@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -89,7 +90,12 @@ class Home extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.topRight,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => HistoryScreen()));
+                            },
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: 10.toHeight,

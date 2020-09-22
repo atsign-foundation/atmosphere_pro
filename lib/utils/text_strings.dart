@@ -10,4 +10,9 @@ class TextStrings {
 
   // buttons text
   String buttonStart = 'Start';
+  String buttonClose = 'Close';
+
+  //history screen texts
+  String sent = 'Sent';
+  String received = 'Received';
 }
