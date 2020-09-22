@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="atsign_atmosphere_app"
+        android:label="@mosphere"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
