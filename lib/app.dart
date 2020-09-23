@@ -53,6 +53,13 @@ class _MyAppState extends State<MyApp> {
       title: 'AtSign Atmosphere App',
       debugShowCheckedModeBanner: false,
       initialRoute: SetupRoutes.initialRoute,
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          elevation: 0,
+        ),
+      ),
       routes: SetupRoutes.routes,
     );
   }

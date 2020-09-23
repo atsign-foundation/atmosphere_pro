@@ -1,3 +1,5 @@
+import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/screens/widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -88,25 +90,12 @@ class Home extends StatelessWidget {
                         flex: 4,
                         child: Align(
                           alignment: Alignment.topRight,
-                          child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.toHeight,
-                                horizontal: 30.toWidth,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(20.toFont),
-                              ),
-                              child: Text(
-                                TextStrings().buttonStart,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.toFont,
-                                ),
-                              ),
-                            ),
+                          child: CommonButton(
+                            TextStrings().buttonStart,
+                            () {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.WELCOME_SCREEN);
+                            },
                           ),
                         ),
                       ),
