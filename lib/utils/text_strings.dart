@@ -8,6 +8,15 @@ class TextStrings {
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
 
+  // welcome screen texts
+  String welcomeUser(String userName) => 'Welcome\n $userName!';
+  String welcomeRecipient = 'Select a recipient and start sending them files.';
+  String welcomeSendFilesTo = 'Send file to';
+  String welcomeContactPlaceholder = '@sign';
+  String welcomeFilePlaceholder = 'Select file to transfer';
+  String welcomeAddFilePlaceholder = 'Add file to transfer';
+
   // buttons text
   String buttonStart = 'Start';
+  String buttonSend = 'Send';
 }

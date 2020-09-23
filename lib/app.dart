@@ -9,6 +9,9 @@ class MyApp extends StatelessWidget {
       title: 'AtSign Atmosphere App',
       debugShowCheckedModeBanner: false,
       initialRoute: SetupRoutes.initialRoute,
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+      ),
       routes: SetupRoutes.routes,
     );
   }
