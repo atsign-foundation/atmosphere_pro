@@ -6,14 +6,17 @@ class CustomTextStyles {
   //colorWeightSize
 
   static TextStyle blueRegular18 = TextStyle(
-    color: ColorConstants.appBarCloseColor,
-    fontSize: 18.toFont,
-  );
+      color: ColorConstants.appBarCloseColor,
+      fontSize: 18.toFont,
+      fontWeight: FontWeight.w300);
   static TextStyle blueRegular16 = TextStyle(
     color: ColorConstants.appBarCloseColor,
     fontSize: 16.toFont,
   );
-
+  static TextStyle blueRegular14 = TextStyle(
+      color: ColorConstants.appBarCloseColor,
+      fontSize: 14.toFont,
+      fontWeight: FontWeight.normal);
   static TextStyle whiteBold16 = TextStyle(
     color: Colors.white,
     fontSize: 16.toFont,
@@ -21,8 +24,8 @@ class CustomTextStyles {
   );
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
+    fontWeight: FontWeight.bold,
     fontSize: 18.toFont,
-    fontWeight: FontWeight.w600,
   );
 
   static TextStyle primaryBold16 = TextStyle(
@@ -49,7 +52,7 @@ class CustomTextStyles {
   static TextStyle primaryRegular16 = TextStyle(
       color: ColorConstants.fontPrimary,
       fontSize: 16.toFont,
-      fontWeight: FontWeight.w400);
+      fontWeight: FontWeight.normal);
 
   static TextStyle secondaryRegular12 = TextStyle(
       color: ColorConstants.fontSecondary,

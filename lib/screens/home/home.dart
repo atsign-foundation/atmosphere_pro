@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/screens/blocked_users/blocked_users.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
@@ -91,10 +92,12 @@ class Home extends StatelessWidget {
                           alignment: Alignment.topRight,
                           child: InkWell(
                             onTap: () {
-                              showDialog(
-                                  barrierDismissible: true,
-                                  context: context,
-                                  builder: (context) => ReceiveFilesAlert());
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => BlockedUsers(
+                                            blockedUserList: ['test'],
+                                          )));
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
