@@ -1,4 +1,4 @@
-import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
+import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -91,10 +91,10 @@ class Home extends StatelessWidget {
                           alignment: Alignment.topRight,
                           child: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (ctx) => HistoryScreen()));
+                              showDialog(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (context) => ReceiveFilesAlert());
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

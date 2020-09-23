@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -110,7 +111,7 @@ class _FilesListTileState extends State<FilesListTile> {
                         child: Row(
                           children: [
                             Text(
-                              'More Details',
+                              TextStrings().moreDetails,
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(
@@ -183,7 +184,6 @@ class _FilesListTileState extends State<FilesListTile> {
                       setState(() {
                         isOpen = !isOpen;
                       });
-                      print('ON BUTTON TAP====>$isOpen');
                     },
                     child: Container(
                       width: 140.toWidth,
@@ -191,7 +191,7 @@ class _FilesListTileState extends State<FilesListTile> {
                       child: Row(
                         children: [
                           Text(
-                            'Less Details',
+                            TextStrings().lesserDetails,
                             style: CustomTextStyles.primaryBold14,
                           ),
                           Container(
