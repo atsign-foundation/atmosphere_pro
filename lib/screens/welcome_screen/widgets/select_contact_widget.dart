@@ -128,7 +128,7 @@ class _ExpansionTileWidget extends StatelessWidget {
 
 class _ListTileWidget extends StatelessWidget {
   final int selectedIndex;
-  final Function onRemove;
+  final Function() onRemove;
   _ListTileWidget(this.selectedIndex, this.onRemove);
 
   @override

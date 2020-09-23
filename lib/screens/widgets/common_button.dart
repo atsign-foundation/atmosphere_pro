@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CommonButton extends StatelessWidget {
   final String title;
-  final Function onTap;
+  final Function() onTap;
   const CommonButton(this.title, this.onTap);
 
   @override

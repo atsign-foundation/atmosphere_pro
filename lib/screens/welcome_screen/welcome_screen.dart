@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/select_file_widget.dart';
 import 'package:atsign_atmosphere_app/screens/widgets/common_button.dart';
+import 'package:atsign_atmosphere_app/screens/widgets/side_bar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
@@ -28,9 +29,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
       ),
+      endDrawer: SideBarWidget(),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 26.toWidth),

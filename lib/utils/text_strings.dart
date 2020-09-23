@@ -16,7 +16,22 @@ class TextStrings {
   String welcomeFilePlaceholder = 'Select file to transfer';
   String welcomeAddFilePlaceholder = 'Add file to transfer';
 
+  //sidebar menu texts
+  String sidebarContact = 'Contact';
+  String sidebarTransferHistory = 'Transfer History';
+  String sidebarBlockedUser = 'Blocked User';
+  String sidebarTermsAndConditions = 'Terms and Conditions';
+  String sidebarFaqs = 'FAQ';
+  String sidebarAutoAcceptFile = 'Auto Accept Files';
+  String sidebarEnablingMessage =
+      'Enabling this will auto accept all the files sent by your contacts.';
+  String sidebarSwitchOut = 'Switch @sign';
+
+  //FAQs texts
+  String faqs = 'FAQ';
+
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
+  String buttonClose = 'Close';
 }
