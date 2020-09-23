@@ -32,7 +32,7 @@ class BlockedUsers extends StatelessWidget {
                   child: ListView.separated(
                     itemCount: 10,
                     separatorBuilder: (context, index) => Divider(
-                      indent: 20.toWidth,
+                      indent: 16.toWidth,
                     ),
                     itemBuilder: (context, index) => ListTile(
                       leading: CircleAvatar(
