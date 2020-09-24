@@ -30,9 +30,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
 
   final List<String> targetScreens = [
     Routes.FAQ_SCREEN,
-    Routes.FAQ_SCREEN,
-    Routes.FAQ_SCREEN,
-    Routes.FAQ_SCREEN,
+    Routes.HISTORY,
+    Routes.BLOCKED_USERS,
+    Routes.TERMS_CONDITIONS,
     Routes.FAQ_SCREEN,
   ];
 
@@ -60,7 +60,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               itemCount: menuItemsTitle.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed(targetScreens[index]);
+                  Navigator.pop(context);
+                  Navigator.of(context).pushNamed(targetScreens[index],
+                      arguments: (index == 2)
+                          ? {
+                              'blockedUserList': ['hello']
+                            }
+                          : null);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 13.toHeight),

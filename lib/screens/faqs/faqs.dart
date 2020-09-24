@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
@@ -7,31 +8,9 @@ class FaqsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Padding(
-            padding: EdgeInsets.only(left: 10.toWidth),
-            child: Center(
-              child: Text(
-                TextStrings().buttonClose,
-                style: TextStyle(
-                  color: ColorConstants.blueText,
-                ),
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          TextStrings().faqs,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18.toFont,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: CustomAppBar(
+        showTitle: true,
+        title: 'FAQ',
       ),
       body: Container(
         margin:

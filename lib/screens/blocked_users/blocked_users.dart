@@ -23,7 +23,7 @@ class BlockedUsers extends StatelessWidget {
             ? Center(
                 child: Container(
                   child: Text(
-                    'No bLocked users',
+                    'No blocked users',
                     style: CustomTextStyles.blueRegular16,
                   ),
                 ),
