@@ -57,18 +57,20 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                 ),
                 Expanded(
-                  // height: 400,
                   child: TabBarView(controller: _controller, children: [
                     ListView.separated(
+                      padding: EdgeInsets.only(bottom: 170.toHeight),
+                      physics: AlwaysScrollableScrollPhysics(),
                       separatorBuilder: (context, index) => Divider(
                         indent: 16.toWidth,
                       ),
-                      itemCount: 3,
+                      itemCount: 5,
                       itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: FilesListTile()),
                     ),
                     ListView.separated(
+                      padding: EdgeInsets.only(bottom: 170.toHeight),
                       separatorBuilder: (context, index) => Divider(
                         indent: 16.toWidth,
                       ),

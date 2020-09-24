@@ -28,65 +28,70 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
-      // titleSpacing: 80,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          (!showLeadingicon)
-              ? (showBackButton)
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: ColorConstants.fontPrimary,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      })
-                  : Container(
-                      padding: EdgeInsets.only(right: 16.toWidth),
-                      child: GestureDetector(
+          Flexible(
+            flex: 2,
+            child: Container(
+              height: 40.toHeight,
+              width: 60.toWidth,
+              child: (!showLeadingicon)
+                  ? (showBackButton)
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: ColorConstants.fontPrimary,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })
+                      : Center(
+                          child: GestureDetector(
+                            child: Text(
+                              'Close',
+                              style: CustomTextStyles.blueRegular18,
+                            ),
+                          ),
+                        )
+                  : Image.asset(ImageConstants.logoIcon),
+            ),
+          ),
+          Expanded(
+            flex: 9,
+            child: (showTitle)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
                         child: Text(
-                          'Close',
-                          style: CustomTextStyles.blueRegular18,
+                          title,
+                          style: CustomTextStyles.primaryBold18,
                         ),
                       ),
-                    )
-              : Container(
-                  height: 40,
-                  width: 40,
-                  child: Image.asset(ImageConstants.logoIcon),
-                ),
-          (showTitle)
-              ? Container(
-                  padding: EdgeInsets.only(
-                      left: (showBackButton) ? 100.toWidth : 80.toWidth),
-                  child: Text(
-                    title,
-                    style: CustomTextStyles.primaryBold18,
+                    ],
+                  )
+                : Container(),
+          ),
+          Expanded(
+            flex: 2,
+            child: (showTitle)
+                ? Container(
+                    height: 22.toHeight,
+                    width: 22.toWidth,
+                  )
+                : GestureDetector(
+                    onTap: () {
+                      print('ON DRWAER TAP');
+                    },
+                    child: Image.asset(
+                      ImageConstants.drawerIcon,
+                    ),
                   ),
-                )
-              : Container(),
+          )
         ],
       ),
       automaticallyImplyLeading: false,
       backgroundColor: ColorConstants.appBarColor,
-      actions: [
-        (showTitle)
-            ? Container()
-            : Container(
-                height: 22.toHeight,
-                width: 22.toWidth,
-                margin: EdgeInsets.only(right: 27.toWidth),
-                child: GestureDetector(
-                  onTap: () {
-                    print('ON DRWAER TAP');
-                  },
-                  child: Image.asset(
-                    ImageConstants.drawerIcon,
-                  ),
-                ),
-              )
-      ],
     );
   }
 }

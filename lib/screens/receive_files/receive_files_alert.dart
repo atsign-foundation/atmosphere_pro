@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
@@ -9,8 +10,9 @@ class ReceiveFilesAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      titlePadding: EdgeInsets.only(top: 10.toHeight),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.toWidth)),
+      titlePadding: EdgeInsets.only(top: 10.toHeight, left: 10.toWidth),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -23,7 +25,7 @@ class ReceiveFilesAlert extends StatelessWidget {
             margin: EdgeInsets.only(right: 15.toWidth),
             child: Text(
               TextStrings().blockUser,
-              style: CustomTextStyles.blueRegular16,
+              style: CustomTextStyles.blueMedium16,
             ),
           )
         ],
@@ -40,25 +42,30 @@ class ReceiveFilesAlert extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    CircleAvatar(
-                      radius: 10.toWidth,
-                      backgroundColor: Colors.transparent,
-                      child: Image.asset(ImageConstants.drawerIcon),
+                    // CircleAvatar(
+                    //   radius: 10.toWidth,
+                    //   backgroundColor: Colors.transparent,
+                    //   child: Image.asset(ImageConstants.drawerIcon),
+                    // ),
+                    CustomCircleAvatar(
+                      image: ImageConstants.test,
                     ),
-                    RichText(
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                      overflow: TextOverflow.visible,
-                      text: TextSpan(
-                        text: '@levinat',
-                        style: CustomTextStyles.primaryBold14,
-                        children: [
-                          TextSpan(
-                            text: ' wants to send you\n a file?',
-                            style: CustomTextStyles.primaryRegular16,
-                          )
-                        ],
+                    Expanded(
+                      child: RichText(
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        text: TextSpan(
+                          text: '@levinat',
+                          style: CustomTextStyles.primaryBold14,
+                          children: [
+                            TextSpan(
+                              text: ' wants to send you\n a file?',
+                              style: CustomTextStyles.primaryRegular16,
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -71,12 +78,15 @@ class ReceiveFilesAlert extends StatelessWidget {
             Center(
               child: Container(
                 height: 100.toHeight,
-                width: 100.toWidth,
+                width: 100.toHeight,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.toHeight)),
-                child: Image.asset(
-                  ImageConstants.logoIcon,
-                  fit: BoxFit.contain,
+                  borderRadius: BorderRadius.circular(10.toHeight),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      ImageConstants.test,
+                    ),
+                  ),
                 ),
               ),
             ),

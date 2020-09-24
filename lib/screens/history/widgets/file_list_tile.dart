@@ -1,6 +1,6 @@
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -17,10 +17,8 @@ class _FilesListTileState extends State<FilesListTile> {
     return Column(
       children: [
         ListTile(
-          leading: CircleAvatar(
-            radius: 30.toHeight,
-            backgroundColor: Colors.white,
-            backgroundImage: AssetImage(ImageConstants.logoIcon),
+          leading: CustomCircleAvatar(
+            image: ImageConstants.test,
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,6 +42,7 @@ class _FilesListTileState extends State<FilesListTile> {
                   )
                 ],
               ),
+              SizedBox(height: 5.toHeight),
               Text(
                 '@levinaTt',
                 style: CustomTextStyles.secondaryRegular12,
@@ -96,7 +95,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 ),
               ),
               SizedBox(
-                height: 8.toHeight,
+                height: 3.toHeight,
               ),
               (!isOpen)
                   ? GestureDetector(
@@ -104,14 +103,13 @@ class _FilesListTileState extends State<FilesListTile> {
                         setState(() {
                           isOpen = !isOpen;
                         });
-                        print('ON BUTTON TAP====>$isOpen');
                       },
                       child: Container(
                         width: 140.toWidth,
                         child: Row(
                           children: [
                             Text(
-                              TextStrings().moreDetails,
+                              'More Details',
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(
@@ -142,9 +140,9 @@ class _FilesListTileState extends State<FilesListTile> {
                       itemCount: 6,
                       itemBuilder: (context, index) => ListTile(
                         leading: Container(
-                          height: 50.toHeight,
-                          width: 50.toWidth,
-                          child: Image.asset(ImageConstants.drawerIcon),
+                          child: CustomCircleAvatar(
+                            image: ImageConstants.test,
+                          ),
                         ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +189,7 @@ class _FilesListTileState extends State<FilesListTile> {
                       child: Row(
                         children: [
                           Text(
-                            TextStrings().lesserDetails,
+                            'Lesser Details',
                             style: CustomTextStyles.primaryBold14,
                           ),
                           Container(
