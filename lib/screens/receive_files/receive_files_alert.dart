@@ -31,7 +31,7 @@ class ReceiveFilesAlert extends StatelessWidget {
         ],
       ),
       content: Container(
-        height: 230.toHeight,
+        height: 240.toHeight,
         child: Column(
           children: [
             SizedBox(
@@ -91,6 +91,7 @@ class ReceiveFilesAlert extends StatelessWidget {
             Center(
               child: Container(
                 width: 80.toWidth,
+                height: 20.toHeight,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -142,11 +142,6 @@ class _FilesListTileState extends State<FilesListTile> {
                       ),
                       itemCount: 6,
                       itemBuilder: (context, index) => ListTile(
-                        // leading: Container(
-                        //   child: CustomCircleAvatar(
-                        //     image: ImageConstants.test,
-                        //   ),
-                        // ),
                         leading: Container(
                           height: 50.toHeight,
                           width: 50.toHeight,
