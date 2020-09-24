@@ -30,6 +30,12 @@ class TextStrings {
   //FAQs texts
   String faqs = 'FAQ';
 
+  //Contact texts
+  String searchContact = 'Search Contact';
+  String addContactSearch = 'Search @sign';
+  String contactSearchResults = 'Search Results';
+  String addContact = 'Add Contact';
+
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';

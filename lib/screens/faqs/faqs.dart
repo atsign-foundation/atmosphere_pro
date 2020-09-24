@@ -1,5 +1,6 @@
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/screens/widgets/appBar_with_close_action.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -7,32 +8,7 @@ class FaqsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Padding(
-            padding: EdgeInsets.only(left: 10.toWidth),
-            child: Center(
-              child: Text(
-                TextStrings().buttonClose,
-                style: TextStyle(
-                  color: ColorConstants.blueText,
-                ),
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          TextStrings().faqs,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18.toFont,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      appBar: AppBarWithCloseButton(title: TextStrings().faqs),
       body: Container(
         margin:
             EdgeInsets.symmetric(horizontal: 16.toWidth, vertical: 16.toHeight),
