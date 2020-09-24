@@ -1,5 +1,7 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/blocked_users/blocked_users.dart';
+import 'package:atsign_atmosphere_app/screens/contact/add_contact.dart';
+import 'package:atsign_atmosphere_app/screens/contact/contact.dart';
 import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_app/screens/home/home.dart';
@@ -25,7 +27,9 @@ class SetupRoutes {
         return BlockedUsers(
           blockedUserList: args['blockedUserList'],
         );
-      }
+      },
+      Routes.CONTACT_SCREEN: (context) => ContactScreen(),
+      Routes.ADD_CONTACT_SCREEN: (context) => AddContactScreen(),
     };
   }
 }

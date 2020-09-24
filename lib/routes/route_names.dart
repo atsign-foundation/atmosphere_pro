@@ -5,4 +5,6 @@ class Routes {
   static const String BLOCKED_USERS = 'blockedUsers';
   static const String TERMS_CONDITIONS = 'termsAndConditions';
   static const String HISTORY = 'history';
+  static const String CONTACT_SCREEN = 'contactScreen';
+  static const String ADD_CONTACT_SCREEN = 'addContactScreen';
 }

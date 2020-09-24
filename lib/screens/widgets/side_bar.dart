@@ -29,7 +29,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   ];
 
   final List<String> targetScreens = [
-    Routes.FAQ_SCREEN,
+    Routes.CONTACT_SCREEN,
     Routes.HISTORY,
     Routes.BLOCKED_USERS,
     Routes.TERMS_CONDITIONS,

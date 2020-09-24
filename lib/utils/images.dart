@@ -10,6 +10,7 @@ class ImageConstants {
   static String termsAndConditionsIcon = '$_basePath/termsAndConditions.png';
   static String transferHistoryIcon = '$_basePath/transferHistory.png';
   static String logoutIcon = '$_basePath/logout.png';
+  static String sendIcon = '$_basePath/send.png';
 
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';
