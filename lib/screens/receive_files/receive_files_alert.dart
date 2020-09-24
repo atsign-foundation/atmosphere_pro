@@ -42,11 +42,6 @@ class ReceiveFilesAlert extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // CircleAvatar(
-                    //   radius: 10.toWidth,
-                    //   backgroundColor: Colors.transparent,
-                    //   child: Image.asset(ImageConstants.drawerIcon),
-                    // ),
                     CustomCircleAvatar(
                       image: ImageConstants.test,
                     ),

@@ -96,9 +96,9 @@ class Home extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (ctx) => BlockedUsers(
-                                    blockedUserList: ['test'],
-                                  ),
+                                  builder: (ctx) => HistoryScreen(
+                                      // blockedUserList: ['test'],
+                                      ),
                                 ),
                               );
                             },

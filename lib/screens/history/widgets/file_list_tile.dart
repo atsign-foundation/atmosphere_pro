@@ -136,12 +136,28 @@ class _FilesListTileState extends State<FilesListTile> {
                 children: [
                   Container(
                     height: 200.toHeight,
-                    child: ListView.builder(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                        indent: 80.toWidth,
+                      ),
                       itemCount: 6,
                       itemBuilder: (context, index) => ListTile(
+                        // leading: Container(
+                        //   child: CustomCircleAvatar(
+                        //     image: ImageConstants.test,
+                        //   ),
+                        // ),
                         leading: Container(
-                          child: CustomCircleAvatar(
-                            image: ImageConstants.test,
+                          height: 50.toHeight,
+                          width: 50.toHeight,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.toHeight),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                ImageConstants.test,
+                              ),
+                            ),
                           ),
                         ),
                         title: Column(
