@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: SetupRoutes.initialRoute,
       theme: ThemeData(
+        fontFamily: 'HelveticaNeu',
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
           color: Colors.white,

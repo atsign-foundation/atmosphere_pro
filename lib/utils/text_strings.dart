@@ -34,4 +34,15 @@ class TextStrings {
   String buttonStart = 'Start';
   String buttonSend = 'Send';
   String buttonClose = 'Close';
+  String accept = 'Accept';
+  String reject = 'Reject';
+
+  //history screen texts
+  String sent = 'Sent';
+  String received = 'Received';
+  String moreDetails = 'More Details';
+  String lesserDetails = 'Lesser Details';
+
+  //receive files texts
+  String blockUser = 'Block User';
 }
