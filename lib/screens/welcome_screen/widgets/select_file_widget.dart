@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -93,10 +94,16 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
                   ),
                   leading: Container(
-                    height: 40.toWidth,
-                    width: 40.toWidth,
+                    height: 50.toHeight,
+                    width: 50.toHeight,
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10.toHeight),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          ImageConstants.test,
+                        ),
+                      ),
                     ),
                   ),
                   trailing: IconButton(

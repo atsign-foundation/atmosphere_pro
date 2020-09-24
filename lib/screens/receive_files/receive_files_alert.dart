@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 
 class ReceiveFilesAlert extends StatelessWidget {
+  final Function() onAccept;
+
+  const ReceiveFilesAlert({Key key, this.onAccept}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -56,7 +59,7 @@ class ReceiveFilesAlert extends StatelessWidget {
                           style: CustomTextStyles.primaryBold14,
                           children: [
                             TextSpan(
-                              text: ' wants to send you\n a file?',
+                              text: ' wants to send you a file?',
                               style: CustomTextStyles.primaryRegular16,
                             )
                           ],
@@ -113,7 +116,7 @@ class ReceiveFilesAlert extends StatelessWidget {
       actions: [
         CustomButton(
           buttonText: TextStrings().accept,
-          onPressed: () {},
+          onPressed: onAccept,
         ),
         SizedBox(
           height: 10.toHeight,

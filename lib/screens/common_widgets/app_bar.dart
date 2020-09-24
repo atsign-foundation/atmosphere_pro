@@ -6,6 +6,7 @@
 
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -28,68 +29,72 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
+      centerTitle: true,
+      leading: (showLeadingicon)
+          ? Image.asset(ImageConstants.logoIcon)
+          : (showBackButton)
+              ? IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: ColorConstants.fontPrimary,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  })
+              : null,
       title: Row(
         children: [
-          Flexible(
-            flex: 2,
-            child: Container(
-              height: 40.toHeight,
-              width: 60.toWidth,
-              child: (!showLeadingicon)
-                  ? (showBackButton)
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: ColorConstants.fontPrimary,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          })
-                      : Center(
-                          child: GestureDetector(
-                            child: Text(
-                              'Close',
-                              style: CustomTextStyles.blueRegular18,
-                            ),
-                          ),
-                        )
-                  : Image.asset(ImageConstants.logoIcon),
-            ),
-          ),
-          Expanded(
-            flex: 9,
-            child: (showTitle)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Text(
-                          title,
-                          style: CustomTextStyles.primaryBold18,
-                        ),
+          Container(
+            height: 40.toHeight,
+            margin: EdgeInsets.only(top: 5.toHeight),
+            child: (!showBackButton && !showLeadingicon)
+                ? Center(
+                    child: GestureDetector(
+                      child: Text(
+                        TextStrings().buttonClose,
+                        style: CustomTextStyles.blueRegular18,
                       ),
-                    ],
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   )
                 : Container(),
           ),
           Expanded(
-            flex: 2,
             child: (showTitle)
-                ? Container(
+                ? Center(
+                    child: Text(
+                      title,
+                      style: CustomTextStyles.primaryBold18,
+                    ),
+                  )
+                : Container(),
+          ),
+        ],
+      ),
+      actions: [
+        Container(
+          height: 22.toHeight,
+          width: 22.toWidth,
+          margin: EdgeInsets.only(right: 20),
+          child: (showTitle)
+              ? Container()
+              : GestureDetector(
+                  onTap: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  child: Container(
                     height: 22.toHeight,
                     width: 22.toWidth,
-                  )
-                : GestureDetector(
-                    onTap: () {
-                      print('ON DRWAER TAP');
-                    },
                     child: Image.asset(
                       ImageConstants.drawerIcon,
                     ),
                   ),
-          )
-        ],
-      ),
+                ),
+        )
+        // :
+      ],
       automaticallyImplyLeading: false,
       backgroundColor: ColorConstants.appBarColor,
     );

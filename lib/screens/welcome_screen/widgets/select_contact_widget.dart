@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -110,13 +111,8 @@ class _ExpansionTileWidget extends StatelessWidget {
                 fontSize: 14.toFont,
               ),
             ),
-            leading: Container(
-              height: 40.toWidth,
-              width: 40.toWidth,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-              ),
+            leading: CustomCircleAvatar(
+              image: ImageConstants.test,
             ),
             trailing: Icon(Icons.add),
           ),
