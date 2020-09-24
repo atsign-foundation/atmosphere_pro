@@ -9,7 +9,7 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 
 class CustomButton extends StatelessWidget {
   final bool isInverted;
-  final Function onPressed;
+  final Function() onPressed;
   final String buttonText;
 
   const CustomButton(
