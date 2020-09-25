@@ -1,7 +1,5 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/add_contact/add_contact_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
-import 'package:atsign_atmosphere_app/screens/widgets/common_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -95,8 +93,8 @@ class Home extends StatelessWidget {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              Navigator.of(context)
-                                  .pushNamed(Routes.WELCOME_SCREEN);
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  Routes.WELCOME_SCREEN, (route) => false);
                             },
                           ),
                         ),

@@ -1,7 +1,7 @@
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/select_file_widget.dart';
-import 'package:atsign_atmosphere_app/screens/widgets/common_button.dart';
-import 'package:atsign_atmosphere_app/screens/widgets/side_bar.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
