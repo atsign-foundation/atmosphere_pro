@@ -16,18 +16,13 @@ class CustomCircleAvatar extends StatelessWidget {
     return Container(
       height: size.toFont,
       width: size.toFont,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(size.toWidth),
+          border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: CircleAvatar(
         radius: (size - 5).toFont,
-        backgroundColor: ColorConstants.fontSecondary,
-        child: Container(
-          height: (size - 6).toFont,
-          width: (size - 6).toFont,
-          child: CircleAvatar(
-            // radius: 35.toFont,
-            backgroundColor: Colors.transparent,
-            backgroundImage: AssetImage(image),
-          ),
-        ),
+        backgroundColor: Colors.transparent,
+        backgroundImage: AssetImage(image),
       ),
     );
   }
