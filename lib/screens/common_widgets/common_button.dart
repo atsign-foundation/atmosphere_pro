@@ -11,6 +11,8 @@ class CommonButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
+        width: 120.toWidth,
+        height: 40.toHeight,
         padding: EdgeInsets.symmetric(
           vertical: 10.toHeight,
           horizontal: 30.toWidth,
@@ -19,11 +21,13 @@ class CommonButton extends StatelessWidget {
           color: Colors.black,
           borderRadius: BorderRadius.circular(20.toFont),
         ),
-        child: Text(
-          title ?? '',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 15.toFont,
+        child: Center(
+          child: Text(
+            title ?? '',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15.toFont,
+            ),
           ),
         ),
       ),
