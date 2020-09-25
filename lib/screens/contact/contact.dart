@@ -1,6 +1,6 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/screens/widgets/appBar_with_close_action.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -38,18 +38,23 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithCloseButton(
+      // appBar: AppBarWithCloseButton(
+      //   title: TextStrings().sidebarContact,
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.add),
+      //       onPressed: () {
+      //         Navigator.of(context).pushNamed(
+      //           Routes.ADD_CONTACT_SCREEN,
+      //         );
+      //       },
+      //     ),
+      //   ],
+      // ),
+      appBar: CustomAppBar(
+        showAddButton: true,
+        showTitle: true,
         title: TextStrings().sidebarContact,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).pushNamed(
-                Routes.ADD_CONTACT_SCREEN,
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(

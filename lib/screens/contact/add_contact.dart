@@ -1,5 +1,6 @@
+import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/screens/widgets/appBar_with_close_action.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
@@ -36,7 +37,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithCloseButton(
+      appBar: CustomAppBar(
+        showTitle: true,
         title: TextStrings().addContact,
       ),
       body: SingleChildScrollView(
@@ -112,7 +114,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       ),
                       trailing: IconButton(
                         icon: Icon(Icons.add),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AddContactDialog(
+                                    name: contacts[index],
+                                  ));
+                        },
                       ),
                     ),
                   );

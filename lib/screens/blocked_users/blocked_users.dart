@@ -32,6 +32,7 @@ class BlockedUsers extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ListView.separated(
+                      padding: EdgeInsets.symmetric(vertical: 40.toHeight),
                       itemCount: 10,
                       separatorBuilder: (context, index) => Divider(
                         indent: 16.toWidth,

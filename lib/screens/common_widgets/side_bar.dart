@@ -136,7 +136,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               height: 210.toHeight,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.HOME, (route) => false);
+              },
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 13.toHeight),
                 child: Row(
