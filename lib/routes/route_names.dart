@@ -7,4 +7,5 @@ class Routes {
   static const String HISTORY = 'history';
   static const String CONTACT_SCREEN = 'contactScreen';
   static const String ADD_CONTACT_SCREEN = 'addContactScreen';
+  static const String SCAN_QR_SCREEN = 'scanQrScreen';
 }
