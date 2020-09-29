@@ -20,20 +20,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showLeadingicon;
   final bool showAddButton;
+  final double elevation;
 
-  const CustomAppBar(
-      {this.title,
-      this.showTitle = false,
-      this.showBackButton = false,
-      this.showLeadingicon = false,
-      this.showAddButton = false});
+  const CustomAppBar({
+    this.title,
+    this.showTitle = false,
+    this.showBackButton = false,
+    this.showLeadingicon = false,
+    this.showAddButton = false,
+    this.elevation = 0,
+  });
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      elevation: elevation ?? 0,
       centerTitle: true,
       leading: (showLeadingicon)
           ? Image.asset(ImageConstants.logoIcon)
