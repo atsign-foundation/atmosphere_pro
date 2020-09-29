@@ -55,5 +55,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Sharing your files</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Sharing your files</string>
 </dict>
 </plist>
