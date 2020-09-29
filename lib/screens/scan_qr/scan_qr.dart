@@ -4,9 +4,24 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class ScanQrScreen extends StatelessWidget {
-  const ScanQrScreen({Key key}) : super(key: key);
+class ScanQrScreen extends StatefulWidget {
+  ScanQrScreen({Key key}) : super(key: key);
+
+  @override
+  _ScanQrScreenState createState() => _ScanQrScreenState();
+}
+
+class _ScanQrScreenState extends State<ScanQrScreen> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool scanned;
+
+  @override
+  void initState() {
+    scanned = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +49,21 @@ class ScanQrScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                color: Colors.black,
+                child: QRView(
+                  key: qrKey,
+                  onQRViewCreated: (controller) {
+                    controller.scannedDataStream.listen((scanData) {
+                      if (!scanned) {
+                        scanned = true;
+                        Navigator.of(context)
+                            .pushNamed(Routes.WELCOME_SCREEN)
+                            .then(
+                              (value) => scanned = false,
+                            );
+                      }
+                    });
+                  },
+                ),
               ),
             ),
             SizedBox(
