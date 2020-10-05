@@ -1,10 +1,11 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ScanQrScreen extends StatefulWidget {
   ScanQrScreen({Key key}) : super(key: key);
@@ -16,6 +17,14 @@ class ScanQrScreen extends StatefulWidget {
 class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool scanned;
+  signUp() async {
+    const url = 'https://staging.atsign.wt/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   void initState() {
@@ -55,9 +64,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                     controller.scannedDataStream.listen((scanData) {
                       if (!scanned) {
                         scanned = true;
-                        Navigator.of(context)
-                            .pushNamed(Routes.WELCOME_SCREEN)
-                            .then(
+                        Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN).then(
                               (value) => scanned = false,
                             );
                       }
@@ -69,12 +76,17 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             SizedBox(
               height: 25.toHeight,
             ),
-            Text(
-              TextStrings().scanQrFooter,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.toFont,
-                color: ColorConstants.redText,
+            InkWell(
+              onTap: () {
+                signUp();
+              },
+              child: Text(
+                TextStrings().scanQrFooter,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.toFont,
+                  color: ColorConstants.redText,
+                ),
               ),
             ),
             // Remove this block of code later.

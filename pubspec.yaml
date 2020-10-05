@@ -32,6 +32,7 @@ dependencies:
   receive_sharing_intent: ^1.4.1
   qr_code_scanner: ^0.0.13
   flushbar: ^1.10.4
+  url_launcher: ^5.7.2
 
 dev_dependencies:
   flutter_test:
