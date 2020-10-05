@@ -54,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: <Widget>[
           Icon(
             Icons.cancel,
-            size: 16.toFont,
+            size: 13.toFont,
             color: ColorConstants.redText,
           ),
           Padding(
@@ -63,7 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             child: Text(
               message,
-              style: TextStyle(color: ColorConstants.fadedText, fontSize: 13.toFont),
+              style: TextStyle(color: ColorConstants.fadedText, fontSize: 10.toFont),
             ),
           )
         ],
@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       messageText: Text(
         "Levina Thomas 4 files, 12 MB",
         style: TextStyle(
-          fontSize: 10.toFont,
+          fontSize: 9.toFont,
           color: ColorConstants.fontSecondary,
         ),
       ),
