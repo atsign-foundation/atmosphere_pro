@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ColorConstants {
+  static const Color successColor = Colors.green;
   static const Color fadedText = Color(0xFF6D6D79);
   static const Color appBarColor = Colors.white;
   static const Color scaffoldColor = Colors.white;
