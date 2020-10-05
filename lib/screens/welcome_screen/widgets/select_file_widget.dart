@@ -68,6 +68,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   if (selectedFiles.isEmpty) widget.onUpdate(true);
                   result = await FilePicker.platform.pickFiles(
                     allowMultiple: true,
+                    type: FileType.media,
                   );
                   if (result?.files != null) selectedFiles = [...result?.files];
                   setState(() {});

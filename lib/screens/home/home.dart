@@ -93,9 +93,8 @@ class Home extends StatelessWidget {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              // Navigator.pushNamed(context, Routes.FILE_PICKER);
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  Routes.WELCOME_SCREEN, (route) => false);
+                              Navigator.pushNamed(
+                                  context, Routes.SCAN_QR_SCREEN);
                             },
                           ),
                         ),
