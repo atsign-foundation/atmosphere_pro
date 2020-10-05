@@ -5,7 +5,6 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ScanQrScreen extends StatefulWidget {
   ScanQrScreen({Key key}) : super(key: key);
@@ -17,14 +16,6 @@ class ScanQrScreen extends StatefulWidget {
 class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool scanned;
-  signUp() async {
-    const url = 'https://staging.atsign.wt/';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   void initState() {
@@ -78,7 +69,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                signUp();
+                Navigator.of(context).pushNamed(Routes.Get_Now);
               },
               child: Text(
                 TextStrings().scanQrFooter,
