@@ -100,12 +100,16 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
+
+                      /// [DEVELOPMENT CODE]
                       Center(
                         child: ProviderHandler<TestModel>(
                           successBuilder: (model) => Text('${model.testValue}'),
                           errorBuilder: (model) => Text('Some error occured'),
                         ),
                       ),
+
+                      /// [DEVELOPMENT CODE]
                       Expanded(
                         flex: 4,
                         child: Align(
@@ -113,6 +117,7 @@ class _HomeState extends State<Home> {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
+                              /// [DEVELOPMENT CODE]
                               if (model.testValue < 10) {
                                 model.increment();
                                 print('TEST VALUE======>${model.testValue}');
@@ -120,6 +125,8 @@ class _HomeState extends State<Home> {
                                 model.decrement();
                                 print('TEST VALUE======>${model.testValue}');
                               }
+
+                              /// [DEVELOPMENT CODE]
                               // Navigator.pushNamedAndRemoveUntil(context,
                               //     Routes.WELCOME_SCREEN, (route) => false);
                             },

@@ -1,10 +1,12 @@
+/// [TEST MODEL DELETE AFTER DEVELOPMENT]
+
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 
 class TestModel extends BaseModel {
   TestModel._();
   static TestModel _instance = TestModel._();
   factory TestModel() => _instance;
-  int testValue;
+  int testValue = 0;
 
   increment() async {
     setStatus(Status.Loading);

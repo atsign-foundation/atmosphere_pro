@@ -31,6 +31,10 @@ dependencies:
   google_fonts: ^1.1.0
   receive_sharing_intent: ^1.4.1
   provider: ^4.3.2+2
+  file_picker: ^2.0.5
+  video_thumbnail: ^0.2.2
+  qr_code_scanner: ^0.0.13
+  flushbar: ^1.10.4
 
 dev_dependencies:
   flutter_test:

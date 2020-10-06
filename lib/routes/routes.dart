@@ -3,8 +3,10 @@ import 'package:atsign_atmosphere_app/screens/blocked_users/blocked_users.dart';
 import 'package:atsign_atmosphere_app/screens/contact/add_contact.dart';
 import 'package:atsign_atmosphere_app/screens/contact/contact.dart';
 import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
+import 'package:atsign_atmosphere_app/screens/file_picker/file_picker.dart';
 import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_app/screens/home/home.dart';
+import 'package:atsign_atmosphere_app/screens/scan_qr/scan_qr.dart';
 import 'package:atsign_atmosphere_app/screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,8 @@ class SetupRoutes {
       },
       Routes.CONTACT_SCREEN: (context) => ContactScreen(),
       Routes.ADD_CONTACT_SCREEN: (context) => AddContactScreen(),
+      Routes.FILE_PICKER: (context) => FilePickerScreen(),
+      Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
     };
   }
 }
