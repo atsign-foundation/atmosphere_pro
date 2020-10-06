@@ -7,21 +7,23 @@ class TestModel extends BaseModel {
   static TestModel _instance = TestModel._();
   factory TestModel() => _instance;
   int testValue = 0;
-
+  String INCREMENT = 'increment';
+  String DECREMENT = 'decrement';
   increment() async {
-    setStatus(Status.Loading);
+    setStatus(INCREMENT, Status.Loading);
     await Future.delayed(Duration(seconds: 1), () {
       testValue++;
     });
-
-    setStatus(Status.Done);
+    setStatus(INCREMENT, Status.Error);
     notifyListeners();
   }
 
-  decrement() {
-    setStatus(Status.Loading);
-    testValue--;
-    setStatus(Status.Done);
+  decrement() async {
+    setStatus(DECREMENT, Status.Loading);
+    await Future.delayed(Duration(seconds: 1), () {
+      testValue--;
+    });
+    setStatus(DECREMENT, Status.Done);
     notifyListeners();
   }
 }

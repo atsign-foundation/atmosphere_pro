@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<TestModel>(
           create: (context) => TestModel(),
-        )
+        ),
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',

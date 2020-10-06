@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BaseModel with ChangeNotifier {
+  Map<String, Status> status = {'main': Status.Idle};
   // bool isLoading = false;
-  Status status;
-  setStatus(Status localStatus) {
-    status = localStatus;
+  // Status status;
+  setStatus(String function, Status _status) {
+    // status = localStatus;
+    this.status[function] = _status;
     notifyListeners();
   }
 
@@ -25,4 +27,4 @@ class BaseModel with ChangeNotifier {
   // bool netwotkIssue = false;
 }
 
-enum Status { Loading, Done, Error }
+enum Status { Loading, Done, Error, Idle }

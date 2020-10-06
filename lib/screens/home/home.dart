@@ -106,6 +106,14 @@ class _HomeState extends State<Home> {
                         child: ProviderHandler<TestModel>(
                           successBuilder: (model) => Text('${model.testValue}'),
                           errorBuilder: (model) => Text('Some error occured'),
+                          functionName: model.INCREMENT,
+                        ),
+                      ),
+                      Center(
+                        child: ProviderHandler<TestModel>(
+                          successBuilder: (model) => Text('${model.testValue}'),
+                          errorBuilder: (model) => Text('Some error occured'),
+                          functionName: model.DECREMENT,
                         ),
                       ),
 
@@ -118,13 +126,13 @@ class _HomeState extends State<Home> {
                             TextStrings().buttonStart,
                             () {
                               /// [DEVELOPMENT CODE]
-                              if (model.testValue < 10) {
-                                model.increment();
-                                print('TEST VALUE======>${model.testValue}');
-                              } else {
-                                model.decrement();
-                                print('TEST VALUE======>${model.testValue}');
-                              }
+                              // if (model.testValue < 10) {
+                              model.increment();
+                              print('TEST VALUE======>${model.testValue}');
+                              // } else {
+                              //   model.decrement();
+                              //   print('TEST VALUE======>${model.testValue}');
+                              // }
 
                               /// [DEVELOPMENT CODE]
                               // Navigator.pushNamedAndRemoveUntil(context,
@@ -133,6 +141,29 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
+                      Expanded(
+                        flex: 4,
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: CommonButton(
+                            TextStrings().buttonStart,
+                            () {
+                              /// [DEVELOPMENT CODE]
+                              // if (model.testValue < 10) {
+                              //   model.increment();
+                              //   print('TEST VALUE======>${model.testValue}');
+                              // } else {
+                              model.decrement();
+                              print('TEST VALUE======>${model.testValue}');
+                              // }
+
+                              /// [DEVELOPMENT CODE]
+                              // Navigator.pushNamedAndRemoveUntil(context,
+                              //     Routes.WELCOME_SCREEN, (route) => false);
+                            },
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
