@@ -7,12 +7,12 @@ import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class GetNow extends StatefulWidget {
+class WebsiteScreen extends StatefulWidget {
   @override
-  _GetNowState createState() => _GetNowState();
+  _WebsiteScreenState createState() => _WebsiteScreenState();
 }
 
-class _GetNowState extends State<GetNow> {
+class _WebsiteScreenState extends State<WebsiteScreen> {
   @override
   void initState() {
     super.initState();

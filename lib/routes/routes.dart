@@ -18,7 +18,7 @@ class SetupRoutes {
   static Map<String, WidgetBuilder> get routes {
     return {
       Routes.HOME: (context) => Home(),
-      Routes.WEBSITE_SCREEN: (context) => GetNow(),
+      Routes.WEBSITE_SCREEN: (context) => WebsiteScreen(),
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
       Routes.FAQ_SCREEN: (context) => FaqsScreen(),
       Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
