@@ -30,6 +30,7 @@ dependencies:
   pedantic: ^1.9.0
   google_fonts: ^1.1.0
   receive_sharing_intent: ^1.4.1
+  provider: ^4.3.2+2
 
 dev_dependencies:
   flutter_test:
@@ -37,7 +38,6 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is
@@ -51,10 +51,8 @@ flutter:
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
@@ -73,7 +71,6 @@ flutter:
           weight: 700
         - asset: assets/fonts/HelveticaExtraBold.ttf
           weight: 800
-
           # style: italic
   #   - family: Trajan Pro
   #     fonts:

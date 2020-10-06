@@ -1,5 +1,7 @@
+import 'package:atsign_atmosphere_app/view_models/test_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -49,20 +51,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AtSign Atmosphere App',
-      debugShowCheckedModeBanner: false,
-      initialRoute: SetupRoutes.initialRoute,
-      theme: ThemeData(
-        fontFamily: 'HelveticaNeu',
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: AppBarTheme(
-          color: Colors.white,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<TestModel>(
+          create: (context) => TestModel(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'AtSign Atmosphere App',
+        debugShowCheckedModeBanner: false,
+        initialRoute: SetupRoutes.initialRoute,
+        theme: ThemeData(
+          fontFamily: 'HelveticaNeu',
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+          ),
         ),
+        routes: SetupRoutes.routes,
       ),
-      routes: SetupRoutes.routes,
     );
   }
 }
