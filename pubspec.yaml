@@ -31,6 +31,22 @@ dependencies:
   google_fonts: ^1.1.0
   receive_sharing_intent: ^1.4.1
   qr_code_scanner: ^0.0.13
+  shared_preferences: ^0.5.12
+  at_client:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_client
+      ref: dev_env
+  at_client_mobile:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_client_mobile
+      ref: dev_env
+  at_demo_data:
+    git:
+      url: git@github.com:atsign-company/at_demos.git
+      path: at_demo_data
+      ref: dev_env
 
 dev_dependencies:
   flutter_test:

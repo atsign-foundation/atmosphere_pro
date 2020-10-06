@@ -1,5 +1,7 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_app/services/at_me_signin.dart';
+import 'package:atsign_atmosphere_app/services/shared_pref_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -8,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatelessWidget {
+  Home() {
+    SharedPrefService.setSharedPreference();
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -93,8 +98,7 @@ class Home extends StatelessWidget {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              Navigator.pushNamed(
-                                  context, Routes.SCAN_QR_SCREEN);
+                              AtMeService.getInstance().checkLogin(context);
                             },
                           ),
                         ),
