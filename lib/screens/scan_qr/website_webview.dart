@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
+import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -32,9 +35,13 @@ class _GetNowState extends State<GetNow> {
             size: 22,
           ),
         ),
+        title: Text(
+          TextStrings().websiteTitle,
+          style: CustomTextStyles.primaryBold18,
+        ),
       ),
       body: WebView(
-        initialUrl: 'https://staging.atsign.wtf/',
+        initialUrl: MixedConstants.WEBSITE_URL,
         javascriptMode: JavascriptMode.unrestricted,
       ),
     );

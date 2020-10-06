@@ -55,7 +55,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                     controller.scannedDataStream.listen((scanData) {
                       if (!scanned) {
                         scanned = true;
-                        Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN).then(
+                        Navigator.of(context)
+                            .pushNamed(Routes.WELCOME_SCREEN)
+                            .then(
                               (value) => scanned = false,
                             );
                       }
@@ -69,7 +71,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.Get_Now);
+                Navigator.of(context).pushNamed(Routes.WEBSITE_SCREEN);
               },
               child: Text(
                 TextStrings().scanQrFooter,
