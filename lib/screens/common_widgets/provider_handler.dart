@@ -7,6 +7,7 @@
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_app/services/size_config.dart';
 
 class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   final Widget Function(T) successBuilder;
@@ -22,7 +23,13 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
       print(
           '_provider?.status[function]=======>${_provider?.status[functionName]}');
       if (_provider?.status[functionName] == Status.Loading) {
-        return CircularProgressIndicator();
+        return Center(
+          child: Container(
+            height: 50.toHeight,
+            width: 50.toHeight,
+            child: CircularProgressIndicator(),
+          ),
+        );
       } else if (_provider?.status[functionName] == Status.Error) {
         return errorBuilder(_provider);
       } else {

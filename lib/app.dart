@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/test_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<TestModel>(
           create: (context) => TestModel(),
         ),
+        ChangeNotifierProvider<HistoryProvider>(
+            create: (context) => HistoryProvider())
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',

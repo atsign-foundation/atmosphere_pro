@@ -1,6 +1,5 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -100,24 +99,6 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-
-                      /// [DEVELOPMENT CODE]
-                      Center(
-                        child: ProviderHandler<TestModel>(
-                          successBuilder: (model) => Text('${model.testValue}'),
-                          errorBuilder: (model) => Text('Some error occured'),
-                          functionName: model.INCREMENT,
-                        ),
-                      ),
-                      Center(
-                        child: ProviderHandler<TestModel>(
-                          successBuilder: (model) => Text('${model.testValue}'),
-                          errorBuilder: (model) => Text('Some error occured'),
-                          functionName: model.DECREMENT,
-                        ),
-                      ),
-
-                      /// [DEVELOPMENT CODE]
                       Expanded(
                         flex: 4,
                         child: Align(
@@ -125,45 +106,12 @@ class _HomeState extends State<Home> {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              /// [DEVELOPMENT CODE]
-                              // if (model.testValue < 10) {
-                              model.increment();
-                              print('TEST VALUE======>${model.testValue}');
-                              // } else {
-                              //   model.decrement();
-                              //   print('TEST VALUE======>${model.testValue}');
-                              // }
-
-                              /// [DEVELOPMENT CODE]
-                              // Navigator.pushNamedAndRemoveUntil(context,
-                              //     Routes.WELCOME_SCREEN, (route) => false);
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  Routes.WELCOME_SCREEN, (route) => false);
                             },
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 4,
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: CommonButton(
-                            TextStrings().buttonStart,
-                            () {
-                              /// [DEVELOPMENT CODE]
-                              // if (model.testValue < 10) {
-                              //   model.increment();
-                              //   print('TEST VALUE======>${model.testValue}');
-                              // } else {
-                              model.decrement();
-                              print('TEST VALUE======>${model.testValue}');
-                              // }
-
-                              /// [DEVELOPMENT CODE]
-                              // Navigator.pushNamedAndRemoveUntil(context,
-                              //     Routes.WELCOME_SCREEN, (route) => false);
-                            },
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
