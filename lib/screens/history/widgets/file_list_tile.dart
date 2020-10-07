@@ -29,10 +29,11 @@ class _FilesListTileState extends State<FilesListTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    // 'Levina Thomas',
-                    widget.sentHistory['name'].toString(),
-                    style: CustomTextStyles.primaryRegular16,
+                  Expanded(
+                    child: Text(
+                      widget.sentHistory['name'].toString(),
+                      style: CustomTextStyles.primaryRegular16,
+                    ),
                   ),
                   GestureDetector(
                     child: Container(
@@ -47,10 +48,15 @@ class _FilesListTileState extends State<FilesListTile> {
                 ],
               ),
               SizedBox(height: 5.toHeight),
-              Text(
-                // '@levinaTt',
-                widget.sentHistory['handle'].toString(),
-                style: CustomTextStyles.secondaryRegular12,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.sentHistory['handle'].toString(),
+                      style: CustomTextStyles.secondaryRegular12,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 8.toHeight,
@@ -84,7 +90,6 @@ class _FilesListTileState extends State<FilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      // 'August 12 2020',
                       widget.sentHistory['date'].toString(),
                       style: CustomTextStyles.secondaryRegular12,
                     ),
@@ -94,7 +99,6 @@ class _FilesListTileState extends State<FilesListTile> {
                       width: 1.toWidth,
                     ),
                     Text(
-                      // '1:22 PM',
                       widget.sentHistory['time'].toString(),
                       style: CustomTextStyles.secondaryRegular12,
                     ),
@@ -166,11 +170,17 @@ class _FilesListTileState extends State<FilesListTile> {
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              // 'FILE_NAME',
-                              widget.sentHistory['files'][index]['file_name']
-                                  .toString(),
-                              style: CustomTextStyles.primaryRegular16,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    widget.sentHistory['files'][index]
+                                            ['file_name']
+                                        .toString(),
+                                    style: CustomTextStyles.primaryRegular16,
+                                  ),
+                                ),
+                              ],
                             ),
                             Container(
                               width: 80.toWidth,
