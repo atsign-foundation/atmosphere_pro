@@ -16,6 +16,7 @@ class ImageConstants {
   static String wordLogo = '$_basePath/wordLogo.jpg';
   static String exelLogo = '$_basePath/exelLogo.jpeg';
   static String txtLogo = '$_basePath/txtLogo.png';
+  static String unknownLogo = '$_basePath/unknown.png';
 
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';

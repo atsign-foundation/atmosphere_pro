@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/test_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,7 +59,9 @@ class _MyAppState extends State<MyApp> {
           create: (context) => TestModel(),
         ),
         ChangeNotifierProvider<HistoryProvider>(
-            create: (context) => HistoryProvider())
+            create: (context) => HistoryProvider()),
+        ChangeNotifierProvider<FilePickerProvider>(
+            create: (context) => FilePickerProvider())
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',
