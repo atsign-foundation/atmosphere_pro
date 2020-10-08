@@ -36,8 +36,6 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   @override
   void initState() {
     provider = FilePickerProvider();
-    print(
-        ' provider.selectedFiles.isEmpty======>${provider.selectedFiles.isEmpty}');
     super.initState();
   }
 
@@ -136,6 +134,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                         onPressed: () {
                           setState(() {
                             provider.selectedFiles.removeAt(index);
+                            provider.calculateSize();
                           });
                           if (provider.selectedFiles.isEmpty) {
                             widget.onUpdate(false);
