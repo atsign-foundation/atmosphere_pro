@@ -112,7 +112,7 @@ class _ExpansionTileWidget extends StatelessWidget {
               ),
             ),
             leading: CustomCircleAvatar(
-              image: ImageConstants.test,
+              image: ImageConstants.imagePlaceholder,
             ),
             trailing: Icon(Icons.add),
           ),
@@ -143,6 +143,9 @@ class _ListTileWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           shape: BoxShape.circle,
+        ),
+        child: CustomCircleAvatar(
+          image: ImageConstants.imagePlaceholder,
         ),
       ),
       trailing: InkWell(

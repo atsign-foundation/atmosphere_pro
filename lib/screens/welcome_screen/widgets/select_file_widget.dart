@@ -67,8 +67,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ? null
                     : Text(
                         double.parse(provider.totalSize.toString()) <= 1024
-                            ? '${provider.totalSize} Kb'
-                            : '${(provider.totalSize / 1024).toStringAsFixed(2)} Mb',
+                            ? '${provider.totalSize} Kb . ${provider.selectedFiles?.length} file(s)'
+                            : '${(provider.totalSize / 1024).toStringAsFixed(2)} Mb . ${provider.selectedFiles?.length} file(s)',
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 10.toFont,
