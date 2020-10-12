@@ -112,7 +112,7 @@ class _ExpansionTileWidget extends StatelessWidget {
               ),
             ),
             leading: CustomCircleAvatar(
-              image: ImageConstants.imagePlaceholder,
+              image: ImageConstants.barbara,
             ),
             trailing: Icon(Icons.add),
           ),
