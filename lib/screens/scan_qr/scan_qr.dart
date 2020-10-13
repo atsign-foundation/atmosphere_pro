@@ -1,6 +1,7 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,44 @@ class ScanQrScreen extends StatefulWidget {
 
 class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool scanned;
+  QRViewController controller;
+  BackendService backendService = BackendService.getInstance();
 
   @override
   void initState() {
-    scanned = false;
     super.initState();
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      controller.pauseCamera();
+      backendService.authenticate(scanData, context);
+    });
+  }
+
+  void _cramAuthWithoutQR() async {
+    // String colinSecret =
+    //     "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
+    String kevinSecret =
+        'e0d06915c3f81561fb5f8929caae64a7231db34fdeaff939aacac3cb736be8328c2843b518a2fc7a58fcec8c0aa98c735c0ce5f8ce880e97cd61cf1f2751efc5';
+    await backendService
+        .authenticateWithCram("@kevin🛠", cramSecret: kevinSecret)
+        .then((response) async {
+      print("auth successful $response");
+      if (response != null) {
+        await backendService.startMonitor();
+        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
+      }
+    }).catchError((err) {
+      print("error in cram auth: $err");
+    });
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,18 +84,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               child: Container(
                 child: QRView(
                   key: qrKey,
-                  onQRViewCreated: (controller) {
-                    controller.scannedDataStream.listen((scanData) {
-                      if (!scanned) {
-                        scanned = true;
-                        Navigator.of(context)
-                            .pushNamed(Routes.WELCOME_SCREEN)
-                            .then(
-                              (value) => scanned = false,
-                            );
-                      }
-                    });
-                  },
+                  onQRViewCreated: _onQRViewCreated,
                 ),
               ),
             ),
@@ -90,7 +112,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
+                _cramAuthWithoutQR();
               },
               child: Text(
                 'Skip',

@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -9,16 +10,36 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
+  Home({Key key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   TestModel model;
+  bool onboardSuccess = false;
+
   @override
   void initState() {
     super.initState();
     model = TestModel();
+    _checkToOnboard();
+  }
+
+  void _checkToOnboard() async {
+    // onboard call to get the already setup atsigns
+    BackendService backendService = BackendService.getInstance();
+    await backendService.onboard().then((isChecked) async {
+      if (!isChecked) {
+        print("onboard returned: $isChecked");
+      } else {
+        await backendService.startMonitor();
+        onboardSuccess = true;
+      }
+    }).catchError((error) async {
+      print("Error in authenticating: $error");
+    });
   }
 
   @override
@@ -106,8 +127,13 @@ class _HomeState extends State<Home> {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  Routes.SCAN_QR_SCREEN, (route) => false);
+                              if (onboardSuccess) {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    Routes.WELCOME_SCREEN, (route) => false);
+                              } else {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    Routes.SCAN_QR_SCREEN, (route) => false);
+                              }
                             },
                           ),
                         ),

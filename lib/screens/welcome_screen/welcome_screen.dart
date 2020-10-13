@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/select_file_widget.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -23,6 +24,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isContactSelected;
   bool isFileSelected;
+  BackendService backendService = BackendService.getInstance();
+
   void _showScaffold(String message) {
     Flushbar(
       title: message,
@@ -110,7 +113,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  TextStrings().welcomeUser('John'),
+                  TextStrings().welcomeUser(backendService.currentAtsign),
                   style: GoogleFonts.playfairDisplay(
                     textStyle: TextStyle(
                       fontSize: 28.toFont,
@@ -169,7 +172,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: CommonButton(
                       TextStrings().buttonSend,
                       () {
-                        _showScaffold("Oops! something went wrong");
+                        // _showScaffold("Oops! something went wrong");
+                        backendService
+                            .sendFile(filePickerModel.selectedFiles[0].path);
                       },
                     ),
                   ),

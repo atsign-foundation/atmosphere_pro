@@ -37,6 +37,17 @@ dependencies:
   flushbar: ^1.10.4
   webview_flutter: ^1.0.0
 
+  at_client_mobile:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_client_mobile
+      ref: dev_env
+  at_commons:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_commons
+      ref: dev_env
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
