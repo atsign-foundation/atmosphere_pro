@@ -2,8 +2,8 @@ import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +59,7 @@ class _ContactScreenState extends State<ContactScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: 16.toWidth, vertical: 16.toHeight),
+          margin: EdgeInsets.symmetric(horizontal: 16.toWidth, vertical: 16.toHeight),
           child: Column(
             children: [
               ContactSearchField(
@@ -84,8 +83,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     }
                   });
 
-                  String currentChar =
-                      String.fromCharCode(alphabetIndes + 65).toUpperCase();
+                  String currentChar = String.fromCharCode(alphabetIndes + 65).toUpperCase();
                   List<String> contactsForAlphabet = [];
 
                   _filteredList.forEach((c) {
@@ -114,8 +112,7 @@ class _ContactScreenState extends State<ContactScreen> {
                             SizedBox(width: 4.toWidth),
                             Expanded(
                               child: Divider(
-                                color: ColorConstants.dividerColor
-                                    .withOpacity(0.2),
+                                color: ColorConstants.dividerColor.withOpacity(0.2),
                                 height: 1.toHeight,
                               ),
                             ),
@@ -156,8 +153,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                     image: ImageConstants.colin,
                                   )),
                               trailing: IconButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pushNamed(
+                                onPressed: () => Navigator.of(context).pushNamed(
                                   Routes.WELCOME_SCREEN,
                                 ),
                                 icon: Image.asset(
