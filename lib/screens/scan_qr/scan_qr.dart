@@ -33,12 +33,12 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   }
 
   void _cramAuthWithoutQR() async {
-    // String colinSecret =
-    //     "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
+    String colinSecret =
+        "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
     String kevinSecret =
         'e0d06915c3f81561fb5f8929caae64a7231db34fdeaff939aacac3cb736be8328c2843b518a2fc7a58fcec8c0aa98c735c0ce5f8ce880e97cd61cf1f2751efc5';
     await backendService
-        .authenticateWithCram("@kevin🛠", cramSecret: kevinSecret)
+        .authenticateWithCram("@colin🛠", cramSecret: colinSecret)
         .then((response) async {
       print("auth successful $response");
       if (response != null) {

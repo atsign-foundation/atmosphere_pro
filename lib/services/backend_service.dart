@@ -13,6 +13,7 @@ class BackendService {
   AtClientService atClientServiceInstance;
   AtClientImpl atClientInstance;
   String _atsign;
+  String _documentsPath;
 
   String get currentAtsign => _atsign;
 
@@ -20,6 +21,8 @@ class BackendService {
     atClientServiceInstance = AtClientService();
     final appDocumentDirectory =
         await path_provider.getApplicationDocumentsDirectory();
+    _documentsPath = appDocumentDirectory.path;
+    print("appDocumentDirectory => $appDocumentDirectory");
     String path = appDocumentDirectory.path;
     var atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
@@ -81,7 +84,7 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey);
+    atClientInstance.startMonitor(privateKey, _documentsPath);
     print("Monitor started");
     return true;
   }
@@ -89,9 +92,12 @@ class BackendService {
   // send a file
   Future<bool> sendFile(String filePath) async {
     print("Sending file => $filePath");
-    var test = await atClientInstance.stream('@kevin🛠', filePath);
-    // '/Users/sarikagautam/Library/Developer/CoreSimulator/Devices/B37C28C0-B1FE-4707-BCD8-62AC35C6BB84/data/Containers/Data/Application/85DD5206-A6D8-4EEF-A6F2-048F00613607/tmp/DKImageAssetExporter/Q0M5NUYwOEMtODhDMy00MDEyLTlENkQtNjRBNDEzRDI1NEIzL0wwLzAwMQ==/552636978.1476938/0/IMG_0111.jpg');
-    print("sendfile result => $test");
-    return true;
+    var result = await atClientInstance.stream('@kevin🛠', filePath);
+    print("sendfile result => $result");
+    if (result.status.toString() == 'AtStreamStatus.COMPLETE') {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

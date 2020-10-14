@@ -26,9 +26,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isFileSelected;
   BackendService backendService = BackendService.getInstance();
 
-  void _showScaffold(String message) {
+  // 0-Sending, 1-Success, 2-Error
+  List<Widget> transferStatus = [
+    SizedBox(),
+    Icon(
+      Icons.check_circle,
+      size: 13.toFont,
+      color: ColorConstants.successColor,
+    ),
+    Icon(
+      Icons.cancel,
+      size: 13.toFont,
+      color: ColorConstants.redText,
+    )
+  ];
+  List<String> transferMessages = [
+    'Sending file ...',
+    'Sent the file',
+    'Oops! something went wrong'
+  ];
+
+  void _showScaffold({int status = 0}) {
     Flushbar(
-      title: message,
+      title: transferMessages[status],
       message: "Lorem Ipsum is simply dummy ",
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -40,13 +60,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
       ],
       isDismissible: false,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 10),
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(ImageConstants.test), fit: BoxFit.cover),
+              image: AssetImage(ImageConstants.kevin), fit: BoxFit.cover),
           shape: BoxShape.circle,
         ),
       ),
@@ -61,17 +81,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       progressIndicatorBackgroundColor: Colors.blueGrey,
       titleText: Row(
         children: <Widget>[
-          Icon(
-            Icons.cancel,
-            size: 13.toFont,
-            color: ColorConstants.redText,
-          ),
+          // Icon(
+          //   Icons.cancel,
+          //   size: 13.toFont,
+          //   color: ColorConstants.redText,
+          // ),
+          transferStatus[status],
           Padding(
             padding: EdgeInsets.only(
               left: 5.toWidth,
             ),
             child: Text(
-              message,
+              transferMessages[status],
               style: TextStyle(
                   color: ColorConstants.fadedText, fontSize: 10.toFont),
             ),
@@ -171,10 +192,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     alignment: Alignment.topRight,
                     child: CommonButton(
                       TextStrings().buttonSend,
-                      () {
-                        // _showScaffold("Oops! something went wrong");
-                        backendService
+                      () async {
+                        _showScaffold(status: 0);
+                        bool response = await backendService
                             .sendFile(filePickerModel.selectedFiles[0].path);
+                        if (response == true) {
+                          _showScaffold(status: 1);
+                        } else {
+                          _showScaffold(status: 2);
+                        }
                       },
                     ),
                   ),
