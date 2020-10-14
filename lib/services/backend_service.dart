@@ -84,7 +84,7 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey, _documentsPath);
+    atClientInstance.startMonitor(privateKey, _documentsPath, acceptStream);
     print("Monitor started");
     return true;
   }
@@ -99,5 +99,13 @@ class BackendService {
     } else {
       return false;
     }
+  }
+
+  // acknowledge file transfer
+  Future<bool> acceptStream(String atsign, String filename) async {
+    print("from:$atsign file:$filename");
+    // popup for user which is awaited for one minute
+    // and returns true or false
+    return true;
   }
 }
