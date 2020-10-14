@@ -56,12 +56,11 @@ class AtMeService {
   }
 
   checkLogin(BuildContext context) async {
-    String atSign;
-    // SharedPrefService.prefs.getString('atSign');
-    if (atSign != null) {
+    try {
       await onboard();
       Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
-    } else {
+    } catch (e) {
+      print("error here => $e");
       Navigator.pushNamed(context, Routes.SCAN_QR_SCREEN);
     }
   }
@@ -75,8 +74,6 @@ class AtMeService {
           print("error => $e");
         });
         await authenticate(params[0], cramSecret: params[1]);
-        await SharedPrefService.prefs.setString('atSign', params[0]);
-        await SharedPrefService.prefs.setString('cramSecret', params[1]);
         Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
       } catch (e) {
         print(e);

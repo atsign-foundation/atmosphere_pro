@@ -37,6 +37,11 @@ dependencies:
       url: git@github.com:atsign-company/atsign_foundation.git
       path: at_client
       ref: dev_env
+  at_contact:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_contact
+      ref: dev_env
   at_client_mobile:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
