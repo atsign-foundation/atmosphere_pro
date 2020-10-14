@@ -11,6 +11,11 @@ class ImageConstants {
   static String transferHistoryIcon = '$_basePath/transferHistory.png';
   static String logoutIcon = '$_basePath/logout.png';
   static String sendIcon = '$_basePath/send.png';
+  static String pdfLogo = '$_basePath/pdf.jpeg';
+  static String musicLogo = '$_basePath/music.png';
+  static String wordLogo = '$_basePath/wordLogo.jpg';
+  static String exelLogo = '$_basePath/exelLogo.jpeg';
+  static String txtLogo = '$_basePath/txtLogo.png';
 
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';

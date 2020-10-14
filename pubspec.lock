@@ -27,7 +27,7 @@ packages:
     description:
       path: at_client
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -36,7 +36,7 @@ packages:
     description:
       path: at_client_mobile
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -45,7 +45,7 @@ packages:
     description:
       path: at_commons
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -54,7 +54,7 @@ packages:
     description:
       path: at_contact
       ref: dev_env
-      resolved-ref: c6c23675682af655579ae3b7335a182c31d697a4
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.0.0"
@@ -63,7 +63,7 @@ packages:
     description:
       path: at_demo_data
       ref: dev_env
-      resolved-ref: b59c15b7c824bd822363129faf93051987e248f2
+      resolved-ref: "070a2f6c59ccca150cbd65352e7bb03e34c37c49"
       url: "git@github.com:atsign-company/at_demos.git"
     source: git
     version: "0.1.0"
@@ -72,7 +72,7 @@ packages:
     description:
       path: at_lookup
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -81,7 +81,7 @@ packages:
     description:
       path: at_persistence_secondary_server
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -90,7 +90,7 @@ packages:
     description:
       path: at_persistence_spec
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -99,7 +99,7 @@ packages:
     description:
       path: at_utils
       ref: dev_env
-      resolved-ref: ec249a480839e4a3b1cdebedcdc89c26d1e31f1c
+      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -208,6 +208,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.2.1"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.7"
+  flushbar:
+    dependency: "direct main"
+    description:
+      name: flushbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.10.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -220,6 +234,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.11"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -286,6 +307,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0-nullsafety.3"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   path:
     dependency: transitive
     description:
@@ -299,7 +327,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.16"
+    version: "1.6.18"
   path_provider_linux:
     dependency: transitive
     description:
@@ -327,14 +355,14 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4+1"
   pedantic:
     dependency: "direct main"
     description:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.2"
   platform:
     dependency: transitive
     description:
@@ -348,7 +376,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   pointycastle:
     dependency: transitive
     description:
@@ -363,6 +391,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.13"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.2+2"
   qr_code_scanner:
     dependency: "direct main"
     description:
@@ -480,6 +515,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.1"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.2"
   vector_math:
     dependency: transitive
     description:
@@ -487,6 +529,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
+  video_thumbnail:
+    dependency: "direct main"
+    description:
+      name: video_thumbnail
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   win32:
     dependency: transitive
     description:
@@ -500,7 +549,7 @@ packages:
       name: xdg_directories
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.2"
   yaml:
     dependency: transitive
     description:

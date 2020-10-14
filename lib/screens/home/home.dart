@@ -6,13 +6,23 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/test_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Home extends StatelessWidget {
-  Home() {
-    SharedPrefService.setSharedPreference();
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  TestModel model;
+  @override
+  void initState() {
+    super.initState();
+    model = TestModel();
   }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

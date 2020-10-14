@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 
 class FilesListTile extends StatefulWidget {
+  final Map<String, dynamic> sentHistory;
+
+  const FilesListTile({Key key, this.sentHistory}) : super(key: key);
   @override
   _FilesListTileState createState() => _FilesListTileState();
 }
@@ -26,9 +29,11 @@ class _FilesListTileState extends State<FilesListTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Levina Thomas',
-                    style: CustomTextStyles.primaryRegular16,
+                  Expanded(
+                    child: Text(
+                      widget.sentHistory['name'].toString(),
+                      style: CustomTextStyles.primaryRegular16,
+                    ),
                   ),
                   GestureDetector(
                     child: Container(
@@ -43,9 +48,15 @@ class _FilesListTileState extends State<FilesListTile> {
                 ],
               ),
               SizedBox(height: 5.toHeight),
-              Text(
-                '@levinaTt',
-                style: CustomTextStyles.secondaryRegular12,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.sentHistory['handle'].toString(),
+                      style: CustomTextStyles.secondaryRegular12,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 8.toHeight,
@@ -56,7 +67,7 @@ class _FilesListTileState extends State<FilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      '# Files',
+                      '${widget.sentHistory['files_count']} Files',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                     Text(
@@ -64,7 +75,7 @@ class _FilesListTileState extends State<FilesListTile> {
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                     Text(
-                      '432 Kb',
+                      '${widget.sentHistory['total_size']} Kb',
                       style: CustomTextStyles.secondaryRegular12,
                     )
                   ],
@@ -79,7 +90,7 @@ class _FilesListTileState extends State<FilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      'August 12 2020',
+                      widget.sentHistory['date'].toString(),
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                     Container(
@@ -88,7 +99,7 @@ class _FilesListTileState extends State<FilesListTile> {
                       width: 1.toWidth,
                     ),
                     Text(
-                      '1:22 PM',
+                      widget.sentHistory['time'].toString(),
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                   ],
@@ -140,7 +151,8 @@ class _FilesListTileState extends State<FilesListTile> {
                       separatorBuilder: (context, index) => Divider(
                         indent: 80.toWidth,
                       ),
-                      itemCount: 6,
+                      itemCount: int.parse(
+                          widget.sentHistory['files'].length.toString()),
                       itemBuilder: (context, index) => ListTile(
                         leading: Container(
                           height: 50.toHeight,
@@ -158,9 +170,17 @@ class _FilesListTileState extends State<FilesListTile> {
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'FILE_NAME',
-                              style: CustomTextStyles.primaryRegular16,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    widget.sentHistory['files'][index]
+                                            ['file_name']
+                                        .toString(),
+                                    style: CustomTextStyles.primaryRegular16,
+                                  ),
+                                ),
+                              ],
                             ),
                             Container(
                               width: 80.toWidth,
@@ -169,7 +189,7 @@ class _FilesListTileState extends State<FilesListTile> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '144 Kb',
+                                    '${widget.sentHistory['files'][index]['size']} Kb',
                                     style: CustomTextStyles.secondaryRegular12,
                                   ),
                                   Text(
@@ -177,7 +197,9 @@ class _FilesListTileState extends State<FilesListTile> {
                                     style: CustomTextStyles.secondaryRegular12,
                                   ),
                                   Text(
-                                    'JPG',
+                                    // 'JPG',
+                                    widget.sentHistory['files'][index]['type']
+                                        .toString(),
                                     style: CustomTextStyles.secondaryRegular12,
                                   )
                                 ],

@@ -11,17 +11,24 @@ class CustomButton extends StatelessWidget {
   final bool isInverted;
   final Function() onPressed;
   final String buttonText;
+  final double height;
+  final double width;
 
   const CustomButton(
-      {Key key, this.isInverted = false, this.onPressed, this.buttonText})
+      {Key key,
+      this.isInverted = false,
+      this.onPressed,
+      this.buttonText,
+      this.height,
+      this.width})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 278.toWidth,
-        height: 60.toHeight,
+        width: width ?? 278.toWidth,
+        height: height ?? 60.toHeight,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.toWidth),
             color: (isInverted) ? Colors.white : Colors.black),
