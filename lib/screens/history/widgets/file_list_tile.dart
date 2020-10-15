@@ -21,7 +21,7 @@ class _FilesListTileState extends State<FilesListTile> {
       children: [
         ListTile(
           leading: CustomCircleAvatar(
-            image: ImageConstants.test,
+            image: ImageConstants.kevin,
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +162,7 @@ class _FilesListTileState extends State<FilesListTile> {
                             image: DecorationImage(
                               fit: BoxFit.cover,
                               image: AssetImage(
-                                ImageConstants.test,
+                                ImageConstants.filePreview,
                               ),
                             ),
                           ),

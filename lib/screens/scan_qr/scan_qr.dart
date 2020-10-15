@@ -1,9 +1,9 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/services/at_me_signin.dart';
+import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -73,12 +73,17 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             SizedBox(
               height: 25.toHeight,
             ),
-            Text(
-              TextStrings().scanQrFooter,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.toFont,
-                color: ColorConstants.redText,
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed(Routes.WEBSITE_SCREEN);
+              },
+              child: Text(
+                TextStrings().scanQrFooter,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.toFont,
+                  color: ColorConstants.redText,
+                ),
               ),
             ),
             // Remove this block of code later.

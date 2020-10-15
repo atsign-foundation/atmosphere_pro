@@ -39,7 +39,7 @@ class BlockedUsers extends StatelessWidget {
                       ),
                       itemBuilder: (context, index) => ListTile(
                         leading: CustomCircleAvatar(
-                          image: ImageConstants.test,
+                          image: ImageConstants.barbara,
                         ),
                         title: Container(
                           width: 300.toWidth,

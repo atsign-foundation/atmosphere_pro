@@ -36,6 +36,7 @@ dependencies:
   qr_code_scanner: ^0.0.13
   shared_preferences: ^0.5.12
   flushbar: ^1.10.4
+  webview_flutter: ^1.0.0
   at_client:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git

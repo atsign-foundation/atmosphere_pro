@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_app/screens/file_picker/file_picker.dart';
 import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_app/screens/home/home.dart';
+import 'package:atsign_atmosphere_app/screens/scan_qr/website_webview.dart';
 import 'package:atsign_atmosphere_app/screens/scan_qr/scan_qr.dart';
 import 'package:atsign_atmosphere_app/screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
@@ -17,6 +18,7 @@ class SetupRoutes {
   static Map<String, WidgetBuilder> get routes {
     return {
       Routes.HOME: (context) => Home(),
+      Routes.WEBSITE_SCREEN: (context) => WebsiteScreen(),
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
       Routes.FAQ_SCREEN: (context) => FaqsScreen(),
       Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
@@ -31,7 +33,6 @@ class SetupRoutes {
         );
       },
       Routes.CONTACT_SCREEN: (context) => ContactScreen(),
-      Routes.ADD_CONTACT_SCREEN: (context) => AddContactScreen(),
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
     };

@@ -12,57 +12,65 @@ class HistoryProvider extends BaseModel {
   List<Map<String, dynamic>> receivedHistory = [];
   getSentHistory() async {
     setStatus(SENT_HISTORY, Status.Loading);
-    await Future.delayed(Duration(seconds: 1), () {
-      sentHistory = [];
-      for (int i = 0; i < 10; i++) {
-        Random r = Random();
-        int random = r.nextInt(10) + 1;
-        sentHistory.add({
-          'name': 'User $i',
-          'handle': '@user$i',
-          'files_count': random,
-          'total_size': random * 256,
-          'date': '12 August 2020',
-          'time': '1:12 PM',
-          'files': List.generate(random, (index) {
-            print(random * 256 / index);
-            return {
-              'file_name': 'File_Name $index',
-              'size': (random * 256 / 3).floor(),
-              'type': 'JPG'
-            };
-          })
-        });
-      }
-    });
-    setStatus(SENT_HISTORY, Status.Done);
+    try {
+      await Future.delayed(Duration(seconds: 1), () {
+        sentHistory = [];
+        for (int i = 0; i < 10; i++) {
+          Random r = Random();
+          int random = r.nextInt(10) + 1;
+          sentHistory.add({
+            'name': 'User $i',
+            'handle': '@user$i',
+            'files_count': random,
+            'total_size': random * 256,
+            'date': '12 August 2020',
+            'time': '1:12 PM',
+            'files': List.generate(random, (index) {
+              print(random * 256 / index);
+              return {
+                'file_name': 'File_Name $index',
+                'size': (random * 256 / 3).floor(),
+                'type': 'JPG'
+              };
+            })
+          });
+        }
+      });
+      setStatus(SENT_HISTORY, Status.Done);
+    } catch (e) {
+      setStatus(SENT_HISTORY, Status.Error);
+    }
   }
 
   getRecievedHistory() async {
     setStatus(RECEIVED_HISTORY, Status.Loading);
-    await Future.delayed(Duration(seconds: 1), () {
-      receivedHistory = [];
-      for (int i = 0; i < 10; i++) {
-        Random r = Random();
-        int random = r.nextInt(10) + 1;
-        receivedHistory.add({
-          'name': 'User $i',
-          'handle': '@user$i',
-          'files_count': random,
-          'total_size': random * 256,
-          'date': '12 August 2020',
-          'time': '1:12 PM',
-          'files': List.generate(random, (index) {
-            print(random * 256 / index);
-            return {
-              'file_name': 'File_Name $index',
-              'size': (random * 256 / 3).floor(),
-              'type': 'JPG'
-            };
-          })
-        });
-      }
-    });
-    setStatus(RECEIVED_HISTORY, Status.Done);
+    try {
+      await Future.delayed(Duration(seconds: 1), () {
+        receivedHistory = [];
+        for (int i = 0; i < 10; i++) {
+          Random r = Random();
+          int random = r.nextInt(10) + 1;
+          receivedHistory.add({
+            'name': 'User $i',
+            'handle': '@user$i',
+            'files_count': random,
+            'total_size': random * 256,
+            'date': '12 August 2020',
+            'time': '1:12 PM',
+            'files': List.generate(random, (index) {
+              print(random * 256 / index);
+              return {
+                'file_name': 'File_Name $index',
+                'size': (random * 256 / 3).floor(),
+                'type': 'JPG'
+              };
+            })
+          });
+        }
+      });
+      setStatus(RECEIVED_HISTORY, Status.Done);
+    } catch (e) {
+      setStatus(RECEIVED_HISTORY, Status.Error);
+    }
   }
 }
