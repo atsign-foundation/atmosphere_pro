@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ContactScreen extends StatefulWidget {
   @override
@@ -119,52 +120,73 @@ class _ContactScreenState extends State<ContactScreen> {
                           ],
                         ),
                         ListView.separated(
-                          itemCount: contactsForAlphabet.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          separatorBuilder: (context, _) => Divider(
-                            color: ColorConstants.dividerColor.withOpacity(0.2),
-                            height: 1.toHeight,
-                          ),
-                          itemBuilder: (context, itemIndex) => Container(
-                            child: ListTile(
-                              title: Text(
-                                contactsForAlphabet[itemIndex],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.toFont,
+                            itemCount: contactsForAlphabet.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            separatorBuilder: (context, _) => Divider(
+                                  color: ColorConstants.dividerColor.withOpacity(0.2),
+                                  height: 1.toHeight,
                                 ),
-                              ),
-                              subtitle: Text(
-                                '@colin',
-                                style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                ),
-                              ),
-                              leading: Container(
-                                  height: 40.toWidth,
-                                  width: 40.toWidth,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    shape: BoxShape.circle,
+                            itemBuilder: (context, itemIndex) => Slidable(
+                                  actionPane: SlidableDrawerActionPane(),
+                                  actionExtentRatio: 0.25,
+                                  secondaryActions: <Widget>[
+                                    IconSlideAction(
+                                      caption: 'Block',
+                                      color: ColorConstants.inputFieldColor,
+                                      icon: Icons.block,
+                                      onTap: () {
+                                        print('Block');
+                                      },
+                                    ),
+                                    IconSlideAction(
+                                      caption: 'Delete',
+                                      color: Colors.red,
+                                      icon: Icons.delete,
+                                      onTap: () {
+                                        print('Delete');
+                                      },
+                                    ),
+                                  ],
+                                  child: Container(
+                                    child: ListTile(
+                                      title: Text(
+                                        contactsForAlphabet[itemIndex],
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14.toFont,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        '@colin',
+                                        style: TextStyle(
+                                          color: ColorConstants.fadedText,
+                                          fontSize: 14.toFont,
+                                        ),
+                                      ),
+                                      leading: Container(
+                                          height: 40.toWidth,
+                                          width: 40.toWidth,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: CustomCircleAvatar(
+                                            image: ImageConstants.colin,
+                                          )),
+                                      trailing: IconButton(
+                                        onPressed: () => Navigator.of(context).pushNamed(
+                                          Routes.WELCOME_SCREEN,
+                                        ),
+                                        icon: Image.asset(
+                                          ImageConstants.sendIcon,
+                                          width: 21.toWidth,
+                                          height: 18.toHeight,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  child: CustomCircleAvatar(
-                                    image: ImageConstants.colin,
-                                  )),
-                              trailing: IconButton(
-                                onPressed: () => Navigator.of(context).pushNamed(
-                                  Routes.WELCOME_SCREEN,
-                                ),
-                                icon: Image.asset(
-                                  ImageConstants.sendIcon,
-                                  width: 21.toWidth,
-                                  height: 18.toHeight,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+                                ))
                       ],
                     ),
                   );
