@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/file_types.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -18,10 +19,9 @@ class SelectFileWidget extends StatefulWidget {
 
 class _SelectFileWidgetState extends State<SelectFileWidget> {
   bool isLoading = false;
-  FilePickerResult result;
-  PlatformFile file;
-  List<PlatformFile> selectedFiles = [];
+
   Uint8List videoThumbnail;
+  FilePickerProvider provider;
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
@@ -34,113 +34,126 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   }
 
   @override
+  void initState() {
+    provider = FilePickerProvider();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.toFont),
-          color: ColorConstants.inputFieldColor,
-        ),
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(
-                selectedFiles.isEmpty
-                    ? TextStrings().welcomeFilePlaceholder
-                    : TextStrings().welcomeAddFilePlaceholder,
-                style: TextStyle(
-                  color: ColorConstants.fadedText,
-                  fontSize: 14.toFont,
+    return ProviderHandler<FilePickerProvider>(
+      functionName: provider.PICK_FILES,
+      successBuilder: (provider) => ClipRRect(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.toFont),
+            color: ColorConstants.inputFieldColor,
+          ),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  provider.selectedFiles.isEmpty
+                      ? TextStrings().welcomeFilePlaceholder
+                      : TextStrings().welcomeAddFilePlaceholder,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
+                  ),
+                ),
+                subtitle: provider.selectedFiles.isEmpty
+                    ? null
+                    : Text(
+                        double.parse(provider.totalSize.toString()) <= 1024
+                            ? '${provider.totalSize} Kb . ${provider.selectedFiles?.length} file(s)'
+                            : '${(provider.totalSize / 1024).toStringAsFixed(2)} Mb . ${provider.selectedFiles?.length} file(s)',
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 10.toFont,
+                        ),
+                      ),
+                trailing: InkWell(
+                  onTap: () {
+                    provider.pickFiles();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                    child: Icon(
+                      Icons.add_circle,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              subtitle: selectedFiles.isEmpty
-                  ? null
-                  : Text(
-                      '144KB . JPG',
-                      style: TextStyle(
-                        color: ColorConstants.fadedText,
-                        fontSize: 10.toFont,
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: provider.selectedFiles.isNotEmpty
+                    ? int.parse(provider.selectedFiles?.length?.toString())
+                    : 0,
+                itemBuilder: (c, index) {
+                  if (FileTypes.VIDEO_TYPES
+                      .contains(provider.selectedFiles[index].extension)) {
+                    videoThumbnailBuilder(provider.selectedFiles[index].path);
+                  }
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ColorConstants.dividerColor.withOpacity(0.1),
+                          width: 1.toHeight,
+                        ),
                       ),
                     ),
-              trailing: InkWell(
-                onTap: () async {
-                  selectedFiles = [];
-                  if (selectedFiles.isEmpty) widget.onUpdate(true);
-                  result = await FilePicker.platform.pickFiles(
-                    allowMultiple: true,
-                    type: FileType.media,
+                    child: ListTile(
+                      title: Text(
+                        provider.result.files[index].name.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                      subtitle: Text(
+                        double.parse(provider.selectedFiles[index].size
+                                    .toString()) <=
+                                1024
+                            ? '${provider.selectedFiles[index].size} Kb' +
+                                ' . ${provider.selectedFiles[index].extension}'
+                            : '${(provider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
+                                ' . ${provider.selectedFiles[index].extension}',
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                      leading: thumbnail(
+                          provider.selectedFiles[index].extension.toString(),
+                          provider.selectedFiles[index].path.toString()),
+                      trailing: IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            provider.selectedFiles.removeAt(index);
+                            provider.calculateSize();
+                          });
+                          if (provider.selectedFiles.isEmpty) {
+                            widget.onUpdate(false);
+                          }
+                        },
+                      ),
+                    ),
                   );
-                  if (result?.files != null) selectedFiles = [...result?.files];
-                  setState(() {});
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                  child: Icon(
-                    Icons.add_circle,
-                    color: Colors.black,
-                  ),
-                ),
               ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: selectedFiles.isNotEmpty ? selectedFiles.length : 0,
-              itemBuilder: (c, index) {
-                if (selectedFiles[index].extension == 'mp4') {
-                  videoThumbnailBuilder(selectedFiles[index].path);
-                }
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: ColorConstants.dividerColor.withOpacity(0.1),
-                        width: 1.toHeight,
-                      ),
-                    ),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      result.files[index].name,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.toFont,
-                      ),
-                    ),
-                    subtitle: Text(
-                      selectedFiles[index].size <= 1024
-                          ? '${selectedFiles[index].size} Kb' +
-                              ' . ${selectedFiles[index].extension}'
-                          : '${(selectedFiles[index].size / 1024).round()} Mb' +
-                              ' . ${selectedFiles[index].extension}',
-                      style: TextStyle(
-                        color: ColorConstants.fadedText,
-                        fontSize: 14.toFont,
-                      ),
-                    ),
-                    leading: thumbnail(selectedFiles[index].extension,
-                        selectedFiles[index].path),
-                    trailing: IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          selectedFiles.removeAt(index);
-                        });
-                        if (selectedFiles.isEmpty) widget.onUpdate(false);
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget thumbnail(String extension, String path) {
-    return (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
+    return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
             child: Container(
@@ -152,7 +165,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               ),
             ),
           )
-        : (extension == 'mp4')
+        : FileTypes.VIDEO_TYPES.contains(extension)
             ? FutureBuilder(
                 future: videoThumbnailBuilder(path),
                 builder: (context, snapshot) => (snapshot.data == null)
@@ -177,21 +190,17 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   height: 50.toHeight,
                   width: 50.toWidth,
                   child: Image.asset(
-                    (extension == 'pdf')
+                    FileTypes.PDF_TYPES.contains(extension)
                         ? ImageConstants.pdfLogo
-                        : (extension == 'mp3' ||
-                                extension == 'wmv' ||
-                                extension == 'ogg' ||
-                                extension == 'aac' ||
-                                extension == 'flac')
+                        : FileTypes.AUDIO_TYPES.contains(extension)
                             ? ImageConstants.musicLogo
-                            : (extension == 'doc' || extension == 'docx')
+                            : FileTypes.WORD_TYPES.contains(extension)
                                 ? ImageConstants.wordLogo
-                                : (extension == 'xls' || extension == 'xlsx')
+                                : FileTypes.EXEL_TYPES.contains(extension)
                                     ? ImageConstants.exelLogo
-                                    : (extension == 'txt')
+                                    : FileTypes.TEXT_TYPES.contains(extension)
                                         ? ImageConstants.txtLogo
-                                        : '',
+                                        : ImageConstants.unknownLogo,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -69,51 +69,62 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                 ),
                 Expanded(
-                  child: TabBarView(controller: _controller, children: [
-                    ProviderHandler<HistoryProvider>(
-                      functionName: provider.SENT_HISTORY,
-                      successBuilder: (provider) => (provider
-                              .sentHistory.isEmpty)
-                          ? Center(
-                              child: Text('No files sent'),
-                            )
-                          : ListView.separated(
-                              padding: EdgeInsets.only(bottom: 170.toHeight),
-                              physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
-                              ),
-                              itemCount: provider.sentHistory.length,
-                              itemBuilder: (context, index) => Padding(
+                  child: TabBarView(
+                    controller: _controller,
+                    children: [
+                      ProviderHandler<HistoryProvider>(
+                        functionName: provider.SENT_HISTORY,
+                        successBuilder: (provider) => (provider
+                                .sentHistory.isEmpty)
+                            ? Center(
+                                child: Text('No files sent'),
+                              )
+                            : ListView.separated(
+                                padding: EdgeInsets.only(bottom: 170.toHeight),
+                                physics: AlwaysScrollableScrollPhysics(),
+                                separatorBuilder: (context, index) => Divider(
+                                  indent: 16.toWidth,
+                                ),
+                                itemCount: provider.sentHistory.length,
+                                itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FilesListTile(
                                     sentHistory: provider.sentHistory[index],
-                                  )),
-                            ),
-                    ),
-                    ProviderHandler<HistoryProvider>(
-                      functionName: provider.RECEIVED_HISTORY,
-                      successBuilder: (provider) => (provider
-                              .receivedHistory.isEmpty)
-                          ? Center(
-                              child: Text('No files received'),
-                            )
-                          : ListView.separated(
-                              padding: EdgeInsets.only(bottom: 170.toHeight),
-                              physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
+                                  ),
+                                ),
                               ),
-                              itemCount: provider.receivedHistory.length,
-                              itemBuilder: (context, index) => Padding(
+                        errorBuilder: (provider) => Center(
+                          child: Text('Some error occured'),
+                        ),
+                      ),
+                      ProviderHandler<HistoryProvider>(
+                        functionName: provider.RECEIVED_HISTORY,
+                        successBuilder: (provider) => (provider
+                                .receivedHistory.isEmpty)
+                            ? Center(
+                                child: Text('No files received'),
+                              )
+                            : ListView.separated(
+                                padding: EdgeInsets.only(bottom: 170.toHeight),
+                                physics: AlwaysScrollableScrollPhysics(),
+                                separatorBuilder: (context, index) => Divider(
+                                  indent: 16.toWidth,
+                                ),
+                                itemCount: provider.receivedHistory.length,
+                                itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FilesListTile(
                                     sentHistory:
                                         provider.receivedHistory[index],
-                                  )),
-                            ),
-                    ),
-                  ]),
+                                  ),
+                                ),
+                              ),
+                        errorBuilder: (provider) => Center(
+                          child: Text('Some error occured'),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

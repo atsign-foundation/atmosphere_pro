@@ -107,7 +107,7 @@ class _HomeState extends State<Home> {
                             TextStrings().buttonStart,
                             () {
                               Navigator.pushNamedAndRemoveUntil(context,
-                                  Routes.WELCOME_SCREEN, (route) => false);
+                                  Routes.SCAN_QR_SCREEN, (route) => false);
                             },
                           ),
                         ),

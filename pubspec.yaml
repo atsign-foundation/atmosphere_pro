@@ -35,6 +35,8 @@ dependencies:
   video_thumbnail: ^0.2.2
   qr_code_scanner: ^0.0.13
   flushbar: ^1.10.4
+  webview_flutter: ^1.0.0
+  flutter_slidable: ^0.5.7
 
 dev_dependencies:
   flutter_test:

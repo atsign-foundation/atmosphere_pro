@@ -6,9 +6,11 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/select_contact_widget.dart';
 
@@ -30,14 +32,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       reverseAnimationCurve: Curves.decelerate,
       forwardAnimationCurve: Curves.elasticOut,
       backgroundColor: ColorConstants.scaffoldColor,
-      boxShadows: [BoxShadow(color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)],
+      boxShadows: [
+        BoxShadow(
+            color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
+      ],
       isDismissible: false,
       duration: Duration(seconds: 5),
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(ImageConstants.test), fit: BoxFit.cover),
+          image: DecorationImage(
+              image: AssetImage(ImageConstants.test), fit: BoxFit.cover),
           shape: BoxShape.circle,
         ),
       ),
@@ -63,7 +69,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             child: Text(
               message,
-              style: TextStyle(color: ColorConstants.fadedText, fontSize: 10.toFont),
+              style: TextStyle(
+                  color: ColorConstants.fadedText, fontSize: 10.toFont),
             ),
           )
         ],
@@ -87,6 +94,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final filePickerModel = Provider.of<FilePickerProvider>(context);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -96,7 +104,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         endDrawer: SideBarWidget(),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 26.toWidth, vertical: 20.toHeight),
+            padding: EdgeInsets.symmetric(
+                horizontal: 26.toWidth, vertical: 20.toHeight),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -153,7 +162,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(
                   height: 60.toHeight,
                 ),
-                if (isContactSelected && isFileSelected) ...[
+                if (isContactSelected &&
+                    filePickerModel.selectedFiles.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.topRight,
                     child: CommonButton(

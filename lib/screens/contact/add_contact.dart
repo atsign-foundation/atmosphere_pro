@@ -1,9 +1,10 @@
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/adduser_provider.dart';
 import 'package:flutter/material.dart';
@@ -73,70 +74,63 @@ class _AddContactScreenState extends State<AddContactScreen> {
               SizedBox(
                 height: 15.toHeight,
               ),
-              ProviderHandler<AdduserProvider>(
-                functionName: provider.Addusers,
-                successBuilder: (provider) => (provider.addusers.isEmpty)
-                    ? Center(
-                        child: Text('No Users added'),
-                      )
-                    : ListView.builder(
-                        itemCount: contacts.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var adduserlist = provider.addusers[index];
-                          if (!contacts[index].toUpperCase().contains(searchText.toUpperCase())) {
-                            return Container();
-                          }
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: ColorConstants.dividerColor.withOpacity(0.2),
-                                  width: 1.toHeight,
-                                ),
-                              ),
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                contacts[index],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.toFont,
-                                ),
-                              ),
-                              subtitle: Text(
-                                adduserlist['name'].toString(),
-                                style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                ),
-                              ),
-                              leading: Container(
-                                height: 40.toWidth,
-                                width: 40.toWidth,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AddContactDialog(
-                                            name: contacts[index],
-                                          ));
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                errorBuilder: (provider) => Center(
-                  child: Text('Some error occured'),
-                ),
-              ),
+              ListView.builder(
+                itemCount: contacts.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  if (!contacts[index].toUpperCase().contains(searchText.toUpperCase())) {
+                    return Container();
+                  }
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ColorConstants.dividerColor.withOpacity(0.2),
+                          width: 1.toHeight,
+                        ),
+                      ),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        contacts[index],
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '@kevin',
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                      leading: Container(
+                          height: 40.toWidth,
+                          width: 40.toWidth,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: CustomCircleAvatar(
+                            image: ImageConstants.kevin,
+                          )),
+                      trailing: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AddContactDialog(
+                                    name: contacts[index],
+                                  ));
+                        },
+                      ),
+                    ),
+                  );
+                },
+              )
             ],
           ),
         ),
