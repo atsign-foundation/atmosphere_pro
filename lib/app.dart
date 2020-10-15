@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:atsign_atmosphere_app/view_models/adduser_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/blockuser_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/test_model.dart';
@@ -61,7 +63,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<HistoryProvider>(create: (context) => HistoryProvider()),
         ChangeNotifierProvider<FilePickerProvider>(create: (context) => FilePickerProvider()),
-        ChangeNotifierProvider<AdduserProvider>(create: (context) => AdduserProvider())
+        ChangeNotifierProvider<AdduserProvider>(create: (context) => AdduserProvider()),
+        ChangeNotifierProvider<BlockeduserProvider>(create: (context) => BlockeduserProvider()),
+        ChangeNotifierProvider<ContactProvider>(create: (context) => ContactProvider())
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',

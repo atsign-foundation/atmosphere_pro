@@ -1,11 +1,13 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -15,6 +17,7 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
+  ContactProvider provider;
   final List<String> contacts = [
     'A1',
     'A2',
@@ -32,6 +35,9 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   void initState() {
+    provider = ContactProvider();
+    provider.getContacts();
+
     contacts.sort();
     searchText = '';
     super.initState();
@@ -119,74 +125,89 @@ class _ContactScreenState extends State<ContactScreen> {
                             ),
                           ],
                         ),
-                        ListView.separated(
-                            itemCount: contactsForAlphabet.length,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            separatorBuilder: (context, _) => Divider(
-                                  color: ColorConstants.dividerColor.withOpacity(0.2),
-                                  height: 1.toHeight,
-                                ),
-                            itemBuilder: (context, itemIndex) => Slidable(
-                                  actionPane: SlidableDrawerActionPane(),
-                                  actionExtentRatio: 0.25,
-                                  secondaryActions: <Widget>[
-                                    IconSlideAction(
-                                      caption: 'Block',
-                                      color: ColorConstants.inputFieldColor,
-                                      icon: Icons.block,
-                                      onTap: () {
-                                        print('Block');
-                                      },
-                                    ),
-                                    IconSlideAction(
-                                      caption: 'Delete',
-                                      color: Colors.red,
-                                      icon: Icons.delete,
-                                      onTap: () {
-                                        print('Delete');
-                                      },
-                                    ),
-                                  ],
-                                  child: Container(
-                                    child: ListTile(
-                                      title: Text(
-                                        contactsForAlphabet[itemIndex],
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14.toFont,
-                                        ),
+                        ProviderHandler<ContactProvider>(
+                          functionName: provider.Contacts,
+                          successBuilder: (provider) => (provider.contacts.isEmpty)
+                              ? Center(
+                                  child: Text('No files sent'),
+                                )
+                              : ListView.separated(
+                                  itemCount: contactsForAlphabet.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  separatorBuilder: (context, _) => Divider(
+                                        color: ColorConstants.dividerColor.withOpacity(0.2),
+                                        height: 1.toHeight,
                                       ),
-                                      subtitle: Text(
-                                        '@colin',
-                                        style: TextStyle(
-                                          color: ColorConstants.fadedText,
-                                          fontSize: 14.toFont,
-                                        ),
-                                      ),
-                                      leading: Container(
-                                          height: 40.toWidth,
-                                          width: 40.toWidth,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            shape: BoxShape.circle,
+                                  itemBuilder: (context, index) {
+                                    var contactuser = provider.contacts[index];
+                                    return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Slidable(
+                                          actionPane: SlidableDrawerActionPane(),
+                                          actionExtentRatio: 0.25,
+                                          secondaryActions: <Widget>[
+                                            IconSlideAction(
+                                              caption: 'Block',
+                                              color: ColorConstants.inputFieldColor,
+                                              icon: Icons.block,
+                                              onTap: () {
+                                                print('Block');
+                                              },
+                                            ),
+                                            IconSlideAction(
+                                              caption: 'Delete',
+                                              color: Colors.red,
+                                              icon: Icons.delete,
+                                              onTap: () {
+                                                print('Delete');
+                                              },
+                                            ),
+                                          ],
+                                          child: Container(
+                                            child: ListTile(
+                                              title: Text(
+                                                contactsForAlphabet[index],
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14.toFont,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                contactuser['name'].toString(),
+                                                style: TextStyle(
+                                                  color: ColorConstants.fadedText,
+                                                  fontSize: 14.toFont,
+                                                ),
+                                              ),
+                                              leading: Container(
+                                                  height: 40.toWidth,
+                                                  width: 40.toWidth,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CustomCircleAvatar(
+                                                    image: ImageConstants.colin,
+                                                  )),
+                                              trailing: IconButton(
+                                                onPressed: () => Navigator.of(context).pushNamed(
+                                                  Routes.WELCOME_SCREEN,
+                                                ),
+                                                icon: Image.asset(
+                                                  ImageConstants.sendIcon,
+                                                  width: 21.toWidth,
+                                                  height: 18.toHeight,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          child: CustomCircleAvatar(
-                                            image: ImageConstants.colin,
-                                          )),
-                                      trailing: IconButton(
-                                        onPressed: () => Navigator.of(context).pushNamed(
-                                          Routes.WELCOME_SCREEN,
-                                        ),
-                                        icon: Image.asset(
-                                          ImageConstants.sendIcon,
-                                          width: 21.toWidth,
-                                          height: 18.toHeight,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ))
+                                        ));
+                                  }),
+                          errorBuilder: (provider) => Center(
+                            child: Text('Some error occured'),
+                          ),
+                        )
                       ],
                     ),
                   );
