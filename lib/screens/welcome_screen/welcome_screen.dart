@@ -12,7 +12,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
+import 'package:path/path.dart' show basename;
 import 'widgets/select_contact_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -189,8 +189,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       TextStrings().buttonSend,
                       () async {
                         _showScaffold(status: 0);
-                        bool response = await backendService
-                            .sendFile(filePickerModel.selectedFiles[0].path);
+                        // bool response = await backendService
+                        //     .sendFile(filePickerModel.selectedFiles[0].path);
+                        bool response = true;
+                        Future.delayed(Duration(seconds: 1), () async {
+                          String fileName =
+                              basename(filePickerModel.selectedFiles[0].path);
+                          await backendService.acceptStream('atsign', fileName);
+                        });
                         if (response == true) {
                           _showScaffold(status: 1);
                         } else {

@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -114,6 +115,7 @@ class BackendService {
   Future<bool> acceptStream(
       String atsign, String filename, String filesize) async {
     print("from:$atsign file:$filename size:$filesize");
+    await NotificationService().showNotification(atsign, filename);
     // popup for user which is awaited for one minute
     // and returns true or false
     return true;

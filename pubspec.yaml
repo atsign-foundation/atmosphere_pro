@@ -36,7 +36,9 @@ dependencies:
   flushbar: ^1.10.4
   webview_flutter: ^1.0.0
   flutter_qr_reader: ^1.0.3
-
+  flutter_local_notifications: ^2.0.1
+  rxdart: ^0.24.1
+  
   at_client_mobile:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
