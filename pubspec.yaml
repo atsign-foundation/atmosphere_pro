@@ -36,6 +36,7 @@ dependencies:
   flushbar: ^1.10.4
   webview_flutter: ^1.0.0
   flutter_qr_reader: ^1.0.3
+  flutter_slidable: ^0.5.7
 
   at_client_mobile:
     git:
