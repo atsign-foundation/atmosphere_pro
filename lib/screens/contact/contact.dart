@@ -153,7 +153,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: CustomCircleAvatar(
-                                    image: ImageConstants.colin,
+                                    image: ImageConstants.imagePlaceholder,
                                   )),
                               trailing: IconButton(
                                 onPressed: () =>

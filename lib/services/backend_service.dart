@@ -13,7 +13,6 @@ class BackendService {
   AtClientService atClientServiceInstance;
   AtClientImpl atClientInstance;
   String _atsign;
-  String _documentsPath;
 
   String get currentAtsign => _atsign;
 
@@ -21,15 +20,17 @@ class BackendService {
     atClientServiceInstance = AtClientService();
     final appDocumentDirectory =
         await path_provider.getApplicationDocumentsDirectory();
-    _documentsPath = appDocumentDirectory.path;
-    print("appDocumentDirectory => $appDocumentDirectory");
-    String path = appDocumentDirectory.path;
+    final appSupportDirectory =
+        await path_provider.getApplicationSupportDirectory();
+    print("paths => $appDocumentDirectory $appSupportDirectory");
+    String path = appSupportDirectory.path;
     var atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
       ..commitLogPath = path
       ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = 'test.do-sf2.atsign.zone'
-      ..hiveStoragePath = path;
+      ..hiveStoragePath = path
+      ..downloadPath = appDocumentDirectory.path;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference,
         atsign: atsign,
@@ -84,7 +85,7 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey, _documentsPath, acceptStream);
+    atClientInstance.startMonitor(privateKey, acceptStream);
     print("Monitor started");
     return true;
   }
@@ -102,8 +103,9 @@ class BackendService {
   }
 
   // acknowledge file transfer
-  Future<bool> acceptStream(String atsign, String filename) async {
-    print("from:$atsign file:$filename");
+  Future<bool> acceptStream(
+      String atsign, String filename, String filesize) async {
+    print("from:$atsign file:$filename size:$filesize");
     // popup for user which is awaited for one minute
     // and returns true or false
     return true;

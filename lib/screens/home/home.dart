@@ -50,7 +50,6 @@ class _HomeState extends State<Home> {
         width: SizeConfig().screenWidth,
         height: SizeConfig().screenHeight,
         decoration: BoxDecoration(
-          color: Colors.red,
           image: DecorationImage(
             image: AssetImage(
               ImageConstants.welcomeBackground,
