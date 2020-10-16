@@ -59,5 +59,7 @@
 	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used to scan QR code</string>
 </dict>
 </plist>

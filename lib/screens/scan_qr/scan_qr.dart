@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 
 class ScanQrScreen extends StatefulWidget {
   ScanQrScreen({Key key}) : super(key: key);
@@ -16,20 +20,19 @@ class ScanQrScreen extends StatefulWidget {
 
 class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController controller;
+  QrReaderViewController _controller;
   BackendService backendService = BackendService.getInstance();
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      controller.pauseCamera();
-      backendService.authenticate(scanData, context);
-    });
+  void onScan(String data, List<Offset> offsets) {
+    print([data, offsets]);
+    backendService.authenticate(data, context);
+    _controller.stopCamera();
   }
 
   void _cramAuthWithoutQR() async {
@@ -50,9 +53,74 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     });
   }
 
+  void _uploadKeyFile() async {
+    print("upload file");
+    try {
+      String fileContents, aesKey, atsign;
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: true);
+      setState(() {
+        loading = true;
+      });
+      for (var file in result.files) {
+        if (file.path.contains('atKeys')) {
+          fileContents = File(file.path).readAsStringSync();
+        } else if (aesKey == null &&
+            atsign == null &&
+            file.path.contains('_private_key.png')) {
+          String result = await FlutterQrReader.imgScan(File(file.path));
+          List<String> params = result.split(':');
+          atsign = params[0];
+          aesKey = params[1];
+          //read scan QRcode and extract atsign,aeskey
+        }
+      }
+      if (fileContents == null || (aesKey == null && atsign == null)) {
+        // _showAlertDialog(_incorrectKeyFile);
+        print("show file content error");
+      }
+      await _processAESKey(atsign, aesKey, fileContents);
+    } on Error catch (error) {
+      setState(() {
+        loading = false;
+      });
+      // _logger.severe('Processing files throws $error');
+      // _showAlertDialog(_failedFileProcessing);
+    } on Exception catch (ex) {
+      setState(() {
+        loading = false;
+      });
+      // _logger.severe('Processing files throws $ex');
+      // _showAlertDialog(_failedFileProcessing);
+    }
+  }
+
+  _processAESKey(String atsign, String aesKey, String contents) async {
+    assert(aesKey != null || aesKey != '');
+    assert(atsign != null || atsign != '');
+    assert(contents != null || contents != '');
+    await backendService
+        .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
+        .then((response) async {
+      if (response) {
+        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
+      }
+      setState(() {
+        loading = false;
+      });
+    }).catchError((err) {
+      print("Error in authenticateWithAESKey");
+      // _showAlertDialog(err);
+      // setState(() {
+      //   loading = false;
+      // });
+      // _logger.severe('Scanning QR code throws $err Error');
+    });
+  }
+
   @override
   void dispose() {
-    controller?.dispose();
+    // _controller?.dispose();
     super.dispose();
   }
 
@@ -62,7 +130,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       appBar: CustomAppBar(
         title: TextStrings().scanQrTitle,
         showTitle: true,
-        showBackButton: true,
+        showLeadingicon: true,
         elevation: 5,
       ),
       body: Container(
@@ -80,13 +148,27 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             SizedBox(
               height: 25.toHeight,
             ),
-            Expanded(
-              child: Container(
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                ),
+            Container(
+              height: 350.toHeight,
+              child: QrReaderView(
+                width: 300.toWidth,
+                height: 350.toHeight,
+                callback: (container) {
+                  this._controller = container;
+                  _controller.startCamera(onScan);
+                },
               ),
+            ),
+            SizedBox(
+              height: 25.toHeight,
+            ),
+            Center(child: Text('OR')),
+            SizedBox(
+              height: 25.toHeight,
+            ),
+            CustomButton(
+              buttonText: TextStrings().upload,
+              onPressed: _uploadKeyFile,
             ),
             SizedBox(
               height: 25.toHeight,

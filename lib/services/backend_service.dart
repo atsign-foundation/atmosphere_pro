@@ -66,6 +66,14 @@ class BackendService {
     return result;
   }
 
+  Future<bool> authenticateWithAESKey(String atsign,
+      {String cramSecret, String jsonData, String decryptKey}) async {
+    var result = await atClientServiceInstance.authenticate(atsign,
+        cramSecret: cramSecret, jsonData: jsonData, decryptKey: decryptKey);
+    atClientInstance = atClientServiceInstance.atClient;
+    return result;
+  }
+
   ///Fetches atsign from device keychain.
   Future<String> getAtSign() async {
     return await atClientServiceInstance.getAtSign();

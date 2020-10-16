@@ -81,11 +81,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       progressIndicatorBackgroundColor: Colors.blueGrey,
       titleText: Row(
         children: <Widget>[
-          // Icon(
-          //   Icons.cancel,
-          //   size: 13.toFont,
-          //   color: ColorConstants.redText,
-          // ),
           transferStatus[status],
           Padding(
             padding: EdgeInsets.only(
