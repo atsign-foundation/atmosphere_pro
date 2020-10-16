@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -84,7 +85,7 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey, _documentsPath, acceptStream);
+    // atClientInstance.startMonitor(privateKey, _documentsPath, acceptStream);
     print("Monitor started");
     return true;
   }
@@ -104,6 +105,7 @@ class BackendService {
   // acknowledge file transfer
   Future<bool> acceptStream(String atsign, String filename) async {
     print("from:$atsign file:$filename");
+    await NotificationService().showNotification(atsign, filename);
     // popup for user which is awaited for one minute
     // and returns true or false
     return true;

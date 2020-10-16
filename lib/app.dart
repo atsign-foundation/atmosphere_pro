@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/test_model.dart';
@@ -67,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         title: 'AtSign Atmosphere App',
         debugShowCheckedModeBanner: false,
         initialRoute: SetupRoutes.initialRoute,
+        navigatorKey: NavService.navKey,
         theme: ThemeData(
           fontFamily: 'HelveticaNeu',
           scaffoldBackgroundColor: Colors.white,

@@ -1,15 +1,52 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
-class ReceiveFilesAlert extends StatelessWidget {
+class ReceiveFilesAlert extends StatefulWidget {
   final Function() onAccept;
+  final String payload;
+  final Function(bool) sharingStatus;
+  const ReceiveFilesAlert(
+      {Key key, this.onAccept, this.payload, this.sharingStatus})
+      : super(key: key);
 
-  const ReceiveFilesAlert({Key key, this.onAccept}) : super(key: key);
+  @override
+  _ReceiveFilesAlertState createState() => _ReceiveFilesAlertState();
+}
+
+class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
+  NotificationPayload payload;
+  bool status = false;
+  @override
+  void initState() {
+    Map<String, dynamic> test =
+        jsonDecode(widget.payload) as Map<String, dynamic>;
+    payload = NotificationPayload.fromJson(test);
+    super.initState();
+  }
+
+  Uint8List videoThumbnail;
+  // FilePickerProvider provider;
+  Future videoThumbnailBuilder(String path) async {
+    videoThumbnail = await VideoThumbnail.thumbnailData(
+      video: path,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth:
+          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      quality: 100,
+    );
+    return videoThumbnail;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -34,7 +71,7 @@ class ReceiveFilesAlert extends StatelessWidget {
         ],
       ),
       content: Container(
-        height: 240.toHeight,
+        height: 180.toHeight,
         child: Column(
           children: [
             SizedBox(
@@ -55,7 +92,8 @@ class ReceiveFilesAlert extends StatelessWidget {
                         softWrap: true,
                         overflow: TextOverflow.visible,
                         text: TextSpan(
-                          text: '@levinat',
+                          // text: '@levinat',
+                          text: payload.name,
                           style: CustomTextStyles.primaryBold14,
                           children: [
                             TextSpan(
@@ -73,41 +111,31 @@ class ReceiveFilesAlert extends StatelessWidget {
             SizedBox(
               height: 13.toHeight,
             ),
-            Center(
-              child: Container(
-                height: 100.toHeight,
-                width: 100.toHeight,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.toHeight),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      ImageConstants.test,
-                    ),
-                  ),
-                ),
-              ),
-            ),
             SizedBox(
               height: 13.toHeight,
             ),
-            Center(
-              child: Container(
-                width: 80.toWidth,
-                height: 20.toHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '1 File',
-                      style: CustomTextStyles.secondaryRegular14,
+            Text(payload.file),
+            Container(
+              width: 100.toWidth,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            double.parse(payload.size.toString()) <= 1024
+                                ? '${payload.size} Kb'
+                                : '${(payload.size / 1024).toStringAsFixed(2)} Mb',
+                            style: CustomTextStyles.secondaryRegular14,
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      '4 Mb',
-                      style: CustomTextStyles.secondaryRegular14,
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -116,7 +144,11 @@ class ReceiveFilesAlert extends StatelessWidget {
       actions: [
         CustomButton(
           buttonText: TextStrings().accept,
-          onPressed: onAccept,
+          onPressed: () {
+            status = true;
+            widget.onAccept;
+            widget.sharingStatus(status);
+          },
         ),
         SizedBox(
           height: 10.toHeight,
@@ -125,7 +157,10 @@ class ReceiveFilesAlert extends StatelessWidget {
           isInverted: true,
           buttonText: TextStrings().reject,
           onPressed: () {
+            status = false;
+            NotificationService().cancelNotifications();
             Navigator.pop(context);
+            widget.sharingStatus(status);
           },
         ),
       ],
