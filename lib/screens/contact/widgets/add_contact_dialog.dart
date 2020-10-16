@@ -1,10 +1,9 @@
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+
 /// This widgets pops up when a contact is added it takes [name]
 /// [handle] to display the name and the handle of the user and an
 /// onTap function named as [onYesTap] for on press of [Yes] button of the dialog
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +11,11 @@ import 'package:flutter/material.dart';
 class AddContactDialog extends StatelessWidget {
   final String name;
   final String handle;
-  final Function() onYesTap;
+  final Function(String) onYesTap;
+  String atsignName = '';
 
-  const AddContactDialog({Key key, this.name, this.handle, this.onYesTap}) : super(key: key);
+  AddContactDialog({Key key, this.name, this.handle, this.onYesTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +24,10 @@ class AddContactDialog extends StatelessWidget {
         width: 100,
         child: SingleChildScrollView(
           child: AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.toWidth)),
-            titlePadding: EdgeInsets.only(top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth)),
+            titlePadding: EdgeInsets.only(
+                top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -32,42 +35,44 @@ class AddContactDialog extends StatelessWidget {
                   child: Text(
                     TextStrings().addContactHeading,
                     textAlign: TextAlign.center,
-                    style: CustomTextStyles.secondaryRegular16,
+                    style: CustomTextStyles.primaryBold18,
                   ),
                 )
               ],
             ),
             content: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 190.toHeight),
+              constraints: BoxConstraints(maxHeight: 198.toHeight),
               child: Column(
                 children: [
                   SizedBox(
-                    height: 21.toHeight,
+                    height: 20.toHeight,
                   ),
-                  CustomCircleAvatar(
-                    image: ImageConstants.test,
-                    size: 75,
+                  TextField(
+                    autofocus: true,
+                    onChanged: (value) {
+                      atsignName = value;
+                    },
+                    decoration: InputDecoration(
+                      prefixText: '@',
+                      prefixStyle: TextStyle(color: Colors.grey),
+                      hintText: '\tEnter user atsign',
+                    ),
                   ),
                   SizedBox(
-                    height: 30.toHeight,
+                    height: 45.toHeight,
                   ),
-                  TextField(decoration: InputDecoration(hintText: 'Enter user atsign')),
-                  // SizedBox(
-                  //   height: 10.toHeight,
-                  // ),
-                  // TextField(decoration: InputDecoration(hintText: 'Enter user handle '))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        buttonText: TextStrings().addtoContact,
+                        onPressed: () => onYesTap(atsignName),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 30),
-                child: CustomButton(
-                  buttonText: TextStrings().addtoContact,
-                  onPressed: onYesTap,
-                ),
-              )
-            ],
           ),
         ));
   }

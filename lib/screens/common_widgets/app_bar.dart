@@ -20,17 +20,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showLeadingicon;
   final bool showAddButton;
+  final onActionpressed;
 
   final double elevation;
 
-  const CustomAppBar({
-    this.title,
-    this.showTitle = false,
-    this.showBackButton = false,
-    this.showLeadingicon = false,
-    this.showAddButton = false,
-    this.elevation = 0,
-  });
+  const CustomAppBar(
+      {this.title,
+      this.showTitle = false,
+      this.showBackButton = false,
+      this.showLeadingicon = false,
+      this.showAddButton = false,
+      this.elevation = 0,
+      this.onActionpressed});
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
@@ -95,7 +96,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         showDialog(
                             context: context,
                             builder: (context) => AddContactDialog(
-                                  onYesTap: () {
+                                  onYesTap: (value) {
+                                    onActionpressed(value);
                                     Navigator.pop(context);
                                   },
                                   //name: contacts[index],

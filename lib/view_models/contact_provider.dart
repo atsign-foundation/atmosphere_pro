@@ -1,37 +1,60 @@
+import 'dart:async';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 
 class ContactProvider extends BaseModel {
-  List<AtContact> contactList;
-  List<AtContact> blockContactList;
-  ContactProvider._() {
-    {
-      initContactImpl();
-    }
+  List<AtContact> contactList = [];
+  List<AtContact> blockContactList = [];
+  ContactProvider() {
+    initContactImpl();
   }
-  static ContactProvider _instance = ContactProvider._();
+  // static ContactProvider _instance = ContactProvider._();
+  Completer completer;
 
   initContactImpl() async {
-    atContact = await AtContactsImpl.getInstance('@alice🛠');
+    try {
+      print("callled here");
+      completer = Completer();
+      atContact = await AtContactsImpl.getInstance('@alice🛠');
+      completer.complete(true);
+    } catch (e) {
+      print("error =>  $e");
+    }
   }
 
-  factory ContactProvider() => _instance;
+  // factory ContactProvider() => _instance;
+
   String Contacts = 'contacts';
   List<Map<String, dynamic>> contacts = [];
-  AtContactsImpl atContact;
+  static AtContactsImpl atContact;
 
   getContacts() async {
-    setStatus(Contacts, Status.Loading);
-    contactList = await atContact.listContacts();
-    await Future.delayed(Duration(seconds: 1), () {
-      contacts = [];
-      for (int i = 0; i < 10; i++) {
-        contacts.add({
-          'name': 'User $i',
-        });
+    try {
+      setStatus(Contacts, Status.Loading);
+      contactList = [];
+      await completer.future;
+      contactList = await atContact.listContacts();
+      List<AtContact> tempContactList = [...contactList];
+      print("list =>  $contactList");
+      int range = contactList.length;
+
+      for (int i = 0; i < range; i++) {
+        print("is blocked => ${contactList[i].blocked}");
+        if (contactList[i].blocked) {
+          print("herererr");
+          tempContactList.remove(contactList[i]);
+        }
       }
-    });
-    setStatus(Contacts, Status.Done);
+      contactList = tempContactList;
+      contactList.sort(
+          (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
+      print("list =>  $contactList");
+      setStatus(Contacts, Status.Done);
+    } catch (e) {
+      print("error here => $e");
+      setStatus(Contacts, Status.Error);
+    }
   }
 
   blockUnBLockContact({String atSign, bool blockAction}) async {
@@ -47,18 +70,34 @@ class ContactProvider extends BaseModel {
 
       contact.type = ContactType.Institute;
       contact.blocked = blockAction;
-      var updateResult = await atContact.update(contact);
-      setStatus(Contacts, Status.Error);
+      await atContact.update(contact);
+      if (blockAction == true) {
+        getContacts();
+      } else {
+        fetchBlockContactList();
+      }
     } catch (e) {
       setStatus(Contacts, Status.Error);
     }
   }
 
-  fetchBlockList() async {
+  fetchBlockContactList() async {
     try {
       setStatus(Contacts, Status.Loading);
       blockContactList = await atContact.listBlockedContacts();
+      print("block contact list => $blockContactList");
       setStatus(Contacts, Status.Done);
+    } catch (e) {
+      setStatus(Contacts, Status.Error);
+    }
+  }
+
+  deleteAtsignContact({String atSign}) async {
+    try {
+      setStatus(Contacts, Status.Loading);
+      var result = await atContact.delete('$atSign');
+      print("delete result => $result");
+      getContacts();
     } catch (e) {
       setStatus(Contacts, Status.Error);
     }
@@ -76,7 +115,7 @@ class ContactProvider extends BaseModel {
       );
       var result = await atContact.add(contact);
       print('create result : ${result}');
-      setStatus(Contacts, Status.Error);
+      getContacts();
     } catch (e) {
       setStatus(Contacts, Status.Error);
     }
