@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/select_file_widget.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -23,9 +24,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isContactSelected;
   bool isFileSelected;
-  void _showScaffold(String message) {
+  BackendService backendService = BackendService.getInstance();
+
+  // 0-Sending, 1-Success, 2-Error
+  List<Widget> transferStatus = [
+    SizedBox(),
+    Icon(
+      Icons.check_circle,
+      size: 13.toFont,
+      color: ColorConstants.successColor,
+    ),
+    Icon(
+      Icons.cancel,
+      size: 13.toFont,
+      color: ColorConstants.redText,
+    )
+  ];
+  List<String> transferMessages = [
+    'Sending file ...',
+    'Sent the file',
+    'Oops! something went wrong'
+  ];
+
+  void _showScaffold({int status = 0}) {
     Flushbar(
-      title: message,
+      title: transferMessages[status],
       message: "Lorem Ipsum is simply dummy ",
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -37,13 +60,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
       ],
       isDismissible: false,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 10),
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(ImageConstants.test), fit: BoxFit.cover),
+              image: AssetImage(ImageConstants.kevin), fit: BoxFit.cover),
           shape: BoxShape.circle,
         ),
       ),
@@ -58,17 +81,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       progressIndicatorBackgroundColor: Colors.blueGrey,
       titleText: Row(
         children: <Widget>[
-          Icon(
-            Icons.cancel,
-            size: 13.toFont,
-            color: ColorConstants.redText,
-          ),
+          transferStatus[status],
           Padding(
             padding: EdgeInsets.only(
               left: 5.toWidth,
             ),
             child: Text(
-              message,
+              transferMessages[status],
               style: TextStyle(
                   color: ColorConstants.fadedText, fontSize: 10.toFont),
             ),
@@ -110,7 +129,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  TextStrings().welcomeUser('John'),
+                  TextStrings().welcomeUser(backendService.currentAtsign),
                   style: GoogleFonts.playfairDisplay(
                     textStyle: TextStyle(
                       fontSize: 28.toFont,
@@ -168,8 +187,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     alignment: Alignment.topRight,
                     child: CommonButton(
                       TextStrings().buttonSend,
-                      () {
-                        _showScaffold("Oops! something went wrong");
+                      () async {
+                        _showScaffold(status: 0);
+                        bool response = await backendService
+                            .sendFile(filePickerModel.selectedFiles[0].path);
+                        if (response == true) {
+                          _showScaffold(status: 1);
+                        } else {
+                          _showScaffold(status: 2);
+                        }
                       },
                     ),
                   ),

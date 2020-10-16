@@ -149,6 +149,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
           ),
         ),
       ),
+      errorBuilder: (provider) => Center(child: Text('some error occured')),
     );
   }
 

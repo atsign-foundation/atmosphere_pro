@@ -33,10 +33,20 @@ dependencies:
   provider: ^4.3.2+2
   file_picker: ^2.0.5
   video_thumbnail: ^0.2.2
-  qr_code_scanner: ^0.0.13
   flushbar: ^1.10.4
   webview_flutter: ^1.0.0
-  flutter_slidable: ^0.5.7
+  flutter_qr_reader: ^1.0.3
+
+  at_client_mobile:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_client_mobile
+      ref: dev_env
+  at_commons:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_commons
+      ref: dev_env
 
 dev_dependencies:
   flutter_test:
