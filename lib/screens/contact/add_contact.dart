@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/services/validators.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
@@ -16,6 +17,7 @@ class AddContactScreen extends StatefulWidget {
 
 class _AddContactScreenState extends State<AddContactScreen> {
   AdduserProvider provider;
+  final Validators validators = Validators();
   final List<String> contacts = [
     'A1',
     'A2',

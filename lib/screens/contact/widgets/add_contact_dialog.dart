@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart'
 /// [handle] to display the name and the handle of the user and an
 /// onTap function named as [onYesTap] for on press of [Yes] button of the dialog
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/services/validators.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,15 @@ class AddContactDialog extends StatelessWidget {
   final String name;
   final String handle;
   final Function() onYesTap;
+  final formKey;
 
-  const AddContactDialog({Key key, this.name, this.handle, this.onYesTap}) : super(key: key);
+  AddContactDialog({
+    Key key,
+    this.name,
+    this.handle,
+    this.onYesTap,
+    this.formKey,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +51,9 @@ class AddContactDialog extends StatelessWidget {
                   SizedBox(
                     height: 20.toHeight,
                   ),
-                  TextField(
+                  TextFormField(
                     autofocus: true,
+                    validator: Validators.validateAdduser,
                     decoration: InputDecoration(
                       prefixText: '@',
                       prefixStyle: TextStyle(color: Colors.grey),
