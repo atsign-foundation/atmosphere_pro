@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -22,17 +23,28 @@ class _HomeState extends State<Home> {
   NotificationService _notificationService;
   bool onboardSuccess = false;
   bool sharingStatus = false;
+  BackendService backendService;
+  // bool userAcceptance;
+
   @override
   void initState() {
     super.initState();
     _notificationService = NotificationService();
+    _initBackendService();
     _checkToOnboard();
+  }
+
+  void _initBackendService() {
+    backendService = BackendService.getInstance();
+    _notificationService.setOnNotificationClick(onNotificationClick);
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+      debugPrint('SystemChannels> $msg');
+      backendService.app_lifecycle_state = msg;
+    });
   }
 
   void _checkToOnboard() async {
     // onboard call to get the already setup atsigns
-    BackendService backendService = BackendService.getInstance();
-    _notificationService.setOnNotificationClick(onNotificationClick);
     await backendService.onboard().then((isChecked) async {
       if (!isChecked) {
         print("onboard returned: $isChecked");
@@ -46,18 +58,26 @@ class _HomeState extends State<Home> {
   }
 
   onNotificationClick(String payload) async {
-    BuildContext c = NavService.navKey.currentContext;
-    print('Payload $payload');
-    await showDialog(
-      context: c,
-      builder: (c) => ReceiveFilesAlert(
-        payload: payload,
-        sharingStatus: (s) {
-          sharingStatus = s;
-          print('STATUS====>$s');
-        },
-      ),
-    );
+    // this popup added to accept stream to await answer
+    // BuildContext c = NavService.navKey.currentContext;
+    // print('Payload $payload');
+    // bool userAcceptance = null;
+    // await showDialog(
+    //   context: c,
+    //   builder: (c) => ReceiveFilesAlert(
+    //     payload: payload,
+    //     sharingStatus: (s) {
+    //       // sharingStatus = s;
+    //       userAcceptance = s;
+    //       print('STATUS====>$s');
+    //     },
+    //   ),
+    // );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -144,13 +164,13 @@ class _HomeState extends State<Home> {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              // if (onboardSuccess) {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  Routes.WELCOME_SCREEN, (route) => false);
-                              // } else {
-                              //   Navigator.pushNamedAndRemoveUntil(context,
-                              //       Routes.SCAN_QR_SCREEN, (route) => false);
-                              // }
+                              if (onboardSuccess) {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    Routes.WELCOME_SCREEN, (route) => false);
+                              } else {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    Routes.SCAN_QR_SCREEN, (route) => false);
+                              }
                             },
                           ),
                         ),

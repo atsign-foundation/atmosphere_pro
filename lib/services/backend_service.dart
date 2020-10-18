@@ -1,8 +1,14 @@
+import 'dart:convert';
+import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'dart:io';
+
+import 'navigation_service.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -14,6 +20,8 @@ class BackendService {
   AtClientService atClientServiceInstance;
   AtClientImpl atClientInstance;
   String _atsign;
+  Function ask_user_acceptance;
+  String app_lifecycle_state;
 
   String get currentAtsign => _atsign;
 
@@ -115,9 +123,26 @@ class BackendService {
   Future<bool> acceptStream(
       String atsign, String filename, String filesize) async {
     print("from:$atsign file:$filename size:$filesize");
-    await NotificationService().showNotification(atsign, filename);
-    // popup for user which is awaited for one minute
-    // and returns true or false
-    return true;
+    if (app_lifecycle_state != null &&
+        app_lifecycle_state != AppLifecycleState.resumed.toString()) {
+      print("app not active $app_lifecycle_state");
+      await NotificationService().showNotification(atsign, filename, filesize);
+      // sleep(const Duration(seconds: 2));
+    }
+    NotificationPayload payload = NotificationPayload(
+        file: filename, name: atsign, size: double.parse(filesize));
+    BuildContext c = NavService.navKey.currentContext;
+    bool userAcceptance;
+    await showDialog(
+      context: c,
+      builder: (c) => ReceiveFilesAlert(
+        payload: jsonEncode(payload),
+        sharingStatus: (s) {
+          userAcceptance = s;
+          print('STATUS====>$s');
+        },
+      ),
+    );
+    return userAcceptance;
   }
 }

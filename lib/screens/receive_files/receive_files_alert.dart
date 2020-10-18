@@ -147,6 +147,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
           onPressed: () {
             status = true;
             widget.onAccept;
+            NotificationService().cancelNotifications();
+            Navigator.pop(context);
             widget.sharingStatus(status);
           },
         ),
