@@ -167,6 +167,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               height: 25.toHeight,
             ),
             CustomButton(
+              width: 230.toWidth,
               buttonText: TextStrings().upload,
               onPressed: _uploadKeyFile,
             ),

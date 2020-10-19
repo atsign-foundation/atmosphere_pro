@@ -23,7 +23,7 @@ packages:
     source: hosted
     version: "2.5.0-nullsafety.1"
   at_client:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: at_client
       ref: dev_env
@@ -58,15 +58,6 @@ packages:
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.0.0"
-  at_demo_data:
-    dependency: "direct main"
-    description:
-      path: at_demo_data
-      ref: dev_env
-      resolved-ref: "070a2f6c59ccca150cbd65352e7bb03e34c37c49"
-      url: "git@github.com:atsign-company/at_demos.git"
-    source: git
-    version: "0.1.0"
   at_lookup:
     dependency: transitive
     description:

@@ -40,27 +40,17 @@ dependencies:
   rxdart: ^0.24.1
   
   flutter_slidable: ^0.5.7
-  at_client:
+  
+  at_client_mobile:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_client
+      path: at_client_mobile
       ref: dev_env
   at_contact:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
       path: at_contact
       ref: dev_env
-  at_client_mobile:
-    git:
-      url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_client_mobile
-      ref: dev_env
-  at_demo_data:
-    git:
-      url: git@github.com:atsign-company/at_demos.git
-      path: at_demo_data
-      ref: dev_env
-
   at_commons:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
