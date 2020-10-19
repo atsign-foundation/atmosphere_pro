@@ -70,7 +70,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     CustomCircleAvatar(
-                      image: ImageConstants.test,
+                      image: ImageConstants.imagePlaceholder,
                     ),
                     Expanded(
                       child: RichText(

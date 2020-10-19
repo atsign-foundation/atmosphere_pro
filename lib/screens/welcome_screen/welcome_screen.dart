@@ -13,7 +13,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart' show basename;
 import 'widgets/select_contact_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -50,7 +49,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   void didChangeDependencies() {
-    print("hererrer in dependicies");
     if (contactProvider == null) {
       contactProvider = Provider.of<ContactProvider>(context);
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -58,7 +56,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       });
     }
 
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -82,7 +79,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         width: 40.toWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(ImageConstants.kevin), fit: BoxFit.cover),
+              image: AssetImage(ImageConstants.imagePlaceholder),
+              fit: BoxFit.cover),
           shape: BoxShape.circle,
         ),
       ),
@@ -130,6 +128,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final filePickerModel = Provider.of<FilePickerProvider>(context);
+    final contactPickerModel = Provider.of<ContactProvider>(context);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -205,8 +204,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       TextStrings().buttonSend,
                       () async {
                         _showScaffold(status: 0);
-                        bool response = await backendService
-                            .sendFile(filePickerModel.selectedFiles[0].path);
+                        bool response = await backendService.sendFile(
+                            contactPickerModel.selectedAtsign,
+                            filePickerModel.selectedFiles[0].path);
                         if (response == true) {
                           _showScaffold(status: 1);
                         } else {

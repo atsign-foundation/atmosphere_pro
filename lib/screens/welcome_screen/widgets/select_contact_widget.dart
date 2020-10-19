@@ -70,7 +70,6 @@ class _ExpansionTileWidget extends StatelessWidget {
   _ExpansionTileWidget(this.headerText, this.onSelected);
   @override
   Widget build(BuildContext context) {
-    print("something selected");
     return ExpansionTile(
       backgroundColor: ColorConstants.inputFieldColor,
       title: Text(
@@ -125,7 +124,7 @@ class _ExpansionTileWidget extends StatelessWidget {
               ),
             ),
             leading: CustomCircleAvatar(
-              image: ImageConstants.barbara,
+              image: ImageConstants.imagePlaceholder,
             ),
             trailing: Icon(Icons.add),
           ),

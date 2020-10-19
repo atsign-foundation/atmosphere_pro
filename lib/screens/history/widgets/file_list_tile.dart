@@ -20,9 +20,7 @@ class _FilesListTileState extends State<FilesListTile> {
     return Column(
       children: [
         ListTile(
-          leading: CustomCircleAvatar(
-            image: ImageConstants.kevin,
-          ),
+          leading: CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

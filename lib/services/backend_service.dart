@@ -3,10 +3,10 @@ import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'dart:io';
 
 import 'navigation_service.dart';
 
@@ -38,10 +38,9 @@ class BackendService {
     atClientPreference.isLocalStoreRequired = true;
     atClientPreference.commitLogPath = path;
     atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
-    atClientPreference.rootDomain = 'test.do-sf2.atsign.zone';
+    atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
-
-    // atClientPreference.downloadPath = appDocumentDirectory.path;
+    atClientPreference.downloadPath = appDocumentDirectory.path;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference,
         atsign: atsign,
@@ -104,15 +103,15 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey);
+    atClientInstance.startMonitor(privateKey, acceptStream);
     print("Monitor started");
     return true;
   }
 
   // send a file
-  Future<bool> sendFile(String filePath) async {
-    print("Sending file => $filePath");
-    var result = await atClientInstance.stream('@kevin🛠', filePath);
+  Future<bool> sendFile(String atSign, String filePath) async {
+    print("Sending file => $atSign $filePath");
+    var result = await atClientInstance.stream(atSign, filePath);
     print("sendfile result => $result");
     if (result.status.toString() == 'AtStreamStatus.COMPLETE') {
       return true;

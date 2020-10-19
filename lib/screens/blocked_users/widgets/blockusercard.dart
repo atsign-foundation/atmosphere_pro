@@ -21,7 +21,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CustomCircleAvatar(
-        image: ImageConstants.test,
+        image: ImageConstants.imagePlaceholder,
       ),
       title: Container(
         width: 300.toWidth,
@@ -42,7 +42,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
       trailing: GestureDetector(
         onTap: () {
           Provider.of<ContactProvider>(context, listen: false)
-              .blockUnBLockContact(
+              .blockUnblockContact(
                   atSign: widget.blockeduser.atSign, blockAction: false);
         },
         child: Container(

@@ -39,7 +39,7 @@ class AddContactDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    TextStrings().addContactHeading,
+                    TextStrings().addContact,
                     textAlign: TextAlign.center,
                     style: CustomTextStyles.primaryBold18,
                   ),

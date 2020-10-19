@@ -7,7 +7,7 @@ import 'package:atsign_atmosphere_app/services/validators.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/adduser_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/add_contact_provider.dart';
 import 'package:flutter/material.dart';
 
 class AddContactScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class AddContactScreen extends StatefulWidget {
 }
 
 class _AddContactScreenState extends State<AddContactScreen> {
-  AdduserProvider provider;
+  AddContactProvider provider;
   final Validators validators = Validators();
   final List<String> contacts = [
     'A1',
@@ -35,8 +35,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   @override
   void initState() {
-    provider = AdduserProvider();
-    provider.getaddusers();
+    provider = AddContactProvider();
+    provider.getAddContacts();
     contacts.sort();
     searchText = '';
     super.initState();
@@ -120,7 +120,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             shape: BoxShape.circle,
                           ),
                           child: CustomCircleAvatar(
-                            image: ImageConstants.kevin,
+                            image: ImageConstants.imagePlaceholder,
                           )),
                       trailing: IconButton(
                         icon: Icon(Icons.add),

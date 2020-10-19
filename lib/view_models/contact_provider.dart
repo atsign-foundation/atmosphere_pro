@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 
 class ContactProvider extends BaseModel {
   List<AtContact> contactList = [];
   List<AtContact> blockContactList = [];
   String selectedAtsign = '';
+  BackendService backendService = BackendService.getInstance();
   ContactProvider() {
     initContactImpl();
   }
@@ -18,7 +20,8 @@ class ContactProvider extends BaseModel {
       print("callled here");
       setStatus(Contacts, Status.Loading);
       completer = Completer();
-      atContact = await AtContactsImpl.getInstance('@alice🛠');
+      atContact =
+          await AtContactsImpl.getInstance(backendService.currentAtsign);
       completer.complete(true);
     } catch (e) {
       print("error =>  $e");
@@ -59,7 +62,7 @@ class ContactProvider extends BaseModel {
     }
   }
 
-  blockUnBLockContact({String atSign, bool blockAction}) async {
+  blockUnblockContact({String atSign, bool blockAction}) async {
     try {
       setStatus(Contacts, Status.Loading);
       if (atSign[0] != '@') {
@@ -67,10 +70,10 @@ class ContactProvider extends BaseModel {
       }
       AtContact contact = AtContact(
         atSign: atSign,
-        personas: ['persona1', 'persona22', 'persona33'],
+        // personas: ['persona1', 'persona22', 'persona33'],
       );
 
-      contact.type = ContactType.Institute;
+      // contact.type = ContactType.Institute;
       contact.blocked = blockAction;
       await atContact.update(contact);
       if (blockAction == true) {
@@ -113,7 +116,7 @@ class ContactProvider extends BaseModel {
       }
       AtContact contact = AtContact(
         atSign: atSign,
-        personas: ['persona1', 'persona22', 'persona33'],
+        // personas: ['persona1', 'persona22', 'persona33'],
       );
       var result = await atContact.add(contact);
       print('create result : ${result}');

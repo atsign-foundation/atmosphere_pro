@@ -54,7 +54,8 @@ class TextStrings {
   String blockUser = 'Block User';
 
   //add contact texts
-  String addContactHeading = 'Add User';
+  String addContactHeading =
+      'Are you sure you want to add the user to your contact list?';
   String yes = 'Yes';
   String no = 'No';
 

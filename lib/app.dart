@@ -1,15 +1,14 @@
-import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'dart:async';
-
-import 'package:atsign_atmosphere_app/view_models/adduser_provider.dart';
-import 'package:atsign_atmosphere_app/view_models/blockuser_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_app/services/navigation_service.dart';
+import 'package:atsign_atmosphere_app/view_models/add_contact_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/blocked_contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/test_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import 'routes/routes.dart';
@@ -64,14 +63,14 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<HistoryProvider>(
             create: (context) => HistoryProvider()),
-        ChangeNotifierProvider<AdduserProvider>(
-            create: (context) => AdduserProvider()),
+        ChangeNotifierProvider<AddContactProvider>(
+            create: (context) => AddContactProvider()),
         ChangeNotifierProvider<FilePickerProvider>(
             create: (context) => FilePickerProvider()),
-        ChangeNotifierProvider<AdduserProvider>(
-            create: (context) => AdduserProvider()),
         ChangeNotifierProvider<ContactProvider>(
-            create: (context) => ContactProvider())
+            create: (context) => ContactProvider()),
+        ChangeNotifierProvider<BlockedContactProvider>(
+            create: (context) => BlockedContactProvider())
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',

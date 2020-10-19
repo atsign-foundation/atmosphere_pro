@@ -159,7 +159,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     onTap: () {
                                                       print('Block');
                                                       provider
-                                                          .blockUnBLockContact(
+                                                          .blockUnblockContact(
                                                               atSign:
                                                                   contactuser
                                                                       .atSign,
@@ -211,7 +211,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                         child:
                                                             CustomCircleAvatar(
                                                           image: ImageConstants
-                                                              .colin,
+                                                              .imagePlaceholder,
                                                         )),
                                                     trailing: IconButton(
                                                       onPressed: () {

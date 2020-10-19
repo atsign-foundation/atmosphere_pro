@@ -20,9 +20,6 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
-      // print("ffrf => ${_provider?.status[functionName]}");
-      // print(
-      //     '_provider?.status[function]=======>${_provider?.status[functionName]}');
       if (_provider?.status[functionName] == Status.Loading) {
         return Center(
           child: Container(
