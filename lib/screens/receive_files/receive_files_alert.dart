@@ -34,19 +34,6 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
     super.initState();
   }
 
-  Uint8List videoThumbnail;
-  // FilePickerProvider provider;
-  Future videoThumbnailBuilder(String path) async {
-    videoThumbnail = await VideoThumbnail.thumbnailData(
-      video: path,
-      imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-      quality: 100,
-    );
-    return videoThumbnail;
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
