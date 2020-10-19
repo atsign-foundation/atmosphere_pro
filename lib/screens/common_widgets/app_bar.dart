@@ -1,3 +1,6 @@
+import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
+import 'package:atsign_atmosphere_app/services/size_config.dart';
+
 ///This is a custom app bar [showTitle] enables to display the title in the center
 ///[showBackButton] toggles the automatically implies leading functionality
 ///if [false] it shows a [Close] String instead of backbutton
@@ -5,14 +8,11 @@
 ///[title] is a [String] to display the title of the appbar
 ///[showAddButton] toggles the visibility of add button and is only used for contacts screen
 ///therefore it has it's navigation embedded in the widget itself.
-
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -20,16 +20,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showLeadingicon;
   final bool showAddButton;
+  final onActionpressed;
+
   final double elevation;
 
-  const CustomAppBar({
-    this.title,
-    this.showTitle = false,
-    this.showBackButton = false,
-    this.showLeadingicon = false,
-    this.showAddButton = false,
-    this.elevation = 0,
-  });
+  const CustomAppBar(
+      {this.title,
+      this.showTitle = false,
+      this.showBackButton = false,
+      this.showLeadingicon = false,
+      this.showAddButton = false,
+      this.elevation = 0,
+      this.onActionpressed});
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
@@ -91,7 +93,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
-                        Navigator.pushNamed(context, Routes.ADD_CONTACT_SCREEN);
+                        showDialog(
+                            context: context,
+                            builder: (context) => AddContactDialog(
+                                  onYesTap: (value) {
+                                    onActionpressed(value);
+                                    Navigator.pop(context);
+                                  },
+                                  //name: contacts[index],
+                                ));
                       })
                   : Container()
               : GestureDetector(

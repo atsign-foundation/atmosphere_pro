@@ -1,6 +1,7 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
+import 'package:atsign_atmosphere_app/services/at_me_signin.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
@@ -164,13 +165,7 @@ class _HomeState extends State<Home> {
                           child: CommonButton(
                             TextStrings().buttonStart,
                             () {
-                              if (onboardSuccess) {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    Routes.WELCOME_SCREEN, (route) => false);
-                              } else {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    Routes.SCAN_QR_SCREEN, (route) => false);
-                              }
+                              AtMeService.getInstance().checkLogin(context);
                             },
                           ),
                         ),

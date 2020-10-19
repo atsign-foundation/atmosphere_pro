@@ -3,7 +3,9 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SelectContactWidget extends StatefulWidget {
   final Function(bool) onUpdate;
@@ -48,7 +50,6 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
                   },
                 )
               : _ListTileWidget(
-                  selectedIndex,
                   () {
                     widget.onUpdate(false);
                     setState(() {
@@ -65,9 +66,11 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
 class _ExpansionTileWidget extends StatelessWidget {
   final String headerText;
   final Function(int) onSelected;
+
   _ExpansionTileWidget(this.headerText, this.onSelected);
   @override
   Widget build(BuildContext context) {
+    print("something selected");
     return ExpansionTile(
       backgroundColor: ColorConstants.inputFieldColor,
       title: Text(
@@ -85,7 +88,7 @@ class _ExpansionTileWidget extends StatelessWidget {
         ),
       ),
       children: List.generate(
-        5,
+        Provider.of<ContactProvider>(context).contactList.length,
         (index) => Container(
           decoration: BoxDecoration(
             border: Border(
@@ -96,16 +99,26 @@ class _ExpansionTileWidget extends StatelessWidget {
             ),
           ),
           child: ListTile(
-            onTap: () => onSelected(index),
+            onTap: () {
+              Provider.of<ContactProvider>(context, listen: false)
+                      .selectedAtsign =
+                  Provider.of<ContactProvider>(context, listen: false)
+                      .contactList[index]
+                      .atSign;
+              onSelected(index);
+            },
             title: Text(
-              'Levina Thomas $index',
+              Provider.of<ContactProvider>(context)
+                  .contactList[index]
+                  .atSign
+                  .substring(1),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
               ),
             ),
             subtitle: Text(
-              '@levinat',
+              Provider.of<ContactProvider>(context).contactList[index].atSign,
               style: TextStyle(
                 color: ColorConstants.fadedText,
                 fontSize: 14.toFont,
@@ -123,15 +136,14 @@ class _ExpansionTileWidget extends StatelessWidget {
 }
 
 class _ListTileWidget extends StatelessWidget {
-  final int selectedIndex;
   final Function() onRemove;
-  _ListTileWidget(this.selectedIndex, this.onRemove);
+  _ListTileWidget(this.onRemove);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        'Levina Thomas $selectedIndex',
+        Provider.of<ContactProvider>(context).selectedAtsign ?? '',
         style: TextStyle(
           color: ColorConstants.fadedText,
           fontSize: 14.toFont,

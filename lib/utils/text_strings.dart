@@ -35,7 +35,7 @@ class TextStrings {
   String addContactSearch = 'Search @sign';
   String contactSearchResults = 'Search Results';
   String addContact = 'Add Contact';
-
+  String addtoContact = 'Add to Contact';
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
@@ -54,8 +54,7 @@ class TextStrings {
   String blockUser = 'Block User';
 
   //add contact texts
-  String addContactHeading =
-      'Are you sure you want to add the user to your contact list?';
+  String addContactHeading = 'Add User';
   String yes = 'Yes';
   String no = 'No';
 

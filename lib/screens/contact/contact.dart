@@ -1,12 +1,16 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 class ContactScreen extends StatefulWidget {
   @override
@@ -14,48 +18,40 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  final List<String> contacts = [
-    'A1',
-    'A2',
-    'B1',
-    'C4',
-    'F6',
-    'B5',
-    'B8',
-    'F9',
-    'G1',
-    'H7',
-    'C6',
-  ];
+  ContactProvider provider;
   String searchText;
 
   @override
   void initState() {
-    contacts.sort();
-    searchText = '';
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("hererrer in dependicies");
+    if (provider == null) {
+      provider = Provider.of<ContactProvider>(context);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        provider.getContacts();
+      });
+      print("called herre => $provider");
+
+      searchText = '';
+    }
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBarWithCloseButton(
-      //   title: TextStrings().sidebarContact,
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(Icons.add),
-      //       onPressed: () {
-      //         Navigator.of(context).pushNamed(
-      //           Routes.ADD_CONTACT_SCREEN,
-      //         );
-      //       },
-      //     ),
-      //   ],
-      // ),
       appBar: CustomAppBar(
         showAddButton: true,
         showTitle: true,
         title: TextStrings().sidebarContact,
+        onActionpressed: (String atSignName) =>
+            provider.addContact(atSign: atSignName),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -72,108 +68,179 @@ class _ContactScreenState extends State<ContactScreen> {
               SizedBox(
                 height: 15.toHeight,
               ),
-              ListView.builder(
-                itemCount: 26,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, alphabetIndes) {
-                  List<String> _filteredList = [];
-                  contacts.forEach((c) {
-                    if (c.toUpperCase().contains(searchText.toUpperCase())) {
-                      _filteredList.add(c);
-                    }
-                  });
+              ProviderHandler<ContactProvider>(
+                  functionName: provider.Contacts,
+                  errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
+                  successBuilder: (provider) {
+                    return (provider.contactList.isEmpty)
+                        ? Center(
+                            child: Text('No Contact found'),
+                          )
+                        : ListView.builder(
+                            itemCount: 26,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, alphabetIndes) {
+                              List<String> _filteredList = [];
+                              provider.contactList.forEach((c) {
+                                if (c.atSign[1]
+                                    .toUpperCase()
+                                    .contains(searchText.toUpperCase())) {
+                                  _filteredList.add(c.atSign);
+                                }
+                              });
 
-                  String currentChar =
-                      String.fromCharCode(alphabetIndes + 65).toUpperCase();
-                  List<String> contactsForAlphabet = [];
+                              String currentChar =
+                                  String.fromCharCode(alphabetIndes + 65)
+                                      .toUpperCase();
+                              List<String> contactsForAlphabet = [];
 
-                  _filteredList.forEach((c) {
-                    if (c.toUpperCase().startsWith(currentChar)) {
-                      contactsForAlphabet.add(c);
-                    }
-                  });
+                              _filteredList.forEach((c) {
+                                if (c[1].toUpperCase() == currentChar) {
+                                  contactsForAlphabet.add(c);
+                                }
+                              });
 
-                  if (contactsForAlphabet.isEmpty) {
-                    return Container();
-                  }
+                              if (contactsForAlphabet.isEmpty) {
+                                return Container();
+                              }
 
-                  return Container(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              currentChar,
-                              style: TextStyle(
-                                color: ColorConstants.blueText,
-                                fontSize: 16.toFont,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(width: 4.toWidth),
-                            Expanded(
-                              child: Divider(
-                                color: ColorConstants.dividerColor
-                                    .withOpacity(0.2),
-                                height: 1.toHeight,
-                              ),
-                            ),
-                          ],
-                        ),
-                        ListView.separated(
-                          itemCount: contactsForAlphabet.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          separatorBuilder: (context, _) => Divider(
-                            color: ColorConstants.dividerColor.withOpacity(0.2),
-                            height: 1.toHeight,
-                          ),
-                          itemBuilder: (context, itemIndex) => Container(
-                            child: ListTile(
-                              title: Text(
-                                contactsForAlphabet[itemIndex],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.toFont,
+                              return Container(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          currentChar,
+                                          style: TextStyle(
+                                            color: ColorConstants.blueText,
+                                            fontSize: 16.toFont,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(width: 4.toWidth),
+                                        Expanded(
+                                          child: Divider(
+                                            color: ColorConstants.dividerColor
+                                                .withOpacity(0.2),
+                                            height: 1.toHeight,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ListView.separated(
+                                        itemCount: contactsForAlphabet.length,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        separatorBuilder: (context, _) =>
+                                            Divider(
+                                              color: ColorConstants.dividerColor
+                                                  .withOpacity(0.2),
+                                              height: 1.toHeight,
+                                            ),
+                                        itemBuilder: (context, index) {
+                                          var contactuser =
+                                              provider.contactList[index];
+                                          return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Slidable(
+                                                actionPane:
+                                                    SlidableDrawerActionPane(),
+                                                actionExtentRatio: 0.25,
+                                                secondaryActions: <Widget>[
+                                                  IconSlideAction(
+                                                    caption: 'Block',
+                                                    color: ColorConstants
+                                                        .inputFieldColor,
+                                                    icon: Icons.block,
+                                                    onTap: () {
+                                                      print('Block');
+                                                      provider
+                                                          .blockUnBLockContact(
+                                                              atSign:
+                                                                  contactuser
+                                                                      .atSign,
+                                                              blockAction:
+                                                                  true);
+                                                    },
+                                                  ),
+                                                  IconSlideAction(
+                                                    caption: 'Delete',
+                                                    color: Colors.red,
+                                                    icon: Icons.delete,
+                                                    onTap: () {
+                                                      provider
+                                                          .deleteAtsignContact(
+                                                              atSign:
+                                                                  contactuser
+                                                                      .atSign);
+                                                    },
+                                                  ),
+                                                ],
+                                                child: Container(
+                                                  child: ListTile(
+                                                    title: Text(
+                                                      contactsForAlphabet[index]
+                                                          .substring(1),
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14.toFont,
+                                                      ),
+                                                    ),
+                                                    subtitle: Text(
+                                                      contactsForAlphabet[
+                                                          index],
+                                                      style: TextStyle(
+                                                        color: ColorConstants
+                                                            .fadedText,
+                                                        fontSize: 14.toFont,
+                                                      ),
+                                                    ),
+                                                    leading: Container(
+                                                        height: 40.toWidth,
+                                                        width: 40.toWidth,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.black,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child:
+                                                            CustomCircleAvatar(
+                                                          image: ImageConstants
+                                                              .colin,
+                                                        )),
+                                                    trailing: IconButton(
+                                                      onPressed: () {
+                                                        provider.selectedAtsign =
+                                                            provider
+                                                                .contactList[
+                                                                    index]
+                                                                .atSign;
+                                                        Navigator.of(context)
+                                                            .pushNamed(
+                                                          Routes.WELCOME_SCREEN,
+                                                        );
+                                                      },
+                                                      icon: Image.asset(
+                                                        ImageConstants.sendIcon,
+                                                        width: 21.toWidth,
+                                                        height: 18.toHeight,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ));
+                                        }),
+                                  ],
                                 ),
-                              ),
-                              subtitle: Text(
-                                '@colin',
-                                style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                ),
-                              ),
-                              leading: Container(
-                                  height: 40.toWidth,
-                                  width: 40.toWidth,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: CustomCircleAvatar(
-                                    image: ImageConstants.imagePlaceholder,
-                                  )),
-                              trailing: IconButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pushNamed(
-                                  Routes.WELCOME_SCREEN,
-                                ),
-                                icon: Image.asset(
-                                  ImageConstants.sendIcon,
-                                  width: 21.toWidth,
-                                  height: 18.toHeight,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              )
+                              );
+                            },
+                          );
+                  })
             ],
           ),
         ),

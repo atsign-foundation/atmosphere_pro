@@ -2,10 +2,12 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_app/services/validators.dart';
+import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/adduser_provider.dart';
 import 'package:flutter/material.dart';
 
 class AddContactScreen extends StatefulWidget {
@@ -14,6 +16,8 @@ class AddContactScreen extends StatefulWidget {
 }
 
 class _AddContactScreenState extends State<AddContactScreen> {
+  AdduserProvider provider;
+  final Validators validators = Validators();
   final List<String> contacts = [
     'A1',
     'A2',
@@ -31,6 +35,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   @override
   void initState() {
+    provider = AdduserProvider();
+    provider.getaddusers();
     contacts.sort();
     searchText = '';
     super.initState();

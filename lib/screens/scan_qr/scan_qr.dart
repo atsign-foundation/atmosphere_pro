@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_app/services/at_me_signin.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
@@ -194,7 +195,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                _cramAuthWithoutQR();
+                AtMeService.getInstance().performAuthentication(
+                    '@alice🛠:b26455a907582760ebf35bc4847de549bc41c24b25c8b1c58d5964f7b4f8a43bc55b0e9a601c9a9657d9a8b8bbc32f88b4e38ffaca03c8710ebae1b14ca9f364',
+                    context);
+                // Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
               },
               child: Text(
                 'Skip',

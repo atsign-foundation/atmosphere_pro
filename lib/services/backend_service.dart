@@ -33,13 +33,15 @@ class BackendService {
         await path_provider.getApplicationSupportDirectory();
     print("paths => $appDocumentDirectory $appSupportDirectory");
     String path = appSupportDirectory.path;
-    var atClientPreference = AtClientPreference()
-      ..isLocalStoreRequired = true
-      ..commitLogPath = path
-      ..syncStrategy = SyncStrategy.IMMEDIATE
-      ..rootDomain = 'test.do-sf2.atsign.zone'
-      ..hiveStoragePath = path
-      ..downloadPath = appDocumentDirectory.path;
+    var atClientPreference = AtClientPreference();
+
+    atClientPreference.isLocalStoreRequired = true;
+    atClientPreference.commitLogPath = path;
+    atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
+    atClientPreference.rootDomain = 'test.do-sf2.atsign.zone';
+    atClientPreference.hiveStoragePath = path;
+
+    // atClientPreference.downloadPath = appDocumentDirectory.path;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference,
         atsign: atsign,
@@ -102,7 +104,7 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey, acceptStream);
+    atClientInstance.startMonitor(privateKey);
     print("Monitor started");
     return true;
   }

@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isContactSelected;
   bool isFileSelected;
+  ContactProvider contactProvider;
   BackendService backendService = BackendService.getInstance();
 
   // 0-Sending, 1-Success, 2-Error
@@ -45,6 +47,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     'Sent the file',
     'Oops! something went wrong'
   ];
+
+  @override
+  void didChangeDependencies() {
+    print("hererrer in dependicies");
+    if (contactProvider == null) {
+      contactProvider = Provider.of<ContactProvider>(context);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        contactProvider.getContacts();
+      });
+    }
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   void _showScaffold({int status = 0}) {
     Flushbar(
