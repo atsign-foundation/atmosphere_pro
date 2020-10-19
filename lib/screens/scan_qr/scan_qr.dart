@@ -149,6 +149,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               height: 25.toHeight,
             ),
             Container(
+              alignment: Alignment.center,
+              width: 300.toWidth,
               height: 350.toHeight,
               child: QrReaderView(
                 width: 300.toWidth,
