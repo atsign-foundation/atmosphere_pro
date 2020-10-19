@@ -18,60 +18,68 @@ class _BlockedUsersState extends State<BlockedUsers> {
 
   @override
   void initState() {
-    provider = ContactProvider();
-    provider.fetchBlockContactList();
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    print("hererrer in dependicies");
+    if (provider == null) {
+      provider = Provider.of<ContactProvider>(context);
+
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        provider.fetchBlockContactList();
+      });
+    }
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ContactProvider>(create: (context) => provider)
-      ],
-      child: SafeArea(
-          child: Scaffold(
-              backgroundColor: ColorConstants.scaffoldColor,
-              appBar: CustomAppBar(
-                showTitle: true,
-                title: 'Blocked User',
-              ),
-              body: Container(
-                color: ColorConstants.appBarColor,
-                child: ProviderHandler<ContactProvider>(
-                  functionName: provider.Contacts,
-                  successBuilder: (provider) => (provider
-                          .blockContactList.isEmpty)
-                      ? Center(
-                          child: Container(
-                            child: Text(
-                              'No blocked users',
-                              style: CustomTextStyles.blueRegular16,
-                            ),
+    return SafeArea(
+        child: Scaffold(
+            backgroundColor: ColorConstants.scaffoldColor,
+            appBar: CustomAppBar(
+              showTitle: true,
+              title: 'Blocked User',
+            ),
+            body: Container(
+              color: ColorConstants.appBarColor,
+              child: ProviderHandler<ContactProvider>(
+                functionName: provider.Contacts,
+                successBuilder: (provider) => (provider
+                        .blockContactList.isEmpty)
+                    ? Center(
+                        child: Container(
+                          child: Text(
+                            'No blocked users',
+                            style: CustomTextStyles.blueRegular16,
                           ),
-                        )
-                      : Column(
-                          children: [
-                            Expanded(
-                              child: ListView.separated(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 40.toHeight),
-                                  itemCount: provider.blockContactList.length,
-                                  separatorBuilder: (context, index) => Divider(
-                                        indent: 16.toWidth,
-                                      ),
-                                  itemBuilder: (context, index) =>
-                                      BlockedUserCard(
-                                        blockeduser:
-                                            provider.blockContactList[index],
-                                      )),
-                            ),
-                          ],
                         ),
-                  errorBuilder: (provider) => Center(
-                    child: Text('Some error occured'),
-                  ),
+                      )
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                                padding:
+                                    EdgeInsets.symmetric(vertical: 40.toHeight),
+                                itemCount: provider.blockContactList.length,
+                                separatorBuilder: (context, index) => Divider(
+                                      indent: 16.toWidth,
+                                    ),
+                                itemBuilder: (context, index) =>
+                                    BlockedUserCard(
+                                      blockeduser:
+                                          provider.blockContactList[index],
+                                    )),
+                          ),
+                        ],
+                      ),
+                errorBuilder: (provider) => Center(
+                  child: Text('Some error occured'),
                 ),
-              ))),
-    );
+              ),
+            )));
   }
 }

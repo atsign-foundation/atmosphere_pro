@@ -69,6 +69,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) => FilePickerProvider()),
         ChangeNotifierProvider<AdduserProvider>(
             create: (context) => AdduserProvider()),
+        ChangeNotifierProvider<ContactProvider>(
+            create: (context) => ContactProvider())
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',

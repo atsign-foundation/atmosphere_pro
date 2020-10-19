@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 class ContactProvider extends BaseModel {
   List<AtContact> contactList = [];
   List<AtContact> blockContactList = [];
+  String selectedAtsign = '';
   ContactProvider() {
     initContactImpl();
   }
@@ -15,6 +16,7 @@ class ContactProvider extends BaseModel {
   initContactImpl() async {
     try {
       print("callled here");
+      setStatus(Contacts, Status.Loading);
       completer = Completer();
       atContact = await AtContactsImpl.getInstance('@alice🛠');
       completer.complete(true);

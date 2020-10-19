@@ -1,7 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/services/shared_pref_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:path_provider/path_provider.dart' as path_provider;
