@@ -32,12 +32,20 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To upload music file, please allow permission to access your files.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used to scan QR code</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To upload photos, please allow permission to access your photo library.</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -55,11 +63,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
-	<key>UIFileSharingEnabled</key>
-	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>The camera is used to scan QR code</string>
 </dict>
 </plist>
