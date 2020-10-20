@@ -77,7 +77,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     provider.pickFiles();
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                    padding: EdgeInsets.symmetric(vertical: 10),
                     child: Icon(
                       Icons.add_circle,
                       color: Colors.black,
