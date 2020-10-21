@@ -21,6 +21,7 @@ class TextStrings {
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked User';
   String sidebarTermsAndConditions = 'Terms and Conditions';
+  String sidebarPrivacyPolicy = "Privacy policy";
   String sidebarFaqs = 'FAQ';
   String sidebarAutoAcceptFile = 'Auto Accept Files';
   String sidebarEnablingMessage =

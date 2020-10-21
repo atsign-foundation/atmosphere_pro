@@ -3,9 +3,11 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/scan_qr_provider.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +124,13 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.WEBSITE_SCREEN);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => WebsiteScreen(
+                        url: MixedConstants.WEBSITE_URL,
+                        title: TextStrings().websiteTitle),
+                  ),
+                );
               },
               child: Text(
                 TextStrings().scanQrFooter,
@@ -160,33 +168,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                 ),
               ),
             )
-            // ProviderHandler<ScanQrProvider>(
-            //   successBuilder: (provider) {
-            //     return InkWell(
-            //       onTap: () {
-            //         provider.cramAuthWithoutQR();
-            //       },
-            //       child: Text(
-            //         'Skip',
-            //         style: TextStyle(
-            //           fontSize: 16.toFont,
-            //           color: ColorConstants.blueText,
-            //         ),
-            //       ),
-            //     );
-            //   },
-            //   errorBuilder: (provider) {},
-            // )
+
             // end
           ],
         ),
       ),
     );
-  }
-
-  onPressed() {
-    print('LOLOLOLOLO');
-    Navigator.pop(context);
-    Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
   }
 }

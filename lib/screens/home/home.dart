@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -159,9 +160,9 @@ class _HomeState extends State<Home> {
                         flex: 4,
                         child: Align(
                           alignment: Alignment.topRight,
-                          child: CommonButton(
-                            TextStrings().buttonStart,
-                            () {
+                          child: CustomButton(
+                            buttonText: TextStrings().buttonStart,
+                            onPressed: () {
                               if (onboardSuccess) {
                                 Navigator.pushNamedAndRemoveUntil(context,
                                     Routes.WELCOME_SCREEN, (route) => false);
