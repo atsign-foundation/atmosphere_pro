@@ -32,31 +32,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   }
 
   void onScan(String data, List<Offset> offsets) {
-    print([data, offsets]);
     backendService.authenticate(data, context);
     _controller.stopCamera();
   }
 
-  void _cramAuthWithoutQR() async {
-    String colinSecret =
-        "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
-    String kevinSecret =
-        'e0d06915c3f81561fb5f8929caae64a7231db34fdeaff939aacac3cb736be8328c2843b518a2fc7a58fcec8c0aa98c735c0ce5f8ce880e97cd61cf1f2751efc5';
-    await backendService
-        .authenticateWithCram("@colin🛠", cramSecret: colinSecret)
-        .then((response) async {
-      print("auth successful $response");
-      if (response != null) {
-        await backendService.startMonitor();
-        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
-      }
-    }).catchError((err) {
-      print("error in cram auth: $err");
-    });
-  }
-
   void _uploadKeyFile() async {
-    print("upload file");
     try {
       String fileContents, aesKey, atsign;
       FilePickerResult result = await FilePicker.platform
@@ -77,6 +57,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           //read scan QRcode and extract atsign,aeskey
         }
       }
+
       if (fileContents == null || (aesKey == null && atsign == null)) {
         // _showAlertDialog(_incorrectKeyFile);
         print("show file content error");
@@ -104,6 +85,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     await backendService
         .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
         .then((response) async {
+      await backendService.startMonitor();
       if (response) {
         await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
       }
@@ -197,25 +179,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                 ),
               ),
             ),
-            // Remove this block of code later.
-            // Adding skip button for development & testing purpose.
-            // start
-            SizedBox(
-              height: 15.toHeight,
-            ),
-            InkWell(
-              onTap: () {
-                _cramAuthWithoutQR();
-              },
-              child: Text(
-                'Skip',
-                style: TextStyle(
-                  fontSize: 16.toFont,
-                  color: ColorConstants.blueText,
-                ),
-              ),
-            ),
-            // end
           ],
         ),
       ),

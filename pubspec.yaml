@@ -40,7 +40,9 @@ dependencies:
   rxdart: ^0.24.1
   permission_handler: ^5.0.1+1
   flutter_slidable: ^0.5.7
-  
+  qr_flutter: ^3.2.0
+  share: ^0.6.5+2
+
   at_client_mobile:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
