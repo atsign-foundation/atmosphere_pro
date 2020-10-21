@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:atsign_atmosphere_app/view_models/scan_qr_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,6 @@ import 'package:atsign_atmosphere_app/view_models/blocked_contact_provider.dart'
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
-import 'package:atsign_atmosphere_app/view_models/test_model.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import 'routes/routes.dart';
@@ -58,9 +58,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<TestModel>(
-          create: (context) => TestModel(),
-        ),
         ChangeNotifierProvider<HistoryProvider>(
             create: (context) => HistoryProvider()),
         ChangeNotifierProvider<AddContactProvider>(
@@ -70,7 +67,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<ContactProvider>(
             create: (context) => ContactProvider()),
         ChangeNotifierProvider<BlockedContactProvider>(
-            create: (context) => BlockedContactProvider())
+            create: (context) => BlockedContactProvider()),
+        ChangeNotifierProvider<ScanQrProvider>(
+            create: (context) => ScanQrProvider())
       ],
       child: MaterialApp(
         title: 'AtSign Atmosphere App',

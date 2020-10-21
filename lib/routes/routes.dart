@@ -1,6 +1,5 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/blocked_users/blocked_users.dart';
-import 'package:atsign_atmosphere_app/screens/contact/add_contact.dart';
 import 'package:atsign_atmosphere_app/screens/contact/contact.dart';
 import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_app/screens/file_picker/file_picker.dart';
@@ -24,8 +23,9 @@ class SetupRoutes {
       Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
       Routes.HISTORY: (context) => HistoryScreen(),
       Routes.BLOCKED_USERS: (context) {
-        Map<String, List<dynamic>> args =
-            ModalRoute.of(context).settings.arguments as Map<String, List<dynamic>>;
+        Map<String, List<dynamic>> args = ModalRoute.of(context)
+            .settings
+            .arguments as Map<String, List<dynamic>>;
         print("ARGUMENTS $args");
         return BlockedUsers();
       },

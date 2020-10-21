@@ -61,12 +61,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               itemBuilder: (context, index) => InkWell(
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.of(context).pushNamed(targetScreens[index],
-                      arguments: (index == 2)
-                          ? {
-                              'blockedUserList': ['hello']
-                            }
-                          : null);
+                  Navigator.of(context).pushNamed(
+                    targetScreens[index],
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 13.toHeight),

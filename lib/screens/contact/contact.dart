@@ -1,6 +1,8 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -10,7 +12,6 @@ import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
 
 class ContactScreen extends StatefulWidget {
   @override
@@ -23,23 +24,17 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   void initState() {
+    provider = ContactProvider();
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    print("hererrer in dependicies");
-    if (provider == null) {
-      provider = Provider.of<ContactProvider>(context);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        provider.getContacts();
-      });
-      print("called herre => $provider");
-
-      searchText = '';
-    }
-
-    // TODO: implement didChangeDependencies
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      provider.getContacts();
+    });
+    print("called herre => $provider");
+    searchText = '';
     super.didChangeDependencies();
   }
 
@@ -50,8 +45,14 @@ class _ContactScreenState extends State<ContactScreen> {
         showAddButton: true,
         showTitle: true,
         title: TextStrings().sidebarContact,
-        onActionpressed: (String atSignName) =>
-            provider.addContact(atSign: atSignName),
+        onActionpressed: (String atSignName) {
+          providerCallback<ContactProvider>(context,
+              task: (provider) => provider.addContact(atSign: atSignName),
+              taskName: (provider) => provider.Contacts,
+              onSuccess: (provider) {},
+              onError: (err) =>
+                  ErrorDialog().show(err.toString(), context: context));
+        },
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -69,7 +70,9 @@ class _ContactScreenState extends State<ContactScreen> {
                 height: 15.toHeight,
               ),
               ProviderHandler<ContactProvider>(
-                  functionName: provider.Contacts,
+                  functionName: 'contacts',
+                  showError: true,
+                  load: (provider) => provider.getContacts(),
                   errorBuilder: (provider) => Center(
                         child: Text('Some error occured'),
                       ),
@@ -144,96 +147,89 @@ class _ContactScreenState extends State<ContactScreen> {
                                           var contactuser =
                                               provider.contactList[index];
                                           return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Slidable(
-                                                actionPane:
-                                                    SlidableDrawerActionPane(),
-                                                actionExtentRatio: 0.25,
-                                                secondaryActions: <Widget>[
-                                                  IconSlideAction(
-                                                    caption: 'Block',
-                                                    color: ColorConstants
-                                                        .inputFieldColor,
-                                                    icon: Icons.block,
-                                                    onTap: () {
-                                                      print('Block');
-                                                      provider
-                                                          .blockUnblockContact(
-                                                              atSign:
-                                                                  contactuser
-                                                                      .atSign,
-                                                              blockAction:
-                                                                  true);
-                                                    },
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Slidable(
+                                              actionPane:
+                                                  SlidableDrawerActionPane(),
+                                              actionExtentRatio: 0.25,
+                                              secondaryActions: <Widget>[
+                                                IconSlideAction(
+                                                  caption: 'Block',
+                                                  color: ColorConstants
+                                                      .inputFieldColor,
+                                                  icon: Icons.block,
+                                                  onTap: () {
+                                                    print('Block');
+                                                    provider
+                                                        .blockUnblockContact(
+                                                            atSign: contactuser
+                                                                .atSign,
+                                                            blockAction: true);
+                                                  },
+                                                ),
+                                                IconSlideAction(
+                                                  caption: 'Delete',
+                                                  color: Colors.red,
+                                                  icon: Icons.delete,
+                                                  onTap: () {
+                                                    provider
+                                                        .deleteAtsignContact(
+                                                            atSign: contactuser
+                                                                .atSign);
+                                                  },
+                                                ),
+                                              ],
+                                              child: Container(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    contactsForAlphabet[index]
+                                                        .substring(1),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14.toFont,
+                                                    ),
                                                   ),
-                                                  IconSlideAction(
-                                                    caption: 'Delete',
-                                                    color: Colors.red,
-                                                    icon: Icons.delete,
-                                                    onTap: () {
-                                                      provider
-                                                          .deleteAtsignContact(
-                                                              atSign:
-                                                                  contactuser
-                                                                      .atSign);
-                                                    },
+                                                  subtitle: Text(
+                                                    contactsForAlphabet[index],
+                                                    style: TextStyle(
+                                                      color: ColorConstants
+                                                          .fadedText,
+                                                      fontSize: 14.toFont,
+                                                    ),
                                                   ),
-                                                ],
-                                                child: Container(
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      contactsForAlphabet[index]
-                                                          .substring(1),
-                                                      style: TextStyle(
+                                                  leading: Container(
+                                                      height: 40.toWidth,
+                                                      width: 40.toWidth,
+                                                      decoration: BoxDecoration(
                                                         color: Colors.black,
-                                                        fontSize: 14.toFont,
+                                                        shape: BoxShape.circle,
                                                       ),
-                                                    ),
-                                                    subtitle: Text(
-                                                      contactsForAlphabet[
-                                                          index],
-                                                      style: TextStyle(
-                                                        color: ColorConstants
-                                                            .fadedText,
-                                                        fontSize: 14.toFont,
-                                                      ),
-                                                    ),
-                                                    leading: Container(
-                                                        height: 40.toWidth,
-                                                        width: 40.toWidth,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.black,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child:
-                                                            CustomCircleAvatar(
-                                                          image: ImageConstants
-                                                              .imagePlaceholder,
-                                                        )),
-                                                    trailing: IconButton(
-                                                      onPressed: () {
-                                                        provider.selectedAtsign =
-                                                            provider
-                                                                .contactList[
-                                                                    index]
-                                                                .atSign;
-                                                        Navigator.of(context)
-                                                            .pushNamed(
-                                                          Routes.WELCOME_SCREEN,
-                                                        );
-                                                      },
-                                                      icon: Image.asset(
-                                                        ImageConstants.sendIcon,
-                                                        width: 21.toWidth,
-                                                        height: 18.toHeight,
-                                                      ),
+                                                      child: CustomCircleAvatar(
+                                                        image: ImageConstants
+                                                            .imagePlaceholder,
+                                                      )),
+                                                  trailing: IconButton(
+                                                    onPressed: () {
+                                                      provider.selectedAtsign =
+                                                          provider
+                                                              .contactList[
+                                                                  index]
+                                                              .atSign;
+                                                      Navigator.of(context)
+                                                          .pushNamed(
+                                                        Routes.WELCOME_SCREEN,
+                                                      );
+                                                    },
+                                                    icon: Image.asset(
+                                                      ImageConstants.sendIcon,
+                                                      width: 21.toWidth,
+                                                      height: 18.toHeight,
                                                     ),
                                                   ),
                                                 ),
-                                              ));
+                                              ),
+                                            ),
+                                          );
                                         }),
                                   ],
                                 ),

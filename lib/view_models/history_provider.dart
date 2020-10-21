@@ -26,7 +26,7 @@ class HistoryProvider extends BaseModel {
             'date': '12 August 2020',
             'time': '1:12 PM',
             'files': List.generate(random, (index) {
-              print(random * 256 / index);
+              // print(random * 256 / index);
               return {
                 'file_name': 'File_Name $index',
                 'size': (random * 256 / 3).floor(),
@@ -36,9 +36,11 @@ class HistoryProvider extends BaseModel {
           });
         }
       });
+      // int a = int.parse('source');
       setStatus(SENT_HISTORY, Status.Done);
-    } catch (e) {
-      setStatus(SENT_HISTORY, Status.Error);
+    } catch (error) {
+      print('ERROR IN SENT HISTORU======>$error');
+      setError(SENT_HISTORY, error.toString());
     }
   }
 
@@ -58,7 +60,7 @@ class HistoryProvider extends BaseModel {
             'date': '12 August 2020',
             'time': '1:12 PM',
             'files': List.generate(random, (index) {
-              print(random * 256 / index);
+              // print(random * 256 / 0);
               return {
                 'file_name': 'File_Name $index',
                 'size': (random * 256 / 3).floor(),
@@ -69,8 +71,8 @@ class HistoryProvider extends BaseModel {
         }
       });
       setStatus(RECEIVED_HISTORY, Status.Done);
-    } catch (e) {
-      setStatus(RECEIVED_HISTORY, Status.Error);
+    } catch (error) {
+      setError(RECEIVED_HISTORY, error.toString());
     }
   }
 }

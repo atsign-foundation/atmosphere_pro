@@ -1,13 +1,13 @@
-import 'dart:io';
-
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:atsign_atmosphere_app/view_models/scan_qr_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 
@@ -22,6 +22,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QrReaderViewController _controller;
   BackendService backendService = BackendService.getInstance();
+  ScanQrProvider qrProvider = ScanQrProvider();
   bool loading = false;
 
   @override
@@ -35,94 +36,28 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     _controller.stopCamera();
   }
 
-  void _cramAuthWithoutQR() async {
-    String colinSecret =
-        "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
-    String kevinSecret =
-        'e0d06915c3f81561fb5f8929caae64a7231db34fdeaff939aacac3cb736be8328c2843b518a2fc7a58fcec8c0aa98c735c0ce5f8ce880e97cd61cf1f2751efc5';
-    await backendService
-        .authenticateWithCram("@colin🛠", cramSecret: colinSecret)
-        .then((response) async {
-      print("auth successful $response");
-      if (response != null) {
-        await backendService.startMonitor();
-        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
-      }
-    }).catchError((err) {
-      print("error in cram auth: $err");
-    });
-  }
-
-  void _uploadKeyFile() async {
-    print("upload file");
-    try {
-      String fileContents, aesKey, atsign;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
-      setState(() {
-        loading = true;
-      });
-      for (var file in result.files) {
-        if (file.path.contains('atKeys')) {
-          fileContents = File(file.path).readAsStringSync();
-        } else if (aesKey == null &&
-            atsign == null &&
-            file.path.contains('_private_key.png')) {
-          String result = await FlutterQrReader.imgScan(File(file.path));
-          List<String> params = result.split(':');
-          atsign = params[0];
-          aesKey = params[1];
-          //read scan QRcode and extract atsign,aeskey
-        }
-      }
-      if (fileContents == null || (aesKey == null && atsign == null)) {
-        // _showAlertDialog(_incorrectKeyFile);
-        print("show file content error");
-      }
-      await _processAESKey(atsign, aesKey, fileContents);
-    } on Error catch (error) {
-      setState(() {
-        loading = false;
-      });
-      // _logger.severe('Processing files throws $error');
-      // _showAlertDialog(_failedFileProcessing);
-    } on Exception catch (ex) {
-      setState(() {
-        loading = false;
-      });
-      // _logger.severe('Processing files throws $ex');
-      // _showAlertDialog(_failedFileProcessing);
-    }
-  }
-
-  _processAESKey(String atsign, String aesKey, String contents) async {
-    assert(aesKey != null || aesKey != '');
-    assert(atsign != null || atsign != '');
-    assert(contents != null || contents != '');
-    await backendService
-        .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
-        .then((response) async {
-      if (response) {
-        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
-      }
-      setState(() {
-        loading = false;
-      });
-    }).catchError((err) {
-      print("Error in authenticateWithAESKey");
-      // _showAlertDialog(err);
-      // setState(() {
-      //   loading = false;
-      // });
-      // _logger.severe('Scanning QR code throws $err Error');
-    });
-  }
-
   @override
   void dispose() {
     // _controller?.dispose();
     super.dispose();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   BuildContext c = NavService.navKey.currentContext;
+  //   if (qrProvider.status['cram'] == Status.Error) {
+  //     showDialog(
+  //       context: c,
+  //       barrierDismissible: true,
+  //       builder: (context) => Container(
+  //         height: 40,
+  //         width: 40,
+  //         color: Colors.red,
+  //       ),
+  //     );
+  //   }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +106,16 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             CustomButton(
               width: 230.toWidth,
               buttonText: TextStrings().upload,
-              onPressed: _uploadKeyFile,
+              onPressed: () {
+                providerCallback<ScanQrProvider>(context,
+                    task: (provider) => provider.uploadKeyFile(),
+                    taskName: (provider) => provider.uploadKey,
+                    onSuccess: (provider) =>
+                        (provider.aesKeyResponse) ??
+                        Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN),
+                    onError: (err) =>
+                        ErrorDialog().show(err.toString(), context: context));
+              },
             ),
             SizedBox(
               height: 25.toHeight,
@@ -197,7 +141,16 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                _cramAuthWithoutQR();
+                providerCallback<ScanQrProvider>(context,
+                    task: (provider) => provider.cramAuthWithoutQR(),
+                    taskName: (provider) => 'cram_without_qr',
+                    onSuccess: (provider) =>
+                        Navigator.pushNamed(context, Routes.WELCOME_SCREEN),
+                    onErrorHandeling: () {
+                      // Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
+                    },
+                    onError: (err) =>
+                        ErrorDialog().show(err.toString(), context: context));
               },
               child: Text(
                 'Skip',
@@ -206,11 +159,34 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                   color: ColorConstants.blueText,
                 ),
               ),
-            ),
+            )
+            // ProviderHandler<ScanQrProvider>(
+            //   successBuilder: (provider) {
+            //     return InkWell(
+            //       onTap: () {
+            //         provider.cramAuthWithoutQR();
+            //       },
+            //       child: Text(
+            //         'Skip',
+            //         style: TextStyle(
+            //           fontSize: 16.toFont,
+            //           color: ColorConstants.blueText,
+            //         ),
+            //       ),
+            //     );
+            //   },
+            //   errorBuilder: (provider) {},
+            // )
             // end
           ],
         ),
       ),
     );
+  }
+
+  onPressed() {
+    print('LOLOLOLOLO');
+    Navigator.pop(context);
+    Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
   }
 }

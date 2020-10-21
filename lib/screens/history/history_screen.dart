@@ -73,7 +73,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                     controller: _controller,
                     children: [
                       ProviderHandler<HistoryProvider>(
-                        functionName: provider.SENT_HISTORY,
+                        functionName: 'sent_history',
+                        load: (provider) async {
+                          await provider.getSentHistory();
+                        },
+                        showError: true,
                         successBuilder: (provider) => (provider
                                 .sentHistory.isEmpty)
                             ? Center(
@@ -93,12 +97,16 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   ),
                                 ),
                               ),
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
+                        // errorBuilder: (provider) => Center(
+                        //   child: Text('Some error occured'),
+                        // ),
                       ),
                       ProviderHandler<HistoryProvider>(
-                        functionName: provider.RECEIVED_HISTORY,
+                        functionName: 'received_history',
+                        load: (provider) async {
+                          await provider.getRecievedHistory();
+                        },
+                        showError: true,
                         successBuilder: (provider) => (provider
                                 .receivedHistory.isEmpty)
                             ? Center(
@@ -119,9 +127,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   ),
                                 ),
                               ),
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
+                        // errorBuilder: (provider) => Center(
+                        //   child: Text('Some error occured'),
+                        // ),
                       ),
                     ],
                   ),

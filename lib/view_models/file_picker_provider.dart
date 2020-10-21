@@ -30,8 +30,8 @@ class FilePickerProvider extends BaseModel {
         calculateSize();
       }
       setStatus(PICK_FILES, Status.Done);
-    } catch (e) {
-      setStatus(PICK_FILES, Status.Error);
+    } catch (error) {
+      setError(PICK_FILES, error.toString());
     }
   }
 
