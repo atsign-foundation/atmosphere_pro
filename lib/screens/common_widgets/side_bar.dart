@@ -1,6 +1,7 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarTransferHistory,
     TextStrings().sidebarBlockedUser,
     TextStrings().sidebarTermsAndConditions,
+    TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
   ];
 
@@ -25,6 +27,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.transferHistoryIcon,
     ImageConstants.blockedIcon,
     ImageConstants.termsAndConditionsIcon,
+    ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
   ];
 
@@ -32,7 +35,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.CONTACT_SCREEN,
     Routes.HISTORY,
     Routes.BLOCKED_USERS,
-    Routes.TERMS_CONDITIONS,
+    Routes.WEBSITE_SCREEN,
+    Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
   ];
 
@@ -64,11 +68,18 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).pushNamed(targetScreens[index],
-                        arguments: (index == 2)
+                        arguments: (index == 3)
                             ? {
-                                'blockedUserList': ['hello']
+                                "title":
+                                    TextStrings().sidebarTermsAndConditions,
+                                "url": MixedConstants.TERMS_CONDITIONS
                               }
-                            : null);
+                            : (index == 4)
+                                ? {
+                                    "title": TextStrings().sidebarPrivacyPolicy,
+                                    "url": MixedConstants.PRIVACY_POLICY
+                                  }
+                                : null);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 13.toHeight),
