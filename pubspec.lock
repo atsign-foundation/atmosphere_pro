@@ -27,7 +27,7 @@ packages:
     description:
       path: at_client
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -36,7 +36,7 @@ packages:
     description:
       path: at_client_mobile
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -45,7 +45,7 @@ packages:
     description:
       path: at_commons
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -54,7 +54,7 @@ packages:
     description:
       path: at_contact
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.0.0"
@@ -63,7 +63,7 @@ packages:
     description:
       path: at_demo_data
       ref: dev_env
-      resolved-ref: "070a2f6c59ccca150cbd65352e7bb03e34c37c49"
+      resolved-ref: cf3be874e9ed54d224d9772345b6b2bbb0399a02
       url: "git@github.com:atsign-company/at_demos.git"
     source: git
     version: "0.1.0"
@@ -72,7 +72,7 @@ packages:
     description:
       path: at_lookup
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -81,7 +81,7 @@ packages:
     description:
       path: at_persistence_secondary_server
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -90,7 +90,7 @@ packages:
     description:
       path: at_persistence_spec
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -99,7 +99,7 @@ packages:
     description:
       path: at_utils
       ref: dev_env
-      resolved-ref: "0e337a43be587efa46166d9a7b03af287ed2a53f"
+      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -172,7 +172,7 @@ packages:
       name: crypton
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.3"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -214,7 +214,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.9+1"
   flushbar:
     dependency: "direct main"
     description:
@@ -240,7 +240,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1+1"
+    version: "2.0.2"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
@@ -322,7 +322,7 @@ packages:
     source: hosted
     version: "1.1.1"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"

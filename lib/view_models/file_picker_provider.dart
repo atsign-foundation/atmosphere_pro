@@ -20,17 +20,23 @@ class FilePickerProvider extends BaseModel {
     try {
       selectedFiles = [];
       totalSize = 0;
+      // print("platform => $platform");
       result = await FilePicker.platform.pickFiles(
           allowMultiple: true,
           type: FileType.media,
           allowCompression: true,
           withData: true);
+      print("comming till here");
       if (result?.files != null) {
         selectedFiles = [...result?.files];
+        print("till here also1");
         calculateSize();
+        print("till here also 2");
       }
+      print("till here also3");
       setStatus(PICK_FILES, Status.Done);
     } catch (e) {
+      print("error herer =. $e");
       setStatus(PICK_FILES, Status.Error);
     }
   }

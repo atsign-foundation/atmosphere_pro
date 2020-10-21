@@ -1,12 +1,16 @@
+import 'dart:io';
+
+import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:intl/intl.dart';
 
 class FilesListTile extends StatefulWidget {
-  final Map<String, dynamic> sentHistory;
+  final FilesModel sentHistory;
 
   const FilesListTile({Key key, this.sentHistory}) : super(key: key);
   @override
@@ -15,8 +19,10 @@ class FilesListTile extends StatefulWidget {
 
 class _FilesListTileState extends State<FilesListTile> {
   bool isOpen = false;
+  DateTime sendTime;
   @override
   Widget build(BuildContext context) {
+    sendTime = DateTime.parse(widget.sentHistory.date);
     return Column(
       children: [
         ListTile(
@@ -29,7 +35,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.sentHistory['name'].toString(),
+                      widget.sentHistory.name.substring(1),
                       style: CustomTextStyles.primaryRegular16,
                     ),
                   ),
@@ -50,7 +56,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.sentHistory['handle'].toString(),
+                      widget.sentHistory.name,
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                   ),
@@ -60,20 +66,22 @@ class _FilesListTileState extends State<FilesListTile> {
                 height: 8.toHeight,
               ),
               Container(
-                width: 100.toWidth,
+                // width: 100.toWidth,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.sentHistory['files_count']} Files',
+                      '${widget.sentHistory.files.length} Files',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
+                    SizedBox(width: 10.toHeight),
                     Text(
                       '.',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
+                    SizedBox(width: 10.toHeight),
                     Text(
-                      '${widget.sentHistory['total_size']} Kb',
+                      '${(widget.sentHistory.totalSize / 1024).toStringAsFixed(2)} Kb',
                       style: CustomTextStyles.secondaryRegular12,
                     )
                   ],
@@ -85,19 +93,21 @@ class _FilesListTileState extends State<FilesListTile> {
               Container(
                 width: 150.toWidth,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      widget.sentHistory['date'].toString(),
+                      '${DateFormat('MM-dd-yyyy').format(sendTime)}',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
+                    SizedBox(width: 10.toHeight),
                     Container(
                       color: ColorConstants.fontSecondary,
                       height: 14.toHeight,
                       width: 1.toWidth,
                     ),
+                    SizedBox(width: 10.toHeight),
                     Text(
-                      widget.sentHistory['time'].toString(),
+                      '${DateFormat('kk:mm').format(sendTime)}',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                   ],
@@ -144,27 +154,22 @@ class _FilesListTileState extends State<FilesListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 200.toHeight,
+                    height: 66.0 * widget.sentHistory.files.length,
                     child: ListView.separated(
                       separatorBuilder: (context, index) => Divider(
                         indent: 80.toWidth,
                       ),
-                      itemCount: int.parse(
-                          widget.sentHistory['files'].length.toString()),
+                      itemCount:
+                          int.parse(widget.sentHistory.files.length.toString()),
                       itemBuilder: (context, index) => ListTile(
                         leading: Container(
-                          height: 50.toHeight,
-                          width: 50.toHeight,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.toHeight),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                ImageConstants.filePreview,
-                              ),
-                            ),
-                          ),
-                        ),
+                            height: 50.toHeight,
+                            width: 50.toHeight,
+                            child: Image.file(
+                                File(
+                                  widget.sentHistory.files[index].filePath,
+                                ),
+                                fit: BoxFit.cover)),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -172,31 +177,32 @@ class _FilesListTileState extends State<FilesListTile> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    widget.sentHistory['files'][index]
-                                            ['file_name']
+                                    widget.sentHistory.files[index].fileName
                                         .toString(),
                                     style: CustomTextStyles.primaryRegular16,
                                   ),
                                 ),
                               ],
                             ),
+                            SizedBox(width: 10.toHeight),
                             Container(
-                              width: 80.toWidth,
+                              // width: 80.toWidth,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${widget.sentHistory['files'][index]['size']} Kb',
+                                    '${(widget.sentHistory.files[index].size / 1024).toStringAsFixed(2)} Kb',
                                     style: CustomTextStyles.secondaryRegular12,
                                   ),
+                                  SizedBox(width: 10.toHeight),
                                   Text(
                                     '.',
                                     style: CustomTextStyles.secondaryRegular12,
                                   ),
+                                  SizedBox(width: 10.toHeight),
                                   Text(
                                     // 'JPG',
-                                    widget.sentHistory['files'][index]['type']
+                                    widget.sentHistory.files[index].type
                                         .toString(),
                                     style: CustomTextStyles.secondaryRegular12,
                                   )
