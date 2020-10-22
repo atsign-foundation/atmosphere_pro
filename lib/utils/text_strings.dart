@@ -52,6 +52,7 @@ class TextStrings {
   String accept = 'Accept';
   String reject = 'Reject';
   String upload = 'Upload QR code image';
+  String buttonCancel = 'CANCEL';
 
   //history screen texts
   String sent = 'Sent';
