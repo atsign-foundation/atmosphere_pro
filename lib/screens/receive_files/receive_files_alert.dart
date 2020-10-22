@@ -145,6 +145,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
                     files: [
                   FilesDetail(
                       filePath: backendService.atClientPreference.downloadPath +
+                          '/' +
                           payload.file,
                       size: payload.size,
                       fileName: payload.file,

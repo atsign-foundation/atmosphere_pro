@@ -62,9 +62,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         print("fetched contacts");
-        contactProvider.getContacts();
-        historyProvider.getSentHistory();
-        historyProvider.getRecievedHistory();
+        contactProvider?.getContacts();
+        historyProvider?.getSentHistory();
+        historyProvider?.getRecievedHistory();
       });
     }
 

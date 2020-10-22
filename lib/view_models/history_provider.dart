@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
-
 import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
@@ -21,7 +18,6 @@ class HistoryProvider extends BaseModel {
       String atSignName,
       List<FilesDetail> files}) async {
     try {
-      print("comming till here");
       DateTime now = DateTime.now();
       FilesModel filesModel = FilesModel(
           name: atSignName,
@@ -29,21 +25,28 @@ class HistoryProvider extends BaseModel {
           date: now.toString(),
           files: files);
       filesModel.totalSize = 0.0;
-      filesModel.files.forEach((file) {
-        filesModel.totalSize += file.size;
-      });
+
       AtKey atKey = AtKey()..metadata = Metadata();
       var result;
       if (historyType == HistoryType.received) {
-        receivedFileHistory['history'].add((filesModel.toJson()));
+        // the file size come in bytes in reciever side
+        filesModel.files.forEach((file) {
+          file.size = file.size / 1024;
+          filesModel.totalSize += file.size;
+        });
+        receivedFileHistory['history'].insert(0, (filesModel.toJson()));
 
-        atKey.key = 'receive';
+        atKey.key = 'receivedFiles';
 
         result = await backendService.atClientInstance
             .put(atKey, json.encode(receivedFileHistory));
       } else {
-        sendFileHistory['history'].add(filesModel.toJson());
-        atKey.key = 'send';
+        // the file is in kB in sender side
+        filesModel.files.forEach((file) {
+          filesModel.totalSize += file.size;
+        });
+        sendFileHistory['history'].insert(0, filesModel.toJson());
+        atKey.key = 'sentFiles';
         result = await backendService.atClientInstance
             .put(atKey, json.encode(sendFileHistory));
       }
@@ -57,24 +60,19 @@ class HistoryProvider extends BaseModel {
     setStatus(SENT_HISTORY, Status.Loading);
     try {
       sentHistory = [];
-      print("comming till here");
       AtKey key = AtKey()
-        ..key = 'send'
+        ..key = 'sentFiles'
         ..metadata = Metadata();
       var keyValue = await backendService.atClientInstance.get(key);
-      print("value => ${keyValue.value} => ${keyValue.value.runtimeType}");
       if (keyValue != null && keyValue.value != null) {
         Map historyFile = json.decode((keyValue.value) as String) as Map;
         sendFileHistory['history'] = historyFile['history'];
-        print("hrww => ${historyFile['history']}");
         historyFile['history'].forEach((value) {
-          print("value122 => ${value.runtimeType}");
           FilesModel filesModel = FilesModel.fromJson((value));
-          print("dewdwed => $filesModel");
           filesModel.historyType = HistoryType.send;
           sentHistory.add(filesModel);
         });
-        print("sendFileHistory => $sentHistory");
+        print("sentFileHistory => $sentHistory");
       }
 
       setStatus(SENT_HISTORY, Status.Done);
@@ -86,21 +84,16 @@ class HistoryProvider extends BaseModel {
   getRecievedHistory() async {
     setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
-      print("inside receive");
       receivedHistory = [];
       AtKey key = AtKey()
-        ..key = 'receive'
+        ..key = 'receivedFiles'
         ..metadata = Metadata();
       var keyValue = await backendService.atClientInstance.get(key);
-      print("keyValue1 => $keyValue");
       if (keyValue != null && keyValue.value != null) {
         Map historyFile = json.decode((keyValue.value) as String) as Map;
         receivedFileHistory['history'] = historyFile['history'];
-        print("hrww1 => ${historyFile['history']}");
         historyFile['history'].forEach((value) {
-          print("value12211 => ${value.runtimeType}");
           FilesModel filesModel = FilesModel.fromJson((value));
-          print("dewdwed11 => $filesModel");
           filesModel.historyType = HistoryType.send;
           receivedHistory.add(filesModel);
         });
