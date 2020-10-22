@@ -10,4 +10,5 @@ class Routes {
   static const String ADD_CONTACT_SCREEN = 'addContactScreen';
   static const String FILE_PICKER = 'filePicker';
   static const String SCAN_QR_SCREEN = 'scanQrScreen';
+  static const String PRIVATE_KEY_GEN_SCREEN = 'privateKeyGenScreen';
 }

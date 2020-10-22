@@ -8,6 +8,14 @@ class TextStrings {
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
 
+  // onboarding flow texts
+  String saveKeyTitle = 'Save your Private Key';
+  String importantTitle = 'IMPORTANT!';
+  String saveKeyDescription =
+      "Please save your private key. For security reasons, it's highly recommended to save it in GDrive/iCloudDrive.";
+  String buttonSave = 'SAVE';
+  String buttonContinue = 'CONTINUE';
+
   // welcome screen texts
   String welcomeUser(String userName) => 'Welcome\n $userName!';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
@@ -44,6 +52,8 @@ class TextStrings {
   String accept = 'Accept';
   String reject = 'Reject';
   String upload = 'Upload QR code image';
+  String uploadCram = 'Upload QR code with cram key';
+  String buttonCancel = 'CANCEL';
 
   //history screen texts
   String sent = 'Sent';

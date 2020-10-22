@@ -145,9 +145,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 210.toHeight,
-              ),
+              Expanded(child: SizedBox()),
               InkWell(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(

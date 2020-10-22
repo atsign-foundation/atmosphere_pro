@@ -14,7 +14,12 @@ class CustomButton extends StatelessWidget {
   final double width;
 
   const CustomButton(
-      {Key key, this.isInverted = false, this.onPressed, this.buttonText, this.height, this.width})
+      {Key key,
+      this.isInverted = false,
+      this.onPressed,
+      this.buttonText,
+      this.height,
+      this.width})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -23,13 +28,17 @@ class CustomButton extends StatelessWidget {
       child: Container(
         width: width ?? 158.toWidth,
         height: height ?? 50.toHeight,
+        padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.toWidth),
             color: (isInverted) ? Colors.white : Colors.black),
         child: Center(
           child: Text(
             buttonText,
-            style: (isInverted) ? CustomTextStyles.primaryBold16 : CustomTextStyles.whiteBold16,
+            textAlign: TextAlign.center,
+            style: (isInverted)
+                ? CustomTextStyles.primaryBold16
+                : CustomTextStyles.whiteBold16,
           ),
         ),
       ),

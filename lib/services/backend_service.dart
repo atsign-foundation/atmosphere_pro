@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
@@ -54,22 +55,29 @@ class BackendService {
   }
 
   // QR code scan
-  authenticate(String qrCodeString, BuildContext context) async {
+  Future authenticate(String qrCodeString, BuildContext context) async {
+    Completer c = Completer();
     if (qrCodeString.contains('@')) {
       try {
         List<String> params = qrCodeString.split(':');
         if (params?.length == 2) {
-          _atsign = params[0];
           await authenticateWithCram(params[0], cramSecret: params[1]);
-          await Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
+          _atsign = params[0];
+          await startMonitor();
+          c.complete('Auth Completed');
+          await Navigator.pushNamed(context, Routes.PRIVATE_KEY_GEN_SCREEN);
         }
       } catch (e) {
+        print("error here =>  ${e.toString}");
+        c.complete('Fail to Authenticate');
         print(e);
       }
     } else {
       // wrong bar code
+      c.complete("incorrect QR code");
       print("incorrect QR code");
     }
+    return c.future;
   }
 
   // first time setup with cram authentication
@@ -85,6 +93,7 @@ class BackendService {
     var result = await atClientServiceInstance.authenticate(atsign,
         cramSecret: cramSecret, jsonData: jsonData, decryptKey: decryptKey);
     atClientInstance = atClientServiceInstance.atClient;
+    _atsign = atsign;
     return result;
   }
 
@@ -101,6 +110,14 @@ class BackendService {
   ///Fetches publickey for [atsign] from device keychain.
   Future<String> getPublicKey(String atsign) async {
     return await atClientServiceInstance.getPublicKey(atsign);
+  }
+
+  Future<String> getAESKey(String atsign) async {
+    return await atClientServiceInstance.getAESKey(atsign);
+  }
+
+  Future<Map<String, String>> getEncryptedKeys(String atsign) async {
+    return await atClientServiceInstance.getEncryptedKeys(atsign);
   }
 
   // startMonitor needs to be called at the beginning of session

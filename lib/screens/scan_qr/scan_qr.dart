@@ -27,6 +27,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   BackendService backendService = BackendService.getInstance();
   bool loading = false;
   bool cameraPermissionGrated = false;
+  bool scanCompleted = false;
 
   @override
   void initState() {
@@ -54,34 +55,87 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     }
   }
 
-  void onScan(String data, List<Offset> offsets) {
-    print([data, offsets]);
-    backendService.authenticate(data, context);
+  showSnackBar(BuildContext context, messageText) {
+    final snackBar = SnackBar(content: Text(messageText));
+
+// Find the Scaffold in the widget tree and use it to show a SnackBar.
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void onScan(String data, List<Offset> offsets, context) async {
+    print("here scan completed => $data ");
+    this.setState(() {
+      scanCompleted = true;
+    });
+    String authenticateMessage =
+        await backendService.authenticate(data, context);
+
+    print("message from authenticate => $authenticateMessage");
+    showSnackBar(context, authenticateMessage);
+    this.setState(() {
+      scanCompleted = false;
+    });
+
     _controller.stopCamera();
   }
 
-  void _cramAuthWithoutQR() async {
-    String aliceSecret =
-        'b26455a907582760ebf35bc4847de549bc41c24b25c8b1c58d5964f7b4f8a43bc55b0e9a601c9a9657d9a8b8bbc32f88b4e38ffaca03c8710ebae1b14ca9f364';
-    String colinSecret =
-        "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
-    String kevinSecret =
-        'e0d06915c3f81561fb5f8929caae64a7231db34fdeaff939aacac3cb736be8328c2843b518a2fc7a58fcec8c0aa98c735c0ce5f8ce880e97cd61cf1f2751efc5';
-    await backendService
-        .authenticateWithCram("@kevin🛠", cramSecret: kevinSecret)
-        .then((response) async {
-      print("auth successful $response");
-      if (response != null) {
-        await backendService.startMonitor();
-        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
+  void _uploadCramKeyFile() async {
+    try {
+      String cramKey;
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: true);
+      print("it is called  => $result");
+      // setState(() {
+      //   loading = true;
+      // });
+      for (var file in result.files) {
+        print("it is comming here => $file");
+        if (cramKey == null) {
+          String result = await FlutterQrReader.imgScan(File(file.path));
+          print("resultttt => $result");
+          if (result.contains('@')) {
+            cramKey = result;
+            break;
+          } //read scan QRcode and extract atsign,aeskey
+        }
       }
-    }).catchError((err) {
-      print("error in cram auth: $err");
-    });
+      print("hererere => $cramKey");
+
+      if (cramKey == null) {
+        // _showAlertDialog(_incorrectKeyFile);
+        print("herree also");
+        print("show file content error");
+        showSnackBar(context, "show file content error");
+        setState(() {
+          loading = true;
+        });
+      } else {
+        String authenticateMessage =
+            await backendService.authenticate(cramKey, context);
+
+        print("message from authenticate => $authenticateMessage");
+        showSnackBar(context, authenticateMessage);
+        setState(() {
+          loading = false;
+        });
+      }
+      // await _processAESKey(atsign, aesKey, fileContents);
+    } on Error catch (error) {
+      setState(() {
+        loading = false;
+      });
+      // _logger.severe('Processing files throws $error');
+      // _showAlertDialog(_failedFileProcessing);
+    } on Exception catch (ex) {
+      setState(() {
+        loading = false;
+      });
+      // _logger.severe('Processing files throws $ex');
+      // _showAlertDialog(_failedFileProcessing);
+    }
   }
 
   void _uploadKeyFile() async {
-    print("upload file");
     try {
       String fileContents, aesKey, atsign;
       FilePickerResult result = await FilePicker.platform
@@ -102,6 +156,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           //read scan QRcode and extract atsign,aeskey
         }
       }
+
       if (fileContents == null || (aesKey == null && atsign == null)) {
         // _showAlertDialog(_incorrectKeyFile);
         print("show file content error");
@@ -129,6 +184,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     await backendService
         .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
         .then((response) async {
+      await backendService.startMonitor();
       if (response) {
         await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
       }
@@ -175,21 +231,36 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             SizedBox(
               height: 25.toHeight,
             ),
-            Container(
-              alignment: Alignment.center,
-              width: 300.toWidth,
-              height: 350.toHeight,
-              color: Colors.black,
-              child: !cameraPermissionGrated
-                  ? SizedBox()
-                  : QrReaderView(
-                      width: 300.toWidth,
-                      height: 350.toHeight,
-                      callback: (container) {
-                        this._controller = container;
-                        _controller.startCamera(onScan);
-                      },
-                    ),
+            Builder(
+              builder: (context) => Container(
+                alignment: Alignment.center,
+                width: 300.toWidth,
+                height: 350.toHeight,
+                color: Colors.black,
+                child: !cameraPermissionGrated
+                    ? SizedBox()
+                    : Stack(
+                        children: [
+                          QrReaderView(
+                            width: 300.toWidth,
+                            height: 350.toHeight,
+                            callback: (container) {
+                              this._controller = container;
+                              _controller.startCamera((data, offsets) {
+                                onScan(data, offsets, context);
+                              });
+                            },
+                          ),
+                          scanCompleted
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          ColorConstants.redText)),
+                                )
+                              : SizedBox()
+                        ],
+                      ),
+              ),
             ),
             SizedBox(
               height: 25.toHeight,
@@ -202,6 +273,14 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               width: 230.toWidth,
               buttonText: TextStrings().upload,
               onPressed: _uploadKeyFile,
+            ),
+            SizedBox(
+              height: 25.toHeight,
+            ),
+            CustomButton(
+              width: 230.toWidth,
+              buttonText: TextStrings().uploadCram,
+              onPressed: _uploadCramKeyFile,
             ),
             SizedBox(
               height: 25.toHeight,
@@ -225,25 +304,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                 ),
               ),
             ),
-            // Remove this block of code later.
-            // Adding skip button for development & testing purpose.
-            // start
-            SizedBox(
-              height: 15.toHeight,
-            ),
-            InkWell(
-              onTap: () {
-                _cramAuthWithoutQR();
-              },
-              child: Text(
-                'Skip',
-                style: TextStyle(
-                  fontSize: 16.toFont,
-                  color: ColorConstants.blueText,
-                ),
-              ),
-            ),
-            // end
           ],
         ),
       ),

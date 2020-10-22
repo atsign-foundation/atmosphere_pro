@@ -47,7 +47,7 @@ class AddContactDialog extends StatelessWidget {
               ],
             ),
             content: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 198.toHeight),
+              constraints: BoxConstraints(maxHeight: 255.toHeight),
               child: Column(
                 children: [
                   SizedBox(
@@ -74,6 +74,19 @@ class AddContactDialog extends StatelessWidget {
                       CustomButton(
                         buttonText: TextStrings().addtoContact,
                         onPressed: () => onYesTap(atsignName),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.toHeight,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        isInverted: true,
+                        buttonText: TextStrings().buttonCancel,
+                        onPressed: () => Navigator.pop(context),
                       )
                     ],
                   ),
