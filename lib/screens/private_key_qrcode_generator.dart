@@ -16,6 +16,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
+import 'package:archive/archive_io.dart';
 
 class PrivateKeyQRCodeGenScreen extends StatefulWidget {
   PrivateKeyQRCodeGenScreen({Key key}) : super(key: key);
@@ -46,7 +47,6 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
   /// captures the widget and saves it as png file.
   void _captureAndSavePng() async {
     try {
-      List<String> imagePaths = [];
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
       var image = await boundary.toImage();
@@ -57,7 +57,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       if (fileLocation == null) {
         if (Platform.isIOS) {
           directory = await path_provider.getApplicationDocumentsDirectory();
-          fileLocation = directory.path.toString();
+          fileLocation = directory.path.toString() + '/';
         }
         if (Platform.isAndroid) {
           directory = await path_provider.getExternalStorageDirectory();
@@ -69,12 +69,14 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       var _imagename = atsign + '_private_key';
       final emptyFile = await File('$path$_imagename.png').create();
       await emptyFile.writeAsBytes(_pngBytes);
-      imagePaths.add(emptyFile.path);
+      var encoder = ZipFileEncoder();
+      encoder.create('$path' + 'atKeys.zip');
+      encoder.addFile(emptyFile);
       var _encryptKeys = atsign + '_encrypt_keys';
-      imagePaths.add('$path$_encryptKeys.atKeys');
+      encoder.addFile(File('$path$_encryptKeys.atKeys'));
+      encoder.close();
       final RenderBox box = context.findRenderObject();
-      await Share.shareFiles(imagePaths,
-          subject: 'Qr code',
+      await Share.shareFiles([encoder.zip_path],
           sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     } catch (e) {
       print(e.toString());
