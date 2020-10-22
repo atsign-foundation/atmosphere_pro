@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
+import 'package:atsign_atmosphere_app/services/at_error_dialog.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
@@ -13,6 +15,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class ScanQrScreen extends StatefulWidget {
   ScanQrScreen({Key key}) : super(key: key);
@@ -29,6 +32,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   bool cameraPermissionGrated = false;
   bool scanCompleted = false;
 
+  String _incorrectKeyFile =
+      'Unable to fetch the keys from chosen file. Please choose correct file';
+  String _failedFileProcessing = 'Failed in processing files. Please try again';
+
   @override
   void initState() {
     askCameraPermission();
@@ -36,7 +43,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   }
 
   askCameraPermission() async {
-    print("called herer");
     var status = await Permission.camera.status;
     print("camera status => $status");
     if (status.isUndetermined) {
@@ -126,44 +132,57 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   void _uploadKeyFile() async {
     try {
-      String fileContents, aesKey, atsign;
+      var fileContents, aesKey, atsign;
       FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+          .pickFiles(type: FileType.any, allowMultiple: false);
       setState(() {
         loading = true;
       });
-      for (var file in result.files) {
-        if (file.path.contains('atKeys')) {
-          fileContents = File(file.path).readAsStringSync();
+      var path = result.files[0].path;
+      var bytes = File(path).readAsBytesSync();
+      final archive = ZipDecoder().decodeBytes(bytes);
+      for (var file in archive) {
+        if (file.name.contains('atKeys')) {
+          fileContents = String.fromCharCodes(file.content);
         } else if (aesKey == null &&
             atsign == null &&
-            file.path.contains('_private_key.png')) {
-          String result = await FlutterQrReader.imgScan(File(file.path));
+            file.name.contains('_private_key.png')) {
+          var bytes = file.content as List<int>;
+          var path = (await path_provider.getTemporaryDirectory()).path;
+          var file1 = await File('$path' + 'test').create();
+          file1.writeAsBytesSync(bytes);
+          String result = await FlutterQrReader.imgScan(file1);
           List<String> params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
+          await File(path + 'test').delete();
           //read scan QRcode and extract atsign,aeskey
         }
       }
-
       if (fileContents == null || (aesKey == null && atsign == null)) {
-        // _showAlertDialog(_incorrectKeyFile);
-        print("show file content error");
+        _showAlertDialog(_incorrectKeyFile);
       }
       await _processAESKey(atsign, aesKey, fileContents);
     } on Error catch (error) {
       setState(() {
         loading = false;
       });
-      // _logger.severe('Processing files throws $error');
-      // _showAlertDialog(_failedFileProcessing);
+      _showAlertDialog(_failedFileProcessing);
     } on Exception catch (ex) {
       setState(() {
         loading = false;
       });
-      // _logger.severe('Processing files throws $ex');
-      // _showAlertDialog(_failedFileProcessing);
+      _showAlertDialog(_failedFileProcessing);
     }
+  }
+
+  _showAlertDialog(var errorMessage) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AtErrorDialog.getAlertDialog(errorMessage, context);
+        });
   }
 
   _processAESKey(String atsign, String aesKey, String contents) async {
@@ -262,15 +281,15 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               width: 230.toWidth,
               isInverted: true,
               buttonText: TextStrings().upload,
-              onPressed: _uploadKeyFile,
+              onPressed: _uploadCramKeyFile,
             ),
             SizedBox(
               height: 25.toHeight,
             ),
             CustomButton(
               width: 230.toWidth,
-              buttonText: TextStrings().uploadCram,
-              onPressed: _uploadCramKeyFile,
+              buttonText: TextStrings().uploadKey,
+              onPressed: _uploadKeyFile,
             ),
             SizedBox(
               height: 25.toHeight,
