@@ -84,28 +84,22 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       String cramKey;
       FilePickerResult result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: true);
-      print("it is called  => $result");
       // setState(() {
       //   loading = true;
       // });
       for (var file in result.files) {
-        print("it is comming here => $file");
         if (cramKey == null) {
           String result = await FlutterQrReader.imgScan(File(file.path));
-          print("resultttt => $result");
           if (result.contains('@')) {
             cramKey = result;
             break;
           } //read scan QRcode and extract atsign,aeskey
         }
       }
-      print("hererere => $cramKey");
 
       if (cramKey == null) {
         // _showAlertDialog(_incorrectKeyFile);
-        print("herree also");
-        print("show file content error");
-        showSnackBar(context, "show file content error");
+        showSnackBar(context, "File content error");
         setState(() {
           loading = true;
         });
@@ -113,7 +107,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         String authenticateMessage =
             await backendService.authenticate(cramKey, context);
 
-        print("message from authenticate => $authenticateMessage");
         showSnackBar(context, authenticateMessage);
         setState(() {
           loading = false;
@@ -124,14 +117,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       setState(() {
         loading = false;
       });
-      // _logger.severe('Processing files throws $error');
-      // _showAlertDialog(_failedFileProcessing);
     } on Exception catch (ex) {
       setState(() {
         loading = false;
       });
-      // _logger.severe('Processing files throws $ex');
-      // _showAlertDialog(_failedFileProcessing);
     }
   }
 
@@ -271,6 +260,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             CustomButton(
               width: 230.toWidth,
+              isInverted: true,
               buttonText: TextStrings().upload,
               onPressed: _uploadKeyFile,
             ),
