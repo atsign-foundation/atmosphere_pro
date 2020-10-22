@@ -80,7 +80,7 @@ class _ExpansionTileWidget extends StatelessWidget {
         ),
       ),
       trailing: Container(
-        padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+        padding: EdgeInsets.symmetric(vertical: 15),
         child: Image.asset(
           ImageConstants.contactsIcon,
           color: Colors.black,

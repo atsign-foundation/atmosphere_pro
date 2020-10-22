@@ -64,8 +64,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                     indicatorWeight: 5.toHeight,
                     indicatorColor: Colors.black,
                     indicatorSize: TabBarIndicatorSize.tab,
-                    labelStyle: CustomTextStyles.primaryBold16,
-                    unselectedLabelStyle: CustomTextStyles.secondaryRegular16,
+                    labelStyle: CustomTextStyles.primaryBold14,
+                    unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
                     controller: _controller,
                     tabs: [
                       Text(

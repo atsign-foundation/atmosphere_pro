@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:atsign_atmosphere_app/utils/faq_data.dart';
 
 class FaqsScreen extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class FaqsScreen extends StatelessWidget {
         margin:
             EdgeInsets.symmetric(horizontal: 16.toWidth, vertical: 16.toHeight),
         child: ListView.separated(
-          itemCount: 10,
+          itemCount: FAQData.data.length,
           separatorBuilder: (context, index) => SizedBox(
             height: 10.toHeight,
           ),
@@ -30,7 +31,7 @@ class FaqsScreen extends StatelessWidget {
                 ),
                 child: ExpansionTile(
                   title: Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit?',
+                    FAQData.data[index]["question"],
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 12.toFont,
@@ -47,7 +48,7 @@ class FaqsScreen extends StatelessWidget {
                         14.toHeight,
                       ),
                       child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                        FAQData.data[index]["answer"],
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 12.toFont,

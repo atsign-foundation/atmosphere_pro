@@ -76,14 +76,16 @@ class _MyAppState extends State<MyApp> {
         initialRoute: SetupRoutes.initialRoute,
         navigatorKey: NavService.navKey,
         theme: ThemeData(
-          fontFamily: 'HelveticaNeu',
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
-            color: Colors.white,
-            elevation: 0,
-            iconTheme: IconThemeData(color: Colors.black),
-          ),
-        ),
+            fontFamily: 'HelveticaNeu',
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              color: Colors.white,
+              elevation: 0,
+              iconTheme: IconThemeData(color: Colors.black),
+            ),
+            buttonBarTheme: ButtonBarThemeData(
+              alignment: MainAxisAlignment.center,
+            )),
         routes: SetupRoutes.routes,
       ),
     );

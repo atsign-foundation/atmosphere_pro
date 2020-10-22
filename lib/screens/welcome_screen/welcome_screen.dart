@@ -121,7 +121,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ],
       ),
       messageText: Text(
-        "Levina Thomas 4 files, 12 MB",
+        "",
         style: TextStyle(
           fontSize: 9.toFont,
           color: ColorConstants.fontSecondary,

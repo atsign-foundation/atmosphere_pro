@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -9,6 +10,7 @@ import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -23,6 +25,8 @@ class _HomeState extends State<Home> {
   bool sharingStatus = false;
   BackendService backendService;
   // bool userAcceptance;
+  final Permission _cameraPermission = Permission.camera;
+  final Permission _storagePermission = Permission.storage;
 
   @override
   void initState() {
@@ -30,6 +34,7 @@ class _HomeState extends State<Home> {
     _notificationService = NotificationService();
     _initBackendService();
     _checkToOnboard();
+    _checkForPermissionStatus();
   }
 
   void _initBackendService() {
@@ -53,6 +58,17 @@ class _HomeState extends State<Home> {
     }).catchError((error) async {
       print("Error in authenticating: $error");
     });
+  }
+
+  void _checkForPermissionStatus() async {
+    final existingCameraStatus = await _cameraPermission.status;
+    if (existingCameraStatus != PermissionStatus.granted) {
+      await _cameraPermission.request();
+    }
+    final existingStorageStatus = await _storagePermission.status;
+    if (existingStorageStatus != PermissionStatus.granted) {
+      await _storagePermission.request();
+    }
   }
 
   onNotificationClick(String payload) async {
@@ -159,9 +175,9 @@ class _HomeState extends State<Home> {
                         flex: 4,
                         child: Align(
                           alignment: Alignment.topRight,
-                          child: CommonButton(
-                            TextStrings().buttonStart,
-                            () {
+                          child: CustomButton(
+                            buttonText: TextStrings().buttonStart,
+                            onPressed: () {
                               if (onboardSuccess) {
                                 Navigator.pushNamedAndRemoveUntil(context,
                                     Routes.WELCOME_SCREEN, (route) => false);

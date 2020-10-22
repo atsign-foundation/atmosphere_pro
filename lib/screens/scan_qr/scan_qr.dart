@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -30,33 +32,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   }
 
   void onScan(String data, List<Offset> offsets) {
-    print([data, offsets]);
     backendService.authenticate(data, context);
     _controller.stopCamera();
   }
 
-  void _cramAuthWithoutQR() async {
-    String aliceSecret =
-        'b26455a907582760ebf35bc4847de549bc41c24b25c8b1c58d5964f7b4f8a43bc55b0e9a601c9a9657d9a8b8bbc32f88b4e38ffaca03c8710ebae1b14ca9f364';
-    String colinSecret =
-        "540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba";
-    String kevinSecret =
-        'e0d06915c3f81561fb5f8929caae64a7231db34fdeaff939aacac3cb736be8328c2843b518a2fc7a58fcec8c0aa98c735c0ce5f8ce880e97cd61cf1f2751efc5';
-    await backendService
-        .authenticateWithCram("@kevin🛠", cramSecret: kevinSecret)
-        .then((response) async {
-      print("auth successful $response");
-      if (response != null) {
-        await backendService.startMonitor();
-        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
-      }
-    }).catchError((err) {
-      print("error in cram auth: $err");
-    });
-  }
-
   void _uploadKeyFile() async {
-    print("upload file");
     try {
       String fileContents, aesKey, atsign;
       FilePickerResult result = await FilePicker.platform
@@ -77,6 +57,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           //read scan QRcode and extract atsign,aeskey
         }
       }
+
       if (fileContents == null || (aesKey == null && atsign == null)) {
         // _showAlertDialog(_incorrectKeyFile);
         print("show file content error");
@@ -104,6 +85,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     await backendService
         .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
         .then((response) async {
+      await backendService.startMonitor();
       if (response) {
         await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
       }
@@ -151,6 +133,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               height: 25.toHeight,
             ),
             Container(
+              alignment: Alignment.center,
+              width: 300.toWidth,
               height: 350.toHeight,
               child: QrReaderView(
                 width: 300.toWidth,
@@ -169,6 +153,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               height: 25.toHeight,
             ),
             CustomButton(
+              width: 230.toWidth,
               buttonText: TextStrings().upload,
               onPressed: _uploadKeyFile,
             ),
@@ -177,7 +162,13 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.WEBSITE_SCREEN);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => WebsiteScreen(
+                        url: MixedConstants.WEBSITE_URL,
+                        title: TextStrings().websiteTitle),
+                  ),
+                );
               },
               child: Text(
                 TextStrings().scanQrFooter,
@@ -188,25 +179,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                 ),
               ),
             ),
-            // Remove this block of code later.
-            // Adding skip button for development & testing purpose.
-            // start
-            SizedBox(
-              height: 15.toHeight,
-            ),
-            InkWell(
-              onTap: () {
-                _cramAuthWithoutQR();
-              },
-              child: Text(
-                'Skip',
-                style: TextStyle(
-                  fontSize: 16.toFont,
-                  color: ColorConstants.blueText,
-                ),
-              ),
-            ),
-            // end
           ],
         ),
       ),
