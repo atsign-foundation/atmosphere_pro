@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ScanQrScreen extends StatefulWidget {
   ScanQrScreen({Key key}) : super(key: key);
@@ -23,10 +26,32 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   QrReaderViewController _controller;
   BackendService backendService = BackendService.getInstance();
   bool loading = false;
+  bool cameraPermissionGrated = false;
 
   @override
   void initState() {
+    askCameraPermission();
     super.initState();
+  }
+
+  askCameraPermission() async {
+    print("called herer");
+    var status = await Permission.camera.status;
+    print("camera status => $status");
+    if (status.isUndetermined) {
+      // We didn't ask for permission yet.
+      await [
+        Permission.camera,
+        Permission.storage,
+      ].request();
+      this.setState(() {
+        cameraPermissionGrated = true;
+      });
+    } else {
+      this.setState(() {
+        cameraPermissionGrated = true;
+      });
+    }
   }
 
   void onScan(String data, List<Offset> offsets) {
@@ -151,15 +176,20 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               height: 25.toHeight,
             ),
             Container(
+              alignment: Alignment.center,
+              width: 300.toWidth,
               height: 350.toHeight,
-              child: QrReaderView(
-                width: 300.toWidth,
-                height: 350.toHeight,
-                callback: (container) {
-                  this._controller = container;
-                  _controller.startCamera(onScan);
-                },
-              ),
+              color: Colors.black,
+              child: !cameraPermissionGrated
+                  ? SizedBox()
+                  : QrReaderView(
+                      width: 300.toWidth,
+                      height: 350.toHeight,
+                      callback: (container) {
+                        this._controller = container;
+                        _controller.startCamera(onScan);
+                      },
+                    ),
             ),
             SizedBox(
               height: 25.toHeight,
@@ -169,6 +199,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               height: 25.toHeight,
             ),
             CustomButton(
+              width: 230.toWidth,
               buttonText: TextStrings().upload,
               onPressed: _uploadKeyFile,
             ),
@@ -177,7 +208,13 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.WEBSITE_SCREEN);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => WebsiteScreen(
+                        url: MixedConstants.WEBSITE_URL,
+                        title: TextStrings().websiteTitle),
+                  ),
+                );
               },
               child: Text(
                 TextStrings().scanQrFooter,

@@ -23,11 +23,11 @@ packages:
     source: hosted
     version: "2.5.0-nullsafety.1"
   at_client:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: at_client
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -36,7 +36,7 @@ packages:
     description:
       path: at_client_mobile
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -45,7 +45,7 @@ packages:
     description:
       path: at_commons
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -54,25 +54,16 @@ packages:
     description:
       path: at_contact
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.0.0"
-  at_demo_data:
-    dependency: "direct main"
-    description:
-      path: at_demo_data
-      ref: dev_env
-      resolved-ref: cf3be874e9ed54d224d9772345b6b2bbb0399a02
-      url: "git@github.com:atsign-company/at_demos.git"
-    source: git
-    version: "0.1.0"
   at_lookup:
     dependency: transitive
     description:
       path: at_lookup
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -81,7 +72,7 @@ packages:
     description:
       path: at_persistence_secondary_server
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -90,7 +81,7 @@ packages:
     description:
       path: at_persistence_spec
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -99,7 +90,7 @@ packages:
     description:
       path: at_utils
       ref: dev_env
-      resolved-ref: "20712c96b13cb3e16abb672ca083a723c54b4bdd"
+      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -214,7 +205,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9+1"
+    version: "2.0.10"
   flushbar:
     dependency: "direct main"
     description:
@@ -405,6 +396,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.2"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.1+1"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   platform:
     dependency: transitive
     description:
@@ -549,7 +554,7 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.5"
   win32:
     dependency: transitive
     description:

@@ -119,9 +119,10 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            double.parse(payload.size.toString()) / 1024 <= 1024
-                                ? '${payload.size} Kb'
-                                : '${(payload.size / 1024).toStringAsFixed(2)} Mb',
+                            double.parse(payload.size.toString()) <=
+                                    1048576 //1024 * 1024 bytes
+                                ? '${payload.size / 1024} Kb'
+                                : '${(payload.size / 1048576).toStringAsFixed(2)} Mb',
                             style: CustomTextStyles.secondaryRegular14,
                           )
                         ],
@@ -145,6 +146,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
                     files: [
                   FilesDetail(
                       filePath: backendService.atClientPreference.downloadPath +
+                          '/' +
                           payload.file,
                       size: payload.size,
                       fileName: payload.file,

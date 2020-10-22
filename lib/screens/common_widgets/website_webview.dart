@@ -1,22 +1,26 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebsiteScreen extends StatefulWidget {
+  final String title;
+  final String url;
+
+  const WebsiteScreen({Key key, this.title, this.url}) : super(key: key);
   @override
   _WebsiteScreenState createState() => _WebsiteScreenState();
 }
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
+  bool loading;
   @override
   void initState() {
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    loading = true;
   }
 
   @override
@@ -36,14 +40,29 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
           ),
         ),
         title: Text(
-          TextStrings().websiteTitle,
+          widget.title,
           style: CustomTextStyles.primaryBold18,
         ),
       ),
-      body: WebView(
-        initialUrl: MixedConstants.WEBSITE_URL,
-        javascriptMode: JavascriptMode.unrestricted,
-      ),
+      body: Stack(children: [
+        WebView(
+          initialUrl: widget.url,
+          javascriptMode: JavascriptMode.unrestricted,
+          onPageFinished: (test1) {
+            this.setState(() {
+              loading = false;
+            });
+          },
+        ),
+        loading
+            ? Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                  ColorConstants.blueText,
+                )),
+              )
+            : SizedBox()
+      ]),
     );
   }
 }

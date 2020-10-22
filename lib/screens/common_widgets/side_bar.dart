@@ -1,6 +1,7 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarTransferHistory,
     TextStrings().sidebarBlockedUser,
     TextStrings().sidebarTermsAndConditions,
+    TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
   ];
 
@@ -25,6 +27,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.transferHistoryIcon,
     ImageConstants.blockedIcon,
     ImageConstants.termsAndConditionsIcon,
+    ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
   ];
 
@@ -32,7 +35,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.CONTACT_SCREEN,
     Routes.HISTORY,
     Routes.BLOCKED_USERS,
-    Routes.TERMS_CONDITIONS,
+    Routes.WEBSITE_SCREEN,
+    Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
   ];
 
@@ -46,34 +50,115 @@ class _SideBarWidgetState extends State<SideBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30.toWidth),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 100.toHeight,
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: menuItemsTitle.length,
-              itemBuilder: (context, index) => InkWell(
+    return SizedBox(
+      width: SizeConfig().screenWidth * 0.65,
+      child: Drawer(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 30.toWidth),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 100.toHeight,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: menuItemsTitle.length,
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(targetScreens[index],
+                        arguments: (index == 3)
+                            ? {
+                                "title":
+                                    TextStrings().sidebarTermsAndConditions,
+                                "url": MixedConstants.TERMS_CONDITIONS
+                              }
+                            : (index == 4)
+                                ? {
+                                    "title": TextStrings().sidebarPrivacyPolicy,
+                                    "url": MixedConstants.PRIVACY_POLICY
+                                  }
+                                : null);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 13.toHeight),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          menuItemsIcons[index],
+                          height: 20.toHeight,
+                          color: ColorConstants.fadedText,
+                        ),
+                        SizedBox(
+                          width: 15.toWidth,
+                        ),
+                        Text(
+                          menuItemsTitle[index],
+                          style: TextStyle(
+                            color: ColorConstants.fadedText,
+                            fontSize: 14.toFont,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40.toHeight,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    TextStrings().sidebarAutoAcceptFile,
+                    style: TextStyle(
+                      color: ColorConstants.fadedText,
+                      fontSize: 14.toFont,
+                    ),
+                  ),
+                  Transform.scale(
+                    scale: 0.6,
+                    child: CupertinoSwitch(
+                      value: autoAcceptFiles,
+                      onChanged: (b) {
+                        setState(() {
+                          autoAcceptFiles = b;
+                        });
+                      },
+                      activeColor: Colors.black,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 14.toHeight,
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.toWidth),
+                child: Text(
+                  TextStrings().sidebarEnablingMessage,
+                  style: TextStyle(
+                    color: ColorConstants.dullText,
+                    fontSize: 12.toFont,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 210.toHeight,
+              ),
+              InkWell(
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).pushNamed(targetScreens[index],
-                      arguments: (index == 2)
-                          ? {
-                              'blockedUserList': ['hello']
-                            }
-                          : null);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.HOME, (route) => false);
                 },
-                child: Container(
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 13.toHeight),
                   child: Row(
                     children: [
                       Image.asset(
-                        menuItemsIcons[index],
+                        ImageConstants.logoutIcon,
                         height: 20.toHeight,
                         color: ColorConstants.fadedText,
                       ),
@@ -81,7 +166,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         width: 15.toWidth,
                       ),
                       Text(
-                        menuItemsTitle[index],
+                        TextStrings().sidebarSwitchOut,
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 14.toFont,
@@ -91,79 +176,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 40.toHeight,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  TextStrings().sidebarAutoAcceptFile,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
-                  ),
-                ),
-                Transform.scale(
-                  scale: 0.6,
-                  child: CupertinoSwitch(
-                    value: autoAcceptFiles,
-                    onChanged: (b) {
-                      setState(() {
-                        autoAcceptFiles = b;
-                      });
-                    },
-                    activeColor: Colors.black,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 14.toHeight,
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 16.toWidth),
-              child: Text(
-                TextStrings().sidebarEnablingMessage,
-                style: TextStyle(
-                  color: ColorConstants.dullText,
-                  fontSize: 12.toFont,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 210.toHeight,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.HOME, (route) => false);
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13.toHeight),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      ImageConstants.logoutIcon,
-                      height: 20.toHeight,
-                      color: ColorConstants.fadedText,
-                    ),
-                    SizedBox(
-                      width: 15.toWidth,
-                    ),
-                    Text(
-                      TextStrings().sidebarSwitchOut,
-                      style: TextStyle(
-                        color: ColorConstants.fadedText,
-                        fontSize: 14.toFont,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
