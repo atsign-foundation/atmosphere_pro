@@ -18,7 +18,14 @@ class FilePickerProvider extends BaseModel {
   pickFiles() async {
     setStatus(PICK_FILES, Status.Loading);
     try {
+      print('SELECTED LIST INITIAL====>$selectedFiles');
+      List<PlatformFile> tempList = [];
+      if (selectedFiles.isNotEmpty) {
+        tempList = selectedFiles;
+      }
+      print('TEMP LIST INITIAL====>$tempList');
       selectedFiles = [];
+
       totalSize = 0;
       result = await FilePicker.platform.pickFiles(
           allowMultiple: true,
@@ -26,9 +33,17 @@ class FilePickerProvider extends BaseModel {
           allowCompression: true,
           withData: true);
       if (result?.files != null) {
-        selectedFiles = [...result?.files];
+        selectedFiles = [...tempList];
+        tempList = [];
+        print('SLECRED FILES FIRST====>$selectedFiles');
+        result.files.forEach((element) {
+          selectedFiles.add(element);
+        });
+        // selectedFiles = [...result?.files];
+        print('SELECTED LIST FINAL !=====>$selectedFiles');
         calculateSize();
       }
+      print('SELECTED LIST FINAL AFETR SIZE=====>$selectedFiles');
       setStatus(PICK_FILES, Status.Done);
     } catch (e) {
       setStatus(PICK_FILES, Status.Error);
@@ -37,8 +52,11 @@ class FilePickerProvider extends BaseModel {
 
   calculateSize() async {
     totalSize = 0;
+    print('selected files lenhh====>${selectedFiles.length}');
+    print('tota;l size efore====>$totalSize');
     selectedFiles?.forEach((element) {
       totalSize += element.size;
     });
+    print('tota;l size after====>$totalSize');
   }
 }

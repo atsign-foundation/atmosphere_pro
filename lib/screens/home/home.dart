@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
     _notificationService = NotificationService();
     _initBackendService();
     _checkToOnboard();
@@ -178,13 +180,13 @@ class _HomeState extends State<Home> {
                           child: CustomButton(
                             buttonText: TextStrings().buttonStart,
                             onPressed: () {
-                              if (onboardSuccess) {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    Routes.WELCOME_SCREEN, (route) => false);
-                              } else {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    Routes.SCAN_QR_SCREEN, (route) => false);
-                              }
+                              // if (onboardSuccess) {
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  Routes.WELCOME_SCREEN, (route) => false);
+                              // } else {
+                              //   Navigator.pushNamedAndRemoveUntil(context,
+                              //       Routes.SCAN_QR_SCREEN, (route) => false);
+                              // }
                             },
                           ),
                         ),

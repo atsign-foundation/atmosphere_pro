@@ -87,7 +87,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               ),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: ClampingScrollPhysics(),
                 itemCount: provider.selectedFiles.isNotEmpty
                     ? int.parse(provider.selectedFiles?.length?.toString())
                     : 0,
@@ -107,7 +107,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
                     child: ListTile(
                       title: Text(
-                        provider.result.files[index].name.toString(),
+                        provider.selectedFiles[index].name.toString(),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.toFont,
