@@ -187,7 +187,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     String path;
     if (Platform.isIOS) {
       directory = await path_provider.getApplicationDocumentsDirectory();
-      path = directory.path.toString();
+      path = directory.path.toString() + '/';
     }
     if (Platform.isAndroid) {
       directory = await path_provider.getExternalStorageDirectory();
