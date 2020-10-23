@@ -71,7 +71,7 @@ class BackendService {
           await Navigator.pushNamed(context, Routes.PRIVATE_KEY_GEN_SCREEN);
         }
       } catch (e) {
-        print("error here =>  ${e.toString}");
+        print("error here =>  ${e.toString()}");
         c.complete('Fail to Authenticate');
         print(e);
       }
