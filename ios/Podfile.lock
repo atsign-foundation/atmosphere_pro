@@ -53,11 +53,15 @@ PODS:
   - libwebp/webp (1.1.0)
   - path_provider (0.0.1):
     - Flutter
+  - "permission_handler (5.0.1+1)":
+    - Flutter
   - receive_sharing_intent (0.0.1):
     - Flutter
   - SDWebImage (5.9.2):
     - SDWebImage/Core (= 5.9.2)
   - SDWebImage/Core (5.9.2)
+  - share (0.0.1):
+    - Flutter
   - SwiftyGif (5.3.0)
   - video_thumbnail (0.0.1):
     - Flutter
@@ -73,7 +77,9 @@ DEPENDENCIES:
   - flutter_qr_reader (from `.symlinks/plugins/flutter_qr_reader/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - receive_sharing_intent (from `.symlinks/plugins/receive_sharing_intent/ios`)
+  - share (from `.symlinks/plugins/share/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
@@ -100,8 +106,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
   receive_sharing_intent:
     :path: ".symlinks/plugins/receive_sharing_intent/ios"
+  share:
+    :path: ".symlinks/plugins/share/ios"
   video_thumbnail:
     :path: ".symlinks/plugins/video_thumbnail/ios"
   webview_flutter:
@@ -118,12 +128,14 @@ SPEC CHECKSUMS:
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   receive_sharing_intent: c0d87310754e74c0f9542947e7cbdf3a0335a3b1
   SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
+  share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
+PODFILE CHECKSUM: be3641bcaef7a85afc04e2ed523c1b5ffa98afbe
 
 COCOAPODS: 1.8.4

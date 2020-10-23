@@ -7,7 +7,8 @@ import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 class ContactProvider extends BaseModel {
   List<AtContact> contactList = [];
   List<AtContact> blockContactList = [];
-  String selectedAtsign = '';
+  List<String> allContactsList = [];
+  String selectedAtsign;
   BackendService backendService = BackendService.getInstance();
   ContactProvider() {
     initContactImpl();
@@ -34,10 +35,12 @@ class ContactProvider extends BaseModel {
   List<Map<String, dynamic>> contacts = [];
   static AtContactsImpl atContact;
 
-  getContacts() async {
+  Future getContacts() async {
+    Completer c = Completer();
     try {
       setStatus(Contacts, Status.Loading);
       contactList = [];
+      allContactsList = [];
       await completer.future;
       contactList = await atContact.listContacts();
       List<AtContact> tempContactList = [...contactList];
@@ -46,6 +49,7 @@ class ContactProvider extends BaseModel {
 
       for (int i = 0; i < range; i++) {
         print("is blocked => ${contactList[i].blocked}");
+        allContactsList.add(contactList[i].atSign);
         if (contactList[i].blocked) {
           print("herererr");
           tempContactList.remove(contactList[i]);
@@ -56,10 +60,13 @@ class ContactProvider extends BaseModel {
           (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
       print("list =>  $contactList");
       setStatus(Contacts, Status.Done);
+      c.complete(true);
     } catch (e) {
       print("error here => $e");
       setStatus(Contacts, Status.Error);
+      c.complete(true);
     }
+    return c.future;
   }
 
   blockUnblockContact({String atSign, bool blockAction}) async {
@@ -108,7 +115,8 @@ class ContactProvider extends BaseModel {
     }
   }
 
-  addContact({String atSign}) async {
+  Future addContact({String atSign}) async {
+    Completer c = Completer();
     try {
       setStatus(Contacts, Status.Loading);
       if (atSign[0] != '@') {
@@ -120,9 +128,12 @@ class ContactProvider extends BaseModel {
       );
       var result = await atContact.add(contact);
       print('create result : ${result}');
-      getContacts();
+      await getContacts();
+      c.complete(true);
     } catch (e) {
+      c.complete(true);
       setStatus(Contacts, Status.Error);
     }
+    return c.future;
   }
 }
