@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -17,13 +18,21 @@ class _HistoryScreenState extends State<HistoryScreen>
     with SingleTickerProviderStateMixin {
   TabController _controller;
   bool isOpen = false;
-  HistoryProvider provider;
+  HistoryProvider historyProvider;
+
   @override
-  void initState() {
-    _controller = TabController(length: 2, vsync: this, initialIndex: 0);
-    provider = HistoryProvider();
-    provider.getSentHistory();
-    super.initState();
+  void didChangeDependencies() {
+    if (historyProvider == null) {
+      _controller = TabController(length: 2, vsync: this, initialIndex: 0);
+      historyProvider = Provider.of<HistoryProvider>(context);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        print("fetched contacts");
+        historyProvider.getSentHistory();
+        historyProvider.getRecievedHistory();
+      });
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -45,10 +54,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                   child: TabBar(
                     onTap: (index) {
                       if (index == 0) {
-                        provider.getSentHistory();
+                        // provider.getSentHistory();
                       }
                       if (index == 1) {
-                        provider.getRecievedHistory();
+                        // provider.getRecievedHistory();
                       }
                     },
                     labelColor: ColorConstants.fontPrimary,
@@ -73,7 +82,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     controller: _controller,
                     children: [
                       ProviderHandler<HistoryProvider>(
-                        functionName: provider.SENT_HISTORY,
+                        functionName: historyProvider.SENT_HISTORY,
                         successBuilder: (provider) => (provider
                                 .sentHistory.isEmpty)
                             ? Center(
@@ -98,7 +107,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         ),
                       ),
                       ProviderHandler<HistoryProvider>(
-                        functionName: provider.RECEIVED_HISTORY,
+                        functionName: historyProvider.RECEIVED_HISTORY,
                         successBuilder: (provider) => (provider
                                 .receivedHistory.isEmpty)
                             ? Center(

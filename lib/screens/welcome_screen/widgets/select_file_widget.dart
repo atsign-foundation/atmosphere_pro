@@ -7,7 +7,9 @@ import 'package:atsign_atmosphere_app/utils/file_types.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SelectFileWidget extends StatefulWidget {
@@ -21,7 +23,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   bool isLoading = false;
 
   Uint8List videoThumbnail;
-  FilePickerProvider provider;
+  FilePickerProvider filePickerProvider;
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
@@ -35,15 +37,24 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
 
   @override
   void initState() {
-    provider = FilePickerProvider();
+    filePickerProvider = FilePickerProvider();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (filePickerProvider == null) {
+      filePickerProvider = Provider.of<FilePickerProvider>(context);
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<FilePickerProvider>(
-      functionName: provider.PICK_FILES,
-      successBuilder: (provider) => ClipRRect(
+      functionName: filePickerProvider.PICK_FILES,
+      successBuilder: (filePickerProvider) => ClipRRect(
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.toFont),
@@ -53,7 +64,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             children: [
               ListTile(
                 title: Text(
-                  provider.selectedFiles.isEmpty
+                  filePickerProvider.selectedFiles.isEmpty
                       ? TextStrings().welcomeFilePlaceholder
                       : TextStrings().welcomeAddFilePlaceholder,
                   style: TextStyle(
@@ -61,20 +72,21 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     fontSize: 14.toFont,
                   ),
                 ),
-                subtitle: provider.selectedFiles.isEmpty
+                subtitle: filePickerProvider.selectedFiles.isEmpty
                     ? null
                     : Text(
-                        double.parse(provider.totalSize.toString()) <= 1024
-                            ? '${provider.totalSize} Kb . ${provider.selectedFiles?.length} file(s)'
-                            : '${(provider.totalSize / 1024).toStringAsFixed(2)} Mb . ${provider.selectedFiles?.length} file(s)',
+                        double.parse(filePickerProvider.totalSize.toString()) <=
+                                1024
+                            ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
+                            : '${(filePickerProvider.totalSize / 1024).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 10.toFont,
                         ),
                       ),
                 trailing: InkWell(
-                  onTap: () {
-                    provider.pickFiles();
+                  onTap: () async {
+                    filePickerProvider.pickFiles();
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
@@ -88,13 +100,15 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: ClampingScrollPhysics(),
-                itemCount: provider.selectedFiles.isNotEmpty
-                    ? int.parse(provider.selectedFiles?.length?.toString())
+                itemCount: filePickerProvider.selectedFiles.isNotEmpty
+                    ? int.parse(
+                        filePickerProvider.selectedFiles?.length?.toString())
                     : 0,
                 itemBuilder: (c, index) {
-                  if (FileTypes.VIDEO_TYPES
-                      .contains(provider.selectedFiles[index].extension)) {
-                    videoThumbnailBuilder(provider.selectedFiles[index].path);
+                  if (FileTypes.VIDEO_TYPES.contains(
+                      filePickerProvider.selectedFiles[index].extension)) {
+                    videoThumbnailBuilder(
+                        filePickerProvider.selectedFiles[index].path);
                   }
                   return Container(
                     decoration: BoxDecoration(
@@ -107,36 +121,39 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
                     child: ListTile(
                       title: Text(
-                        provider.selectedFiles[index].name.toString(),
+                        filePickerProvider.selectedFiles[index].name.toString(),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.toFont,
                         ),
                       ),
                       subtitle: Text(
-                        double.parse(provider.selectedFiles[index].size
+                        double.parse(filePickerProvider
+                                    .selectedFiles[index].size
                                     .toString()) <=
                                 1024
-                            ? '${provider.selectedFiles[index].size} Kb' +
-                                ' . ${provider.selectedFiles[index].extension}'
-                            : '${(provider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
-                                ' . ${provider.selectedFiles[index].extension}',
+                            ? '${filePickerProvider.selectedFiles[index].size} Kb' +
+                                ' . ${filePickerProvider.selectedFiles[index].extension}'
+                            : '${(filePickerProvider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
+                                ' . ${filePickerProvider.selectedFiles[index].extension}',
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 14.toFont,
                         ),
                       ),
                       leading: thumbnail(
-                          provider.selectedFiles[index].extension.toString(),
-                          provider.selectedFiles[index].path.toString()),
+                          filePickerProvider.selectedFiles[index].extension
+                              .toString(),
+                          filePickerProvider.selectedFiles[index].path
+                              .toString()),
                       trailing: IconButton(
                         icon: Icon(Icons.clear),
                         onPressed: () {
                           setState(() {
-                            provider.selectedFiles.removeAt(index);
-                            provider.calculateSize();
+                            filePickerProvider.selectedFiles.removeAt(index);
+                            filePickerProvider.calculateSize();
                           });
-                          if (provider.selectedFiles.isEmpty) {
+                          if (filePickerProvider.selectedFiles.isEmpty) {
                             widget.onUpdate(false);
                           }
                         },

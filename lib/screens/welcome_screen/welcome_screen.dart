@@ -1,3 +1,5 @@
+import 'package:at_commons/at_commons.dart';
+import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
@@ -9,6 +11,7 @@ import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +29,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isFileSelected;
   ContactProvider contactProvider;
   BackendService backendService = BackendService.getInstance();
+  HistoryProvider historyProvider;
 
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
@@ -51,8 +55,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void didChangeDependencies() {
     if (contactProvider == null) {
       contactProvider = Provider.of<ContactProvider>(context);
+
+      if (historyProvider != null) {
+        historyProvider = Provider.of<HistoryProvider>(context);
+      }
+
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        contactProvider.getContacts();
+        print("fetched contacts");
+        contactProvider?.getContacts();
+        historyProvider?.getSentHistory();
+        historyProvider?.getRecievedHistory();
       });
     }
 
@@ -188,6 +200,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 SelectFileWidget(
                   (b) {
+                    print("file is selected => $b");
                     setState(() {
                       isFileSelected = b;
                     });
@@ -208,6 +221,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             contactPickerModel.selectedAtsign,
                             filePickerModel.selectedFiles[0].path);
                         if (response == true) {
+                          Provider.of<HistoryProvider>(context, listen: false)
+                              .setFilesHistory(
+                                  atSignName: contactProvider.selectedAtsign,
+                                  historyType: HistoryType.send,
+                                  files: [
+                                FilesDetail(
+                                    filePath:
+                                        filePickerModel.selectedFiles[0].path,
+                                    size: filePickerModel.totalSize,
+                                    fileName: filePickerModel
+                                        .result.files[0].name
+                                        .toString(),
+                                    type: filePickerModel
+                                        .selectedFiles[0].extension
+                                        .toString())
+                              ]);
                           _showScaffold(status: 1);
                         } else {
                           _showScaffold(status: 2);

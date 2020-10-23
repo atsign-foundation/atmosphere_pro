@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
+import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:provider/provider.dart';
 
 import 'navigation_service.dart';
 
@@ -22,6 +26,7 @@ class BackendService {
   String _atsign;
   Function ask_user_acceptance;
   String app_lifecycle_state;
+  AtClientPreference atClientPreference;
 
   String get currentAtsign => _atsign;
 
@@ -33,7 +38,7 @@ class BackendService {
         await path_provider.getApplicationSupportDirectory();
     print("paths => $appDocumentDirectory $appSupportDirectory");
     String path = appSupportDirectory.path;
-    var atClientPreference = AtClientPreference();
+    atClientPreference = AtClientPreference();
 
     atClientPreference.isLocalStoreRequired = true;
     atClientPreference.commitLogPath = path;
@@ -50,7 +55,8 @@ class BackendService {
   }
 
   // QR code scan
-  authenticate(String qrCodeString, BuildContext context) async {
+  Future authenticate(String qrCodeString, BuildContext context) async {
+    Completer c = Completer();
     if (qrCodeString.contains('@')) {
       try {
         List<String> params = qrCodeString.split(':');
@@ -58,15 +64,20 @@ class BackendService {
           await authenticateWithCram(params[0], cramSecret: params[1]);
           _atsign = params[0];
           await startMonitor();
+          c.complete('Auth Completed');
           await Navigator.pushNamed(context, Routes.PRIVATE_KEY_GEN_SCREEN);
         }
       } catch (e) {
+        print("error here =>  ${e.toString}");
+        c.complete('Fail to Authenticate');
         print(e);
       }
     } else {
       // wrong bar code
+      c.complete("incorrect QR code");
       print("incorrect QR code");
     }
+    return c.future;
   }
 
   // first time setup with cram authentication
@@ -130,6 +141,8 @@ class BackendService {
     }
   }
 
+  void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
+
   // acknowledge file transfer
   Future<bool> acceptStream(
       String atsign, String filename, String filesize) async {
@@ -154,6 +167,7 @@ class BackendService {
         },
       ),
     );
+
     return userAcceptance;
   }
 }

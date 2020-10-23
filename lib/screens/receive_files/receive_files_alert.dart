@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {
@@ -26,6 +30,7 @@ class ReceiveFilesAlert extends StatefulWidget {
 class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
   NotificationPayload payload;
   bool status = false;
+  BackendService backendService = BackendService.getInstance();
   @override
   void initState() {
     Map<String, dynamic> test =
@@ -36,6 +41,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
 
   @override
   Widget build(BuildContext context) {
+    print("payload => ${widget.payload}");
     return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
@@ -133,6 +139,21 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
         CustomButton(
           buttonText: TextStrings().accept,
           onPressed: () {
+            Provider.of<HistoryProvider>(context, listen: false)
+                .setFilesHistory(
+                    atSignName: payload.name.toString(),
+                    historyType: HistoryType.received,
+                    files: [
+                  FilesDetail(
+                      filePath: backendService.atClientPreference.downloadPath +
+                          '/' +
+                          payload.file,
+                      size: payload.size,
+                      fileName: payload.file,
+                      type: payload.file
+                          .substring(payload.file.lastIndexOf('.') + 1))
+                ]);
+
             status = true;
             widget.onAccept;
             NotificationService().cancelNotifications();
