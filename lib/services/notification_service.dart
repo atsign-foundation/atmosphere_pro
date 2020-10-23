@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
-import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
@@ -17,10 +16,10 @@ class NotificationService {
   final BehaviorSubject<ReceivedNotification>
       didReceivedLocalNotificationSubject =
       BehaviorSubject<ReceivedNotification>();
-  FilePickerProvider _filePickerProvider;
+
   init() async {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
-    _filePickerProvider = FilePickerProvider();
+
     if (Platform.isIOS) {
       _requestIOSPermission();
     }

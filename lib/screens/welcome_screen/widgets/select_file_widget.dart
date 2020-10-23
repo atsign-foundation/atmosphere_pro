@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/file_types.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -38,6 +38,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   @override
   void initState() {
     filePickerProvider = FilePickerProvider();
+    // provider = Provider.of<FilePickerProvider>(context, listen: false);
     super.initState();
   }
 
@@ -52,121 +53,121 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<FilePickerProvider>(
-      functionName: filePickerProvider.PICK_FILES,
-      successBuilder: (filePickerProvider) => ClipRRect(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.toFont),
-            color: ColorConstants.inputFieldColor,
-          ),
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  filePickerProvider.selectedFiles.isEmpty
-                      ? TextStrings().welcomeFilePlaceholder
-                      : TextStrings().welcomeAddFilePlaceholder,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
-                  ),
-                ),
-                subtitle: filePickerProvider.selectedFiles.isEmpty
-                    ? null
-                    : Text(
-                        double.parse(filePickerProvider.totalSize.toString()) <=
-                                1024
-                            ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
-                            : '${(filePickerProvider.totalSize / 1024).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
-                        style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 10.toFont,
-                        ),
-                      ),
-                trailing: InkWell(
-                  onTap: () async {
-                    filePickerProvider.pickFiles();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Icon(
-                      Icons.add_circle,
-                      color: Colors.black,
-                    ),
-                  ),
+    return ClipRRect(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.toFont),
+          color: ColorConstants.inputFieldColor,
+        ),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                filePickerProvider.selectedFiles.isEmpty
+                    ? TextStrings().welcomeFilePlaceholder
+                    : TextStrings().welcomeAddFilePlaceholder,
+                style: TextStyle(
+                  color: ColorConstants.fadedText,
+                  fontSize: 14.toFont,
                 ),
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                itemCount: filePickerProvider.selectedFiles.isNotEmpty
-                    ? int.parse(
-                        filePickerProvider.selectedFiles?.length?.toString())
-                    : 0,
-                itemBuilder: (c, index) {
-                  if (FileTypes.VIDEO_TYPES.contains(
-                      filePickerProvider.selectedFiles[index].extension)) {
-                    videoThumbnailBuilder(
-                        filePickerProvider.selectedFiles[index].path);
-                  }
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: ColorConstants.dividerColor.withOpacity(0.1),
-                          width: 1.toHeight,
-                        ),
+              subtitle: filePickerProvider.selectedFiles.isEmpty
+                  ? null
+                  : Text(
+                      double.parse(filePickerProvider.totalSize.toString()) <=
+                              1024
+                          ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
+                          : '${(filePickerProvider.totalSize / 1024).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
+                      style: TextStyle(
+                        color: ColorConstants.fadedText,
+                        fontSize: 10.toFont,
                       ),
                     ),
-                    child: ListTile(
-                      title: Text(
-                        filePickerProvider.selectedFiles[index].name.toString(),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.toFont,
-                        ),
-                      ),
-                      subtitle: Text(
-                        double.parse(filePickerProvider
-                                    .selectedFiles[index].size
-                                    .toString()) <=
-                                1024
-                            ? '${filePickerProvider.selectedFiles[index].size} Kb' +
-                                ' . ${filePickerProvider.selectedFiles[index].extension}'
-                            : '${(filePickerProvider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
-                                ' . ${filePickerProvider.selectedFiles[index].extension}',
-                        style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 14.toFont,
-                        ),
-                      ),
-                      leading: thumbnail(
-                          filePickerProvider.selectedFiles[index].extension
-                              .toString(),
-                          filePickerProvider.selectedFiles[index].path
-                              .toString()),
-                      trailing: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            filePickerProvider.selectedFiles.removeAt(index);
-                            filePickerProvider.calculateSize();
-                          });
-                          if (filePickerProvider.selectedFiles.isEmpty) {
-                            widget.onUpdate(false);
-                          }
-                        },
-                      ),
-                    ),
-                  );
+              trailing: InkWell(
+                onTap: () {
+                  providerCallback<FilePickerProvider>(context,
+                      task: (provider) => provider.pickFiles(),
+                      taskName: (provider) => provider.PICK_FILES,
+                      onSuccess: (provider) {},
+                      onError: (err) =>
+                          ErrorDialog().show(err.toString(), context: context));
                 },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                  child: Icon(
+                    Icons.add_circle,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemCount: filePickerProvider.selectedFiles.isNotEmpty
+                  ? int.parse(
+                      filePickerProvider.selectedFiles?.length?.toString())
+                  : 0,
+              itemBuilder: (c, index) {
+                if (FileTypes.VIDEO_TYPES.contains(
+                    filePickerProvider.selectedFiles[index].extension)) {
+                  videoThumbnailBuilder(
+                      filePickerProvider.selectedFiles[index].path);
+                }
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: ColorConstants.dividerColor.withOpacity(0.1),
+                        width: 1.toHeight,
+                      ),
+                    ),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      filePickerProvider.selectedFiles[index].name.toString(),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.toFont,
+                      ),
+                    ),
+                    subtitle: Text(
+                      double.parse(filePickerProvider.selectedFiles[index].size
+                                  .toString()) <=
+                              1024
+                          ? '${filePickerProvider.selectedFiles[index].size} Kb' +
+                              ' . ${filePickerProvider.selectedFiles[index].extension}'
+                          : '${(filePickerProvider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
+                              ' . ${filePickerProvider.selectedFiles[index].extension}',
+                      style: TextStyle(
+                        color: ColorConstants.fadedText,
+                        fontSize: 14.toFont,
+                      ),
+                    ),
+                    leading: thumbnail(
+                        filePickerProvider.selectedFiles[index].extension
+                            .toString(),
+                        filePickerProvider.selectedFiles[index].path
+                            .toString()),
+                    trailing: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          filePickerProvider.selectedFiles.removeAt(index);
+                          filePickerProvider.calculateSize();
+                        });
+                        if (filePickerProvider.selectedFiles.isEmpty) {
+                          widget.onUpdate(false);
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
-      errorBuilder: (provider) => Center(child: Text('some error occured')),
     );
   }
 

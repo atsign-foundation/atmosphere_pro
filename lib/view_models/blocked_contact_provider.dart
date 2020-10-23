@@ -1,3 +1,4 @@
+import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 
 class BlockedContactProvider extends BaseModel {
@@ -6,19 +7,21 @@ class BlockedContactProvider extends BaseModel {
 
   factory BlockedContactProvider() => _instance;
   String BlockedContacts = 'blockedContacts';
-  List<Map<String, dynamic>> blockedContacts = [];
+  List<AtContact> blockedContacts = [];
 
   getBlockedContacts() async {
+    print(' in blocked user get');
     setStatus(BlockedContacts, Status.Loading);
-    await Future.delayed(Duration(seconds: 1), () {
-      blockedContacts = [];
-      for (int i = 0; i < 10; i++) {
-        blockedContacts.add({
-          'name': 'User $i',
-          'handle': '@user$i',
-        });
-      }
-    });
-    setStatus(BlockedContacts, Status.Done);
+    try {
+      await Future.delayed(Duration(seconds: 1), () {
+        blockedContacts = [];
+        for (int i = 0; i < 10; i++) {
+          blockedContacts.add(AtContact(atSign: 'User $i'));
+        }
+      });
+      setStatus(BlockedContacts, Status.Done);
+    } catch (error) {
+      setError(BlockedContacts, error.toString());
+    }
   }
 }

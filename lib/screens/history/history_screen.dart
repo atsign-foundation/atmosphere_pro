@@ -83,6 +83,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                     children: [
                       ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.SENT_HISTORY,
+
+                        load: (provider) async {
+                          await provider.getSentHistory();
+                        },
+                        showError: true,
                         successBuilder: (provider) => (provider
                                 .sentHistory.isEmpty)
                             ? Center(
@@ -102,12 +107,17 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   ),
                                 ),
                               ),
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
+                        // errorBuilder: (provider) => Center(
+                        //   child: Text('Some error occured'),
+                        // ),
                       ),
                       ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.RECEIVED_HISTORY,
+
+                        load: (provider) async {
+                          await provider.getRecievedHistory();
+                        },
+                        showError: true,
                         successBuilder: (provider) => (provider
                                 .receivedHistory.isEmpty)
                             ? Center(
@@ -128,9 +138,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   ),
                                 ),
                               ),
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
+                        // errorBuilder: (provider) => Center(
+                        //   child: Text('Some error occured'),
+                        // ),
                       ),
                     ],
                   ),
