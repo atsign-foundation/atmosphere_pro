@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -31,12 +32,23 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
   NotificationPayload payload;
   bool status = false;
   BackendService backendService = BackendService.getInstance();
+  ContactProvider contactProvider;
   @override
   void initState() {
     Map<String, dynamic> test =
         jsonDecode(widget.payload) as Map<String, dynamic>;
     payload = NotificationPayload.fromJson(test);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (contactProvider == null) {
+      contactProvider = Provider.of<ContactProvider>(context);
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -54,11 +66,21 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
             width: 42.toWidth,
             child: Image.asset(ImageConstants.logoIcon),
           ),
-          Container(
-            margin: EdgeInsets.only(right: 15.toWidth),
-            child: Text(
-              TextStrings().blockUser,
-              style: CustomTextStyles.blueMedium16,
+          GestureDetector(
+            onTap: () {
+              contactProvider.blockUnblockContact(
+                  atSign: payload.name, blockAction: true);
+              status = false;
+              NotificationService().cancelNotifications();
+              widget.sharingStatus(status);
+              Navigator.pop(context);
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 15.toWidth),
+              child: Text(
+                TextStrings().blockUser,
+                style: CustomTextStyles.blueMedium16,
+              ),
             ),
           )
         ],

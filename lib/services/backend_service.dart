@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -27,6 +29,7 @@ class BackendService {
   Function ask_user_acceptance;
   String app_lifecycle_state;
   AtClientPreference atClientPreference;
+  bool autoAcceptFiles = false;
 
   String get currentAtsign => _atsign;
 
@@ -147,7 +150,18 @@ class BackendService {
   Future<bool> acceptStream(
       String atsign, String filename, String filesize) async {
     print("from:$atsign file:$filename size:$filesize");
-    if (app_lifecycle_state != null &&
+    BuildContext context = NavService.navKey.currentContext;
+    ContactProvider contactProvider =
+        Provider.of<ContactProvider>(context, listen: false);
+
+    for (AtContact blockeduser in contactProvider.blockContactList) {
+      if (atsign == blockeduser.atSign) {
+        return false;
+      }
+    }
+
+    if (!autoAcceptFiles &&
+        app_lifecycle_state != null &&
         app_lifecycle_state != AppLifecycleState.resumed.toString()) {
       print("app not active $app_lifecycle_state");
       await NotificationService().showNotification(atsign, filename, filesize);
@@ -155,18 +169,32 @@ class BackendService {
     }
     NotificationPayload payload = NotificationPayload(
         file: filename, name: atsign, size: double.parse(filesize));
-    BuildContext c = NavService.navKey.currentContext;
+
     bool userAcceptance;
-    await showDialog(
-      context: c,
-      builder: (c) => ReceiveFilesAlert(
-        payload: jsonEncode(payload),
-        sharingStatus: (s) {
-          userAcceptance = s;
-          print('STATUS====>$s');
-        },
-      ),
-    );
+    if (autoAcceptFiles) {
+      Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
+          atSignName: payload.name.toString(),
+          historyType: HistoryType.received,
+          files: [
+            FilesDetail(
+                filePath: atClientPreference.downloadPath + '/' + payload.file,
+                size: payload.size,
+                fileName: payload.file,
+                type: payload.file.substring(payload.file.lastIndexOf('.') + 1))
+          ]);
+      userAcceptance = true;
+    } else {
+      await showDialog(
+        context: context,
+        builder: (context) => ReceiveFilesAlert(
+          payload: jsonEncode(payload),
+          sharingStatus: (s) {
+            userAcceptance = s;
+            print('STATUS====>$s');
+          },
+        ),
+      );
+    }
 
     return userAcceptance;
   }

@@ -17,12 +17,23 @@ class SelectContactWidget extends StatefulWidget {
 
 class _SelectContactWidgetState extends State<SelectContactWidget> {
   String headerText;
-  int selectedIndex;
+
+  ContactProvider contactProvider;
 
   @override
   void initState() {
     headerText = TextStrings().welcomeContactPlaceholder;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (contactProvider == null) {
+      contactProvider = Provider.of<ContactProvider>(context);
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -40,22 +51,19 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
         borderRadius: BorderRadius.circular(15.toFont),
         child: Container(
           color: ColorConstants.inputFieldColor,
-          child: selectedIndex == null
+          child: contactProvider.selectedAtsign == null
               ? _ExpansionTileWidget(
                   headerText,
                   (index) {
                     widget.onUpdate(true);
-                    setState(() {
-                      selectedIndex = index;
-                    });
+                    setState(() {});
                   },
                 )
               : _ListTileWidget(
                   () {
+                    contactProvider.selectedAtsign = null;
                     widget.onUpdate(false);
-                    setState(() {
-                      selectedIndex = null;
-                    });
+                    setState(() {});
                   },
                 ),
         ),

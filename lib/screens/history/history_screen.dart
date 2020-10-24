@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   TabController _controller;
   bool isOpen = false;
   HistoryProvider historyProvider;
+  ContactProvider contactProvider;
 
   @override
   void didChangeDependencies() {
@@ -30,6 +32,9 @@ class _HistoryScreenState extends State<HistoryScreen>
         historyProvider.getSentHistory();
         historyProvider.getRecievedHistory();
       });
+    }
+    if (contactProvider == null) {
+      contactProvider = Provider.of<ContactProvider>(context, listen: false);
     }
 
     super.didChangeDependencies();
@@ -125,6 +130,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   child: FilesListTile(
                                     sentHistory:
                                         provider.receivedHistory[index],
+                                    contactProvider: contactProvider,
                                   ),
                                 ),
                               ),
