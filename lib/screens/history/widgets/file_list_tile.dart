@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_app/screens/history/widgets/%20add_contact_from_history.dart';
+import 'package:atsign_atmosphere_app/screens/history/widgets/add_contact_from_history.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
