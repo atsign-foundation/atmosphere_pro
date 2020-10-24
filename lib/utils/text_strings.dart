@@ -35,6 +35,7 @@ class TextStrings {
   String sidebarEnablingMessage =
       'Enabling this will auto accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
+  String sidebarDeleteAtsign = 'Delete @sign';
 
   //FAQs texts
   String faqs = 'FAQ';
@@ -54,6 +55,8 @@ class TextStrings {
   String upload = 'Upload QR code image';
   String uploadKey = 'Upload key file';
   String buttonCancel = 'CANCEL';
+  String buttonDelete = 'DELETE';
+  String buttonDismiss = 'DISMISS';
 
   //history screen texts
   String sent = 'Sent';

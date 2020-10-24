@@ -1,9 +1,11 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -105,6 +107,29 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
               ),
+              InkWell(
+                onTap: () {
+                  _deleteAtSign(BackendService.getInstance().currentAtsign);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 13.toHeight),
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: ColorConstants.fadedText),
+                      SizedBox(
+                        width: 15.toWidth,
+                      ),
+                      Text(
+                        TextStrings().sidebarDeleteAtsign,
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 40.toHeight,
               ),
@@ -179,5 +204,91 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         ),
       ),
     );
+  }
+
+  _deleteAtSign(String atsign) async {
+    final _formKey = GlobalKey<FormState>();
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Center(
+              child: Text(
+                'Delete @sign',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Are you sure you want to delete all data associated with',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey[700])),
+                SizedBox(height: 20),
+                Text('$atsign',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(height: 20),
+                Text('Type the @sign above to proceed',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey[700])),
+                SizedBox(height: 5),
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    autovalidate: true,
+                    validator: (value) {
+                      if (value != atsign) {
+                        return "The @sign doesn't match. Please retype.";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorConstants.fadedText)),
+                        filled: true,
+                        fillColor: Colors.white),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text("Caution: this action can't be undone",
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FlatButton(
+                        child: Text(TextStrings().buttonDelete,
+                            style: CustomTextStyles.primaryBold14),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            await BackendService.getInstance()
+                                .deleteAtSignFromKeyChain(atsign);
+                            await Navigator.pushNamedAndRemoveUntil(
+                                context, Routes.HOME, (route) => false);
+                          }
+                        }),
+                    Spacer(),
+                    FlatButton(
+                        child: Text(TextStrings().buttonCancel,
+                            style: CustomTextStyles.primaryBold14),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        })
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 }

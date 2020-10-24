@@ -192,12 +192,12 @@ class _HomeState extends State<Home> {
                                   });
                                   await c.future;
                                   if (onboardSuccess) {
-                                    Navigator.pushNamedAndRemoveUntil(
+                                    await Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         Routes.WELCOME_SCREEN,
                                         (route) => false);
                                   } else {
-                                    Navigator.pushNamedAndRemoveUntil(
+                                    await Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         Routes.SCAN_QR_SCREEN,
                                         (route) => false);
