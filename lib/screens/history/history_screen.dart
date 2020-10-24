@@ -103,8 +103,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FilesListTile(
-                                    sentHistory: provider.sentHistory[index],
-                                  ),
+                                      sentHistory: provider.sentHistory[index],
+                                      contactProvider: contactProvider),
                                 ),
                               ),
                         errorBuilder: (provider) => Center(
