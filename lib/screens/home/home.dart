@@ -17,6 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' show basename;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class Home extends StatefulWidget {
@@ -43,7 +44,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    filePickerProvider = FilePickerProvider();
+    filePickerProvider =
+        Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
     _initBackendService();
     _checkToOnboard();
@@ -53,50 +55,58 @@ class _HomeState extends State<Home> {
 
   void acceptFiles() async {
     _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) {
+        .listen((List<SharedMediaFile> value) async {
       _sharedFiles = value;
 
       if (value.isNotEmpty) {
+        // setState(() {
         value.forEach((element) async {
           File file = File(element.path);
           double length = await file.length() / 1024;
-          filePickerProvider.selectedFiles.add(PlatformFile(
+          await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
               name: basename(file.path),
               path: file.path,
               size: length.round(),
               bytes: await file.readAsBytes()));
-          await filePickerProvider.calculateSize();
+          await filePickerProvider.setFiles();
         });
 
         BuildContext c = NavService.navKey.currentContext;
 
         print("Shared:wawawawawawa" +
             (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-        Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
+        await Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
       }
     }, onError: (err) {
       print("getIntentDataStream error: $err");
     });
 
     // For sharing images coming from outside the app while the app is closed
-    await ReceiveSharingIntent.getInitialMedia()
-        .then((List<SharedMediaFile> value) {
+    await ReceiveSharingIntent.getInitialMedia().then(
+        (List<SharedMediaFile> value) async {
       _sharedFiles = value;
+      print('SHARED FILES+=======>$_sharedFiles');
       if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
         _sharedFiles.forEach((element) async {
-          var test = File(element.path);
-          var length = await test.length() / 1024;
-          filePickerProvider.selectedFiles.add(PlatformFile(
-              name: basename(test.path),
-              path: test.path,
+          File file = File(element.path);
+          var length = await file.length() / 1024;
+          PlatformFile fileToBeAdded = PlatformFile(
+              name: basename(file.path),
+              path: file.path,
               size: length.round(),
-              bytes: await test.readAsBytes()));
-          await filePickerProvider.calculateSize();
+              bytes: await file.readAsBytes());
+          FilePickerProvider.appClosedSharedFiles.add(fileToBeAdded);
+          filePickerProvider.setFiles();
         });
+
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+
         BuildContext c = NavService.navKey.currentContext;
-        Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
+
+        await Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
       }
+    }, onError: (error) {
+      print('ERROR IS HERE=========>$error');
     });
   }
 

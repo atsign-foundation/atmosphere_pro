@@ -37,16 +37,29 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
 
   @override
   void initState() {
-    filePickerProvider = FilePickerProvider();
+    // setState(() {
+    filePickerProvider =
+        Provider.of<FilePickerProvider>(context, listen: false);
+    // print(
+    //     'FILE PICKER PROVIDER IN SELECT FILE WIDHET=====>${filePickerProvider.selectedFiles}');
+    // });
+
     // provider = Provider.of<FilePickerProvider>(context, listen: false);
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (filePickerProvider == null) {
-      filePickerProvider = Provider.of<FilePickerProvider>(context);
+      filePickerProvider =
+          Provider.of<FilePickerProvider>(context, listen: false);
+      await filePickerProvider.setFiles();
     }
+    // setState(() async {
+
+    // print(
+    //     'FILE PICKER PROVIDER IN SELECT FILE WIDHET DIPENDENCY CHANGED=====>${await filePickerProvider.selectedFiles[0].path}');
+    // });
 
     super.didChangeDependencies();
   }
@@ -114,55 +127,58 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   videoThumbnailBuilder(
                       filePickerProvider.selectedFiles[index].path);
                 }
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: ColorConstants.dividerColor.withOpacity(0.1),
-                        width: 1.toHeight,
+                return Consumer<FilePickerProvider>(
+                    builder: (context, provider, _) {
+                  print(
+                      'CONSUMER FILES=======>${provider.selectedFiles.length}');
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ColorConstants.dividerColor.withOpacity(0.1),
+                          width: 1.toHeight,
+                        ),
                       ),
                     ),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      filePickerProvider.selectedFiles[index].name.toString(),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.toFont,
+                    child: ListTile(
+                      title: Text(
+                        provider.selectedFiles[index].name.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                      subtitle: Text(
+                        double.parse(provider.selectedFiles[index].size
+                                    .toString()) <=
+                                1024
+                            ? '${provider.selectedFiles[index].size} Kb' +
+                                ' . ${provider.selectedFiles[index].extension}'
+                            : '${(provider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
+                                ' . ${provider.selectedFiles[index].extension}',
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                      leading: thumbnail(
+                          provider.selectedFiles[index].extension.toString(),
+                          provider.selectedFiles[index].path.toString()),
+                      trailing: IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            provider.selectedFiles.removeAt(index);
+                            provider.calculateSize();
+                          });
+                          if (provider.selectedFiles.isEmpty) {
+                            widget.onUpdate(false);
+                          }
+                        },
                       ),
                     ),
-                    subtitle: Text(
-                      double.parse(filePickerProvider.selectedFiles[index].size
-                                  .toString()) <=
-                              1024
-                          ? '${filePickerProvider.selectedFiles[index].size} Kb' +
-                              ' . ${filePickerProvider.selectedFiles[index].extension}'
-                          : '${(filePickerProvider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
-                              ' . ${filePickerProvider.selectedFiles[index].extension}',
-                      style: TextStyle(
-                        color: ColorConstants.fadedText,
-                        fontSize: 14.toFont,
-                      ),
-                    ),
-                    leading: thumbnail(
-                        filePickerProvider.selectedFiles[index].extension
-                            .toString(),
-                        filePickerProvider.selectedFiles[index].path
-                            .toString()),
-                    trailing: IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          filePickerProvider.selectedFiles.removeAt(index);
-                          filePickerProvider.calculateSize();
-                        });
-                        if (filePickerProvider.selectedFiles.isEmpty) {
-                          widget.onUpdate(false);
-                        }
-                      },
-                    ),
-                  ),
-                );
+                  );
+                });
               },
             ),
           ],

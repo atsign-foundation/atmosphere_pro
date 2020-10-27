@@ -20,9 +20,29 @@ class FilePickerProvider extends BaseModel {
   List<SharedMediaFile> _sharedFiles;
   FilePickerResult result;
   PlatformFile file;
+  static List<PlatformFile> appClosedSharedFiles = [];
   List<PlatformFile> selectedFiles = [];
   Uint8List videoThumbnail;
   double totalSize = 0;
+  setFiles() async {
+    setStatus(PICK_FILES, Status.Loading);
+    try {
+      selectedFiles = [];
+      totalSize = 0;
+      if (appClosedSharedFiles.isNotEmpty) {
+        print('IN ! HERE');
+        appClosedSharedFiles.forEach((element) {
+          print('IN HERE @');
+          selectedFiles.add(element);
+        });
+        calculateSize();
+      }
+      appClosedSharedFiles = [];
+      setStatus(PICK_FILES, Status.Done);
+    } catch (error) {
+      setError(PICK_FILES, error.toString());
+    }
+  }
 
   pickFiles() async {
     setStatus(PICK_FILES, Status.Loading);
@@ -31,7 +51,6 @@ class FilePickerProvider extends BaseModel {
       if (selectedFiles.isNotEmpty) {
         tempList = selectedFiles;
       }
-
       selectedFiles = [];
 
       totalSize = 0;
@@ -43,15 +62,20 @@ class FilePickerProvider extends BaseModel {
           withData: true);
 
       if (result?.files != null) {
-        selectedFiles = [...tempList];
+        selectedFiles = tempList;
         tempList = [];
 
         result.files.forEach((element) {
           selectedFiles.add(element);
         });
-
-        calculateSize();
+        if (appClosedSharedFiles.isNotEmpty) {
+          appClosedSharedFiles.forEach((element) {
+            selectedFiles.add(element);
+          });
+        }
       }
+
+      calculateSize();
 
       setStatus(PICK_FILES, Status.Done);
     } catch (error) {
@@ -61,7 +85,6 @@ class FilePickerProvider extends BaseModel {
 
   calculateSize() async {
     totalSize = 0;
-
     selectedFiles?.forEach((element) {
       totalSize += element.size;
     });
