@@ -70,6 +70,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   void onScan(String data, List<Offset> offsets, context) async {
     print("here scan completed => $data ");
+    _controller.stopCamera();
     this.setState(() {
       scanCompleted = true;
     });
@@ -82,7 +83,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       scanCompleted = false;
     });
 
-    _controller.stopCamera();
+    await _controller.startCamera((data, offsets) {
+      onScan(data, offsets, context);
+    });
   }
 
   void _uploadCramKeyFile() async {
@@ -211,7 +214,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   @override
   void dispose() {
-    // _controller?.dispose();
+    _controller?.stopCamera();
     super.dispose();
   }
 

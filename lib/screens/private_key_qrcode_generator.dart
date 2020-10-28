@@ -55,14 +55,8 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       _pngBytes = byteData.buffer.asUint8List();
       var directory;
       if (fileLocation == null) {
-        if (Platform.isIOS) {
-          directory = await path_provider.getApplicationDocumentsDirectory();
-          fileLocation = directory.path.toString() + '/';
-        }
-        if (Platform.isAndroid) {
-          directory = await path_provider.getExternalStorageDirectory();
-          fileLocation = directory.path.toString().substring(0, 20);
-        }
+        directory = await path_provider.getApplicationDocumentsDirectory();
+        fileLocation = directory.path.toString() + '/';
         await Permission.storage.request();
       }
       String path = fileLocation;
@@ -185,14 +179,8 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
         await BackendService.getInstance().getEncryptedKeys(atsign);
     var directory;
     String path;
-    if (Platform.isIOS) {
-      directory = await path_provider.getApplicationDocumentsDirectory();
-      path = directory.path.toString() + '/';
-    }
-    if (Platform.isAndroid) {
-      directory = await path_provider.getExternalStorageDirectory();
-      path = directory.path.toString().substring(0, 20);
-    }
+    directory = await path_provider.getApplicationDocumentsDirectory();
+    path = directory.path.toString() + '/';
     await Permission.storage.request();
     fileLocation = path;
     var _encryptKeys = atsign + '_encrypt_keys';
