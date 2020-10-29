@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
@@ -36,8 +37,13 @@ class BackendService {
 
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
-    final appDocumentDirectory =
-        await path_provider.getApplicationDocumentsDirectory();
+    var appDocumentDirectory;
+    if (Platform.isIOS) {
+      appDocumentDirectory =
+          await path_provider.getApplicationDocumentsDirectory();
+    } else {
+      appDocumentDirectory = await path_provider.getExternalStorageDirectory();
+    }
     final appSupportDirectory =
         await path_provider.getApplicationSupportDirectory();
     print("paths => $appDocumentDirectory $appSupportDirectory");
