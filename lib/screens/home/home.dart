@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
@@ -73,8 +72,7 @@ class _HomeState extends State<Home> {
 
         BuildContext c = NavService.navKey.currentContext;
 
-        print("Shared:wawawawawawa" +
-            (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
         await Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
       }
     }, onError: (err) {
@@ -85,7 +83,6 @@ class _HomeState extends State<Home> {
     await ReceiveSharingIntent.getInitialMedia().then(
         (List<SharedMediaFile> value) async {
       _sharedFiles = value;
-      print('SHARED FILES+=======>$_sharedFiles');
       if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
         _sharedFiles.forEach((element) async {
           File file = File(element.path);
@@ -100,10 +97,6 @@ class _HomeState extends State<Home> {
         });
 
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-
-        BuildContext c = NavService.navKey.currentContext;
-
-        await Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
       }
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
@@ -130,6 +123,10 @@ class _HomeState extends State<Home> {
       } else {
         await backendService.startMonitor();
         onboardSuccess = true;
+        if (FilePickerProvider().selectedFiles.isNotEmpty) {
+          BuildContext cd = NavService.navKey.currentContext;
+          await Navigator.pushReplacementNamed(cd, Routes.WELCOME_SCREEN);
+        }
         c.complete(true);
       }
     }).catchError((error) async {
@@ -257,15 +254,17 @@ class _HomeState extends State<Home> {
                                     authenticating = true;
                                   });
                                   await c.future;
-                                  // if (onboardSuccess) {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      Routes.WELCOME_SCREEN, (route) => false);
-                                  // } else {
-                                  //   Navigator.pushNamedAndRemoveUntil(
-                                  //       context,
-                                  //       Routes.SCAN_QR_SCREEN,
-                                  //       (route) => false);
-                                  // }
+                                  if (onboardSuccess) {
+                                    await Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.WELCOME_SCREEN,
+                                        (route) => false);
+                                  } else {
+                                    await Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.SCAN_QR_SCREEN,
+                                        (route) => false);
+                                  }
                                 },
                               ),
                             ),
