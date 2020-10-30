@@ -55,6 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void didChangeDependencies() {
     if (contactProvider == null) {
       contactProvider = Provider.of<ContactProvider>(context);
+      print("herere => ${contactProvider.selectedAtsign}");
 
       if (historyProvider != null) {
         historyProvider = Provider.of<HistoryProvider>(context);
@@ -63,6 +64,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         print("fetched contacts");
         contactProvider?.getContacts();
+        contactProvider?.fetchBlockContactList();
         historyProvider?.getSentHistory();
         historyProvider?.getRecievedHistory();
       });
@@ -141,6 +143,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final filePickerModel = Provider.of<FilePickerProvider>(context);
     final contactPickerModel = Provider.of<ContactProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -209,7 +212,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(
                   height: 60.toHeight,
                 ),
-                if (isContactSelected &&
+                if (contactProvider.selectedAtsign != null &&
                     filePickerModel.selectedFiles.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.topRight,

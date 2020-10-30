@@ -41,7 +41,7 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To upload music file, please allow permission to access your files.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>The camera is used to scan QR code</string>
+	<string>The camera is used to scan QR code to pair your device with your @sign</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To upload photos, please allow permission to access your photo library.</string>
 	<key>UIFileSharingEnabled</key>

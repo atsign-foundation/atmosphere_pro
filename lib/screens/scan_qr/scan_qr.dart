@@ -74,6 +74,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   void onScan(String data, List<Offset> offsets, context) async {
     print("here scan completed => $data ");
+    _controller.stopCamera();
     this.setState(() {
       scanCompleted = true;
     });
@@ -86,13 +87,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       scanCompleted = false;
     });
 
-    _controller.stopCamera();
-  }
-
-  @override
-  void dispose() {
-    // _controller?.dispose();
-    super.dispose();
+    await _controller.startCamera((data, offsets) {
+      onScan(data, offsets, context);
+    });
   }
 
   // @override
@@ -154,6 +151,91 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         loading = false;
       });
     }
+  }
+
+  void _uploadKeyFile() async {
+    try {
+      var fileContents, aesKey, atsign;
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: false);
+      setState(() {
+        loading = true;
+      });
+      var path = result.files[0].path;
+      var bytes = File(path).readAsBytesSync();
+      final archive = ZipDecoder().decodeBytes(bytes);
+      for (var file in archive) {
+        if (file.name.contains('atKeys')) {
+          fileContents = String.fromCharCodes(file.content);
+        } else if (aesKey == null &&
+            atsign == null &&
+            file.name.contains('_private_key.png')) {
+          var bytes = file.content as List<int>;
+          var path = (await path_provider.getTemporaryDirectory()).path;
+          var file1 = await File('$path' + 'test').create();
+          file1.writeAsBytesSync(bytes);
+          String result = await FlutterQrReader.imgScan(file1);
+          List<String> params = result.split(':');
+          atsign = params[0];
+          aesKey = params[1];
+          await File(path + 'test').delete();
+          //read scan QRcode and extract atsign,aeskey
+        }
+      }
+      if (fileContents == null || (aesKey == null && atsign == null)) {
+        _showAlertDialog(_incorrectKeyFile);
+      }
+      await _processAESKey(atsign, aesKey, fileContents);
+    } on Error catch (error) {
+      setState(() {
+        loading = false;
+      });
+      _showAlertDialog(_failedFileProcessing);
+    } on Exception catch (ex) {
+      setState(() {
+        loading = false;
+      });
+      _showAlertDialog(_failedFileProcessing);
+    }
+  }
+
+  _showAlertDialog(var errorMessage) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AtErrorDialog.getAlertDialog(errorMessage, context);
+        });
+  }
+
+  _processAESKey(String atsign, String aesKey, String contents) async {
+    assert(aesKey != null || aesKey != '');
+    assert(atsign != null || atsign != '');
+    assert(contents != null || contents != '');
+    await backendService
+        .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
+        .then((response) async {
+      await backendService.startMonitor();
+      if (response) {
+        await Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN);
+      }
+      setState(() {
+        loading = false;
+      });
+    }).catchError((err) {
+      print("Error in authenticateWithAESKey");
+      // _showAlertDialog(err);
+      // setState(() {
+      //   loading = false;
+      // });
+      // _logger.severe('Scanning QR code throws $err Error');
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller?.stopCamera();
+    super.dispose();
   }
 
   @override

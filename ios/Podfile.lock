@@ -57,9 +57,9 @@ PODS:
     - Flutter
   - receive_sharing_intent (0.0.1):
     - Flutter
-  - SDWebImage (5.9.1):
-    - SDWebImage/Core (= 5.9.1)
-  - SDWebImage/Core (5.9.1)
+  - SDWebImage (5.9.2):
+    - SDWebImage/Core (= 5.9.2)
+  - SDWebImage/Core (5.9.2)
   - share (0.0.1):
     - Flutter
   - SwiftyGif (5.3.0)
@@ -130,7 +130,7 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   receive_sharing_intent: c0d87310754e74c0f9542947e7cbdf3a0335a3b1
-  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
+  SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
