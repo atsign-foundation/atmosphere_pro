@@ -95,11 +95,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         SizedBox(
                           width: 15.toWidth,
                         ),
-                        Text(
-                          menuItemsTitle[index],
-                          style: TextStyle(
-                            color: ColorConstants.fadedText,
-                            fontSize: 14.toFont,
+                        Expanded(
+                          child: Text(
+                            menuItemsTitle[index],
+                            softWrap: true,
+                            style: TextStyle(
+                              color: ColorConstants.fadedText,
+                              fontSize: 14.toFont,
+                            ),
                           ),
                         ),
                       ],
@@ -133,8 +136,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               SizedBox(
                 height: 40.toHeight,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                direction: Axis.horizontal,
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     TextStrings().sidebarAutoAcceptFile,
