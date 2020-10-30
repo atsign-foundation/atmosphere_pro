@@ -27,7 +27,7 @@ class CustomButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: width ?? 158.toWidth,
-        height: height ?? 50.toHeight,
+        height: height ?? (50.toHeight),
         padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.toWidth),

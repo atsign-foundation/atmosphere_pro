@@ -8,11 +8,12 @@ class CommonButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return InkWell(
       onTap: onTap,
       child: Container(
         width: 120.toWidth,
-        height: 40.toHeight,
+        height: 40.toHeight * deviceTextFactor,
         padding: EdgeInsets.symmetric(
           vertical: 10.toHeight,
           horizontal: 30.toWidth,

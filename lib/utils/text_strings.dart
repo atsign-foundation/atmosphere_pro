@@ -80,7 +80,7 @@ class TextStrings {
 
   // scan qr texts
   String scanQrTitle = 'Scan QR Code';
-  String scanQrMessage = 'Just scan the QR code displayed at\nwww.atsign.com';
+  String scanQrMessage = 'Just scan the QR code displayed at www.atsign.com';
   String scanQrFooter = 'Don’t have an @sign? Get now.';
   String websiteTitle = 'Atsign';
 

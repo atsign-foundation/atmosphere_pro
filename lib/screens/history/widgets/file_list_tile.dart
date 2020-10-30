@@ -100,7 +100,7 @@ class _FilesListTileState extends State<FilesListTile> {
                     ),
                     SizedBox(width: 10.toHeight),
                     Text(
-                      '${(widget.sentHistory.totalSize / 1024).toStringAsFixed(2)} Kb',
+                      '${(widget.sentHistory.totalSize / (widget.sentHistory.totalSize > 1024 ? 1024 : 1)).toStringAsFixed(2)} ${widget.sentHistory.totalSize < 1024 ? "Kb" : "Mb"}',
                       style: CustomTextStyles.secondaryRegular12,
                     )
                   ],
@@ -110,7 +110,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 height: 20.toHeight,
               ),
               Container(
-                width: 150.toWidth,
+                // width: 150.toWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -143,7 +143,7 @@ class _FilesListTileState extends State<FilesListTile> {
                         });
                       },
                       child: Container(
-                        width: 140.toWidth,
+                        // width: 140.toWidth,
                         child: Row(
                           children: [
                             Text(
@@ -210,7 +210,7 @@ class _FilesListTileState extends State<FilesListTile> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${(widget.sentHistory.files[index].size / 1024).toStringAsFixed(2)} Kb',
+                                    '${(widget.sentHistory.files[index].size / (widget.sentHistory.files[index].size > 1024 ? 1024 : 1)).toStringAsFixed(2)} ${widget.sentHistory.files[index].size < 1024 ? "Kb" : "MB"}',
                                     style: CustomTextStyles.secondaryRegular12,
                                   ),
                                   SizedBox(width: 10.toHeight),
@@ -240,7 +240,7 @@ class _FilesListTileState extends State<FilesListTile> {
                       });
                     },
                     child: Container(
-                      width: 140.toWidth,
+                      // width: 140.toWidth,
                       margin: EdgeInsets.only(left: 85.toWidth),
                       child: Row(
                         children: [

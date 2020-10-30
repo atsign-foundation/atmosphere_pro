@@ -25,9 +25,10 @@ class AddContactDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-        height: 100,
-        width: 100,
+        height: 100.toHeight * deviceTextFactor,
+        width: 100.toWidth,
         child: SingleChildScrollView(
           child: AlertDialog(
             shape: RoundedRectangleBorder(
@@ -47,7 +48,8 @@ class AddContactDialog extends StatelessWidget {
               ],
             ),
             content: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 255.toHeight),
+              constraints:
+                  BoxConstraints(maxHeight: 255.toHeight * deviceTextFactor),
               child: Column(
                 children: [
                   SizedBox(
@@ -72,6 +74,7 @@ class AddContactDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
                         buttonText: TextStrings().addtoContact,
                         onPressed: () => onYesTap(atsignName),
                       )
@@ -84,6 +87,7 @@ class AddContactDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
                         isInverted: true,
                         buttonText: TextStrings().buttonCancel,
                         onPressed: () => Navigator.pop(context),

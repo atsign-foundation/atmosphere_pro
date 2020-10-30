@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
@@ -162,7 +163,13 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         loading = true;
       });
       var path = result.files[0].path;
-      var bytes = File(path).readAsBytesSync();
+      File zipFile = File(path);
+      var length = zipFile.lengthSync();
+      if (zipFile.lengthSync() < 10) {
+        _showAlertDialog(_incorrectKeyFile);
+        return;
+      }
+      var bytes = zipFile.readAsBytesSync();
       final archive = ZipDecoder().decodeBytes(bytes);
       for (var file in archive) {
         if (file.name.contains('atKeys')) {
@@ -223,7 +230,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         loading = false;
       });
     }).catchError((err) {
-      print("Error in authenticateWithAESKey");
+      print("Error in authenticateWithAESKey => ${err}");
+      throw Exception(err.toString());
       // _showAlertDialog(err);
       // setState(() {
       //   loading = false;
@@ -240,6 +248,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Scaffold(
       appBar: CustomAppBar(
         title: TextStrings().scanQrTitle,
@@ -247,106 +256,116 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         showLeadingicon: true,
         elevation: 5,
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 25.toHeight),
-        child: Column(
-          children: [
-            Text(
-              TextStrings().scanQrMessage,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.toFont,
-                color: ColorConstants.greyText,
-              ),
-            ),
-            SizedBox(
-              height: 25.toHeight,
-            ),
-            Builder(
-              builder: (context) => Container(
-                alignment: Alignment.center,
-                width: 300.toWidth,
-                height: 350.toHeight,
-                color: Colors.black,
-                child: !cameraPermissionGrated
-                    ? SizedBox()
-                    : Stack(
-                        children: [
-                          QrReaderView(
-                            width: 300.toWidth,
-                            height: 350.toHeight,
-                            callback: (container) {
-                              this._controller = container;
-                              _controller.startCamera((data, offsets) {
-                                onScan(data, offsets, context);
-                              });
-                            },
-                          ),
-                          scanCompleted
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          ColorConstants.redText)),
-                                )
-                              : SizedBox()
-                        ],
-                      ),
-              ),
-            ),
-            SizedBox(
-              height: 25.toHeight,
-            ),
-            Center(child: Text('OR')),
-            SizedBox(
-              height: 25.toHeight,
-            ),
-            CustomButton(
-              width: 230.toWidth,
-              isInverted: true,
-              buttonText: TextStrings().upload,
-              onPressed: _uploadCramKeyFile,
-            ),
-            SizedBox(
-              height: 25.toHeight,
-            ),
-            // CustomButton(
-            //   width: 230.toWidth,
-            //   buttonText: TextStrings().uploadKey,
-            //   onPressed: _uploadKeyFile,
-            //   onPressed: () {
-            //     providerCallback<ScanQrProvider>(context,
-            //         task: (provider) => provider.uploadKeyFile(),
-            //         taskName: (provider) => provider.uploadKey,
-            //         onSuccess: (provider) =>
-            //             (provider.aesKeyResponse) ??
-            //             Navigator.of(context).pushNamed(Routes.WELCOME_SCREEN),
-            //         onError: (err) =>
-            //             ErrorDialog().show(err.toString(), context: context));
-            //   },
-            // ),
-            SizedBox(
-              height: 25.toHeight,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => WebsiteScreen(
-                        url: MixedConstants.WEBSITE_URL,
-                        title: TextStrings().websiteTitle),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.symmetric(
+              vertical: 25.toHeight, horizontal: 24.toHeight),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  Text(
+                    TextStrings().scanQrMessage,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.toFont,
+                      color: ColorConstants.greyText,
+                    ),
                   ),
-                );
-              },
-              child: Text(
-                TextStrings().scanQrFooter,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.toFont,
-                  color: ColorConstants.redText,
-                ),
+                  SizedBox(
+                    height: 25.toHeight,
+                  ),
+                  Builder(
+                    builder: (context) => Container(
+                      alignment: Alignment.center,
+                      width: 300.toWidth,
+                      height: 350.toHeight,
+                      color: Colors.black,
+                      child: !cameraPermissionGrated
+                          ? SizedBox()
+                          : Stack(
+                              children: [
+                                QrReaderView(
+                                  width: 300.toWidth,
+                                  height: 350.toHeight,
+                                  callback: (container) {
+                                    this._controller = container;
+                                    _controller.startCamera((data, offsets) {
+                                      onScan(data, offsets, context);
+                                    });
+                                  },
+                                ),
+                                scanCompleted
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    ColorConstants.redText)),
+                                      )
+                                    : SizedBox()
+                              ],
+                            ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25.toHeight,
+                  ),
+                  Center(child: Text('OR')),
+                  SizedBox(
+                    height: 25.toHeight,
+                  ),
+                  CustomButton(
+                    width: 230.toWidth,
+                    height: 50.toHeight * deviceTextFactor,
+                    isInverted: true,
+                    buttonText: TextStrings().upload,
+                    onPressed: _uploadCramKeyFile,
+                  ),
+                  SizedBox(
+                    height: 25.toHeight,
+                  ),
+                  CustomButton(
+                    width: 230.toWidth,
+                    buttonText: TextStrings().uploadKey,
+                    onPressed: _uploadKeyFile,
+                  ),
+                  SizedBox(
+                    height: 25.toHeight,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => WebsiteScreen(
+                              url: MixedConstants.WEBSITE_URL,
+                              title: TextStrings().websiteTitle),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      TextStrings().scanQrFooter,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.toFont,
+                        color: ColorConstants.redText,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+              loading
+                  ? SizedBox(
+                      height: SizeConfig().screenHeight,
+                      width: SizeConfig().screenWidth,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                ColorConstants.redText)),
+                      ),
+                    )
+                  : SizedBox()
+            ],
+          ),
         ),
       ),
     );
