@@ -73,7 +73,8 @@ class _HomeState extends State<Home> {
         BuildContext c = NavService.navKey.currentContext;
 
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-        await Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
+        await Navigator.pushNamedAndRemoveUntil(
+            c, Routes.WELCOME_SCREEN, (route) => false);
       }
     }, onError: (err) {
       print("getIntentDataStream error: $err");
