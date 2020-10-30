@@ -57,7 +57,7 @@ class FilePickerProvider extends BaseModel {
 
       result = await FilePicker.platform.pickFiles(
           allowMultiple: true,
-          type: FileType.media,
+          type: FileType.any,
           allowCompression: true,
           withData: true);
 
