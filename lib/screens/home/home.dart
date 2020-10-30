@@ -1,18 +1,23 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' show basename;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -31,20 +36,80 @@ class _HomeState extends State<Home> {
   final Permission _storagePermission = Permission.storage;
   Completer c = Completer();
   bool authenticating = false;
+  StreamSubscription _intentDataStreamSubscription;
+  List<SharedMediaFile> _sharedFiles;
+  FilePickerProvider filePickerProvider;
 
   @override
   void initState() {
     super.initState();
+    filePickerProvider =
+        Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
     _initBackendService();
     _checkToOnboard();
+    acceptFiles();
     _checkForPermissionStatus();
   }
 
+  void acceptFiles() async {
+    _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
+        .listen((List<SharedMediaFile> value) async {
+      _sharedFiles = value;
+
+      if (value.isNotEmpty) {
+        // setState(() {
+        value.forEach((element) async {
+          File file = File(element.path);
+          double length = await file.length() / 1024;
+          await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
+              name: basename(file.path),
+              path: file.path,
+              size: length.round(),
+              bytes: await file.readAsBytes()));
+          await filePickerProvider.setFiles();
+        });
+
+        BuildContext c = NavService.navKey.currentContext;
+
+        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+        await Navigator.pushNamedAndRemoveUntil(
+            c, Routes.WELCOME_SCREEN, (route) => false);
+      }
+    }, onError: (err) {
+      print("getIntentDataStream error: $err");
+    });
+
+    // For sharing images coming from outside the app while the app is closed
+    await ReceiveSharingIntent.getInitialMedia().then(
+        (List<SharedMediaFile> value) async {
+      _sharedFiles = value;
+      if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
+        _sharedFiles.forEach((element) async {
+          File file = File(element.path);
+          var length = await file.length() / 1024;
+          PlatformFile fileToBeAdded = PlatformFile(
+              name: basename(file.path),
+              path: file.path,
+              size: length.round(),
+              bytes: await file.readAsBytes());
+          FilePickerProvider.appClosedSharedFiles.add(fileToBeAdded);
+          filePickerProvider.setFiles();
+        });
+
+        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+      }
+    }, onError: (error) {
+      print('ERROR IS HERE=========>$error');
+    });
+  }
+
+  String state;
   void _initBackendService() {
     backendService = BackendService.getInstance();
     _notificationService.setOnNotificationClick(onNotificationClick);
     SystemChannels.lifecycle.setMessageHandler((msg) {
+      state = msg;
       debugPrint('SystemChannels> $msg');
       backendService.app_lifecycle_state = msg;
     });
@@ -59,6 +124,10 @@ class _HomeState extends State<Home> {
       } else {
         await backendService.startMonitor();
         onboardSuccess = true;
+        if (FilePickerProvider().selectedFiles.isNotEmpty) {
+          BuildContext cd = NavService.navKey.currentContext;
+          await Navigator.pushReplacementNamed(cd, Routes.WELCOME_SCREEN);
+        }
         c.complete(true);
       }
     }).catchError((error) async {
@@ -94,11 +163,6 @@ class _HomeState extends State<Home> {
     //     },
     //   ),
     // );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

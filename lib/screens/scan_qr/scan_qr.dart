@@ -5,6 +5,8 @@ import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/services/at_error_dialog.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -12,6 +14,7 @@ import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/scan_qr_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
@@ -29,6 +32,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QrReaderViewController _controller;
   BackendService backendService = BackendService.getInstance();
+  ScanQrProvider qrProvider = ScanQrProvider();
   bool loading = false;
   bool cameraPermissionGrated = false;
   bool scanCompleted = false;
@@ -89,6 +93,22 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     });
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   BuildContext c = NavService.navKey.currentContext;
+  //   if (qrProvider.status['cram'] == Status.Error) {
+  //     showDialog(
+  //       context: c,
+  //       barrierDismissible: true,
+  //       builder: (context) => Container(
+  //         height: 40,
+  //         width: 40,
+  //         color: Colors.red,
+  //       ),
+  //     );
+  //   }
+  //   super.didChangeDependencies();
+  // }
   void _uploadCramKeyFile() async {
     try {
       String cramKey;

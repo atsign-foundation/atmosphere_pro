@@ -226,7 +226,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_keychain:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_keychain
       url: "https://pub.dartlang.org"
@@ -547,7 +547,7 @@ packages:
       name: timezone
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.7"
+    version: "0.5.9"
   typed_data:
     dependency: transitive
     description:

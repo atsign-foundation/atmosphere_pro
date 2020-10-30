@@ -76,8 +76,9 @@ class HistoryProvider extends BaseModel {
       }
 
       setStatus(SENT_HISTORY, Status.Done);
-    } catch (e) {
-      setStatus(SENT_HISTORY, Status.Error);
+    } catch (error) {
+      print('ERROR IN SENT HISTORU======>$error');
+      setError(SENT_HISTORY, error.toString());
     }
   }
 
@@ -101,8 +102,8 @@ class HistoryProvider extends BaseModel {
       }
 
       setStatus(RECEIVED_HISTORY, Status.Done);
-    } catch (e) {
-      setStatus(RECEIVED_HISTORY, Status.Error);
+    } catch (error) {
+      setError(RECEIVED_HISTORY, error.toString());
     }
   }
 }

@@ -9,14 +9,18 @@ class AddContactProvider extends BaseModel {
 
   getAddContacts() async {
     setStatus(AddContacts, Status.Loading);
-    await Future.delayed(Duration(seconds: 1), () {
-      addContacts = [];
-      for (int i = 0; i < 10; i++) {
-        addContacts.add({
-          'name': 'User $i',
-        });
-      }
-    });
-    setStatus(AddContacts, Status.Done);
+    try {
+      await Future.delayed(Duration(seconds: 1), () {
+        addContacts = [];
+        for (int i = 0; i < 10; i++) {
+          addContacts.add({
+            'name': 'User $i',
+          });
+        }
+      });
+      setStatus(AddContacts, Status.Done);
+    } catch (error) {
+      setError(AddContacts, error.toString());
+    }
   }
 }

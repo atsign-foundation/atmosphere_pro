@@ -24,8 +24,10 @@ class ContactProvider extends BaseModel {
       atContact =
           await AtContactsImpl.getInstance(backendService.currentAtsign);
       completer.complete(true);
-    } catch (e) {
-      print("error =>  $e");
+      setStatus(Contacts, Status.Done);
+    } catch (error) {
+      print("error =>  $error");
+      setError(Contacts, error.toString());
     }
   }
 
@@ -88,8 +90,8 @@ class ContactProvider extends BaseModel {
       } else {
         fetchBlockContactList();
       }
-    } catch (e) {
-      setStatus(Contacts, Status.Error);
+    } catch (error) {
+      setError(Contacts, error.toString());
     }
   }
 
@@ -99,8 +101,8 @@ class ContactProvider extends BaseModel {
       blockContactList = await atContact.listBlockedContacts();
       print("block contact list => $blockContactList");
       setStatus(Contacts, Status.Done);
-    } catch (e) {
-      setStatus(Contacts, Status.Error);
+    } catch (error) {
+      setError(Contacts, error.toString());
     }
   }
 
@@ -110,8 +112,9 @@ class ContactProvider extends BaseModel {
       var result = await atContact.delete('$atSign');
       print("delete result => $result");
       getContacts();
-    } catch (e) {
-      setStatus(Contacts, Status.Error);
+      setStatus(Contacts, Status.Done);
+    } catch (error) {
+      setError(Contacts, error.toString());
     }
   }
 

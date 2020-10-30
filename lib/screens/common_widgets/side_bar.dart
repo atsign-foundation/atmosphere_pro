@@ -180,6 +180,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               Expanded(child: SizedBox()),
               InkWell(
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.HOME, (route) => false);
                 },

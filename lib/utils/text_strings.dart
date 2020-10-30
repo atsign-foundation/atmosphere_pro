@@ -83,4 +83,7 @@ class TextStrings {
   String scanQrMessage = 'Just scan the QR code displayed at www.atsign.com';
   String scanQrFooter = 'Don’t have an @sign? Get now.';
   String websiteTitle = 'Atsign';
+
+  //error texts
+  String errorOccured = 'Some Error occured';
 }
