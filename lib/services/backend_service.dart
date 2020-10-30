@@ -56,6 +56,7 @@ class BackendService {
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
     atClientPreference.downloadPath = appDocumentDirectory.path;
+    atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference,
         atsign: atsign,
