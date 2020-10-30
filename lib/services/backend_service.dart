@@ -32,7 +32,7 @@ class BackendService {
   String app_lifecycle_state;
   AtClientPreference atClientPreference;
   bool autoAcceptFiles = false;
-
+  final String AUTH_SUCCESS = "Authentication successful";
   String get currentAtsign => _atsign;
 
   Future<bool> onboard({String atsign}) async {
@@ -75,7 +75,7 @@ class BackendService {
           await authenticateWithCram(params[0], cramSecret: params[1]);
           _atsign = params[0];
           await startMonitor();
-          c.complete('Auth Completed');
+          c.complete(AUTH_SUCCESS);
           await Navigator.pushNamed(context, Routes.PRIVATE_KEY_GEN_SCREEN);
         }
       } catch (e) {

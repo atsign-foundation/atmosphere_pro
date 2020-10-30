@@ -87,10 +87,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     this.setState(() {
       scanCompleted = false;
     });
-
-    await _controller.startCamera((data, offsets) {
-      onScan(data, offsets, context);
-    });
+    if (authenticateMessage != backendService.AUTH_SUCCESS) {
+      await _controller.startCamera((data, offsets) {
+        onScan(data, offsets, context);
+      });
+    }
   }
 
   // @override
@@ -113,7 +114,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     try {
       String cramKey;
       FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+          .pickFiles(type: FileType.any, allowMultiple: false);
       // setState(() {
       //   loading = true;
       // });
@@ -158,34 +159,48 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     try {
       var fileContents, aesKey, atsign;
       FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false);
+          .pickFiles(type: FileType.any, allowMultiple: true);
       setState(() {
         loading = true;
       });
-      var path = result.files[0].path;
-      File zipFile = File(path);
-      var length = zipFile.lengthSync();
-      if (zipFile.lengthSync() < 10) {
-        _showAlertDialog(_incorrectKeyFile);
-        return;
-      }
-      var bytes = zipFile.readAsBytesSync();
-      final archive = ZipDecoder().decodeBytes(bytes);
-      for (var file in archive) {
-        if (file.name.contains('atKeys')) {
-          fileContents = String.fromCharCodes(file.content);
+      for (var pickedFile in result.files) {
+        var path = pickedFile.path;
+        File selectedFile = File(path);
+        var length = selectedFile.lengthSync();
+        if (selectedFile.lengthSync() < 10) {
+          _showAlertDialog(_incorrectKeyFile);
+          return;
+        }
+        if (pickedFile.extension == 'zip') {
+          var bytes = selectedFile.readAsBytesSync();
+          final archive = ZipDecoder().decodeBytes(bytes);
+          for (var file in archive) {
+            if (file.name.contains('atKeys')) {
+              fileContents = String.fromCharCodes(file.content);
+            } else if (aesKey == null &&
+                atsign == null &&
+                file.name.contains('_private_key.png')) {
+              var bytes = file.content as List<int>;
+              var path = (await path_provider.getTemporaryDirectory()).path;
+              var file1 = await File('$path' + 'test').create();
+              file1.writeAsBytesSync(bytes);
+              String result = await FlutterQrReader.imgScan(file1);
+              List<String> params = result.split(':');
+              atsign = params[0];
+              aesKey = params[1];
+              await File(path + 'test').delete();
+              //read scan QRcode and extract atsign,aeskey
+            }
+          }
+        } else if (pickedFile.name.contains('atKeys')) {
+          fileContents = File(path).readAsStringSync();
         } else if (aesKey == null &&
             atsign == null &&
-            file.name.contains('_private_key.png')) {
-          var bytes = file.content as List<int>;
-          var path = (await path_provider.getTemporaryDirectory()).path;
-          var file1 = await File('$path' + 'test').create();
-          file1.writeAsBytesSync(bytes);
-          String result = await FlutterQrReader.imgScan(file1);
+            pickedFile.name.contains('_private_key.png')) {
+          String result = await FlutterQrReader.imgScan(File(path));
           List<String> params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
-          await File(path + 'test').delete();
           //read scan QRcode and extract atsign,aeskey
         }
       }
@@ -242,7 +257,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   @override
   void dispose() {
-    _controller?.stopCamera();
+    // if (_controller != null) {
+    //   _controller.stopCamera();
+    // }
     super.dispose();
   }
 
