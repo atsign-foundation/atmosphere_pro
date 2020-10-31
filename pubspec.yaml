@@ -50,17 +50,17 @@ dependencies:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
       path: at_client_mobile
-      ref: dev_env
+      ref: master
   at_contact:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
       path: at_contact
-      ref: dev_env
+      ref: master
   at_commons:
     git:
       url: git@github.com:atsign-company/atsign_foundation.git
       path: at_commons
-      ref: dev_env
+      ref: master
 
 dev_dependencies:
   flutter_test:
