@@ -50,14 +50,12 @@ class _ContactScreenState extends State<ContactScreen> {
               task: (provider) => provider.addContact(atSign: atSignName),
               taskName: (provider) => provider.Contacts,
               onSuccess: (provider) {},
-              onError: (err) =>
-                  ErrorDialog().show(err.toString(), context: context));
+              onError: (err) => ErrorDialog().show(err.toString(), context: context));
         },
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: 16.toWidth, vertical: 16.toHeight),
+          margin: EdgeInsets.symmetric(horizontal: 16.toWidth, vertical: 16.toHeight),
           child: Column(
             children: [
               ContactSearchField(
@@ -88,16 +86,13 @@ class _ContactScreenState extends State<ContactScreen> {
                             itemBuilder: (context, alphabetIndes) {
                               List<String> _filteredList = [];
                               provider.contactList.forEach((c) {
-                                if (c.atSign[1]
-                                    .toUpperCase()
-                                    .contains(searchText.toUpperCase())) {
+                                if (c.atSign[1].toUpperCase().contains(searchText.toUpperCase())) {
                                   _filteredList.add(c.atSign);
                                 }
                               });
 
                               String currentChar =
-                                  String.fromCharCode(alphabetIndes + 65)
-                                      .toUpperCase();
+                                  String.fromCharCode(alphabetIndes + 65).toUpperCase();
                               List<String> contactsForAlphabet = [];
 
                               _filteredList.forEach((c) {
@@ -126,8 +121,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         SizedBox(width: 4.toWidth),
                                         Expanded(
                                           child: Divider(
-                                            color: ColorConstants.dividerColor
-                                                .withOpacity(0.2),
+                                            color: ColorConstants.dividerColor.withOpacity(0.2),
                                             height: 1.toHeight,
                                           ),
                                         ),
@@ -137,34 +131,27 @@ class _ContactScreenState extends State<ContactScreen> {
                                         itemCount: contactsForAlphabet.length,
                                         physics: NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
-                                        separatorBuilder: (context, _) =>
-                                            Divider(
-                                              color: ColorConstants.dividerColor
-                                                  .withOpacity(0.2),
+                                        separatorBuilder: (context, _) => Divider(
+                                              color: ColorConstants.dividerColor.withOpacity(0.2),
                                               height: 1.toHeight,
                                             ),
                                         itemBuilder: (context, index) {
-                                          var contactuser =
-                                              provider.contactList[index];
+                                          var contactuser = provider.contactList[index];
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Slidable(
-                                              actionPane:
-                                                  SlidableDrawerActionPane(),
+                                              actionPane: SlidableDrawerActionPane(),
                                               actionExtentRatio: 0.25,
                                               secondaryActions: <Widget>[
                                                 IconSlideAction(
                                                   caption: 'Block',
-                                                  color: ColorConstants
-                                                      .inputFieldColor,
+                                                  color: ColorConstants.inputFieldColor,
                                                   icon: Icons.block,
                                                   onTap: () {
                                                     print('Block');
-                                                    provider
-                                                        .blockUnblockContact(
-                                                            atSign: contactuser
-                                                                .atSign,
-                                                            blockAction: true);
+                                                    provider.blockUnblockContact(
+                                                        atSign: contactuser.atSign,
+                                                        blockAction: true);
                                                   },
                                                 ),
                                                 IconSlideAction(
@@ -172,18 +159,15 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   color: Colors.red,
                                                   icon: Icons.delete,
                                                   onTap: () {
-                                                    provider
-                                                        .deleteAtsignContact(
-                                                            atSign: contactuser
-                                                                .atSign);
+                                                    provider.deleteAtsignContact(
+                                                        atSign: contactuser.atSign);
                                                   },
                                                 ),
                                               ],
                                               child: Container(
                                                 child: ListTile(
                                                   title: Text(
-                                                    contactsForAlphabet[index]
-                                                        .substring(1),
+                                                    contactsForAlphabet[index].substring(1),
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14.toFont,
@@ -192,8 +176,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   subtitle: Text(
                                                     contactsForAlphabet[index],
                                                     style: TextStyle(
-                                                      color: ColorConstants
-                                                          .fadedText,
+                                                      color: ColorConstants.fadedText,
                                                       fontSize: 14.toFont,
                                                     ),
                                                   ),
@@ -205,18 +188,16 @@ class _ContactScreenState extends State<ContactScreen> {
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: CustomCircleAvatar(
-                                                        image: ImageConstants
-                                                            .imagePlaceholder,
+                                                        image: ImageConstants.imagePlaceholder,
                                                       )),
                                                   trailing: IconButton(
                                                     onPressed: () {
+                                                      provider.contactList[index].atSign =
+                                                          contactsForAlphabet[index].substring(1);
                                                       provider.selectedAtsign =
-                                                          provider
-                                                              .contactList[
-                                                                  index]
-                                                              .atSign;
-                                                      Navigator.of(context)
-                                                          .pushNamed(
+                                                          provider.contactList[index].atSign;
+
+                                                      Navigator.of(context).pushNamed(
                                                         Routes.WELCOME_SCREEN,
                                                       );
                                                     },
