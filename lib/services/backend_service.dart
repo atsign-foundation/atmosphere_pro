@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
@@ -34,6 +35,7 @@ class BackendService {
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
   String get currentAtsign => _atsign;
+  OutboundConnection monitorConnection;
 
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
@@ -132,10 +134,12 @@ class BackendService {
   }
 
   // startMonitor needs to be called at the beginning of session
+  // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey, acceptStream);
+    monitorConnection =
+        await atClientInstance.startMonitor(privateKey, acceptStream);
     print("Monitor started");
     return true;
   }
