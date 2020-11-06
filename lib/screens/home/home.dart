@@ -112,7 +112,8 @@ class _HomeState extends State<Home> {
       state = msg;
       debugPrint('SystemChannels> $msg');
       backendService.app_lifecycle_state = msg;
-      if (backendService.monitorConnection.isInValid()) {
+      if (backendService.monitorConnection != null &&
+          backendService.monitorConnection.isInValid()) {
         backendService.startMonitor();
       }
     });
