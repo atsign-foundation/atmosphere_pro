@@ -88,10 +88,6 @@ class _HistoryScreenState extends State<HistoryScreen>
                     children: [
                       ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.SENT_HISTORY,
-
-                        load: (provider) async {
-                          await provider.getSentHistory();
-                        },
                         showError: true,
                         successBuilder: (provider) => (provider
                                 .sentHistory.isEmpty)

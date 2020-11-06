@@ -61,6 +61,11 @@ dependencies:
       url: git@github.com:atsign-company/atsign_foundation.git
       path: at_commons
       ref: dev_env
+  at_lookup:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_lookup
+      ref: dev_env
 
 dev_dependencies:
   flutter_test:
