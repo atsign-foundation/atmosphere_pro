@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/file_types.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,14 +38,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
 
   @override
   void initState() {
-    // setState(() {
     filePickerProvider =
         Provider.of<FilePickerProvider>(context, listen: false);
-    // print(
-    //     'FILE PICKER PROVIDER IN SELECT FILE WIDHET=====>${filePickerProvider.selectedFiles}');
-    // });
-
-    // provider = Provider.of<FilePickerProvider>(context, listen: false);
     super.initState();
   }
 
@@ -55,13 +50,74 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
           Provider.of<FilePickerProvider>(context, listen: false);
       await filePickerProvider.setFiles();
     }
-    // setState(() async {
-
-    // print(
-    //     'FILE PICKER PROVIDER IN SELECT FILE WIDHET DIPENDENCY CHANGED=====>${await filePickerProvider.selectedFiles[0].path}');
-    // });
-
     super.didChangeDependencies();
+  }
+
+  void _showFileChoice() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0,
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Text(
+                    TextStrings().fileChoiceQuestion,
+                    style: CustomTextStyles.primaryBold16,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        providerCallback<FilePickerProvider>(context,
+                            task: (provider) =>
+                                provider.pickFiles(provider.MEDIA),
+                            taskName: (provider) => provider.PICK_FILES,
+                            onSuccess: (provider) {},
+                            onError: (err) => ErrorDialog()
+                                .show(err.toString(), context: context));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(Icons.camera, size: 30),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              TextStrings().choice1,
+                              style: CustomTextStyles.primaryBold14,
+                            ))
+                      ])),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        providerCallback<FilePickerProvider>(context,
+                            task: (provider) =>
+                                provider.pickFiles(provider.FILES),
+                            taskName: (provider) => provider.PICK_FILES,
+                            onSuccess: (provider) {},
+                            onError: (err) => ErrorDialog()
+                                .show(err.toString(), context: context));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(Icons.file_copy, size: 30),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              TextStrings().choice2,
+                              style: CustomTextStyles.primaryBold14,
+                            ))
+                      ]))
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -98,12 +154,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
               trailing: InkWell(
                 onTap: () {
-                  providerCallback<FilePickerProvider>(context,
-                      task: (provider) => provider.pickFiles(),
-                      taskName: (provider) => provider.PICK_FILES,
-                      onSuccess: (provider) {},
-                      onError: (err) =>
-                          ErrorDialog().show(err.toString(), context: context));
+                  _showFileChoice();
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 15.toHeight),

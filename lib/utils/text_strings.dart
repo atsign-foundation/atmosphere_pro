@@ -86,4 +86,9 @@ class TextStrings {
 
   //error texts
   String errorOccured = 'Some Error occured';
+
+  // File choice dialog texts
+  String fileChoiceQuestion = 'What would you like to send?';
+  String choice1 = 'Photos';
+  String choice2 = 'Other files';
 }

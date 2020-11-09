@@ -24,6 +24,9 @@ class FilePickerProvider extends BaseModel {
   List<PlatformFile> selectedFiles = [];
   Uint8List videoThumbnail;
   double totalSize = 0;
+  final String MEDIA = 'MEDIA';
+  final String FILES = 'FILES';
+
   setFiles() async {
     setStatus(PICK_FILES, Status.Loading);
     try {
@@ -44,7 +47,7 @@ class FilePickerProvider extends BaseModel {
     }
   }
 
-  pickFiles() async {
+  pickFiles(String choice) async {
     setStatus(PICK_FILES, Status.Loading);
     try {
       List<PlatformFile> tempList = [];
@@ -57,7 +60,7 @@ class FilePickerProvider extends BaseModel {
 
       result = await FilePicker.platform.pickFiles(
           allowMultiple: true,
-          type: FileType.any,
+          type: choice == MEDIA ? FileType.media : FileType.any,
           allowCompression: true,
           withData: true);
 
@@ -110,8 +113,8 @@ class FilePickerProvider extends BaseModel {
             await calculateSize();
           });
 
-          print("Shared:wawawawawawa" +
-              (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+          print(
+              "Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
         }
       }, onError: (err) {
         print("getIntentDataStream error: $err");
