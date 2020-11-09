@@ -146,6 +146,9 @@ class BackendService {
 
   // send a file
   Future<bool> sendFile(String atSign, String filePath) async {
+    if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
     print("Sending file => $atSign $filePath");
     var result = await atClientInstance.stream(atSign, filePath);
     print("sendfile result => $result");
