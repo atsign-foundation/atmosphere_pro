@@ -48,6 +48,9 @@ class _HistoryScreenState extends State<HistoryScreen>
         appBar: CustomAppBar(
           showTitle: true,
           title: 'History',
+          showTrailingButton: true,
+          trailingIcon: Icons.library_books,
+          isHistory: true,
         ),
         body: SingleChildScrollView(
           child: Container(

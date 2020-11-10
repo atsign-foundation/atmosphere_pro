@@ -2,16 +2,19 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/screens/history/widgets/add_contact_from_history.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/file_types.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class FilesListTile extends StatefulWidget {
@@ -43,6 +46,7 @@ class _FilesListTileState extends State<FilesListTile> {
   @override
   Widget build(BuildContext context) {
     sendTime = DateTime.parse(widget.sentHistory.date);
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Column(
       children: [
         ListTile(
@@ -203,8 +207,17 @@ class _FilesListTileState extends State<FilesListTile> {
                                 widget.sentHistory.files[index].filePath);
                           }
                           return ListTile(
-                            onTap: () {
+                            onTap: () async {
                               // preview file
+                              File test = File(
+                                  widget.sentHistory.files[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    widget.sentHistory.files[index].filePath);
+                              } else {
+                                _showNoFileDialog(deviceTextFactor);
+                              }
                             },
                             leading: Container(
                               height: 50.toHeight,
@@ -359,5 +372,42 @@ class _FilesListTileState extends State<FilesListTile> {
                   ),
                 ),
               );
+  }
+
+  void _showNoFileDialog(double deviceTextFactor) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0,
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Text(
+                    TextStrings().noFileFound,
+                    style: CustomTextStyles.primaryBold16,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
+                        isInverted: false,
+                        buttonText: TextStrings().buttonClose,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

@@ -6,7 +6,7 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 ///if [false] it shows a [Close] String instead of backbutton
 ///[showLeadingButton] toggles the drawer menu button
 ///[title] is a [String] to display the title of the appbar
-///[showAddButton] toggles the visibility of add button and is only used for contacts screen
+///[showTrailingButton] toggles the visibility of trailing button, default add icon
 ///therefore it has it's navigation embedded in the widget itself.
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -19,7 +19,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showTitle;
   final bool showBackButton;
   final bool showLeadingicon;
-  final bool showAddButton;
+  final bool showTrailingButton;
+  final IconData trailingIcon;
+  final bool isHistory;
   final onActionpressed;
 
   final double elevation;
@@ -29,7 +31,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.showTitle = false,
       this.showBackButton = false,
       this.showLeadingicon = false,
-      this.showAddButton = false,
+      this.showTrailingButton = false,
+      this.trailingIcon = Icons.add,
+      this.isHistory = false,
       this.elevation = 0,
       this.onActionpressed});
   @override
@@ -89,19 +93,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: 22.toWidth,
           margin: EdgeInsets.only(right: 20),
           child: (showTitle)
-              ? (showAddButton)
+              ? (showTrailingButton)
                   ? IconButton(
-                      icon: Icon(Icons.add),
+                      icon: Icon(trailingIcon),
                       onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AddContactDialog(
-                                  onYesTap: (value) {
-                                    onActionpressed(value);
-                                    Navigator.pop(context);
-                                  },
-                                  //name: contacts[index],
-                                ));
+                        if (isHistory) {
+                          // navigate to downloads folder
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AddContactDialog(
+                                    onYesTap: (value) {
+                                      onActionpressed(value);
+                                      Navigator.pop(context);
+                                    },
+                                    //name: contacts[index],
+                                  ));
+                        }
                       })
                   : Container()
               : GestureDetector(
