@@ -36,19 +36,20 @@ class BackendService {
   final String AUTH_SUCCESS = "Authentication successful";
   String get currentAtsign => _atsign;
   OutboundConnection monitorConnection;
+  Directory downloadDirectory;
 
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
-    var appDocumentDirectory;
     if (Platform.isIOS) {
-      appDocumentDirectory =
+      downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
     } else {
-      appDocumentDirectory = await path_provider.getExternalStorageDirectory();
+      downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
+
     final appSupportDirectory =
         await path_provider.getApplicationSupportDirectory();
-    print("paths => $appDocumentDirectory $appSupportDirectory");
+    print("paths => $downloadDirectory $appSupportDirectory");
     String path = appSupportDirectory.path;
     atClientPreference = AtClientPreference();
 
@@ -57,7 +58,7 @@ class BackendService {
     atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
-    atClientPreference.downloadPath = appDocumentDirectory.path;
+    atClientPreference.downloadPath = downloadDirectory.path;
     atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference,

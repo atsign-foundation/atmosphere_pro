@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 
 ///This is a custom app bar [showTitle] enables to display the title in the center
@@ -12,7 +15,10 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -96,11 +102,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ? (showTrailingButton)
                   ? IconButton(
                       icon: Icon(trailingIcon),
-                      onPressed: () {
+                      onPressed: () async {
                         if (isHistory) {
                           // navigate to downloads folder
+                          if (Platform.isAndroid) {
+                            String path = await FilesystemPicker.open(
+                              title: 'Atmosphere download folder',
+                              context: context,
+                              rootDirectory: BackendService.getInstance()
+                                  .downloadDirectory,
+                              fsType: FilesystemType.all,
+                              folderIconColor: Colors.teal,
+                              allowedExtensions: [],
+                              fileTileSelectMode: FileTileSelectMode.wholeTile,
+                              requestPermission: () async =>
+                                  await Permission.storage.request().isGranted,
+                            );
+                          } else {
+                            String url = 'shareddocuments://' +
+                                BackendService.getInstance()
+                                    .atClientPreference
+                                    .downloadPath;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
                         } else {
-                          showDialog(
+                          await showDialog(
                               context: context,
                               builder: (context) => AddContactDialog(
                                     onYesTap: (value) {

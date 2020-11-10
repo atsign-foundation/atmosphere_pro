@@ -46,6 +46,8 @@ dependencies:
   archive: ^2.0.13
   flutter_keychain: ^1.0.0
   open_file: ^3.0.3
+  url_launcher: ^5.7.10
+  filesystem_picker: ^1.0.3
 
   at_client_mobile:
     git:
