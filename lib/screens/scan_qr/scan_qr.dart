@@ -115,9 +115,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       String cramKey;
       FilePickerResult result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
-      // setState(() {
-      //   loading = true;
-      // });
+      setState(() {
+        loading = true;
+      });
       for (var file in result.files) {
         if (cramKey == null) {
           String result = await FlutterQrReader.imgScan(File(file.path));
