@@ -59,7 +59,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.sentHistory.name.substring(1),
+                      widget.sentHistory.name,
                       style: CustomTextStyles.primaryRegular16,
                     ),
                   ),
