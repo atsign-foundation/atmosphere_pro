@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
@@ -217,5 +218,16 @@ class BackendService {
 
   deleteAtSignFromKeyChain(String atsign) async {
     await FlutterKeychain.remove(key: '@atsign');
+  }
+
+  Future<bool> checkAtsign(String atSign) async {
+    if (atSign == null) {
+      return false;
+    } else if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
+    var checkPresence = await AtLookupImpl.findSecondary(
+        atSign, MixedConstants.ROOT_DOMAIN, AtClientPreference().rootPort);
+    return checkPresence != null;
   }
 }
