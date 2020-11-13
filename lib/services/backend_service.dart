@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
@@ -246,12 +247,38 @@ class BackendService {
     key.sharedBy = atSign;
     key.metadata = metadata;
     List contactFields = TextStrings().contactFields;
-    for (var i = 0; i < contactFields.length; i++) {
-      key.key = contactFields[i];
-      var test = await atClientInstance.get(key);
-      if (test != null && test.value != null) {
-        contactDetails[contactFields[i]] = test.value;
+
+    try {
+      // firstname
+      key.key = contactFields[0];
+      var result = await atClientInstance.get(key).catchError(
+          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+      var firstname = result.value;
+
+      // lastname
+      key.key = contactFields[1];
+      result = await atClientInstance.get(key);
+      var lastname = result.value;
+
+      var name = (firstname ?? '' + lastname ?? '').trim();
+      if (name.length == 0) {
+        name = atSign.substring(1);
       }
+
+      // image
+      key.metadata.isBinary = true;
+      key.key = contactFields[2];
+      result = await atClientInstance.get(key);
+      // Uint8List image = Uint8List.fromList((result.value).cast<int>());
+      var testImage = result.value;
+      List<int> intList2 = testImage.cast<int>();
+      Uint8List image = Uint8List.fromList(intList2);
+
+      contactDetails['name'] = name;
+      contactDetails['image'] = image;
+    } catch (e) {
+      contactDetails['name'] = null;
+      contactDetails['image'] = null;
     }
     return contactDetails;
   }

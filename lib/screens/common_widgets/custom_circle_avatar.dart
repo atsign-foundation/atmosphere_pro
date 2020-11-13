@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 /// This is a custom Circle Avatar with a border of secondary color
 /// [size] is set to [50] as default
 
@@ -8,8 +10,15 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 class CustomCircleAvatar extends StatelessWidget {
   final String image;
   final double size;
+  final bool nonAsset;
+  final Uint8List byteImage;
 
-  const CustomCircleAvatar({Key key, this.image, this.size = 50})
+  const CustomCircleAvatar(
+      {Key key,
+      this.image,
+      this.size = 50,
+      this.nonAsset = false,
+      this.byteImage})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -23,7 +32,7 @@ class CustomCircleAvatar extends StatelessWidget {
       child: CircleAvatar(
         radius: (size - 5).toFont,
         backgroundColor: Colors.transparent,
-        backgroundImage: AssetImage(image),
+        backgroundImage: nonAsset ? Image.memory(byteImage) : AssetImage(image),
       ),
     );
   }

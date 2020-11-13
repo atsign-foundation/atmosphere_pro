@@ -100,4 +100,9 @@ class TextStrings {
     'lastname.persona',
     'image.persona',
   ];
+
+  String unknownAtsign(String atSign) =>
+      '$atSign is not found. Please check and try again.';
+  String atsignExists(String atSign) => '$atSign already exists';
+  String emptyAtsign = 'Please type in an atsign';
 }
