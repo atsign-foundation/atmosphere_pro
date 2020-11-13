@@ -94,4 +94,10 @@ class TextStrings {
 
   // history no file to open
   String noFileFound = 'Sorry, unable to open this file';
+
+  List<String> contactFields = [
+    'firstname.persona',
+    'lastname.persona',
+    'image.persona',
+  ];
 }

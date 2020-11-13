@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
-
+import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 
 class BackendService {
@@ -229,5 +230,29 @@ class BackendService {
     var checkPresence = await AtLookupImpl.findSecondary(
         atSign, MixedConstants.ROOT_DOMAIN, AtClientPreference().rootPort);
     return checkPresence != null;
+  }
+
+  Future<Map<String, dynamic>> getContactDetails(String atSign) async {
+    Map<String, dynamic> contactDetails = {};
+    if (atSign == null) {
+      return contactDetails;
+    } else if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
+    var metadata = Metadata();
+    metadata.isPublic = true;
+    metadata.namespaceAware = false;
+    AtKey key = AtKey();
+    key.sharedBy = atSign;
+    key.metadata = metadata;
+    List contactFields = TextStrings().contactFields;
+    for (var i = 0; i < contactFields.length; i++) {
+      key.key = contactFields[i];
+      var test = await atClientInstance.get(key);
+      if (test != null && test.value != null) {
+        contactDetails[contactFields[i]] = test.value;
+      }
+    }
+    return contactDetails;
   }
 }
