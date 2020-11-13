@@ -21,7 +21,6 @@ class ContactScreen extends StatefulWidget {
 class _ContactScreenState extends State<ContactScreen> {
   ContactProvider provider;
   String searchText;
-
   @override
   void initState() {
     provider = ContactProvider();
@@ -42,7 +41,7 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        showAddButton: true,
+        showTrailingButton: true,
         showTitle: true,
         title: TextStrings().sidebarContact,
         onActionpressed: (String atSignName) {
@@ -82,10 +81,10 @@ class _ContactScreenState extends State<ContactScreen> {
                             child: Text('No Contact found'),
                           )
                         : ListView.builder(
-                            itemCount: 26,
+                            itemCount: 27,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, alphabetIndes) {
+                            itemBuilder: (context, alphabetIndex) {
                               List<String> _filteredList = [];
                               provider.contactList.forEach((c) {
                                 if (c.atSign[1]
@@ -94,18 +93,24 @@ class _ContactScreenState extends State<ContactScreen> {
                                   _filteredList.add(c.atSign);
                                 }
                               });
-
-                              String currentChar =
-                                  String.fromCharCode(alphabetIndes + 65)
-                                      .toUpperCase();
                               List<String> contactsForAlphabet = [];
-
-                              _filteredList.forEach((c) {
-                                if (c[1].toUpperCase() == currentChar) {
-                                  contactsForAlphabet.add(c);
-                                }
-                              });
-
+                              String currentChar =
+                                  String.fromCharCode(alphabetIndex + 65)
+                                      .toUpperCase();
+                              if (alphabetIndex == 26) {
+                                currentChar = 'Others';
+                                _filteredList.forEach((c) {
+                                  if (int.tryParse(c[1]) != null) {
+                                    contactsForAlphabet.add(c);
+                                  }
+                                });
+                              } else {
+                                _filteredList.forEach((c) {
+                                  if (c[1].toUpperCase() == currentChar) {
+                                    contactsForAlphabet.add(c);
+                                  }
+                                });
+                              }
                               if (contactsForAlphabet.isEmpty) {
                                 return Container();
                               }
@@ -144,8 +149,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                               height: 1.toHeight,
                                             ),
                                         itemBuilder: (context, index) {
-                                          var contactuser =
-                                              provider.contactList[index];
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Slidable(
@@ -160,11 +163,11 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   icon: Icons.block,
                                                   onTap: () {
                                                     print('Block');
-                                                    provider
-                                                        .blockUnblockContact(
-                                                            atSign: contactuser
-                                                                .atSign,
-                                                            blockAction: true);
+                                                    provider.blockUnblockContact(
+                                                        atSign:
+                                                            contactsForAlphabet[
+                                                                index],
+                                                        blockAction: true);
                                                   },
                                                 ),
                                                 IconSlideAction(
@@ -172,10 +175,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   color: Colors.red,
                                                   icon: Icons.delete,
                                                   onTap: () {
-                                                    provider
-                                                        .deleteAtsignContact(
-                                                            atSign: contactuser
-                                                                .atSign);
+                                                    provider.deleteAtsignContact(
+                                                        atSign:
+                                                            contactsForAlphabet[
+                                                                index]);
                                                   },
                                                 ),
                                               ],
@@ -210,11 +213,18 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       )),
                                                   trailing: IconButton(
                                                     onPressed: () {
+                                                      provider
+                                                              .contactList[index]
+                                                              .atSign =
+                                                          contactsForAlphabet[
+                                                                  index]
+                                                              .substring(1);
                                                       provider.selectedAtsign =
                                                           provider
                                                               .contactList[
                                                                   index]
                                                               .atSign;
+
                                                       Navigator.of(context)
                                                           .pushNamed(
                                                         Routes.WELCOME_SCREEN,

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 
 ///This is a custom app bar [showTitle] enables to display the title in the center
@@ -6,20 +9,25 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 ///if [false] it shows a [Close] String instead of backbutton
 ///[showLeadingButton] toggles the drawer menu button
 ///[title] is a [String] to display the title of the appbar
-///[showAddButton] toggles the visibility of add button and is only used for contacts screen
+///[showTrailingButton] toggles the visibility of trailing button, default add icon
 ///therefore it has it's navigation embedded in the widget itself.
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showTitle;
   final bool showBackButton;
   final bool showLeadingicon;
-  final bool showAddButton;
+  final bool showTrailingButton;
+  final IconData trailingIcon;
+  final bool isHistory;
   final onActionpressed;
 
   final double elevation;
@@ -29,7 +37,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.showTitle = false,
       this.showBackButton = false,
       this.showLeadingicon = false,
-      this.showAddButton = false,
+      this.showTrailingButton = false,
+      this.trailingIcon = Icons.add,
+      this.isHistory = false,
       this.elevation = 0,
       this.onActionpressed});
   @override
@@ -89,19 +99,47 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: 22.toWidth,
           margin: EdgeInsets.only(right: 20),
           child: (showTitle)
-              ? (showAddButton)
+              ? (showTrailingButton)
                   ? IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AddContactDialog(
-                                  onYesTap: (value) {
-                                    onActionpressed(value);
-                                    Navigator.pop(context);
-                                  },
-                                  //name: contacts[index],
-                                ));
+                      icon: Icon(trailingIcon),
+                      onPressed: () async {
+                        if (isHistory) {
+                          // navigate to downloads folder
+                          if (Platform.isAndroid) {
+                            String path = await FilesystemPicker.open(
+                              title: 'Atmosphere download folder',
+                              context: context,
+                              rootDirectory: BackendService.getInstance()
+                                  .downloadDirectory,
+                              fsType: FilesystemType.all,
+                              folderIconColor: Colors.teal,
+                              allowedExtensions: [],
+                              fileTileSelectMode: FileTileSelectMode.wholeTile,
+                              requestPermission: () async =>
+                                  await Permission.storage.request().isGranted,
+                            );
+                          } else {
+                            String url = 'shareddocuments://' +
+                                BackendService.getInstance()
+                                    .atClientPreference
+                                    .downloadPath;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        } else {
+                          await showDialog(
+                              context: context,
+                              builder: (context) => AddContactDialog(
+                                    onYesTap: (value) {
+                                      onActionpressed(value);
+                                      Navigator.pop(context);
+                                    },
+                                    //name: contacts[index],
+                                  ));
+                        }
                       })
                   : Container()
               : GestureDetector(

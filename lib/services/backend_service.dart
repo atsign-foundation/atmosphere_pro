@@ -2,20 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
-
+import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 
 class BackendService {
@@ -34,19 +37,21 @@ class BackendService {
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
   String get currentAtsign => _atsign;
+  OutboundConnection monitorConnection;
+  Directory downloadDirectory;
 
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
-    var appDocumentDirectory;
     if (Platform.isIOS) {
-      appDocumentDirectory =
+      downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
     } else {
-      appDocumentDirectory = await path_provider.getExternalStorageDirectory();
+      downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
+
     final appSupportDirectory =
         await path_provider.getApplicationSupportDirectory();
-    print("paths => $appDocumentDirectory $appSupportDirectory");
+    print("paths => $downloadDirectory $appSupportDirectory");
     String path = appSupportDirectory.path;
     atClientPreference = AtClientPreference();
 
@@ -55,7 +60,7 @@ class BackendService {
     atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
-    atClientPreference.downloadPath = appDocumentDirectory.path;
+    atClientPreference.downloadPath = downloadDirectory.path;
     atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference,
@@ -132,16 +137,21 @@ class BackendService {
   }
 
   // startMonitor needs to be called at the beginning of session
+  // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    atClientInstance.startMonitor(privateKey, acceptStream);
+    monitorConnection =
+        await atClientInstance.startMonitor(privateKey, acceptStream);
     print("Monitor started");
     return true;
   }
 
   // send a file
   Future<bool> sendFile(String atSign, String filePath) async {
+    if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
     print("Sending file => $atSign $filePath");
     var result = await atClientInstance.stream(atSign, filePath);
     print("sendfile result => $result");
@@ -209,5 +219,40 @@ class BackendService {
 
   deleteAtSignFromKeyChain(String atsign) async {
     await FlutterKeychain.remove(key: '@atsign');
+  }
+
+  Future<bool> checkAtsign(String atSign) async {
+    if (atSign == null) {
+      return false;
+    } else if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
+    var checkPresence = await AtLookupImpl.findSecondary(
+        atSign, MixedConstants.ROOT_DOMAIN, AtClientPreference().rootPort);
+    return checkPresence != null;
+  }
+
+  Future<Map<String, dynamic>> getContactDetails(String atSign) async {
+    Map<String, dynamic> contactDetails = {};
+    if (atSign == null) {
+      return contactDetails;
+    } else if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
+    var metadata = Metadata();
+    metadata.isPublic = true;
+    metadata.namespaceAware = false;
+    AtKey key = AtKey();
+    key.sharedBy = atSign;
+    key.metadata = metadata;
+    List contactFields = TextStrings().contactFields;
+    for (var i = 0; i < contactFields.length; i++) {
+      key.key = contactFields[i];
+      var test = await atClientInstance.get(key);
+      if (test != null && test.value != null) {
+        contactDetails[contactFields[i]] = test.value;
+      }
+    }
+    return contactDetails;
   }
 }

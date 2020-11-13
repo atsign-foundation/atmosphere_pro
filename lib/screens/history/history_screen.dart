@@ -48,6 +48,9 @@ class _HistoryScreenState extends State<HistoryScreen>
         appBar: CustomAppBar(
           showTitle: true,
           title: 'History',
+          showTrailingButton: true,
+          trailingIcon: Icons.library_books,
+          isHistory: true,
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -88,10 +91,6 @@ class _HistoryScreenState extends State<HistoryScreen>
                     children: [
                       ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.SENT_HISTORY,
-
-                        load: (provider) async {
-                          await provider.getSentHistory();
-                        },
                         showError: true,
                         successBuilder: (provider) => (provider
                                 .sentHistory.isEmpty)

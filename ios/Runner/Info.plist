@@ -43,7 +43,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is used to scan QR code to pair your device with your @sign</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To upload photos, please allow permission to access your photo library.</string>
+	<string>Enable @mosphere to access your photos to upload the ones you choose in file transfer.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

@@ -86,4 +86,18 @@ class TextStrings {
 
   //error texts
   String errorOccured = 'Some Error occured';
+
+  // File choice dialog texts
+  String fileChoiceQuestion = 'What would you like to send?';
+  String choice1 = 'Photos';
+  String choice2 = 'Other files';
+
+  // history no file to open
+  String noFileFound = 'Sorry, unable to open this file';
+
+  List<String> contactFields = [
+    'firstname.persona',
+    'lastname.persona',
+    'image.persona',
+  ];
 }
