@@ -7,7 +7,9 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/services/validators.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddContactDialog extends StatelessWidget {
   final String name;
@@ -48,8 +50,13 @@ class AddContactDialog extends StatelessWidget {
               ],
             ),
             content: ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxHeight: 255.toHeight * deviceTextFactor),
+              constraints: BoxConstraints(
+                  maxHeight:
+                      (Provider.of<ContactProvider>(context).getAtSignError ==
+                                  ''
+                              ? 255.toHeight
+                              : 285.toHeight) *
+                          deviceTextFactor),
               child: Column(
                 children: [
                   SizedBox(
@@ -68,16 +75,35 @@ class AddContactDialog extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
+                    height: 10.toHeight,
+                  ),
+                  (Provider.of<ContactProvider>(context).getAtSignError == '')
+                      ? Container()
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                Provider.of<ContactProvider>(
+                                  context,
+                                ).getAtSignError,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            )
+                          ],
+                        ),
+                  SizedBox(
                     height: 45.toHeight,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomButton(
-                        height: 50.toHeight * deviceTextFactor,
-                        buttonText: TextStrings().addtoContact,
-                        onPressed: () => onYesTap(atsignName),
-                      )
+                      (Provider.of<ContactProvider>(context).isLoading)
+                          ? CircularProgressIndicator()
+                          : CustomButton(
+                              height: 50.toHeight * deviceTextFactor,
+                              buttonText: TextStrings().addtoContact,
+                              onPressed: () => onYesTap(atsignName),
+                            )
                     ],
                   ),
                   SizedBox(
@@ -87,11 +113,14 @@ class AddContactDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomButton(
-                        height: 50.toHeight * deviceTextFactor,
-                        isInverted: true,
-                        buttonText: TextStrings().buttonCancel,
-                        onPressed: () => Navigator.pop(context),
-                      )
+                          height: 50.toHeight * deviceTextFactor,
+                          isInverted: true,
+                          buttonText: TextStrings().buttonCancel,
+                          onPressed: () {
+                            Provider.of<ContactProvider>(context, listen: false)
+                                .getAtSignError = '';
+                            Navigator.pop(context);
+                          })
                     ],
                   ),
                 ],

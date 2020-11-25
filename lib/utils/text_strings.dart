@@ -25,7 +25,7 @@ class TextStrings {
   String welcomeAddFilePlaceholder = 'Add file to transfer';
 
   //sidebar menu texts
-  String sidebarContact = 'Contact';
+  String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked User';
   String sidebarTermsAndConditions = 'Terms and Conditions';
@@ -100,4 +100,9 @@ class TextStrings {
     'lastname.persona',
     'image.persona',
   ];
+
+  String unknownAtsign(String atSign) =>
+      '$atSign is not found. Please check and try again.';
+  String atsignExists(String atSign) => '$atSign already exists';
+  String emptyAtsign = 'Please type in an atsign';
 }

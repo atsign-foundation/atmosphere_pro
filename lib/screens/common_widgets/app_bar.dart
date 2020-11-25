@@ -135,9 +135,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               builder: (context) => AddContactDialog(
                                     onYesTap: (value) {
                                       onActionpressed(value);
-                                      Navigator.pop(context);
                                     },
-                                    //name: contacts[index],
                                   ));
                         }
                       })

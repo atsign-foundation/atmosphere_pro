@@ -42,116 +42,115 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ColorConstants.scaffoldColor,
-        appBar: CustomAppBar(
-          showTitle: true,
-          title: 'History',
-          showTrailingButton: true,
-          trailingIcon: Icons.library_books,
-          isHistory: true,
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: SizeConfig().screenHeight,
-            child: Column(
-              children: [
-                Container(
-                  height: 40,
-                  child: TabBar(
-                    onTap: (index) {
-                      if (index == 0) {
-                        // provider.getSentHistory();
-                      }
-                      if (index == 1) {
-                        // provider.getRecievedHistory();
-                      }
-                    },
-                    labelColor: ColorConstants.fontPrimary,
-                    indicatorWeight: 5.toHeight,
-                    indicatorColor: Colors.black,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelStyle: CustomTextStyles.primaryBold14,
-                    unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
-                    controller: _controller,
-                    tabs: [
-                      Text(
-                        TextStrings().sent,
-                      ),
-                      Text(
-                        TextStrings().received,
-                      )
-                    ],
-                  ),
+    return Scaffold(
+      backgroundColor: ColorConstants.scaffoldColor,
+      appBar: CustomAppBar(
+        showBackButton: true,
+        showTitle: true,
+        title: 'History',
+        showTrailingButton: true,
+        trailingIcon: Icons.library_books,
+        isHistory: true,
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: SizeConfig().screenHeight,
+          child: Column(
+            children: [
+              Container(
+                height: 40,
+                child: TabBar(
+                  onTap: (index) {
+                    if (index == 0) {
+                      // provider.getSentHistory();
+                    }
+                    if (index == 1) {
+                      // provider.getRecievedHistory();
+                    }
+                  },
+                  labelColor: ColorConstants.fontPrimary,
+                  indicatorWeight: 5.toHeight,
+                  indicatorColor: Colors.black,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelStyle: CustomTextStyles.primaryBold14,
+                  unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
+                  controller: _controller,
+                  tabs: [
+                    Text(
+                      TextStrings().sent,
+                    ),
+                    Text(
+                      TextStrings().received,
+                    )
+                  ],
                 ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _controller,
-                    children: [
-                      ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.SENT_HISTORY,
-                        showError: true,
-                        successBuilder: (provider) => (provider
-                                .sentHistory.isEmpty)
-                            ? Center(
-                                child: Text('No files sent'),
-                              )
-                            : ListView.separated(
-                                padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) => Divider(
-                                  indent: 16.toWidth,
-                                ),
-                                itemCount: provider.sentHistory.length,
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: FilesListTile(
-                                      sentHistory: provider.sentHistory[index],
-                                      contactProvider: contactProvider),
-                                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _controller,
+                  children: [
+                    ProviderHandler<HistoryProvider>(
+                      functionName: historyProvider.SENT_HISTORY,
+                      showError: true,
+                      successBuilder: (provider) => (provider
+                              .sentHistory.isEmpty)
+                          ? Center(
+                              child: Text('No files sent'),
+                            )
+                          : ListView.separated(
+                              padding: EdgeInsets.only(bottom: 170.toHeight),
+                              physics: AlwaysScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) => Divider(
+                                indent: 16.toWidth,
                               ),
-                        // errorBuilder: (provider) => Center(
-                        //   child: Text('Some error occured'),
-                        // ),
-                      ),
-                      ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.RECEIVED_HISTORY,
+                              itemCount: provider.sentHistory.length,
+                              itemBuilder: (context, index) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FilesListTile(
+                                    sentHistory: provider.sentHistory[index],
+                                    contactProvider: contactProvider),
+                              ),
+                            ),
+                      // errorBuilder: (provider) => Center(
+                      //   child: Text('Some error occured'),
+                      // ),
+                      load: (provider) {},
+                    ),
+                    ProviderHandler<HistoryProvider>(
+                      functionName: historyProvider.RECEIVED_HISTORY,
 
-                        load: (provider) async {
-                          await provider.getRecievedHistory();
-                        },
-                        showError: true,
-                        successBuilder: (provider) => (provider
-                                .receivedHistory.isEmpty)
-                            ? Center(
-                                child: Text('No files received'),
-                              )
-                            : ListView.separated(
-                                padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) => Divider(
-                                  indent: 16.toWidth,
-                                ),
-                                itemCount: provider.receivedHistory.length,
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: FilesListTile(
-                                    sentHistory:
-                                        provider.receivedHistory[index],
-                                    contactProvider: contactProvider,
-                                  ),
+                      load: (provider) async {
+                        await provider.getRecievedHistory();
+                      },
+                      showError: true,
+                      successBuilder: (provider) => (provider
+                              .receivedHistory.isEmpty)
+                          ? Center(
+                              child: Text('No files received'),
+                            )
+                          : ListView.separated(
+                              padding: EdgeInsets.only(bottom: 170.toHeight),
+                              physics: AlwaysScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) => Divider(
+                                indent: 16.toWidth,
+                              ),
+                              itemCount: provider.receivedHistory.length,
+                              itemBuilder: (context, index) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FilesListTile(
+                                  sentHistory: provider.receivedHistory[index],
+                                  contactProvider: contactProvider,
                                 ),
                               ),
-                        // errorBuilder: (provider) => Center(
-                        //   child: Text('Some error occured'),
-                        // ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                            ),
+                      // errorBuilder: (provider) => Center(
+                      //   child: Text('Some error occured'),
+                      // ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),

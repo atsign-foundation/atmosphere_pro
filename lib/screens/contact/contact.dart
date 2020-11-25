@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+import 'dart:convert';
+import 'dart:async';
+import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
@@ -12,6 +16,7 @@ import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 class ContactScreen extends StatefulWidget {
   @override
@@ -32,7 +37,6 @@ class _ContactScreenState extends State<ContactScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.getContacts();
     });
-    print("called herre => $provider");
     searchText = '';
     super.didChangeDependencies();
   }
@@ -41,16 +45,13 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        showBackButton: true,
         showTrailingButton: true,
         showTitle: true,
         title: TextStrings().sidebarContact,
         onActionpressed: (String atSignName) {
-          providerCallback<ContactProvider>(context,
-              task: (provider) => provider.addContact(atSign: atSignName),
-              taskName: (provider) => provider.Contacts,
-              onSuccess: (provider) {},
-              onError: (err) =>
-                  ErrorDialog().show(err.toString(), context: context));
+          Provider.of<ContactProvider>(context, listen: false)
+              .addContact(atSign: atSignName);
         },
       ),
       body: SingleChildScrollView(
@@ -69,7 +70,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 height: 15.toHeight,
               ),
               ProviderHandler<ContactProvider>(
-                  functionName: 'contacts',
+                  functionName: 'get_contacts',
                   showError: true,
                   load: (provider) => provider.getContacts(),
                   errorBuilder: (provider) => Center(
@@ -85,28 +86,29 @@ class _ContactScreenState extends State<ContactScreen> {
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, alphabetIndex) {
-                              List<String> _filteredList = [];
+                              List<AtContact> _filteredList = [];
                               provider.contactList.forEach((c) {
                                 if (c.atSign[1]
                                     .toUpperCase()
                                     .contains(searchText.toUpperCase())) {
-                                  _filteredList.add(c.atSign);
+                                  _filteredList.add(c);
                                 }
                               });
-                              List<String> contactsForAlphabet = [];
+                              List<AtContact> contactsForAlphabet = [];
                               String currentChar =
                                   String.fromCharCode(alphabetIndex + 65)
                                       .toUpperCase();
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 _filteredList.forEach((c) {
-                                  if (int.tryParse(c[1]) != null) {
+                                  if (int.tryParse(c.atSign[1]) != null) {
                                     contactsForAlphabet.add(c);
                                   }
                                 });
                               } else {
                                 _filteredList.forEach((c) {
-                                  if (c[1].toUpperCase() == currentChar) {
+                                  if (c.atSign[1].toUpperCase() ==
+                                      currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
                                 });
@@ -114,7 +116,6 @@ class _ContactScreenState extends State<ContactScreen> {
                               if (contactsForAlphabet.isEmpty) {
                                 return Container();
                               }
-
                               return Container(
                                 child: Column(
                                   children: [
@@ -166,7 +167,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     provider.blockUnblockContact(
                                                         atSign:
                                                             contactsForAlphabet[
-                                                                index],
+                                                                    index]
+                                                                .atSign,
                                                         blockAction: true);
                                                   },
                                                 ),
@@ -178,7 +180,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     provider.deleteAtsignContact(
                                                         atSign:
                                                             contactsForAlphabet[
-                                                                index]);
+                                                                    index]
+                                                                .atSign);
                                                   },
                                                 ),
                                               ],
@@ -186,14 +189,28 @@ class _ContactScreenState extends State<ContactScreen> {
                                                 child: ListTile(
                                                   title: Text(
                                                     contactsForAlphabet[index]
-                                                        .substring(1),
+                                                                    .tags !=
+                                                                null &&
+                                                            contactsForAlphabet[
+                                                                            index]
+                                                                        .tags[
+                                                                    'name'] !=
+                                                                null
+                                                        ? contactsForAlphabet[
+                                                                index]
+                                                            .tags['name']
+                                                        : contactsForAlphabet[
+                                                                index]
+                                                            .atSign
+                                                            .substring(1),
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14.toFont,
                                                     ),
                                                   ),
                                                   subtitle: Text(
-                                                    contactsForAlphabet[index],
+                                                    contactsForAlphabet[index]
+                                                        .atSign,
                                                     style: TextStyle(
                                                       color: ColorConstants
                                                           .fadedText,
@@ -201,16 +218,34 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     ),
                                                   ),
                                                   leading: Container(
-                                                      height: 40.toWidth,
-                                                      width: 40.toWidth,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: CustomCircleAvatar(
-                                                        image: ImageConstants
-                                                            .imagePlaceholder,
-                                                      )),
+                                                    height: 40.toWidth,
+                                                    width: 40.toWidth,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: (contactsForAlphabet[
+                                                                        index]
+                                                                    .tags !=
+                                                                null &&
+                                                            contactsForAlphabet[
+                                                                            index]
+                                                                        .tags[
+                                                                    'image'] !=
+                                                                null)
+                                                        ? CustomCircleAvatar(
+                                                            byteImage:
+                                                                contactsForAlphabet[
+                                                                            index]
+                                                                        .tags[
+                                                                    'image'],
+                                                            nonAsset: true,
+                                                          )
+                                                        : CustomCircleAvatar(
+                                                            image: ImageConstants
+                                                                .imagePlaceholder,
+                                                          ),
+                                                  ),
                                                   trailing: IconButton(
                                                     onPressed: () {
                                                       provider
@@ -218,6 +253,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                               .atSign =
                                                           contactsForAlphabet[
                                                                   index]
+                                                              .atSign
                                                               .substring(1);
                                                       provider.selectedAtsign =
                                                           provider

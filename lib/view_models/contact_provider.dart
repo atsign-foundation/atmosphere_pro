@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'package:atsign_atmosphere_app/services/navigation_service.dart';
+import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 
 class ContactProvider extends BaseModel {
@@ -10,6 +12,13 @@ class ContactProvider extends BaseModel {
   List<String> allContactsList = [];
   String selectedAtsign;
   BackendService backendService = BackendService.getInstance();
+
+  String Contacts = 'contacts';
+  String AddContacts = 'add_contacts';
+  String GetContacts = 'get_contacts';
+  String DeleteContacts = 'delete_contacts';
+  String BlockContacts = 'block_contacts';
+
   ContactProvider() {
     initContactImpl();
   }
@@ -18,7 +27,6 @@ class ContactProvider extends BaseModel {
 
   initContactImpl() async {
     try {
-      print("callled here");
       setStatus(Contacts, Status.Loading);
       completer = Completer();
       atContact =
@@ -33,14 +41,13 @@ class ContactProvider extends BaseModel {
 
   // factory ContactProvider() => _instance;
 
-  String Contacts = 'contacts';
   List<Map<String, dynamic>> contacts = [];
   static AtContactsImpl atContact;
 
   Future getContacts() async {
     Completer c = Completer();
     try {
-      setStatus(Contacts, Status.Loading);
+      setStatus(GetContacts, Status.Loading);
       contactList = [];
       allContactsList = [];
       await completer.future;
@@ -61,11 +68,11 @@ class ContactProvider extends BaseModel {
       contactList.sort(
           (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
       print("list =>  $contactList");
-      setStatus(Contacts, Status.Done);
+      setStatus(GetContacts, Status.Done);
       c.complete(true);
     } catch (e) {
       print("error here => $e");
-      setStatus(Contacts, Status.Error);
+      setStatus(GetContacts, Status.Error);
       c.complete(true);
     }
     return c.future;
@@ -73,7 +80,7 @@ class ContactProvider extends BaseModel {
 
   blockUnblockContact({String atSign, bool blockAction}) async {
     try {
-      setStatus(Contacts, Status.Loading);
+      setStatus(BlockContacts, Status.Loading);
       if (atSign[0] != '@') {
         atSign = '@' + atSign;
       }
@@ -86,56 +93,93 @@ class ContactProvider extends BaseModel {
       contact.blocked = blockAction;
       await atContact.update(contact);
       if (blockAction == true) {
-        getContacts();
+        await getContacts();
       } else {
         fetchBlockContactList();
       }
     } catch (error) {
-      setError(Contacts, error.toString());
+      setError(BlockContacts, error.toString());
     }
   }
 
   fetchBlockContactList() async {
     try {
-      setStatus(Contacts, Status.Loading);
+      setStatus(BlockContacts, Status.Loading);
       blockContactList = await atContact.listBlockedContacts();
       print("block contact list => $blockContactList");
-      setStatus(Contacts, Status.Done);
+      setStatus(BlockContacts, Status.Done);
     } catch (error) {
-      setError(Contacts, error.toString());
+      setError(BlockContacts, error.toString());
     }
   }
 
   deleteAtsignContact({String atSign}) async {
     try {
-      setStatus(Contacts, Status.Loading);
+      setStatus(DeleteContacts, Status.Loading);
       var result = await atContact.delete('$atSign');
       print("delete result => $result");
-      getContacts();
-      setStatus(Contacts, Status.Done);
+      await getContacts();
+      setStatus(DeleteContacts, Status.Done);
     } catch (error) {
-      setError(Contacts, error.toString());
+      setError(DeleteContacts, error.toString());
     }
   }
 
+  bool isContactPresent = false;
+  bool isLoading = false;
+  String getAtSignError = '';
+  bool checkAtSign;
+
   Future addContact({String atSign}) async {
+    if (atSign == null || atSign == '') {
+      getAtSignError = TextStrings().emptyAtsign;
+      setError(AddContacts, '_error');
+      isLoading = false;
+      return true;
+    } else if (atSign[0] != '@') {
+      atSign = '@' + atSign;
+    }
     Completer c = Completer();
     try {
-      setStatus(Contacts, Status.Loading);
-      if (atSign[0] != '@') {
-        atSign = '@' + atSign;
+      isContactPresent = false;
+      isLoading = true;
+      getAtSignError = '';
+      AtContact contact = AtContact();
+      setStatus(AddContacts, Status.Loading);
+
+      checkAtSign = await backendService.checkAtsign(atSign);
+      if (!checkAtSign) {
+        getAtSignError = TextStrings().unknownAtsign(atSign);
+        setError(AddContacts, '_error');
+        isLoading = false;
+      } else {
+        contactList.forEach((element) async {
+          if (element.atSign == atSign) {
+            getAtSignError = TextStrings().atsignExists(atSign);
+            isContactPresent = true;
+            return true;
+          }
+          isLoading = false;
+        });
       }
-      AtContact contact = AtContact(
-        atSign: atSign,
-        // personas: ['persona1', 'persona22', 'persona33'],
-      );
-      var result = await atContact.add(contact);
-      print('create result : ${result}');
-      await getContacts();
+      if (!isContactPresent && checkAtSign) {
+        var details = await backendService.getContactDetails(atSign);
+        contact = AtContact(
+          atSign: atSign,
+          tags: details,
+        );
+        var result = await atContact.add(contact);
+        print(result);
+        isLoading = false;
+        Navigator.pop(NavService.navKey.currentContext);
+        await getContacts();
+      }
       c.complete(true);
+      isLoading = false;
+      setStatus(AddContacts, Status.Done);
     } catch (e) {
       c.complete(true);
-      setStatus(Contacts, Status.Error);
+      setStatus(AddContacts, Status.Error);
     }
     return c.future;
   }
