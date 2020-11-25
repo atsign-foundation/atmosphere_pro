@@ -10,6 +10,7 @@ class FaqsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        showBackButton: true,
         showTitle: true,
         title: TextStrings().faqs,
       ),

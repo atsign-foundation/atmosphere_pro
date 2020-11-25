@@ -45,6 +45,7 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        showBackButton: true,
         showTrailingButton: true,
         showTitle: true,
         title: TextStrings().sidebarContact,

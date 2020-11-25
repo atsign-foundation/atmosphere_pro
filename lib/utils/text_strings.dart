@@ -25,7 +25,7 @@ class TextStrings {
   String welcomeAddFilePlaceholder = 'Add file to transfer';
 
   //sidebar menu texts
-  String sidebarContact = 'Contact';
+  String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked User';
   String sidebarTermsAndConditions = 'Terms and Conditions';

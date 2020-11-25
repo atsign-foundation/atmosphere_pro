@@ -144,115 +144,112 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final filePickerModel = Provider.of<FilePickerProvider>(context);
     final contactPickerModel = Provider.of<ContactProvider>(context);
 
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: CustomAppBar(
-          showLeadingicon: true,
-        ),
-        endDrawer: SideBarWidget(),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 26.toWidth, vertical: 20.toHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  TextStrings().welcomeUser(backendService.currentAtsign),
-                  style: GoogleFonts.playfairDisplay(
-                    textStyle: TextStyle(
-                      fontSize: 28.toFont,
-                      fontWeight: FontWeight.w800,
-                      height: 1.3,
-                    ),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: CustomAppBar(
+        showLeadingicon: true,
+      ),
+      endDrawer: SideBarWidget(),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: 26.toWidth, vertical: 20.toHeight),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                TextStrings().welcomeUser(backendService.currentAtsign),
+                style: GoogleFonts.playfairDisplay(
+                  textStyle: TextStyle(
+                    fontSize: 28.toFont,
+                    fontWeight: FontWeight.w800,
+                    height: 1.3,
                   ),
                 ),
-                SizedBox(
-                  height: 10.toHeight,
+              ),
+              SizedBox(
+                height: 10.toHeight,
+              ),
+              Text(
+                TextStrings().welcomeRecipient,
+                style: TextStyle(
+                  color: ColorConstants.fadedText,
+                  fontSize: 13.toFont,
                 ),
-                Text(
-                  TextStrings().welcomeRecipient,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 13.toFont,
+              ),
+              SizedBox(
+                height: 67.toHeight,
+              ),
+              Text(
+                TextStrings().welcomeSendFilesTo,
+                style: TextStyle(
+                  color: ColorConstants.fadedText,
+                  fontSize: 12.toFont,
+                ),
+              ),
+              SizedBox(
+                height: 20.toHeight,
+              ),
+              SelectContactWidget(
+                (b) {
+                  setState(() {
+                    isContactSelected = b;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 40.toHeight,
+              ),
+              SelectFileWidget(
+                (b) {
+                  print("file is selected => $b");
+                  setState(() {
+                    isFileSelected = b;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 60.toHeight,
+              ),
+              if (contactProvider.selectedAtsign != null &&
+                  filePickerModel.selectedFiles.isNotEmpty) ...[
+                Align(
+                  alignment: Alignment.topRight,
+                  child: CommonButton(
+                    TextStrings().buttonSend,
+                    () async {
+                      _showScaffold(status: 0);
+                      bool response = await backendService.sendFile(
+                          contactPickerModel.selectedAtsign,
+                          filePickerModel.selectedFiles[0].path);
+                      if (response == true) {
+                        Provider.of<HistoryProvider>(context, listen: false)
+                            .setFilesHistory(
+                                atSignName: contactProvider.selectedAtsign,
+                                historyType: HistoryType.send,
+                                files: [
+                              FilesDetail(
+                                  filePath:
+                                      filePickerModel.selectedFiles[0].path,
+                                  size: filePickerModel.totalSize,
+                                  fileName: filePickerModel.result.files[0].name
+                                      .toString(),
+                                  type: filePickerModel
+                                      .selectedFiles[0].extension
+                                      .toString())
+                            ]);
+                        _showScaffold(status: 1);
+                      } else {
+                        _showScaffold(status: 2);
+                      }
+                    },
                   ),
-                ),
-                SizedBox(
-                  height: 67.toHeight,
-                ),
-                Text(
-                  TextStrings().welcomeSendFilesTo,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 12.toFont,
-                  ),
-                ),
-                SizedBox(
-                  height: 20.toHeight,
-                ),
-                SelectContactWidget(
-                  (b) {
-                    setState(() {
-                      isContactSelected = b;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 40.toHeight,
-                ),
-                SelectFileWidget(
-                  (b) {
-                    print("file is selected => $b");
-                    setState(() {
-                      isFileSelected = b;
-                    });
-                  },
                 ),
                 SizedBox(
                   height: 60.toHeight,
                 ),
-                if (contactProvider.selectedAtsign != null &&
-                    filePickerModel.selectedFiles.isNotEmpty) ...[
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: CommonButton(
-                      TextStrings().buttonSend,
-                      () async {
-                        _showScaffold(status: 0);
-                        bool response = await backendService.sendFile(
-                            contactPickerModel.selectedAtsign,
-                            filePickerModel.selectedFiles[0].path);
-                        if (response == true) {
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .setFilesHistory(
-                                  atSignName: contactProvider.selectedAtsign,
-                                  historyType: HistoryType.send,
-                                  files: [
-                                FilesDetail(
-                                    filePath:
-                                        filePickerModel.selectedFiles[0].path,
-                                    size: filePickerModel.totalSize,
-                                    fileName: filePickerModel
-                                        .result.files[0].name
-                                        .toString(),
-                                    type: filePickerModel
-                                        .selectedFiles[0].extension
-                                        .toString())
-                              ]);
-                          _showScaffold(status: 1);
-                        } else {
-                          _showScaffold(status: 2);
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 60.toHeight,
-                  ),
-                ],
               ],
-            ),
+            ],
           ),
         ),
       ),
