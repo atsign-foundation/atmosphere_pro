@@ -150,6 +150,30 @@ class _ContactScreenState extends State<ContactScreen> {
                                               height: 1.toHeight,
                                             ),
                                         itemBuilder: (context, index) {
+                                          // the contact image returned is List<dynamic>
+                                          // converting to Uint8List
+                                          Widget contactImage;
+                                          if (contactsForAlphabet[index].tags !=
+                                                  null &&
+                                              contactsForAlphabet[index]
+                                                      .tags['image'] !=
+                                                  null) {
+                                            List<int> intList =
+                                                contactsForAlphabet[index]
+                                                    .tags['image']
+                                                    .cast<int>();
+                                            Uint8List image =
+                                                Uint8List.fromList(intList);
+                                            contactImage = CustomCircleAvatar(
+                                              byteImage: image,
+                                              nonAsset: true,
+                                            );
+                                          } else {
+                                            contactImage = CustomCircleAvatar(
+                                              image: ImageConstants
+                                                  .imagePlaceholder,
+                                            );
+                                          }
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Slidable(
@@ -218,34 +242,13 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     ),
                                                   ),
                                                   leading: Container(
-                                                    height: 40.toWidth,
-                                                    width: 40.toWidth,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: (contactsForAlphabet[
-                                                                        index]
-                                                                    .tags !=
-                                                                null &&
-                                                            contactsForAlphabet[
-                                                                            index]
-                                                                        .tags[
-                                                                    'image'] !=
-                                                                null)
-                                                        ? CustomCircleAvatar(
-                                                            byteImage:
-                                                                contactsForAlphabet[
-                                                                            index]
-                                                                        .tags[
-                                                                    'image'],
-                                                            nonAsset: true,
-                                                          )
-                                                        : CustomCircleAvatar(
-                                                            image: ImageConstants
-                                                                .imagePlaceholder,
-                                                          ),
-                                                  ),
+                                                      height: 40.toWidth,
+                                                      width: 40.toWidth,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: contactImage),
                                                   trailing: IconButton(
                                                     onPressed: () {
                                                       provider

@@ -60,7 +60,6 @@ class ContactProvider extends BaseModel {
         print("is blocked => ${contactList[i].blocked}");
         allContactsList.add(contactList[i].atSign);
         if (contactList[i].blocked) {
-          print("herererr");
           tempContactList.remove(contactList[i]);
         }
       }
@@ -116,7 +115,7 @@ class ContactProvider extends BaseModel {
   deleteAtsignContact({String atSign}) async {
     try {
       setStatus(DeleteContacts, Status.Loading);
-      var result = await atContact.delete('$atSign');
+      var result = await atContact.delete(atSign);
       print("delete result => $result");
       await getContacts();
       setStatus(DeleteContacts, Status.Done);
@@ -168,7 +167,9 @@ class ContactProvider extends BaseModel {
           atSign: atSign,
           tags: details,
         );
-        var result = await atContact.add(contact);
+        var result = await atContact
+            .add(contact)
+            .catchError((e) => print('error to add contact => $e'));
         print(result);
         isLoading = false;
         Navigator.pop(NavService.navKey.currentContext);
