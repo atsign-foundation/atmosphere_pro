@@ -105,4 +105,7 @@ class TextStrings {
       '$atSign is not found. Please check and try again.';
   String atsignExists(String atSign) => '$atSign already exists';
   String emptyAtsign = 'Please type in an atsign';
+
+  // Group conatct screen
+  String selectContact = 'Select Contact';
 }

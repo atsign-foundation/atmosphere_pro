@@ -142,8 +142,8 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    monitorConnection =
-        await atClientInstance.startMonitor(privateKey, acceptStream);
+    // monitorConnection =
+    await atClientInstance.startMonitor(privateKey, acceptStream);
     print("Monitor started");
     return true;
   }

@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 class ContactProvider extends BaseModel {
   List<AtContact> contactList = [];
   List<AtContact> blockContactList = [];
+  List<AtContact> selectedContacts = [];
   List<String> allContactsList = [];
   String selectedAtsign;
   BackendService backendService = BackendService.getInstance();
@@ -18,6 +19,8 @@ class ContactProvider extends BaseModel {
   String GetContacts = 'get_contacts';
   String DeleteContacts = 'delete_contacts';
   String BlockContacts = 'block_contacts';
+  String SelectContact = 'select_contacts';
+  bool limitReached = false;
 
   ContactProvider() {
     initContactImpl();
@@ -182,5 +185,34 @@ class ContactProvider extends BaseModel {
       setStatus(AddContacts, Status.Error);
     }
     return c.future;
+  }
+
+  selectContacts(AtContact contact) {
+    setStatus(SelectContact, Status.Loading);
+    try {
+      if (selectedContacts.length <= 2) {
+        selectedContacts.add(contact);
+      } else {
+        limitReached = true;
+      }
+
+      setStatus(SelectContact, Status.Done);
+      print('LIMIT REACHED=====>$limitReached');
+    } catch (error) {
+      setError(SelectContact, error.toString());
+    }
+  }
+
+  removeContacts(AtContact contact) {
+    setStatus(SelectContact, Status.Loading);
+    try {
+      selectedContacts.remove(contact);
+      if (selectedContacts.length <= 2) {
+        limitReached = false;
+      }
+      setStatus(SelectContact, Status.Done);
+    } catch (error) {
+      setError(SelectContact, error.toString());
+    }
   }
 }

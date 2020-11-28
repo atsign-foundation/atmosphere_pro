@@ -1,8 +1,8 @@
-import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
+import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/select_file_widget.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -15,6 +15,7 @@ import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'widgets/select_contact_widget.dart';
 
@@ -197,6 +198,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       isContactSelected = b;
                     });
                   },
+                ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                Consumer<ContactProvider>(
+                  builder: (context, provider, _) =>
+                      (provider.selectedContacts.isEmpty)
+                          ? Container()
+                          : OverlappingContacts(
+                              selectedList: provider.selectedContacts),
                 ),
                 SizedBox(
                   height: 40.toHeight,

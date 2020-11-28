@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_app/screens/blocked_users/blocked_users.dart';
 import 'package:atsign_atmosphere_app/screens/contact/contact.dart';
 import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_app/screens/file_picker/file_picker.dart';
+import 'package:atsign_atmosphere_app/screens/group_contacts_screen/group_contact_screen.dart';
 import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_app/screens/home/home.dart';
 import 'package:atsign_atmosphere_app/screens/private_key_qrcode_generator.dart';
@@ -31,6 +32,7 @@ class SetupRoutes {
       Routes.CONTACT_SCREEN: (context) => ContactScreen(),
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
+      Routes.GROUP_CONTACT_SCREEn: (context) => GroupContactScreen(),
       Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen()
     };
   }

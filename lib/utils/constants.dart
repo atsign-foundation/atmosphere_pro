@@ -3,9 +3,9 @@ class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
 
   // for local server
-  static const String ROOT_DOMAIN = 'test.do-sf2.atsign.zone';
+  // static const String ROOT_DOMAIN = 'test.do-sf2.atsign.zone';
   // for staging server
-  // static const String ROOT_DOMAIN = 'root.atsign.wtf';
+  static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
   // static const String ROOT_DOMAIN = 'root.atsign.org';
 

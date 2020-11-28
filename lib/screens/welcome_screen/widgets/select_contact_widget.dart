@@ -90,7 +90,7 @@ class _ExpansionTileWidget extends StatelessWidget {
       ),
       trailing: InkWell(
         onTap: () async {
-          await Navigator.pushNamed(context, Routes.CONTACT_SCREEN);
+          await Navigator.pushNamed(context, Routes.GROUP_CONTACT_SCREEn);
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),
