@@ -54,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void didChangeDependencies() {
     if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context);
+      contactProvider = Provider.of<ContactProvider>(context, listen: true);
       print("herere => ${contactProvider.selectedAtsign}");
 
       if (historyProvider != null) {

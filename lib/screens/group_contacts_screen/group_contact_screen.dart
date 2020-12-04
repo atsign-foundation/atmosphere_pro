@@ -83,6 +83,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                     SizedBox(height: 10),
                     Consumer<ContactProvider>(
                       builder: (context, provider, __) {
+                        print('PROVIDER IN GROUP====>$provider');
                         return (provider.selectedContacts.isEmpty)
                             ? Container()
                             : Container(
@@ -133,60 +134,72 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                     SizedBox(height: 10.toHeight),
                     ProviderHandler<ContactProvider>(
                       functionName: 'get_contacts',
+                      showError: false,
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
                       load: (provider) => provider.getContacts(),
                       successBuilder: (provider) {
-                        return Container(
-                          height: 600.toHeight,
-                          child: ListView.separated(
-                            separatorBuilder: (context, _) => Divider(
-                              color:
-                                  ColorConstants.dividerColor.withOpacity(0.2),
-                              height: 1.toHeight,
-                            ),
-                            padding: EdgeInsets.only(
-                                bottom: provider.selectedContacts.isEmpty
-                                    ? 0
-                                    : 190.toHeight),
-                            scrollDirection: Axis.vertical,
-                            itemCount: provider.contactList.length,
-                            itemBuilder: (context, index) {
-                              return GroupContactListTile(
-                                isSelected: provider.selectedContacts
-                                    .contains(provider.contactList[index]),
-                                onAdd: () {
-                                  provider.selectContacts(
-                                      provider.contactList[index]);
-                                },
-                                onRemove: () {
-                                  provider.removeContacts(
-                                      provider.contactList[index]);
-                                },
-                                name: provider.contactList[index].tags !=
-                                            null &&
-                                        provider.contactList[index]
-                                                .tags['name'] !=
-                                            null
-                                    ? provider.contactList[index].tags['name']
-                                    : provider.contactList[index].atSign
-                                        .substring(1),
-                                atSign: provider.contactList[index].atSign,
-                                image: (provider.contactList[index].tags !=
-                                            null &&
-                                        provider.contactList[index]
-                                                .tags['image'] !=
-                                            null)
-                                    ? CustomCircleAvatar(
-                                        byteImage: provider
-                                            .contactList[index].tags['image'],
-                                        nonAsset: true,
-                                      )
-                                    : CustomCircleAvatar(
-                                        image: ImageConstants.imagePlaceholder,
-                                      ),
+                        return (provider.contactList.isEmpty)
+                            ? Container()
+                            : Container(
+                                height: 600.toHeight,
+                                child: ListView.separated(
+                                  separatorBuilder: (context, _) => Divider(
+                                    color: ColorConstants.dividerColor
+                                        .withOpacity(0.2),
+                                    height: 1.toHeight,
+                                  ),
+                                  padding: EdgeInsets.only(
+                                      bottom: provider.selectedContacts.isEmpty
+                                          ? 0
+                                          : 190.toHeight),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: provider.contactList.length,
+                                  itemBuilder: (context, index) {
+                                    return GroupContactListTile(
+                                      isSelected: provider.selectedContacts
+                                          .contains(
+                                              provider.contactList[index]),
+                                      onAdd: () {
+                                        provider.selectContacts(
+                                            provider.contactList[index]);
+                                      },
+                                      onRemove: () {
+                                        provider.removeContacts(
+                                            provider.contactList[index]);
+                                      },
+                                      name: provider.contactList[index].tags !=
+                                                  null &&
+                                              provider.contactList[index]
+                                                      .tags['name'] !=
+                                                  null
+                                          ? provider
+                                              .contactList[index].tags['name']
+                                          : provider.contactList[index].atSign
+                                              .substring(1),
+                                      atSign:
+                                          provider.contactList[index].atSign,
+                                      image:
+                                          (provider.contactList[index].tags !=
+                                                      null &&
+                                                  provider.contactList[index]
+                                                          .tags['image'] !=
+                                                      null)
+                                              ? CustomCircleAvatar(
+                                                  byteImage: provider
+                                                      .contactList[index]
+                                                      .tags['image'],
+                                                  nonAsset: true,
+                                                )
+                                              : CustomCircleAvatar(
+                                                  image: ImageConstants
+                                                      .imagePlaceholder,
+                                                ),
+                                    );
+                                  },
+                                ),
                               );
-                            },
-                          ),
-                        );
                       },
                     )
                   ],
