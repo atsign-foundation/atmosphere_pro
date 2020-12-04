@@ -13,10 +13,8 @@ import 'package:provider/provider.dart';
 
 class OverlappingContacts extends StatefulWidget {
   final List<AtContact> selectedList;
-  final bool isListView;
-  const OverlappingContacts(
-      {Key key, this.selectedList, this.isListView = true})
-      : super(key: key);
+
+  const OverlappingContacts({Key key, this.selectedList}) : super(key: key);
 
   @override
   _OverlappingContactsState createState() => _OverlappingContactsState();
@@ -76,43 +74,62 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                   (widget.selectedList.isEmpty)
                       ? Container()
                       : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              width: 60.toWidth,
-                              child: Text(
-                                '${widget.selectedList[0].atSign}',
-                                style: CustomTextStyles.secondaryRegular14,
-                                overflow: TextOverflow.ellipsis,
+                              width: 160.toWidth,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 60.toWidth,
+                                    child: Text(
+                                      '${widget.selectedList[0].atSign}',
+                                      style:
+                                          CustomTextStyles.secondaryRegular14,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Container(
+                                    // width: 100.toWidth,
+                                    child: Text(
+                                      widget.selectedList.length - 1 == 0
+                                          ? ''
+                                          : widget.selectedList.length - 1 == 1
+                                              ? ' and ${widget.selectedList.length - 1} other'
+                                              : ' and ${widget.selectedList.length - 1} others',
+                                      style:
+                                          CustomTextStyles.secondaryRegular14,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                            Container(
-                              width: 100.toWidth,
-                              child: Text(
-                                widget.selectedList.length - 1 == 0
-                                    ? ''
-                                    : widget.selectedList.length - 1 == 1
-                                        ? ' and ${widget.selectedList.length - 1} other'
-                                        : ' and ${widget.selectedList.length - 1} others',
-                                style: CustomTextStyles.secondaryRegular14,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
                           ],
                         ),
-                  SizedBox(
-                    width: 30.toWidth,
-                  ),
-                  // Expanded(child: Container()),
-                  Container(
-                    width: 20.toWidth,
-                    child: Icon(
-                      (isExpanded)
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
-                      size: 15.toFont,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 10.toWidth,
+                      ),
+                      // Expanded(child: Container()),
+                    ],
                   )
                 ],
+              ),
+            ),
+            Positioned(
+              top: 10.toHeight,
+              right: 0,
+              child: Container(
+                width: 20.toWidth,
+                child: Icon(
+                  (isExpanded)
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  size: 15.toFont,
+                ),
               ),
             ),
             (isExpanded)

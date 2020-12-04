@@ -18,6 +18,8 @@ class ImageConstants {
   static String exelLogo = '$_basePath/exelLogo.jpeg';
   static String txtLogo = '$_basePath/txtLogo.png';
   static String unknownLogo = '$_basePath/unknown.png';
+  static String exclamation = '$_basePath/exclamation.png';
+  static String close = '$_basePath/close.png';
 
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';

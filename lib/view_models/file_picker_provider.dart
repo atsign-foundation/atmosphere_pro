@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
+import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/view_models/base_model.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
@@ -16,16 +20,19 @@ class FilePickerProvider extends BaseModel {
   String PICK_FILES = 'pick_files';
   String VIDEO_THUMBNAIL = 'video_thumbnail';
   String ACCEPT_FILES = 'accept_files';
+  String SEND_FILES = 'send_files';
   StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerResult result;
   PlatformFile file;
   static List<PlatformFile> appClosedSharedFiles = [];
   List<PlatformFile> selectedFiles = [];
+  List<bool> sentStatus;
   Uint8List videoThumbnail;
   double totalSize = 0;
   final String MEDIA = 'MEDIA';
   final String FILES = 'FILES';
+  BackendService _backendService = BackendService.getInstance();
 
   setFiles() async {
     setStatus(PICK_FILES, Status.Loading);
@@ -145,5 +152,57 @@ class FilePickerProvider extends BaseModel {
     } catch (error) {
       setError(ACCEPT_FILES, error.toString());
     }
+  }
+
+  sendFiles(
+      List<PlatformFile> selectedFiles, List<AtContact> contactList) async {
+    setStatus(SEND_FILES, Status.Loading);
+    try {
+      sentStatus = List<bool>.generate(selectedFiles.length, (index) => false);
+      List<Isolate> isolates =
+          List.generate(contactList.length, (index) => null);
+      ;
+      // if (contactList.length > 20) {
+      //   length = 20;
+      // } else {
+      //   length = contactList.length;
+      // }
+      print('before isolates');
+      for (int i = 0; i < contactList.length; i++) {
+        print('index======>$i');
+        isolates[i] = await Isolate.spawn((message) {
+          Isolate.spawn((message) {
+            // send(contactList[i].atSign, selectedFiles, _backendService);
+            print('IN ISOLATE');
+          }, 'message');
+        }, 'message');
+      }
+      print('ISOLATE LIST====>${isolates[0]}======>$isolates');
+      // contactList.forEach((contact) {
+      //   // selectedFiles.forEach((file) {
+      //   //   _backendService.sendFile(contact.atSign, file.path);
+      //   //   print('file path====>${file.path}');
+      //   // });
+      //   isolates = List.generate(conta, (index) => null);
+      //   print('contact.atSign=====>${contact.atSign}');
+      // });
+      // selectedFiles.forEach((file) {
+      //   contactList.forEach((contact) async {
+      //     await _backendService.sendFile(contact.atSign, file.path);
+      //   });
+      // });
+      print('SENT STATUS=====>${sentStatus.length}========>$sentStatus');
+      setStatus(SEND_FILES, Status.Done);
+    } catch (error) {
+      setError(SEND_FILES, error.toString());
+    }
+  }
+
+  static send(String contact, List selectedFiles, _backendService) async {
+    // await _backendService.sendFile(
+    //     contactList[contact].atSign, selectedFiles[file].path);
+    selectedFiles.forEach((file) async {
+      await _backendService.sendFile(contact, file.path);
+    });
   }
 }

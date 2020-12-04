@@ -15,7 +15,6 @@ import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'widgets/select_contact_widget.dart';
 
@@ -223,38 +222,42 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(
                   height: 60.toHeight,
                 ),
-                if (contactProvider.selectedAtsign != null &&
+                if (contactProvider.selectedContacts != null &&
                     filePickerModel.selectedFiles.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.topRight,
                     child: CommonButton(
                       TextStrings().buttonSend,
                       () async {
-                        _showScaffold(status: 0);
-                        bool response = await backendService.sendFile(
-                            contactPickerModel.selectedAtsign,
-                            filePickerModel.selectedFiles[0].path);
-                        if (response == true) {
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .setFilesHistory(
-                                  atSignName: contactProvider.selectedAtsign,
-                                  historyType: HistoryType.send,
-                                  files: [
-                                FilesDetail(
-                                    filePath:
-                                        filePickerModel.selectedFiles[0].path,
-                                    size: filePickerModel.totalSize,
-                                    fileName: filePickerModel
-                                        .result.files[0].name
-                                        .toString(),
-                                    type: filePickerModel
-                                        .selectedFiles[0].extension
-                                        .toString())
-                              ]);
-                          _showScaffold(status: 1);
-                        } else {
-                          _showScaffold(status: 2);
-                        }
+                        // _showScaffold(status: 0);
+                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                            contactPickerModel.selectedContacts);
+                        // bool response = filePickerModel.sentStatus[0];
+                        // bool response = await backendService.sendFile(
+                        //     contactPickerModel.selectedContacts,
+                        //     filePickerModel.selectedFiles[0].path);
+                        // if (response == true) {
+                        //   Provider.of<HistoryProvider>(context, listen: false)
+                        //       .setFilesHistory(
+                        //           atSignName: contactProvider
+                        //               .selectedContacts[0].atSign,
+                        //           historyType: HistoryType.send,
+                        //           files: [
+                        //         FilesDetail(
+                        //             filePath:
+                        //                 filePickerModel.selectedFiles[0].path,
+                        //             size: filePickerModel.totalSize,
+                        //             fileName: filePickerModel
+                        //                 .result.files[0].name
+                        //                 .toString(),
+                        //             type: filePickerModel
+                        //                 .selectedFiles[0].extension
+                        //                 .toString())
+                        //       ]);
+                        //   _showScaffold(status: 1);
+                        // } else {
+                        //   _showScaffold(status: 2);
+                        // }
                       },
                     ),
                   ),

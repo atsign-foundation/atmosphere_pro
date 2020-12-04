@@ -190,9 +190,12 @@ class ContactProvider extends BaseModel {
   selectContacts(AtContact contact) {
     setStatus(SelectContact, Status.Loading);
     try {
-      if (selectedContacts.length <= 2) {
+      print('IN SELECT;');
+      if (selectedContacts.length <= 3) {
+        print('in 1');
         selectedContacts.add(contact);
       } else {
+        print('in 2');
         limitReached = true;
       }
 
@@ -207,8 +210,10 @@ class ContactProvider extends BaseModel {
     setStatus(SelectContact, Status.Loading);
     try {
       selectedContacts.remove(contact);
-      if (selectedContacts.length <= 2) {
+      if (selectedContacts.length <= 3) {
         limitReached = false;
+      } else {
+        limitReached = true;
       }
       setStatus(SelectContact, Status.Done);
     } catch (error) {

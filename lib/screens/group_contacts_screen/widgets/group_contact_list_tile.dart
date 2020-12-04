@@ -62,11 +62,9 @@ class _GroupContactListTileState extends State<GroupContactListTile> {
         ),
         trailing: (widget.isSelected)
             ? GestureDetector(
-                onTap: (widget.onlyRemoveMethod)
-                    ? () {
-                        widget.onRemove();
-                      }
-                    : () {},
+                onTap: () {
+                  widget.onRemove();
+                },
                 child: Icon(
                   Icons.close,
                   color: Color(0xffA8A8A8),

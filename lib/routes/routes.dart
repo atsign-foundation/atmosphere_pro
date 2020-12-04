@@ -32,7 +32,7 @@ class SetupRoutes {
       Routes.CONTACT_SCREEN: (context) => ContactScreen(),
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
-      Routes.GROUP_CONTACT_SCREEn: (context) => GroupContactScreen(),
+      Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),
       Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen()
     };
   }
