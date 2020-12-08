@@ -7,7 +7,7 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 
-class GroupContactListTile extends StatefulWidget {
+class ContactListTile extends StatefulWidget {
   final String name;
   final String atSign;
   final Widget image;
@@ -15,8 +15,10 @@ class GroupContactListTile extends StatefulWidget {
   final Function onRemove;
   final bool isSelected;
   final bool onlyRemoveMethod;
+  final Function onTileTap;
+  final bool plainView;
 
-  const GroupContactListTile(
+  const ContactListTile(
       {Key key,
       this.name,
       this.atSign,
@@ -24,13 +26,15 @@ class GroupContactListTile extends StatefulWidget {
       @required this.onAdd,
       @required this.onRemove,
       this.isSelected = false,
-      this.onlyRemoveMethod = false})
+      this.onlyRemoveMethod = false,
+      this.plainView = false,
+      this.onTileTap})
       : super(key: key);
   @override
-  _GroupContactListTileState createState() => _GroupContactListTileState();
+  _ContactListTileState createState() => _ContactListTileState();
 }
 
-class _GroupContactListTileState extends State<GroupContactListTile> {
+class _ContactListTileState extends State<ContactListTile> {
   bool selected = false;
 
   @override
@@ -39,7 +43,9 @@ class _GroupContactListTileState extends State<GroupContactListTile> {
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         onTap: (widget.onlyRemoveMethod)
-            ? () {}
+            ? () {
+                widget?.onTileTap();
+              }
             : () {
                 setState(() {
                   selected = !selected;
@@ -60,20 +66,25 @@ class _GroupContactListTileState extends State<GroupContactListTile> {
             fontSize: 14.toFont,
           ),
         ),
-        trailing: (widget.isSelected)
-            ? GestureDetector(
-                onTap: () {
-                  widget.onRemove();
-                },
-                child: Icon(
-                  Icons.close,
-                  color: Color(0xffA8A8A8),
-                ),
+        trailing: (widget.plainView)
+            ? Container(
+                height: 0,
+                width: 0,
               )
-            : Icon(
-                Icons.add,
-                color: Colors.black,
-              ),
+            : (widget.isSelected)
+                ? GestureDetector(
+                    onTap: () {
+                      widget.onRemove();
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: Color(0xffA8A8A8),
+                    ),
+                  )
+                : Icon(
+                    Icons.add,
+                    color: Colors.black,
+                  ),
         leading: Stack(
           children: [
             Container(

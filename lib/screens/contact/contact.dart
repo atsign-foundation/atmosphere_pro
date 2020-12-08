@@ -1,12 +1,9 @@
 import 'dart:typed_data';
-import 'dart:convert';
-import 'dart:async';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -45,6 +42,7 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        showBackButton: true,
         showTrailingButton: true,
         showTitle: true,
         title: TextStrings().sidebarContact,
@@ -149,6 +147,30 @@ class _ContactScreenState extends State<ContactScreen> {
                                               height: 1.toHeight,
                                             ),
                                         itemBuilder: (context, index) {
+                                          // the contact image returned is List<dynamic>
+                                          // converting to Uint8List
+                                          Widget contactImage;
+                                          if (contactsForAlphabet[index].tags !=
+                                                  null &&
+                                              contactsForAlphabet[index]
+                                                      .tags['image'] !=
+                                                  null) {
+                                            List<int> intList =
+                                                contactsForAlphabet[index]
+                                                    .tags['image']
+                                                    .cast<int>();
+                                            Uint8List image =
+                                                Uint8List.fromList(intList);
+                                            contactImage = CustomCircleAvatar(
+                                              byteImage: image,
+                                              nonAsset: true,
+                                            );
+                                          } else {
+                                            contactImage = CustomCircleAvatar(
+                                              image: ImageConstants
+                                                  .imagePlaceholder,
+                                            );
+                                          }
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Slidable(
@@ -217,34 +239,13 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     ),
                                                   ),
                                                   leading: Container(
-                                                    height: 40.toWidth,
-                                                    width: 40.toWidth,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: (contactsForAlphabet[
-                                                                        index]
-                                                                    .tags !=
-                                                                null &&
-                                                            contactsForAlphabet[
-                                                                            index]
-                                                                        .tags[
-                                                                    'image'] !=
-                                                                null)
-                                                        ? CustomCircleAvatar(
-                                                            byteImage:
-                                                                contactsForAlphabet[
-                                                                            index]
-                                                                        .tags[
-                                                                    'image'],
-                                                            nonAsset: true,
-                                                          )
-                                                        : CustomCircleAvatar(
-                                                            image: ImageConstants
-                                                                .imagePlaceholder,
-                                                          ),
-                                                  ),
+                                                      height: 40.toWidth,
+                                                      width: 40.toWidth,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: contactImage),
                                                   trailing: IconButton(
                                                     onPressed: () {
                                                       provider

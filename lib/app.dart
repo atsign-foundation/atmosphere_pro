@@ -45,10 +45,10 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'HelveticaNeu',
             scaffoldBackgroundColor: Colors.white,
             appBarTheme: AppBarTheme(
-              color: Colors.white,
-              elevation: 0,
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
+                color: Colors.white,
+                elevation: 0,
+                iconTheme: IconThemeData(color: Colors.black),
+                brightness: Brightness.light),
             buttonBarTheme: ButtonBarThemeData(
               alignment: MainAxisAlignment.center,
             )),

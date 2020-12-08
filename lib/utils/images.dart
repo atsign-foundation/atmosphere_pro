@@ -20,6 +20,7 @@ class ImageConstants {
   static String unknownLogo = '$_basePath/unknown.png';
   static String exclamation = '$_basePath/exclamation.png';
   static String close = '$_basePath/close.png';
+  static String emptyTrustedContacts = '$_basePath/emptyTrustedSenders.png';
 
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';

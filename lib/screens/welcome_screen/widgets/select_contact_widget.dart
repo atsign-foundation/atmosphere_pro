@@ -1,5 +1,4 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
@@ -90,7 +89,8 @@ class _ExpansionTileWidget extends StatelessWidget {
       ),
       trailing: InkWell(
         onTap: () async {
-          await Navigator.pushNamed(context, Routes.GROUP_CONTACT_SCREEN);
+          await Navigator.pushNamed(context, Routes.GROUP_CONTACT_SCREEN,
+              arguments: {"isTrustedSender": false});
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),

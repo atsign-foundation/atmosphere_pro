@@ -12,4 +12,6 @@ class Routes {
   static const String SCAN_QR_SCREEN = 'scanQrScreen';
   static const String GROUP_CONTACT_SCREEN = 'groupContactScreen';
   static const String PRIVATE_KEY_GEN_SCREEN = 'privateKeyGenScreen';
+  static const String TRUSTED_SENDER = 'trustedSenderScreen';
+  static const String EMPTY_TRUSTED_CONTACTS = 'emptyTrustedContacts';
 }

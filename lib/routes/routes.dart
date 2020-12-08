@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_app/screens/private_key_qrcode_generator.dart'
 import 'package:atsign_atmosphere_app/screens/scan_qr/scan_qr.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/screens/terms_conditions/terms_conditions_screen.dart';
+import 'package:atsign_atmosphere_app/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,15 @@ class SetupRoutes {
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
       Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),
-      Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen()
+      Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen(),
+      Routes.EMPTY_TRUSTED_CONTACTS: (context) => TrustedContacts(),
+      Routes.TRUSTED_SENDER: (context) {
+        Map<String, bool> args =
+            ModalRoute.of(context).settings.arguments as Map<String, bool>;
+        return GroupContactScreen(
+          isTrustedScreen: args['isTrustedSender'],
+        );
+      }
     };
   }
 }

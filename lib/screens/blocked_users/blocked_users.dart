@@ -32,64 +32,63 @@ class _BlockedUsersState extends State<BlockedUsers> {
   }
 
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ColorConstants.scaffoldColor,
-        appBar: CustomAppBar(
-          showTitle: true,
-          title: 'Blocked User',
-        ),
-        body: RefreshIndicator(
-          color: Colors.transparent,
-          strokeWidth: 0,
-          backgroundColor: Colors.transparent,
-          onRefresh: () async {
-            await providerCallback<BlockedContactProvider>(context,
-                task: (provider) => provider.getBlockedContacts(),
-                taskName: (provider) => 'blockedContacts',
-                onSuccess: (provider) => print('object'),
-                onErrorHandeling: () {
-                  //Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
-                },
-                onError: (err) =>
-                    ErrorDialog().show(err.toString(), context: context));
-          },
-          child: Container(
-            color: ColorConstants.appBarColor,
-            child: ProviderHandler<BlockedContactProvider>(
-              functionName: 'blockedContacts',
-              load: (provider) => provider.getBlockedContacts(),
-              showError: true,
-              successBuilder: (provider) {
-                return (provider.blockedContacts.isEmpty)
-                    ? Center(
-                        child: Container(
-                          child: Text(
-                            'No blocked users',
-                            style: CustomTextStyles.blueRegular16,
+    return Scaffold(
+      backgroundColor: ColorConstants.scaffoldColor,
+      appBar: CustomAppBar(
+        showBackButton: true,
+        showTitle: true,
+        title: 'Blocked User',
+      ),
+      body: RefreshIndicator(
+        color: Colors.transparent,
+        strokeWidth: 0,
+        backgroundColor: Colors.transparent,
+        onRefresh: () async {
+          await providerCallback<BlockedContactProvider>(context,
+              task: (provider) => provider.getBlockedContacts(),
+              taskName: (provider) => 'blockedContacts',
+              onSuccess: (provider) => print('object'),
+              onErrorHandeling: () {
+                //Navigator.pushNamed(context, Routes.WELCOME_SCREEN);
+              },
+              onError: (err) =>
+                  ErrorDialog().show(err.toString(), context: context));
+        },
+        child: Container(
+          color: ColorConstants.appBarColor,
+          child: ProviderHandler<BlockedContactProvider>(
+            functionName: 'blockedContacts',
+            load: (provider) => provider.getBlockedContacts(),
+            showError: true,
+            successBuilder: (provider) {
+              return (provider.blockedContacts.isEmpty)
+                  ? Center(
+                      child: Container(
+                        child: Text(
+                          'No blocked users',
+                          style: CustomTextStyles.blueRegular16,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: ListView.separated(
+                            padding:
+                                EdgeInsets.symmetric(vertical: 40.toHeight),
+                            itemCount: provider.blockedContacts.length,
+                            separatorBuilder: (context, index) => Divider(
+                              indent: 16.toWidth,
+                            ),
+                            itemBuilder: (context, index) => BlockedUserCard(
+                                blockeduser: provider.blockedContacts[index]),
                           ),
                         ),
-                      )
-                    : Column(
-                        children: [
-                          Expanded(
-                            child: ListView.separated(
-                              padding:
-                                  EdgeInsets.symmetric(vertical: 40.toHeight),
-                              itemCount: provider.blockedContacts.length,
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
-                              ),
-                              itemBuilder: (context, index) => BlockedUserCard(
-                                  blockeduser: provider.blockedContacts[index]),
-                            ),
-                          ),
-                        ],
-                      );
-              },
-              errorBuilder: (provider) => Center(
-                child: Text('Some error occured'),
-              ),
+                      ],
+                    );
+            },
+            errorBuilder: (provider) => Center(
+              child: Text('Some error occured'),
             ),
           ),
         ),

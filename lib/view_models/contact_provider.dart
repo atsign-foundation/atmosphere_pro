@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
@@ -10,7 +12,10 @@ class ContactProvider extends BaseModel {
   List<AtContact> contactList = [];
   List<AtContact> blockContactList = [];
   List<AtContact> selectedContacts = [];
+  List<AtContact> trustedContacts = [];
+  List<AtContact> fetchedTrustedContact = [];
   List<String> allContactsList = [];
+
   String selectedAtsign;
   BackendService backendService = BackendService.getInstance();
 
@@ -20,7 +25,10 @@ class ContactProvider extends BaseModel {
   String DeleteContacts = 'delete_contacts';
   String BlockContacts = 'block_contacts';
   String SelectContact = 'select_contacts';
+  String AddTrustedContacts = 'add_trusted_contacts';
+  String GetTrustedContacts = 'get_trusted_contacts';
   bool limitReached = false;
+  bool trustedContactOperation = false;
 
   ContactProvider() {
     initContactImpl();
@@ -63,7 +71,6 @@ class ContactProvider extends BaseModel {
         print("is blocked => ${contactList[i].blocked}");
         allContactsList.add(contactList[i].atSign);
         if (contactList[i].blocked) {
-          print("herererr");
           tempContactList.remove(contactList[i]);
         }
       }
@@ -119,7 +126,7 @@ class ContactProvider extends BaseModel {
   deleteAtsignContact({String atSign}) async {
     try {
       setStatus(DeleteContacts, Status.Loading);
-      var result = await atContact.delete('$atSign');
+      var result = await atContact.delete(atSign);
       print("delete result => $result");
       await getContacts();
       setStatus(DeleteContacts, Status.Done);
@@ -171,7 +178,9 @@ class ContactProvider extends BaseModel {
           atSign: atSign,
           tags: details,
         );
-        var result = await atContact.add(contact);
+        var result = await atContact
+            .add(contact)
+            .catchError((e) => print('error to add contact => $e'));
         print(result);
         isLoading = false;
         Navigator.pop(NavService.navKey.currentContext);
@@ -208,6 +217,7 @@ class ContactProvider extends BaseModel {
 
   removeContacts(AtContact contact) {
     setStatus(SelectContact, Status.Loading);
+
     try {
       selectedContacts.remove(contact);
       if (selectedContacts.length <= 3) {
@@ -219,5 +229,99 @@ class ContactProvider extends BaseModel {
     } catch (error) {
       setError(SelectContact, error.toString());
     }
+  }
+
+  addTrustedContacts(AtContact contact) async {
+    setStatus(AddTrustedContacts, Status.Loading);
+
+    try {
+      // trustedContacts = [];
+      // await getTrustedContact();
+      if (!trustedContacts.contains(contact)) {
+        trustedContacts.add(contact);
+      }
+      setStatus(AddTrustedContacts, Status.Done);
+    } catch (error) {
+      setError(AddTrustedContacts, error.toString());
+    }
+  }
+
+  removeTrustedContacts(AtContact contact) async {
+    print('BEFORE IN REMOVE TRUSTED BOOL====>$trustedContactOperation');
+
+    print('IN REMOVE TRUSTED BOOL====>$trustedContactOperation');
+    setStatus(AddTrustedContacts, Status.Loading);
+
+    try {
+      print('remove');
+      // trustedContacts = [];
+      // await getTrustedContact();
+      if (trustedContacts.contains(contact)) {
+        trustedContacts.remove(contact);
+      }
+      print('TRUSTED IN REMOVE METHOD=====>${trustedContacts}');
+      // await setTrustedContact();
+      // isRemovingTrustedContact = false;
+      setStatus(AddTrustedContacts, Status.Done);
+    } catch (error) {
+      // isRemovingTrustedContact = false;
+      setError(AddTrustedContacts, error.toString());
+    }
+  }
+
+  setTrustedContact() async {
+    trustedContactOperation = true;
+    setStatus(AddTrustedContacts, Status.Loading);
+    try {
+      print('TRUSTED CONTACTS IN SET====>$trustedContacts');
+      AtKey trustedContactsKey = AtKey()
+        ..key = 'trustedContactsKey'
+        ..metadata = Metadata();
+      var result = await backendService.atClientInstance.put(
+        trustedContactsKey,
+        json.encode({"trustedContacts": trustedContacts}),
+      );
+      print('RESULT AFTER TRUSTED CONTACT====>$result');
+      // getTrustedContact();
+      trustedContactOperation = false;
+      setStatus(AddTrustedContacts, Status.Done);
+    } catch (error) {
+      trustedContactOperation = false;
+      setError(AddTrustedContacts, error.toString());
+    }
+  }
+
+  getTrustedContact() async {
+    setStatus(GetTrustedContacts, Status.Loading);
+    print('lololoolo');
+    // try {
+    print(1);
+    AtKey trustedContactsKey = AtKey()
+      ..key = 'trustedContactsKey'
+      ..metadata = Metadata();
+    AtValue keyValue =
+        await backendService.atClientInstance.get(trustedContactsKey);
+    print(2);
+    // print('KEY VALUE====>$keyValue');
+    var jsonValue;
+    if (keyValue.value != null) {
+      jsonValue = jsonDecode(keyValue.value);
+      jsonValue['trustedContacts'].forEach((contact) {
+        final c = AtContact.fromJson(contact);
+        fetchedTrustedContact.add(c);
+      });
+    }
+    // print('RESULT AFTER GET TRUSTED CONTACT====>$jsonValue');
+
+    trustedContacts = [];
+    trustedContacts = fetchedTrustedContact;
+    print(
+        'TRUSTED CONTACTS IN GET TRUSTED CONTACTS FINAL======>$trustedContacts');
+    // trustedContacts = [...fetchedTrustedContact];
+    setStatus(GetTrustedContacts, Status.Done);
+    // } catch (error) {
+    //   print('ERROR=====>$error');
+    //   setError(GetTrustedContacts, error.toString());
+    // }
   }
 }

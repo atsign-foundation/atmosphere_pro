@@ -1,9 +1,3 @@
-import 'dart:io';
-
-import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-
 ///This is a custom app bar [showTitle] enables to display the title in the center
 ///[showBackButton] toggles the automatically implies leading functionality
 ///if [false] it shows a [Close] String instead of backbutton
@@ -11,6 +5,13 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 ///[title] is a [String] to display the title of the appbar
 ///[showTrailingButton] toggles the visibility of trailing button, default add icon
 ///therefore it has it's navigation embedded in the widget itself.
+
+import 'dart:io';
+import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
+import 'package:atsign_atmosphere_app/screens/group_contacts_screen/group_contact_screen.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
@@ -29,7 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData trailingIcon;
   final bool isHistory;
   final onActionpressed;
-
+  final bool isTrustedContactScreen;
   final double elevation;
 
   const CustomAppBar(
@@ -41,7 +42,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.trailingIcon = Icons.add,
       this.isHistory = false,
       this.elevation = 0,
-      this.onActionpressed});
+      this.onActionpressed,
+      this.isTrustedContactScreen = false});
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
@@ -129,14 +131,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               throw 'Could not launch $url';
                             }
                           }
+                        } else if (isTrustedContactScreen) {
+                          // await Navigator.pushNamed(
+                          //     context, Routes.GROUP_CONTACT_SCREEN,
+                          //     arguments: {'isTrustedSender': true});
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GroupContactScreen(
+                                isTrustedScreen: true,
+                              ),
+                            ),
+                          );
                         } else {
                           await showDialog(
-                              context: context,
-                              builder: (context) => AddContactDialog(
-                                    onYesTap: (value) {
-                                      onActionpressed(value);
-                                    },
-                                  ));
+                            context: context,
+                            builder: (context) => AddContactDialog(
+                              onYesTap: (value) {
+                                onActionpressed(value);
+                              },
+                            ),
+                          );
                         }
                       })
                   : Container()

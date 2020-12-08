@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
-import 'package:at_commons/at_commons.dart';
+
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
+
 import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/services/at_error_dialog.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -75,7 +74,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   void onScan(String data, List<Offset> offsets, context) async {
     print("here scan completed => $data ");
-    _controller.stopCamera();
+    await _controller.stopCamera();
     this.setState(() {
       scanCompleted = true;
     });
@@ -143,6 +142,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           loading = false;
         });
       }
+      // qrProvider.cramAuthWithoutQR();
       // await _processAESKey(atsign, aesKey, fileContents);
     } on Error catch (error) {
       setState(() {

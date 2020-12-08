@@ -22,6 +22,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
+    TextStrings().trustedSender
   ];
 
   final List<String> menuItemsIcons = [
@@ -30,6 +31,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.blockedIcon,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.termsAndConditionsIcon,
+    ImageConstants.faqsIcon,
     ImageConstants.faqsIcon,
   ];
 
@@ -40,6 +42,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.WEBSITE_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
+    Routes.EMPTY_TRUSTED_CONTACTS
   ];
 
   bool autoAcceptFiles;
@@ -81,7 +84,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     "title": TextStrings().sidebarPrivacyPolicy,
                                     "url": MixedConstants.PRIVACY_POLICY
                                   }
-                                : null);
+                                : null
+                        // : (index == 6)
+                        //     ? {"isTrustedSender": true}
+                        //     : null
+                        );
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 13.toHeight),

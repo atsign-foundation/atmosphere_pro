@@ -260,7 +260,7 @@ class BackendService {
       result = await atClientInstance.get(key);
       var lastname = result.value;
 
-      var name = (firstname ?? '' + lastname ?? '').trim();
+      var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
       if (name.length == 0) {
         name = atSign.substring(1);
       }
@@ -269,11 +269,7 @@ class BackendService {
       key.metadata.isBinary = true;
       key.key = contactFields[2];
       result = await atClientInstance.get(key);
-      // Uint8List image = Uint8List.fromList((result.value).cast<int>());
-      var testImage = result.value;
-      List<int> intList2 = testImage.cast<int>();
-      Uint8List image = Uint8List.fromList(intList2);
-
+      var image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;
     } catch (e) {

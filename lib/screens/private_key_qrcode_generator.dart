@@ -38,7 +38,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     atsign = BackendService.getInstance().currentAtsign;
   }
 
-  GlobalKey globalKey = new GlobalKey();
+  GlobalKey globalKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var _loading = false;
   Uint8List _pngBytes;
@@ -85,7 +85,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     if (aesKey == null) {
       _generateAESKey();
       return Scaffold();
-    } else
+    } else {
       return Opacity(
         opacity: _loading ? 0.2 : 1,
         child: AbsorbPointer(
@@ -172,6 +172,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
           ),
         ),
       );
+    }
   }
 
   _generateAESKey() async {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
@@ -14,7 +13,6 @@ import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:provider/provider.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {
   final Function() onAccept;
@@ -43,7 +41,6 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     if (contactProvider == null) {
       contactProvider = Provider.of<ContactProvider>(context);
     }
@@ -56,7 +53,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
     print("payload => ${widget.payload}");
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.toWidth)),
+        borderRadius: BorderRadius.circular(10.toWidth),
+      ),
       titlePadding: EdgeInsets.only(top: 10.toHeight, left: 10.toWidth),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
