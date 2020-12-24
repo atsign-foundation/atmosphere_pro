@@ -146,6 +146,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         } else {
                           await showDialog(
                             context: context,
+                            barrierDismissible: true,
                             builder: (context) => AddContactDialog(
                               onYesTap: (value) {
                                 onActionpressed(value);

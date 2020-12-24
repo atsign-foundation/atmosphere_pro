@@ -15,6 +15,7 @@ class ContactProvider extends BaseModel {
   List<AtContact> trustedContacts = [];
   List<AtContact> fetchedTrustedContact = [];
   List<String> allContactsList = [];
+  List<String> trustedNames = [];
 
   String selectedAtsign;
   BackendService backendService = BackendService.getInstance();
@@ -64,7 +65,7 @@ class ContactProvider extends BaseModel {
       await completer.future;
       contactList = await atContact.listContacts();
       List<AtContact> tempContactList = [...contactList];
-      print("list =>  $contactList");
+
       int range = contactList.length;
 
       for (int i = 0; i < range; i++) {
@@ -77,7 +78,7 @@ class ContactProvider extends BaseModel {
       contactList = tempContactList;
       contactList.sort(
           (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
-      print("list =>  $contactList");
+
       setStatus(GetContacts, Status.Done);
       c.complete(true);
     } catch (e) {
@@ -247,24 +248,15 @@ class ContactProvider extends BaseModel {
   }
 
   removeTrustedContacts(AtContact contact) async {
-    print('BEFORE IN REMOVE TRUSTED BOOL====>$trustedContactOperation');
-
-    print('IN REMOVE TRUSTED BOOL====>$trustedContactOperation');
     setStatus(AddTrustedContacts, Status.Loading);
 
     try {
-      print('remove');
-      // trustedContacts = [];
-      // await getTrustedContact();
       if (trustedContacts.contains(contact)) {
         trustedContacts.remove(contact);
       }
-      print('TRUSTED IN REMOVE METHOD=====>${trustedContacts}');
-      // await setTrustedContact();
-      // isRemovingTrustedContact = false;
+
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
-      // isRemovingTrustedContact = false;
       setError(AddTrustedContacts, error.toString());
     }
   }
@@ -273,7 +265,6 @@ class ContactProvider extends BaseModel {
     trustedContactOperation = true;
     setStatus(AddTrustedContacts, Status.Loading);
     try {
-      print('TRUSTED CONTACTS IN SET====>$trustedContacts');
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
@@ -281,7 +272,7 @@ class ContactProvider extends BaseModel {
         trustedContactsKey,
         json.encode({"trustedContacts": trustedContacts}),
       );
-      print('RESULT AFTER TRUSTED CONTACT====>$result');
+
       // getTrustedContact();
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
@@ -293,35 +284,32 @@ class ContactProvider extends BaseModel {
 
   getTrustedContact() async {
     setStatus(GetTrustedContacts, Status.Loading);
-    print('lololoolo');
-    // try {
-    print(1);
-    AtKey trustedContactsKey = AtKey()
-      ..key = 'trustedContactsKey'
-      ..metadata = Metadata();
-    AtValue keyValue =
-        await backendService.atClientInstance.get(trustedContactsKey);
-    print(2);
-    // print('KEY VALUE====>$keyValue');
-    var jsonValue;
-    if (keyValue.value != null) {
-      jsonValue = jsonDecode(keyValue.value);
-      jsonValue['trustedContacts'].forEach((contact) {
-        final c = AtContact.fromJson(contact);
-        fetchedTrustedContact.add(c);
-      });
-    }
-    // print('RESULT AFTER GET TRUSTED CONTACT====>$jsonValue');
 
-    trustedContacts = [];
-    trustedContacts = fetchedTrustedContact;
-    print(
-        'TRUSTED CONTACTS IN GET TRUSTED CONTACTS FINAL======>$trustedContacts');
-    // trustedContacts = [...fetchedTrustedContact];
-    setStatus(GetTrustedContacts, Status.Done);
-    // } catch (error) {
-    //   print('ERROR=====>$error');
-    //   setError(GetTrustedContacts, error.toString());
-    // }
+    try {
+      AtKey trustedContactsKey = AtKey()
+        ..key = 'trustedContactsKey'
+        ..metadata = Metadata();
+
+      AtValue keyValue =
+          await backendService.atClientInstance.get(trustedContactsKey);
+
+      var jsonValue;
+      if (keyValue.value != null) {
+        jsonValue = jsonDecode(keyValue.value);
+        jsonValue['trustedContacts'].forEach((contact) {
+          final c = AtContact.fromJson(contact);
+          fetchedTrustedContact.add(c);
+          trustedNames.add(c.atSign);
+        });
+      }
+
+      trustedContacts = [];
+      trustedContacts = fetchedTrustedContact;
+
+      setStatus(GetTrustedContacts, Status.Done);
+    } catch (error) {
+      print('ERROR=====>$error');
+      setError(GetTrustedContacts, error.toString());
+    }
   }
 }

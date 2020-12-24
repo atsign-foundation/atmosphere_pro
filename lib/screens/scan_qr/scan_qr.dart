@@ -172,6 +172,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           return;
         }
         if (pickedFile.extension == 'zip') {
+          // File selectedFile = File(
+          //     'Users/rishabh1/Desktop/untitled\ folder/appletester1/atKeys.zip');
           var bytes = selectedFile.readAsBytesSync();
           final archive = ZipDecoder().decodeBytes(bytes);
           for (var file in archive) {
@@ -184,6 +186,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               var path = (await path_provider.getTemporaryDirectory()).path;
               var file1 = await File('$path' + 'test').create();
               file1.writeAsBytesSync(bytes);
+              print('LINE 190');
+              // String result =
+              //     '@test_sunday3:ISmV8RfM2HLAXzBeIqOpc+5aIgqckNMqQbFkDenI6Gw=';
               String result = await FlutterQrReader.imgScan(file1);
               List<String> params = result.split(':');
               atsign = params[0];

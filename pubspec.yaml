@@ -67,6 +67,12 @@ dependencies:
   url_launcher: ^5.7.10
   video_thumbnail: ^0.2.2
   webview_flutter: ^1.0.0
+  # atsign_contacts:
+  #   git:
+  #     url: git@git.geekyants.com:flutter-client-projects/atsign-contacts.git
+  #     ref: development
+  atsign_contacts:
+    path: ../atsign-contacts
 
 dev_dependencies:
   flutter_test:

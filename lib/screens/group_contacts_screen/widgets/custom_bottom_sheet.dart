@@ -4,11 +4,6 @@ import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 
-// class BottomSheet extends StatefulWidget {
-//   @override
-//   _BottomSheetState createState() => _BottomSheetState();
-// }
-
 class CustomBottomSheet extends StatelessWidget {
   final List<AtContact> list;
   final Function onPressed;

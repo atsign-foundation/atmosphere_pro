@@ -1,9 +1,12 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -89,8 +92,17 @@ class _ExpansionTileWidget extends StatelessWidget {
       ),
       trailing: InkWell(
         onTap: () async {
-          await Navigator.pushNamed(context, Routes.GROUP_CONTACT_SCREEN,
-              arguments: {"isTrustedSender": false});
+          await Navigator.pushNamed(context, Routes.CONTACT_SCREEN, arguments: {
+            'currentAtsign': BackendService.getInstance().currentAtsign,
+            'context': NavService.navKey.currentContext,
+            'asSelectionScreen': true,
+            'selectedList': (s) {
+              Provider.of<WelcomeScreenProvider>(
+                      NavService.navKey.currentContext,
+                      listen: false)
+                  .updateSelectedContacts(s);
+            }
+          });
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),

@@ -62,10 +62,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                 child: TabBar(
                   onTap: (index) {
                     if (index == 0) {
-                      // provider.getSentHistory();
+                      Provider.of<HistoryProvider>(context, listen: false)
+                          .getSentHistory();
                     }
                     if (index == 1) {
-                      // provider.getRecievedHistory();
+                      Provider.of<HistoryProvider>(context, listen: false)
+                          .getRecievedHistory();
                     }
                   },
                   labelColor: ColorConstants.fontPrimary,

@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
+import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -132,6 +133,9 @@ class _HomeState extends State<Home> {
           BuildContext cd = NavService.navKey.currentContext;
           await Navigator.pushReplacementNamed(cd, Routes.WELCOME_SCREEN);
         }
+
+        await getTrustedContact();
+
         c.complete(true);
       }
     }).catchError((error) async {
@@ -149,6 +153,11 @@ class _HomeState extends State<Home> {
     if (existingStorageStatus != PermissionStatus.granted) {
       await _storagePermission.request();
     }
+  }
+
+  getTrustedContact() async {
+    await Provider.of<ContactProvider>(context, listen: false)
+        .getTrustedContact();
   }
 
   onNotificationClick(String payload) async {

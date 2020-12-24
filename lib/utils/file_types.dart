@@ -20,6 +20,7 @@ class FileTypes {
     'AAC',
     'FLAC'
   ];
+  static List<String> APK_TYPES = ['apk', 'APK'];
   static List<String> PDF_TYPES = ['pdf', 'PDF'];
   static List<String> WORD_TYPES = ['doc', 'docx', 'DOC', 'DOCX'];
   static List<String> EXEL_TYPES = ['xls', 'xlsx', 'XLS', 'XLSX'];

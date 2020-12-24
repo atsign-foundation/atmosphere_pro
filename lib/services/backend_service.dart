@@ -35,11 +35,12 @@ class BackendService {
   Function ask_user_acceptance;
   String app_lifecycle_state;
   AtClientPreference atClientPreference;
-  bool autoAcceptFiles = false;
+  bool autoAcceptFiles = true;
   final String AUTH_SUCCESS = "Authentication successful";
   String get currentAtsign => _atsign;
   OutboundConnection monitorConnection;
   Directory downloadDirectory;
+  ContactProvider _contactProvider;
 
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
@@ -68,6 +69,7 @@ class BackendService {
         atsign: atsign,
         namespace: 'mosphere');
     atClientInstance = atClientServiceInstance.atClient;
+    _contactProvider = ContactProvider();
     return result;
   }
 
@@ -142,6 +144,7 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
+    print('PRIVATE KEY=====>${privateKey}');
     // monitorConnection =
     await atClientInstance.startMonitor(privateKey, acceptStream);
     print("Monitor started");
@@ -190,7 +193,9 @@ class BackendService {
         file: filename, name: atsign, size: double.parse(filesize));
 
     bool userAcceptance;
-    if (autoAcceptFiles) {
+    _contactProvider = Provider.of<ContactProvider>(context, listen: false);
+
+    if (autoAcceptFiles && _contactProvider.trustedNames.contains(atsign)) {
       Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
           atSignName: payload.name.toString(),
           historyType: HistoryType.received,

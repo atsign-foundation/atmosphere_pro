@@ -1,6 +1,4 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/blocked_users/blocked_users.dart';
-import 'package:atsign_atmosphere_app/screens/contact/contact.dart';
 import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_app/screens/file_picker/file_picker.dart';
 import 'package:atsign_atmosphere_app/screens/group_contacts_screen/group_contact_screen.dart';
@@ -12,6 +10,8 @@ import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dar
 import 'package:atsign_atmosphere_app/screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:atsign_atmosphere_app/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
+import 'package:atsign_contacts/screens/blocked_screen.dart';
+import 'package:atsign_contacts/screens/contacts_screen.dart';
 import 'package:flutter/material.dart';
 
 class SetupRoutes {
@@ -29,8 +29,16 @@ class SetupRoutes {
       Routes.FAQ_SCREEN: (context) => FaqsScreen(),
       Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
       Routes.HISTORY: (context) => HistoryScreen(),
-      Routes.BLOCKED_USERS: (context) => BlockedUsers(),
-      Routes.CONTACT_SCREEN: (context) => ContactScreen(),
+      Routes.BLOCKED_USERS: (context) => BlockedScreen(),
+      Routes.CONTACT_SCREEN: (context) {
+        Map<String, dynamic> args =
+            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+        return ContactsScreen(
+          selectedList: args['selectedList'],
+          context: args['context'],
+          asSelectionScreen: args['asSelectionScreen'],
+        );
+      },
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
       Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),

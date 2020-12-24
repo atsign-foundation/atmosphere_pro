@@ -1,13 +1,16 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/constants.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_app/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SideBarWidget extends StatefulWidget {
   @override
@@ -45,11 +48,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.EMPTY_TRUSTED_CONTACTS
   ];
 
-  bool autoAcceptFiles;
+  bool autoAcceptFiles = true;
 
   @override
   void initState() {
     autoAcceptFiles = true;
+    BackendService.getInstance().autoAcceptFiles = autoAcceptFiles;
     super.initState();
   }
 
@@ -73,18 +77,31 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).pushNamed(targetScreens[index],
-                        arguments: (index == 3)
+                        arguments: (index == 0)
                             ? {
-                                "title":
-                                    TextStrings().sidebarTermsAndConditions,
-                                "url": MixedConstants.TERMS_CONDITIONS
+                                'currentAtsign':
+                                    BackendService.getInstance().currentAtsign,
+                                'context': NavService.navKey.currentContext,
+                                'selectedList': (s) {
+                                  Provider.of<WelcomeScreenProvider>(
+                                          NavService.navKey.currentContext,
+                                          listen: false)
+                                      .updateSelectedContacts(s);
+                                }
                               }
-                            : (index == 4)
+                            : (index == 3)
                                 ? {
-                                    "title": TextStrings().sidebarPrivacyPolicy,
-                                    "url": MixedConstants.PRIVACY_POLICY
+                                    "title":
+                                        TextStrings().sidebarTermsAndConditions,
+                                    "url": MixedConstants.TERMS_CONDITIONS
                                   }
-                                : null
+                                : (index == 4)
+                                    ? {
+                                        "title":
+                                            TextStrings().sidebarPrivacyPolicy,
+                                        "url": MixedConstants.PRIVACY_POLICY
+                                      }
+                                    : null
                         // : (index == 6)
                         //     ? {"isTrustedSender": true}
                         //     : null
@@ -164,6 +181,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       onChanged: (b) {
                         setState(() {
                           autoAcceptFiles = b;
+                          print('AUTO IN SWITCH======>$autoAcceptFiles');
+                          BackendService.getInstance().autoAcceptFiles =
+                              autoAcceptFiles;
                         });
                       },
                       activeColor: Colors.black,

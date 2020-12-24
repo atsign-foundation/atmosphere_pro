@@ -1,3 +1,4 @@
+import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
@@ -11,6 +12,7 @@ import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_app/view_models/welcome_screen_view_model.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   ContactProvider contactProvider;
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
-
+  List<AtContact> selectedList = [];
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -200,7 +202,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(
                   height: 10.toHeight,
                 ),
-                Consumer<ContactProvider>(
+                // ProviderHandler<WelcomeScreenProvider>(),
+                Consumer<WelcomeScreenProvider>(
                   builder: (context, provider, _) =>
                       (provider.selectedContacts.isEmpty)
                           ? Container()
