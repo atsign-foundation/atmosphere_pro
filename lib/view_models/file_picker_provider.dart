@@ -157,10 +157,12 @@ class FilePickerProvider extends BaseModel {
       List<PlatformFile> selectedFiles, List<AtContact> contactList) async {
     setStatus(SEND_FILES, Status.Loading);
     try {
+      print('object');
       sentStatus = List<bool>.generate(selectedFiles.length, (index) => false);
-      List<Isolate> isolates =
-          List.generate(contactList.length, (index) => null);
-      ;
+      print('sentStatus====>${contactList}');
+      // List<Isolate> isolates =
+      //     List.generate(contactList.length, (index) => null);
+
       // if (contactList.length > 20) {
       //   length = 20;
       // } else {
@@ -176,7 +178,7 @@ class FilePickerProvider extends BaseModel {
       //     }, 'message');
       //   }, 'message');
       // }
-      print('ISOLATE LIST====>${isolates[0]}======>$isolates');
+      // print('ISOLATE LIST====>${isolates[0]}======>$isolates');
       contactList.forEach((contact) {
         selectedFiles.forEach((file) {
           _backendService.sendFile(contact.atSign, file.path);

@@ -314,7 +314,7 @@ class _FilesListTileState extends State<FilesListTile> {
   }
 
   Widget thumbnail(String extension, String path) {
-    print('EXTENSION====>$extension');
+    // print('EXTENSION====>$extension');
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),

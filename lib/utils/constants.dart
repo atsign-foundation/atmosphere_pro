@@ -3,9 +3,9 @@ class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
 
   // for local server
-  // static const String ROOT_DOMAIN = 'test.do-sf2.atsign.zone';
+  static const String ROOT_DOMAIN = 'test.do-sf2.atsign.zone';
   // for staging server
-  static const String ROOT_DOMAIN = 'root.atsign.wtf';
+  // static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
   // static const String ROOT_DOMAIN = 'root.atsign.org';
 
@@ -16,4 +16,8 @@ class MixedConstants {
 
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;
+
+  // Hive Constants
+  static const String HISTORY_KEY = 'historyKey';
+  static const String HISTORY_BOX = 'historyBox';
 }

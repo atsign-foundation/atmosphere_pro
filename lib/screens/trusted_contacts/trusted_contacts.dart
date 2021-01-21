@@ -94,7 +94,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                 height: 160.toHeight,
                                 width: 160.toHeight,
                                 child: Image.asset(
-                                    ImageConstants.emptyTrustedContacts),
+                                    ImageConstants.welcomeBackground),
                               ),
                             ),
                             Text(

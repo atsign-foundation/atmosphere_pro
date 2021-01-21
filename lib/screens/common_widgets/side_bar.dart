@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/services/client_sdk_service.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
@@ -8,6 +9,7 @@ import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/welcome_screen_view_model.dart';
+import 'package:atsign_contacts/utils/init_contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,11 +51,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   ];
 
   bool autoAcceptFiles = true;
-
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  String activeAtSign;
   @override
   void initState() {
     autoAcceptFiles = true;
     BackendService.getInstance().autoAcceptFiles = autoAcceptFiles;
+    getAtSignAndInitializeContacts();
     super.initState();
   }
 
@@ -76,6 +80,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
                     Navigator.pop(context);
+
                     Navigator.of(context).pushNamed(targetScreens[index],
                         arguments: (index == 0)
                             ? {
@@ -325,5 +330,15 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             ),
           );
         });
+  }
+
+  getAtSignAndInitializeContacts() async {
+    String currentAtSign = await clientSdkService.getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+    initializeContactsService(
+        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

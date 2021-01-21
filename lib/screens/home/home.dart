@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
+import 'package:atsign_atmosphere_app/services/client_sdk_service.dart';
+import 'package:atsign_atmosphere_app/services/hive_service.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
 import 'package:atsign_atmosphere_app/services/notification_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
@@ -11,6 +14,8 @@ import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
+// import 'package:atsign_authentication_helper/atsign_authentication_helper.dart';
+// import 'package:atsign_authentication_helper/screens/scan_qr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,7 +45,7 @@ class _HomeState extends State<Home> {
   StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
-
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
   @override
   void initState() {
     super.initState();
@@ -48,6 +53,7 @@ class _HomeState extends State<Home> {
         Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
     _initBackendService();
+    clientSdkService.onboard();
     _checkToOnboard();
     acceptFiles();
     _checkForPermissionStatus();
@@ -279,6 +285,14 @@ class _HomeState extends State<Home> {
                                         Routes.SCAN_QR_SCREEN,
                                         (route) => false);
                                   }
+                                  // await Navigator.pushReplacement(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => ScanQrScreen(
+                                  //             atClientServiceInstance:
+                                  //                 clientSdkService
+                                  //                     .atClientServiceInstance,
+                                  //             nextScreen: WelcomeScreen())));
                                 },
                               ),
                             ),

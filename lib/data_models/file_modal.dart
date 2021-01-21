@@ -21,7 +21,7 @@ class FilesModel {
     name = json['name'].toString();
     handle = json['handle'].toString();
     date = json['date'].toString();
-    print("till here123");
+    // print("till here123");
     totalSize = double.parse(json['total_size'].toString());
 
     if (json['files'] != null) {

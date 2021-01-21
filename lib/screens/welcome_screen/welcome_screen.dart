@@ -1,4 +1,5 @@
 import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
@@ -29,6 +30,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isContactSelected;
   bool isFileSelected;
   ContactProvider contactProvider;
+  WelcomeScreenProvider _welcomeScreenProvider;
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
@@ -137,6 +139,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     isContactSelected = false;
     isFileSelected = false;
+    _welcomeScreenProvider = WelcomeScreenProvider();
     super.initState();
   }
 
@@ -233,7 +236,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       () async {
                         // _showScaffold(status: 0);
                         filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                            contactPickerModel.selectedContacts);
+                            _welcomeScreenProvider.selectedContacts);
                         // bool response = filePickerModel.sentStatus[0];
                         // bool response = await backendService.sendFile(
                         //     contactPickerModel.selectedContacts,

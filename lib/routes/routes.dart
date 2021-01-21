@@ -1,15 +1,18 @@
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
+import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_app/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_app/screens/file_picker/file_picker.dart';
 import 'package:atsign_atmosphere_app/screens/group_contacts_screen/group_contact_screen.dart';
 import 'package:atsign_atmosphere_app/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_app/screens/home/home.dart';
+import 'package:atsign_atmosphere_app/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_app/screens/private_key_qrcode_generator.dart';
 import 'package:atsign_atmosphere_app/screens/scan_qr/scan_qr.dart';
 import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_app/screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:atsign_atmosphere_app/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
+import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
 import 'package:atsign_contacts/screens/blocked_screen.dart';
 import 'package:atsign_contacts/screens/contacts_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +30,11 @@ class SetupRoutes {
       },
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
       Routes.FAQ_SCREEN: (context) => FaqsScreen(),
-      Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
-      Routes.HISTORY: (context) => HistoryScreen(),
+      // Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
+      Routes.HISTORY: (context) {
+        return MyFiles();
+      },
+      // Routes.HISTORY: (context) => HistoryScreen(),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =
