@@ -24,6 +24,8 @@ class _DocumentsState extends State<Documents> {
         child: ListView.builder(
             itemCount: provider.receivedDocument.length,
             itemBuilder: (context, index) {
+              DateTime date =
+                  DateTime.parse(provider.receivedDocument[index].date);
               return InkWell(
                 onTap: () {
                   showModalBottomSheet(
@@ -100,33 +102,28 @@ class _DocumentsState extends State<Documents> {
                           height: 50.toHeight,
                           width: 50.toWidth,
                           child: Image.asset(
-                            FileTypes.PDF_TYPES.contains(provider.receivedDocument[index].fileName
+                            FileTypes.PDF_TYPES.contains(provider
+                                    .receivedDocument[index].fileName
                                     .split('.')
                                     .last)
                                 ? ImageConstants.pdfLogo
-                                : FileTypes.AUDIO_TYPES.contains(provider
+                                : FileTypes.WORD_TYPES.contains(provider
                                         .receivedDocument[index].fileName
                                         .split('.')
                                         .last)
-                                    ? ImageConstants.musicLogo
-                                    : FileTypes.WORD_TYPES.contains(provider
+                                    ? ImageConstants.wordLogo
+                                    : FileTypes.EXEL_TYPES.contains(provider
                                             .receivedDocument[index].fileName
                                             .split('.')
                                             .last)
-                                        ? ImageConstants.wordLogo
-                                        : FileTypes.EXEL_TYPES.contains(provider
+                                        ? ImageConstants.exelLogo
+                                        : FileTypes.TEXT_TYPES.contains(provider
                                                 .receivedDocument[index]
                                                 .fileName
                                                 .split('.')
                                                 .last)
-                                            ? ImageConstants.exelLogo
-                                            : FileTypes.TEXT_TYPES.contains(provider
-                                                    .receivedDocument[index]
-                                                    .fileName
-                                                    .split('.')
-                                                    .last)
-                                                ? ImageConstants.txtLogo
-                                                : ImageConstants.unknownLogo,
+                                            ? ImageConstants.txtLogo
+                                            : ImageConstants.unknownLogo,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -135,12 +132,18 @@ class _DocumentsState extends State<Documents> {
                     subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text('15.3 MB',
+                          Text(
+                              double.parse(provider.receivedDocument[index].size
+                                          .toString()) <=
+                                      1024
+                                  ? '${(provider.receivedDocument[index].size).toStringAsFixed(2)} Kb'
+                                  : '${(provider.receivedDocument[index].size / 1024).toStringAsFixed(2)} Mb',
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,
                           ),
-                          Text('Nov 25, 2020',
+                          Text(
+                              '${date.day.toString()}/${date.month}/${date.year}',
                               style: CustomTextStyles.secondaryRegular12),
                         ]),
                   ),

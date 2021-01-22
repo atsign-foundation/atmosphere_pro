@@ -44,7 +44,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
     Documents(),
   ];
   bool isLoading = false;
-  List<FilesDetail> list = [];
+  var runtimeType;
   @override
   void initState() {
     historyProvider = HistoryProvider();
@@ -59,7 +59,6 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
     await historyProvider.getRecievedHistory();
     _controller = TabController(
         length: historyProvider.tabs.length, vsync: this, initialIndex: 0);
-
     isLoading = false;
     setState(() {});
   }
@@ -74,77 +73,80 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
         showTitle: true,
         showLeadingIcon: true,
         titleText: TextStrings().myFiles,
-        // trailingIcon: Icon(Icons.more_vert),
-        trailingIcon: (historyProvider.tabs[_controller.index].runtimeType ==
-                    Videos ||
-                historyProvider.tabs[_controller.index].runtimeType ==
-                    Documents ||
-                historyProvider.tabs[_controller.index].runtimeType == APK ||
-                historyProvider.tabs[_controller.index].runtimeType == Audios)
+        trailingIcon: (historyProvider.tabs.length > 1 &&
+                (runtimeType == Videos ||
+                    runtimeType == Documents ||
+                    runtimeType == APK ||
+                    runtimeType == Audios))
             ? PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 onSelected: (s) {
-                  print('_controller.index====>${_controller.index}');
                   switch (s) {
-                    case 'Sort By Name':
+                    case TextStrings.SORT_NAME:
                       providerCallback<HistoryProvider>(context,
                           task: (provider) {
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Photos) {
+                            if (runtimeType == Photos) {
                               provider.sortByName(provider.receivedPhotos);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Videos) {
+                            } else if (runtimeType == Videos) {
                               provider.sortByName(provider.receivedVideos);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                APK) {
+                            } else if (runtimeType == APK) {
                               provider.sortByName(provider.receivedApk);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Audios) {
+                            } else if (runtimeType == Audios) {
                               provider.sortByName(provider.receivedAudio);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Documents) {
+                            } else if (runtimeType == Documents) {
                               provider.sortByName(provider.receivedDocument);
                             }
                           },
                           taskName: (provider) => provider.SORT_LIST,
                           onSuccess: (provider) {});
                       break;
-                    case 'Sort By Size':
+                    case TextStrings.SORT_SIZE:
                       providerCallback<HistoryProvider>(context,
                           task: (provider) {
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Photos) {
+                            if (runtimeType == Photos) {
                               provider.sortBySize(provider.receivedPhotos);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Videos) {
+                            } else if (runtimeType == Videos) {
                               provider.sortBySize(provider.receivedVideos);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                APK) {
+                            } else if (runtimeType == APK) {
                               provider.sortBySize(provider.receivedApk);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Audios) {
+                            } else if (runtimeType == Audios) {
                               provider.sortBySize(provider.receivedAudio);
-                            }
-                            if (provider.tabs[_controller.index].runtimeType ==
-                                Documents) {
+                            } else if (runtimeType == Documents) {
                               provider.sortBySize(provider.receivedDocument);
                             }
                           },
                           taskName: (provider) => provider.SORT_LIST,
                           onSuccess: (provider) {});
                       break;
+                    case TextStrings.SORT_DATE:
+                      providerCallback<HistoryProvider>(context,
+                          task: (provider) {
+                            if (runtimeType == Photos) {
+                              provider.sortByDate(provider.receivedPhotos);
+                            } else if (runtimeType == Videos) {
+                              provider.sortByDate(provider.receivedVideos);
+                            } else if (runtimeType == APK) {
+                              provider.sortByDate(provider.receivedApk);
+                            } else if (runtimeType == Audios) {
+                              provider.sortByDate(provider.receivedAudio);
+                            } else if (runtimeType == Documents) {
+                              provider.sortByDate(provider.receivedDocument);
+                            }
+                          },
+                          taskName: (provider) => provider.SORT_LIST,
+                          onSuccess: (provider) {
+                            print('object');
+                          });
+                      break;
                     default:
                   }
                 },
                 itemBuilder: (context) {
-                  return {'Sort By Name', 'Sort By Size'}.map((String choice) {
+                  return {
+                    TextStrings.SORT_NAME,
+                    TextStrings.SORT_SIZE,
+                    TextStrings.SORT_DATE
+                  }.map((String choice) {
                     return PopupMenuItem<String>(
                       value: choice,
                       child: Text(choice),
@@ -152,7 +154,6 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                   }).toList();
                 })
             : Container(),
-
         onTrailingIconPressed: () {
           setState(() {
             isOpen != isOpen;
@@ -175,15 +176,13 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                               .getRecievedHistory();
                           Provider.of<HistoryProvider>(context, listen: false)
                               .sortFiles(historyProvider.receivedHistory);
-                          if (historyProvider.tabs[index].runtimeType ==
-                              Photos) {
-                            list = historyProvider.receivedPhotos;
-                          }
-                          if (historyProvider.tabs[index].runtimeType ==
-                              Videos) {
-                            list = historyProvider.receivedVideos;
-                          }
-                          setState(() {});
+                          setState(() {
+                            print(
+                                'historyProvider.tabs[index].runtimeType;====>${historyProvider.tabs[index].runtimeType}');
+                            runtimeType =
+                                historyProvider.tabs[index].runtimeType;
+                            print('AFER TYPE====>${runtimeType}');
+                          });
                         },
                         isScrollable: true,
                         labelColor: ColorConstants.fontPrimary,

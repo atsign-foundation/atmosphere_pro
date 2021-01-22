@@ -23,6 +23,7 @@ class _APKState extends State<APK> {
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,
             itemBuilder: (context, index) {
+              DateTime date = DateTime.parse(provider.receivedApk[index].date);
               return InkWell(
                 onTap: () {},
                 child: Card(
@@ -48,12 +49,18 @@ class _APKState extends State<APK> {
                     subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text(provider.receivedApk[index].size.toString(),
+                          Text(
+                              double.parse(provider.receivedApk[index].size
+                                          .toString()) <=
+                                      1024
+                                  ? '${(provider.receivedApk[index].size).toStringAsFixed(2)} Kb'
+                                  : '${(provider.receivedApk[index].size / 1024).toStringAsFixed(2)} Mb',
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,
                           ),
-                          Text('Version: 4.4419',
+                          Text(
+                              '${date.day.toString()}/${date.month}/${date.year}',
                               style: CustomTextStyles.secondaryRegular12),
                         ]),
                   ),

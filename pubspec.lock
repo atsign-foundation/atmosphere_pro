@@ -34,7 +34,7 @@ packages:
     description:
       path: at_client
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -43,7 +43,7 @@ packages:
     description:
       path: at_client_mobile
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -52,7 +52,7 @@ packages:
     description:
       path: at_commons
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -61,7 +61,7 @@ packages:
     description:
       path: at_contact
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.0.0"
@@ -70,7 +70,7 @@ packages:
     description:
       path: at_lookup
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -79,7 +79,7 @@ packages:
     description:
       path: at_persistence_secondary_server
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -88,7 +88,7 @@ packages:
     description:
       path: at_persistence_spec
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
@@ -97,10 +97,33 @@ packages:
     description:
       path: at_utils
       ref: dev_env
-      resolved-ref: "3c67a7c99e6a663acb017f92c74b41be031e7a6b"
+      resolved-ref: "5b370ea43563c69f0be2d1de4b7049bc20f8ecdd"
       url: "git@github.com:atsign-company/atsign_foundation.git"
     source: git
     version: "0.1.0"
+  atsign_authentication_helper:
+    dependency: "direct main"
+    description:
+      path: "/Users/rishabh1/Desktop/work/atsign-authentication-helper"
+      relative: false
+    source: path
+    version: "0.0.1"
+  atsign_common:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: c1f2c72abf59ad53c2856adba0a3724bed5fe019
+      url: "git@git.geekyants.com:flutter-client-projects/atsign-common.git"
+    source: git
+    version: "0.0.1"
+  atsign_contacts:
+    dependency: "direct main"
+    description:
+      path: "../atsign-contacts"
+      relative: true
+    source: path
+    version: "0.0.1"
   base2e15:
     dependency: transitive
     description:
@@ -156,7 +179,7 @@ packages:
       name: cron
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.3"
+    version: "0.2.4"
   crypto:
     dependency: transitive
     description:
@@ -212,14 +235,14 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.10"
+    version: "2.1.5+1"
   filesystem_picker:
     dependency: "direct main"
     description:
       name: filesystem_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   flushbar:
     dependency: "direct main"
     description:
@@ -252,7 +275,7 @@ packages:
       name: flutter_local_notifications_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.0+1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -292,12 +315,19 @@ packages:
     source: hosted
     version: "1.1.1"
   hive:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.4+1"
+  hive_flutter:
+    dependency: "direct main"
+    description:
+      name: hive_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   http:
     dependency: transitive
     description:
@@ -318,7 +348,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.7+12"
+    version: "0.6.7+21"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -388,7 +418,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.21"
+    version: "1.6.27"
   path_provider_linux:
     dependency: transitive
     description:
@@ -402,21 +432,21 @@ packages:
       name: path_provider_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4+4"
+    version: "0.0.4+8"
   path_provider_platform_interface:
     dependency: transitive
     description:
       name: path_provider_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   path_provider_windows:
     dependency: transitive
     description:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4+1"
+    version: "0.0.4+3"
   pedantic:
     dependency: "direct main"
     description:
@@ -458,7 +488,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   process:
     dependency: transitive
     description:
@@ -472,7 +502,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.2+2"
+    version: "4.3.3"
   qr:
     dependency: transitive
     description:
@@ -493,7 +523,7 @@ packages:
       name: receive_sharing_intent
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.1"
+    version: "1.4.2"
   rxdart:
     dependency: "direct main"
     description:
@@ -507,7 +537,7 @@ packages:
       name: share
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.5+3"
+    version: "0.6.5+4"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -638,21 +668,21 @@ packages:
       name: video_thumbnail
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.5+1"
   webview_flutter:
     dependency: "direct main"
     description:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.7"
   win32:
     dependency: transitive
     description:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.3"
+    version: "1.7.4"
   xdg_directories:
     dependency: transitive
     description:
@@ -668,5 +698,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.10.0-110 <2.11.0"
+  dart: ">=2.10.0-110 <=2.10.4"
   flutter: ">=1.22.0 <2.0.0"

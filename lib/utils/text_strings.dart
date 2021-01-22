@@ -140,4 +140,9 @@ class TextStrings {
       '$atSign is not found. Please check and try again.';
   String atsignExists(String atSign) => '$atSign already exists';
   String emptyAtsign = 'Please type in an atsign';
+
+  // sort strings
+  static const String SORT_NAME = 'Sort By Name';
+  static const String SORT_DATE = 'Sort By Date';
+  static const String SORT_SIZE = 'Sort By Size';
 }

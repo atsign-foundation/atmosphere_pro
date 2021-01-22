@@ -40,6 +40,8 @@ class _VideosState extends State<Videos> {
         child: ListView.builder(
             itemCount: provider.receivedVideos.length,
             itemBuilder: (context, index) {
+              DateTime date =
+                  DateTime.parse(provider.receivedVideos[index].date);
               return InkWell(
                 onTap: () {
                   print(
@@ -89,7 +91,8 @@ class _VideosState extends State<Videos> {
                           SizedBox(
                             width: 12.toWidth,
                           ),
-                          Text('Nov 25, 2020',
+                          Text(
+                              '${date.day.toString()}/${date.month}/${date.year}',
                               style: CustomTextStyles.secondaryRegular12),
                         ]),
                   ),

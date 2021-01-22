@@ -67,12 +67,25 @@ dependencies:
   url_launcher: ^5.7.10
   video_thumbnail: ^0.2.2
   webview_flutter: ^1.0.0
+  hive: ^1.4.4+1
+  hive_flutter: ^0.3.1
   # atsign_contacts:
   #   git:
   #     url: git@git.geekyants.com:flutter-client-projects/atsign-contacts.git
   #     ref: development
+  atsign_authentication_helper:
+    # git:
+    #   url: git@git.geekyants.com:flutter-client-projects/atsign-authentication-helper.git
+    #   ref: master
+    path: /Users/rishabh1/Desktop/work/atsign-authentication-helper
   atsign_contacts:
     path: ../atsign-contacts
+  atsign_common:
+    # path: /Users/rishabh1/Desktop/atsign-common
+    git:
+      url: git@git.geekyants.com:flutter-client-projects/atsign-common.git
+      # path: atsign-common
+      ref: master
 
 dev_dependencies:
   flutter_test:

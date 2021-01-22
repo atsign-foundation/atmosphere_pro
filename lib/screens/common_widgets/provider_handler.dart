@@ -21,7 +21,7 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
       this.successBuilder,
       this.errorBuilder,
       this.functionName,
-      this.showError,
+      this.showError = true,
       this.load})
       : super(key: key);
   @override

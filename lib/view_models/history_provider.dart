@@ -150,16 +150,20 @@ class HistoryProvider extends BaseModel {
 
           if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
             receivedAudio.add(file);
-          } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+          }
+          if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
             receivedVideos.add(file);
-          } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+          }
+          if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
             receivedPhotos.add(file);
-          } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+          }
+          if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
               FileTypes.PDF_TYPES.contains(fileExtension) ||
               FileTypes.WORD_TYPES.contains(fileExtension) ||
               FileTypes.EXEL_TYPES.contains(fileExtension)) {
             receivedDocument.add(file);
-          } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
+          }
+          if (FileTypes.APK_TYPES.contains(fileExtension)) {
             receivedApk.add(file);
           } else {}
         });
@@ -222,6 +226,7 @@ class HistoryProvider extends BaseModel {
     try {
       setStatus(SORT_LIST, Status.Loading);
       list.sort((a, b) => a.size.compareTo(b.size));
+
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
       setError(SORT_LIST, e.toString());
@@ -233,18 +238,19 @@ class HistoryProvider extends BaseModel {
       setStatus(SORT_LIST, Status.Loading);
       list.sort((a, b) =>
           a.fileName.split('.').last.compareTo(b.fileName.split('.').last));
+
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
       setError(SORT_LIST, e.toString());
     }
   }
 
-  sortByDate(List<FilesModel> list) {
+  sortByDate(List<FilesDetail> list) {
     try {
       setStatus(SORT_LIST, Status.Loading);
-      // list.forEach((element) {element.});
-      print('LIST BY DATE====>${list}');
-      // list.sort((a, b) => a.date.compareTo(b.date));
+
+      list.sort(
+          (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
       setError(SORT_LIST, e.toString());

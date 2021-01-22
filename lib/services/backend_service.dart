@@ -239,6 +239,7 @@ class BackendService {
 
     bool userAcceptance;
     if (autoAcceptFiles) {
+      DateTime date = DateTime.now();
       Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
           atSignName: payload.name.toString(),
           historyType: HistoryType.received,
@@ -246,6 +247,7 @@ class BackendService {
             FilesDetail(
                 filePath: atClientPreference.downloadPath + '/' + payload.file,
                 size: payload.size,
+                date: date.toString(),
                 fileName: payload.file,
                 type: payload.file.substring(payload.file.lastIndexOf('.') + 1))
           ]);

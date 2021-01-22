@@ -159,6 +159,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
         CustomButton(
           buttonText: TextStrings().accept,
           onPressed: () {
+            DateTime date = DateTime.now();
             Provider.of<HistoryProvider>(context, listen: false)
                 .setFilesHistory(
                     atSignName: payload.name.toString(),
@@ -168,6 +169,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
                       filePath: backendService.atClientPreference.downloadPath +
                           '/' +
                           payload.file,
+                      date: date.toString(),
+                      // date: date,
                       size: payload.size,
                       fileName: payload.file,
                       type: payload.file
