@@ -1,15 +1,22 @@
 import 'dart:async';
-import 'package:atsign_atmosphere_app/services/navigation_service.dart';
+import 'dart:convert';
+import 'package:at_commons/at_commons.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class ContactProvider extends BaseModel {
   List<AtContact> contactList = [];
   List<AtContact> blockContactList = [];
+  List<AtContact> selectedContacts = [];
+  List<AtContact> trustedContacts = [];
+  List<AtContact> fetchedTrustedContact = [];
   List<String> allContactsList = [];
+  List<String> trustedNames = [];
+
   String selectedAtsign;
   BackendService backendService = BackendService.getInstance();
 
@@ -18,6 +25,11 @@ class ContactProvider extends BaseModel {
   String GetContacts = 'get_contacts';
   String DeleteContacts = 'delete_contacts';
   String BlockContacts = 'block_contacts';
+  String SelectContact = 'select_contacts';
+  String AddTrustedContacts = 'add_trusted_contacts';
+  String GetTrustedContacts = 'get_trusted_contacts';
+  bool limitReached = false;
+  bool trustedContactOperation = false;
 
   ContactProvider() {
     initContactImpl();
@@ -53,7 +65,7 @@ class ContactProvider extends BaseModel {
       await completer.future;
       contactList = await atContact.listContacts();
       List<AtContact> tempContactList = [...contactList];
-      print("list =>  $contactList");
+
       int range = contactList.length;
 
       for (int i = 0; i < range; i++) {
@@ -66,7 +78,7 @@ class ContactProvider extends BaseModel {
       contactList = tempContactList;
       contactList.sort(
           (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
-      print("list =>  $contactList");
+
       setStatus(GetContacts, Status.Done);
       c.complete(true);
     } catch (e) {
@@ -183,5 +195,121 @@ class ContactProvider extends BaseModel {
       setStatus(AddContacts, Status.Error);
     }
     return c.future;
+  }
+
+  selectContacts(AtContact contact) {
+    setStatus(SelectContact, Status.Loading);
+    try {
+      print('IN SELECT;');
+      if (selectedContacts.length <= 3) {
+        print('in 1');
+        selectedContacts.add(contact);
+      } else {
+        print('in 2');
+        limitReached = true;
+      }
+
+      setStatus(SelectContact, Status.Done);
+      print('LIMIT REACHED=====>$limitReached');
+    } catch (error) {
+      setError(SelectContact, error.toString());
+    }
+  }
+
+  removeContacts(AtContact contact) {
+    setStatus(SelectContact, Status.Loading);
+
+    try {
+      selectedContacts.remove(contact);
+      if (selectedContacts.length <= 3) {
+        limitReached = false;
+      } else {
+        limitReached = true;
+      }
+      setStatus(SelectContact, Status.Done);
+    } catch (error) {
+      setError(SelectContact, error.toString());
+    }
+  }
+
+  addTrustedContacts(AtContact contact) async {
+    setStatus(AddTrustedContacts, Status.Loading);
+
+    try {
+      // trustedContacts = [];
+      // await getTrustedContact();
+      if (!trustedContacts.contains(contact)) {
+        trustedContacts.add(contact);
+      }
+      setStatus(AddTrustedContacts, Status.Done);
+    } catch (error) {
+      setError(AddTrustedContacts, error.toString());
+    }
+  }
+
+  removeTrustedContacts(AtContact contact) async {
+    setStatus(AddTrustedContacts, Status.Loading);
+
+    try {
+      if (trustedContacts.contains(contact)) {
+        trustedContacts.remove(contact);
+      }
+
+      setStatus(AddTrustedContacts, Status.Done);
+    } catch (error) {
+      setError(AddTrustedContacts, error.toString());
+    }
+  }
+
+  setTrustedContact() async {
+    trustedContactOperation = true;
+    setStatus(AddTrustedContacts, Status.Loading);
+    try {
+      AtKey trustedContactsKey = AtKey()
+        ..key = 'trustedContactsKey'
+        ..metadata = Metadata();
+      var result = await backendService.atClientInstance.put(
+        trustedContactsKey,
+        json.encode({"trustedContacts": trustedContacts}),
+      );
+
+      // getTrustedContact();
+      trustedContactOperation = false;
+      setStatus(AddTrustedContacts, Status.Done);
+    } catch (error) {
+      trustedContactOperation = false;
+      setError(AddTrustedContacts, error.toString());
+    }
+  }
+
+  getTrustedContact() async {
+    setStatus(GetTrustedContacts, Status.Loading);
+
+    try {
+      AtKey trustedContactsKey = AtKey()
+        ..key = 'trustedContactsKey'
+        ..metadata = Metadata();
+
+      AtValue keyValue =
+          await backendService.atClientInstance.get(trustedContactsKey);
+
+      var jsonValue;
+      if (keyValue.value != null) {
+        jsonValue = jsonDecode(keyValue.value);
+        jsonValue['trustedContacts'].forEach((contact) {
+          final c = AtContact.fromJson(contact);
+          fetchedTrustedContact.add(c);
+          trustedNames.add(c.atSign);
+        });
+      }
+
+      trustedContacts = [];
+      trustedContacts = fetchedTrustedContact;
+
+      setStatus(GetTrustedContacts, Status.Done);
+    } catch (error) {
+      print('ERROR=====>$error');
+      setError(GetTrustedContacts, error.toString());
+    }
   }
 }

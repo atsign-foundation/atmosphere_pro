@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 

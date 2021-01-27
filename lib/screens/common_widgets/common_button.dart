@@ -1,4 +1,4 @@
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CommonButton extends StatelessWidget {

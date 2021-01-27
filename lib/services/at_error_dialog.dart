@@ -1,4 +1,4 @@
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';

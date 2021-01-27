@@ -1,17 +1,19 @@
-import 'package:at_commons/at_commons.dart';
-import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/common_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/side_bar.dart';
-import 'package:atsign_atmosphere_app/screens/welcome_screen/widgets/select_file_widget.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/images.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
-import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
+import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,9 +30,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isContactSelected;
   bool isFileSelected;
   ContactProvider contactProvider;
+  WelcomeScreenProvider _welcomeScreenProvider;
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
-
+  List<AtContact> selectedList = [];
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -54,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void didChangeDependencies() {
     if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context);
+      contactProvider = Provider.of<ContactProvider>(context, listen: true);
       print("herere => ${contactProvider.selectedAtsign}");
 
       if (historyProvider != null) {
@@ -136,6 +139,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     isContactSelected = false;
     isFileSelected = false;
+    _welcomeScreenProvider = WelcomeScreenProvider();
     super.initState();
   }
 
@@ -144,112 +148,103 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final filePickerModel = Provider.of<FilePickerProvider>(context);
     final contactPickerModel = Provider.of<ContactProvider>(context);
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
-        showLeadingicon: true,
-      ),
-      endDrawer: SideBarWidget(),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: 26.toWidth, vertical: 20.toHeight),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                TextStrings().welcomeUser(backendService.currentAtsign),
-                style: GoogleFonts.playfairDisplay(
-                  textStyle: TextStyle(
-                    fontSize: 28.toFont,
-                    fontWeight: FontWeight.w800,
-                    height: 1.3,
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: CustomAppBar(
+          showLeadingicon: true,
+        ),
+        endDrawer: SideBarWidget(),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: 26.toWidth, vertical: 20.toHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  TextStrings().welcomeUser(backendService.currentAtsign),
+                  style: GoogleFonts.playfairDisplay(
+                    textStyle: TextStyle(
+                      fontSize: 28.toFont,
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10.toHeight,
-              ),
-              Text(
-                TextStrings().welcomeRecipient,
-                style: TextStyle(
-                  color: ColorConstants.fadedText,
-                  fontSize: 13.toFont,
+                SizedBox(
+                  height: 10.toHeight,
                 ),
-              ),
-              SizedBox(
-                height: 67.toHeight,
-              ),
-              Text(
-                TextStrings().welcomeSendFilesTo,
-                style: TextStyle(
-                  color: ColorConstants.fadedText,
-                  fontSize: 12.toFont,
-                ),
-              ),
-              SizedBox(
-                height: 20.toHeight,
-              ),
-              SelectContactWidget(
-                (b) {
-                  setState(() {
-                    isContactSelected = b;
-                  });
-                },
-              ),
-              SizedBox(
-                height: 40.toHeight,
-              ),
-              SelectFileWidget(
-                (b) {
-                  print("file is selected => $b");
-                  setState(() {
-                    isFileSelected = b;
-                  });
-                },
-              ),
-              SizedBox(
-                height: 60.toHeight,
-              ),
-              if (contactProvider.selectedAtsign != null &&
-                  filePickerModel.selectedFiles.isNotEmpty) ...[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: CommonButton(
-                    TextStrings().buttonSend,
-                    () async {
-                      _showScaffold(status: 0);
-                      bool response = await backendService.sendFile(
-                          contactPickerModel.selectedAtsign,
-                          filePickerModel.selectedFiles[0].path);
-                      if (response == true) {
-                        Provider.of<HistoryProvider>(context, listen: false)
-                            .setFilesHistory(
-                                atSignName: contactProvider.selectedAtsign,
-                                historyType: HistoryType.send,
-                                files: [
-                              FilesDetail(
-                                  filePath:
-                                      filePickerModel.selectedFiles[0].path,
-                                  size: filePickerModel.totalSize,
-                                  fileName: filePickerModel.result.files[0].name
-                                      .toString(),
-                                  type: filePickerModel
-                                      .selectedFiles[0].extension
-                                      .toString())
-                            ]);
-                        _showScaffold(status: 1);
-                      } else {
-                        _showScaffold(status: 2);
-                      }
-                    },
+                Text(
+                  TextStrings().welcomeRecipient,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 13.toFont,
                   ),
+                ),
+                SizedBox(
+                  height: 67.toHeight,
+                ),
+                Text(
+                  TextStrings().welcomeSendFilesTo,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 12.toFont,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
+                SelectContactWidget(
+                  (b) {
+                    setState(() {
+                      isContactSelected = b;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                // ProviderHandler<WelcomeScreenProvider>(),
+                Consumer<WelcomeScreenProvider>(
+                  builder: (context, provider, _) =>
+                      (provider.selectedContacts.isEmpty)
+                          ? Container()
+                          : OverlappingContacts(
+                              selectedList: provider.selectedContacts),
+                ),
+                SizedBox(
+                  height: 40.toHeight,
+                ),
+                SelectFileWidget(
+                  (b) {
+                    print("file is selected => $b");
+                    setState(() {
+                      isFileSelected = b;
+                    });
+                  },
                 ),
                 SizedBox(
                   height: 60.toHeight,
                 ),
+                if (contactProvider.selectedContacts != null &&
+                    filePickerModel.selectedFiles.isNotEmpty) ...[
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: CommonButton(
+                      TextStrings().buttonSend,
+                      () async {
+                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                            _welcomeScreenProvider.selectedContacts);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 60.toHeight,
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

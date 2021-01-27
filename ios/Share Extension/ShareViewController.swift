@@ -12,8 +12,8 @@ import Photos
 
 class ShareViewController: SLComposeServiceViewController {
     // TODO: IMPORTANT: This should be your host app bundle identifier
-    let hostAppBundleIdentifier = "com.atsign.atmosphere"
-    let sharedKey = "ShareKey"
+    let hostAppBundleIdentifier = "com.atsign.atmosphere-pro"
+    let sharedKey = "AtmospherePro"
     var sharedMedia: [SharedMediaFile] = []
     var sharedText: [String] = []
     let imageContentType = kUTTypeImage as String

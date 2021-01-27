@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:at_contact/at_contact.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/receive_files/receive_files_alert.dart';
-import 'package:atsign_atmosphere_app/services/notification_service.dart';
-import 'package:atsign_atmosphere_app/utils/constants.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
+import 'package:atsign_atmosphere_pro/services/hive_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
@@ -40,7 +39,8 @@ class BackendService {
   String get currentAtsign => _atsign;
   OutboundConnection monitorConnection;
   Directory downloadDirectory;
-
+  double bytesReceived = 0.0;
+  AnimationController controller;
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
     if (Platform.isIOS) {
@@ -64,9 +64,7 @@ class BackendService {
     atClientPreference.downloadPath = downloadDirectory.path;
     atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
     var result = await atClientServiceInstance.onboard(
-        atClientPreference: atClientPreference,
-        atsign: atsign,
-        namespace: 'mosphere');
+        atClientPreference: atClientPreference, atsign: atsign);
     atClientInstance = atClientServiceInstance.atClient;
     return result;
   }
@@ -99,16 +97,19 @@ class BackendService {
 
   // first time setup with cram authentication
   Future<bool> authenticateWithCram(String atsign, {String cramSecret}) async {
-    var result = await atClientServiceInstance.authenticate(atsign,
-        cramSecret: cramSecret);
+    atClientPreference.cramSecret = cramSecret;
+    var result =
+        await atClientServiceInstance.authenticate(atsign, atClientPreference);
     atClientInstance = await atClientServiceInstance.atClient;
     return result;
   }
 
   Future<bool> authenticateWithAESKey(String atsign,
       {String cramSecret, String jsonData, String decryptKey}) async {
-    var result = await atClientServiceInstance.authenticate(atsign,
-        cramSecret: cramSecret, jsonData: jsonData, decryptKey: decryptKey);
+    atClientPreference.cramSecret = cramSecret;
+    var result = await atClientServiceInstance.authenticate(
+        atsign, atClientPreference,
+        jsonData: jsonData, decryptKey: decryptKey);
     atClientInstance = atClientServiceInstance.atClient;
     _atsign = atsign;
     return result;
@@ -142,11 +143,59 @@ class BackendService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
-    monitorConnection =
-        await atClientInstance.startMonitor(privateKey, acceptStream);
+    // monitorConnection =
+    await atClientInstance.startMonitor(privateKey, _notificationCallBack);
     print("Monitor started");
     return true;
   }
+
+  var fileLength;
+  var userResponse = false;
+  Future<void> _notificationCallBack(var response) async {
+    print('response => $response');
+    response = response.replaceFirst('notification:', '');
+    var responseJson = jsonDecode(response);
+    var notificationKey = responseJson['key'];
+    var fromAtSign = responseJson['from'];
+    var atKey = notificationKey.split(':')[1];
+    atKey = atKey.replaceFirst(fromAtSign, '');
+    atKey = atKey.trim();
+    if (atKey == 'stream_id') {
+      var valueObject = responseJson['value'];
+      var streamId = valueObject.split(':')[0];
+      var fileName = valueObject.split(':')[1];
+      fileLength = valueObject.split(':')[2];
+      fileName = utf8.decode(base64.decode(fileName));
+      userResponse = await acceptStream(fromAtSign, fileName, fileLength);
+      if (userResponse == true) {
+        await atClientInstance.sendStreamAck(
+            streamId,
+            fileName,
+            int.parse(fileLength),
+            fromAtSign,
+            _streamCompletionCallBack,
+            _streamReceiveCallBack);
+      }
+    }
+  }
+
+  void _streamCompletionCallBack(var streamId) async {
+    print('FILE TRANSFER COMPLETE FOR STRAM : $streamId');
+    DateTime now = DateTime.now();
+    int historyFileCount = 0;
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .receivedFileHistory
+        .forEach((key, value) {
+      value.forEach((e) => historyFileCount++);
+    });
+
+    var value = {'timeStamp': now, 'length': historyFileCount};
+    HiveService().writeData(
+        MixedConstants.HISTORY_BOX, MixedConstants.HISTORY_KEY, value);
+  }
+
+  void _streamReceiveCallBack(var bytesReceived) {}
 
   // send a file
   Future<bool> sendFile(String atSign, String filePath) async {
@@ -170,27 +219,27 @@ class BackendService {
       String atsign, String filename, String filesize) async {
     print("from:$atsign file:$filename size:$filesize");
     BuildContext context = NavService.navKey.currentContext;
-    ContactProvider contactProvider =
-        Provider.of<ContactProvider>(context, listen: false);
+    // ContactProvider contactProvider =
+    //     Provider.of<ContactProvider>(context, listen: false);
 
-    for (AtContact blockeduser in contactProvider.blockContactList) {
-      if (atsign == blockeduser.atSign) {
-        return false;
-      }
-    }
+    // for (AtContact blockeduser in contactProvider.blockedContactList) {
+    //   if (atsign == blockeduser.atSign) {
+    //     return false;
+    //   }
+    // }
 
     if (!autoAcceptFiles &&
         app_lifecycle_state != null &&
         app_lifecycle_state != AppLifecycleState.resumed.toString()) {
       print("app not active $app_lifecycle_state");
       await NotificationService().showNotification(atsign, filename, filesize);
-      // sleep(const Duration(seconds: 2));
     }
     NotificationPayload payload = NotificationPayload(
         file: filename, name: atsign, size: double.parse(filesize));
 
     bool userAcceptance;
     if (autoAcceptFiles) {
+      DateTime date = DateTime.now();
       Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
           atSignName: payload.name.toString(),
           historyType: HistoryType.received,
@@ -198,6 +247,7 @@ class BackendService {
             FilesDetail(
                 filePath: atClientPreference.downloadPath + '/' + payload.file,
                 size: payload.size,
+                date: date.toString(),
                 fileName: payload.file,
                 type: payload.file.substring(payload.file.lastIndexOf('.') + 1))
           ]);
@@ -251,8 +301,9 @@ class BackendService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientInstance.get(key).catchError(
-          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+      var result = await atClientInstance
+          .get(key)
+          .catchError((e) => print("error in get ${e.toString()}"));
       var firstname = result.value;
 
       // lastname

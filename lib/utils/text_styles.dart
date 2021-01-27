@@ -1,6 +1,6 @@
-import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class CustomTextStyles {
   //colorWeightSize
