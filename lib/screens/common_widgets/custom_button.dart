@@ -1,5 +1,5 @@
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 
 /// Custom button widget [isInverted] toggles between black and white button,
 /// [isInverted=false] by default, if true bg color and border color goes [white]

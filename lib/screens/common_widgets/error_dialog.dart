@@ -1,10 +1,10 @@
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_popup_route.dart';
-import 'package:atsign_atmosphere_app/services/navigation_service.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_popup_route.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class ErrorDialogWidget extends StatelessWidget {
   final String text;

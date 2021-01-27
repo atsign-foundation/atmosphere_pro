@@ -1,4 +1,4 @@
-name: atsign_atmosphere_app
+name: atsign_atmosphere_pro
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -15,11 +15,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+2
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.7.0 <=2.10.4"
-  # sdk: ">=0.7.3 <2.0.0"
 
 dependencies:
   flutter:
@@ -33,7 +32,6 @@ dependencies:
   flutter_local_notifications: ^2.0.1
   flutter_qr_reader: ^1.0.3
   flutter_slidable: ^0.5.7
-  # flutter_svg: ^0.19.2+1
   google_fonts: ^1.1.0
   intl: ^0.16.1
   open_file: ^3.0.3

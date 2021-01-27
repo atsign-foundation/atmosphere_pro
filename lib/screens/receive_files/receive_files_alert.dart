@@ -1,17 +1,17 @@
 import 'dart:convert';
-import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/services/notification_service.dart';
-import 'package:atsign_atmosphere_app/utils/images.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
-import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {

@@ -1,13 +1,13 @@
-import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/screens/group_contacts_screen/widgets/custom_bottom_sheet.dart';
-import 'package:atsign_atmosphere_app/screens/group_contacts_screen/widgets/custom_list_view.dart';
-import 'package:atsign_atmosphere_app/screens/group_contacts_screen/widgets/horizontal_list_view.dart';
-import 'package:atsign_atmosphere_app/screens/group_contacts_screen/widgets/limit_alert.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/screens/contact/widgets/search_field.dart';
+import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/custom_bottom_sheet.dart';
+import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/custom_list_view.dart';
+import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/horizontal_list_view.dart';
+import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/limit_alert.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

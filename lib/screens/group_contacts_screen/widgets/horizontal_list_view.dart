@@ -1,10 +1,10 @@
 import 'package:at_contact/at_contact.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/contact_initial.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_app/screens/group_contacts_screen/widgets/circular_contacts.dart';
-import 'package:atsign_atmosphere_app/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/circular_contacts.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class HorizontalCircularList extends StatelessWidget {

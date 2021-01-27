@@ -3,11 +3,11 @@
 /// a [successBuilder] which tells what to render is status is [Status.Done]
 /// [Status.Loading] renders a CircularProgressIndicator whereas
 /// [Status.Error] renders [errorBuilder]
-import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_app/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   final Widget Function(T) successBuilder;

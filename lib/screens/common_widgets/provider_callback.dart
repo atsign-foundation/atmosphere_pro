@@ -1,6 +1,6 @@
-import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/loading_widget.dart';
-import 'package:atsign_atmosphere_app/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

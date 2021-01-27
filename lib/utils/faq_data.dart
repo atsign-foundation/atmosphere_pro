@@ -8,7 +8,7 @@ class FAQData {
     {
       "question": "What types of applications are in the works?",
       "answer":
-          "@persona: Your go-to destination for building your online persona. As a starting point for all “@” apps, @persona allows you to set up your preferences and determine how you want to engage in the @universe.  @buzz: Keeping your social network up-to-date has never been easier. @buzz makes it possible for you to update your connections in real-time, at the same time. @mosphere: Transfer files in real-time across all devices and locations. @mosphere allows for peer-to-peer encrypted file sharing."
+          "@persona: Your go-to destination for building your online persona. As a starting point for all “@” apps, @persona allows you to set up your preferences and determine how you want to engage in the @universe.  @buzz: Keeping your social network up-to-date has never been easier. @buzz makes it possible for you to update your connections in real-time, at the same time. @mosphere-pro: Transfer files in real-time across all devices and locations. @mosphere-pro allows for peer-to-peer encrypted file sharing."
     },
     {
       "question": "How are @pps different from what is available today?",

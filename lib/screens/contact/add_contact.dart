@@ -1,13 +1,13 @@
-import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/contact/widgets/search_field.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/services/validators.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/images.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/add_contact_provider.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/screens/contact/widgets/add_contact_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/contact/widgets/search_field.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/validators.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:flutter/material.dart';
 
 class AddContactScreen extends StatefulWidget {

@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 
-import 'package:atsign_atmosphere_app/screens/common_widgets/website_webview.dart';
-import 'package:atsign_atmosphere_app/services/at_error_dialog.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/constants.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/scan_qr_provider.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
+import 'package:atsign_atmosphere_pro/services/at_error_dialog.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/scan_qr_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
