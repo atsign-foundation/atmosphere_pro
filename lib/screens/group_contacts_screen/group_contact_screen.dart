@@ -21,32 +21,6 @@ class GroupContactScreen extends StatefulWidget {
 }
 
 class _GroupContactScreenState extends State<GroupContactScreen> {
-  // ContactProvider _contactProvider = ContactProvider();
-  // ContactProvider _contactProvider;
-
-  @override
-  void initState() {
-    // _contactProvider = Provider.of<ContactProvider>(context, listen: false);
-    // Future.delayed(Duration(seconds: 1), ini);
-    print('IS TRUSTED IN MAIN SCREEN====>${widget.isTrustedScreen}');
-    super.initState();
-  }
-
-  // ini() async {
-  //   if (widget.isTrustedScreen) {
-
-  //     // Provider.of<ContactProvider>(context, listen: false)
-  //     //     .getTrustedContact(trustedContactsKey);
-  //   }
-  // }
-
-  @override
-  void didChangeDependencies() {
-    // _contactProvider = Provider.of<ContactProvider>(context);
-
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -79,9 +53,6 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                   : Consumer<ContactProvider>(
                       builder: (context, provider, _) => LimitAlert(
                         limitReached: provider.limitReached,
-                        // onChange: (s) {
-                        //   provider.limitReached = s;
-                        // },
                       ),
                     ),
               Container(
@@ -95,9 +66,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                             ? Container()
                             : ContactSearchField(
                                 TextStrings().searchContact,
-                                (text) => setState(() {
-                                  // searchText = text;
-                                }),
+                                (text) => setState(() {}),
                               ),
                       ),
                     ),

@@ -1,4 +1,3 @@
-// import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
@@ -177,11 +176,8 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                           Provider.of<HistoryProvider>(context, listen: false)
                               .sortFiles(historyProvider.receivedHistory);
                           setState(() {
-                            print(
-                                'historyProvider.tabs[index].runtimeType;====>${historyProvider.tabs[index].runtimeType}');
                             runtimeType =
                                 historyProvider.tabs[index].runtimeType;
-                            print('AFER TYPE====>${runtimeType}');
                           });
                         },
                         isScrollable: true,

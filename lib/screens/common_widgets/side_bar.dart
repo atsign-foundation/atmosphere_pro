@@ -47,7 +47,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.WEBSITE_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
-    Routes.EMPTY_TRUSTED_CONTACTS
+    Routes.TRUSTED_CONTACTS
   ];
 
   bool autoAcceptFiles = true;
@@ -106,11 +106,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                             TextStrings().sidebarPrivacyPolicy,
                                         "url": MixedConstants.PRIVACY_POLICY
                                       }
-                                    : null
-                        // : (index == 6)
-                        //     ? {"isTrustedSender": true}
-                        //     : null
-                        );
+                                    : null);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 13.toHeight),

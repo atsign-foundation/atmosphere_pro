@@ -63,19 +63,4 @@ class _PhotosState extends State<Photos> {
       ),
     );
   }
-
-  // Widget thumbnail(String extension, String path) {
-  //   print('EXTENSION====>$extension');
-  //   return ClipRRect(
-  //     borderRadius: BorderRadius.circular(10.toHeight),
-  //     child: Container(
-  //       height: 50.toHeight,
-  //       width: 50.toWidth,
-  //       child: Image.file(
-  //         File(path),
-  //         fit: BoxFit.cover,
-  //       ),
-  //     ),
-  //   );
-  // }
 }

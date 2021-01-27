@@ -103,7 +103,6 @@ class _FilesListTileState extends State<FilesListTile> {
                 height: 8.toHeight,
               ),
               Container(
-                // width: 100.toWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -128,7 +127,6 @@ class _FilesListTileState extends State<FilesListTile> {
                 height: 20.toHeight,
               ),
               Container(
-                // width: 150.toWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -161,7 +159,6 @@ class _FilesListTileState extends State<FilesListTile> {
                         });
                       },
                       child: Container(
-                        // width: 140.toWidth,
                         child: Row(
                           children: [
                             Text(
@@ -246,7 +243,6 @@ class _FilesListTileState extends State<FilesListTile> {
                                 ),
                                 SizedBox(width: 10.toHeight),
                                 Container(
-                                  // width: 80.toWidth,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -263,7 +259,6 @@ class _FilesListTileState extends State<FilesListTile> {
                                       ),
                                       SizedBox(width: 10.toHeight),
                                       Text(
-                                        // 'JPG',
                                         widget.sentHistory.files[index].type
                                             .toString(),
                                         style:
@@ -284,7 +279,6 @@ class _FilesListTileState extends State<FilesListTile> {
                       });
                     },
                     child: Container(
-                      // width: 140.toWidth,
                       margin: EdgeInsets.only(left: 85.toWidth),
                       child: Row(
                         children: [
@@ -314,7 +308,6 @@ class _FilesListTileState extends State<FilesListTile> {
   }
 
   Widget thumbnail(String extension, String path) {
-    // print('EXTENSION====>$extension');
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),

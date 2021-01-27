@@ -9,7 +9,6 @@ import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_pro/screens/private_key_qrcode_generator.dart';
 import 'package:atsign_atmosphere_pro/screens/scan_qr/scan_qr.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
-import 'package:atsign_atmosphere_pro/screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -30,11 +29,7 @@ class SetupRoutes {
       },
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
       Routes.FAQ_SCREEN: (context) => FaqsScreen(),
-      // Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
-      Routes.HISTORY: (context) {
-        return MyFiles();
-      },
-      // Routes.HISTORY: (context) => HistoryScreen(),
+      Routes.HISTORY: (context) => MyFiles(),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =
@@ -47,9 +42,8 @@ class SetupRoutes {
       },
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
-      Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),
       Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen(),
-      Routes.EMPTY_TRUSTED_CONTACTS: (context) => TrustedContacts(),
+      Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),
       Routes.TRUSTED_SENDER: (context) {
         Map<String, bool> args =
             ModalRoute.of(context).settings.arguments as Map<String, bool>;

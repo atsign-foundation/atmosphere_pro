@@ -31,7 +31,6 @@ class _VideosState extends State<Videos> {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
       load: (provider) {
-        print('VIDEO ARRAY====>${provider.receivedVideos}');
         return provider.sortFiles(provider.receivedHistory);
       },
       successBuilder: (provider) => Container(

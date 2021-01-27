@@ -30,7 +30,6 @@ class _LimitAlertState extends State<LimitAlert> {
                 color: Colors.transparent,
                 height: 70.toHeight,
               )
-            // : Container()
             : Container(
                 color: Color(0xffFFC4C4),
                 height: 70.toHeight,
@@ -62,11 +61,7 @@ class _LimitAlertState extends State<LimitAlert> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // setState(() {
                             limit = true;
-                            // widget.onChange(limitReached);
-                            print('LIMIT===>${limit}');
-                            // });
                           },
                           child: Container(
                             height: 25.toHeight,

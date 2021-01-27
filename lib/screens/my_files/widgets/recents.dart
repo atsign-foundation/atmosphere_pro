@@ -26,15 +26,6 @@ class _RecentsState extends State<Recents> {
     super.initState();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   providerCallback<HistoryProvider>(context,
-  //       task: (provider) => provider.getRecievedHistory(),
-  //       taskName: (provider) => provider.RECEIVED_HISTORY,
-  //       onSuccess: null);
-  //   super.didChangeDependencies();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
@@ -66,7 +57,6 @@ class _RecentsState extends State<Recents> {
 }
 
 Widget thumbnail(String extension, String path) {
-  // print('EXTENSION====>$extension');
   return FileTypes.IMAGE_TYPES.contains(extension)
       ? ClipRRect(
           borderRadius: BorderRadius.circular(10.toHeight),

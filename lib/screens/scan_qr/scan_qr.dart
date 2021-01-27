@@ -93,22 +93,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     }
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   BuildContext c = NavService.navKey.currentContext;
-  //   if (qrProvider.status['cram'] == Status.Error) {
-  //     showDialog(
-  //       context: c,
-  //       barrierDismissible: true,
-  //       builder: (context) => Container(
-  //         height: 40,
-  //         width: 40,
-  //         color: Colors.red,
-  //       ),
-  //     );
-  //   }
-  //   super.didChangeDependencies();
-  // }
   void _uploadCramKeyFile() async {
     try {
       String cramKey;
@@ -142,8 +126,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           loading = false;
         });
       }
-      // qrProvider.cramAuthWithoutQR();
-      // await _processAESKey(atsign, aesKey, fileContents);
     } on Error catch (error) {
       setState(() {
         loading = false;
@@ -172,8 +154,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           return;
         }
         if (pickedFile.extension == 'zip') {
-          // File selectedFile = File(
-          //     'Users/rishabh1/Desktop/untitled\ folder/appletester1/atKeys.zip');
           var bytes = selectedFile.readAsBytesSync();
           final archive = ZipDecoder().decodeBytes(bytes);
           for (var file in archive) {
@@ -186,9 +166,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               var path = (await path_provider.getTemporaryDirectory()).path;
               var file1 = await File('$path' + 'test').create();
               file1.writeAsBytesSync(bytes);
-              print('LINE 190');
-              // String result =
-              //     '@test_sunday3:ISmV8RfM2HLAXzBeIqOpc+5aIgqckNMqQbFkDenI6Gw=';
               String result = await FlutterQrReader.imgScan(file1);
               List<String> params = result.split(':');
               atsign = params[0];
@@ -252,11 +229,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     }).catchError((err) {
       print("Error in authenticateWithAESKey => ${err}");
       throw Exception(err.toString());
-      // _showAlertDialog(err);
-      // setState(() {
-      //   loading = false;
-      // });
-      // _logger.severe('Scanning QR code throws $err Error');
     });
   }
 

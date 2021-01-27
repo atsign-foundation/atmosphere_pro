@@ -15,7 +15,6 @@ class HorizontalCircularList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('HORIZONTAL CIRCULAR======>$isTrustedSender');
     return Container(
       height: (list.isEmpty) ? 0 : 120.toHeight,
       child: ListView.builder(
@@ -40,7 +39,6 @@ class HorizontalCircularList extends StatelessWidget {
                     .removeTrustedContacts(list[index])
                 : Provider.of<ContactProvider>(context, listen: false)
                     .removeContacts(list[index]);
-            // onTap();
           },
         ),
       ),

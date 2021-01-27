@@ -14,8 +14,6 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
-// import 'package:atsign_authentication_helper/atsign_authentication_helper.dart';
-// import 'package:atsign_authentication_helper/screens/scan_qr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,7 +63,6 @@ class _HomeState extends State<Home> {
       _sharedFiles = value;
 
       if (value.isNotEmpty) {
-        // setState(() {
         value.forEach((element) async {
           File file = File(element.path);
           double length = await file.length() / 1024;
@@ -166,23 +163,7 @@ class _HomeState extends State<Home> {
         .getTrustedContact();
   }
 
-  onNotificationClick(String payload) async {
-    // this popup added to accept stream to await answer
-    // BuildContext c = NavService.navKey.currentContext;
-    // print('Payload $payload');
-    // bool userAcceptance = null;
-    // await showDialog(
-    //   context: c,
-    //   builder: (c) => ReceiveFilesAlert(
-    //     payload: payload,
-    //     sharingStatus: (s) {
-    //       // sharingStatus = s;
-    //       userAcceptance = s;
-    //       print('STATUS====>$s');
-    //     },
-    //   ),
-    // );
-  }
+  onNotificationClick(String payload) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -285,14 +266,6 @@ class _HomeState extends State<Home> {
                                         Routes.SCAN_QR_SCREEN,
                                         (route) => false);
                                   }
-                                  // await Navigator.pushReplacement(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => ScanQrScreen(
-                                  //             atClientServiceInstance:
-                                  //                 clientSdkService
-                                  //                     .atClientServiceInstance,
-                                  //             nextScreen: WelcomeScreen())));
                                 },
                               ),
                             ),

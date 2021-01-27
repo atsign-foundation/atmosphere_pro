@@ -115,9 +115,6 @@ class _TrustedContactsState extends State<TrustedContacts> {
                               height: 40.toHeight,
                               width: 115.toWidth,
                               onPressed: () {
-                                // Navigator.pushNamed(
-                                //     context, Routes.GROUP_CONTACT_SCREEN,
-                                //     arguments: {"isTrustedSender": true});
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

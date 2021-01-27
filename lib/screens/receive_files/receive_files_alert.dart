@@ -170,7 +170,6 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
                           '/' +
                           payload.file,
                       date: date.toString(),
-                      // date: date,
                       size: payload.size,
                       fileName: payload.file,
                       type: payload.file

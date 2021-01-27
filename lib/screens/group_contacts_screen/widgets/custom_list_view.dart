@@ -50,8 +50,6 @@ class _CustomListViewState extends State<CustomListView> {
         itemBuilder: (context, index) {
           return Consumer<ContactProvider>(
             builder: (context, provider, _) {
-              print(
-                  'widget.contactList[index]====>${widget.contactList[index]}=====>${provider.trustedContacts.contains(widget.contactList[index])}');
               return ContactListTile(
                 isSelected: (widget.isTrustedContact)
                     ? widget.secondaryList.contains(provider.contactList[index])

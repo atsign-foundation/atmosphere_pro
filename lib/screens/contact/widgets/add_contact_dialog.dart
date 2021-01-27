@@ -29,8 +29,6 @@ class AddContactDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-      // height: 100.toHeight * deviceTextFactor,
-      // width: 100.toWidth,
       child: SingleChildScrollView(
         child: AlertDialog(
           shape: RoundedRectangleBorder(
@@ -49,14 +47,6 @@ class AddContactDialog extends StatelessWidget {
               )
             ],
           ),
-          // content: ConstrainedBox(
-          //   constraints: BoxConstraints(
-          //       // maxHeight:
-          //       //     (Provider.of<ContactProvider>(context).getAtSignError == ''
-          //       //             ? 255.toHeight
-          //       //             : 305.toHeight) *
-          //       //         deviceTextFactor),
-          //   child:  ),
           content: Column(
             children: [
               SizedBox(
