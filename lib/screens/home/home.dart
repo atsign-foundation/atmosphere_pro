@@ -74,11 +74,14 @@ class _HomeState extends State<Home> {
           await filePickerProvider.setFiles();
         });
 
-        BuildContext c = NavService.navKey.currentContext;
-
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-        await Navigator.pushNamedAndRemoveUntil(
-            c, Routes.WELCOME_SCREEN, (route) => false);
+        // check to see if atsign is paired
+        var atsign = await backendService.currentAtsign;
+        if (atsign != null) {
+          BuildContext c = NavService.navKey.currentContext;
+          await Navigator.pushNamedAndRemoveUntil(
+              c, Routes.WELCOME_SCREEN, (route) => false);
+        }
       }
     }, onError: (err) {
       print("getIntentDataStream error: $err");

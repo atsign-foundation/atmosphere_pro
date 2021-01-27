@@ -64,7 +64,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       final emptyFile = await File('$path$_imagename.png').create();
       await emptyFile.writeAsBytes(_pngBytes);
       var encoder = ZipFileEncoder();
-      encoder.create('$path' + 'atKeys.zip');
+      encoder.create('$path' + atsign + '_atKeys.zip');
       encoder.addFile(emptyFile);
       var _encryptKeys = atsign + '_encrypt_keys';
       encoder.addFile(File('$path$_encryptKeys.atKeys'));
