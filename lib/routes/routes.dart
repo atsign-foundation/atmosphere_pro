@@ -13,8 +13,8 @@ import 'package:atsign_atmosphere_app/screens/terms_conditions/terms_conditions_
 import 'package:atsign_atmosphere_app/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_app/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
-import 'package:atsign_contacts/screens/blocked_screen.dart';
-import 'package:atsign_contacts/screens/contacts_screen.dart';
+import 'package:at_contacts_flutter/screens/blocked_screen.dart';
+import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:flutter/material.dart';
 
 class SetupRoutes {

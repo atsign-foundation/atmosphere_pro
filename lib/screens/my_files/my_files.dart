@@ -12,8 +12,8 @@ import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/history_provider.dart';
-import 'package:atsign_common/atsign_common.dart';
-import 'package:atsign_common/widgets/custom_app_bar.dart';
+import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -9,7 +9,7 @@ import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/welcome_screen_view_model.dart';
-import 'package:atsign_contacts/utils/init_contacts_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
