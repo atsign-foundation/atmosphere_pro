@@ -34,7 +34,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
         });
       },
       child: Container(
-        height: (isExpanded) ? 300.toHeight : 50.toHeight,
+        height: (isExpanded) ? 300.toHeight : 60.toHeight,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Color(0xffF7F7FF),
@@ -56,12 +56,14 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                     image = Uint8List.fromList(intList);
                   }
                   return Positioned(
-                    left: 5 + double.parse((index * 25).toString()),
+                    left: 5 + double.parse((index * 10).toString()),
                     top: 5.toHeight,
                     child: Container(
                       height: 28.toHeight,
                       width: 28.toHeight,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white)),
                       child: (widget.selectedList[index].tags != null &&
                               widget.selectedList[index].tags['image'] != null)
                           ? CustomCircleAvatar(
@@ -71,14 +73,14 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                           : ContactInitial(
                               initials: widget.selectedList[index].atSign
                                   .substring(1, 3),
-                            ),
+                              size: 28),
                     ),
                   );
                 },
               ),
             ),
             Positioned(
-              top: 10.toHeight,
+              top: 5.toHeight,
               left: 40 +
                   double.parse((widget.selectedList.length * 25).toString()),
               child: Row(

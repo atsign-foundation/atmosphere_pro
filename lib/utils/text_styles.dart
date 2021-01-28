@@ -48,7 +48,11 @@ class CustomTextStyles {
     fontSize: 16.toFont,
     fontWeight: FontWeight.w700,
   );
-
+  static TextStyle whiteBold({int size = 16}) => TextStyle(
+        color: Colors.white,
+        fontSize: size.toFont,
+        fontWeight: FontWeight.w700,
+      );
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontWeight: FontWeight.w700,

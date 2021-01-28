@@ -25,7 +25,7 @@ class ContactInitial extends StatelessWidget {
       child: Center(
         child: Text(
           initials.toUpperCase(),
-          style: CustomTextStyles.whiteBold16,
+          style: CustomTextStyles.whiteBold(size: (size ~/ 3)),
         ),
       ),
     );

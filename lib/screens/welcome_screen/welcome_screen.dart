@@ -1,5 +1,6 @@
 import 'package:at_contact/at_contact.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
@@ -55,24 +56,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   ];
 
   @override
+  void initState() {
+    isContactSelected = false;
+    isFileSelected = false;
+    _welcomeScreenProvider = WelcomeScreenProvider();
+    getAtSignAndInitializeContacts();
+    super.initState();
+  }
+
+  getAtSignAndInitializeContacts() async {
+    String currentAtSign = await backendService.getAtSign();
+    initializeContactsService(
+        backendService.atClientServiceInstance.atClient, currentAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
+  }
+
+  @override
   void didChangeDependencies() {
     if (contactProvider == null) {
       contactProvider = Provider.of<ContactProvider>(context, listen: true);
-      print("herere => ${contactProvider.selectedAtsign}");
-
-      if (historyProvider != null) {
-        historyProvider = Provider.of<HistoryProvider>(context);
-      }
-
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        print("fetched contacts");
-        contactProvider?.getContacts();
-        contactProvider?.fetchBlockContactList();
-        historyProvider?.getSentHistory();
-        historyProvider?.getRecievedHistory();
-      });
     }
-
     super.didChangeDependencies();
   }
 
@@ -133,14 +136,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     ).show(context);
-  }
-
-  @override
-  void initState() {
-    isContactSelected = false;
-    isFileSelected = false;
-    _welcomeScreenProvider = WelcomeScreenProvider();
-    super.initState();
   }
 
   @override
