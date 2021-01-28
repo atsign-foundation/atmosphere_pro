@@ -34,12 +34,4 @@ class ImageConstants {
   static String documentFile = '$_basePath/documentFile.png';
   static String exclamation = '$_basePath/exclamation.png';
   static String close = '$_basePath/close.png';
-  // TEST FILE DELETE WHEN IN PRODUCTION
-  static String test = '$_basePath/test.jpg';
-
-  // Sample profile pictures
-  static String barbara = '$_basePath/barbara.jpg';
-  static String colin = '$_basePath/colin.jpg';
-  static String kevin = '$_basePath/kevin.jpg';
-  static String filePreview = '$_basePath/filePreview.jpg';
 }
