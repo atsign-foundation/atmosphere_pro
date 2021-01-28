@@ -4,7 +4,6 @@ import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/client_sdk_service.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
@@ -43,7 +42,6 @@ class _HomeState extends State<Home> {
   StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
   @override
   void initState() {
     super.initState();
@@ -51,7 +49,6 @@ class _HomeState extends State<Home> {
         Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
     _initBackendService();
-    clientSdkService.onboard();
     _checkToOnboard();
     acceptFiles();
     _checkForPermissionStatus();

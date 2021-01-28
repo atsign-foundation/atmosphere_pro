@@ -1,6 +1,5 @@
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/client_sdk_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -9,7 +8,6 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,13 +49,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   ];
 
   bool autoAcceptFiles = true;
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
   @override
   void initState() {
     autoAcceptFiles = true;
     BackendService.getInstance().autoAcceptFiles = autoAcceptFiles;
-    getAtSignAndInitializeContacts();
     super.initState();
   }
 
@@ -326,15 +321,5 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             ),
           );
         });
-  }
-
-  getAtSignAndInitializeContacts() async {
-    String currentAtSign = await clientSdkService.getAtSign();
-    setState(() {
-      activeAtSign = currentAtSign;
-    });
-    initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

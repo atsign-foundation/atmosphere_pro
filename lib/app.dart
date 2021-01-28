@@ -1,5 +1,4 @@
 import 'package:atsign_atmosphere_pro/view_models/blocked_contact_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/scan_qr_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,8 +33,6 @@ class _MyAppState extends State<MyApp> {
             create: (context) => ContactProvider()),
         ChangeNotifierProvider<BlockedContactProvider>(
             create: (context) => BlockedContactProvider()),
-        ChangeNotifierProvider<ScanQrProvider>(
-            create: (context) => ScanQrProvider()),
         ChangeNotifierProvider<WelcomeScreenProvider>(
             create: (context) => WelcomeScreenProvider())
       ],
