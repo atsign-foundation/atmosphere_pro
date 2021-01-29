@@ -1,6 +1,6 @@
-import 'package:atsign_atmosphere_app/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class CustomTextStyles {
   //colorWeightSize
@@ -48,7 +48,11 @@ class CustomTextStyles {
     fontSize: 16.toFont,
     fontWeight: FontWeight.w700,
   );
-
+  static TextStyle whiteBold({int size = 16}) => TextStyle(
+        color: Colors.white,
+        fontSize: size.toFont,
+        fontWeight: FontWeight.w700,
+      );
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontWeight: FontWeight.w700,

@@ -1,16 +1,41 @@
 import 'dart:convert';
 import 'package:at_commons/at_commons.dart';
-import 'package:atsign_atmosphere_app/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:flutter/cupertino.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
   List<FilesModel> sentHistory = [];
-  List<FilesModel> receivedHistory = [];
+  List<FilesDetail> sentPhotos,
+      sentVideos,
+      sentAudio,
+      sentApk,
+      sentDocument = [];
+
+  List<FilesDetail> receivedPhotos,
+      receivedVideos,
+      receivedAudio,
+      receivedApk,
+      receivedDocument,
+      finalReceivedHistory = [];
+
+  List<FilesModel> receivedHistory, receivedAudioModel = [];
+  List<Widget> tabs = [Recents()];
+  String SORT_FILES = 'sort_files';
+  String POPULATE_TABS = 'populate_tabs';
   Map receivedFileHistory = {'history': []};
   Map sendFileHistory = {'history': []};
+  String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
 
   setFilesHistory(
@@ -50,7 +75,6 @@ class HistoryProvider extends BaseModel {
         result = await backendService.atClientInstance
             .put(atKey, json.encode(sendFileHistory));
       }
-      print(result);
     } catch (e) {
       print("here error => $e");
     }
@@ -72,12 +96,10 @@ class HistoryProvider extends BaseModel {
           filesModel.historyType = HistoryType.send;
           sentHistory.add(filesModel);
         });
-        print("sentFileHistory => $sentHistory");
       }
 
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
-      print('ERROR IN SENT HISTORU======>$error');
       setError(SENT_HISTORY, error.toString());
     }
   }
@@ -98,12 +120,140 @@ class HistoryProvider extends BaseModel {
           filesModel.historyType = HistoryType.send;
           receivedHistory.add(filesModel);
         });
-        print("receivedHistory => $receivedHistory");
-      }
 
+        finalReceivedHistory = [];
+        receivedHistory.forEach((atSign) {
+          atSign.files.forEach((file) {
+            finalReceivedHistory.add(file);
+          });
+        });
+        sortFiles(receivedHistory);
+        populateTabs();
+      }
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
       setError(RECEIVED_HISTORY, error.toString());
+    }
+  }
+
+  sortFiles(List<FilesModel> filesList) async {
+    try {
+      setStatus(SORT_FILES, Status.Loading);
+      receivedAudio = [];
+      receivedApk = [];
+      receivedDocument = [];
+      receivedPhotos = [];
+      receivedVideos = [];
+      filesList.forEach((atSign) {
+        atSign.files.forEach((file) {
+          String fileExtension = file.fileName.split('.').last;
+
+          if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
+            receivedAudio.add(file);
+          }
+          if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+            receivedVideos.add(file);
+          }
+          if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+            receivedPhotos.add(file);
+          }
+          if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+              FileTypes.PDF_TYPES.contains(fileExtension) ||
+              FileTypes.WORD_TYPES.contains(fileExtension) ||
+              FileTypes.EXEL_TYPES.contains(fileExtension)) {
+            receivedDocument.add(file);
+          }
+          if (FileTypes.APK_TYPES.contains(fileExtension)) {
+            receivedApk.add(file);
+          } else {}
+        });
+      });
+
+      setStatus(SORT_FILES, Status.Done);
+    } catch (e) {
+      setError(SORT_FILES, e.toString());
+    }
+  }
+
+  populateTabs() {
+    try {
+      setStatus(POPULATE_TABS, Status.Loading);
+
+      if (receivedApk.isNotEmpty) {
+        if (!tabs.contains(APK) || !tabs.contains(APK())) {
+          tabs.add(APK());
+        }
+      }
+      if (receivedAudio.isNotEmpty) {
+        if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
+          tabs.add(Audios());
+        }
+      }
+      if (receivedDocument.isNotEmpty) {
+        if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
+          tabs.add(Documents());
+        }
+      }
+      if (receivedPhotos.isNotEmpty) {
+        if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
+          tabs.add(Photos());
+        }
+      }
+      if (receivedVideos.isNotEmpty) {
+        if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
+          tabs.add(Videos());
+        }
+      }
+
+      setStatus(POPULATE_TABS, Status.Done);
+    } catch (e) {
+      setError(POPULATE_TABS, e.toString());
+    }
+  }
+
+  sortByName(List<FilesDetail> list) {
+    try {
+      setStatus(SORT_LIST, Status.Loading);
+      list.sort((a, b) => a.fileName.compareTo(b.fileName));
+
+      setStatus(SORT_LIST, Status.Done);
+    } catch (e) {
+      setError(SORT_LIST, e.toString());
+    }
+  }
+
+  sortBySize(List<FilesDetail> list) {
+    try {
+      setStatus(SORT_LIST, Status.Loading);
+      list.sort((a, b) => a.size.compareTo(b.size));
+
+      setStatus(SORT_LIST, Status.Done);
+    } catch (e) {
+      setError(SORT_LIST, e.toString());
+    }
+  }
+
+  sortByType(List<FilesDetail> list) {
+    try {
+      setStatus(SORT_LIST, Status.Loading);
+      list.sort((a, b) =>
+          a.fileName.split('.').last.compareTo(b.fileName.split('.').last));
+
+      setStatus(SORT_LIST, Status.Done);
+    } catch (e) {
+      setError(SORT_LIST, e.toString());
+    }
+  }
+
+  sortByDate(List<FilesDetail> list) {
+    try {
+      setStatus(SORT_LIST, Status.Loading);
+
+      list.sort(
+          (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+      setStatus(SORT_LIST, Status.Done);
+    } catch (e) {
+      setError(SORT_LIST, e.toString());
     }
   }
 }

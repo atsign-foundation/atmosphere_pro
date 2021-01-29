@@ -1,5 +1,5 @@
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_popup_route.dart';
-import 'package:atsign_atmosphere_app/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_popup_route.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 class LoadingDialog {

@@ -28,6 +28,9 @@ class TextStrings {
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked User';
+  String sidebarMyFiles = 'My Files';
+  String sidebarTrustedSenders = 'Trusted Senders';
+  String sidebarMyGroups = 'My Groups';
   String sidebarTermsAndConditions = 'Terms and Conditions';
   String sidebarPrivacyPolicy = "Privacy policy";
   String sidebarFaqs = 'FAQ';
@@ -50,28 +53,60 @@ class TextStrings {
   String buttonStart = 'Start';
   String buttonSend = 'Send';
   String buttonClose = 'Close';
+
   String accept = 'Accept';
   String reject = 'Reject';
   String upload = 'Upload QR code image';
   String uploadKey = 'Upload key file';
-  String buttonCancel = 'CANCEL';
+  String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
   String buttonDismiss = 'DISMISS';
 
   //history screen texts
   String sent = 'Sent';
   String received = 'Received';
+
   String moreDetails = 'More Details';
   String lesserDetails = 'Lesser Details';
 
   //receive files texts
   String blockUser = 'Block User';
+  String receiverNotification = 'Receivers Notification';
 
   //add contact texts
   String addContactHeading =
       'Are you sure you want to add the user to your contact list?';
   String yes = 'Yes';
   String no = 'No';
+  String add = 'Add';
+  String done = 'Done';
+  //my files
+  String myFiles = 'My Files';
+  String recents = 'Recents';
+  String photos = 'Photos';
+  String videos = 'Videos';
+  String audio = 'Audio';
+  String apk = 'APK';
+  String documents = 'Documents';
+
+  // trusted sender screens
+  String trustedSenders = 'Trusted Senders';
+  String selectperson = 'Select Person';
+  String noTrustedSenders = 'No Trusted Senders!';
+  String addTrustedSender = 'Would you like to add people?';
+  String removeTrustedSender =
+      "Are you sure you want to remove from Trusted senders' list?";
+  // my groups
+  String groups = 'Groups';
+  String noGroups = 'No Groups';
+  String newGroup = 'New Group';
+  String addGroups = 'Would you like to create a group';
+  String create = 'Create';
+  String groupName = 'Group Name';
+  String enterGroupName = 'Enter group name';
+  String removeGroup = 'Are you sure you want to remove from group ?';
+  String changeGroupPhoto = 'Change Group Photo';
+  String removeGroupPhoto = 'Remove Group Photo';
 
   // terms and conditions texts
   String termsAppBar = 'Terms and Conditions';
@@ -105,4 +140,9 @@ class TextStrings {
       '$atSign is not found. Please check and try again.';
   String atsignExists(String atSign) => '$atSign already exists';
   String emptyAtsign = 'Please type in an atsign';
+
+  // sort strings
+  static const String SORT_NAME = 'Sort By Name';
+  static const String SORT_DATE = 'Sort By Date';
+  static const String SORT_SIZE = 'Sort By Size';
 }

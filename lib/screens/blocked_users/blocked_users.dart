@@ -1,12 +1,12 @@
-import 'package:atsign_atmosphere_app/screens/blocked_users/widgets/blockusercard.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/app_bar.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_callback.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
-import 'package:atsign_atmosphere_app/view_models/blocked_contact_provider.dart';
+import 'package:atsign_atmosphere_pro/screens/blocked_users/widgets/blockusercard.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/blocked_contact_provider.dart';
 import 'package:flutter/material.dart';
 
 class BlockedUsers extends StatefulWidget {

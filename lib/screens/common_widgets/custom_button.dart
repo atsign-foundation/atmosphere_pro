@@ -1,5 +1,5 @@
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 
 /// Custom button widget [isInverted] toggles between black and white button,
 /// [isInverted=false] by default, if true bg color and border color goes [white]
@@ -12,6 +12,7 @@ class CustomButton extends StatelessWidget {
   final String buttonText;
   final double height;
   final double width;
+  final bool isOrange;
 
   const CustomButton(
       {Key key,
@@ -19,7 +20,8 @@ class CustomButton extends StatelessWidget {
       this.onPressed,
       this.buttonText,
       this.height,
-      this.width})
+      this.width,
+      this.isOrange = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,11 @@ class CustomButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.toWidth),
-            color: (isInverted) ? Colors.white : Colors.black),
+            color: (isOrange)
+                ? Color(0xffF05E3E)
+                : (isInverted)
+                    ? Colors.white
+                    : Colors.black),
         child: Center(
           child: Text(
             buttonText,

@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/services/navigation_service.dart';
-import 'package:atsign_atmosphere_app/services/notification_service.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/images.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/hive_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,7 +42,6 @@ class _HomeState extends State<Home> {
   StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
-
   @override
   void initState() {
     super.initState();
@@ -58,7 +60,6 @@ class _HomeState extends State<Home> {
       _sharedFiles = value;
 
       if (value.isNotEmpty) {
-        // setState(() {
         value.forEach((element) async {
           File file = File(element.path);
           double length = await file.length() / 1024;
@@ -70,11 +71,14 @@ class _HomeState extends State<Home> {
           await filePickerProvider.setFiles();
         });
 
-        BuildContext c = NavService.navKey.currentContext;
-
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-        await Navigator.pushNamedAndRemoveUntil(
-            c, Routes.WELCOME_SCREEN, (route) => false);
+        // check to see if atsign is paired
+        var atsign = await backendService.currentAtsign;
+        if (atsign != null) {
+          BuildContext c = NavService.navKey.currentContext;
+          await Navigator.pushNamedAndRemoveUntil(
+              c, Routes.WELCOME_SCREEN, (route) => false);
+        }
       }
     }, onError: (err) {
       print("getIntentDataStream error: $err");
@@ -132,6 +136,9 @@ class _HomeState extends State<Home> {
           BuildContext cd = NavService.navKey.currentContext;
           await Navigator.pushReplacementNamed(cd, Routes.WELCOME_SCREEN);
         }
+
+        await getTrustedContact();
+
         c.complete(true);
       }
     }).catchError((error) async {
@@ -151,23 +158,12 @@ class _HomeState extends State<Home> {
     }
   }
 
-  onNotificationClick(String payload) async {
-    // this popup added to accept stream to await answer
-    // BuildContext c = NavService.navKey.currentContext;
-    // print('Payload $payload');
-    // bool userAcceptance = null;
-    // await showDialog(
-    //   context: c,
-    //   builder: (c) => ReceiveFilesAlert(
-    //     payload: payload,
-    //     sharingStatus: (s) {
-    //       // sharingStatus = s;
-    //       userAcceptance = s;
-    //       print('STATUS====>$s');
-    //     },
-    //   ),
-    // );
+  getTrustedContact() async {
+    await Provider.of<ContactProvider>(context, listen: false)
+        .getTrustedContact();
   }
+
+  onNotificationClick(String payload) async {}
 
   @override
   Widget build(BuildContext context) {

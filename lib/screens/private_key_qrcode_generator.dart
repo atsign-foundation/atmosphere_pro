@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +38,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     atsign = BackendService.getInstance().currentAtsign;
   }
 
-  GlobalKey globalKey = new GlobalKey();
+  GlobalKey globalKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var _loading = false;
   Uint8List _pngBytes;
@@ -64,7 +64,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       final emptyFile = await File('$path$_imagename.png').create();
       await emptyFile.writeAsBytes(_pngBytes);
       var encoder = ZipFileEncoder();
-      encoder.create('$path' + 'atKeys.zip');
+      encoder.create('$path' + atsign + '_atKeys.zip');
       encoder.addFile(emptyFile);
       var _encryptKeys = atsign + '_encrypt_keys';
       encoder.addFile(File('$path$_encryptKeys.atKeys'));
@@ -85,7 +85,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     if (aesKey == null) {
       _generateAESKey();
       return Scaffold();
-    } else
+    } else {
       return Opacity(
         opacity: _loading ? 0.2 : 1,
         child: AbsorbPointer(
@@ -172,6 +172,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
           ),
         ),
       );
+    }
   }
 
   _generateAESKey() async {

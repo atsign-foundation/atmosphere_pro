@@ -1,13 +1,16 @@
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/services/backend_service.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
-import 'package:atsign_atmosphere_app/utils/colors.dart';
-import 'package:atsign_atmosphere_app/utils/constants.dart';
-import 'package:atsign_atmosphere_app/utils/images.dart';
-import 'package:atsign_atmosphere_app/utils/text_strings.dart';
-import 'package:atsign_atmosphere_app/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SideBarWidget extends StatefulWidget {
   @override
@@ -22,6 +25,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
+    TextStrings().sidebarTrustedSenders
   ];
 
   final List<String> menuItemsIcons = [
@@ -31,6 +35,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
+    ImageConstants.trustedSendersIcon,
   ];
 
   final List<String> targetScreens = [
@@ -40,13 +45,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.WEBSITE_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
+    Routes.TRUSTED_CONTACTS
   ];
-
-  bool autoAcceptFiles;
 
   @override
   void initState() {
-    autoAcceptFiles = true;
     super.initState();
   }
 
@@ -69,19 +72,33 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
                     Navigator.pop(context);
+
                     Navigator.of(context).pushNamed(targetScreens[index],
-                        arguments: (index == 3)
+                        arguments: (index == 0)
                             ? {
-                                "title":
-                                    TextStrings().sidebarTermsAndConditions,
-                                "url": MixedConstants.TERMS_CONDITIONS
+                                'currentAtsign':
+                                    BackendService.getInstance().currentAtsign,
+                                'context': NavService.navKey.currentContext,
+                                'selectedList': (s) {
+                                  Provider.of<WelcomeScreenProvider>(
+                                          NavService.navKey.currentContext,
+                                          listen: false)
+                                      .updateSelectedContacts(s);
+                                }
                               }
-                            : (index == 4)
+                            : (index == 3)
                                 ? {
-                                    "title": TextStrings().sidebarPrivacyPolicy,
-                                    "url": MixedConstants.PRIVACY_POLICY
+                                    "title":
+                                        TextStrings().sidebarTermsAndConditions,
+                                    "url": MixedConstants.TERMS_CONDITIONS
                                   }
-                                : null);
+                                : (index == 4)
+                                    ? {
+                                        "title":
+                                            TextStrings().sidebarPrivacyPolicy,
+                                        "url": MixedConstants.PRIVACY_POLICY
+                                      }
+                                    : null);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 13.toHeight),
@@ -153,10 +170,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   Transform.scale(
                     scale: 0.6,
                     child: CupertinoSwitch(
-                      value: autoAcceptFiles,
+                      value: BackendService.getInstance().autoAcceptFiles,
                       onChanged: (b) {
                         setState(() {
-                          autoAcceptFiles = b;
+                          BackendService.getInstance().autoAcceptFiles = b;
                         });
                       },
                       activeColor: Colors.black,

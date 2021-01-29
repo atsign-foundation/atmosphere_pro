@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:atsign_atmosphere_app/data_models/notification_payload.dart';
+import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';

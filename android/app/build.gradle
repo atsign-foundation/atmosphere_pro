@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.atsign.atsign_atmosphere_app"
+        applicationId "com.atsign.atsign_atmosphere_pro"
         multiDexEnabled true
         minSdkVersion 24
         targetSdkVersion 29
