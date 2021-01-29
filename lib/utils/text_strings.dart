@@ -39,7 +39,6 @@ class TextStrings {
       'Enabling this will auto accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign';
-  String trustedSender = 'Trusted Senders';
 
   //FAQs texts
   String faqs = 'FAQ';
@@ -89,13 +88,14 @@ class TextStrings {
   String audio = 'Audio';
   String apk = 'APK';
   String documents = 'Documents';
-  // trusted sender texts
+
+  // trusted sender screens
   String trustedSenders = 'Trusted Senders';
   String selectperson = 'Select Person';
-  String noTrustedSender = 'No Trusted Senders!';
-  String addTrustedSender = 'Would you like to add people';
+  String noTrustedSenders = 'No Trusted Senders!';
+  String addTrustedSender = 'Would you like to add people?';
   String removeTrustedSender =
-      'Are you sure you want to remove from Trusted Sender List ?';
+      "Are you sure you want to remove from Trusted senders' list?";
   // my groups
   String groups = 'Groups';
   String noGroups = 'No Groups';

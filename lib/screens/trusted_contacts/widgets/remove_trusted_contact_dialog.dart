@@ -1,7 +1,9 @@
 import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
+    as pro_text_strings;
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,25 +25,18 @@ class RemoveTrustedContact extends StatefulWidget {
 }
 
 class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
-  // ContactProvider _contactProvider;
-  @override
-  void initState() {
-    // _contactProvider = ContactProvider();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.toWidth),
       ),
-      titlePadding: EdgeInsets.only(top: 10.toHeight, left: 10.toWidth),
+      titlePadding: EdgeInsets.all(20.toHeight),
       title: Row(
         children: [
           Expanded(
             child: Text(
-              'Are you sure you want to remove from the group?',
+              pro_text_strings.TextStrings().removeTrustedSender,
               style: CustomTextStyles.secondaryRegular16,
               textAlign: TextAlign.center,
             ),
@@ -52,9 +47,6 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         height: 280.toHeight,
         child: Column(
           children: [
-            SizedBox(
-              height: 20.toHeight,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -64,9 +56,12 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                         byteImage: widget.contact.tags['image'],
                         nonAsset: true,
                       )
-                    : CustomCircleAvatar(
-                        image: ImageConstants.imagePlaceholder,
-                      ),
+                    : ContactInitial(
+                        initials: widget.contact.tags != null &&
+                                widget.contact.tags['name'] != null
+                            ? widget.contact.tags['name'].substring(0, 2)
+                            : widget.contact.atSign.substring(1, 3),
+                      )
               ],
             ),
             SizedBox(
@@ -138,7 +133,6 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                     Navigator.pop(context);
                   },
                 ),
-                SizedBox(height: 10.toHeight)
               ],
             )
           ],

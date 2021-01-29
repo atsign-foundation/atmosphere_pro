@@ -25,7 +25,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
-    TextStrings().trustedSender
+    TextStrings().sidebarTrustedSenders
   ];
 
   final List<String> menuItemsIcons = [
@@ -35,7 +35,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
-    ImageConstants.faqsIcon,
+    ImageConstants.trustedSendersIcon,
   ];
 
   final List<String> targetScreens = [
