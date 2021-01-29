@@ -48,11 +48,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.TRUSTED_CONTACTS
   ];
 
-  bool autoAcceptFiles = true;
   @override
   void initState() {
-    autoAcceptFiles = true;
-    BackendService.getInstance().autoAcceptFiles = autoAcceptFiles;
     super.initState();
   }
 
@@ -173,13 +170,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   Transform.scale(
                     scale: 0.6,
                     child: CupertinoSwitch(
-                      value: autoAcceptFiles,
+                      value: BackendService.getInstance().autoAcceptFiles,
                       onChanged: (b) {
                         setState(() {
-                          autoAcceptFiles = b;
-                          print('AUTO IN SWITCH======>$autoAcceptFiles');
-                          BackendService.getInstance().autoAcceptFiles =
-                              autoAcceptFiles;
+                          BackendService.getInstance().autoAcceptFiles = b;
                         });
                       },
                       activeColor: Colors.black,
