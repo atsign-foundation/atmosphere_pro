@@ -229,8 +229,37 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: CommonButton(
                       TextStrings().buttonSend,
                       () async {
-                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                            _welcomeScreenProvider.selectedContacts);
+                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                        //     _welcomeScreenProvider.selectedContacts);
+                        // _showScaffold(status: 0);
+                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                        //     _welcomeScreenProvider.selectedContacts);
+                        // bool response = filePickerModel.sentStatus[0];
+                        // bool response = await backendService.sendFile(
+                        //     contactPickerModel.selectedContacts,
+                        //     filePickerModel.selectedFiles[0].path);
+                        // if (response == true) {
+                        //   Provider.of<HistoryProvider>(context, listen: false)
+                        //       .setFilesHistory(
+                        //           atSignName: contactProvider
+                        //               .selectedContacts[0].atSign,
+                        //           historyType: HistoryType.send,
+                        //           files: [
+                        //         FilesDetail(
+                        //             filePath:
+                        //                 filePickerModel.selectedFiles[0].path,
+                        //             size: filePickerModel.totalSize,
+                        //             fileName: filePickerModel
+                        //                 .result.files[0].name
+                        //                 .toString(),
+                        //             type: filePickerModel
+                        //                 .selectedFiles[0].extension
+                        //                 .toString())
+                        //       ]);
+                        //   _showScaffold(status: 1);
+                        // } else {
+                        //   _showScaffold(status: 2);
+                        // }
                       },
                     ),
                   ),

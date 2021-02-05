@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:archive/archive.dart';
-
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
@@ -94,21 +92,26 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   void _uploadCramKeyFile() async {
     try {
       String cramKey;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false);
-      setState(() {
-        loading = true;
-      });
-      for (var file in result.files) {
-        if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(File(file.path));
-          if (result.contains('@')) {
-            cramKey = result;
-            break;
-          } //read scan QRcode and extract atsign,aeskey
-        }
-      }
-
+      // FilePickerResult result = await FilePicker.platform
+      //     .pickFiles(type: FileType.any, allowMultiple: false);
+      // setState(() {
+      //   loading = true;
+      // });
+      // for (var file in result.files) {
+      //   if (cramKey == null) {
+      //     String result = await FlutterQrReader.imgScan(File(file.path));
+      //     if (result.contains('@')) {
+      //       cramKey = result;
+      //       break;
+      //     } //read scan QRcode and extract atsign,aeskey
+      //   }
+      // }
+      // cramKey =
+      //     '@alice🛠:b26455a907582760ebf35bc4847de549bc41c24b25c8b1c58d5964f7b4f8a43bc55b0e9a601c9a9657d9a8b8bbc32f88b4e38ffaca03c8710ebae1b14ca9f364';
+      // cramKey =
+      //     '@bob🛠:33c2df30b79743ff880fc1c832a5c69170974dd736231b84ee360df89a0faff1f6efe0e83064144a7b4e5029334ad1daedc49bf82c0be1f763f590c28e33ba0a';
+      cramKey =
+          '@colin🛠:540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
       if (cramKey == null) {
         // _showAlertDialog(_incorrectKeyFile);
         showSnackBar(context, "File content error");
@@ -118,7 +121,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       } else {
         String authenticateMessage =
             await backendService.authenticate(cramKey, context);
-
+        print('authenticateMessage=====>$authenticateMessage');
         showSnackBar(context, authenticateMessage);
         setState(() {
           loading = false;
@@ -172,17 +175,19 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               //read scan QRcode and extract atsign,aeskey
             }
           }
-        } else if (pickedFile.name.contains('atKeys')) {
-          fileContents = File(path).readAsStringSync();
-        } else if (aesKey == null &&
-            atsign == null &&
-            pickedFile.name.contains('_private_key.png')) {
-          String result = await FlutterQrReader.imgScan(File(path));
-          List<String> params = result.split(':');
-          atsign = params[0];
-          aesKey = params[1];
-          //read scan QRcode and extract atsign,aeskey
         }
+        // }
+        // else if (pickedFile.name.contains('atKeys')) {
+        //   fileContents = File(path).readAsStringSync();
+        // } else if (aesKey == null &&
+        //     atsign == null &&
+        //     pickedFile.name.contains('_private_key.png')) {
+        //   String result = await FlutterQrReader.imgScan(File(path));
+        //   List<String> params = result.split(':');
+        //   atsign = params[0];
+        //   aesKey = params[1];
+        //   //read scan QRcode and extract atsign,aeskey
+        // }
       }
       if (fileContents == null || (aesKey == null && atsign == null)) {
         _showAlertDialog(_incorrectKeyFile);

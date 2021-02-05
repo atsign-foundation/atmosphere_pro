@@ -1,5 +1,8 @@
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/client_sdk_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -22,6 +25,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarContact,
     TextStrings().sidebarTransferHistory,
     TextStrings().sidebarBlockedUser,
+    TextStrings().myFiles,
+    TextStrings().groups,
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
@@ -32,25 +37,48 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.contactsIcon,
     ImageConstants.transferHistoryIcon,
     ImageConstants.blockedIcon,
+    ImageConstants.myFiles,
+    ImageConstants.groups,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
     ImageConstants.trustedSendersIcon,
+    ImageConstants.trustedSender,
   ];
 
   final List<String> targetScreens = [
     Routes.CONTACT_SCREEN,
     Routes.HISTORY,
     Routes.BLOCKED_USERS,
+    Routes.MY_FILES,
+    Routes.GROUPS,
     Routes.WEBSITE_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
     Routes.TRUSTED_CONTACTS
   ];
-
+  String activeAtSign;
   @override
   void initState() {
+    getAtSignAndInitializeContacts();
+    initGroups();
     super.initState();
+  }
+
+  getAtSignAndInitializeContacts() async {
+    String currentAtSign = await clientSdkService.getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+    initializeContactsService(
+        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
+  }
+
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  initGroups() async {
+    GroupService().init(await clientSdkService.getAtSign());
+    GroupService().fetchGroupsAndContacts();
   }
 
   @override
@@ -94,9 +122,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                   }
                                 : (index == 4)
                                     ? {
-                                        "title":
-                                            TextStrings().sidebarPrivacyPolicy,
-                                        "url": MixedConstants.PRIVACY_POLICY
+                                        // "title":
+                                        //     TextStrings().sidebarPrivacyPolicy,
+                                        // "url": MixedConstants.PRIVACY_POLICY
+                                        "currentAtsign":
+                                            BackendService.getInstance()
+                                                .currentAtsign
                                       }
                                     : null);
                   },

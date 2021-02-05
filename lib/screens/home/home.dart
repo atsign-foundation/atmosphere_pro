@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/client_sdk_service.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
@@ -21,6 +23,8 @@ import 'package:path/path.dart' show basename;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+
+import '../../utils/constants.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -42,6 +46,8 @@ class _HomeState extends State<Home> {
   StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
+  String activeAtSign;
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
   @override
   void initState() {
     super.initState();
@@ -49,9 +55,21 @@ class _HomeState extends State<Home> {
         Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
     _initBackendService();
+    clientSdkService.onboard();
+    getAtSignAndInitializeContacts();
     _checkToOnboard();
     acceptFiles();
     _checkForPermissionStatus();
+  }
+
+  getAtSignAndInitializeContacts() async {
+    String currentAtSign = await clientSdkService.getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+    initializeContactsService(
+        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   void acceptFiles() async {
