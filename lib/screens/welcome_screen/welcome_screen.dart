@@ -235,8 +235,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       TextStrings().buttonSend,
                       () async {
                         // _showScaffold(status: 0);
-                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                            _welcomeScreenProvider.selectedContacts);
+                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                        //     _welcomeScreenProvider.selectedContacts);
                         // bool response = filePickerModel.sentStatus[0];
                         // bool response = await backendService.sendFile(
                         //     contactPickerModel.selectedContacts,

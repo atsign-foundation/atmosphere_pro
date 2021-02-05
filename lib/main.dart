@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'app.dart';
 
 void main() async {
+  // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+  // });
+  WidgetsFlutterBinding.ensureInitialized();
   HiveService().initHive();
   runApp(MyApp());
 }

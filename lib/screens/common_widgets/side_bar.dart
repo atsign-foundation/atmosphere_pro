@@ -1,3 +1,5 @@
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/client_sdk_service.dart';
@@ -9,7 +11,6 @@ import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
 import 'package:atsign_atmosphere_app/utils/text_styles.dart';
 import 'package:atsign_atmosphere_app/view_models/welcome_screen_view_model.dart';
-import 'package:atsign_contacts/utils/init_contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarContact,
     TextStrings().sidebarTransferHistory,
     TextStrings().sidebarBlockedUser,
+    TextStrings().myFiles,
+    TextStrings().groups,
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
@@ -34,16 +37,20 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.contactsIcon,
     ImageConstants.transferHistoryIcon,
     ImageConstants.blockedIcon,
+    ImageConstants.myFiles,
+    ImageConstants.groups,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
-    ImageConstants.faqsIcon,
+    ImageConstants.trustedSender,
   ];
 
   final List<String> targetScreens = [
     Routes.CONTACT_SCREEN,
     Routes.HISTORY,
     Routes.BLOCKED_USERS,
+    Routes.MY_FILES,
+    Routes.GROUP_CONTACT_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
@@ -58,7 +65,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     autoAcceptFiles = true;
     BackendService.getInstance().autoAcceptFiles = autoAcceptFiles;
     getAtSignAndInitializeContacts();
+    initGroups();
     super.initState();
+  }
+
+  initGroups() async {
+    GroupService().init(await clientSdkService.getAtSign());
+    GroupService().fetchGroupsAndContacts();
   }
 
   @override
@@ -102,9 +115,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                   }
                                 : (index == 4)
                                     ? {
-                                        "title":
-                                            TextStrings().sidebarPrivacyPolicy,
-                                        "url": MixedConstants.PRIVACY_POLICY
+                                        // "title":
+                                        //     TextStrings().sidebarPrivacyPolicy,
+                                        // "url": MixedConstants.PRIVACY_POLICY
+                                        "currentAtsign":
+                                            BackendService.getInstance()
+                                                .currentAtsign
                                       }
                                     : null
                         // : (index == 6)

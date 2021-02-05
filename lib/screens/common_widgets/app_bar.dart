@@ -7,9 +7,9 @@
 ///therefore it has it's navigation embedded in the widget itself.
 
 import 'dart:io';
-import 'package:atsign_atmosphere_app/routes/route_names.dart';
-import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
-import 'package:atsign_atmosphere_app/screens/group_contacts_screen/group_contact_screen.dart';
+// import 'package:atsign_atmosphere_app/routes/route_names.dart';
+// import 'package:atsign_atmosphere_app/screens/contact/widgets/add_contact_dialog.dart';
+// import 'package:atsign_atmosphere_app/screens/group_contacts_screen/group_contact_screen.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/size_config.dart';
 import 'package:atsign_atmosphere_app/utils/colors.dart';
@@ -131,29 +131,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               throw 'Could not launch $url';
                             }
                           }
-                        } else if (isTrustedContactScreen) {
-                          // await Navigator.pushNamed(
-                          //     context, Routes.GROUP_CONTACT_SCREEN,
-                          //     arguments: {'isTrustedSender': true});
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GroupContactScreen(
-                                isTrustedScreen: true,
-                              ),
-                            ),
-                          );
-                        } else {
-                          await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (context) => AddContactDialog(
-                              onYesTap: (value) {
-                                onActionpressed(value);
-                              },
-                            ),
-                          );
                         }
+                        // else if (isTrustedContactScreen) {
+                        //   // await Navigator.pushNamed(
+                        //   //     context, Routes.GROUP_CONTACT_SCREEN,
+                        //   //     arguments: {'isTrustedSender': true});
+                        //   await Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => GroupContactScreen(
+                        //         isTrustedScreen: true,
+                        //       ),
+                        //     ),
+                        //   );
+                        // } else {
+                        //   await showDialog(
+                        //     context: context,
+                        //     barrierDismissible: true,
+                        //     builder: (context) => AddContactDialog(
+                        //       onYesTap: (value) {
+                        //         onActionpressed(value);
+                        //       },
+                        //     ),
+                        //   );
+                        // }
                       })
                   : Container()
               : GestureDetector(

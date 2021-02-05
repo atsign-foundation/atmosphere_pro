@@ -1,7 +1,9 @@
+import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_app/routes/route_names.dart';
 import 'package:atsign_atmosphere_app/services/backend_service.dart';
 import 'package:atsign_atmosphere_app/services/navigation_service.dart';
-import 'package:atsign_atmosphere_app/services/size_config.dart';
+
 import 'package:atsign_atmosphere_app/utils/colors.dart';
 import 'package:atsign_atmosphere_app/utils/images.dart';
 import 'package:atsign_atmosphere_app/utils/text_strings.dart';
@@ -39,6 +41,7 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Theme(
       data: ThemeData(
         dividerColor: Colors.transparent,
@@ -92,17 +95,24 @@ class _ExpansionTileWidget extends StatelessWidget {
       ),
       trailing: InkWell(
         onTap: () async {
-          await Navigator.pushNamed(context, Routes.CONTACT_SCREEN, arguments: {
-            'currentAtsign': BackendService.getInstance().currentAtsign,
-            'context': NavService.navKey.currentContext,
-            'asSelectionScreen': true,
-            'selectedList': (s) {
-              Provider.of<WelcomeScreenProvider>(
-                      NavService.navKey.currentContext,
-                      listen: false)
-                  .updateSelectedContacts(s);
-            }
-          });
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GroupContactView(
+                asSelectionScreen: true,
+                // singleSelection: true,
+                showGroups: true,
+                showContacts: true,
+                selectedList: (s) {
+                  Provider.of<WelcomeScreenProvider>(
+                          NavService.navKey.currentContext,
+                          listen: false)
+                      .updateSelectedContacts(s);
+                },
+                // singleSelection: true,
+              ),
+            ),
+          );
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),

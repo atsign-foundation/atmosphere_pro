@@ -24,26 +24,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_client_mobile:
-    git:
-      url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_client_mobile
-      ref: dev_env
-  at_commons:
-    git:
-      url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_commons
-      ref: dev_env
-  at_contact:
-    git:
-      url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_contact
-      ref: dev_env
-  at_lookup:
-    git:
-      url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_lookup
-      ref: dev_env
+  at_client_mobile: ^1.0.0+3
+  at_commons: ^1.0.1+3
+  at_contact: ^1.0.0
+  at_lookup: ^1.0.0+3
   archive: ^2.0.13
   cupertino_icons: ^0.1.3
   file_picker: ^2.0.10
@@ -53,7 +37,6 @@ dependencies:
   flutter_local_notifications: ^2.0.1
   flutter_qr_reader: ^1.0.3
   flutter_slidable: ^0.5.7
-  # flutter_svg: ^0.19.2+1
   google_fonts: ^1.1.0
   intl: ^0.16.1
   open_file: ^3.0.3
@@ -69,24 +52,26 @@ dependencies:
   webview_flutter: ^1.0.0
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
-  # atsign_contacts:
-  #   git:
-  #     url: git@git.geekyants.com:flutter-client-projects/atsign-contacts.git
-  #     ref: development
-  atsign_authentication_helper:
-    # git:
-    #   url: git@git.geekyants.com:flutter-client-projects/atsign-authentication-helper.git
-    #   ref: master
-    path: /Users/rishabh1/Desktop/work/atsign-authentication-helper
-  atsign_contacts:
-    path: ../atsign-contacts
-  atsign_common:
-    # path: /Users/rishabh1/Desktop/atsign-common
-    git:
-      url: git@git.geekyants.com:flutter-client-projects/atsign-common.git
-      # path: atsign-common
-      ref: master
+  # at_common_flutter: ^0.0.1
 
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_common_flutter
+      ref: dev_env
+
+  at_contacts_flutter:
+    path: /Users/rishabh1/Desktop/work/at_widgets/at_contacts_flutter
+    # git:
+    #   url: https://github.com/atsign-foundation/at_widgets.git
+    #   path: at_contacts_flutter
+    #   ref: dev_env
+  at_contacts_group_flutter:
+    path: /Users/rishabh1/Desktop/work/at_widgets/at_contacts_group_flutter
+    # git:
+    #   url: https://github.com/atsign-foundation/at_widgets.git
+    #   path: at_contacts_group_flutter
+    #   ref: dev_env
 dev_dependencies:
   flutter_test:
     sdk: flutter
