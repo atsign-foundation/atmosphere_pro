@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -32,6 +33,7 @@ class FilePickerProvider extends BaseModel {
   final String MEDIA = 'MEDIA';
   final String FILES = 'FILES';
   BackendService _backendService = BackendService.getInstance();
+  List<AtContact> temporaryList = [];
 
   setFiles() async {
     setStatus(PICK_FILES, Status.Loading);
@@ -153,12 +155,42 @@ class FilePickerProvider extends BaseModel {
     }
   }
 
-  sendFiles(
-      List<PlatformFile> selectedFiles, List<AtContact> contactList) async {
+  sendFiles(List<PlatformFile> selectedFiles,
+      List<GroupContactsModel> contactList) async {
     setStatus(SEND_FILES, Status.Loading);
     try {
+      temporaryList = [];
+      contactList.forEach((element) {
+        if (element.contactType == ContactsType.CONTACT) {
+          bool flag = false;
+          for (AtContact atContact in temporaryList) {
+            if (atContact.toString() == element.contact.toString()) {
+              flag = true;
+            }
+          }
+          if (!flag) {
+            temporaryList.add(element.contact);
+          }
+        } else if (element.contactType == ContactsType.GROUP) {
+          element.group.members.forEach((contact) {
+            bool flag = false;
+            for (AtContact atContact in temporaryList) {
+              if (atContact.toString() == contact.toString()) {
+                flag = true;
+              }
+            }
+            if (!flag) {
+              temporaryList.add(contact);
+            }
+          });
+        }
+      });
+      // int i = 1;
+      // temporaryList.forEach((element) {
+      //   print("\n\n${i++} Temporary element $element");
+      // });
       sentStatus = List<bool>.generate(selectedFiles.length, (index) => false);
-      contactList.forEach((contact) {
+      temporaryList.forEach((contact) {
         selectedFiles.forEach((file) {
           _backendService.sendFile(contact.atSign, file.path);
           print('file path====>${file.path}');
@@ -169,6 +201,10 @@ class FilePickerProvider extends BaseModel {
     } catch (error) {
       setError(SEND_FILES, error.toString());
     }
+  }
+
+  bool checkAtContactList(AtContact element) {
+    return false;
   }
 
   static send(String contact, List selectedFiles, _backendService) async {

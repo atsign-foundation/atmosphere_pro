@@ -229,8 +229,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: CommonButton(
                       TextStrings().buttonSend,
                       () async {
-                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                        //     _welcomeScreenProvider.selectedContacts);
+                        // print(_welcomeScreenProvider.selectedContacts);
+
+                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                            _welcomeScreenProvider.selectedContacts);
                         // _showScaffold(status: 0);
                         // filePickerModel.sendFiles(filePickerModel.selectedFiles,
                         //     _welcomeScreenProvider.selectedContacts);
