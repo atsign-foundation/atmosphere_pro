@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -10,9 +11,13 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
+
+import '../../view_models/file_picker_provider.dart';
+import '../../view_models/file_picker_provider.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {
   final Function() onAccept;
@@ -26,11 +31,14 @@ class ReceiveFilesAlert extends StatefulWidget {
   _ReceiveFilesAlertState createState() => _ReceiveFilesAlertState();
 }
 
-class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
+class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
+    with TickerProviderStateMixin {
+  AnimationController progressController;
   NotificationPayload payload;
   bool status = false;
   BackendService backendService = BackendService.getInstance();
   ContactProvider contactProvider;
+  Flushbar flushbar;
   @override
   void initState() {
     Map<String, dynamic> test =
@@ -159,6 +167,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
         CustomButton(
           buttonText: TextStrings().accept,
           onPressed: () {
+            progressController = AnimationController(vsync: this);
+            backendService.controller = progressController;
             DateTime date = DateTime.now();
             Provider.of<HistoryProvider>(context, listen: false)
                 .setFilesHistory(
@@ -181,6 +191,13 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
             NotificationService().cancelNotifications();
             Navigator.pop(context);
             widget.sharingStatus(status);
+            if (FilePickerProvider().sentStatus != null &&
+                FilePickerProvider().sentStatus) {
+              flushbar = CustomFlushBar()
+                  .getFlushbar(TextStrings().receivingFile, progressController);
+
+              flushbar.show(context);
+            }
           },
         ),
         SizedBox(

@@ -13,6 +13,11 @@ class WelcomeScreenProvider extends BaseModel {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts = updatedList;
+      // selectedContacts.forEach((element) {
+      //   if (element.contactType == ContactsType.CONTACT) {
+      //     print(element);
+      //   }
+      // });
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());

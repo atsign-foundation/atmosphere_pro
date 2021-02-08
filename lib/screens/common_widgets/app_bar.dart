@@ -7,18 +7,22 @@
 ///therefore it has it's navigation embedded in the widget itself.
 
 import 'dart:io';
+import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/contact/widgets/add_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/group_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -135,8 +139,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => GroupContactScreen(
-                                isTrustedScreen: true,
+                              builder: (context) => ContactsScreen(
+                                asSelectionScreen: true,
+                                context: NavService.navKey.currentContext,
+                                selectedList: (s) async {
+                                  s.forEach((element) async {
+                                    await Provider.of<TrustedContactProvider>(
+                                            context,
+                                            listen: false)
+                                        .addTrustedContacts(element);
+                                  });
+                                  await Provider.of<TrustedContactProvider>(
+                                          context,
+                                          listen: false)
+                                      .setTrustedContact();
+                                },
                               ),
                             ),
                           );

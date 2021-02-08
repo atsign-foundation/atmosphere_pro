@@ -145,4 +145,9 @@ class TextStrings {
   static const String SORT_NAME = 'Sort By Name';
   static const String SORT_DATE = 'Sort By Date';
   static const String SORT_SIZE = 'Sort By Size';
+
+  // Flushbar messages
+  String receivingFile = 'Receiving file';
+  String sendingFile = 'Sending file';
+  String fileReceived = 'File received';
 }

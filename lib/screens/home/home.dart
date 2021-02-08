@@ -163,6 +163,8 @@ class _HomeState extends State<Home> {
       c.complete(true);
       print("Error in authenticating: $error");
     });
+    // onboardSuccess = await clientSdkService.onboard();
+    print('onboardSuccess=====>$onboardSuccess');
   }
 
   void _checkForPermissionStatus() async {

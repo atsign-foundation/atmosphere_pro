@@ -18,4 +18,5 @@ class ColorConstants {
   static const Color fadedBlue = Color(0xFFF7F7FF);
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
+  static const Color orangeColor = Color(0xffF05E3F);
 }

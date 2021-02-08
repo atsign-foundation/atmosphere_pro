@@ -19,6 +19,8 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../../data_models/file_modal.dart';
+import '../../view_models/file_picker_provider.dart';
 import 'widgets/select_contact_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -32,6 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isFileSelected;
   ContactProvider contactProvider;
   WelcomeScreenProvider _welcomeScreenProvider;
+  Flushbar sendingFlushbar;
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
@@ -79,10 +82,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.didChangeDependencies();
   }
 
-  void _showScaffold({int status = 0}) {
-    Flushbar(
+  _showScaffold({int status = 0}) {
+    return Flushbar(
       title: transferMessages[status],
-      message: "Lorem Ipsum is simply dummy ",
+      message: 'hello',
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
       reverseAnimationCurve: Curves.decelerate,
@@ -93,7 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
       ],
       isDismissible: false,
-      duration: Duration(seconds: 10),
+      duration: Duration(seconds: 3),
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
@@ -104,14 +107,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           shape: BoxShape.circle,
         ),
       ),
+
       mainButton: FlatButton(
-        onPressed: () {},
+        onPressed: () {
+          sendingFlushbar.dismiss();
+        },
         child: Text(
-          "Dismiss",
+          TextStrings().buttonDismiss,
           style: TextStyle(color: ColorConstants.fontPrimary),
         ),
       ),
-      showProgressIndicator: true,
+      // showProgressIndicator: true,
       progressIndicatorBackgroundColor: Colors.blueGrey,
       titleText: Row(
         children: <Widget>[
@@ -128,14 +134,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           )
         ],
       ),
-      messageText: Text(
-        "",
-        style: TextStyle(
-          fontSize: 9.toFont,
-          color: ColorConstants.fontSecondary,
-        ),
-      ),
-    ).show(context);
+    );
   }
 
   @override
@@ -237,31 +236,65 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         // filePickerModel.sendFiles(filePickerModel.selectedFiles,
                         //     _welcomeScreenProvider.selectedContacts);
                         // bool response = filePickerModel.sentStatus[0];
+                        // if (filePickerModel.sentStatus != null) {
+                        sendingFlushbar = _showScaffold(status: 0);
+                        await sendingFlushbar.show(context);
+                        // }
+                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                            // _welcomeScreenProvider.selectedContacts
+                            [
+                              // AtContact(
+                              //     atSign: '@bob🛠',
+                              //     type: ContactType.Individual,
+                              //     categories: [ContactCategory.Other],
+                              //     favourite: false,
+                              //     blocked: false,
+                              //     personas: null,
+                              //     tags: {},
+                              //     clazz: 'com.atSign.AtContact',
+                              //     version: 1)
+                            ]);
+
+                        _showScaffold(status: 0);
+                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                        //     _welcomeScreenProvider.selectedContacts);
+
+                        bool response;
+
+                        response = Provider.of<FilePickerProvider>(context,
+                                listen: false)
+                            .sentStatus;
+
+                        print(
+                            'RESPONSEEEEEEEE-----======>$response'); // bool response = true;
                         // bool response = await backendService.sendFile(
                         //     contactPickerModel.selectedContacts,
                         //     filePickerModel.selectedFiles[0].path);
-                        // if (response == true) {
-                        //   Provider.of<HistoryProvider>(context, listen: false)
-                        //       .setFilesHistory(
-                        //           atSignName: contactProvider
-                        //               .selectedContacts[0].atSign,
-                        //           historyType: HistoryType.send,
-                        //           files: [
-                        //         FilesDetail(
-                        //             filePath:
-                        //                 filePickerModel.selectedFiles[0].path,
-                        //             size: filePickerModel.totalSize,
-                        //             fileName: filePickerModel
-                        //                 .result.files[0].name
-                        //                 .toString(),
-                        //             type: filePickerModel
-                        //                 .selectedFiles[0].extension
-                        //                 .toString())
-                        //       ]);
-                        //   _showScaffold(status: 1);
-                        // } else {
-                        //   _showScaffold(status: 2);
-                        // }
+
+                        Provider.of<HistoryProvider>(context, listen: false)
+                            .setFilesHistory(
+                                atSignName:
+                                    contactProvider.selectedContacts[0].atSign,
+                                historyType: HistoryType.send,
+                                files: [
+                              FilesDetail(
+                                  filePath:
+                                      filePickerModel.selectedFiles[0].path,
+                                  size: filePickerModel.totalSize,
+                                  fileName: filePickerModel.result.files[0].name
+                                      .toString(),
+                                  type: filePickerModel
+                                      .selectedFiles[0].extension
+                                      .toString())
+                            ]);
+
+                        // _showScaffold(status: 1);
+                        if (response != null && response == true) {
+                          sendingFlushbar = _showScaffold(status: 1);
+                          await sendingFlushbar.show(context);
+                        } else {
+                          _showScaffold(status: 2);
+                        }
                       },
                     ),
                   ),

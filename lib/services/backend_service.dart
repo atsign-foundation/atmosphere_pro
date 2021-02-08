@@ -5,13 +5,14 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
@@ -41,6 +42,7 @@ class BackendService {
   Directory downloadDirectory;
   double bytesReceived = 0.0;
   AnimationController controller;
+  Flushbar receivingFlushbar;
   Future<bool> onboard({String atsign}) async {
     atClientServiceInstance = AtClientService();
     if (Platform.isIOS) {
@@ -180,7 +182,6 @@ class BackendService {
   }
 
   void _streamCompletionCallBack(var streamId) async {
-    print('FILE TRANSFER COMPLETE FOR STRAM : $streamId');
     DateTime now = DateTime.now();
     int historyFileCount = 0;
     Provider.of<HistoryProvider>(NavService.navKey.currentContext,
@@ -193,6 +194,10 @@ class BackendService {
     var value = {'timeStamp': now, 'length': historyFileCount};
     HiveService().writeData(
         MixedConstants.HISTORY_BOX, MixedConstants.HISTORY_KEY, value);
+    receivingFlushbar =
+        CustomFlushBar().getFlushbar(TextStrings().fileReceived, null);
+
+    await receivingFlushbar.show(NavService.navKey.currentContext);
   }
 
   void _streamReceiveCallBack(var bytesReceived) {}

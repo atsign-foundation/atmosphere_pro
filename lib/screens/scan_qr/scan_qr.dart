@@ -3,7 +3,6 @@ import 'package:archive/archive.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_pro/services/at_error_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -108,10 +107,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       // }
       // cramKey =
       //     '@alice🛠:b26455a907582760ebf35bc4847de549bc41c24b25c8b1c58d5964f7b4f8a43bc55b0e9a601c9a9657d9a8b8bbc32f88b4e38ffaca03c8710ebae1b14ca9f364';
-      // cramKey =
-      //     '@bob🛠:33c2df30b79743ff880fc1c832a5c69170974dd736231b84ee360df89a0faff1f6efe0e83064144a7b4e5029334ad1daedc49bf82c0be1f763f590c28e33ba0a';
       cramKey =
-          '@colin🛠:540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
+          '@bob🛠:33c2df30b79743ff880fc1c832a5c69170974dd736231b84ee360df89a0faff1f6efe0e83064144a7b4e5029334ad1daedc49bf82c0be1f763f590c28e33ba0a';
+      // cramKey =
+      //     '@colin🛠:540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
       if (cramKey == null) {
         // _showAlertDialog(_incorrectKeyFile);
         showSnackBar(context, "File content error");

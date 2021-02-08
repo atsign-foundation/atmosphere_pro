@@ -55,13 +55,13 @@ class SetupRoutes {
       // Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),
       Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen(),
       Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),
-      Routes.TRUSTED_SENDER: (context) {
-        Map<String, bool> args =
-            ModalRoute.of(context).settings.arguments as Map<String, bool>;
-        return GroupContactScreen(
-          isTrustedScreen: args['isTrustedSender'],
-        );
-      }
+      // Routes.TRUSTED_SENDER: (context) {
+      //   Map<String, bool> args =
+      //       ModalRoute.of(context).settings.arguments as Map<String, bool>;
+      //   return GroupContactScreen(
+      //     isTrustedScreen: args['isTrustedSender'],
+      //   );
+      // }
     };
   }
 }

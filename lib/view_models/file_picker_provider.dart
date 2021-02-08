@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
+
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
@@ -27,7 +27,8 @@ class FilePickerProvider extends BaseModel {
   PlatformFile file;
   static List<PlatformFile> appClosedSharedFiles = [];
   List<PlatformFile> selectedFiles = [];
-  List<bool> sentStatus;
+  // List<Map<AtContact, List<bool>>> sentStatus = [];
+  bool sentStatus = false;
   Uint8List videoThumbnail;
   double totalSize = 0;
   final String MEDIA = 'MEDIA';
@@ -41,9 +42,7 @@ class FilePickerProvider extends BaseModel {
       selectedFiles = [];
       totalSize = 0;
       if (appClosedSharedFiles.isNotEmpty) {
-        print('IN ! HERE');
         appClosedSharedFiles.forEach((element) {
-          print('IN HERE @');
           selectedFiles.add(element);
         });
         calculateSize();
@@ -185,18 +184,20 @@ class FilePickerProvider extends BaseModel {
           });
         }
       });
-      // int i = 1;
-      // temporaryList.forEach((element) {
-      //   print("\n\n${i++} Temporary element $element");
-      // });
-      sentStatus = List<bool>.generate(selectedFiles.length, (index) => false);
+
+      // sentStatus = List<bool>.generate(selectedFiles.length, (index) => false);
+      // temporaryList.forEach((contact) {
       temporaryList.forEach((contact) {
         selectedFiles.forEach((file) {
+          if (file == selectedFiles.first) {
+            sentStatus = true;
+          } else {
+            sentStatus = null;
+          }
           _backendService.sendFile(contact.atSign, file.path);
-          print('file path====>${file.path}');
         });
       });
-      print('SENT STATUS=====>${sentStatus.length}========>$sentStatus');
+
       setStatus(SEND_FILES, Status.Done);
     } catch (error) {
       setError(SEND_FILES, error.toString());
