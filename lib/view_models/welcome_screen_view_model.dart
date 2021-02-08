@@ -1,4 +1,3 @@
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
@@ -13,11 +12,6 @@ class WelcomeScreenProvider extends BaseModel {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts = updatedList;
-      // selectedContacts.forEach((element) {
-      //   if (element.contactType == ContactsType.CONTACT) {
-      //     print(element);
-      //   }
-      // });
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());

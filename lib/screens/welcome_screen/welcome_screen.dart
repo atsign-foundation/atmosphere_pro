@@ -11,7 +11,6 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -19,7 +18,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../data_models/file_modal.dart';
 import '../../view_models/file_picker_provider.dart';
 import 'widgets/select_contact_widget.dart';
 
@@ -32,12 +30,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isContactSelected;
   bool isFileSelected;
-  ContactProvider contactProvider;
+  // ContactProvider contactProvider;
   WelcomeScreenProvider _welcomeScreenProvider;
   Flushbar sendingFlushbar;
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
+  // FilePickerProvider _filePickerProvider;
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -63,6 +62,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     isContactSelected = false;
     isFileSelected = false;
     _welcomeScreenProvider = WelcomeScreenProvider();
+    // _filePickerProvider = FilePickerProvider();
     getAtSignAndInitializeContacts();
     super.initState();
   }
@@ -72,14 +72,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     initializeContactsService(
         backendService.atClientServiceInstance.atClient, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context, listen: true);
-    }
-    super.didChangeDependencies();
   }
 
   _showScaffold({int status = 0}) {
@@ -140,7 +132,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final filePickerModel = Provider.of<FilePickerProvider>(context);
-    final contactPickerModel = Provider.of<ContactProvider>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -221,15 +212,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(
                   height: 60.toHeight,
                 ),
-                if (contactProvider.selectedContacts != null &&
+                if (_welcomeScreenProvider.selectedContacts != null &&
                     filePickerModel.selectedFiles.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.topRight,
                     child: CommonButton(
                       TextStrings().buttonSend,
                       () async {
-                        // print(_welcomeScreenProvider.selectedContacts);
-
                         filePickerModel.sendFiles(filePickerModel.selectedFiles,
                             _welcomeScreenProvider.selectedContacts);
                         // _showScaffold(status: 0);
@@ -240,20 +229,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         sendingFlushbar = _showScaffold(status: 0);
                         await sendingFlushbar.show(context);
                         // }
-                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                            // _welcomeScreenProvider.selectedContacts
-                            [
-                              // AtContact(
-                              //     atSign: '@bob🛠',
-                              //     type: ContactType.Individual,
-                              //     categories: [ContactCategory.Other],
-                              //     favourite: false,
-                              //     blocked: false,
-                              //     personas: null,
-                              //     tags: {},
-                              //     clazz: 'com.atSign.AtContact',
-                              //     version: 1)
-                            ]);
 
                         _showScaffold(status: 0);
                         // filePickerModel.sendFiles(filePickerModel.selectedFiles,
@@ -265,28 +240,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 listen: false)
                             .sentStatus;
 
-                        print(
-                            'RESPONSEEEEEEEE-----======>$response'); // bool response = true;
+                        // bool response = true;
                         // bool response = await backendService.sendFile(
                         //     contactPickerModel.selectedContacts,
                         //     filePickerModel.selectedFiles[0].path);
 
-                        Provider.of<HistoryProvider>(context, listen: false)
-                            .setFilesHistory(
-                                atSignName:
-                                    contactProvider.selectedContacts[0].atSign,
-                                historyType: HistoryType.send,
-                                files: [
-                              FilesDetail(
-                                  filePath:
-                                      filePickerModel.selectedFiles[0].path,
-                                  size: filePickerModel.totalSize,
-                                  fileName: filePickerModel.result.files[0].name
-                                      .toString(),
-                                  type: filePickerModel
-                                      .selectedFiles[0].extension
-                                      .toString())
-                            ]);
+                        // Provider.of<HistoryProvider>(context, listen: false)
+                        //     .setFilesHistory(
+                        //         atSignName: _filePickerProvider
+                        //             .temporaryContactList[0].atSign,
+                        //         historyType: HistoryType.send,
+                        //         files: [
+                        //       FilesDetail(
+                        //           filePath:
+                        //               filePickerModel.selectedFiles[0].path,
+                        //           size: filePickerModel.totalSize,
+                        //           fileName: filePickerModel.result.files[0].name
+                        //               .toString(),
+                        //           type: filePickerModel
+                        //               .selectedFiles[0].extension
+                        //               .toString())
+                        //     ]);
 
                         // _showScaffold(status: 1);
                         if (response != null && response == true) {

@@ -8,9 +8,8 @@
 
 import 'dart:io';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/contact/widgets/add_contact_dialog.dart';
-import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/group_contact_screen.dart';
+import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
+
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -162,10 +161,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             context: context,
                             barrierDismissible: true,
                             builder: (context) => AddContactDialog(
-                              onYesTap: (value) {
-                                onActionpressed(value);
-                              },
-                            ),
+                                // onYesTap: (value) {
+                                //   onActionpressed(value);
+                                // },
+                                ),
                           );
                         }
                         // else if (isTrustedContactScreen) {

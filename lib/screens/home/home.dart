@@ -5,8 +5,6 @@ import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/client_sdk_service.dart';
-import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -37,7 +35,7 @@ class _HomeState extends State<Home> {
   NotificationService _notificationService;
   bool onboardSuccess = false;
   bool sharingStatus = false;
-  BackendService backendService;
+  BackendService _backendService;
   // bool userAcceptance;
   final Permission _cameraPermission = Permission.camera;
   final Permission _storagePermission = Permission.storage;
@@ -47,7 +45,7 @@ class _HomeState extends State<Home> {
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
   String activeAtSign;
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +53,7 @@ class _HomeState extends State<Home> {
         Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
     _initBackendService();
-    clientSdkService.onboard();
+
     getAtSignAndInitializeContacts();
     _checkToOnboard();
     acceptFiles();
@@ -63,12 +61,12 @@ class _HomeState extends State<Home> {
   }
 
   getAtSignAndInitializeContacts() async {
-    String currentAtSign = await clientSdkService.getAtSign();
+    String currentAtSign = await _backendService.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        _backendService.atClientServiceInstance.atClient, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
@@ -91,7 +89,7 @@ class _HomeState extends State<Home> {
 
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
         // check to see if atsign is paired
-        var atsign = await backendService.currentAtsign;
+        var atsign = await _backendService.currentAtsign;
         if (atsign != null) {
           BuildContext c = NavService.navKey.currentContext;
           await Navigator.pushNamedAndRemoveUntil(
@@ -128,43 +126,22 @@ class _HomeState extends State<Home> {
 
   String state;
   void _initBackendService() {
-    backendService = BackendService.getInstance();
+    _backendService = BackendService.getInstance();
     _notificationService.setOnNotificationClick(onNotificationClick);
     SystemChannels.lifecycle.setMessageHandler((msg) {
       state = msg;
       debugPrint('SystemChannels> $msg');
-      backendService.app_lifecycle_state = msg;
-      if (backendService.monitorConnection != null &&
-          backendService.monitorConnection.isInValid()) {
-        backendService.startMonitor();
+      _backendService.app_lifecycle_state = msg;
+      if (_backendService.monitorConnection != null &&
+          _backendService.monitorConnection.isInValid()) {
+        _backendService.startMonitor();
       }
     });
   }
 
   void _checkToOnboard() async {
-    // onboard call to get the already setup atsigns
-    await backendService.onboard().then((isChecked) async {
-      if (!isChecked) {
-        c.complete(true);
-        print("onboard returned: $isChecked");
-      } else {
-        await backendService.startMonitor();
-        onboardSuccess = true;
-        if (FilePickerProvider().selectedFiles.isNotEmpty) {
-          BuildContext cd = NavService.navKey.currentContext;
-          await Navigator.pushReplacementNamed(cd, Routes.WELCOME_SCREEN);
-        }
-
-        await getTrustedContact();
-
-        c.complete(true);
-      }
-    }).catchError((error) async {
-      c.complete(true);
-      print("Error in authenticating: $error");
-    });
-    // onboardSuccess = await clientSdkService.onboard();
-    print('onboardSuccess=====>$onboardSuccess');
+    onboardSuccess = await _backendService.onboard();
+    await _backendService.startMonitor();
   }
 
   void _checkForPermissionStatus() async {
@@ -271,11 +248,12 @@ class _HomeState extends State<Home> {
                               child: CustomButton(
                                 buttonText: TextStrings().buttonStart,
                                 onPressed: () async {
-                                  this.setState(() {
-                                    authenticating = true;
-                                  });
-                                  await c.future;
-                                  if (onboardSuccess) {
+                                  // this.setState(() {
+                                  //   authenticating = true;
+                                  // });
+                                  // await c.future;
+                                  if (onboardSuccess != null &&
+                                      onboardSuccess) {
                                     await Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         Routes.WELCOME_SCREEN,
@@ -284,7 +262,15 @@ class _HomeState extends State<Home> {
                                     await Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         Routes.SCAN_QR_SCREEN,
-                                        (route) => false);
+                                        (route) => false,
+                                        arguments: {
+                                          'atClientPreference': _backendService
+                                              .atClientPreference,
+                                          'atClientServiceInstance':
+                                              _backendService
+                                                  .atClientServiceInstance,
+                                          'nextScreen': WelcomeScreen()
+                                        });
                                   }
                                 },
                               ),

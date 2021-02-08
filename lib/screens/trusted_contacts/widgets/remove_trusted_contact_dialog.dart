@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
@@ -114,10 +115,10 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                             buttonText: 'Yes',
                             width: 200.toWidth,
                             onPressed: () async {
-                              await Provider.of<ContactProvider>(context,
+                              await Provider.of<TrustedContactProvider>(context,
                                       listen: false)
                                   .removeTrustedContacts(widget.contact);
-                              await Provider.of<ContactProvider>(context,
+                              await Provider.of<TrustedContactProvider>(context,
                                       listen: false)
                                   .setTrustedContact();
                               await Navigator.pop(context);

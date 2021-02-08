@@ -1,4 +1,5 @@
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
@@ -8,7 +9,6 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/circular_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -125,6 +125,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                 context: NavService
                                                     .navKey.currentContext,
                                                 selectedList: (s) async {
+                                                  print('s=====>${s[0]}');
                                                   s.forEach((element) async {
                                                     await provider
                                                         .addTrustedContacts(
@@ -202,8 +203,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                       provider.fetchedTrustedContact.length,
                                   itemBuilder: (context, index) {
                                     return CircularContacts(
-                                      showCross: false,
-                                      onTap: () {
+                                      onCrossPressed: () {
                                         showDialog(
                                           context: context,
                                           builder: (context) =>
@@ -213,47 +213,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                           ),
                                         );
                                       },
-                                      atSign: provider
-                                          .fetchedTrustedContact[index].atSign,
-                                      name: provider
-                                                      .fetchedTrustedContact[
-                                                          index]
-                                                      .tags !=
-                                                  null &&
-                                              provider
-                                                      .fetchedTrustedContact[
-                                                          index]
-                                                      .tags['name'] !=
-                                                  null
-                                          ? provider
-                                              .fetchedTrustedContact[index]
-                                              .tags['name']
-                                          : provider
-                                              .fetchedTrustedContact[index]
-                                              .atSign
-                                              .substring(1),
-                                      image: (provider
-                                                      .fetchedTrustedContact[
-                                                          index]
-                                                      .tags !=
-                                                  null &&
-                                              provider
-                                                      .fetchedTrustedContact[
-                                                          index]
-                                                      .tags['image'] !=
-                                                  null)
-                                          ? CustomCircleAvatar(
-                                              byteImage: provider
-                                                  .fetchedTrustedContact[index]
-                                                  .tags['image'],
-                                              nonAsset: true,
-                                              size: 50.toHeight,
-                                            )
-                                          : ContactInitial(
-                                              initials: provider
-                                                  .trustedContacts[index].atSign
-                                                  .substring(1, 3),
-                                            ),
+                                      contact:
+                                          provider.fetchedTrustedContact[index],
                                     );
                                   },
                                 )),

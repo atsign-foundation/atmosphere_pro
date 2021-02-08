@@ -1,7 +1,5 @@
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/sort_popup.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';

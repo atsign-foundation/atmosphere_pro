@@ -1,18 +1,19 @@
+import 'package:at_contacts_flutter/screens/blocked_screen.dart';
 import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/faqs/faqs.dart';
 import 'package:atsign_atmosphere_pro/screens/file_picker/file_picker.dart';
-import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/group_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/home/home.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_pro/screens/private_key_qrcode_generator.dart';
-import 'package:atsign_atmosphere_pro/screens/scan_qr/scan_qr.dart';
+// import 'package:atsign_atmosphere_pro/screens/scan_qr/scan_qr.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
-import 'package:at_contacts_flutter/screens/blocked_screen.dart';
+// import 'package:at_contacts_flutter/screens/blocked_screen.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:atsign_authentication_helper/atsign_authentication_helper.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/terms_conditions/terms_conditions_screen.dart';
@@ -45,13 +46,20 @@ class SetupRoutes {
         );
       },
       Routes.GROUPS: (context) {
-        print('HIT');
         Map<String, dynamic> args =
             ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
         return GroupList(currentAtsign: args['currentAtsign']);
       },
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
-      Routes.SCAN_QR_SCREEN: (context) => ScanQrScreen(),
+      Routes.SCAN_QR_SCREEN: (context) {
+        Map<String, dynamic> args =
+            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+        return ScanQrScreen(
+          atClientPreference: args['atClientPreference'],
+          atClientServiceInstance: args['atClientServiceInstance'],
+          nextScreen: args['nextScreen'],
+        );
+      },
       // Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),
       Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen(),
       Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),

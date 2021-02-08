@@ -52,7 +52,7 @@ class HistoryProvider extends BaseModel {
       filesModel.totalSize = 0.0;
 
       AtKey atKey = AtKey()..metadata = Metadata();
-      var result;
+
       if (historyType == HistoryType.received) {
         // the file size come in bytes in reciever side
         filesModel.files.forEach((file) {
@@ -63,7 +63,7 @@ class HistoryProvider extends BaseModel {
 
         atKey.key = 'receivedFiles';
 
-        result = await backendService.atClientInstance
+        await backendService.atClientInstance
             .put(atKey, json.encode(receivedFileHistory));
       } else {
         // the file is in kB in sender side
@@ -72,7 +72,7 @@ class HistoryProvider extends BaseModel {
         });
         sendFileHistory['history'].insert(0, filesModel.toJson());
         atKey.key = 'sentFiles';
-        result = await backendService.atClientInstance
+        await backendService.atClientInstance
             .put(atKey, json.encode(sendFileHistory));
       }
     } catch (e) {

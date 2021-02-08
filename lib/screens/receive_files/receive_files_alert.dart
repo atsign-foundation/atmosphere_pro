@@ -17,7 +17,6 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_models/file_picker_provider.dart';
-import '../../view_models/file_picker_provider.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {
   final Function() onAccept;

@@ -69,6 +69,7 @@ class BackendService {
     var result = await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference, atsign: atsign);
     atClientInstance = atClientServiceInstance.atClient;
+
     return result;
   }
 

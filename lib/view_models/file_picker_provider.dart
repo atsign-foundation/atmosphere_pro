@@ -4,12 +4,15 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
 
@@ -34,7 +37,7 @@ class FilePickerProvider extends BaseModel {
   final String MEDIA = 'MEDIA';
   final String FILES = 'FILES';
   BackendService _backendService = BackendService.getInstance();
-  List<AtContact> temporaryList = [];
+  List<AtContact> temporaryContactList = [];
 
   setFiles() async {
     setStatus(PICK_FILES, Status.Loading);
@@ -158,36 +161,34 @@ class FilePickerProvider extends BaseModel {
       List<GroupContactsModel> contactList) async {
     setStatus(SEND_FILES, Status.Loading);
     try {
-      temporaryList = [];
+      temporaryContactList = [];
       contactList.forEach((element) {
         if (element.contactType == ContactsType.CONTACT) {
           bool flag = false;
-          for (AtContact atContact in temporaryList) {
+          for (AtContact atContact in temporaryContactList) {
             if (atContact.toString() == element.contact.toString()) {
               flag = true;
             }
           }
           if (!flag) {
-            temporaryList.add(element.contact);
+            temporaryContactList.add(element.contact);
           }
         } else if (element.contactType == ContactsType.GROUP) {
           element.group.members.forEach((contact) {
             bool flag = false;
-            for (AtContact atContact in temporaryList) {
+            for (AtContact atContact in temporaryContactList) {
               if (atContact.toString() == contact.toString()) {
                 flag = true;
               }
             }
             if (!flag) {
-              temporaryList.add(contact);
+              temporaryContactList.add(contact);
             }
           });
         }
       });
 
-      // sentStatus = List<bool>.generate(selectedFiles.length, (index) => false);
-      // temporaryList.forEach((contact) {
-      temporaryList.forEach((contact) {
+      temporaryContactList.forEach((contact) {
         selectedFiles.forEach((file) {
           if (file == selectedFiles.first) {
             sentStatus = true;
@@ -195,6 +196,18 @@ class FilePickerProvider extends BaseModel {
             sentStatus = null;
           }
           _backendService.sendFile(contact.atSign, file.path);
+          Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                  listen: false)
+              .setFilesHistory(
+                  atSignName: contact.atSign,
+                  historyType: HistoryType.send,
+                  files: [
+                FilesDetail(
+                    filePath: file.path,
+                    size: double.parse(file.size.toString()),
+                    fileName: file.name.toString(),
+                    type: file.name.split('.').last)
+              ]);
         });
       });
 

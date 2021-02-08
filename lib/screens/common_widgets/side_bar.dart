@@ -2,7 +2,6 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/client_sdk_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -58,27 +57,28 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.TRUSTED_CONTACTS
   ];
   String activeAtSign;
+  BackendService _backendService;
   @override
   void initState() {
+    _backendService = BackendService.getInstance();
     getAtSignAndInitializeContacts();
     initGroups();
     super.initState();
   }
 
   getAtSignAndInitializeContacts() async {
-    String currentAtSign = await clientSdkService.getAtSign();
+    String currentAtSign = await _backendService.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        _backendService.atClientServiceInstance.atClient, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
   initGroups() async {
-    GroupService().init(await clientSdkService.getAtSign());
-    GroupService().fetchGroupsAndContacts();
+    await GroupService().init(await _backendService.getAtSign());
+    await GroupService().fetchGroupsAndContacts();
   }
 
   @override
@@ -88,8 +88,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       child: Drawer(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 30.toWidth),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               SizedBox(
                 height: 100.toHeight,
@@ -296,7 +295,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   key: _formKey,
                   child: TextFormField(
                     textAlign: TextAlign.center,
-                    autovalidate: true,
                     validator: (value) {
                       if (value != atsign) {
                         return "The @sign doesn't match. Please retype.";

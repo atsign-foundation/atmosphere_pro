@@ -1,12 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
