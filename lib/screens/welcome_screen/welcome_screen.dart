@@ -56,19 +56,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     'Sent the file',
     'Oops! something went wrong'
   ];
-
+  String currentAtSign;
   @override
   void initState() {
     isContactSelected = false;
     isFileSelected = false;
+    backendService.onboard();
+    setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
     // _filePickerProvider = FilePickerProvider();
     getAtSignAndInitializeContacts();
     super.initState();
   }
 
+  setAtSign() async {
+    currentAtSign = await backendService.getAtSign();
+    setState(() {});
+  }
+
   getAtSignAndInitializeContacts() async {
-    String currentAtSign = await backendService.getAtSign();
+    // String currentAtSign = await backendService.getAtSign();
     initializeContactsService(
         backendService.atClientServiceInstance.atClient, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
@@ -148,7 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  TextStrings().welcomeUser(backendService.currentAtsign),
+                  TextStrings().welcomeUser(currentAtSign),
                   style: GoogleFonts.playfairDisplay(
                     textStyle: TextStyle(
                       fontSize: 28.toFont,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
@@ -36,7 +37,7 @@ class _HomeState extends State<Home> {
   bool onboardSuccess = false;
   bool sharingStatus = false;
   BackendService _backendService;
-  // bool userAcceptance;
+
   final Permission _cameraPermission = Permission.camera;
   final Permission _storagePermission = Permission.storage;
   Completer c = Completer();
@@ -52,12 +53,17 @@ class _HomeState extends State<Home> {
     filePickerProvider =
         Provider.of<FilePickerProvider>(context, listen: false);
     _notificationService = NotificationService();
-    _initBackendService();
 
-    getAtSignAndInitializeContacts();
+    _initBackendService();
     _checkToOnboard();
+
     acceptFiles();
     _checkForPermissionStatus();
+  }
+
+  initGroups() async {
+    await GroupService().init(await _backendService.getAtSign());
+    await GroupService().fetchGroupsAndContacts();
   }
 
   getAtSignAndInitializeContacts() async {
@@ -140,8 +146,14 @@ class _HomeState extends State<Home> {
   }
 
   void _checkToOnboard() async {
+    // if (await _backendService.currentAtsign != null) {
     onboardSuccess = await _backendService.onboard();
     await _backendService.startMonitor();
+    // }
+    if (onboardSuccess) {
+      getAtSignAndInitializeContacts();
+      initGroups();
+    }
   }
 
   void _checkForPermissionStatus() async {
