@@ -1,5 +1,6 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -65,18 +66,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
     // _filePickerProvider = FilePickerProvider();
-    getAtSignAndInitializeContacts();
+
+    // initGroups();
     super.initState();
   }
 
   setAtSign() async {
     currentAtSign = await backendService.getAtSign();
+    await initGroups();
+    await getAtSignAndInitializeContacts();
     setState(() {});
   }
 
+  initGroups() async {
+    await GroupService().init(await BackendService.getInstance().getAtSign());
+    await GroupService().fetchGroupsAndContacts();
+  }
+
   getAtSignAndInitializeContacts() async {
-    // String currentAtSign = await backendService.getAtSign();
-    initializeContactsService(
+    await initializeContactsService(
         backendService.atClientServiceInstance.atClient, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
