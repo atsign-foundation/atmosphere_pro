@@ -7,6 +7,8 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 
+import 'downloads_folders.dart';
+
 class Documents extends StatefulWidget {
   @override
   _DocumentsState createState() => _DocumentsState();
@@ -66,19 +68,27 @@ class _DocumentsState extends State<Documents> {
                                     right: 20.toWidth),
                                 child: Column(children: <Widget>[
                                   ListTile(
+                                      onTap: () async {
+                                        await openDownloadsFolder(context);
+                                      },
                                       title: Text(
-                                    'Open file location',
-                                    style: CustomTextStyles.primaryRegular16,
-                                  )),
+                                        'Open file location',
+                                        style:
+                                            CustomTextStyles.primaryRegular16,
+                                      )),
                                   Divider(
                                     thickness: 1,
                                     color: ColorConstants.greyText,
                                   ),
                                   ListTile(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
                                       title: Text(
-                                    'Cancel',
-                                    style: CustomTextStyles.primaryRegular16,
-                                  )),
+                                        'Cancel',
+                                        style:
+                                            CustomTextStyles.primaryRegular16,
+                                      )),
                                 ]))
                           ]),
                         );
