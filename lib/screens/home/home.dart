@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_group_flutter/services/group_service.dart';
+
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +20,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
-import '../../utils/constants.dart';
-
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
 
@@ -33,14 +28,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  NotificationService _notificationService;
   bool onboardSuccess = false;
   bool sharingStatus = false;
   BackendService _backendService;
 
   final Permission _cameraPermission = Permission.camera;
   final Permission _storagePermission = Permission.storage;
-  Completer c = Completer();
+
   bool authenticating = false;
   StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
@@ -52,28 +46,9 @@ class _HomeState extends State<Home> {
     super.initState();
     filePickerProvider =
         Provider.of<FilePickerProvider>(context, listen: false);
-    _notificationService = NotificationService();
-
     _initBackendService();
-    _checkToOnboard();
-
     acceptFiles();
     _checkForPermissionStatus();
-  }
-
-  initGroups() async {
-    await GroupService().init(await _backendService.getAtSign());
-    await GroupService().fetchGroupsAndContacts();
-  }
-
-  getAtSignAndInitializeContacts() async {
-    String currentAtSign = await _backendService.getAtSign();
-    setState(() {
-      activeAtSign = currentAtSign;
-    });
-    initializeContactsService(
-        _backendService.atClientServiceInstance.atClient, currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   void acceptFiles() async {
@@ -131,10 +106,19 @@ class _HomeState extends State<Home> {
   }
 
   String state;
-  void _initBackendService() {
+
+  void _initBackendService() async {
+    authenticating = true;
     _backendService = BackendService.getInstance();
-    _notificationService.setOnNotificationClick(onNotificationClick);
+
+    onboardSuccess = await _backendService.onboard();
+
+    if (onboardSuccess != null && onboardSuccess == true) {
+      await _backendService.startMonitor();
+    }
+
     SystemChannels.lifecycle.setMessageHandler((msg) {
+      print('set message handler');
       state = msg;
       debugPrint('SystemChannels> $msg');
       _backendService.app_lifecycle_state = msg;
@@ -143,18 +127,11 @@ class _HomeState extends State<Home> {
         _backendService.startMonitor();
       }
     });
+    authenticating = false;
+    setState(() {});
   }
 
-  void _checkToOnboard() async {
-    // if (await _backendService.currentAtsign != null) {
-    onboardSuccess = await _backendService.onboard();
-    await _backendService.startMonitor();
-    // }
-    if (onboardSuccess) {
-      getAtSignAndInitializeContacts();
-      initGroups();
-    }
-  }
+  bool isAuth = false;
 
   void _checkForPermissionStatus() async {
     final existingCameraStatus = await _cameraPermission.status;
@@ -167,10 +144,10 @@ class _HomeState extends State<Home> {
     }
   }
 
-  getTrustedContact() async {
-    await Provider.of<ContactProvider>(context, listen: false)
-        .getTrustedContact();
-  }
+  // getTrustedContact() async {
+  //   await Provider.of<ContactProvider>(context, listen: false)
+  //       .getTrustedContact();
+  // }
 
   onNotificationClick(String payload) async {}
 
@@ -259,32 +236,32 @@ class _HomeState extends State<Home> {
                               alignment: Alignment.topRight,
                               child: CustomButton(
                                 buttonText: TextStrings().buttonStart,
-                                onPressed: () async {
-                                  // this.setState(() {
-                                  //   authenticating = true;
-                                  // });
-                                  // await c.future;
-                                  if (onboardSuccess != null &&
-                                      onboardSuccess) {
-                                    await Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        Routes.WELCOME_SCREEN,
-                                        (route) => false);
-                                  } else {
-                                    await Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        Routes.SCAN_QR_SCREEN,
-                                        (route) => false,
-                                        arguments: {
-                                          'atClientPreference': _backendService
-                                              .atClientPreference,
-                                          'atClientServiceInstance':
-                                              _backendService
-                                                  .atClientServiceInstance,
-                                          'nextScreen': WelcomeScreen()
-                                        });
-                                  }
-                                },
+                                onPressed: (authenticating)
+                                    ? () {}
+                                    : () async {
+                                        if (onboardSuccess) {
+                                          await Navigator
+                                              .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.WELCOME_SCREEN,
+                                                  (route) => false);
+                                        } else {
+                                          await Navigator
+                                              .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.SCAN_QR_SCREEN,
+                                                  (route) => false,
+                                                  arguments: {
+                                                'atClientPreference':
+                                                    _backendService
+                                                        .atClientPreference,
+                                                'atClientServiceInstance':
+                                                    _backendService
+                                                        .atClientServiceInstance,
+                                                'nextScreen': WelcomeScreen()
+                                              });
+                                        }
+                                      },
                               ),
                             ),
                           ),

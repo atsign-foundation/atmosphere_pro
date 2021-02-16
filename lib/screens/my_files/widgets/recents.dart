@@ -7,7 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Recents extends StatefulWidget {
@@ -16,12 +16,6 @@ class Recents extends StatefulWidget {
 }
 
 class _RecentsState extends State<Recents> {
-  @override
-  void initState() {
-    Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(

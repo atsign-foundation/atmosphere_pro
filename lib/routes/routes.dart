@@ -7,11 +7,11 @@ import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/home/home.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_pro/screens/private_key_qrcode_generator.dart';
-// import 'package:atsign_atmosphere_pro/screens/scan_qr/scan_qr.dart';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
-// import 'package:at_contacts_flutter/screens/blocked_screen.dart';
+
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:atsign_authentication_helper/atsign_authentication_helper.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +25,8 @@ class SetupRoutes {
     return {
       Routes.HOME: (context) => Home(),
       Routes.WEBSITE_SCREEN: (context) {
-        Map<String, String> args =
-            ModalRoute.of(context).settings.arguments as Map<String, String>;
+        Map<String, dynamic> args =
+            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
         return WebsiteScreen(title: args["title"], url: args["url"]);
       },
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),

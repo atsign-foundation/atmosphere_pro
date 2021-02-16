@@ -44,33 +44,41 @@ class BackendService {
   double bytesReceived = 0.0;
   AnimationController controller;
   Flushbar receivingFlushbar;
+  String onBoardError;
   Future<bool> onboard({String atsign}) async {
-    atClientServiceInstance = AtClientService();
-    if (Platform.isIOS) {
-      downloadDirectory =
-          await path_provider.getApplicationDocumentsDirectory();
-    } else {
-      downloadDirectory = await path_provider.getExternalStorageDirectory();
+    try {
+      atClientServiceInstance = AtClientService();
+      if (Platform.isIOS) {
+        downloadDirectory =
+            await path_provider.getApplicationDocumentsDirectory();
+      } else {
+        downloadDirectory = await path_provider.getExternalStorageDirectory();
+      }
+
+      final appSupportDirectory =
+          await path_provider.getApplicationSupportDirectory();
+      print("paths => $downloadDirectory $appSupportDirectory");
+      String path = appSupportDirectory.path;
+      atClientPreference = AtClientPreference();
+
+      atClientPreference.isLocalStoreRequired = true;
+      atClientPreference.commitLogPath = path;
+      atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
+      atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
+      atClientPreference.hiveStoragePath = path;
+      atClientPreference.downloadPath = downloadDirectory.path;
+      atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
+      print(
+          'atClientServiceInstance====>$atClientServiceInstance======>atClientPreference====>${atClientPreference}');
+      var result = await atClientServiceInstance.onboard(
+          atClientPreference: atClientPreference, atsign: atsign);
+      // print('RESULT====>$result');
+      atClientInstance = atClientServiceInstance.atClient;
+      return result;
+    } catch (e) {
+      print(e);
+      return false;
     }
-
-    final appSupportDirectory =
-        await path_provider.getApplicationSupportDirectory();
-    print("paths => $downloadDirectory $appSupportDirectory");
-    String path = appSupportDirectory.path;
-    atClientPreference = AtClientPreference();
-
-    atClientPreference.isLocalStoreRequired = true;
-    atClientPreference.commitLogPath = path;
-    atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
-    atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
-    atClientPreference.hiveStoragePath = path;
-    atClientPreference.downloadPath = downloadDirectory.path;
-    atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
-    var result = await atClientServiceInstance.onboard(
-        atClientPreference: atClientPreference, atsign: atsign);
-    atClientInstance = atClientServiceInstance.atClient;
-
-    return result;
   }
 
   // QR code scan

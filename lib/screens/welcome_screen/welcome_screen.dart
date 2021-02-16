@@ -65,9 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     backendService.onboard();
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
-    // _filePickerProvider = FilePickerProvider();
 
-    // initGroups();
     super.initState();
   }
 

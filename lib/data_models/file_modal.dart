@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 enum HistoryType { send, received }
 
 class FilesModel {
