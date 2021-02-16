@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.da
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 
 class Photos extends StatefulWidget {
   @override
@@ -40,7 +41,15 @@ class _PhotosState extends State<Photos> {
           mainAxisSpacing: 10,
           crossAxisCount: 3,
           children: List.generate(provider.receivedPhotos.length, (index) {
-            return Container(
+            return GestureDetector(
+              onTap: () async {
+                // preview file
+                File test = File(provider.receivedPhotos[index].filePath);
+                bool fileExists = await test.exists();
+                if (fileExists) {
+                  await OpenFile.open(provider.receivedPhotos[index].filePath);
+                }
+              },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(

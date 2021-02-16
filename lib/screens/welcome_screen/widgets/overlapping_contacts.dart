@@ -189,8 +189,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                 isSelected: provider.selectedContacts
                                     .contains(provider.selectedContacts[index]),
                                 onAdd: () {
-                                  provider.addContacts(
-                                      provider.selectedContacts[index]);
+                                  //   provider.addContacts(
+                                  //       provider.selectedContacts[index]);
                                 },
                                 onRemove: () {
                                   provider.removeContacts(
