@@ -19,12 +19,6 @@ class Recents extends StatefulWidget {
 
 class _RecentsState extends State<Recents> {
   @override
-  void initState() {
-    Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       load: (provider) => provider.getRecievedHistory(),

@@ -1,12 +1,9 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
-import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,13 +21,8 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
   @override
   void initState() {
     headerText = TextStrings().welcomeContactPlaceholder;
-    initGroups();
-    super.initState();
-  }
 
-  initGroups() async {
-    await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService().fetchGroupsAndContacts();
+    super.initState();
   }
 
   @override

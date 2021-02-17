@@ -3,7 +3,6 @@ import 'dart:typed_data';
 /// This is a custom widget to display the selected contacts
 /// in a row with overlapping profile pictures
 
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';

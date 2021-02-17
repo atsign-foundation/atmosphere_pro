@@ -1,6 +1,5 @@
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -57,29 +56,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.TRUSTED_CONTACTS
   ];
   String activeAtSign;
-  BackendService _backendService;
-  @override
-  void initState() {
-    _backendService = BackendService.getInstance();
-    getAtSignAndInitializeContacts();
-    initGroups();
-    super.initState();
-  }
-
-  getAtSignAndInitializeContacts() async {
-    String currentAtSign = await _backendService.getAtSign();
-    setState(() {
-      activeAtSign = currentAtSign;
-    });
-    initializeContactsService(
-        _backendService.atClientServiceInstance.atClient, currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
-  }
-
-  initGroups() async {
-    await GroupService().init(await _backendService.getAtSign());
-    await GroupService().fetchGroupsAndContacts();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,131 +67,117 @@ class _SideBarWidgetState extends State<SideBarWidget> {
           child: ListView(
             children: [
               SizedBox(
-                height: 100.toHeight,
+                height: 120.toHeight,
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: menuItemsTitle.length,
-                itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    Navigator.of(context).pushNamed(targetScreens[index],
-                        arguments: (index == 0)
-                            ? {
-                                'currentAtsign':
-                                    BackendService.getInstance().currentAtsign,
-                                'context': NavService.navKey.currentContext,
-                                'selectedList': (s) {
-                                  Provider.of<WelcomeScreenProvider>(
-                                          NavService.navKey.currentContext,
-                                          listen: false)
-                                      .updateSelectedContacts(s);
-                                }
-                              }
-                            : (index == 3)
-                                ? {
-                                    "title":
-                                        TextStrings().sidebarTermsAndConditions,
-                                    "url": MixedConstants.TERMS_CONDITIONS
-                                  }
-                                : (index == 4)
-                                    ? {
-                                        // "title":
-                                        //     TextStrings().sidebarPrivacyPolicy,
-                                        // "url": MixedConstants.PRIVACY_POLICY
-                                        "currentAtsign":
-                                            BackendService.getInstance()
-                                                .currentAtsign
-                                      }
-                                    : null);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 13.toHeight),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          menuItemsIcons[index],
-                          height: 20.toHeight,
-                          color: ColorConstants.fadedText,
-                        ),
-                        SizedBox(
-                          width: 15.toWidth,
-                        ),
-                        Expanded(
-                          child: Text(
-                            menuItemsTitle[index],
-                            softWrap: true,
-                            style: TextStyle(
-                              color: ColorConstants.fadedText,
-                              fontSize: 14.toFont,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  _deleteAtSign(BackendService.getInstance().currentAtsign);
+              SideBarItem(
+                image: menuItemsIcons[0],
+                title: menuItemsTitle[0],
+                routeName: targetScreens[0],
+                arguments: {
+                  'singleSelection': false,
+                  'showGroups': true,
+                  'showContacts': true,
+                  'selectedList': (s) {}
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 13.toHeight),
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: ColorConstants.fadedText),
-                      SizedBox(
-                        width: 15.toWidth,
-                      ),
-                      Text(
-                        TextStrings().sidebarDeleteAtsign,
-                        style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 14.toFont,
-                        ),
-                      ),
-                    ],
+              ),
+              SideBarItem(
+                image: menuItemsIcons[1],
+                title: menuItemsTitle[1],
+                routeName: targetScreens[1],
+              ),
+              SideBarItem(
+                image: menuItemsIcons[2],
+                title: menuItemsTitle[2],
+                routeName: targetScreens[2],
+              ),
+              SideBarItem(
+                image: menuItemsIcons[3],
+                title: menuItemsTitle[3],
+                routeName: targetScreens[3],
+                arguments: {
+                  "title": TextStrings().sidebarTermsAndConditions,
+                  "url": MixedConstants.TERMS_CONDITIONS
+                },
+              ),
+              SideBarItem(
+                image: menuItemsIcons[4],
+                title: menuItemsTitle[4],
+                routeName: targetScreens[4],
+                arguments: {
+                  "currentAtsign": BackendService.getInstance().currentAtsign
+                },
+              ),
+              SideBarItem(
+                image: menuItemsIcons[5],
+                title: menuItemsTitle[5],
+                routeName: targetScreens[5],
+                arguments: {
+                  'title': menuItemsTitle[5],
+                  'url': MixedConstants.TERMS_CONDITIONS
+                },
+              ),
+              SideBarItem(
+                  image: menuItemsIcons[6],
+                  title: menuItemsTitle[6],
+                  routeName: targetScreens[6],
+                  arguments: {
+                    'title': menuItemsTitle[6],
+                    'url': MixedConstants.PRIVACY_POLICY
+                  }),
+              SideBarItem(
+                image: menuItemsIcons[7],
+                title: menuItemsTitle[7],
+                routeName: targetScreens[7],
+              ),
+              SideBarItem(
+                image: menuItemsIcons[8],
+                title: menuItemsTitle[8],
+                routeName: targetScreens[8],
+              ),
+              ListTile(
+                onTap: () async {
+                  _deleteAtSign(
+                      await BackendService.getInstance().currentAtsign);
+                  setState(() {});
+                },
+                leading: Icon(Icons.delete, color: ColorConstants.fadedText),
+                title: Text(
+                  TextStrings().sidebarDeleteAtsign,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
                   ),
                 ),
               ),
               SizedBox(
                 height: 40.toHeight,
               ),
-              Wrap(
-                direction: Axis.horizontal,
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    TextStrings().sidebarAutoAcceptFile,
-                    style: TextStyle(
-                      color: ColorConstants.fadedText,
-                      fontSize: 14.toFont,
-                    ),
+              ListTile(
+                leading: Text(
+                  TextStrings().sidebarAutoAcceptFile,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
                   ),
-                  Transform.scale(
-                    scale: 0.6,
-                    child: CupertinoSwitch(
-                      value: BackendService.getInstance().autoAcceptFiles,
-                      onChanged: (b) {
-                        setState(() {
-                          BackendService.getInstance().autoAcceptFiles = b;
-                        });
-                      },
-                      activeColor: Colors.black,
-                    ),
-                  )
-                ],
+                ),
+                title: Transform.scale(
+                  scale: 0.6,
+                  child: CupertinoSwitch(
+                    value: BackendService.getInstance().autoAcceptFiles,
+                    onChanged: (b) {
+                      setState(() {
+                        BackendService.getInstance().autoAcceptFiles = b;
+                      });
+                    },
+                    activeColor: Colors.black,
+                  ),
+                ),
               ),
-              SizedBox(
-                height: 14.toHeight,
-              ),
+              // SizedBox(
+              //   height: 14.toHeight,
+              // ),
               Padding(
-                padding: EdgeInsets.only(right: 16.toWidth),
+                padding: EdgeInsets.only(left: 16.toWidth),
                 child: Text(
                   TextStrings().sidebarEnablingMessage,
                   style: TextStyle(
@@ -224,33 +186,22 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
-              InkWell(
+              ListTile(
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.HOME, (route) => false);
                 },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 13.toHeight),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        ImageConstants.logoutIcon,
-                        height: 20.toHeight,
-                        color: ColorConstants.fadedText,
-                      ),
-                      SizedBox(
-                        width: 15.toWidth,
-                      ),
-                      Text(
-                        TextStrings().sidebarSwitchOut,
-                        style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 14.toFont,
-                        ),
-                      ),
-                    ],
+                leading: Image.asset(
+                  ImageConstants.logoutIcon,
+                  height: 20.toHeight,
+                  color: ColorConstants.fadedText,
+                ),
+                title: Text(
+                  TextStrings().sidebarSwitchOut,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
                   ),
                 ),
               ),
