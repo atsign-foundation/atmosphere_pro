@@ -1,4 +1,5 @@
 import 'package:at_contacts_flutter/screens/blocked_screen.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/faqs/faqs.dart';
@@ -39,11 +40,24 @@ class SetupRoutes {
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =
             ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
-        return ContactsScreen(
-          selectedList: args['selectedList'],
-          context: args['context'],
-          asSelectionScreen: args['asSelectionScreen'],
-        );
+        return GroupContactView(
+            asSelectionScreen: args['asSelectionScreen'],
+            singleSelection: args['singleSelection'],
+            showGroups: args['showGroups'],
+            showContacts: args['showContacts'],
+            selectedList: args['selectedList']
+            //  (s) {
+            //   Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext,
+            //           listen: false)
+            //       .updateSelectedContacts(s);
+            // },
+            // singleSelection: true,
+            );
+        // return ContactsScreen(
+        //   selectedList: args['selectedList'],
+        //   context: args['context'],
+        //   asSelectionScreen: args['asSelectionScreen'],
+        // );
       },
       Routes.GROUPS: (context) {
         Map<String, dynamic> args =

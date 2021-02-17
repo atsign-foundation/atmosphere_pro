@@ -71,8 +71,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   setAtSign() async {
     currentAtSign = await backendService.getAtSign();
-    await initGroups();
     await getAtSignAndInitializeContacts();
+    await initGroups();
     setState(() {});
   }
 

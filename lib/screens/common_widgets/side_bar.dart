@@ -74,14 +74,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 title: menuItemsTitle[0],
                 routeName: targetScreens[0],
                 arguments: {
-                  'currentAtsign': BackendService.getInstance().currentAtsign,
-                  'context': NavService.navKey.currentContext,
-                  'selectedList': (s) {
-                    Provider.of<WelcomeScreenProvider>(
-                            NavService.navKey.currentContext,
-                            listen: false)
-                        .updateSelectedContacts(s);
-                  }
+                  'singleSelection': false,
+                  'showGroups': true,
+                  'showContacts': true,
+                  'selectedList': (s) {}
                 },
               ),
               SideBarItem(
