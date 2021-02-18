@@ -1,3 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -56,6 +61,30 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.TRUSTED_CONTACTS
   ];
   String activeAtSign;
+  Uint8List image;
+  AtContact contact;
+  String name;
+
+  getEventCreator() async {
+    AtContact contact = await getAtSignDetails(BackendService.getInstance()
+        .atClientServiceInstance
+        .atClient
+        .currentAtSign);
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        setState(() {
+          image = Uint8List.fromList(intList);
+        });
+      }
+      if (contact.tags != null && contact.tags['name'] != null) {
+        String newName = contact.tags['name'].toString();
+        setState(() {
+          name = newName;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +95,59 @@ class _SideBarWidgetState extends State<SideBarWidget> {
           padding: EdgeInsets.symmetric(horizontal: 30.toWidth),
           child: ListView(
             children: [
-              SizedBox(
-                height: 120.toHeight,
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 50.toHeight,
+                  bottom: 40.toHeight,
+                  left: 10.toWidth,
+                ),
+                child: Row(
+                  children: [
+                    (image != null)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            child: Image.memory(
+                              image,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.fill,
+                            ),
+                          )
+                        : ContactInitial(
+                            initials: BackendService.getInstance()
+                                .atClientServiceInstance
+                                .atClient
+                                .currentAtSign
+                                .substring(1, 3)),
+                    Flexible(
+                        child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name ?? 'Full Name',
+                            // style: CustomTextStyles().darkGrey16,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            BackendService.getInstance()
+                                    .atClientServiceInstance
+                                    .atClient
+                                    .currentAtSign ??
+                                '@sign',
+                            // style: CustomTextStyles().darkGrey14,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    )),
+                  ],
+                ),
               ),
               SideBarItem(
                 image: menuItemsIcons[0],
@@ -149,6 +229,25 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
               ),
+              ListTile(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.HOME, (route) => false);
+                },
+                leading: Image.asset(
+                  ImageConstants.logoutIcon,
+                  height: 20.toHeight,
+                  color: ColorConstants.fadedText,
+                ),
+                title: Text(
+                  TextStrings().sidebarSwitchOut,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 40.toHeight,
               ),
@@ -183,25 +282,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   style: TextStyle(
                     color: ColorConstants.dullText,
                     fontSize: 12.toFont,
-                  ),
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.HOME, (route) => false);
-                },
-                leading: Image.asset(
-                  ImageConstants.logoutIcon,
-                  height: 20.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                title: Text(
-                  TextStrings().sidebarSwitchOut,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
                   ),
                 ),
               ),
