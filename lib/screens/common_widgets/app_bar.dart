@@ -102,11 +102,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Container(
           height: 22.toHeight,
           width: 22.toWidth,
-          margin: EdgeInsets.only(right: 20),
+          margin: EdgeInsets.only(right: 30),
           child: (showTitle)
               ? (showTrailingButton)
                   ? IconButton(
-                      icon: Icon(trailingIcon),
+                      icon: Icon(
+                        trailingIcon,
+                        size: 30,
+                      ),
                       onPressed: () async {
                         if (isHistory) {
                           // navigate to downloads folder
