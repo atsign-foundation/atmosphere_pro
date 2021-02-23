@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
@@ -24,7 +22,7 @@ class FilePickerProvider extends BaseModel {
   String VIDEO_THUMBNAIL = 'video_thumbnail';
   String ACCEPT_FILES = 'accept_files';
   String SEND_FILES = 'send_files';
-  StreamSubscription _intentDataStreamSubscription;
+  // StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerResult result;
   PlatformFile file;
@@ -106,9 +104,8 @@ class FilePickerProvider extends BaseModel {
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
     try {
-      _intentDataStreamSubscription =
-          await ReceiveSharingIntent.getMediaStream().listen(
-              (List<SharedMediaFile> value) {
+      await ReceiveSharingIntent.getMediaStream().listen(
+          (List<SharedMediaFile> value) {
         _sharedFiles = value;
 
         if (value.isNotEmpty) {

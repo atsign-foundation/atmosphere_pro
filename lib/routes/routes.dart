@@ -8,15 +8,11 @@ import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/home/home.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_pro/screens/private_key_qrcode_generator.dart';
-
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
-
-import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:atsign_authentication_helper/atsign_authentication_helper.dart';
 import 'package:flutter/material.dart';
-
 import '../screens/terms_conditions/terms_conditions_screen.dart';
 
 class SetupRoutes {

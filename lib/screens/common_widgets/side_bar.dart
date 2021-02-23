@@ -6,17 +6,14 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SideBarWidget extends StatefulWidget {
   @override
@@ -97,8 +94,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  top: 50.toHeight,
-                  bottom: 40.toHeight,
+                  top: 30.toHeight,
+                  bottom: 10.toHeight,
                   left: 10.toWidth,
                 ),
                 child: Row(
@@ -248,9 +245,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 40.toHeight,
-              ),
+
               ListTile(
                 leading: Text(
                   TextStrings().sidebarAutoAcceptFile,

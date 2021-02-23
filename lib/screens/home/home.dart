@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
@@ -36,7 +34,7 @@ class _HomeState extends State<Home> {
   final Permission _storagePermission = Permission.storage;
 
   bool authenticating = false;
-  StreamSubscription _intentDataStreamSubscription;
+
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
   String activeAtSign;
@@ -52,8 +50,8 @@ class _HomeState extends State<Home> {
   }
 
   void acceptFiles() async {
-    _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) async {
+    await ReceiveSharingIntent.getMediaStream().listen(
+        (List<SharedMediaFile> value) async {
       _sharedFiles = value;
 
       if (value.isNotEmpty) {
@@ -126,6 +124,7 @@ class _HomeState extends State<Home> {
           _backendService.monitorConnection.isInValid()) {
         _backendService.startMonitor();
       }
+      return null;
     });
     authenticating = false;
     setState(() {});
@@ -143,11 +142,6 @@ class _HomeState extends State<Home> {
       await _storagePermission.request();
     }
   }
-
-  // getTrustedContact() async {
-  //   await Provider.of<ContactProvider>(context, listen: false)
-  //       .getTrustedContact();
-  // }
 
   onNotificationClick(String payload) async {}
 

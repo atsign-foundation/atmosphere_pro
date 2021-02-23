@@ -131,9 +131,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                             }
                           },
                           taskName: (provider) => provider.SORT_LIST,
-                          onSuccess: (provider) {
-                            print('object');
-                          });
+                          onSuccess: (provider) {});
                       break;
                     default:
                   }

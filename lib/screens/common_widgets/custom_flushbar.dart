@@ -19,7 +19,8 @@ class CustomFlushBar {
   BackendService backendService = BackendService.getInstance();
 
   Flushbar getFlushbar(
-      String displayMessage, AnimationController progressController) {
+      String displayMessage, AnimationController progressController,
+      {String buttonMessage}) {
     if (currentController == null) {
       currentController = progressController;
     } else {
@@ -60,7 +61,7 @@ class CustomFlushBar {
           }
         },
         child: Text(
-          TextStrings().buttonDismiss,
+          buttonMessage ?? TextStrings().buttonDismiss,
           style: TextStyle(color: ColorConstants.fontPrimary),
         ),
       ),

@@ -216,7 +216,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 SelectFileWidget(
                   (b) {
-                    print("file is selected => $b");
                     setState(() {
                       isFileSelected = b;
                     });

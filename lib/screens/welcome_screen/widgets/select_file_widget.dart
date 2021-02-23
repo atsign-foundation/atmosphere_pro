@@ -180,8 +180,6 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                 }
                 return Consumer<FilePickerProvider>(
                     builder: (context, provider, _) {
-                  print(
-                      'CONSUMER FILES=======>${provider.selectedFiles.length}');
                   return Container(
                     decoration: BoxDecoration(
                       border: Border(

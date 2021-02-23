@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 Future<void> openDownloadsFolder(BuildContext context) async {
   if (Platform.isAndroid) {
-    String path = await FilesystemPicker.open(
+    await FilesystemPicker.open(
       title: 'Atmosphere download folder',
       context: context,
       rootDirectory: BackendService.getInstance().downloadDirectory,
