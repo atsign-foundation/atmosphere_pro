@@ -13,24 +13,53 @@ class SideBarItem extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    // return ListTile(
+    //   onTap: () {
+    //     Navigator.pop(context);
+    //     Navigator.pushNamed(context, routeName,
+    //         arguments: arguments != null ? arguments : {});
+    //   },
+    //   leading: Image.asset(
+    //     image,
+    //     height: 20.toHeight,
+    //     color: ColorConstants.fadedText,
+    //   ),
+    //   title: Text(
+    //     title,
+    //     softWrap: true,
+    //     style: TextStyle(
+    //       color: ColorConstants.fadedText,
+    //       letterSpacing: 0.1,
+    //       fontSize: 14.toFont,
+    //     ),
+    //   ),
+    // );
+    return InkWell(
       onTap: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, routeName,
             arguments: arguments != null ? arguments : {});
       },
-      leading: Image.asset(
-        image,
-        height: 20.toHeight,
-        color: ColorConstants.fadedText,
-      ),
-      title: Text(
-        title,
-        softWrap: true,
-        style: TextStyle(
-          color: ColorConstants.fadedText,
-          letterSpacing: 0.1,
-          fontSize: 14.toFont,
+      child: Container(
+        height: 50,
+        child: Row(
+          children: [
+            Image.asset(
+              image,
+              height: 20.toHeight,
+              color: ColorConstants.fadedText,
+            ),
+            SizedBox(width: 10),
+            Text(
+              title,
+              softWrap: true,
+              style: TextStyle(
+                color: ColorConstants.fadedText,
+                letterSpacing: 0.1,
+                fontSize: 14.toFont,
+              ),
+            ),
+          ],
         ),
       ),
     );

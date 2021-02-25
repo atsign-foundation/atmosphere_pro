@@ -62,6 +62,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   AtContact contact;
   String name;
 
+  @override
+  void initState() {
+    super.initState();
+    getEventCreator();
+  }
+
   getEventCreator() async {
     AtContact contact = await getAtSignDetails(BackendService.getInstance()
         .atClientServiceInstance
@@ -78,6 +84,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         String newName = contact.tags['name'].toString();
         setState(() {
           name = newName;
+        });
+      } else {
+        setState(() {
+          name = contact.atSign.substring(1);
         });
       }
     }
@@ -128,7 +138,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             name ?? 'Full Name',
                             // style: CustomTextStyles().darkGrey16,
                             maxLines: 1,
-                            style: TextStyle(letterSpacing: 0.1),
+                            // style: TextStyle(letterSpacing: 0.1),
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
@@ -212,40 +222,51 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 title: menuItemsTitle[8],
                 routeName: targetScreens[8],
               ),
-              ListTile(
-                onTap: () async {
-                  _deleteAtSign(
-                      await BackendService.getInstance().currentAtsign);
-                  setState(() {});
-                },
-                leading: Icon(Icons.delete, color: ColorConstants.fadedText),
-                title: Text(
-                  TextStrings().sidebarDeleteAtsign,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
-                  ),
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.HOME, (route) => false);
-                },
-                leading: Image.asset(
-                  ImageConstants.logoutIcon,
-                  height: 20.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                title: Text(
-                  TextStrings().sidebarSwitchOut,
-                  style: TextStyle(
-                      color: ColorConstants.fadedText,
-                      fontSize: 14.toFont,
-                      letterSpacing: 0.1),
-                ),
-              ),
+              InkWell(
+                  onTap: () async {
+                    _deleteAtSign(
+                        await BackendService.getInstance().currentAtsign);
+                    setState(() {});
+                  },
+                  child: Container(
+                    height: 50,
+                    child: Row(children: [
+                      Icon(Icons.delete,
+                          color: ColorConstants.fadedText, size: 20.toFont),
+                      SizedBox(width: 10),
+                      Text(
+                        TextStrings().sidebarDeleteAtsign,
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 14.toFont,
+                        ),
+                      ),
+                    ]),
+                  )),
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Routes.HOME, (route) => false);
+                  },
+                  child: Container(
+                    height: 50,
+                    child: Row(children: [
+                      Image.asset(
+                        ImageConstants.logoutIcon,
+                        height: 20.toHeight,
+                        color: ColorConstants.fadedText,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        TextStrings().sidebarSwitchOut,
+                        style: TextStyle(
+                            color: ColorConstants.fadedText,
+                            fontSize: 14.toFont,
+                            letterSpacing: 0.1),
+                      ),
+                    ]),
+                  )),
 
               ListTile(
                 leading: Text(
