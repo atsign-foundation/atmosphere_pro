@@ -68,11 +68,10 @@ class BackendService {
       atClientPreference.hiveStoragePath = path;
       atClientPreference.downloadPath = downloadDirectory.path;
       atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
-      print(
-          'atClientServiceInstance====>$atClientServiceInstance======>atClientPreference====>${atClientPreference}');
+
       var result = await atClientServiceInstance.onboard(
           atClientPreference: atClientPreference, atsign: atsign);
-      // print('RESULT====>$result');
+
       atClientInstance = atClientServiceInstance.atClient;
       return result;
     } catch (e) {

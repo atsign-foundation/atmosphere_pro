@@ -6,17 +6,14 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SideBarWidget extends StatefulWidget {
   @override
@@ -97,8 +94,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  top: 50.toHeight,
-                  bottom: 40.toHeight,
+                  top: 30.toHeight,
+                  bottom: 10.toHeight,
                   left: 10.toWidth,
                 ),
                 child: Row(
@@ -131,6 +128,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             name ?? 'Full Name',
                             // style: CustomTextStyles().darkGrey16,
                             maxLines: 1,
+                            style: TextStyle(letterSpacing: 0.1),
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
@@ -140,7 +138,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     .currentAtSign ??
                                 '@sign',
                             // style: CustomTextStyles().darkGrey14,
-                            maxLines: 1,
+                            maxLines: 1, style: TextStyle(letterSpacing: 0.1),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -243,21 +241,19 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 title: Text(
                   TextStrings().sidebarSwitchOut,
                   style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
-                  ),
+                      color: ColorConstants.fadedText,
+                      fontSize: 14.toFont,
+                      letterSpacing: 0.1),
                 ),
               ),
-              SizedBox(
-                height: 40.toHeight,
-              ),
+
               ListTile(
                 leading: Text(
                   TextStrings().sidebarAutoAcceptFile,
                   style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
-                  ),
+                      color: ColorConstants.fadedText,
+                      fontSize: 14.toFont,
+                      letterSpacing: 0.1),
                 ),
                 title: Transform.scale(
                   scale: 0.6,
@@ -280,9 +276,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 child: Text(
                   TextStrings().sidebarEnablingMessage,
                   style: TextStyle(
-                    color: ColorConstants.dullText,
-                    fontSize: 12.toFont,
-                  ),
+                      color: ColorConstants.dullText,
+                      fontSize: 12.toFont,
+                      letterSpacing: 0.1),
                 ),
               ),
             ],
@@ -302,8 +298,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             title: Center(
               child: Text(
                 'Delete @sign',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.black,
+                    letterSpacing: 0.1,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             content: Column(
@@ -311,16 +309,20 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               children: [
                 Text('Are you sure you want to delete all data associated with',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[700])),
+                    style:
+                        TextStyle(letterSpacing: 0.1, color: Colors.grey[700])),
                 SizedBox(height: 20),
                 Text('$atsign',
                     textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                        fontSize: 20,
+                        letterSpacing: 0.1,
+                        fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 Text('Type the @sign above to proceed',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[700])),
+                    style:
+                        TextStyle(color: Colors.grey[700], letterSpacing: 0.1)),
                 SizedBox(height: 5),
                 Form(
                   key: _formKey,
@@ -345,8 +347,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 ),
                 SizedBox(height: 20),
                 Text("Caution: this action can't be undone",
-                    style:
-                        TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                        fontSize: 13,
+                        letterSpacing: 0.1,
+                        fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

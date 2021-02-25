@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
@@ -36,7 +34,7 @@ class _HomeState extends State<Home> {
   final Permission _storagePermission = Permission.storage;
 
   bool authenticating = false;
-  StreamSubscription _intentDataStreamSubscription;
+
   List<SharedMediaFile> _sharedFiles;
   FilePickerProvider filePickerProvider;
   String activeAtSign;
@@ -52,14 +50,14 @@ class _HomeState extends State<Home> {
   }
 
   void acceptFiles() async {
-    _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) async {
+    await ReceiveSharingIntent.getMediaStream().listen(
+        (List<SharedMediaFile> value) async {
       _sharedFiles = value;
 
       if (value.isNotEmpty) {
         value.forEach((element) async {
           File file = File(element.path);
-          double length = await file.length() / 1024;
+          var length = await file.length();
           await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
               name: basename(file.path),
               path: file.path,
@@ -88,7 +86,7 @@ class _HomeState extends State<Home> {
       if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
         _sharedFiles.forEach((element) async {
           File file = File(element.path);
-          var length = await file.length() / 1024;
+          var length = await file.length();
           PlatformFile fileToBeAdded = PlatformFile(
               name: basename(file.path),
               path: file.path,
@@ -98,7 +96,8 @@ class _HomeState extends State<Home> {
           filePickerProvider.setFiles();
         });
 
-        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+        print("Shared second:" +
+            (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
       }
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
@@ -126,6 +125,7 @@ class _HomeState extends State<Home> {
           _backendService.monitorConnection.isInValid()) {
         _backendService.startMonitor();
       }
+      return null;
     });
     authenticating = false;
     setState(() {});
@@ -143,11 +143,6 @@ class _HomeState extends State<Home> {
       await _storagePermission.request();
     }
   }
-
-  // getTrustedContact() async {
-  //   await Provider.of<ContactProvider>(context, listen: false)
-  //       .getTrustedContact();
-  // }
 
   onNotificationClick(String payload) async {}
 
@@ -204,6 +199,7 @@ class _HomeState extends State<Home> {
                               style: GoogleFonts.playfairDisplay(
                                 textStyle: TextStyle(
                                   fontSize: 38.toFont,
+                                  letterSpacing: 0.1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

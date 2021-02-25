@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
@@ -36,7 +37,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
   NotificationPayload payload;
   bool status = false;
   BackendService backendService = BackendService.getInstance();
-  ContactProvider contactProvider;
+
   Flushbar flushbar;
   @override
   void initState() {
@@ -47,17 +48,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
   }
 
   @override
-  void didChangeDependencies() {
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context);
-    }
-
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print("payload => ${widget.payload}");
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.toWidth),
@@ -73,8 +64,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
           ),
           GestureDetector(
             onTap: () {
-              contactProvider.blockUnblockContact(
-                  atSign: payload.name, blockAction: true);
+              // contactProvider.blockUnblockContact(
+              //     atSign: payload.name, blockAction: true);
               status = false;
               NotificationService().cancelNotifications();
               widget.sharingStatus(status);
@@ -165,7 +156,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
       actions: [
         CustomButton(
           buttonText: TextStrings().accept,
-          onPressed: () {
+          onPressed: () async {
             progressController = AnimationController(vsync: this);
             backendService.controller = progressController;
             DateTime date = DateTime.now();
@@ -195,7 +186,15 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
               flushbar = CustomFlushBar()
                   .getFlushbar(TextStrings().receivingFile, progressController);
 
-              flushbar.show(context);
+              await flushbar.show(context);
+              // Future.delayed(Duration(seconds: 2), () async {
+              // print('lolololololololo');
+              await showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => AddContactDialog(),
+              );
+              // });
             }
           },
         ),

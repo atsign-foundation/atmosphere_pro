@@ -34,10 +34,10 @@ class FaqsScreen extends StatelessWidget {
                   title: Text(
                     FAQData.data[index]["question"],
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12.toFont,
-                      fontWeight: FontWeight.w500,
-                    ),
+                        color: Colors.black,
+                        fontSize: 12.toFont,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.1),
                   ),
                   trailing: Icon(Icons.keyboard_arrow_down),
                   children: [
@@ -51,10 +51,10 @@ class FaqsScreen extends StatelessWidget {
                       child: Text(
                         FAQData.data[index]["answer"],
                         style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 12.toFont,
-                          height: 1.7,
-                        ),
+                            color: ColorConstants.fadedText,
+                            fontSize: 12.toFont,
+                            height: 1.7,
+                            letterSpacing: 0.1),
                       ),
                     )
                   ],

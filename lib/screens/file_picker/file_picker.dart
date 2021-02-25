@@ -61,7 +61,10 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: 10.toWidth, vertical: 5.toHeight),
                     child: Center(
-                      child: Text('Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(letterSpacing: 0.1),
+                      ),
                     ),
                   ),
                 ),

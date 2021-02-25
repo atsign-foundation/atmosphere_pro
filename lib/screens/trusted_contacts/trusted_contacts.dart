@@ -125,7 +125,6 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                 context: NavService
                                                     .navKey.currentContext,
                                                 selectedList: (s) async {
-                                                  print('s=====>${s[0]}');
                                                   s.forEach((element) async {
                                                     await provider
                                                         .addTrustedContacts(

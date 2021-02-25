@@ -29,6 +29,7 @@ class SideBarItem extends StatelessWidget {
         softWrap: true,
         style: TextStyle(
           color: ColorConstants.fadedText,
+          letterSpacing: 0.1,
           fontSize: 14.toFont,
         ),
       ),

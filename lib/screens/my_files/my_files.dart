@@ -45,7 +45,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   @override
   void initState() {
     historyProvider = HistoryProvider();
-    print(historyProvider.receivedPhotos);
+
     ini();
     setState(() {});
     super.initState();
@@ -131,9 +131,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                             }
                           },
                           taskName: (provider) => provider.SORT_LIST,
-                          onSuccess: (provider) {
-                            print('object');
-                          });
+                          onSuccess: (provider) {});
                       break;
                     default:
                   }

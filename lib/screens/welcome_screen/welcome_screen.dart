@@ -216,7 +216,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 SelectFileWidget(
                   (b) {
-                    print("file is selected => $b");
                     setState(() {
                       isFileSelected = b;
                     });
@@ -227,63 +226,72 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 if (_welcomeScreenProvider.selectedContacts != null &&
                     filePickerModel.selectedFiles.isNotEmpty) ...[
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: CommonButton(
-                      TextStrings().buttonSend,
-                      () async {
-                        filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                            _welcomeScreenProvider.selectedContacts);
-                        // _showScaffold(status: 0);
-                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                        //     _welcomeScreenProvider.selectedContacts);
-                        // bool response = filePickerModel.sentStatus[0];
-                        // if (filePickerModel.sentStatus != null) {
-                        sendingFlushbar = _showScaffold(status: 0);
-                        await sendingFlushbar.show(context);
-                        // }
-
-                        _showScaffold(status: 0);
-                        // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                        //     _welcomeScreenProvider.selectedContacts);
-
-                        bool response;
-
-                        response = Provider.of<FilePickerProvider>(context,
-                                listen: false)
-                            .sentStatus;
-
-                        // bool response = true;
-                        // bool response = await backendService.sendFile(
-                        //     contactPickerModel.selectedContacts,
-                        //     filePickerModel.selectedFiles[0].path);
-
-                        // Provider.of<HistoryProvider>(context, listen: false)
-                        //     .setFilesHistory(
-                        //         atSignName: _filePickerProvider
-                        //             .temporaryContactList[0].atSign,
-                        //         historyType: HistoryType.send,
-                        //         files: [
-                        //       FilesDetail(
-                        //           filePath:
-                        //               filePickerModel.selectedFiles[0].path,
-                        //           size: filePickerModel.totalSize,
-                        //           fileName: filePickerModel.result.files[0].name
-                        //               .toString(),
-                        //           type: filePickerModel
-                        //               .selectedFiles[0].extension
-                        //               .toString())
-                        //     ]);
-
-                        // _showScaffold(status: 1);
-                        if (response != null && response == true) {
-                          sendingFlushbar = _showScaffold(status: 1);
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CommonButton('Reset', () {
+                        setState(() {
+                          _welcomeScreenProvider.selectedContacts.clear();
+                          filePickerModel.selectedFiles.clear();
+                        });
+                      }),
+                      CommonButton(
+                        TextStrings().buttonSend,
+                        () async {
+                          filePickerModel.sendFiles(
+                              filePickerModel.selectedFiles,
+                              _welcomeScreenProvider.selectedContacts);
+                          // _showScaffold(status: 0);
+                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                          //     _welcomeScreenProvider.selectedContacts);
+                          // bool response = filePickerModel.sentStatus[0];
+                          // if (filePickerModel.sentStatus != null) {
+                          sendingFlushbar = _showScaffold(status: 0);
                           await sendingFlushbar.show(context);
-                        } else {
-                          _showScaffold(status: 2);
-                        }
-                      },
-                    ),
+                          // }
+
+                          _showScaffold(status: 0);
+                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                          //     _welcomeScreenProvider.selectedContacts);
+
+                          bool response;
+
+                          response = Provider.of<FilePickerProvider>(context,
+                                  listen: false)
+                              .sentStatus;
+
+                          // bool response = true;
+                          // bool response = await backendService.sendFile(
+                          //     contactPickerModel.selectedContacts,
+                          //     filePickerModel.selectedFiles[0].path);
+
+                          // Provider.of<HistoryProvider>(context, listen: false)
+                          //     .setFilesHistory(
+                          //         atSignName: _filePickerProvider
+                          //             .temporaryContactList[0].atSign,
+                          //         historyType: HistoryType.send,
+                          //         files: [
+                          //       FilesDetail(
+                          //           filePath:
+                          //               filePickerModel.selectedFiles[0].path,
+                          //           size: filePickerModel.totalSize,
+                          //           fileName: filePickerModel.result.files[0].name
+                          //               .toString(),
+                          //           type: filePickerModel
+                          //               .selectedFiles[0].extension
+                          //               .toString())
+                          //     ]);
+
+                          // _showScaffold(status: 1);
+                          if (response != null && response == true) {
+                            sendingFlushbar = _showScaffold(status: 1);
+                            await sendingFlushbar.show(context);
+                          } else {
+                            _showScaffold(status: 2);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 60.toHeight,

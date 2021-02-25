@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
@@ -24,7 +22,7 @@ class FilePickerProvider extends BaseModel {
   String VIDEO_THUMBNAIL = 'video_thumbnail';
   String ACCEPT_FILES = 'accept_files';
   String SEND_FILES = 'send_files';
-  StreamSubscription _intentDataStreamSubscription;
+  // StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerResult result;
   PlatformFile file;
@@ -106,15 +104,15 @@ class FilePickerProvider extends BaseModel {
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
     try {
-      _intentDataStreamSubscription =
-          await ReceiveSharingIntent.getMediaStream().listen(
-              (List<SharedMediaFile> value) {
+      await ReceiveSharingIntent.getMediaStream().listen(
+          (List<SharedMediaFile> value) {
         _sharedFiles = value;
 
         if (value.isNotEmpty) {
           value.forEach((element) async {
             File file = File(element.path);
-            double length = await file.length() / 1024;
+            double length = double.parse(await file.length().toString());
+
             selectedFiles.add(PlatformFile(
                 name: basename(file.path),
                 path: file.path,
@@ -137,7 +135,8 @@ class FilePickerProvider extends BaseModel {
         if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
           _sharedFiles.forEach((element) async {
             var test = File(element.path);
-            var length = await test.length() / 1024;
+            var length = await test.length();
+
             selectedFiles.add(PlatformFile(
                 name: basename(test.path),
                 path: test.path,
