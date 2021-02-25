@@ -62,7 +62,8 @@ class CustomFlushBar {
         },
         child: Text(
           buttonMessage ?? TextStrings().buttonDismiss,
-          style: TextStyle(color: ColorConstants.fontPrimary),
+          style:
+              TextStyle(color: ColorConstants.fontPrimary, letterSpacing: 0.1),
         ),
       ),
       onStatusChanged: (status) {
@@ -88,7 +89,9 @@ class CustomFlushBar {
                 child: Text(
                   displayMessage,
                   style: TextStyle(
-                      color: ColorConstants.fadedText, fontSize: 10.toFont),
+                      color: ColorConstants.fadedText,
+                      letterSpacing: 0.1,
+                      fontSize: 10.toFont),
                 ),
               )
             ],

@@ -199,6 +199,7 @@ class _HomeState extends State<Home> {
                               style: GoogleFonts.playfairDisplay(
                                 textStyle: TextStyle(
                                   fontSize: 38.toFont,
+                                  letterSpacing: 0.1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

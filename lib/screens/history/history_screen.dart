@@ -76,9 +76,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                   tabs: [
                     Text(
                       TextStrings().sent,
+                      style: TextStyle(letterSpacing: 0.1),
                     ),
                     Text(
                       TextStrings().received,
+                      style: TextStyle(letterSpacing: 0.1),
                     )
                   ],
                 ),
