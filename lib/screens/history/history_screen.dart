@@ -20,7 +20,6 @@ class _HistoryScreenState extends State<HistoryScreen>
   TabController _controller;
   bool isOpen = false;
   HistoryProvider historyProvider;
-  ContactProvider contactProvider;
 
   @override
   void didChangeDependencies() {
@@ -32,9 +31,6 @@ class _HistoryScreenState extends State<HistoryScreen>
         historyProvider.getSentHistory();
         historyProvider.getRecievedHistory();
       });
-    }
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context, listen: false);
     }
 
     super.didChangeDependencies();
@@ -109,8 +105,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: FilesListTile(
-                                    sentHistory: provider.sentHistory[index],
-                                    contactProvider: contactProvider),
+                                  sentHistory: provider.sentHistory[index],
+                                ),
                               ),
                             ),
                       // errorBuilder: (provider) => Center(
@@ -141,7 +137,6 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 padding: const EdgeInsets.all(8.0),
                                 child: FilesListTile(
                                   sentHistory: provider.receivedHistory[index],
-                                  contactProvider: contactProvider,
                                 ),
                               ),
                             ),

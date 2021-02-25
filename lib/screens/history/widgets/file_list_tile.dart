@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/add_contact_from_history.dart';
+import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -70,9 +70,8 @@ class _FilesListTileState extends State<FilesListTile> {
                           onTap: () async {
                             await showDialog(
                               context: context,
-                              builder: (context) => AddHistoryContactDialog(
+                              builder: (context) => AddSingleContact(
                                 atSignName: widget.sentHistory.name,
-                                contactProvider: widget.contactProvider,
                               ),
                             );
                             this.setState(() {});

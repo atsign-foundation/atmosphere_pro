@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
       if (value.isNotEmpty) {
         value.forEach((element) async {
           File file = File(element.path);
-          double length = await file.length() / 1024;
+          var length = await file.length();
           await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
               name: basename(file.path),
               path: file.path,
@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
       if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
         _sharedFiles.forEach((element) async {
           File file = File(element.path);
-          var length = await file.length() / 1024;
+          var length = await file.length();
           PlatformFile fileToBeAdded = PlatformFile(
               name: basename(file.path),
               path: file.path,
@@ -96,7 +96,8 @@ class _HomeState extends State<Home> {
           filePickerProvider.setFiles();
         });
 
-        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+        print("Shared second:" +
+            (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
       }
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');

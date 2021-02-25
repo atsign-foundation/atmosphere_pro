@@ -111,7 +111,8 @@ class FilePickerProvider extends BaseModel {
         if (value.isNotEmpty) {
           value.forEach((element) async {
             File file = File(element.path);
-            double length = await file.length() / 1024;
+            double length = double.parse(await file.length().toString());
+
             selectedFiles.add(PlatformFile(
                 name: basename(file.path),
                 path: file.path,
@@ -134,7 +135,8 @@ class FilePickerProvider extends BaseModel {
         if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
           _sharedFiles.forEach((element) async {
             var test = File(element.path);
-            var length = await test.length() / 1024;
+            var length = await test.length();
+
             selectedFiles.add(PlatformFile(
                 name: basename(test.path),
                 path: test.path,

@@ -37,7 +37,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
   NotificationPayload payload;
   bool status = false;
   BackendService backendService = BackendService.getInstance();
-  ContactProvider contactProvider;
+
   Flushbar flushbar;
   @override
   void initState() {
@@ -48,17 +48,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
   }
 
   @override
-  void didChangeDependencies() {
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context);
-    }
-
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // print("payload => ${widget.payload}");
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.toWidth),
@@ -74,8 +64,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
           ),
           GestureDetector(
             onTap: () {
-              contactProvider.blockUnblockContact(
-                  atSign: payload.name, blockAction: true);
+              // contactProvider.blockUnblockContact(
+              //     atSign: payload.name, blockAction: true);
               status = false;
               NotificationService().cancelNotifications();
               widget.sharingStatus(status);

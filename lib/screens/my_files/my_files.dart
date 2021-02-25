@@ -45,7 +45,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   @override
   void initState() {
     historyProvider = HistoryProvider();
-    print(historyProvider.receivedPhotos);
+
     ini();
     setState(() {});
     super.initState();
