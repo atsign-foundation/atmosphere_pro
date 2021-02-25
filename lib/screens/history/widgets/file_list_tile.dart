@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
@@ -63,7 +64,8 @@ class _FilesListTileState extends State<FilesListTile> {
                       style: CustomTextStyles.primaryRegular16,
                     ),
                   ),
-                  widget.contactProvider.allContactsList
+                  ContactService()
+                          .allContactsList
                           .contains(widget.sentHistory.name)
                       ? SizedBox()
                       : GestureDetector(
@@ -116,7 +118,10 @@ class _FilesListTileState extends State<FilesListTile> {
                     ),
                     SizedBox(width: 10.toHeight),
                     Text(
-                      '${(widget.sentHistory.totalSize / (widget.sentHistory.totalSize > 1024 ? 1024 : 1)).toStringAsFixed(2)} ${widget.sentHistory.totalSize < 1024 ? "Kb" : "Mb"}',
+                      double.parse(widget.sentHistory.totalSize.toString()) <=
+                              1024
+                          ? '${widget.sentHistory.totalSize} Kb '
+                          : '${(widget.sentHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
                       style: CustomTextStyles.secondaryRegular12,
                     )
                   ],
@@ -246,7 +251,12 @@ class _FilesListTileState extends State<FilesListTile> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${(widget.sentHistory.files[index].size / (widget.sentHistory.files[index].size > 1024 ? 1024 : 1)).toStringAsFixed(2)} ${widget.sentHistory.files[index].size < 1024 ? "Kb" : "MB"}',
+                                        double.parse(widget.sentHistory
+                                                    .files[index].size
+                                                    .toString()) <=
+                                                1024
+                                            ? '${widget.sentHistory.files[index].size} Kb '
+                                            : '${(widget.sentHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                         style:
                                             CustomTextStyles.secondaryRegular12,
                                       ),

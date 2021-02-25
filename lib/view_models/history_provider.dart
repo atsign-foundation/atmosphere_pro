@@ -56,7 +56,7 @@ class HistoryProvider extends BaseModel {
       if (historyType == HistoryType.received) {
         // the file size come in bytes in reciever side
         filesModel.files.forEach((file) {
-          file.size = file.size / 1024;
+          file.size = file.size;
           filesModel.totalSize += file.size;
         });
         receivedFileHistory['history'].insert(0, (filesModel.toJson()));
