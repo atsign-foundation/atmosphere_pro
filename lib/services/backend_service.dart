@@ -294,7 +294,7 @@ class BackendService {
   }
 
   deleteAtSignFromKeyChain(String atsign) async {
-    await FlutterKeychain.remove(key: '@atsign');
+    await atClientServiceInstance.resetAtSignFromKeychain(atsign);
   }
 
   Future<bool> checkAtsign(String atSign) async {
