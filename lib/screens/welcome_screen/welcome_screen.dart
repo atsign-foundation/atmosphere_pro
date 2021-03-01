@@ -12,14 +12,14 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../view_models/file_picker_provider.dart';
+import '../../view_models/file_transfer_provider.dart';
 import 'widgets/select_contact_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -144,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filePickerModel = Provider.of<FilePickerProvider>(context);
+    final filePickerModel = Provider.of<FileTransferProvider>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -256,7 +256,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                           bool response;
 
-                          response = Provider.of<FilePickerProvider>(context,
+                          response = Provider.of<FileTransferProvider>(context,
                                   listen: false)
                               .sentStatus;
 

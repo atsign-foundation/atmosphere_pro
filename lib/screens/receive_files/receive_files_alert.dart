@@ -10,14 +10,13 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
 
-import '../../view_models/file_picker_provider.dart';
+import '../../view_models/file_transfer_provider.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {
   final Function() onAccept;
@@ -181,8 +180,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
             NotificationService().cancelNotifications();
             Navigator.pop(context);
             widget.sharingStatus(status);
-            if (FilePickerProvider().sentStatus != null &&
-                FilePickerProvider().sentStatus) {
+            if (FileTransferProvider().sentStatus != null &&
+                FileTransferProvider().sentStatus) {
               flushbar = CustomFlushBar()
                   .getFlushbar(TextStrings().receivingFile, progressController);
 

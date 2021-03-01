@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -14,26 +15,28 @@ import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
 
-class FilePickerProvider extends BaseModel {
-  FilePickerProvider._();
-  static FilePickerProvider _instance = FilePickerProvider._();
-  factory FilePickerProvider() => _instance;
+class FileTransferProvider extends BaseModel {
+  FileTransferProvider._();
+  static FileTransferProvider _instance = FileTransferProvider._();
+  factory FileTransferProvider() => _instance;
+  final String MEDIA = 'MEDIA';
+  final String FILES = 'FILES';
+  static List<PlatformFile> appClosedSharedFiles = [];
   String PICK_FILES = 'pick_files';
   String VIDEO_THUMBNAIL = 'video_thumbnail';
   String ACCEPT_FILES = 'accept_files';
   String SEND_FILES = 'send_files';
-  // StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
   FilePickerResult result;
   PlatformFile file;
-  static List<PlatformFile> appClosedSharedFiles = [];
+
   List<PlatformFile> selectedFiles = [];
-  // List<Map<AtContact, List<bool>>> sentStatus = [];
+  List<FileTransferStatus> tStatus = [];
+  Map<String, List<Map<String, bool>>> fileTransferStatus = {};
   bool sentStatus = false;
   Uint8List videoThumbnail;
   double totalSize = 0;
-  final String MEDIA = 'MEDIA';
-  final String FILES = 'FILES';
+
   BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
 
@@ -187,27 +190,16 @@ class FilePickerProvider extends BaseModel {
         }
       });
 
+      int id = DateTime.now().millisecondsSinceEpoch;
       temporaryContactList.forEach((contact) {
-        selectedFiles.forEach((file) {
-          if (file == selectedFiles.first) {
-            sentStatus = true;
-          } else {
-            sentStatus = null;
-          }
-          _backendService.sendFile(contact.atSign, file.path);
-          Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-                  listen: false)
-              .setFilesHistory(
-                  atSignName: contact.atSign,
-                  historyType: HistoryType.send,
-                  files: [
-                FilesDetail(
-                    filePath: file.path,
-                    size: double.parse(file.size.toString()),
-                    fileName: file.name.toString(),
-                    type: file.name.split('.').last)
-              ]);
-        });
+        // selectedFiles.forEach((file) {
+        //   if (file == selectedFiles.first) {
+        //     sentStatus = true;
+        //   } else {
+        //     sentStatus = null;
+        //   }
+
+        updateStatus(contact, selectedFiles, id);
       });
 
       setStatus(SEND_FILES, Status.Done);
@@ -224,5 +216,42 @@ class FilePickerProvider extends BaseModel {
     selectedFiles.forEach((file) async {
       await _backendService.sendFile(contact, file.path);
     });
+  }
+
+  updateStatus(
+      AtContact contact, List<PlatformFile> selectedFiles, int id) async {
+    selectedFiles.forEach((element) {
+      tStatus.add(FileTransferStatus(
+          contactName: contact.atSign,
+          fileName: element.name,
+          status: TransferStatus.PENDING,
+          id: id));
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .setFilesHistory(
+              atSignName: contact.atSign,
+              historyType: HistoryType.send,
+              files: [
+            FilesDetail(
+              filePath: element.path,
+              size: double.parse(element.size.toString()),
+              fileName: element.name.toString(),
+              type: element.name.split('.').last,
+            ),
+          ]);
+    });
+
+    for (var i = 0; i < selectedFiles.length; i++) {
+      bool tempStatus =
+          await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
+      int index = tStatus.indexWhere((element) =>
+          element.fileName == selectedFiles[i].name &&
+          contact.atSign == element.contactName);
+      if (tempStatus) {
+        tStatus[index].status = TransferStatus.DONE;
+      } else {
+        tStatus[index].status = TransferStatus.FAILED;
+      }
+    }
   }
 }

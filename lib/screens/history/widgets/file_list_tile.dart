@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
@@ -12,10 +13,12 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class FilesListTile extends StatefulWidget {
@@ -277,6 +280,44 @@ class _FilesListTileState extends State<FilesListTile> {
                                   ),
                                 )
                               ],
+                            ),
+                            trailing: Consumer<FileTransferProvider>(
+                              builder: (context, provider, _) {
+                                int i = provider.tStatus.indexWhere((element) =>
+                                    element.contactName ==
+                                        widget.sentHistory.name &&
+                                    element.fileName ==
+                                        widget
+                                            .sentHistory.files[index].fileName);
+
+                                return Container(
+                                  height: 20.toHeight,
+                                  width: 20.toHeight,
+                                  child: Icon(
+                                    provider.tStatus[i].status ==
+                                            TransferStatus.DONE
+                                        ? Icons.check_circle_outline_outlined
+                                        : provider.tStatus[i].status ==
+                                                TransferStatus.FAILED
+                                            ? Icons.cancel_outlined
+                                            : Icons.priority_high_rounded,
+                                    color: provider.tStatus[i].status ==
+                                            TransferStatus.DONE
+                                        ? Colors.green
+                                        : provider.tStatus[i].status ==
+                                                TransferStatus.FAILED
+                                            ? Colors.red
+                                            : Colors.orange,
+                                  ),
+                                  // color: provider.tStatus[i].status ==
+                                  //         TransferStatus.PENDING
+                                  //     ? Colors.orange
+                                  //     : provider.tStatus[i].status ==
+                                  //             TransferStatus.DONE
+                                  //         ? Colors.green
+                                  // : Colors.red,
+                                );
+                              },
                             ),
                           );
                         }),

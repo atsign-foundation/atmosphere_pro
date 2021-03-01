@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 
 import 'routes/routes.dart';
@@ -25,8 +25,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<HistoryProvider>(
             create: (context) => HistoryProvider()),
-        ChangeNotifierProvider<FilePickerProvider>(
-            create: (context) => FilePickerProvider()),
+        ChangeNotifierProvider<FileTransferProvider>(
+            create: (context) => FileTransferProvider()),
         ChangeNotifierProvider<ContactProvider>(
             create: (context) => ContactProvider()),
         ChangeNotifierProvider<BlockedContactProvider>(

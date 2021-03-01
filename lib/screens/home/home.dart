@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,14 +36,14 @@ class _HomeState extends State<Home> {
   bool authenticating = false;
 
   List<SharedMediaFile> _sharedFiles;
-  FilePickerProvider filePickerProvider;
+  FileTransferProvider filePickerProvider;
   String activeAtSign;
 
   @override
   void initState() {
     super.initState();
     filePickerProvider =
-        Provider.of<FilePickerProvider>(context, listen: false);
+        Provider.of<FileTransferProvider>(context, listen: false);
     _initBackendService();
     acceptFiles();
     _checkForPermissionStatus();
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
         value.forEach((element) async {
           File file = File(element.path);
           var length = await file.length();
-          await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
+          await FileTransferProvider.appClosedSharedFiles.add(PlatformFile(
               name: basename(file.path),
               path: file.path,
               size: length.round(),
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
               path: file.path,
               size: length.round(),
               bytes: await file.readAsBytes());
-          FilePickerProvider.appClosedSharedFiles.add(fileToBeAdded);
+          FileTransferProvider.appClosedSharedFiles.add(fileToBeAdded);
           filePickerProvider.setFiles();
         });
 
