@@ -162,6 +162,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
             Provider.of<HistoryProvider>(context, listen: false)
                 .setFilesHistory(
                     atSignName: payload.name.toString(),
+                    // id: payload.id,
                     historyType: HistoryType.received,
                     files: [
                   FilesDetail(
@@ -171,6 +172,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
                       date: date.toString(),
                       size: payload.size,
                       fileName: payload.file,
+                      // id: payload.id,
                       type: payload.file
                           .substring(payload.file.lastIndexOf('.') + 1))
                 ]);

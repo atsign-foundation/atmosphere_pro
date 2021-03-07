@@ -31,8 +31,8 @@ class FileTransferProvider extends BaseModel {
   PlatformFile file;
 
   List<PlatformFile> selectedFiles = [];
-  List<FileTransferStatus> tStatus = [];
-  Map<String, List<Map<String, bool>>> fileTransferStatus = {};
+  List<FileTransferStatus> transferStatus = [];
+  Map<String, List<Map<String, bool>>> transferStatusMap = {};
   bool sentStatus = false;
   Uint8List videoThumbnail;
   double totalSize = 0;
@@ -199,7 +199,7 @@ class FileTransferProvider extends BaseModel {
         //     sentStatus = null;
         //   }
 
-        updateStatus(contact, selectedFiles, id);
+        updateStatus(contact, id);
       });
 
       setStatus(SEND_FILES, Status.Done);
@@ -218,10 +218,9 @@ class FileTransferProvider extends BaseModel {
     });
   }
 
-  updateStatus(
-      AtContact contact, List<PlatformFile> selectedFiles, int id) async {
+  updateStatus(AtContact contact, int id) async {
     selectedFiles.forEach((element) {
-      tStatus.add(FileTransferStatus(
+      transferStatus.add(FileTransferStatus(
           contactName: contact.atSign,
           fileName: element.name,
           status: TransferStatus.PENDING,
@@ -229,11 +228,14 @@ class FileTransferProvider extends BaseModel {
       Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .setFilesHistory(
+              id: id,
               atSignName: contact.atSign,
               historyType: HistoryType.send,
               files: [
             FilesDetail(
               filePath: element.path,
+              id: id,
+              contactName: contact.atSign,
               size: double.parse(element.size.toString()),
               fileName: element.name.toString(),
               type: element.name.split('.').last,
@@ -242,16 +244,46 @@ class FileTransferProvider extends BaseModel {
     });
 
     for (var i = 0; i < selectedFiles.length; i++) {
+      print('before await $i');
       bool tempStatus =
           await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
-      int index = tStatus.indexWhere((element) =>
+      print('after await $i==tempstatus===?$tempStatus');
+
+      int index = transferStatus.indexWhere((element) =>
           element.fileName == selectedFiles[i].name &&
           contact.atSign == element.contactName);
+      print('index===>$index');
       if (tempStatus) {
-        tStatus[index].status = TransferStatus.DONE;
+        transferStatus[index].status = TransferStatus.DONE;
       } else {
-        tStatus[index].status = TransferStatus.FAILED;
+        transferStatus[index].status = TransferStatus.FAILED;
       }
+      print('transferStatus===>${transferStatus[index]}');
     }
+    print('transferStatus LASSSTTT===>${transferStatus.last}');
+    // getStatus(id, contact.atSign);
+  }
+
+  TransferStatus getStatus(int id, String atSign) {
+    TransferStatus status;
+    transferStatus.forEach((element) {
+      print('ID===>$id====$atSign===>${element.status}');
+      if (element.id == id &&
+          element.contactName == atSign &&
+          status != TransferStatus.PENDING) {
+        //     print('in here====${element.status}');
+        //     if (element.status == TransferStatus.DONE) {
+        //       status = TransferStatus.DONE;
+        if (element.status == TransferStatus.PENDING) {
+          status = TransferStatus.PENDING;
+        } else if (element.status == TransferStatus.FAILED) {
+          status = TransferStatus.FAILED;
+        } else if (element.status != TransferStatus.FAILED) {
+          status = TransferStatus.DONE;
+        }
+      }
+    });
+    print('r.runtimeType===>${status}');
+    return status;
   }
 }

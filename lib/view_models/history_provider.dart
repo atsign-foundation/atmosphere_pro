@@ -16,6 +16,9 @@ class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
   List<FilesModel> sentHistory = [];
+  List<List<FilesDetail>> tempList = [];
+  Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
+  static Map<int, Map<String, Set<FilesDetail>>> test = {};
   List<FilesDetail> sentPhotos,
       sentVideos,
       sentAudio,
@@ -41,11 +44,13 @@ class HistoryProvider extends BaseModel {
   setFilesHistory(
       {HistoryType historyType,
       String atSignName,
-      List<FilesDetail> files}) async {
+      List<FilesDetail> files,
+      @required int id}) async {
     try {
       DateTime now = DateTime.now();
       FilesModel filesModel = FilesModel(
           name: atSignName,
+          id: id,
           historyType: historyType,
           date: now.toString(),
           files: files);
@@ -82,26 +87,77 @@ class HistoryProvider extends BaseModel {
 
   getSentHistory() async {
     setStatus(SENT_HISTORY, Status.Loading);
-    try {
-      sentHistory = [];
-      AtKey key = AtKey()
-        ..key = 'sentFiles'
-        ..metadata = Metadata();
-      var keyValue = await backendService.atClientInstance.get(key);
-      if (keyValue != null && keyValue.value != null) {
-        Map historyFile = json.decode((keyValue.value) as String) as Map;
-        sendFileHistory['history'] = historyFile['history'];
-        historyFile['history'].forEach((value) {
-          FilesModel filesModel = FilesModel.fromJson((value));
-          filesModel.historyType = HistoryType.send;
-          sentHistory.add(filesModel);
-        });
-      }
-
-      setStatus(SENT_HISTORY, Status.Done);
-    } catch (error) {
-      setError(SENT_HISTORY, error.toString());
+    // try {
+    sentHistory = [];
+    AtKey key = AtKey()
+      ..key = 'sentFiles'
+      ..metadata = Metadata();
+    var keyValue = await backendService.atClientInstance.get(key);
+    if (keyValue != null && keyValue.value != null) {
+      Map historyFile = json.decode((keyValue.value) as String) as Map;
+      sendFileHistory['history'] = historyFile['history'];
+      historyFile['history'].forEach((value) {
+        FilesModel filesModel = FilesModel.fromJson((value));
+        filesModel.historyType = HistoryType.send;
+        sentHistory.add(filesModel);
+      });
     }
+
+    // sentHistory.forEach((atSign) {
+    //   testSentHistory.putIfAbsent(atSign.id, () => null);
+    //   // atSign.files.forEach((file) {
+    //   //   finalSentHistory.add(file);
+    //   // });
+    // });
+    for (int i = 0; i < sentHistory.length; i++) {
+      if (testSentHistory.containsKey(sentHistory[i].id)) {
+        if (testSentHistory[sentHistory[i].id]
+            .containsKey(sentHistory[i].name)) {
+          testSentHistory[sentHistory[i].id][sentHistory[i].name]
+              .add(sentHistory[i].files[0]);
+        } else {
+          testSentHistory[sentHistory[i].id].putIfAbsent(
+              sentHistory[i].name, () => [...sentHistory[i].files].toSet());
+        }
+      } else {
+        testSentHistory.putIfAbsent(
+            sentHistory[i].id,
+            () => {
+                  sentHistory[i].name: [...sentHistory[i].files].toSet()
+                });
+      }
+    }
+    // print('keys====>${testSentHistory.keys}');
+    // testSentHistory.forEach((key, value) {
+    //   testSentHistory[key].forEach((key, value) {
+    //     print(key);
+    //     value.forEach((element) {
+    //       print('ELEMNT NAME====>${element.fileName}');
+    //     });
+    //   });
+    // });
+    sentHistory.forEach((element) {
+      tempList.add(element.files);
+    });
+    // testSentHistory = {
+    //   tempList[0][0].id: {
+    //     [tempList[0][0]]
+    //   }
+    // };
+    // for (int i = 2; i < tempList.length; i++) {
+    //   if (tempList[i - 1][0].id == tempList[i][0].id) {
+    //     testSentHistory[tempList[i - 1][0].id].add(tempList[i][0]);
+    //   } else {
+    //     testSentHistory.putIfAbsent(
+    //         tempList[i][0].id, () => [tempList[i][0]]);
+    //   }
+    // }
+    test = testSentHistory;
+    print('IN HISTORy---->${testSentHistory}');
+    setStatus(SENT_HISTORY, Status.Done);
+    // } catch (error) {
+    //   setError(SENT_HISTORY, error.toString());
+    // }
   }
 
   getRecievedHistory() async {

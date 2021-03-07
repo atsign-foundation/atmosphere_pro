@@ -5,12 +5,14 @@ class NotificationPayload {
   // String userImage;
   // int numberOfFiles;
   double size;
+  // int id;
   // String extension;
 
   NotificationPayload(
       {this.name,
       // this.handle,
       this.file,
+      // this.id,
       // this.userImage,
       // this.numberOfFiles,
       // this.extension,
@@ -18,6 +20,7 @@ class NotificationPayload {
 
   NotificationPayload.fromJson(Map<String, dynamic> json) {
     name = json['name'].toString();
+    // id = int.parse(json['id'].toString());
     // handle = json['handle'].toString();
     file = json['file'].toString();
     // userImage = json['userImage'].toString();
@@ -31,6 +34,7 @@ class NotificationPayload {
     data['name'] = this.name;
     // data['handle'] = this.handle;
     data['file'] = this.file;
+    // data['id'] = this.id;
     // data['userImage'] = this.userImage;
     // data['numberOfFiles'] = this.numberOfFiles;
     data['size'] = this.size;

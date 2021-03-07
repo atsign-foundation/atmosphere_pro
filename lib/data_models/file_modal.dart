@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
+
 enum HistoryType { send, received }
 
 class FilesModel {
   String name;
   String handle;
   String date;
+  int id;
   double totalSize;
   HistoryType historyType;
 
@@ -16,6 +19,7 @@ class FilesModel {
       this.handle,
       this.date,
       this.files,
+      this.id,
       this.historyType,
       this.totalSize});
 
@@ -23,6 +27,7 @@ class FilesModel {
     name = json['name'].toString();
     handle = json['handle'].toString();
     date = json['date'].toString();
+    id = json['id'];
     totalSize = double.parse(json['total_size'].toString());
 
     if (json['files'] != null) {
@@ -39,6 +44,7 @@ class FilesModel {
     data['handle'] = this.handle;
     data['date'] = this.date;
     data['total_size'] = this.totalSize;
+    data['id'] = this.id;
     if (this.files != null) {
       data['files'] = this.files.map((v) => v.toJson()).toList();
     }
@@ -51,12 +57,18 @@ class FilesDetail {
   String filePath;
   double size;
   String type;
+  String contactName;
+  int id;
   String date;
+  FileTransferStatus status;
   FilesDetail({
     this.fileName,
     this.filePath,
     this.size,
     this.type,
+    this.status,
+    this.contactName,
+    this.id,
     this.date,
   });
 
@@ -66,14 +78,19 @@ class FilesDetail {
     double size,
     String type,
     String date,
+    FileTransferStatus status,
+    String contactName,
+    int id,
   }) {
     return FilesDetail(
-      fileName: fileName ?? this.fileName,
-      filePath: filePath ?? this.filePath,
-      size: size ?? this.size,
-      type: type ?? this.type,
-      date: date ?? this.date,
-    );
+        fileName: fileName ?? this.fileName,
+        filePath: filePath ?? this.filePath,
+        size: size ?? this.size,
+        type: type ?? this.type,
+        date: date ?? this.date,
+        status: status ?? this.status,
+        id: id ?? this.id,
+        contactName: contactName ?? this.contactName);
   }
 
   Map<String, dynamic> toMap() {
@@ -83,6 +100,9 @@ class FilesDetail {
       'size': size,
       'type': type,
       'date': date,
+      'id': id,
+      'status': status,
+      'contactName': contactName
     };
   }
 
@@ -90,12 +110,14 @@ class FilesDetail {
     if (map == null) return null;
 
     return FilesDetail(
-      fileName: map['fileName'],
-      filePath: map['filePath'],
-      size: map['size'],
-      type: map['type'],
-      date: map['date'],
-    );
+        fileName: map['fileName'],
+        filePath: map['filePath'],
+        size: map['size'],
+        type: map['type'],
+        date: map['date'],
+        id: map['id'],
+        status: map['status'],
+        contactName: map['contactName']);
   }
 
   String toJson() => json.encode(toMap());
@@ -105,7 +127,7 @@ class FilesDetail {
 
   @override
   String toString() {
-    return 'FilesDetail(fileName: $fileName, filePath: $filePath, size: $size, type: $type, date: $date)';
+    return 'FilesDetail(fileName: $fileName, filePath: $filePath, size: $size, type: $type, date: $date, id:$id, contactName:$contactName, status:$status)';
   }
 
   @override
@@ -117,7 +139,10 @@ class FilesDetail {
         o.filePath == filePath &&
         o.size == size &&
         o.type == type &&
-        o.date == date;
+        o.date == date &&
+        o.status == status &&
+        o.contactName == contactName &&
+        o.id == id;
   }
 
   @override
@@ -126,6 +151,9 @@ class FilesDetail {
         filePath.hashCode ^
         size.hashCode ^
         type.hashCode ^
-        date.hashCode;
+        date.hashCode ^
+        id.hashCode ^
+        status.hashCode ^
+        contactName.hashCode;
   }
 }

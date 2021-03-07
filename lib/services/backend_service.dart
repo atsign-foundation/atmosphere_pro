@@ -167,6 +167,7 @@ class BackendService {
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
     var fromAtSign = responseJson['from'];
+    // var id = responseJson['id'];
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
@@ -176,7 +177,10 @@ class BackendService {
       var fileName = valueObject.split(':')[1];
       fileLength = valueObject.split(':')[2];
       fileName = utf8.decode(base64.decode(fileName));
-      userResponse = await acceptStream(fromAtSign, fileName, fileLength);
+      userResponse = await acceptStream(
+        fromAtSign, fileName, fileLength,
+        // id:id
+      );
       if (userResponse == true) {
         await atClientInstance.sendStreamAck(
             streamId,
@@ -228,8 +232,8 @@ class BackendService {
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
 
   // acknowledge file transfer
-  Future<bool> acceptStream(
-      String atsign, String filename, String filesize) async {
+  Future<bool> acceptStream(String atsign, String filename, String filesize,
+      {String id}) async {
     print("from:$atsign file:$filename size:$filesize");
     BuildContext context = NavService.navKey.currentContext;
     // ContactProvider contactProvider =
@@ -245,10 +249,17 @@ class BackendService {
         app_lifecycle_state != null &&
         app_lifecycle_state != AppLifecycleState.resumed.toString()) {
       print("app not active $app_lifecycle_state");
-      await NotificationService().showNotification(atsign, filename, filesize);
+      await NotificationService().showNotification(
+        atsign, filename, filesize,
+        // id
+      );
     }
     NotificationPayload payload = NotificationPayload(
-        file: filename, name: atsign, size: double.parse(filesize));
+      file: filename,
+      name: atsign,
+      size: double.parse(filesize),
+      // id: int.parse(id)
+    );
 
     bool userAcceptance;
 
@@ -267,12 +278,14 @@ class BackendService {
       Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
           atSignName: payload.name.toString(),
           historyType: HistoryType.received,
+          // id: payload.id,
           files: [
             FilesDetail(
                 filePath: atClientPreference.downloadPath + '/' + payload.file,
                 size: payload.size,
                 date: date.toString(),
                 fileName: payload.file,
+                // id: payload.id,
                 type: payload.file.substring(payload.file.lastIndexOf('.') + 1))
           ]);
       userAcceptance = true;
@@ -336,7 +349,7 @@ class BackendService {
       var lastname = result.value;
 
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.length == 0) {
+      if (name.fileLength == 0) {
         name = atSign.substring(1);
       }
 
