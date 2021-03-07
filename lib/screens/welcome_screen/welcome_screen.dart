@@ -87,7 +87,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
-  _showScaffold({int status = 0}) {
+  _showScaffold({int status = 0, bool shouldTimeout = true}) {
     return Flushbar(
       title: transferMessages[status],
       message: 'hello',
@@ -101,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
       ],
       isDismissible: false,
-      duration: Duration(seconds: 3),
+      duration: (shouldTimeout) ? Duration(seconds: 3) : null,
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
@@ -227,14 +227,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 if (_welcomeScreenProvider.selectedContacts != null &&
                     filePickerModel.selectedFiles.isNotEmpty) ...[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CommonButton('Reset', () {
-                        setState(() {
-                          _welcomeScreenProvider.selectedContacts.clear();
-                          filePickerModel.selectedFiles.clear();
-                        });
-                      }),
                       CommonButton(
                         TextStrings().buttonSend,
                         () async {
@@ -284,7 +278,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                           // _showScaffold(status: 1);
                           if (response != null && response == true) {
-                            sendingFlushbar = _showScaffold(status: 1);
+                            sendingFlushbar =
+                                _showScaffold(status: 1, shouldTimeout: false);
                             await sendingFlushbar.show(context);
                           } else {
                             _showScaffold(status: 2);

@@ -114,6 +114,8 @@ class _HomeState extends State<Home> {
 
     if (onboardSuccess != null && onboardSuccess == true) {
       await _backendService.startMonitor();
+      await Navigator.pushNamedAndRemoveUntil(
+          context, Routes.WELCOME_SCREEN, (route) => false);
     }
 
     SystemChannels.lifecycle.setMessageHandler((msg) {

@@ -36,7 +36,7 @@ class FileTransferProvider extends BaseModel {
   bool sentStatus = false;
   Uint8List videoThumbnail;
   double totalSize = 0;
-
+  bool clearList = false;
   BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
 
@@ -192,13 +192,6 @@ class FileTransferProvider extends BaseModel {
 
       int id = DateTime.now().millisecondsSinceEpoch;
       temporaryContactList.forEach((contact) {
-        // selectedFiles.forEach((file) {
-        //   if (file == selectedFiles.first) {
-        //     sentStatus = true;
-        //   } else {
-        //     sentStatus = null;
-        //   }
-
         updateStatus(contact, id);
       });
 
@@ -243,37 +236,39 @@ class FileTransferProvider extends BaseModel {
           ]);
     });
 
+    if (contact == temporaryContactList.first) {
+      sentStatus = true;
+    }
     for (var i = 0; i < selectedFiles.length; i++) {
-      print('before await $i');
       bool tempStatus =
           await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
-      print('after await $i==tempstatus===?$tempStatus');
 
       int index = transferStatus.indexWhere((element) =>
           element.fileName == selectedFiles[i].name &&
           contact.atSign == element.contactName);
-      print('index===>$index');
+
       if (tempStatus) {
         transferStatus[index].status = TransferStatus.DONE;
       } else {
         transferStatus[index].status = TransferStatus.FAILED;
       }
-      print('transferStatus===>${transferStatus[index]}');
+
+      if (i == selectedFiles.length - 1 &&
+          contact == temporaryContactList.last) {}
     }
-    print('transferStatus LASSSTTT===>${transferStatus.last}');
+
+    // WelcomeScreenProvider().selectedContacts.clear();
+    // selectedFiles.clear();
+    // notifyListeners();
     // getStatus(id, contact.atSign);
   }
 
   TransferStatus getStatus(int id, String atSign) {
     TransferStatus status;
     transferStatus.forEach((element) {
-      print('ID===>$id====$atSign===>${element.status}');
       if (element.id == id &&
           element.contactName == atSign &&
           status != TransferStatus.PENDING) {
-        //     print('in here====${element.status}');
-        //     if (element.status == TransferStatus.DONE) {
-        //       status = TransferStatus.DONE;
         if (element.status == TransferStatus.PENDING) {
           status = TransferStatus.PENDING;
         } else if (element.status == TransferStatus.FAILED) {
@@ -283,7 +278,7 @@ class FileTransferProvider extends BaseModel {
         }
       }
     });
-    print('r.runtimeType===>${status}');
+
     return status;
   }
 }
