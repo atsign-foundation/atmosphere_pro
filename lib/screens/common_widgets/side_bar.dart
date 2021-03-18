@@ -102,11 +102,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   Widget build(BuildContext context) {
     isTablet = SizeConfig().isTablet(context);
-    return SizedBox(
+    return Container(
       width: SizeConfig().screenWidth * 0.65,
-      child: Drawer(
+      color: ColorConstants.inputFieldColor,
+      child: Container(
         child: Container(
-          color: ColorConstants.inputFieldColor,
           padding: isExpanded
               ? EdgeInsets.symmetric(horizontal: 30.toWidth)
               : EdgeInsets.only(left: 30),
@@ -170,7 +170,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ],
                       ),
                     )
-                  : SizedBox(),
+                  : SizedBox(height: 50.toHeight),
               SideBarItem(
                 image: menuItemsIcons[0],
                 title: menuItemsTitle[0],
@@ -183,18 +183,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'selectedList': (s) {}
                 },
               ),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[1],
                 title: menuItemsTitle[1],
                 routeName: targetScreens[1],
                 showIconOnly: !isExpanded,
               ),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[2],
                 title: menuItemsTitle[2],
                 routeName: targetScreens[2],
                 showIconOnly: !isExpanded,
               ),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[3],
                 title: menuItemsTitle[3],
@@ -205,6 +208,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   "url": MixedConstants.TERMS_CONDITIONS
                 },
               ),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[4],
                 title: menuItemsTitle[4],
@@ -214,6 +218,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   "currentAtsign": BackendService.getInstance().currentAtsign
                 },
               ),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[5],
                 title: menuItemsTitle[5],
@@ -224,6 +229,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'url': MixedConstants.TERMS_CONDITIONS
                 },
               ),
+              SizedBox(height: 10),
               SideBarItem(
                   image: menuItemsIcons[6],
                   title: menuItemsTitle[6],
@@ -233,18 +239,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     'title': menuItemsTitle[6],
                     'url': MixedConstants.PRIVACY_POLICY
                   }),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[7],
                 title: menuItemsTitle[7],
                 routeName: targetScreens[7],
                 showIconOnly: !isExpanded,
               ),
+              SizedBox(height: 10),
               SideBarItem(
                 image: menuItemsIcons[8],
                 title: menuItemsTitle[8],
                 routeName: targetScreens[8],
                 showIconOnly: !isExpanded,
               ),
+              SizedBox(height: 10),
               InkWell(
                   onTap: () async {
                     _deleteAtSign(
@@ -268,6 +277,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           : SizedBox(),
                     ]),
                   )),
+              SizedBox(height: 10),
               InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -294,6 +304,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           : SizedBox(),
                     ]),
                   )),
+
+              SizedBox(height: 10),
 
               isExpanded
                   ? ListTile(
