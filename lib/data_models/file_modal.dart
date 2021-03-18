@@ -33,7 +33,11 @@ class FilesModel {
     if (json['files'] != null) {
       files = List<FilesDetail>();
       json['files'].forEach((v) {
-        files.add(FilesDetail.fromJson(v));
+        if (v.runtimeType == 'String') {
+          files.add(FilesDetail.fromJson(v));
+        } else {
+          files.add(FilesDetail.fromMap(v));
+        }
       });
     }
   }
@@ -95,8 +99,8 @@ class FilesDetail {
 
   Map<String, dynamic> toMap() {
     return {
-      'fileName': fileName,
-      'filePath': filePath,
+      'file_name': fileName,
+      'file_path': filePath,
       'size': size,
       'type': type,
       'date': date,
@@ -110,8 +114,8 @@ class FilesDetail {
     if (map == null) return null;
 
     return FilesDetail(
-        fileName: map['fileName'],
-        filePath: map['filePath'],
+        fileName: map['file_name'],
+        filePath: map['file_path'],
         size: map['size'],
         type: map['type'],
         date: map['date'],
