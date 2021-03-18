@@ -20,7 +20,7 @@ class CustomFlushBar {
 
   Flushbar getFlushbar(
       String displayMessage, AnimationController progressController,
-      {String buttonMessage}) {
+      {String buttonMessage, bool shouldTimeout = true}) {
     if (currentController == null) {
       currentController = progressController;
     } else {
@@ -40,7 +40,7 @@ class CustomFlushBar {
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
       ],
       isDismissible: false,
-      duration: Duration(seconds: 5),
+      duration: (shouldTimeout) ? Duration(seconds: 5) : null,
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
