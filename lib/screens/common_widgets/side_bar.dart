@@ -16,6 +16,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SideBarWidget extends StatefulWidget {
+  final bool isExpanded;
+  SideBarWidget({this.isExpanded = false});
+
   @override
   _SideBarWidgetState createState() => _SideBarWidgetState();
 }
@@ -61,11 +64,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   Uint8List image;
   AtContact contact;
   String name;
+  bool isTablet = false, isExpanded = true;
 
   @override
   void initState() {
     super.initState();
     getEventCreator();
+    isExpanded = widget.isExpanded;
+    print('is Expanded:${isExpanded}');
   }
 
   getEventCreator() async {
@@ -95,72 +101,81 @@ class _SideBarWidgetState extends State<SideBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    isTablet = SizeConfig().isTablet(context);
     return SizedBox(
       width: SizeConfig().screenWidth * 0.65,
       child: Drawer(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 30.toWidth),
+          color: ColorConstants.inputFieldColor,
+          padding: isExpanded
+              ? EdgeInsets.symmetric(horizontal: 30.toWidth)
+              : EdgeInsets.only(left: 30),
           child: ListView(
             children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 30.toHeight,
-                  bottom: 10.toHeight,
-                  left: 10.toWidth,
-                ),
-                child: Row(
-                  children: [
-                    (image != null)
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                            child: Image.memory(
-                              image,
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.fill,
-                            ),
-                          )
-                        : ContactInitial(
-                            initials: BackendService.getInstance()
-                                .atClientServiceInstance
-                                .atClient
-                                .currentAtSign
-                                .substring(1, 3)),
-                    Flexible(
-                        child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              isExpanded
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        top: 30.toHeight,
+                        bottom: 10.toHeight,
+                        left: 10.toWidth,
+                      ),
+                      child: Row(
                         children: [
-                          Text(
-                            name ?? 'Full Name',
-                            // style: CustomTextStyles().darkGrey16,
-                            maxLines: 1,
-                            // style: TextStyle(letterSpacing: 0.1),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            BackendService.getInstance()
-                                    .atClientServiceInstance
-                                    .atClient
-                                    .currentAtSign ??
-                                '@sign',
-                            // style: CustomTextStyles().darkGrey14,
-                            maxLines: 1, style: TextStyle(letterSpacing: 0.1),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          (image != null)
+                              ? ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30)),
+                                  child: Image.memory(
+                                    image,
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.fill,
+                                  ),
+                                )
+                              : ContactInitial(
+                                  initials: BackendService.getInstance()
+                                      .atClientServiceInstance
+                                      .atClient
+                                      .currentAtSign
+                                      .substring(1, 3)),
+                          Flexible(
+                              child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  name ?? 'Full Name',
+                                  // style: CustomTextStyles().darkGrey16,
+                                  maxLines: 1,
+                                  // style: TextStyle(letterSpacing: 0.1),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  BackendService.getInstance()
+                                          .atClientServiceInstance
+                                          .atClient
+                                          .currentAtSign ??
+                                      '@sign',
+                                  // style: CustomTextStyles().darkGrey14,
+                                  maxLines: 1,
+                                  style: TextStyle(letterSpacing: 0.1),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          )),
                         ],
                       ),
-                    )),
-                  ],
-                ),
-              ),
+                    )
+                  : SizedBox(),
               SideBarItem(
                 image: menuItemsIcons[0],
                 title: menuItemsTitle[0],
                 routeName: targetScreens[0],
+                showIconOnly: !isExpanded,
                 arguments: {
                   'singleSelection': false,
                   'showGroups': true,
@@ -172,16 +187,19 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 image: menuItemsIcons[1],
                 title: menuItemsTitle[1],
                 routeName: targetScreens[1],
+                showIconOnly: !isExpanded,
               ),
               SideBarItem(
                 image: menuItemsIcons[2],
                 title: menuItemsTitle[2],
                 routeName: targetScreens[2],
+                showIconOnly: !isExpanded,
               ),
               SideBarItem(
                 image: menuItemsIcons[3],
                 title: menuItemsTitle[3],
                 routeName: targetScreens[3],
+                showIconOnly: !isExpanded,
                 arguments: {
                   "title": TextStrings().sidebarTermsAndConditions,
                   "url": MixedConstants.TERMS_CONDITIONS
@@ -191,6 +209,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 image: menuItemsIcons[4],
                 title: menuItemsTitle[4],
                 routeName: targetScreens[4],
+                showIconOnly: !isExpanded,
                 arguments: {
                   "currentAtsign": BackendService.getInstance().currentAtsign
                 },
@@ -199,6 +218,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 image: menuItemsIcons[5],
                 title: menuItemsTitle[5],
                 routeName: targetScreens[5],
+                showIconOnly: !isExpanded,
                 arguments: {
                   'title': menuItemsTitle[5],
                   'url': MixedConstants.TERMS_CONDITIONS
@@ -208,6 +228,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   image: menuItemsIcons[6],
                   title: menuItemsTitle[6],
                   routeName: targetScreens[6],
+                  showIconOnly: !isExpanded,
                   arguments: {
                     'title': menuItemsTitle[6],
                     'url': MixedConstants.PRIVACY_POLICY
@@ -216,11 +237,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 image: menuItemsIcons[7],
                 title: menuItemsTitle[7],
                 routeName: targetScreens[7],
+                showIconOnly: !isExpanded,
               ),
               SideBarItem(
                 image: menuItemsIcons[8],
                 title: menuItemsTitle[8],
                 routeName: targetScreens[8],
+                showIconOnly: !isExpanded,
               ),
               InkWell(
                   onTap: () async {
@@ -232,15 +255,17 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     height: 50,
                     child: Row(children: [
                       Icon(Icons.delete,
-                          color: ColorConstants.fadedText, size: 20.toFont),
+                          color: ColorConstants.fadedText, size: 25.toHeight),
                       SizedBox(width: 10),
-                      Text(
-                        TextStrings().sidebarDeleteAtsign,
-                        style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 14.toFont,
-                        ),
-                      ),
+                      isExpanded
+                          ? Text(
+                              TextStrings().sidebarDeleteAtsign,
+                              style: TextStyle(
+                                color: ColorConstants.fadedText,
+                                fontSize: 14.toFont,
+                              ),
+                            )
+                          : SizedBox(),
                     ]),
                   )),
               InkWell(
@@ -254,53 +279,72 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     child: Row(children: [
                       Image.asset(
                         ImageConstants.logoutIcon,
-                        height: 20.toHeight,
+                        height: 22.toHeight,
                         color: ColorConstants.fadedText,
                       ),
                       SizedBox(width: 10),
-                      Text(
-                        TextStrings().sidebarSwitchOut,
-                        style: TextStyle(
-                            color: ColorConstants.fadedText,
-                            fontSize: 14.toFont,
-                            letterSpacing: 0.1),
-                      ),
+                      isExpanded
+                          ? Text(
+                              TextStrings().sidebarSwitchOut,
+                              style: TextStyle(
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 14.toFont,
+                                  letterSpacing: 0.1),
+                            )
+                          : SizedBox(),
                     ]),
                   )),
 
-              ListTile(
-                leading: Text(
-                  TextStrings().sidebarAutoAcceptFile,
-                  style: TextStyle(
-                      color: ColorConstants.fadedText,
-                      fontSize: 14.toFont,
-                      letterSpacing: 0.1),
-                ),
-                title: Transform.scale(
-                  scale: 0.6,
-                  child: CupertinoSwitch(
-                    value: BackendService.getInstance().autoAcceptFiles,
-                    onChanged: (b) {
-                      setState(() {
-                        BackendService.getInstance().autoAcceptFiles = b;
-                      });
-                    },
-                    activeColor: Colors.black,
-                  ),
-                ),
-              ),
+              isExpanded
+                  ? ListTile(
+                      leading: isExpanded
+                          ? Text(
+                              TextStrings().sidebarAutoAcceptFile,
+                              style: TextStyle(
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 14.toFont,
+                                  letterSpacing: 0.1),
+                            )
+                          : SizedBox(),
+                      title: Transform.scale(
+                        scale: 0.6,
+                        child: CupertinoSwitch(
+                          value: BackendService.getInstance().autoAcceptFiles,
+                          onChanged: (b) {
+                            setState(() {
+                              BackendService.getInstance().autoAcceptFiles = b;
+                            });
+                          },
+                          activeColor: Colors.black,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      padding: EdgeInsets.only(right: 35),
+                      child: CupertinoSwitch(
+                        value: BackendService.getInstance().autoAcceptFiles,
+                        onChanged: (b) {
+                          setState(() {
+                            BackendService.getInstance().autoAcceptFiles = b;
+                          });
+                        },
+                        activeColor: Colors.black,
+                      ),
+                    ),
               // SizedBox(
               //   height: 14.toHeight,
               // ),
               Padding(
                 padding: EdgeInsets.only(left: 16.toWidth),
-                child: Text(
-                  TextStrings().sidebarEnablingMessage,
-                  style: TextStyle(
-                      color: ColorConstants.dullText,
-                      fontSize: 12.toFont,
-                      letterSpacing: 0.1),
-                ),
+                child: isExpanded
+                    ? Text(
+                        TextStrings().sidebarEnablingMessage,
+                        style: TextStyle(
+                            color: ColorConstants.dullText,
+                            fontSize: 12.toFont,
+                            letterSpacing: 0.1),
+                      )
+                    : SizedBox(),
               ),
             ],
           ),

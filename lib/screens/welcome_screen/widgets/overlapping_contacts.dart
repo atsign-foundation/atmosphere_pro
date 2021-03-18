@@ -64,22 +64,22 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       height: 28.toHeight,
                       width: 28.toHeight,
                       decoration: BoxDecoration(shape: BoxShape.circle),
-                      child:
-                          (widget?.selectedList[index]?.contact?.tags != null &&
-                                  widget?.selectedList[index]?.contact
-                                          ?.tags['image'] !=
-                                      null)
-                              ? CustomCircleAvatar(
-                                  byteImage: image,
-                                  nonAsset: true,
-                                )
-                              : ContactInitial(
-                                  initials: widget
-                                          ?.selectedList[index]?.contact?.atSign
-                                          ?.substring(1, 3) ??
-                                      widget?.selectedList[index]?.group?.name
-                                          ?.substring(0, 2),
-                                ),
+                      child: (widget?.selectedList[index]?.contact?.tags !=
+                                  null &&
+                              widget?.selectedList[index]?.contact
+                                      ?.tags['image'] !=
+                                  null)
+                          ? CustomCircleAvatar(
+                              byteImage: image,
+                              nonAsset: true,
+                            )
+                          : ContactInitial(
+                              initials: widget
+                                      ?.selectedList[index]?.contact?.atSign
+                                      ?.substring(1, 3) ??
+                                  widget?.selectedList[index]?.group?.groupName
+                                      ?.substring(0, 2),
+                            ),
                     ),
                   );
                 },
@@ -105,7 +105,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                   Container(
                                     width: 60.toWidth,
                                     child: Text(
-                                      '${widget?.selectedList[0]?.contact?.atSign ?? widget?.selectedList[0]?.group?.name}',
+                                      '${widget?.selectedList[0]?.contact?.atSign ?? widget?.selectedList[0]?.group?.groupName}',
                                       style:
                                           CustomTextStyles.secondaryRegular14,
                                       overflow: TextOverflow.ellipsis,
@@ -198,8 +198,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                 name: provider?.selectedContacts[index]?.contact
                                         ?.atSign
                                         ?.substring(1) ??
-                                    provider
-                                        ?.selectedContacts[index]?.group?.name
+                                    provider?.selectedContacts[index]?.group
+                                        ?.groupName
                                         ?.substring(0),
                                 atSign: provider?.selectedContacts[index]
                                         ?.contact?.atSign ??
@@ -221,7 +221,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                                 ?.atSign
                                                 ?.substring(1, 3) ??
                                             provider?.selectedContacts[index]
-                                                ?.group?.name
+                                                ?.group?.groupName
                                                 ?.substring(0, 2),
                                       ),
                               );
