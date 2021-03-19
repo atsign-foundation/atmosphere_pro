@@ -47,6 +47,7 @@ dependencies:
   webview_flutter: ^1.0.0
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
+  at_onboarding_flutter: ^1.0.0+1
   at_client_mobile:
   at_commons:
   at_contact:

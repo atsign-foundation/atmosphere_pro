@@ -62,7 +62,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     isContactSelected = false;
     isFileSelected = false;
-    backendService.onboard();
+    // backendService.onboard();
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
 

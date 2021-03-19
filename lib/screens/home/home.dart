@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -43,10 +45,53 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     filePickerProvider =
-        Provider.of<FileTransferProvider>(context, listen: false);
-    _initBackendService();
+        Provider.of<FilePickerProvider>(context, listen: false);
+    _backendService = BackendService.getInstance();
+    _checkToOnboard();
+    // _initBackendService();
     acceptFiles();
     _checkForPermissionStatus();
+  }
+
+  var atClientPrefernce;
+  void _checkToOnboard() async {
+    setState(() {
+      authenticating = true;
+    });
+    String currentatSign = await _backendService.getAtSign();
+    await _backendService
+        .getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+    setState(() {
+      authenticating = false;
+    });
+
+    if (currentatSign != null && currentatSign != '') {
+      await Onboarding(
+        atsign: currentatSign,
+        context: context,
+        atClientPreference: atClientPrefernce,
+        domain: MixedConstants.ROOT_DOMAIN,
+        appColor: Color.fromARGB(255, 240, 94, 62),
+        onboard: (value, atsign) async {
+          setState(() {
+            authenticating = true;
+          });
+          await _backendService.startMonitor(atsign: atsign, value: value);
+          _initBackendService();
+          setState(() {
+            authenticating = false;
+          });
+          await Navigator.pushNamedAndRemoveUntil(
+              context, Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
+        },
+        onError: (error) {
+          print('Onboarding throws $error error');
+        },
+        // nextScreen: WelcomeScreen(),
+      );
+    }
   }
 
   void acceptFiles() async {
@@ -105,18 +150,11 @@ class _HomeState extends State<Home> {
   }
 
   String state;
-
+  NotificationService _notificationService;
   void _initBackendService() async {
     authenticating = true;
-    _backendService = BackendService.getInstance();
-
-    onboardSuccess = await _backendService.onboard();
-
-    if (onboardSuccess != null && onboardSuccess == true) {
-      await _backendService.startMonitor();
-      await Navigator.pushNamedAndRemoveUntil(
-          context, Routes.WELCOME_SCREEN, (route) => false);
-    }
+    _notificationService = NotificationService();
+    _notificationService.setOnNotificationClick(onNotificationClick);
 
     SystemChannels.lifecycle.setMessageHandler((msg) {
       print('set message handler');
@@ -233,34 +271,45 @@ class _HomeState extends State<Home> {
                             child: Align(
                               alignment: Alignment.topRight,
                               child: CustomButton(
-                                buttonText: TextStrings().buttonStart,
-                                onPressed: (authenticating)
-                                    ? () {}
-                                    : () async {
-                                        if (onboardSuccess) {
-                                          await Navigator
-                                              .pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.WELCOME_SCREEN,
-                                                  (route) => false);
-                                        } else {
-                                          await Navigator
-                                              .pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.SCAN_QR_SCREEN,
-                                                  (route) => false,
-                                                  arguments: {
-                                                'atClientPreference':
-                                                    _backendService
-                                                        .atClientPreference,
-                                                'atClientServiceInstance':
-                                                    _backendService
-                                                        .atClientServiceInstance,
-                                                'nextScreen': WelcomeScreen()
+                                  buttonText: TextStrings().buttonStart,
+                                  onPressed: authenticating
+                                      ? () {}
+                                      : () async {
+                                          await Onboarding(
+                                            atsign: await _backendService
+                                                .getAtSign(),
+                                            context: context,
+                                            atClientPreference:
+                                                atClientPrefernce,
+                                            domain: MixedConstants.ROOT_DOMAIN,
+                                            appColor: Color.fromARGB(
+                                                255, 240, 94, 62),
+                                            onboard: (value, atsign) async {
+                                              setState(() {
+                                                authenticating = true;
                                               });
-                                        }
-                                      },
-                              ),
+                                              await _backendService
+                                                  .startMonitor(
+                                                      atsign: atsign,
+                                                      value: value);
+                                              _initBackendService();
+                                              setState(() {
+                                                authenticating = false;
+                                              });
+                                              await Navigator
+                                                  .pushNamedAndRemoveUntil(
+                                                      context,
+                                                      Routes.WELCOME_SCREEN,
+                                                      (Route<dynamic> route) =>
+                                                          false);
+                                            },
+                                            onError: (error) {
+                                              print(
+                                                  'Onboarding throws $error error');
+                                            },
+                                            // nextScreen: WelcomeScreen(),
+                                          );
+                                        }),
                             ),
                           ),
                         ],
