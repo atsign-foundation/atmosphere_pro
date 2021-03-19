@@ -62,8 +62,8 @@ class NotificationService {
     });
   }
 
-  Future<void> showNotification(
-      String from, String fileName, String fileSize) async {
+  Future<void> showNotification(String from, String fileName, String fileSize,
+      {String id}) async {
     var androidChannelSpecifics = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
@@ -78,7 +78,11 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         android: androidChannelSpecifics, iOS: iosChannelSpecifics);
     NotificationPayload payload = NotificationPayload(
-        file: fileName, name: from, size: double.parse(fileSize));
+      file: fileName,
+      name: from,
+      size: double.parse(fileSize),
+      // id: int.parse(id)
+    );
     await _notificationsPlugin.show(
         0,
         '$from wants to send you a file',

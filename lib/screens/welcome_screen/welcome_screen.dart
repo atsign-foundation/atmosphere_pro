@@ -12,14 +12,14 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../view_models/file_picker_provider.dart';
+import '../../view_models/file_transfer_provider.dart';
 import 'widgets/select_contact_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -87,7 +87,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
-  _showScaffold({int status = 0}) {
+  _showScaffold({int status = 0, bool shouldTimeout = true}) {
     return Flushbar(
       title: transferMessages[status],
       message: 'hello',
@@ -101,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
       ],
       isDismissible: false,
-      duration: Duration(seconds: 3),
+      duration: (shouldTimeout) ? Duration(seconds: 3) : null,
       icon: Container(
         height: 40.toWidth,
         width: 40.toWidth,
@@ -144,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filePickerModel = Provider.of<FilePickerProvider>(context);
+    final filePickerModel = Provider.of<FileTransferProvider>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -227,14 +227,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 if (_welcomeScreenProvider.selectedContacts != null &&
                     filePickerModel.selectedFiles.isNotEmpty) ...[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CommonButton('Reset', () {
-                        setState(() {
-                          _welcomeScreenProvider.selectedContacts.clear();
-                          filePickerModel.selectedFiles.clear();
-                        });
-                      }),
                       CommonButton(
                         TextStrings().buttonSend,
                         () async {
@@ -256,7 +250,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                           bool response;
 
-                          response = Provider.of<FilePickerProvider>(context,
+                          response = Provider.of<FileTransferProvider>(context,
                                   listen: false)
                               .sentStatus;
 
@@ -284,7 +278,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                           // _showScaffold(status: 1);
                           if (response != null && response == true) {
-                            sendingFlushbar = _showScaffold(status: 1);
+                            sendingFlushbar =
+                                _showScaffold(status: 1, shouldTimeout: false);
                             await sendingFlushbar.show(context);
                           } else {
                             _showScaffold(status: 2);

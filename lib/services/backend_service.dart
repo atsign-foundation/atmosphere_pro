@@ -197,6 +197,7 @@ class BackendService {
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
     var fromAtSign = responseJson['from'];
+    // var id = responseJson['id'];
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
@@ -206,7 +207,10 @@ class BackendService {
       var fileName = valueObject.split(':')[1];
       fileLength = valueObject.split(':')[2];
       fileName = utf8.decode(base64.decode(fileName));
-      userResponse = await acceptStream(fromAtSign, fileName, fileLength);
+      userResponse = await acceptStream(
+        fromAtSign, fileName, fileLength,
+        // id:id
+      );
       if (userResponse == true) {
         await atClientInstance.sendStreamAck(
             streamId,
@@ -258,8 +262,8 @@ class BackendService {
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
 
   // acknowledge file transfer
-  Future<bool> acceptStream(
-      String atsign, String filename, String filesize) async {
+  Future<bool> acceptStream(String atsign, String filename, String filesize,
+      {String id}) async {
     print("from:$atsign file:$filename size:$filesize");
     if (atsign == currentAtSign) {
     } else {
@@ -405,7 +409,7 @@ class BackendService {
       var lastname = result.value;
 
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.length == 0) {
+      if (name.fileLength == 0) {
         name = atSign.substring(1);
       }
 
