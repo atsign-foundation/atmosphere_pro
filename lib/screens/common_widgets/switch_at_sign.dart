@@ -5,6 +5,7 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
@@ -26,6 +27,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
   var atClientPrefernce;
   @override
   Widget build(BuildContext context) {
+    BuildContext bottomSheetContext = context;
     backendService
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value);
@@ -54,8 +56,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         onTap: isLoading
                             ? () {}
                             : () async {
-                                isLoading = true;
-
                                 setState(() {});
                                 var atClientPrefernce = await backendService
                                     .getAtClientPreference();
@@ -63,11 +63,15 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     'here===atClientPrefernce===>${atClientPrefernce}');
                                 await Onboarding(
                                   atsign: widget.atSignList[index],
-                                  context: context,
+                                  context: bottomSheetContext,
                                   atClientPreference: atClientPrefernce,
                                   domain: MixedConstants.ROOT_DOMAIN,
                                   appColor: Color.fromARGB(255, 240, 94, 62),
                                   onboard: (value, atsign) async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+
                                     await value[widget.atSignList[index]]
                                         .makeAtSignPrimary(
                                             widget.atSignList[index]);
@@ -80,8 +84,9 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                             listen: false)
                                         .selectedFiles = [];
 
-                                    isLoading = false;
-                                    setState(() {});
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     await Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         Routes.WELCOME_SCREEN,
@@ -171,6 +176,24 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
             ),
           ),
         ),
+        isLoading
+            ? Center(
+                child: Column(
+                  children: [
+                    Text(
+                      'Switching atsign...',
+                      style: CustomTextStyles.orangeMedium16,
+                    ),
+                    SizedBox(height: 10),
+                    CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            ColorConstants.redText)),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 100,
+              ),
       ],
     );
   }

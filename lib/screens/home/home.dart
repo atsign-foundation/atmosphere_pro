@@ -63,12 +63,11 @@ class _HomeState extends State<Home> {
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
         .catchError((e) => print(e));
+    setState(() {
+      authenticating = false;
+    });
 
-    if (currentatSign == null || currentatSign == '') {
-      setState(() {
-        authenticating = false;
-      });
-    } else {
+    if (currentatSign != null && currentatSign != '') {
       await Onboarding(
         atsign: currentatSign,
         context: context,
@@ -76,13 +75,14 @@ class _HomeState extends State<Home> {
         domain: MixedConstants.ROOT_DOMAIN,
         appColor: Color.fromARGB(255, 240, 94, 62),
         onboard: (value, atsign) async {
+          setState(() {
+            authenticating = true;
+          });
           await _backendService.startMonitor(atsign: atsign, value: value);
           _initBackendService();
           setState(() {
             authenticating = false;
           });
-          setState(() {});
-
           await Navigator.pushNamedAndRemoveUntil(
               context, Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
         },
@@ -275,9 +275,6 @@ class _HomeState extends State<Home> {
                                   onPressed: authenticating
                                       ? () {}
                                       : () async {
-                                          setState(() {
-                                            authenticating = true;
-                                          });
                                           await Onboarding(
                                             atsign: await _backendService
                                                 .getAtSign(),
@@ -288,6 +285,9 @@ class _HomeState extends State<Home> {
                                             appColor: Color.fromARGB(
                                                 255, 240, 94, 62),
                                             onboard: (value, atsign) async {
+                                              setState(() {
+                                                authenticating = true;
+                                              });
                                               await _backendService
                                                   .startMonitor(
                                                       atsign: atsign,
@@ -309,7 +309,6 @@ class _HomeState extends State<Home> {
                                             },
                                             // nextScreen: WelcomeScreen(),
                                           );
-                                          setState(() {});
                                         }),
                             ),
                           ),
