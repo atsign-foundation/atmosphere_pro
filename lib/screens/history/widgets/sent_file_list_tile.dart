@@ -285,7 +285,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           itemCount: fileLength,
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList[index].fileName.split('.').last)) {
+                                filesList[index].fileName?.split('.')?.last)) {
                               videoThumbnailBuilder(filesList[index].filePath);
                             }
                             return ListTile(
@@ -304,7 +304,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 height: 50.toHeight,
                                 width: 50.toHeight,
                                 child: thumbnail(
-                                  filesList[index].fileName.split('.').last,
+                                  filesList[index].fileName?.split('.')?.last,
                                   filesList[index].filePath,
                                 ),
                               ),

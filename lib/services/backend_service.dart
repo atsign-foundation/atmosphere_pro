@@ -13,7 +13,7 @@ import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flushbar/flushbar.dart';
@@ -174,7 +174,7 @@ class BackendService {
 
     await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
     await initializeContactsService(atClientInstance, currentAtSign);
-    Provider.of<FilePickerProvider>(NavService.navKey.currentContext,
+    Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
             listen: false)
         .selectedFiles = [];
     await onboard(

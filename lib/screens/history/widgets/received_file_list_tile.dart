@@ -204,8 +204,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         itemBuilder: (context, index) {
                           if (FileTypes.VIDEO_TYPES.contains(widget
                               .receivedHistory.files[index].fileName
-                              .split('.')
-                              .last)) {
+                              ?.split('.')
+                              ?.last)) {
                             videoThumbnailBuilder(
                                 widget.receivedHistory.files[index].filePath);
                           }
@@ -227,8 +227,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               width: 50.toHeight,
                               child: thumbnail(
                                 widget.receivedHistory.files[index].fileName
-                                    .split('.')
-                                    .last,
+                                    ?.split('.')
+                                    ?.last,
                                 widget.receivedHistory.files[index].filePath,
                               ),
                             ),

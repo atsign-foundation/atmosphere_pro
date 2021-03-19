@@ -33,7 +33,7 @@ class FilesModel {
     if (json['files'] != null) {
       files = List<FilesDetail>();
       json['files'].forEach((v) {
-        if (v.runtimeType == 'String') {
+        if (v.runtimeType == String) {
           files.add(FilesDetail.fromJson(v));
         } else {
           files.add(FilesDetail.fromMap(v));

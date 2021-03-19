@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     filePickerProvider =
-        Provider.of<FilePickerProvider>(context, listen: false);
+        Provider.of<FileTransferProvider>(context, listen: false);
     _backendService = BackendService.getInstance();
     _checkToOnboard();
     // _initBackendService();
