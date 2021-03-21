@@ -42,7 +42,7 @@ class SideBarItem extends StatelessWidget {
     // );
     return InkWell(
       onTap: () {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         Navigator.pushNamed(context, routeName,
             arguments: arguments != null ? arguments : {});
       },

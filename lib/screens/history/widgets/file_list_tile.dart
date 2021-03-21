@@ -192,7 +192,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 66.0 * widget.sentHistory.files.length,
+                    height: 66.0 * widget.sentHistory.files.length.toHeight,
                     child: ListView.separated(
                         separatorBuilder: (context, index) => Divider(
                               indent: 80.toWidth,

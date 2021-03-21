@@ -174,7 +174,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   SizeConfig().isTablet(context) ? Customheading() : SizedBox(),
                   SizeConfig().isTablet(context)
                       ? Positioned(
-                          right: 90,
+                          right: 80,
                           top: 100,
                           child: Container(
                             height: 50,

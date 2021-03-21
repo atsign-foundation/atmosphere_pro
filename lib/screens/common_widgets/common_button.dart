@@ -13,7 +13,7 @@ class CommonButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 120.toWidth,
-        height: 40.toHeight * deviceTextFactor,
+        height: 45.toHeight * deviceTextFactor,
         padding: EdgeInsets.symmetric(
           vertical: 10.toHeight,
           horizontal: 30.toWidth,

@@ -62,6 +62,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: Icon(
                     Icons.arrow_back,
                     color: ColorConstants.fontPrimary,
+                    size: 25.toFont,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -108,7 +109,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? IconButton(
                       icon: Icon(
                         trailingIcon,
-                        size: 30,
+                        size: 25.toFont,
                       ),
                       onPressed: () async {
                         if (isHistory) {

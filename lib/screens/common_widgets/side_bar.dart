@@ -71,7 +71,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     super.initState();
     getEventCreator();
     isExpanded = widget.isExpanded;
-    print('is Expanded:${isExpanded}');
   }
 
   getEventCreator() async {
@@ -183,21 +182,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'selectedList': (s) {}
                 },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[1],
                 title: menuItemsTitle[1],
                 routeName: targetScreens[1],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[2],
                 title: menuItemsTitle[2],
                 routeName: targetScreens[2],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[3],
                 title: menuItemsTitle[3],
@@ -208,7 +207,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   "url": MixedConstants.TERMS_CONDITIONS
                 },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[4],
                 title: menuItemsTitle[4],
@@ -218,7 +217,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   "currentAtsign": BackendService.getInstance().currentAtsign
                 },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[5],
                 title: menuItemsTitle[5],
@@ -229,7 +228,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'url': MixedConstants.TERMS_CONDITIONS
                 },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                   image: menuItemsIcons[6],
                   title: menuItemsTitle[6],
@@ -239,21 +238,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     'title': menuItemsTitle[6],
                     'url': MixedConstants.PRIVACY_POLICY
                   }),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[7],
                 title: menuItemsTitle[7],
                 routeName: targetScreens[7],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               SideBarItem(
                 image: menuItemsIcons[8],
                 title: menuItemsTitle[8],
                 routeName: targetScreens[8],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               InkWell(
                   onTap: () async {
                     _deleteAtSign(
@@ -277,7 +276,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           : SizedBox(),
                     ]),
                   )),
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
               InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -305,7 +304,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     ]),
                   )),
 
-              SizedBox(height: 10),
+              SizedBox(height: isTablet ? 10 : 0),
 
               isExpanded
                   ? ListTile(
@@ -378,28 +377,39 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 style: TextStyle(
                     color: Colors.black,
                     letterSpacing: 0.1,
+                    fontSize: 20.toFont,
                     fontWeight: FontWeight.bold),
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Are you sure you want to delete all data associated with',
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(letterSpacing: 0.1, color: Colors.grey[700])),
+                Text(
+                  'Are you sure you want to delete all data associated with',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    letterSpacing: 0.1,
+                    color: Colors.grey[700],
+                    fontSize: 15.toFont,
+                  ),
+                ),
                 SizedBox(height: 20),
                 Text('$atsign',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.toFont,
                         letterSpacing: 0.1,
                         fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
-                Text('Type the @sign above to proceed',
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(color: Colors.grey[700], letterSpacing: 0.1)),
+                Text(
+                  'Type the @sign above to proceed',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    letterSpacing: 0.1,
+                    fontSize: 12.toFont,
+                  ),
+                ),
                 SizedBox(height: 5),
                 Form(
                   key: _formKey,
@@ -423,11 +433,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text("Caution: this action can't be undone",
-                    style: TextStyle(
-                        fontSize: 13,
-                        letterSpacing: 0.1,
-                        fontWeight: FontWeight.bold)),
+                Text(
+                  "Caution: this action can't be undone",
+                  style: TextStyle(
+                    fontSize: 13.toFont,
+                    letterSpacing: 0.1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
