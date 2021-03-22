@@ -170,29 +170,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 ),
                           );
                         }
-                        // else if (isTrustedContactScreen) {
-                        //   // await Navigator.pushNamed(
-                        //   //     context, Routes.GROUP_CONTACT_SCREEN,
-                        //   //     arguments: {'isTrustedSender': true});
-                        //   await Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => GroupContactScreen(
-                        //         isTrustedScreen: true,
-                        //       ),
-                        //     ),
-                        //   );
-                        // } else {
-                        //   await showDialog(
-                        //     context: context,
-                        //     barrierDismissible: true,
-                        //     builder: (context) => AddContactDialog(
-                        //       onYesTap: (value) {
-                        //         onActionpressed(value);
-                        //       },
-                        //     ),
-                        //   );
-                        // }
                       })
                   : Container()
               : GestureDetector(

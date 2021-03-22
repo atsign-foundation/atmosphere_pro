@@ -75,31 +75,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     });
   }
 
-  // getEventCreator() async {
-  //   AtContact contact = await getAtSignDetails(BackendService.getInstance()
-  //       .atClientServiceInstance
-  //       .atClient
-  //       .currentAtSign);
-  //   if (contact != null) {
-  //     if (contact.tags != null && contact.tags['image'] != null) {
-  //       List<int> intList = contact.tags['image'].cast<int>();
-  //       setState(() {
-  //         image = Uint8List.fromList(intList);
-  //       });
-  //     }
-  //     if (contact.tags != null && contact.tags['name'] != null) {
-  //       String newName = contact.tags['name'].toString();
-  //       setState(() {
-  //         name = newName;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         name = contact.atSign.substring(1);
-  //       });
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(

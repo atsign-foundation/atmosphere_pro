@@ -85,9 +85,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     sendTime = DateTime.parse(widget.sentHistory.date);
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     Uint8List image;
-    if (contactList.first.tags != null &&
-        contactList.first.tags['image'] != null) {
-      List<int> intList = contactList.first.tags['image'].cast<int>();
+    if (contactList?.first?.tags != null &&
+        contactList?.first?.tags['image'] != null) {
+      List<int> intList = contactList?.first?.tags['image'].cast<int>();
       image = Uint8List.fromList(intList);
     }
     return Column(
@@ -95,8 +95,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         Container(
           color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
           child: ListTile(
-            leading: (contactList.first.tags != null &&
-                    contactList.first.tags['image'] != null)
+            leading: (contactList?.first?.tags != null &&
+                    contactList?.first?.tags['image'] != null)
                 ? CustomCircleAvatar(
                     byteImage: image,
                     nonAsset: true,
@@ -143,16 +143,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   ],
                 ),
                 SizedBox(height: 5.toHeight),
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: Text(
-                //         widget.sentHistory.name,
-                //         style: CustomTextStyles.secondaryRegular12,
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 SizedBox(
                   height: 8.toHeight,
                 ),
@@ -355,44 +345,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   )
                                 ],
                               ),
-                              // trailing: Consumer<FileTransferProvider>(
-                              //   builder: (context, provider, _) {
-                              //     int i = provider.tStatus.indexWhere((element) =>
-                              //         element.contactName ==
-                              //             widget.sentHistory.name &&
-                              //         element.fileName ==
-                              //             widget
-                              //                 .sentHistory.files[index].fileName);
-
-                              // return Container(
-                              //   height: 20.toHeight,
-                              //   width: 20.toHeight,
-                              //   child: Icon(
-                              //     provider.tStatus[i].status ==
-                              //             TransferStatus.DONE
-                              //         ? Icons.check_circle_outline_outlined
-                              //         : provider.tStatus[i].status ==
-                              //                 TransferStatus.FAILED
-                              //             ? Icons.cancel_outlined
-                              //             : Icons.priority_high_rounded,
-                              //     color: provider.tStatus[i].status ==
-                              //             TransferStatus.DONE
-                              //         ? Colors.green
-                              //         : provider.tStatus[i].status ==
-                              //                 TransferStatus.FAILED
-                              //             ? Colors.red
-                              //             : Colors.orange,
-                              //   ),
-                              //   // color: provider.tStatus[i].status ==
-                              //   //         TransferStatus.PENDING
-                              //   //     ? Colors.orange
-                              //   //     : provider.tStatus[i].status ==
-                              //   //             TransferStatus.DONE
-                              //   //         ? Colors.green
-                              //   // : Colors.red,
-                              // );
-                              //   },
-                              // ),
                             );
                           }),
                     ),

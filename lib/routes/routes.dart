@@ -28,7 +28,6 @@ class SetupRoutes {
       },
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
       Routes.FAQ_SCREEN: (context) => FaqsScreen(),
-      // Routes.MY_FILES: (context) => MyFiles(),
       Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
       Routes.MY_FILES: (context) => MyFiles(),
       Routes.HISTORY: (context) => HistoryScreen(),
@@ -41,19 +40,7 @@ class SetupRoutes {
             singleSelection: args['singleSelection'],
             showGroups: args['showGroups'],
             showContacts: args['showContacts'],
-            selectedList: args['selectedList']
-            //  (s) {
-            //   Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext,
-            //           listen: false)
-            //       .updateSelectedContacts(s);
-            // },
-            // singleSelection: true,
-            );
-        // return ContactsScreen(
-        //   selectedList: args['selectedList'],
-        //   context: args['context'],
-        //   asSelectionScreen: args['asSelectionScreen'],
-        // );
+            selectedList: args['selectedList']);
       },
       Routes.GROUPS: (context) {
         Map<String, dynamic> args =
@@ -70,16 +57,8 @@ class SetupRoutes {
           nextScreen: args['nextScreen'],
         );
       },
-      // Routes.GROUP_CONTACT_SCREEN: (context) => GroupContactScreen(),
       Routes.PRIVATE_KEY_GEN_SCREEN: (context) => PrivateKeyQRCodeGenScreen(),
       Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),
-      // Routes.TRUSTED_SENDER: (context) {
-      //   Map<String, bool> args =
-      //       ModalRoute.of(context).settings.arguments as Map<String, bool>;
-      //   return GroupContactScreen(
-      //     isTrustedScreen: args['isTrustedSender'],
-      //   );
-      // }
     };
   }
 }

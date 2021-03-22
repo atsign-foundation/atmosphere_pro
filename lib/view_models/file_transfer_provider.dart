@@ -246,13 +246,13 @@ class FileTransferProvider extends BaseModel {
       int index = transferStatus.indexWhere((element) =>
           element.fileName == selectedFiles[i].name &&
           contact.atSign == element.contactName);
-
-      if (tempStatus) {
-        transferStatus[index].status = TransferStatus.DONE;
-      } else {
-        transferStatus[index].status = TransferStatus.FAILED;
+      if (index != 1) {
+        if (tempStatus) {
+          transferStatus[index].status = TransferStatus.DONE;
+        } else {
+          transferStatus[index].status = TransferStatus.FAILED;
+        }
       }
-
       if (i == selectedFiles.length - 1 &&
           contact == temporaryContactList.last) {}
     }
