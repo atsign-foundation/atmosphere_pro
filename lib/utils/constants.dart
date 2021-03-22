@@ -3,10 +3,10 @@ class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
 
   // for local server
-  static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
+  // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
 
   // for staging server
-  // static const String ROOT_DOMAIN = 'root.atsign.wtf';
+  static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
   // static const String ROOT_DOMAIN = 'root.atsign.org';
 
@@ -21,4 +21,7 @@ class MixedConstants {
   // Hive Constants
   static const String HISTORY_KEY = 'historyKey';
   static const String HISTORY_BOX = 'historyBox';
+
+  static String appNamespace = '@mospherepro';
+  static String regex = '.$appNamespace@';
 }

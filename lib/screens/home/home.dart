@@ -1,14 +1,16 @@
 import 'dart:io';
+import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,17 +38,39 @@ class _HomeState extends State<Home> {
   bool authenticating = false;
 
   List<SharedMediaFile> _sharedFiles;
-  FilePickerProvider filePickerProvider;
+  FileTransferProvider filePickerProvider;
   String activeAtSign;
 
   @override
   void initState() {
     super.initState();
     filePickerProvider =
-        Provider.of<FilePickerProvider>(context, listen: false);
-    _initBackendService();
+        Provider.of<FileTransferProvider>(context, listen: false);
+    _backendService = BackendService.getInstance();
+    _checkToOnboard();
+
     acceptFiles();
     _checkForPermissionStatus();
+  }
+
+  var atClientPrefernce;
+  void _checkToOnboard() async {
+    setState(() {
+      authenticating = true;
+    });
+    String currentatSign = await _backendService.getAtSign();
+    await _backendService
+        .getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+
+    if (currentatSign == null || currentatSign == '') {
+      setState(() {
+        authenticating = false;
+      });
+    } else {
+      _backendService.checkToOnboard(atSign: currentatSign);
+    }
   }
 
   void acceptFiles() async {
@@ -58,7 +82,7 @@ class _HomeState extends State<Home> {
         value.forEach((element) async {
           File file = File(element.path);
           var length = await file.length();
-          await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
+          await FileTransferProvider.appClosedSharedFiles.add(PlatformFile(
               name: basename(file.path),
               path: file.path,
               size: length.round(),
@@ -92,7 +116,7 @@ class _HomeState extends State<Home> {
               path: file.path,
               size: length.round(),
               bytes: await file.readAsBytes());
-          FilePickerProvider.appClosedSharedFiles.add(fileToBeAdded);
+          FileTransferProvider.appClosedSharedFiles.add(fileToBeAdded);
           filePickerProvider.setFiles();
         });
 
@@ -102,37 +126,6 @@ class _HomeState extends State<Home> {
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
     });
-  }
-
-  String state;
-
-  void _initBackendService() async {
-    authenticating = true;
-    _backendService = BackendService.getInstance();
-
-    onboardSuccess = await _backendService.onboard();
-
-    if (onboardSuccess != null && onboardSuccess == true) {
-      await _backendService.startMonitor();
-      Navigator.pushNamed(
-        context,
-        Routes.WELCOME_SCREEN,
-      );
-    }
-
-    SystemChannels.lifecycle.setMessageHandler((msg) {
-      print('set message handler');
-      state = msg;
-      debugPrint('SystemChannels> $msg');
-      _backendService.app_lifecycle_state = msg;
-      if (_backendService.monitorConnection != null &&
-          _backendService.monitorConnection.isInValid()) {
-        _backendService.startMonitor();
-      }
-      return null;
-    });
-    authenticating = false;
-    setState(() {});
   }
 
   bool isAuth = false;
@@ -235,34 +228,20 @@ class _HomeState extends State<Home> {
                             child: Align(
                               alignment: Alignment.topRight,
                               child: CustomButton(
-                                buttonText: TextStrings().buttonStart,
-                                onPressed: (authenticating)
-                                    ? () {}
-                                    : () async {
-                                        if (onboardSuccess) {
-                                          await Navigator
-                                              .pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.WELCOME_SCREEN,
-                                                  (route) => false);
-                                        } else {
-                                          await Navigator
-                                              .pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.SCAN_QR_SCREEN,
-                                                  (route) => false,
-                                                  arguments: {
-                                                'atClientPreference':
-                                                    _backendService
-                                                        .atClientPreference,
-                                                'atClientServiceInstance':
-                                                    _backendService
-                                                        .atClientServiceInstance,
-                                                'nextScreen': WelcomeScreen()
-                                              });
-                                        }
-                                      },
-                              ),
+                                  buttonText: TextStrings().buttonStart,
+                                  onPressed: authenticating
+                                      ? () {}
+                                      : () async {
+                                          setState(() {
+                                            authenticating = true;
+                                          });
+                                          await _backendService
+                                              .checkToOnboard();
+
+                                          setState(() {
+                                            authenticating = false;
+                                          });
+                                        }),
                             ),
                           ),
                         ],

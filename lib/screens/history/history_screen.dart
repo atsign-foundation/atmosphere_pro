@@ -1,11 +1,12 @@
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/file_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,21 +102,38 @@ class _HistoryScreenState extends State<HistoryScreen>
                           : ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),
                               physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
-                              ),
-                              itemCount: provider.sentHistory.length,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FilesListTile(
+                              separatorBuilder: (context, index) {
+                                // print(
+                                //     'provider.testSentHistory.length====>${provider.testSentHistory.length}');
+                                return Divider(
+                                  indent: 16.toWidth,
+                                );
+                              },
+                              itemCount: provider.testSentHistory.length,
+                              // itemCount: 2,
+                              itemBuilder: (context, index) {
+                                List<Map<String, Set<FilesDetail>>> tempList =
+                                    [];
+                                List<int> idList = [];
+                                provider.testSentHistory.forEach((key, value) {
+                                  tempList.add(value);
+                                  idList.add(key);
+                                });
+                                print(idList);
+                                // print('TEMP LIST !====>${tempList[2]}');
+                                return SentFilesListTile(
                                   sentHistory: provider.sentHistory[index],
-                                ),
-                              ),
+                                  testList: tempList[index],
+                                  id: idList[index],
+                                );
+                              },
                             ),
                       // errorBuilder: (provider) => Center(
                       //   child: Text('Some error occured'),
                       // ),
-                      load: (provider) {},
+                      load: (provider) {
+                        provider.getRecievedHistory();
+                      },
                     ),
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.RECEIVED_HISTORY,
@@ -141,8 +159,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                               itemCount: provider.receivedHistory.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: FilesListTile(
-                                  sentHistory: provider.receivedHistory[index],
+                                child: ReceivedFilesListTile(
+                                  receivedHistory:
+                                      provider.receivedHistory[index],
                                 ),
                               ),
                             ),

@@ -18,17 +18,18 @@ import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-class FilesListTile extends StatefulWidget {
-  final FilesModel sentHistory;
+class ReceivedFilesListTile extends StatefulWidget {
+  final FilesModel receivedHistory;
   final ContactProvider contactProvider;
 
-  const FilesListTile({Key key, this.sentHistory, this.contactProvider})
+  const ReceivedFilesListTile(
+      {Key key, this.receivedHistory, this.contactProvider})
       : super(key: key);
   @override
-  _FilesListTileState createState() => _FilesListTileState();
+  _ReceivedFilesListTileState createState() => _ReceivedFilesListTileState();
 }
 
-class _FilesListTileState extends State<FilesListTile> {
+class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   bool isOpen = false;
   DateTime sendTime;
   Uint8List videoThumbnail;
@@ -46,7 +47,7 @@ class _FilesListTileState extends State<FilesListTile> {
 
   @override
   Widget build(BuildContext context) {
-    sendTime = DateTime.parse(widget.sentHistory.date);
+    sendTime = DateTime.parse(widget.receivedHistory.date);
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Column(
       children: [
@@ -60,20 +61,20 @@ class _FilesListTileState extends State<FilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.sentHistory.name,
+                      widget.receivedHistory.name,
                       style: CustomTextStyles.primaryRegular16,
                     ),
                   ),
                   ContactService()
                           .allContactsList
-                          .contains(widget.sentHistory.name)
+                          .contains(widget.receivedHistory.name)
                       ? SizedBox()
                       : GestureDetector(
                           onTap: () async {
                             await showDialog(
                               context: context,
                               builder: (context) => AddSingleContact(
-                                atSignName: widget.sentHistory.name,
+                                atSignName: widget.receivedHistory.name,
                               ),
                             );
                             this.setState(() {});
@@ -94,7 +95,7 @@ class _FilesListTileState extends State<FilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.sentHistory.name,
+                      widget.receivedHistory.name,
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                   ),
@@ -108,7 +109,7 @@ class _FilesListTileState extends State<FilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.sentHistory.files.length} Files',
+                      '${widget.receivedHistory.files.length} Files',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                     SizedBox(width: 10.toHeight),
@@ -118,10 +119,11 @@ class _FilesListTileState extends State<FilesListTile> {
                     ),
                     SizedBox(width: 10.toHeight),
                     Text(
-                      double.parse(widget.sentHistory.totalSize.toString()) <=
+                      double.parse(widget.receivedHistory.totalSize
+                                  .toString()) <=
                               1024
-                          ? '${widget.sentHistory.totalSize} Kb '
-                          : '${(widget.sentHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                          ? '${widget.receivedHistory.totalSize} Kb '
+                          : '${(widget.receivedHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
                       style: CustomTextStyles.secondaryRegular12,
                     )
                   ],
@@ -192,30 +194,30 @@ class _FilesListTileState extends State<FilesListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 66.0 * widget.sentHistory.files.length.toHeight,
+                    height: 66.0 * widget.receivedHistory.files.length.toHeight,
                     child: ListView.separated(
                         separatorBuilder: (context, index) => Divider(
                               indent: 80.toWidth,
                             ),
                         itemCount: int.parse(
-                            widget.sentHistory.files.length.toString()),
+                            widget.receivedHistory.files.length.toString()),
                         itemBuilder: (context, index) {
                           if (FileTypes.VIDEO_TYPES.contains(widget
-                              .sentHistory.files[index].fileName
-                              .split('.')
-                              .last)) {
+                              .receivedHistory.files[index].fileName
+                              ?.split('.')
+                              ?.last)) {
                             videoThumbnailBuilder(
-                                widget.sentHistory.files[index].filePath);
+                                widget.receivedHistory.files[index].filePath);
                           }
                           return ListTile(
                             onTap: () async {
                               // preview file
                               File test = File(
-                                  widget.sentHistory.files[index].filePath);
+                                  widget.receivedHistory.files[index].filePath);
                               bool fileExists = await test.exists();
                               if (fileExists) {
-                                await OpenFile.open(
-                                    widget.sentHistory.files[index].filePath);
+                                await OpenFile.open(widget
+                                    .receivedHistory.files[index].filePath);
                               } else {
                                 _showNoFileDialog(deviceTextFactor);
                               }
@@ -224,10 +226,10 @@ class _FilesListTileState extends State<FilesListTile> {
                               height: 50.toHeight,
                               width: 50.toHeight,
                               child: thumbnail(
-                                widget.sentHistory.files[index].fileName
-                                    .split('.')
-                                    .last,
-                                widget.sentHistory.files[index].filePath,
+                                widget.receivedHistory.files[index].fileName
+                                    ?.split('.')
+                                    ?.last,
+                                widget.receivedHistory.files[index].filePath,
                               ),
                             ),
                             title: Column(
@@ -237,7 +239,8 @@ class _FilesListTileState extends State<FilesListTile> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        widget.sentHistory.files[index].fileName
+                                        widget.receivedHistory.files[index]
+                                            .fileName
                                             .toString(),
                                         style:
                                             CustomTextStyles.primaryRegular16,
@@ -251,12 +254,12 @@ class _FilesListTileState extends State<FilesListTile> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        double.parse(widget.sentHistory
+                                        double.parse(widget.receivedHistory
                                                     .files[index].size
                                                     .toString()) <=
                                                 1024
-                                            ? '${widget.sentHistory.files[index].size} Kb '
-                                            : '${(widget.sentHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                            ? '${widget.receivedHistory.files[index].size} Kb '
+                                            : '${(widget.receivedHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                         style:
                                             CustomTextStyles.secondaryRegular12,
                                       ),
@@ -268,7 +271,7 @@ class _FilesListTileState extends State<FilesListTile> {
                                       ),
                                       SizedBox(width: 10.toHeight),
                                       Text(
-                                        widget.sentHistory.files[index].type
+                                        widget.receivedHistory.files[index].type
                                             .toString(),
                                         style:
                                             CustomTextStyles.secondaryRegular12,

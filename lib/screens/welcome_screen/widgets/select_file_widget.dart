@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -24,7 +24,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   bool isLoading = false;
 
   Uint8List videoThumbnail;
-  FilePickerProvider filePickerProvider;
+  FileTransferProvider filePickerProvider;
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
@@ -39,7 +39,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   @override
   void initState() {
     filePickerProvider =
-        Provider.of<FilePickerProvider>(context, listen: false);
+        Provider.of<FileTransferProvider>(context, listen: false);
     super.initState();
   }
 
@@ -47,7 +47,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   void didChangeDependencies() async {
     if (filePickerProvider == null) {
       filePickerProvider =
-          Provider.of<FilePickerProvider>(context, listen: false);
+          Provider.of<FileTransferProvider>(context, listen: false);
       await filePickerProvider.setFiles();
     }
     super.didChangeDependencies();
@@ -75,7 +75,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   FlatButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        providerCallback<FilePickerProvider>(context,
+                        providerCallback<FileTransferProvider>(context,
                             task: (provider) =>
                                 provider.pickFiles(provider.MEDIA),
                             taskName: (provider) => provider.PICK_FILES,
@@ -96,7 +96,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   FlatButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        providerCallback<FilePickerProvider>(context,
+                        providerCallback<FileTransferProvider>(context,
                             task: (provider) =>
                                 provider.pickFiles(provider.FILES),
                             taskName: (provider) => provider.PICK_FILES,
@@ -178,7 +178,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   videoThumbnailBuilder(
                       filePickerProvider.selectedFiles[index].path);
                 }
-                return Consumer<FilePickerProvider>(
+                return Consumer<FileTransferProvider>(
                     builder: (context, provider, _) {
                   return Container(
                     decoration: BoxDecoration(

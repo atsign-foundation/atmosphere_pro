@@ -37,8 +37,8 @@ class _RecentsState extends State<Recents> {
                     (index) {
                   return thumbnail(
                       provider.finalReceivedHistory[index].fileName
-                          .split('.')
-                          .last,
+                          ?.split('.')
+                          ?.last,
                       provider.finalReceivedHistory[index].filePath);
                 }),
               ),

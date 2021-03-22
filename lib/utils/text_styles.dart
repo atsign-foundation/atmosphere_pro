@@ -98,4 +98,11 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle orangeMedium16 = TextStyle(
+    color: ColorConstants.orangeColor,
+    fontSize: 16.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
 }

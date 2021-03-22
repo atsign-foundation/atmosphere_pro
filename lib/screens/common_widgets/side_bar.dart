@@ -5,7 +5,9 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -69,33 +71,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   void initState() {
     super.initState();
-    getEventCreator();
+    // getEventCreator();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await initializeContactsService(
+          BackendService.getInstance().atClientInstance,
+          BackendService.getInstance().currentAtSign);
+    });
     isExpanded = widget.isExpanded;
-  }
-
-  getEventCreator() async {
-    AtContact contact = await getAtSignDetails(BackendService.getInstance()
-        .atClientServiceInstance
-        .atClient
-        .currentAtSign);
-    if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        setState(() {
-          image = Uint8List.fromList(intList);
-        });
-      }
-      if (contact.tags != null && contact.tags['name'] != null) {
-        String newName = contact.tags['name'].toString();
-        setState(() {
-          name = newName;
-        });
-      } else {
-        setState(() {
-          name = contact.atSign.substring(1);
-        });
-      }
-    }
   }
 
   @override
@@ -133,8 +115,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                 )
                               : ContactInitial(
                                   initials: BackendService.getInstance()
-                                      .atClientServiceInstance
-                                      .atClient
                                       .currentAtSign
                                       .substring(1, 3)),
                           Flexible(
@@ -153,10 +133,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  BackendService.getInstance()
-                                          .atClientServiceInstance
-                                          .atClient
-                                          .currentAtSign ??
+                                  BackendService.getInstance().currentAtSign ??
                                       '@sign',
                                   // style: CustomTextStyles().darkGrey14,
                                   maxLines: 1,

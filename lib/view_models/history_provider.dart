@@ -16,6 +16,9 @@ class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
   List<FilesModel> sentHistory = [];
+  List<List<FilesDetail>> tempList = [];
+  Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
+  static Map<int, Map<String, Set<FilesDetail>>> test = {};
   List<FilesDetail> sentPhotos,
       sentVideos,
       sentAudio,
@@ -41,11 +44,13 @@ class HistoryProvider extends BaseModel {
   setFilesHistory(
       {HistoryType historyType,
       String atSignName,
-      List<FilesDetail> files}) async {
+      List<FilesDetail> files,
+      @required int id}) async {
     try {
       DateTime now = DateTime.now();
       FilesModel filesModel = FilesModel(
           name: atSignName,
+          id: id,
           historyType: historyType,
           date: now.toString(),
           files: files);
@@ -98,6 +103,31 @@ class HistoryProvider extends BaseModel {
         });
       }
 
+      for (int i = 0; i < sentHistory.length; i++) {
+        if (testSentHistory.containsKey(sentHistory[i].id)) {
+          if (testSentHistory[sentHistory[i].id]
+              .containsKey(sentHistory[i].name)) {
+            testSentHistory[sentHistory[i].id][sentHistory[i].name]
+                .add(sentHistory[i].files[0]);
+          } else {
+            testSentHistory[sentHistory[i].id].putIfAbsent(
+                sentHistory[i].name, () => [...sentHistory[i].files].toSet());
+          }
+        } else {
+          testSentHistory.putIfAbsent(
+              sentHistory[i].id,
+              () => {
+                    sentHistory[i].name: [...sentHistory[i].files].toSet()
+                  });
+        }
+      }
+
+      sentHistory.forEach((element) {
+        tempList.add(element.files);
+      });
+
+      test = testSentHistory;
+      print('IN HISTORy---->${testSentHistory}');
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
       setError(SENT_HISTORY, error.toString());
