@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,48 +57,22 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         onTap: isLoading
                             ? () {}
                             : () async {
-                                setState(() {});
-                                var atClientPrefernce = await backendService
-                                    .getAtClientPreference();
-                                print(
-                                    'here===atClientPrefernce===>${atClientPrefernce}');
-                                await Onboarding(
-                                  atsign: widget.atSignList[index],
-                                  context: bottomSheetContext,
-                                  atClientPreference: atClientPrefernce,
-                                  domain: MixedConstants.ROOT_DOMAIN,
-                                  appColor: Color.fromARGB(255, 240, 94, 62),
-                                  onboard: (value, atsign) async {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
+                                setState(() {
+                                  isLoading = true;
+                                });
 
-                                    await value[widget.atSignList[index]]
-                                        .makeAtSignPrimary(
-                                            widget.atSignList[index]);
-                                    print(
-                                        'VALUE===>${value[atsign].atClient}===atsign===>$atsign');
-                                    await backendService.startMonitor(
-                                        value: value, atsign: atsign);
+                                await backendService.checkToOnboard(
+                                    atSign: widget.atSignList[index]);
 
-                                    Provider.of<FileTransferProvider>(context,
-                                            listen: false)
-                                        .selectedFiles = [];
-
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    await Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        Routes.WELCOME_SCREEN,
-                                        (Route<dynamic> route) => false);
-                                  },
-                                  onError: (error) {
-                                    print('Onboarding throws $error error');
-                                  },
-                                  // nextScreen: WelcomeScreen(),
-                                );
-                                // }
+                                Provider.of<WelcomeScreenProvider>(context,
+                                        listen: false)
+                                    .selectedContacts = [];
+                                Provider.of<FileTransferProvider>(context,
+                                        listen: false)
+                                    .selectedFiles = [];
+                                setState(() {
+                                  isLoading = false;
+                                });
                               },
                         child: Padding(
                           padding:
@@ -134,31 +109,14 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        await Onboarding(
-                          atsign: "",
-                          context: context,
-                          atClientPreference: atClientPrefernce,
-                          domain: MixedConstants.ROOT_DOMAIN,
-                          appColor: Color.fromARGB(255, 240, 94, 62),
-                          onboard: (value, atsign) async {
-                            backendService.atClientServiceMap = value;
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await backendService.checkToOnboard(atSign: "");
 
-                            String atSign = await backendService
-                                .atClientServiceMap[atsign]
-                                .atClient
-                                .currentAtSign;
-
-                            backendService.currentAtSign = atSign;
-                            await backendService.atClientServiceMap[atsign]
-                                .makeAtSignPrimary(atSign);
-                          },
-                          onError: (error) {
-                            print('Onboarding throws $error error');
-                          },
-                          nextScreen: WelcomeScreen(),
-                        );
-
-                        setState(() {});
+                        setState(() {
+                          isLoading = false;
+                        });
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 10),

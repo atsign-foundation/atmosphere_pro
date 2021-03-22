@@ -20,6 +20,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
@@ -426,4 +427,57 @@ class BackendService {
     }
     return contactDetails;
   }
+
+  checkToOnboard({String atSign}) async {
+    var atClientPrefernce;
+    //  await getAtClientPreference();
+    await getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+    currentAtSign = atSign;
+    await Onboarding(
+      atsign: atSign,
+      context: NavService.navKey.currentContext,
+      atClientPreference: atClientPrefernce,
+      domain: MixedConstants.ROOT_DOMAIN,
+      appColor: Color.fromARGB(255, 240, 94, 62),
+      onboard: (value, atsign) async {
+        atClientServiceMap = value;
+
+        String atSign = await atClientServiceMap[atsign].atClient.currentAtSign;
+
+        await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+        await startMonitor(atsign: atsign, value: value);
+        _initBackendService();
+        await initializeContactsService(atClientInstance, currentAtSign);
+        // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            Routes.WELCOME_SCREEN,
+            (Route<dynamic> route) => false);
+      },
+      onError: (error) {
+        print('Onboarding throws $error error');
+      },
+      // nextScreen: WelcomeScreen(),
+    );
+  }
+
+  String state;
+  NotificationService _notificationService;
+  void _initBackendService() async {
+    _notificationService = NotificationService();
+    _notificationService.setOnNotificationClick(onNotificationClick);
+
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+      print('set message handler');
+      state = msg;
+      debugPrint('SystemChannels> $msg');
+      app_lifecycle_state = msg;
+
+      return null;
+    });
+  }
+
+  onNotificationClick(String payload) async {}
 }

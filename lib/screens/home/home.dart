@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
         Provider.of<FileTransferProvider>(context, listen: false);
     _backendService = BackendService.getInstance();
     _checkToOnboard();
-    // _initBackendService();
+
     acceptFiles();
     _checkForPermissionStatus();
   }
@@ -63,34 +63,13 @@ class _HomeState extends State<Home> {
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
         .catchError((e) => print(e));
-    setState(() {
-      authenticating = false;
-    });
 
-    if (currentatSign != null && currentatSign != '') {
-      await Onboarding(
-        atsign: currentatSign,
-        context: context,
-        atClientPreference: atClientPrefernce,
-        domain: MixedConstants.ROOT_DOMAIN,
-        appColor: Color.fromARGB(255, 240, 94, 62),
-        onboard: (value, atsign) async {
-          setState(() {
-            authenticating = true;
-          });
-          await _backendService.startMonitor(atsign: atsign, value: value);
-          _initBackendService();
-          setState(() {
-            authenticating = false;
-          });
-          await Navigator.pushNamedAndRemoveUntil(
-              context, Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
-        },
-        onError: (error) {
-          print('Onboarding throws $error error');
-        },
-        // nextScreen: WelcomeScreen(),
-      );
+    if (currentatSign == null || currentatSign == '') {
+      setState(() {
+        authenticating = false;
+      });
+    } else {
+      _backendService.checkToOnboard(atSign: currentatSign);
     }
   }
 
@@ -147,28 +126,6 @@ class _HomeState extends State<Home> {
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
     });
-  }
-
-  String state;
-  NotificationService _notificationService;
-  void _initBackendService() async {
-    authenticating = true;
-    _notificationService = NotificationService();
-    _notificationService.setOnNotificationClick(onNotificationClick);
-
-    SystemChannels.lifecycle.setMessageHandler((msg) {
-      print('set message handler');
-      state = msg;
-      debugPrint('SystemChannels> $msg');
-      _backendService.app_lifecycle_state = msg;
-      if (_backendService.monitorConnection != null &&
-          _backendService.monitorConnection.isInValid()) {
-        _backendService.startMonitor();
-      }
-      return null;
-    });
-    authenticating = false;
-    setState(() {});
   }
 
   bool isAuth = false;
@@ -275,40 +232,15 @@ class _HomeState extends State<Home> {
                                   onPressed: authenticating
                                       ? () {}
                                       : () async {
-                                          await Onboarding(
-                                            atsign: await _backendService
-                                                .getAtSign(),
-                                            context: context,
-                                            atClientPreference:
-                                                atClientPrefernce,
-                                            domain: MixedConstants.ROOT_DOMAIN,
-                                            appColor: Color.fromARGB(
-                                                255, 240, 94, 62),
-                                            onboard: (value, atsign) async {
-                                              setState(() {
-                                                authenticating = true;
-                                              });
-                                              await _backendService
-                                                  .startMonitor(
-                                                      atsign: atsign,
-                                                      value: value);
-                                              _initBackendService();
-                                              setState(() {
-                                                authenticating = false;
-                                              });
-                                              await Navigator
-                                                  .pushNamedAndRemoveUntil(
-                                                      context,
-                                                      Routes.WELCOME_SCREEN,
-                                                      (Route<dynamic> route) =>
-                                                          false);
-                                            },
-                                            onError: (error) {
-                                              print(
-                                                  'Onboarding throws $error error');
-                                            },
-                                            // nextScreen: WelcomeScreen(),
-                                          );
+                                          setState(() {
+                                            authenticating = true;
+                                          });
+                                          await _backendService
+                                              .checkToOnboard();
+
+                                          setState(() {
+                                            authenticating = false;
+                                          });
                                         }),
                             ),
                           ),
