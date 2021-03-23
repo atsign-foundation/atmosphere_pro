@@ -7,15 +7,21 @@ class SideBarItem extends StatelessWidget {
   final String title;
   final String routeName;
   final Map<String, dynamic> arguments;
+  final bool showIconOnly;
 
   const SideBarItem(
-      {Key key, this.image, this.title, this.routeName, this.arguments})
+      {Key key,
+      this.image,
+      this.title,
+      this.routeName,
+      this.arguments,
+      this.showIconOnly = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         Navigator.pushNamed(context, routeName,
             arguments: arguments != null ? arguments : {});
       },
@@ -25,19 +31,21 @@ class SideBarItem extends StatelessWidget {
           children: [
             Image.asset(
               image,
-              height: 20.toHeight,
+              height: 22.toHeight,
               color: ColorConstants.fadedText,
             ),
             SizedBox(width: 10),
-            Text(
-              title,
-              softWrap: true,
-              style: TextStyle(
-                color: ColorConstants.fadedText,
-                letterSpacing: 0.1,
-                fontSize: 14.toFont,
-              ),
-            ),
+            !showIconOnly
+                ? Text(
+                    title,
+                    softWrap: true,
+                    style: TextStyle(
+                      color: ColorConstants.fadedText,
+                      letterSpacing: 0.1,
+                      fontSize: 14.toFont,
+                    ),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

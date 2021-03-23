@@ -96,7 +96,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                       successBuilder: (provider) => (provider
                               .sentHistory.isEmpty)
                           ? Center(
-                              child: Text('No files sent'),
+                              child: Text('No files sent',
+                                  style: TextStyle(fontSize: 15.toFont)),
                             )
                           : ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),
@@ -144,7 +145,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                       successBuilder: (provider) => (provider
                               .receivedHistory.isEmpty)
                           ? Center(
-                              child: Text('No files received'),
+                              child: Text(
+                                'No files received',
+                                style: TextStyle(fontSize: 15.toFont),
+                              ),
                             )
                           : ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),

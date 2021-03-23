@@ -194,7 +194,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 66.0 * widget.receivedHistory.files.length,
+                    height: 66.0 * widget.receivedHistory.files.length.toHeight,
                     child: ListView.separated(
                         separatorBuilder: (context, index) => Divider(
                               indent: 80.toWidth,

@@ -195,7 +195,10 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                   physics: AlwaysScrollableScrollPhysics(),
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
+                                          crossAxisCount:
+                                              SizeConfig().isTablet(context)
+                                                  ? 5
+                                                  : 3,
                                           childAspectRatio: 1 / 1.1),
                                   shrinkWrap: true,
                                   itemCount:

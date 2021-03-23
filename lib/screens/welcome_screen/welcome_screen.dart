@@ -1,6 +1,7 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/Custom_heading.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -19,6 +20,9 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../../services/size_config.dart';
+// import '../../view_models/file_picker_provider.dart';
+import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 import 'widgets/select_contact_widget.dart';
 
@@ -37,6 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
+  bool isExpanded = true;
   // FilePickerProvider _filePickerProvider;
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
@@ -149,153 +154,237 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: CustomAppBar(
-          showLeadingicon: true,
+        appBar: SizeConfig().isTablet(context)
+            ? null
+            : CustomAppBar(
+                showLeadingicon: true,
+              ),
+        extendBody: true,
+        drawerScrimColor: Colors.transparent,
+        endDrawer: SideBarWidget(
+          isExpanded: true,
         ),
-        endDrawer: SideBarWidget(),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 26.toWidth, vertical: 20.toHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  TextStrings().welcomeUser(currentAtSign),
-                  style: GoogleFonts.playfairDisplay(
-                    textStyle: TextStyle(
-                      fontSize: 28.toFont,
-                      fontWeight: FontWeight.w800,
-                      height: 1.3,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.toHeight,
-                ),
-                Text(
-                  TextStrings().welcomeRecipient,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 13.toFont,
-                  ),
-                ),
-                SizedBox(
-                  height: 67.toHeight,
-                ),
-                Text(
-                  TextStrings().welcomeSendFilesTo,
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 12.toFont,
-                  ),
-                ),
-                SizedBox(
-                  height: 20.toHeight,
-                ),
-                SelectContactWidget(
-                  (b) {
-                    setState(() {
-                      isContactSelected = b;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10.toHeight,
-                ),
-                // ProviderHandler<WelcomeScreenProvider>(),
-                Consumer<WelcomeScreenProvider>(
-                  builder: (context, provider, _) =>
-                      (provider.selectedContacts.isEmpty)
-                          ? Container()
-                          : OverlappingContacts(
-                              selectedList: provider.selectedContacts),
-                ),
-                SizedBox(
-                  height: 40.toHeight,
-                ),
-                SelectFileWidget(
-                  (b) {
-                    setState(() {
-                      isFileSelected = b;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 60.toHeight,
-                ),
-                if (_welcomeScreenProvider.selectedContacts != null &&
-                    filePickerModel.selectedFiles.isNotEmpty) ...[
+        body: Container(
+            width: double.infinity,
+            height: SizeConfig().screenHeight,
+            child: Container(
+              width: double.infinity,
+              height: SizeConfig().screenHeight,
+              child: Stack(
+                children: [
+                  SizeConfig().isTablet(context) ? Customheading() : SizedBox(),
+                  SizeConfig().isTablet(context)
+                      ? Positioned(
+                          right: 80,
+                          top: 100,
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.black,
+                            ),
+                            child: Builder(
+                              builder: (context) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isExpanded = !isExpanded;
+                                    });
+                                    print('is expanded changed:${isExpanded}');
+
+                                    Scaffold.of(context).openEndDrawer();
+                                  },
+                                  child: Icon(
+                                    Icons.arrow_back_ios,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CommonButton(
-                        TextStrings().buttonSend,
-                        () async {
-                          filePickerModel.sendFiles(
-                              filePickerModel.selectedFiles,
-                              _welcomeScreenProvider.selectedContacts);
-                          // _showScaffold(status: 0);
-                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                          //     _welcomeScreenProvider.selectedContacts);
-                          // bool response = filePickerModel.sentStatus[0];
-                          // if (filePickerModel.sentStatus != null) {
-                          sendingFlushbar = _showScaffold(status: 0);
-                          await sendingFlushbar.show(context);
-                          // }
+                      Expanded(
+                        flex: 3,
+                        child: SingleChildScrollView(
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20.toWidth, vertical: 20.toHeight),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  TextStrings().welcomeUser(currentAtSign),
+                                  style: GoogleFonts.playfairDisplay(
+                                    textStyle: TextStyle(
+                                      fontSize: 26.toFont,
+                                      fontWeight: FontWeight.w800,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10.toHeight,
+                                ),
+                                Text(
+                                  TextStrings().welcomeRecipient,
+                                  style: TextStyle(
+                                    color: ColorConstants.fadedText,
+                                    fontSize: 13.toFont,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 67.toHeight,
+                                ),
+                                Text(
+                                  TextStrings().welcomeSendFilesTo,
+                                  style: TextStyle(
+                                    color: ColorConstants.fadedText,
+                                    fontSize: 12.toFont,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.toHeight,
+                                ),
+                                SelectContactWidget(
+                                  (b) {
+                                    setState(() {
+                                      isContactSelected = b;
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10.toHeight,
+                                ),
+                                // ProviderHandler<WelcomeScreenProvider>(),
+                                Consumer<WelcomeScreenProvider>(
+                                  builder: (context, provider, _) =>
+                                      (provider.selectedContacts.isEmpty)
+                                          ? Container()
+                                          : OverlappingContacts(
+                                              selectedList:
+                                                  provider.selectedContacts),
+                                ),
+                                SizedBox(
+                                  height: 40.toHeight,
+                                ),
+                                SelectFileWidget(
+                                  (b) {
+                                    setState(() {
+                                      isFileSelected = b;
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 60.toHeight,
+                                ),
+                                if (_welcomeScreenProvider.selectedContacts !=
+                                        null &&
+                                    filePickerModel
+                                        .selectedFiles.isNotEmpty) ...[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CommonButton('Reset', () {
+                                        setState(() {
+                                          _welcomeScreenProvider
+                                              .selectedContacts
+                                              .clear();
+                                          filePickerModel.selectedFiles.clear();
+                                        });
+                                      }),
+                                      CommonButton(
+                                        TextStrings().buttonSend,
+                                        () async {
+                                          filePickerModel.sendFiles(
+                                              filePickerModel.selectedFiles,
+                                              _welcomeScreenProvider
+                                                  .selectedContacts);
+                                          // _showScaffold(status: 0);
+                                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                                          //     _welcomeScreenProvider.selectedContacts);
+                                          // bool response = filePickerModel.sentStatus[0];
+                                          // if (filePickerModel.sentStatus != null) {
+                                          sendingFlushbar =
+                                              _showScaffold(status: 0);
+                                          await sendingFlushbar.show(context);
+                                          // }
 
-                          _showScaffold(status: 0);
-                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                          //     _welcomeScreenProvider.selectedContacts);
+                                          _showScaffold(status: 0);
+                                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
+                                          //     _welcomeScreenProvider.selectedContacts);
 
-                          bool response;
+                                          bool response;
 
-                          response = Provider.of<FileTransferProvider>(context,
-                                  listen: false)
-                              .sentStatus;
+                                          response =
+                                              Provider.of<FileTransferProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .sentStatus;
 
-                          // bool response = true;
-                          // bool response = await backendService.sendFile(
-                          //     contactPickerModel.selectedContacts,
-                          //     filePickerModel.selectedFiles[0].path);
+                                          // bool response = true;
+                                          // bool response = await backendService.sendFile(
+                                          //     contactPickerModel.selectedContacts,
+                                          //     filePickerModel.selectedFiles[0].path);
 
-                          // Provider.of<HistoryProvider>(context, listen: false)
-                          //     .setFilesHistory(
-                          //         atSignName: _filePickerProvider
-                          //             .temporaryContactList[0].atSign,
-                          //         historyType: HistoryType.send,
-                          //         files: [
-                          //       FilesDetail(
-                          //           filePath:
-                          //               filePickerModel.selectedFiles[0].path,
-                          //           size: filePickerModel.totalSize,
-                          //           fileName: filePickerModel.result.files[0].name
-                          //               .toString(),
-                          //           type: filePickerModel
-                          //               .selectedFiles[0].extension
-                          //               .toString())
-                          //     ]);
+                                          // Provider.of<HistoryProvider>(context, listen: false)
+                                          //     .setFilesHistory(
+                                          //         atSignName: _filePickerProvider
+                                          //             .temporaryContactList[0].atSign,
+                                          //         historyType: HistoryType.send,
+                                          //         files: [
+                                          //       FilesDetail(
+                                          //           filePath:
+                                          //               filePickerModel.selectedFiles[0].path,
+                                          //           size: filePickerModel.totalSize,
+                                          //           fileName: filePickerModel.result.files[0].name
+                                          //               .toString(),
+                                          //           type: filePickerModel
+                                          //               .selectedFiles[0].extension
+                                          //               .toString())
+                                          //     ]);
 
-                          // _showScaffold(status: 1);
-                          if (response != null && response == true) {
-                            sendingFlushbar =
-                                _showScaffold(status: 1, shouldTimeout: false);
-                            await sendingFlushbar.show(context);
-                          } else {
-                            _showScaffold(status: 2);
-                          }
-                        },
+                                          // _showScaffold(status: 1);
+                                          if (response != null &&
+                                              response == true) {
+                                            sendingFlushbar =
+                                                _showScaffold(status: 1);
+                                            await sendingFlushbar.show(context);
+                                          } else {
+                                            _showScaffold(status: 2);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 60.toHeight,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
+                      SizeConfig().isTablet(context)
+                          ? Container(
+                              height: SizeConfig().screenHeight,
+                              width: 100,
+                              child: SideBarWidget(
+                                isExpanded: false,
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
-                  SizedBox(
-                    height: 60.toHeight,
-                  ),
                 ],
-              ],
-            ),
-          ),
-        ),
+              ),
+            )),
       ),
     );
   }
