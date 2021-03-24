@@ -255,10 +255,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   )),
               SizedBox(height: isTablet ? 10 : 0),
               InkWell(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.pop(context);
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.HOME, (route) => false);
+                    String atSign =
+                        await BackendService.getInstance().getAtSign();
+
+                    var atSignList = await BackendService.getInstance()
+                        .atClientServiceMap[atSign]
+                        .getAtsignList();
+                    await showModalBottomSheet(
+                      context: NavService.navKey.currentContext,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => AtSignBottomSheet(
+                        atSignList: atSignList,
+                      ),
+                    );
                   },
                   child: Container(
                     height: 50,

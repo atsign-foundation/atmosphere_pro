@@ -186,7 +186,6 @@ class BackendService {
     await initializeContactsService(atClientInstance, currentAtSign);
 
     await atClientInstance.startMonitor(privateKey, _notificationCallBack);
-
     return true;
   }
 
@@ -198,6 +197,7 @@ class BackendService {
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
     var fromAtSign = responseJson['from'];
+    var toAtSing = responseJson['to'];
     // var id = responseJson['id'];
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
@@ -208,10 +208,11 @@ class BackendService {
       var fileName = valueObject.split(':')[1];
       fileLength = valueObject.split(':')[2];
       fileName = utf8.decode(base64.decode(fileName));
-      userResponse = await acceptStream(
-        fromAtSign, fileName, fileLength,
-        // id:id
-      );
+      userResponse =
+          await acceptStream(fromAtSign, fileName, fileLength, toAtSing
+              // id:id
+              );
+
       if (userResponse == true) {
         await atClientInstance.sendStreamAck(
             streamId,
@@ -263,11 +264,11 @@ class BackendService {
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
 
   // acknowledge file transfer
-  Future<bool> acceptStream(String atsign, String filename, String filesize,
+  Future<bool> acceptStream(
+      String atsign, String filename, String filesize, String receiver,
       {String id}) async {
-    print("from:$atsign file:$filename size:$filesize");
-    if (atsign == currentAtSign) {
-    } else {
+    print("from:$atsign file:$filename size:$receiver");
+    if (receiver == currentAtSign && atsign != currentAtSign) {
       BuildContext context = NavService.navKey.currentContext;
 
       if (!autoAcceptFiles &&
@@ -467,6 +468,7 @@ class BackendService {
   NotificationService _notificationService;
   void _initBackendService() async {
     _notificationService = NotificationService();
+    _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
 
     SystemChannels.lifecycle.setMessageHandler((msg) {
