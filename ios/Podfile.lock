@@ -1,4 +1,14 @@
 PODS:
+  - at_backupkey_flutter (0.0.1):
+    - Flutter
+  - at_contacts_flutter (0.0.1):
+    - Flutter
+  - at_contacts_group_flutter (0.0.1):
+    - Flutter
+  - at_onboarding_flutter (0.0.1):
+    - Flutter
+  - atsign_authentication_helper (0.0.1):
+    - Flutter
   - DKImagePickerController/Core (4.3.2):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -30,6 +40,8 @@ PODS:
   - DKPhotoGallery/Resource (0.0.17):
     - SDWebImage
     - SwiftyGif
+  - emoji_picker (0.0.3):
+    - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
@@ -51,18 +63,24 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
+  - open_file (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.1+1)":
+  - "permission_handler (5.1.0+2)":
     - Flutter
   - receive_sharing_intent (0.0.1):
     - Flutter
-  - SDWebImage (5.9.2):
-    - SDWebImage/Core (= 5.9.2)
-  - SDWebImage/Core (5.9.2)
+  - SDWebImage (5.9.1):
+    - SDWebImage/Core (= 5.9.1)
+  - SDWebImage/Core (5.9.1)
   - share (0.0.1):
     - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
   - SwiftyGif (5.3.0)
+  - url_launcher (0.0.1):
+    - Flutter
   - video_thumbnail (0.0.1):
     - Flutter
     - libwebp
@@ -70,16 +88,25 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - at_backupkey_flutter (from `.symlinks/plugins/at_backupkey_flutter/ios`)
+  - at_contacts_flutter (from `.symlinks/plugins/at_contacts_flutter/ios`)
+  - at_contacts_group_flutter (from `.symlinks/plugins/at_contacts_group_flutter/ios`)
+  - at_onboarding_flutter (from `.symlinks/plugins/at_onboarding_flutter/ios`)
+  - atsign_authentication_helper (from `.symlinks/plugins/atsign_authentication_helper/ios`)
+  - emoji_picker (from `.symlinks/plugins/emoji_picker/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_keychain (from `.symlinks/plugins/flutter_keychain/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_qr_reader (from `.symlinks/plugins/flutter_qr_reader/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - open_file (from `.symlinks/plugins/open_file/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - receive_sharing_intent (from `.symlinks/plugins/receive_sharing_intent/ios`)
   - share (from `.symlinks/plugins/share/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
@@ -92,6 +119,18 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
+  at_backupkey_flutter:
+    :path: ".symlinks/plugins/at_backupkey_flutter/ios"
+  at_contacts_flutter:
+    :path: ".symlinks/plugins/at_contacts_flutter/ios"
+  at_contacts_group_flutter:
+    :path: ".symlinks/plugins/at_contacts_group_flutter/ios"
+  at_onboarding_flutter:
+    :path: ".symlinks/plugins/at_onboarding_flutter/ios"
+  atsign_authentication_helper:
+    :path: ".symlinks/plugins/atsign_authentication_helper/ios"
+  emoji_picker:
+    :path: ".symlinks/plugins/emoji_picker/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -104,6 +143,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_qr_reader/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  open_file:
+    :path: ".symlinks/plugins/open_file/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -112,14 +153,24 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/receive_sharing_intent/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
   video_thumbnail:
     :path: ".symlinks/plugins/video_thumbnail/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
+  at_backupkey_flutter: 2fc3d01138175e41bce8b574387a47544c53e01b
+  at_contacts_flutter: 11ad3deb3c2a8f1e9daf302ac5962dadd48e21fb
+  at_contacts_group_flutter: 31bc718fdb2baca1ae36509009e48cf33a23fa5f
+  at_onboarding_flutter: e8219b6d0bfb236d3837ec3528871aebdcc56e8d
+  atsign_authentication_helper: e9b9daa614ed4efdbf741aaeea6b790a51272320
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
+  emoji_picker: 0e868059aa18f9473d234f3d0701fbd4d5fd310c
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
@@ -127,12 +178,15 @@ SPEC CHECKSUMS:
   flutter_qr_reader: 254fd9eea45a65ef461e050d6607daf9cfb753e8
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   receive_sharing_intent: c0d87310754e74c0f9542947e7cbdf3a0335a3b1
-  SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
+  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
