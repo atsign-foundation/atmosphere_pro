@@ -56,7 +56,7 @@ dependencies:
   # at_contacts_flutter:
   # at_common_flutter:
   at_common_flutter:
-    # path: /Users/rishabh1/Desktop/work/at_widgets/at_common_flutter
+    path: /Users/rishabh1/Desktop/work/at_widgets/at_common_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_common_flutter
