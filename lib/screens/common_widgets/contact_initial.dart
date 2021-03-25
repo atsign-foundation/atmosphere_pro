@@ -8,18 +8,19 @@ class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
 
-  const ContactInitial({Key key, this.size = 50, this.initials})
+  const ContactInitial({Key key, this.size = 40, this.initials})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     Random r = Random();
     return Container(
-      height: size.toFont,
-      width: size.toFont,
+      height: size.toHeight,
+      width: size.toHeight,
+
       decoration: BoxDecoration(
         color:
             Color.fromARGB(255, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
-        borderRadius: BorderRadius.circular(size.toWidth),
+        borderRadius: BorderRadius.circular(size.toHeight),
       ),
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: Center(
