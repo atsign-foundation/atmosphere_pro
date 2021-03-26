@@ -78,6 +78,30 @@ class _SideBarWidgetState extends State<SideBarWidget> {
           BackendService.getInstance().currentAtSign);
     });
     isExpanded = widget.isExpanded;
+    getAtsignDetails();
+  }
+
+  getAtsignDetails() async {
+    AtContact contact;
+    if (BackendService.getInstance().currentAtSign != null) {
+      contact =
+          await getAtSignDetails(BackendService.getInstance().currentAtSign);
+    }
+
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        setState(() {
+          image = Uint8List.fromList(intList);
+        });
+      }
+      if (contact.tags != null && contact.tags['name'] != null) {
+        String newName = contact.tags['name'].toString();
+        setState(() {
+          name = newName;
+        });
+      }
+    }
   }
 
   @override
@@ -104,12 +128,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         children: [
                           (image != null)
                               ? ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30)),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(30.toFont)),
                                   child: Image.memory(
                                     image,
-                                    width: 50,
-                                    height: 50,
+                                    width: 50.toFont,
+                                    height: 50.toFont,
                                     fit: BoxFit.fill,
                                   ),
                                 )
@@ -125,19 +149,18 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  name ?? 'Full Name',
-                                  // style: CustomTextStyles().darkGrey16,
-                                  maxLines: 1,
-                                  // style: TextStyle(letterSpacing: 0.1),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                name != null
+                                    ? Text(name ?? '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 15.toFont))
+                                    : SizedBox(),
                                 Text(
                                   BackendService.getInstance().currentAtSign ??
                                       '@sign',
-                                  // style: CustomTextStyles().darkGrey14,
                                   maxLines: 1,
-                                  style: TextStyle(letterSpacing: 0.1),
+                                  style: TextStyle(
+                                      letterSpacing: 0.1, fontSize: 15.toFont),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
@@ -147,6 +170,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       ),
                     )
                   : SizedBox(height: 50.toHeight),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[0],
                 title: menuItemsTitle[0],
@@ -159,21 +183,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'selectedList': (s) {}
                 },
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[1],
                 title: menuItemsTitle[1],
                 routeName: targetScreens[1],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[2],
                 title: menuItemsTitle[2],
                 routeName: targetScreens[2],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[3],
                 title: menuItemsTitle[3],
@@ -184,7 +208,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   "url": MixedConstants.TERMS_CONDITIONS
                 },
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[4],
                 title: menuItemsTitle[4],
@@ -194,7 +218,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   "currentAtsign": BackendService.getInstance().currentAtsign
                 },
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[5],
                 title: menuItemsTitle[5],
@@ -205,7 +229,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'url': MixedConstants.TERMS_CONDITIONS
                 },
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                   image: menuItemsIcons[6],
                   title: menuItemsTitle[6],
@@ -215,21 +239,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     'title': menuItemsTitle[6],
                     'url': MixedConstants.PRIVACY_POLICY
                   }),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[7],
                 title: menuItemsTitle[7],
                 routeName: targetScreens[7],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               SideBarItem(
                 image: menuItemsIcons[8],
                 title: menuItemsTitle[8],
                 routeName: targetScreens[8],
                 showIconOnly: !isExpanded,
               ),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               InkWell(
                   onTap: () async {
                     _deleteAtSign(
@@ -253,10 +277,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           : SizedBox(),
                     ]),
                   )),
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
               InkWell(
                   onTap: () async {
-                    Navigator.pop(context);
                     String atSign =
                         await BackendService.getInstance().getAtSign();
 
@@ -292,7 +315,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     ]),
                   )),
 
-              SizedBox(height: isTablet ? 10 : 0),
+              SizedBox(height: isTablet ? 20.toHeight : 0),
 
               isExpanded
                   ? ListTile(
