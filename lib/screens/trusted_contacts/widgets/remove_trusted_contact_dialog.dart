@@ -120,7 +120,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    (Provider.of<ContactProvider>(context)
+                    (Provider.of<TrustedContactProvider>(context)
                             .trustedContactOperation)
                         ? CircularProgressIndicator()
                         : CustomButton(
@@ -140,13 +140,19 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                   ],
                 ),
                 SizedBox(height: 10.toHeight),
-                CustomButton(
-                  buttonText: 'No',
-                  isInverted: true,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                (Provider.of<TrustedContactProvider>(context)
+                        .trustedContactOperation)
+                    ? SizedBox()
+                    : CustomButton(
+                        buttonText: 'No',
+                        isInverted: true,
+                        onPressed: () {
+                          Provider.of<TrustedContactProvider>(context,
+                                  listen: false)
+                              .trustedContactOperation = false;
+                          Navigator.pop(context);
+                        },
+                      ),
               ],
             )
           ],
