@@ -31,6 +31,7 @@ class HistoryProvider extends BaseModel {
       receivedApk,
       receivedDocument,
       finalReceivedHistory = [];
+  List<String> tabNames = ['Recents'];
 
   List<FilesModel> receivedHistory, receivedAudioModel = [];
   List<Widget> tabs = [Recents()];
@@ -212,26 +213,31 @@ class HistoryProvider extends BaseModel {
       if (receivedApk.isNotEmpty) {
         if (!tabs.contains(APK) || !tabs.contains(APK())) {
           tabs.add(APK());
+          tabNames.add('APK');
         }
       }
       if (receivedAudio.isNotEmpty) {
         if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
           tabs.add(Audios());
+          tabNames.add('Audios');
         }
       }
       if (receivedDocument.isNotEmpty) {
         if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
           tabs.add(Documents());
+          tabNames.add('Documents');
         }
       }
       if (receivedPhotos.isNotEmpty) {
         if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
           tabs.add(Photos());
+          tabNames.add('Photos');
         }
       }
       if (receivedVideos.isNotEmpty) {
         if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
           tabs.add(Videos());
+          tabNames.add('Videos');
         }
       }
 

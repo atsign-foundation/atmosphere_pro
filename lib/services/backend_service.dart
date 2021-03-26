@@ -48,7 +48,8 @@ class BackendService {
   AnimationController controller;
   Flushbar receivingFlushbar;
   String onBoardError;
-  onboard({String atsign, atClientPreference, atClientServiceInstance}) async {
+  setDownloadPath(
+      {String atsign, atClientPreference, atClientServiceInstance}) async {
     if (Platform.isIOS) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
@@ -178,7 +179,7 @@ class BackendService {
     Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
             listen: false)
         .selectedFiles = [];
-    await onboard(
+    await setDownloadPath(
         atsign: atsign,
         atClientPreference: atClientPreference,
         atClientServiceInstance: atClientServiceInstance);

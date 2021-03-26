@@ -14,8 +14,10 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SideBarWidget extends StatefulWidget {
   final bool isExpanded;
@@ -180,7 +182,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   'singleSelection': false,
                   'showGroups': true,
                   'showContacts': true,
-                  'selectedList': (s) {}
+                  'selectedList': (s) {
+                    Navigator.pop(context);
+                    Provider.of<WelcomeScreenProvider>(
+                            NavService.navKey.currentContext,
+                            listen: false)
+                        .updateSelectedContacts(s);
+                  }
                 },
               ),
               SizedBox(height: isTablet ? 20.toHeight : 0),

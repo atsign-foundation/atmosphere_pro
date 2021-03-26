@@ -186,11 +186,8 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                             CustomTextStyles.secondaryRegular14,
                         controller: _controller,
                         tabs: List<Text>.generate(
-                            historyProvider.tabs.length,
-                            (index) => Text(historyProvider.tabs[index]
-                                .toString()
-                                .replaceAll('(', '')
-                                .replaceAll(')', ''))),
+                            historyProvider.tabNames.length,
+                            (index) => Text(historyProvider.tabNames[index])),
                       ),
                     ),
                     Expanded(
