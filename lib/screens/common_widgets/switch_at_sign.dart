@@ -1,16 +1,10 @@
 import 'dart:math';
-
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +22,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
   var atClientPrefernce;
   @override
   Widget build(BuildContext context) {
-    BuildContext bottomSheetContext = context;
     backendService
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value);

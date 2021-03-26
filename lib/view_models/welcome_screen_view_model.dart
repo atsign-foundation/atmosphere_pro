@@ -1,4 +1,5 @@
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class WelcomeScreenProvider extends BaseModel {
@@ -8,6 +9,7 @@ class WelcomeScreenProvider extends BaseModel {
   List<GroupContactsModel> selectedContacts = [];
   String updateContacts = 'update_contacts';
   String selectGroupContacts = 'select_group_contacts';
+
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
@@ -37,6 +39,4 @@ class WelcomeScreenProvider extends BaseModel {
       setError(updateContacts, error.toString());
     }
   }
-
-  selectGroups() async {}
 }
