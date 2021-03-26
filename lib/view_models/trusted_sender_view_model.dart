@@ -42,6 +42,7 @@ class TrustedContactProvider extends BaseModel {
 
   removeTrustedContacts(AtContact trustedContact) async {
     setStatus(AddTrustedContacts, Status.Loading);
+    trustedContactOperation = true;
 
     try {
       // if (trustedContacts.contains(trustedContact)) {
@@ -55,8 +56,10 @@ class TrustedContactProvider extends BaseModel {
           break;
         }
       }
+      trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
+      trustedContactOperation = false;
       setError(AddTrustedContacts, error.toString());
     }
   }
