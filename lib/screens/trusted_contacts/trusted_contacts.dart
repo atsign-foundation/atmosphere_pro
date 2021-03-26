@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -142,54 +144,60 @@ class _TrustedContactsState extends State<TrustedContacts> {
                           : (toggleList)
                               ? ListView.builder(
                                   itemCount: provider.trustedContacts.length,
-                                  itemBuilder: (context, index) =>
-                                      ContactListTile(
-                                    plainView: true,
-                                    isSelected: false,
-                                    onlyRemoveMethod: true,
-                                    onTileTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            RemoveTrustedContact(
-                                          contact: provider
-                                              .fetchedTrustedContact[index],
-                                        ),
-                                      );
-                                    },
-                                    onAdd: () {},
-                                    onRemove: () {},
-                                    name: provider.trustedContacts[index]
-                                                    .tags !=
-                                                null &&
-                                            provider.trustedContacts[index]
-                                                    .tags['name'] !=
-                                                null
-                                        ? provider
-                                            .trustedContacts[index].tags['name']
-                                        : provider.trustedContacts[index].atSign
-                                            .substring(1),
-                                    atSign:
-                                        provider.trustedContacts[index].atSign,
-                                    image:
-                                        (provider.trustedContacts[index].tags !=
-                                                    null &&
-                                                provider.trustedContacts[index]
-                                                        .tags['image'] !=
-                                                    null)
-                                            ? CustomCircleAvatar(
-                                                byteImage: provider
-                                                    .trustedContacts[index]
-                                                    .tags['image'],
-                                                nonAsset: true,
-                                              )
-                                            : ContactInitial(
-                                                initials: provider
-                                                    .trustedContacts[index]
-                                                    .atSign
-                                                    .substring(1, 3),
-                                              ),
-                                  ),
+                                  itemBuilder: (context, index) {
+                                    Uint8List byteImage;
+
+                                    if (provider.trustedContacts[index]
+                                            .tags['image'] !=
+                                        null) {
+                                      List<int> intList = provider
+                                          .trustedContacts[index].tags['image']
+                                          .cast<int>();
+                                      byteImage = Uint8List.fromList(intList);
+                                    }
+
+                                    return ContactListTile(
+                                      plainView: true,
+                                      isSelected: false,
+                                      onlyRemoveMethod: true,
+                                      onTileTap: () {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) =>
+                                              RemoveTrustedContact(
+                                            contact: provider
+                                                .fetchedTrustedContact[index],
+                                          ),
+                                        );
+                                      },
+                                      onAdd: () {},
+                                      onRemove: () {},
+                                      name: provider.trustedContacts[index]
+                                                      .tags !=
+                                                  null &&
+                                              provider.trustedContacts[index]
+                                                      .tags['name'] !=
+                                                  null
+                                          ? provider.trustedContacts[index]
+                                              .tags['name']
+                                          : provider
+                                              .trustedContacts[index].atSign
+                                              .substring(1),
+                                      atSign: provider
+                                          .trustedContacts[index].atSign,
+                                      image: byteImage != null
+                                          ? CustomCircleAvatar(
+                                              byteImage: byteImage,
+                                              nonAsset: true,
+                                            )
+                                          : ContactInitial(
+                                              initials: provider
+                                                  .trustedContacts[index].atSign
+                                                  .substring(1, 3),
+                                            ),
+                                    );
+                                  },
                                 )
                               : GridView.builder(
                                   physics: AlwaysScrollableScrollPhysics(),
@@ -208,6 +216,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                       onCrossPressed: () {
                                         showDialog(
                                           context: context,
+                                          barrierDismissible: false,
                                           builder: (context) =>
                                               RemoveTrustedContact(
                                             contact: provider

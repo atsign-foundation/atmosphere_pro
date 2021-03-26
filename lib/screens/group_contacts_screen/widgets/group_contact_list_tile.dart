@@ -86,8 +86,8 @@ class _ContactListTileState extends State<ContactListTile> {
         leading: Stack(
           children: [
             Container(
-              height: 40.toWidth,
-              width: 40.toWidth,
+              height: 40.toHeight,
+              width: 40.toHeight,
               decoration: BoxDecoration(
                 color: Colors.black,
                 shape: BoxShape.circle,
