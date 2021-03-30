@@ -85,6 +85,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     sendTime = DateTime.parse(widget.sentHistory.date);
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     Uint8List image;
+    print('contactList====>$contactList');
     if (contactList?.first?.tags != null &&
         contactList?.first?.tags['image'] != null) {
       List<int> intList = contactList?.first?.tags['image'].cast<int>();
@@ -348,12 +349,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             );
                           }),
                     ),
-                    (contactList.isEmpty)
+                    (contactList.length < 2)
                         ? Container()
                         : SizedBox(
                             height: 10.toHeight,
                           ),
-                    (contactList.isEmpty)
+                    (contactList.length < 2)
                         ? Container()
                         : Row(
                             children: [
@@ -368,12 +369,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                               ),
                             ],
                           ),
-                    (contactList.isEmpty)
+                    (contactList.length < 2)
                         ? Container()
                         : SizedBox(
                             height: 10.toHeight,
                           ),
-                    (contactList.isEmpty)
+                    (contactList.length < 2)
                         ? Container()
                         : TranferOverlappingContacts(
                             selectedList: contactList.toList(),
