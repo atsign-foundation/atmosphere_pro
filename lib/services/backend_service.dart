@@ -245,7 +245,12 @@ class BackendService {
     await receivingFlushbar.show(NavService.navKey.currentContext);
   }
 
-  void _streamReceiveCallBack(var bytesReceived) {}
+  void _streamReceiveCallBack(var bytesReceived) async {
+    receivingFlushbar =
+        CustomFlushBar().getFlushbar(TextStrings().fileSent, null);
+
+    await receivingFlushbar.show(NavService.navKey.currentContext);
+  }
 
   // send a file
   Future<bool> sendFile(String atSign, String filePath) async {

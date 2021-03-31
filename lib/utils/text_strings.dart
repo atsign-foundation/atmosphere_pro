@@ -150,4 +150,5 @@ class TextStrings {
   String receivingFile = 'Receiving file';
   String sendingFile = 'Sending file';
   String fileReceived = 'File received';
+  String fileSent = 'File sent';
 }

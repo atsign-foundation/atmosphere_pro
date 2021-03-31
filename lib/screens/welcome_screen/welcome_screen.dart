@@ -318,7 +318,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             sendingFlushbar =
                                                 _showScaffold(status: 0);
                                             await sendingFlushbar.show(context);
-                                          } else {
+                                          } else if (!filePickerModel
+                                              .showFlushbar) {
                                             sendingFlushbar =
                                                 _showScaffold(status: 2);
                                             await sendingFlushbar.show(context);
