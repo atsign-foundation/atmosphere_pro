@@ -8,6 +8,7 @@ class WelcomeScreenProvider extends BaseModel {
   factory WelcomeScreenProvider() => _instance;
   List<GroupContactsModel> selectedContacts = [];
   String updateContacts = 'update_contacts';
+  String onboard = 'onboard';
   String selectGroupContacts = 'select_group_contacts';
 
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
@@ -37,6 +38,20 @@ class WelcomeScreenProvider extends BaseModel {
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());
+    }
+  }
+
+  bool authenticating = false;
+  onboardingLoad({String atSign}) {
+    try {
+      authenticating = true;
+      setStatus(onboard, Status.Loading);
+      BackendService.getInstance().checkToOnboard(atSign: atSign);
+      authenticating = false;
+      setStatus(onboard, Status.Done);
+    } catch (error) {
+      authenticating = false;
+      setError(onboard, error.toString());
     }
   }
 }

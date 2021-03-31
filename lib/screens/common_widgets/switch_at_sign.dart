@@ -49,11 +49,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         onTap: isLoading
                             ? () {}
                             : () async {
-                                setState(() {
-                                  isLoading = true;
-                                  Navigator.pop(context);
-                                });
-
                                 await backendService.checkToOnboard(
                                     atSign: widget.atSignList[index]);
 
@@ -63,9 +58,8 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 Provider.of<FileTransferProvider>(context,
                                         listen: false)
                                     .selectedFiles = [];
-                                setState(() {
-                                  isLoading = false;
-                                });
+                                Navigator.pop(context);
+                                // Navigator.pop(context);
                               },
                         child: Padding(
                           padding:
@@ -127,24 +121,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
             ),
           ),
         ),
-        isLoading
-            ? Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'Switching atsign...',
-                      style: CustomTextStyles.orangeMedium16,
-                    ),
-                    SizedBox(height: 10),
-                    CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            ColorConstants.redText)),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 100,
-              ),
       ],
     );
   }

@@ -68,7 +68,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   Uint8List image;
   AtContact contact;
   String name;
-  bool isTablet = false, isExpanded = true;
+  bool isTablet = false, isExpanded = true, isLoading = false;
 
   @override
   void initState() {
@@ -105,283 +105,323 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   Widget build(BuildContext context) {
     isTablet = SizeConfig().isTablet(context);
-    return Container(
-      width: SizeConfig().screenWidth * 0.65,
-      color: ColorConstants.inputFieldColor,
-      child: Container(
-        child: Container(
-          padding: isExpanded
-              ? EdgeInsets.symmetric(horizontal: 30.toWidth)
-              : EdgeInsets.only(left: 30),
-          child: ListView(
-            children: [
-              isExpanded
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                        top: 30.toHeight,
-                        bottom: 10.toHeight,
-                        left: 10.toWidth,
-                      ),
-                      child: Row(
-                        children: [
-                          (image != null)
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(30.toFont)),
-                                  child: Image.memory(
-                                    image,
-                                    width: 50.toFont,
-                                    height: 50.toFont,
-                                    fit: BoxFit.fill,
+    return Stack(
+      children: [
+        Container(
+          width: SizeConfig().screenWidth * 0.65,
+          color: ColorConstants.inputFieldColor,
+          child: Container(
+            child: Container(
+              padding: isExpanded
+                  ? EdgeInsets.symmetric(horizontal: 30.toWidth)
+                  : EdgeInsets.only(left: 30),
+              child: ListView(
+                children: [
+                  isExpanded
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                            top: 30.toHeight,
+                            bottom: 10.toHeight,
+                            left: 10.toWidth,
+                          ),
+                          child: Row(
+                            children: [
+                              (image != null)
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30.toFont)),
+                                      child: Image.memory(
+                                        image,
+                                        width: 50.toFont,
+                                        height: 50.toFont,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )
+                                  : ContactInitial(
+                                      initials: (BackendService.getInstance()
+                                                  .currentAtSign
+                                                  .length >
+                                              4)
+                                          ? BackendService?.getInstance()
+                                              ?.currentAtSign
+                                              ?.substring(1, 3)
+                                          : 'LO'),
+                              Flexible(
+                                  child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    name != null
+                                        ? Text(name ?? '',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style:
+                                                TextStyle(fontSize: 15.toFont))
+                                        : SizedBox(),
+                                    Text(
+                                      BackendService.getInstance()
+                                              .currentAtSign ??
+                                          '@sign',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          letterSpacing: 0.1,
+                                          fontSize: 15.toFont),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              )),
+                            ],
+                          ),
+                        )
+                      : SizedBox(height: 50.toHeight),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[0],
+                    title: menuItemsTitle[0],
+                    routeName: targetScreens[0],
+                    showIconOnly: !isExpanded,
+                    arguments: {
+                      'singleSelection': false,
+                      'showGroups': true,
+                      'showContacts': true,
+                      'selectedList': (s) {
+                        Navigator.pop(context);
+                        Provider.of<WelcomeScreenProvider>(
+                                NavService.navKey.currentContext,
+                                listen: false)
+                            .updateSelectedContacts(s);
+                      }
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[1],
+                    title: menuItemsTitle[1],
+                    routeName: targetScreens[1],
+                    showIconOnly: !isExpanded,
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[2],
+                    title: menuItemsTitle[2],
+                    routeName: targetScreens[2],
+                    showIconOnly: !isExpanded,
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[3],
+                    title: menuItemsTitle[3],
+                    routeName: targetScreens[3],
+                    showIconOnly: !isExpanded,
+                    arguments: {
+                      "title": TextStrings().sidebarTermsAndConditions,
+                      "url": MixedConstants.TERMS_CONDITIONS
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[4],
+                    title: menuItemsTitle[4],
+                    routeName: targetScreens[4],
+                    showIconOnly: !isExpanded,
+                    arguments: {
+                      "currentAtsign":
+                          BackendService.getInstance().currentAtsign
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[5],
+                    title: menuItemsTitle[5],
+                    routeName: targetScreens[5],
+                    showIconOnly: !isExpanded,
+                    arguments: {
+                      'title': menuItemsTitle[5],
+                      'url': MixedConstants.TERMS_CONDITIONS
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                      image: menuItemsIcons[6],
+                      title: menuItemsTitle[6],
+                      routeName: targetScreens[6],
+                      showIconOnly: !isExpanded,
+                      arguments: {
+                        'title': menuItemsTitle[6],
+                        'url': MixedConstants.PRIVACY_POLICY
+                      }),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[7],
+                    title: menuItemsTitle[7],
+                    routeName: targetScreens[7],
+                    showIconOnly: !isExpanded,
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    image: menuItemsIcons[8],
+                    title: menuItemsTitle[8],
+                    routeName: targetScreens[8],
+                    showIconOnly: !isExpanded,
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  InkWell(
+                      onTap: () async {
+                        _deleteAtSign(
+                            await BackendService.getInstance().currentAtsign);
+                        setState(() {});
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(children: [
+                          Icon(Icons.delete,
+                              color: ColorConstants.fadedText,
+                              size: 25.toHeight),
+                          SizedBox(width: 10),
+                          isExpanded
+                              ? Text(
+                                  TextStrings().sidebarDeleteAtsign,
+                                  style: TextStyle(
+                                    color: ColorConstants.fadedText,
+                                    fontSize: 14.toFont,
                                   ),
                                 )
-                              : ContactInitial(
-                                  initials: (BackendService.getInstance()
-                                              .currentAtSign
-                                              .length >
-                                          4)
-                                      ? BackendService?.getInstance()
-                                          ?.currentAtSign
-                                          ?.substring(1, 3)
-                                      : 'LO'),
-                          Flexible(
-                              child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                name != null
-                                    ? Text(name ?? '',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 15.toFont))
-                                    : SizedBox(),
-                                Text(
-                                  BackendService.getInstance().currentAtSign ??
-                                      '@sign',
-                                  maxLines: 1,
+                              : SizedBox(),
+                        ]),
+                      )),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  InkWell(
+                      onTap: () async {
+                        setState(() {
+                          isLoading =
+                              BackendService.getInstance().authenticating;
+                        });
+                        String atSign =
+                            await BackendService.getInstance().getAtSign();
+
+                        var atSignList = await BackendService.getInstance()
+                            .atClientServiceMap[atSign]
+                            .getAtsignList();
+                        await showModalBottomSheet(
+                          context: NavService.navKey.currentContext,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => AtSignBottomSheet(
+                            atSignList: atSignList,
+                          ),
+                        );
+                        setState(() {
+                          isLoading =
+                              BackendService.getInstance().authenticating;
+                        });
+                        // await Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(children: [
+                          Image.asset(
+                            ImageConstants.logoutIcon,
+                            height: 22.toHeight,
+                            color: ColorConstants.fadedText,
+                          ),
+                          SizedBox(width: 10),
+                          isExpanded
+                              ? Text(
+                                  TextStrings().sidebarSwitchOut,
                                   style: TextStyle(
-                                      letterSpacing: 0.1, fontSize: 15.toFont),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                                      color: ColorConstants.fadedText,
+                                      fontSize: 14.toFont,
+                                      letterSpacing: 0.1),
+                                )
+                              : SizedBox(),
+                        ]),
+                      )),
+
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+
+                  isExpanded
+                      ? ListTile(
+                          leading: isExpanded
+                              ? Text(
+                                  TextStrings().sidebarAutoAcceptFile,
+                                  style: TextStyle(
+                                      color: ColorConstants.fadedText,
+                                      fontSize: 14.toFont,
+                                      letterSpacing: 0.1),
+                                )
+                              : SizedBox(),
+                          title: Transform.scale(
+                            scale: 0.6,
+                            child: CupertinoSwitch(
+                              value:
+                                  BackendService.getInstance().autoAcceptFiles,
+                              onChanged: (b) {
+                                setState(() {
+                                  BackendService.getInstance().autoAcceptFiles =
+                                      b;
+                                });
+                              },
+                              activeColor: Colors.black,
                             ),
-                          )),
-                        ],
-                      ),
-                    )
-                  : SizedBox(height: 50.toHeight),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[0],
-                title: menuItemsTitle[0],
-                routeName: targetScreens[0],
-                showIconOnly: !isExpanded,
-                arguments: {
-                  'singleSelection': false,
-                  'showGroups': true,
-                  'showContacts': true,
-                  'selectedList': (s) {
-                    Navigator.pop(context);
-                    Provider.of<WelcomeScreenProvider>(
-                            NavService.navKey.currentContext,
-                            listen: false)
-                        .updateSelectedContacts(s);
-                  }
-                },
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[1],
-                title: menuItemsTitle[1],
-                routeName: targetScreens[1],
-                showIconOnly: !isExpanded,
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[2],
-                title: menuItemsTitle[2],
-                routeName: targetScreens[2],
-                showIconOnly: !isExpanded,
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[3],
-                title: menuItemsTitle[3],
-                routeName: targetScreens[3],
-                showIconOnly: !isExpanded,
-                arguments: {
-                  "title": TextStrings().sidebarTermsAndConditions,
-                  "url": MixedConstants.TERMS_CONDITIONS
-                },
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[4],
-                title: menuItemsTitle[4],
-                routeName: targetScreens[4],
-                showIconOnly: !isExpanded,
-                arguments: {
-                  "currentAtsign": BackendService.getInstance().currentAtsign
-                },
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[5],
-                title: menuItemsTitle[5],
-                routeName: targetScreens[5],
-                showIconOnly: !isExpanded,
-                arguments: {
-                  'title': menuItemsTitle[5],
-                  'url': MixedConstants.TERMS_CONDITIONS
-                },
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                  image: menuItemsIcons[6],
-                  title: menuItemsTitle[6],
-                  routeName: targetScreens[6],
-                  showIconOnly: !isExpanded,
-                  arguments: {
-                    'title': menuItemsTitle[6],
-                    'url': MixedConstants.PRIVACY_POLICY
-                  }),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[7],
-                title: menuItemsTitle[7],
-                routeName: targetScreens[7],
-                showIconOnly: !isExpanded,
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              SideBarItem(
-                image: menuItemsIcons[8],
-                title: menuItemsTitle[8],
-                routeName: targetScreens[8],
-                showIconOnly: !isExpanded,
-              ),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              InkWell(
-                  onTap: () async {
-                    _deleteAtSign(
-                        await BackendService.getInstance().currentAtsign);
-                    setState(() {});
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(children: [
-                      Icon(Icons.delete,
-                          color: ColorConstants.fadedText, size: 25.toHeight),
-                      SizedBox(width: 10),
-                      isExpanded
-                          ? Text(
-                              TextStrings().sidebarDeleteAtsign,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 14.toFont,
-                              ),
-                            )
-                          : SizedBox(),
-                    ]),
-                  )),
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-              InkWell(
-                  onTap: () async {
-                    Navigator.pop(context);
-                    String atSign =
-                        await BackendService.getInstance().getAtSign();
-
-                    var atSignList = await BackendService.getInstance()
-                        .atClientServiceMap[atSign]
-                        .getAtsignList();
-                    await showModalBottomSheet(
-                      context: NavService.navKey.currentContext,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => AtSignBottomSheet(
-                        atSignList: atSignList,
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 50,
-                    child: Row(children: [
-                      Image.asset(
-                        ImageConstants.logoutIcon,
-                        height: 22.toHeight,
-                        color: ColorConstants.fadedText,
-                      ),
-                      SizedBox(width: 10),
-                      isExpanded
-                          ? Text(
-                              TextStrings().sidebarSwitchOut,
-                              style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                  letterSpacing: 0.1),
-                            )
-                          : SizedBox(),
-                    ]),
-                  )),
-
-              SizedBox(height: isTablet ? 20.toHeight : 0),
-
-              isExpanded
-                  ? ListTile(
-                      leading: isExpanded
-                          ? Text(
-                              TextStrings().sidebarAutoAcceptFile,
-                              style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                  letterSpacing: 0.1),
-                            )
-                          : SizedBox(),
-                      title: Transform.scale(
-                        scale: 0.6,
-                        child: CupertinoSwitch(
-                          value: BackendService.getInstance().autoAcceptFiles,
-                          onChanged: (b) {
-                            setState(() {
-                              BackendService.getInstance().autoAcceptFiles = b;
-                            });
-                          },
-                          activeColor: Colors.black,
+                          ),
+                        )
+                      : Container(
+                          padding: EdgeInsets.only(right: 35),
+                          child: CupertinoSwitch(
+                            value: BackendService.getInstance().autoAcceptFiles,
+                            onChanged: (b) {
+                              setState(() {
+                                BackendService.getInstance().autoAcceptFiles =
+                                    b;
+                              });
+                            },
+                            activeColor: Colors.black,
+                          ),
                         ),
-                      ),
-                    )
-                  : Container(
-                      padding: EdgeInsets.only(right: 35),
-                      child: CupertinoSwitch(
-                        value: BackendService.getInstance().autoAcceptFiles,
-                        onChanged: (b) {
-                          setState(() {
-                            BackendService.getInstance().autoAcceptFiles = b;
-                          });
-                        },
-                        activeColor: Colors.black,
-                      ),
-                    ),
-              // SizedBox(
-              //   height: 14.toHeight,
-              // ),
-              Padding(
-                padding: EdgeInsets.only(left: 16.toWidth),
-                child: isExpanded
-                    ? Text(
-                        TextStrings().sidebarEnablingMessage,
-                        style: TextStyle(
-                            color: ColorConstants.dullText,
-                            fontSize: 12.toFont,
-                            letterSpacing: 0.1),
-                      )
-                    : SizedBox(),
+                  // SizedBox(
+                  //   height: 14.toHeight,
+                  // ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.toWidth),
+                    child: isExpanded
+                        ? Text(
+                            TextStrings().sidebarEnablingMessage,
+                            style: TextStyle(
+                                color: ColorConstants.dullText,
+                                fontSize: 12.toFont,
+                                letterSpacing: 0.1),
+                          )
+                        : SizedBox(),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+        isLoading
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Switching atsign...',
+                      style: CustomTextStyles.orangeMedium16,
+                    ),
+                    SizedBox(height: 10),
+                    CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            ColorConstants.redText)),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 100,
+              ),
+      ],
     );
   }
 
