@@ -265,8 +265,7 @@ class BackendService {
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
 
   // acknowledge file transfer
-  Future<bool> acceptStream(
-      String atsign, String filename, String filesize, String receiver,
+  acceptStream(String atsign, String filename, String filesize, String receiver,
       {String id}) async {
     print("from:$atsign file:$filename size:$receiver");
     if (receiver == currentAtSign && atsign != currentAtSign) {
@@ -337,13 +336,11 @@ class BackendService {
     List<String> atSignList = await getAtsignList();
 
     await atClientServiceMap[atsign].deleteAtSignFromKeychain(atsign);
-    // atClientServiceMap.remove(atsign);
 
     if (atSignList != null) {
       atSignList.removeWhere((element) => element == currentAtSign);
     }
-// print(atSignListatSignList'====>$')
-    print('atSignList====>$atSignList');
+
     var atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
     var tempAtsign;
@@ -352,7 +349,7 @@ class BackendService {
     } else {
       tempAtsign = atSignList.first;
     }
-    print('tempAtsign====>$tempAtsign');
+
     if (tempAtsign == '') {
       await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
           Routes.HOME, (Route<dynamic> route) => false);

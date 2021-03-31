@@ -314,12 +314,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           //     _welcomeScreenProvider.selectedContacts);
                                           // bool response = filePickerModel.sentStatus[0];
                                           // if (filePickerModel.sentStatus != null) {
-                                          sendingFlushbar =
-                                              _showScaffold(status: 0);
-                                          await sendingFlushbar.show(context);
-                                          // }
-
-                                          _showScaffold(status: 0);
+                                          if (filePickerModel.showFlushbar) {
+                                            sendingFlushbar =
+                                                _showScaffold(status: 0);
+                                            await sendingFlushbar.show(context);
+                                          } else {
+                                            sendingFlushbar =
+                                                _showScaffold(status: 2);
+                                            await sendingFlushbar.show(context);
+                                          }
                                           // filePickerModel.sendFiles(filePickerModel.selectedFiles,
                                           //     _welcomeScreenProvider.selectedContacts);
 

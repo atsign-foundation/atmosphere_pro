@@ -191,6 +191,7 @@ class FileTransferProvider extends BaseModel {
       });
 
       int id = DateTime.now().millisecondsSinceEpoch;
+      showFlushbar = null;
       temporaryContactList.forEach((contact) {
         updateStatus(contact, id);
       });
@@ -211,6 +212,7 @@ class FileTransferProvider extends BaseModel {
     });
   }
 
+  bool showFlushbar;
   updateStatus(AtContact contact, int id) async {
     selectedFiles.forEach((element) {
       transferStatus.add(FileTransferStatus(
@@ -242,7 +244,9 @@ class FileTransferProvider extends BaseModel {
     for (var i = 0; i < selectedFiles.length; i++) {
       bool tempStatus =
           await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
-
+      if (i == 0 && contact == temporaryContactList.first) {
+        showFlushbar = tempStatus;
+      }
       int index = transferStatus.indexWhere((element) =>
           element.fileName == selectedFiles[i].name &&
           contact.atSign == element.contactName);
