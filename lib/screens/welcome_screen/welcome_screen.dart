@@ -70,7 +70,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // backendService.onboard();
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await initializeContactsService(
+          BackendService.getInstance().atClientInstance,
+          BackendService.getInstance().currentAtSign);
+    });
     super.initState();
   }
 

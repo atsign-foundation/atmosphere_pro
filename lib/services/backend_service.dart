@@ -367,9 +367,9 @@ class BackendService {
       },
       // nextScreen: WelcomeScreen(),
     );
-    if (atClientInstance != null) {
-      await startMonitor();
-    }
+    // if (atClientInstance != null) {
+    //   await startMonitor();
+    // }
   }
 
   Future<bool> checkAtsign(String atSign) async {

@@ -74,11 +74,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   void initState() {
     super.initState();
     // getEventCreator();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await initializeContactsService(
-          BackendService.getInstance().atClientInstance,
-          BackendService.getInstance().currentAtSign);
-    });
+
     isExpanded = widget.isExpanded;
     getAtsignDetails();
   }
@@ -140,9 +136,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                   ),
                                 )
                               : ContactInitial(
-                                  initials: BackendService.getInstance()
-                                      .currentAtSign
-                                      .substring(1, 3)),
+                                  initials: (BackendService.getInstance()
+                                              .currentAtSign
+                                              .length >
+                                          4)
+                                      ? BackendService?.getInstance()
+                                          ?.currentAtSign
+                                          ?.substring(1, 3)
+                                      : 'LO'),
                           Flexible(
                               child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -288,6 +289,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               SizedBox(height: isTablet ? 20.toHeight : 0),
               InkWell(
                   onTap: () async {
+                    Navigator.pop(context);
                     String atSign =
                         await BackendService.getInstance().getAtSign();
 

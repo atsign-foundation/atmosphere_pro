@@ -51,6 +51,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                             : () async {
                                 setState(() {
                                   isLoading = true;
+                                  Navigator.pop(context);
                                 });
 
                                 await backendService.checkToOnboard(
@@ -104,6 +105,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                       onTap: () async {
                         setState(() {
                           isLoading = true;
+                          Navigator.pop(context);
                         });
                         await backendService.checkToOnboard(atSign: "");
 

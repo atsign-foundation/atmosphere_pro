@@ -171,6 +171,8 @@ class _HomeState extends State<Home> {
                         ),
                         child: Image.asset(
                           ImageConstants.logoIcon,
+                          height: 50.toHeight,
+                          width: 50.toHeight,
                         ),
                       ),
                     ),
