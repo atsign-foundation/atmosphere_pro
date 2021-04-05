@@ -70,7 +70,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // backendService.onboard();
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await initializeContactsService(
+          BackendService.getInstance().atClientInstance,
+          BackendService.getInstance().currentAtSign);
+    });
     super.initState();
   }
 
@@ -310,22 +314,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           //     _welcomeScreenProvider.selectedContacts);
                                           // bool response = filePickerModel.sentStatus[0];
                                           // if (filePickerModel.sentStatus != null) {
-                                          sendingFlushbar =
-                                              _showScaffold(status: 0);
-                                          await sendingFlushbar.show(context);
-                                          // }
-
-                                          _showScaffold(status: 0);
+                                          if (filePickerModel.flushbarStatus ==
+                                              FLUSHBAR_STATUS.SENDING) {
+                                            sendingFlushbar =
+                                                _showScaffold(status: 0);
+                                            await sendingFlushbar.show(context);
+                                          } else if (filePickerModel
+                                                  .flushbarStatus ==
+                                              FLUSHBAR_STATUS.FAILED) {
+                                            sendingFlushbar =
+                                                _showScaffold(status: 2);
+                                            await sendingFlushbar.show(context);
+                                          }
                                           // filePickerModel.sendFiles(filePickerModel.selectedFiles,
                                           //     _welcomeScreenProvider.selectedContacts);
 
-                                          bool response;
+                                          // bool response;
 
-                                          response =
-                                              Provider.of<FileTransferProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .sentStatus;
+                                          // response =
+                                          //     Provider.of<FileTransferProvider>(
+                                          //             context,
+                                          //             listen: false)
+                                          //         .sentStatus;
 
                                           // bool response = true;
                                           // bool response = await backendService.sendFile(
@@ -350,14 +360,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           //     ]);
 
                                           // _showScaffold(status: 1);
-                                          if (response != null &&
-                                              response == true) {
-                                            sendingFlushbar =
-                                                _showScaffold(status: 1);
-                                            await sendingFlushbar.show(context);
-                                          } else {
-                                            _showScaffold(status: 2);
-                                          }
+                                          // if (response != null &&
+                                          //     response == true) {
+                                          //   sendingFlushbar =
+                                          //       _showScaffold(status: 1);
+                                          //   await sendingFlushbar.show(context);
+                                          // } else {
+                                          //   _showScaffold(status: 2);
+                                          // }
                                         },
                                       ),
                                     ],

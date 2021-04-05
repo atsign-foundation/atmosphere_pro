@@ -7,7 +7,9 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,7 +67,14 @@ class _HomeState extends State<Home> {
         authenticating = false;
       });
     } else {
-      _backendService.checkToOnboard(atSign: currentatSign);
+      // setState(() {
+      //   authenticating = true;
+      // });
+      await Provider.of<WelcomeScreenProvider>(context, listen: false)
+          .onboardingLoad(atSign: currentatSign);
+      // setState(() {
+      //   authenticating = false;
+      // });
     }
   }
 
@@ -171,6 +180,8 @@ class _HomeState extends State<Home> {
                         ),
                         child: Image.asset(
                           ImageConstants.logoIcon,
+                          height: 50.toHeight,
+                          width: 50.toHeight,
                         ),
                       ),
                     ),
@@ -229,13 +240,15 @@ class _HomeState extends State<Home> {
                                       ? () {}
                                       : () async {
                                           setState(() {
-                                            authenticating = true;
+                                            authenticating =
+                                                _backendService.authenticating;
                                           });
                                           await _backendService
                                               .checkToOnboard();
 
                                           setState(() {
-                                            authenticating = false;
+                                            authenticating =
+                                                _backendService.authenticating;
                                           });
                                         }),
                             ),
@@ -249,10 +262,26 @@ class _HomeState extends State<Home> {
             ),
           ),
           authenticating
-              ? Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          ColorConstants.redText)),
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  ColorConstants.redText)),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Logging in',
+                            style: CustomTextStyles.orangeMedium16,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 )
               : SizedBox()
         ],

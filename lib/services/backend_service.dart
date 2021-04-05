@@ -245,7 +245,12 @@ class BackendService {
     await receivingFlushbar.show(NavService.navKey.currentContext);
   }
 
-  void _streamReceiveCallBack(var bytesReceived) {}
+  void _streamReceiveCallBack(var bytesReceived) async {
+    receivingFlushbar =
+        CustomFlushBar().getFlushbar(TextStrings().fileSent, null);
+
+    await receivingFlushbar.show(NavService.navKey.currentContext);
+  }
 
   // send a file
   Future<bool> sendFile(String atSign, String filePath) async {
@@ -265,8 +270,7 @@ class BackendService {
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
 
   // acknowledge file transfer
-  Future<bool> acceptStream(
-      String atsign, String filename, String filesize, String receiver,
+  acceptStream(String atsign, String filename, String filesize, String receiver,
       {String id}) async {
     print("from:$atsign file:$filename size:$receiver");
     if (receiver == currentAtSign && atsign != currentAtSign) {
@@ -337,39 +341,53 @@ class BackendService {
     List<String> atSignList = await getAtsignList();
 
     await atClientServiceMap[atsign].deleteAtSignFromKeychain(atsign);
-    // atClientServiceMap.remove(atsign);
-    atSignList.removeWhere((element) => element == currentAtSign);
+
+    if (atSignList != null) {
+      atSignList.removeWhere((element) => element == currentAtSign);
+    }
 
     var atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
-
-    await Onboarding(
-      atsign: atSignList.first,
-      context: NavService.navKey.currentContext,
-      atClientPreference: atClientPrefernce,
-      domain: MixedConstants.ROOT_DOMAIN,
-      appColor: Color.fromARGB(255, 240, 94, 62),
-      onboard: (value, atsign) async {
-        atClientServiceMap = value;
-
-        String atSign = await atClientServiceMap[atsign].atClient.currentAtSign;
-
-        await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
-        await initializeContactsService(atClientInstance, currentAtSign);
-        // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
-        await Navigator.pushNamedAndRemoveUntil(
-            NavService.navKey.currentContext,
-            Routes.WELCOME_SCREEN,
-            (Route<dynamic> route) => false);
-      },
-      onError: (error) {
-        print('Onboarding throws $error error');
-      },
-      // nextScreen: WelcomeScreen(),
-    );
-    if (atClientInstance != null) {
-      await startMonitor();
+    var tempAtsign;
+    if (atSignList == null || atSignList.isEmpty) {
+      tempAtsign = '';
+    } else {
+      tempAtsign = atSignList.first;
     }
+
+    if (tempAtsign == '') {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
+          Routes.HOME, (Route<dynamic> route) => false);
+    } else {
+      await Onboarding(
+        atsign: tempAtsign,
+        context: NavService.navKey.currentContext,
+        atClientPreference: atClientPrefernce,
+        domain: MixedConstants.ROOT_DOMAIN,
+        appColor: Color.fromARGB(255, 240, 94, 62),
+        onboard: (value, atsign) async {
+          atClientServiceMap = value;
+
+          String atSign =
+              await atClientServiceMap[atsign].atClient.currentAtSign;
+
+          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          await initializeContactsService(atClientInstance, currentAtSign);
+          // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+          await Navigator.pushNamedAndRemoveUntil(
+              NavService.navKey.currentContext,
+              Routes.HOME,
+              (Route<dynamic> route) => false);
+        },
+        onError: (error) {
+          print('Onboarding throws $error error');
+        },
+        // nextScreen: WelcomeScreen(),
+      );
+    }
+    // if (atClientInstance != null) {
+    //   await startMonitor();
+    // }
   }
 
   Future<bool> checkAtsign(String atSign) async {
@@ -430,39 +448,49 @@ class BackendService {
     return contactDetails;
   }
 
+  bool authenticating = false;
+
   checkToOnboard({String atSign}) async {
-    var atClientPrefernce;
-    //  await getAtClientPreference();
-    await getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
-    currentAtSign = atSign;
-    await Onboarding(
-      atsign: atSign,
-      context: NavService.navKey.currentContext,
-      atClientPreference: atClientPrefernce,
-      domain: MixedConstants.ROOT_DOMAIN,
-      appColor: Color.fromARGB(255, 240, 94, 62),
-      onboard: (value, atsign) async {
-        atClientServiceMap = value;
+    try {
+      authenticating = true;
+      var atClientPrefernce;
+      //  await getAtClientPreference();
+      await getAtClientPreference()
+          .then((value) => atClientPrefernce = value)
+          .catchError((e) => print(e));
+      currentAtSign = atSign;
+      await Onboarding(
+        atsign: atSign,
+        context: NavService.navKey.currentContext,
+        atClientPreference: atClientPrefernce,
+        domain: MixedConstants.ROOT_DOMAIN,
+        appColor: Color.fromARGB(255, 240, 94, 62),
+        onboard: (value, atsign) async {
+          atClientServiceMap = value;
 
-        String atSign = await atClientServiceMap[atsign].atClient.currentAtSign;
+          String atSign =
+              await atClientServiceMap[atsign].atClient.currentAtSign;
 
-        await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
-        await startMonitor(atsign: atsign, value: value);
-        _initBackendService();
-        await initializeContactsService(atClientInstance, currentAtSign);
-        // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
-        await Navigator.pushNamedAndRemoveUntil(
-            NavService.navKey.currentContext,
-            Routes.WELCOME_SCREEN,
-            (Route<dynamic> route) => false);
-      },
-      onError: (error) {
-        print('Onboarding throws $error error');
-      },
-      // nextScreen: WelcomeScreen(),
-    );
+          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          await startMonitor(atsign: atsign, value: value);
+          _initBackendService();
+          await initializeContactsService(atClientInstance, currentAtSign);
+          authenticating = false;
+          // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+          await Navigator.pushNamedAndRemoveUntil(
+              NavService.navKey.currentContext,
+              Routes.WELCOME_SCREEN,
+              (Route<dynamic> route) => false);
+        },
+        onError: (error) {
+          print('Onboarding throws $error error');
+          authenticating = false;
+        },
+        // nextScreen: WelcomeScreen(),
+      );
+    } catch (e) {
+      authenticating = false;
+    }
   }
 
   String state;

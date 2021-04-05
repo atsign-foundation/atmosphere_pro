@@ -31,7 +31,6 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.contact.tags != null && widget.contact.tags['image'] != null) {
       List<int> intList = widget.contact.tags['image'].cast<int>();
