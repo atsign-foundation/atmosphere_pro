@@ -48,6 +48,7 @@ class BackendService {
   AnimationController controller;
   Flushbar receivingFlushbar;
   String onBoardError;
+
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
     if (Platform.isIOS) {

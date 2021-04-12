@@ -47,7 +47,9 @@ dependencies:
   webview_flutter: ^1.0.0
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
-  at_onboarding_flutter: ^1.0.0+1
+  at_onboarding_flutter:
+    path: /Users/rishabh1/Desktop/work/at_widgets/at_onboarding_flutter
+  # ^1.0.0+3
   at_client_mobile:
   at_commons:
   at_contact:
