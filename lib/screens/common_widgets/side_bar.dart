@@ -100,6 +100,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         });
       }
     }
+    await Provider.of<WelcomeScreenProvider>(context, listen: false)
+        .getToggleStatus();
+    setState(() {});
   }
 
   @override
@@ -190,11 +193,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       'showGroups': true,
                       'showContacts': true,
                       'selectedList': (s) {
-                        Navigator.pop(context);
                         Provider.of<WelcomeScreenProvider>(
                                 NavService.navKey.currentContext,
                                 listen: false)
                             .updateSelectedContacts(s);
+                        Navigator.pop(context);
                       }
                     },
                   ),
@@ -356,16 +359,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               : SizedBox(),
                           title: Transform.scale(
                             scale: 0.6,
-                            child: CupertinoSwitch(
-                              value:
-                                  BackendService.getInstance().autoAcceptFiles,
-                              onChanged: (b) {
-                                setState(() {
-                                  BackendService.getInstance().autoAcceptFiles =
-                                      b;
-                                });
+                            child: Consumer<WelcomeScreenProvider>(
+                              builder: (context, provider, _) {
+                                return (provider.isAutoAccept == null)
+                                    ? CircularProgressIndicator()
+                                    : CupertinoSwitch(
+                                        value: provider.isAutoAccept,
+                                        onChanged: (b) async {
+                                          provider.toggleAutoAccept(b);
+                                          await provider.getToggleStatus();
+
+                                          setState(() {});
+                                        },
+                                        activeColor: Colors.black,
+                                      );
                               },
-                              activeColor: Colors.black,
                             ),
                           ),
                         )
