@@ -35,7 +35,7 @@ dependencies:
   google_fonts: ^1.1.0
   intl: ^0.16.1
   open_file: ^3.0.3
-  pedantic: ^1.9.0
+  pedantic: ^1.11.0
   permission_handler: ^5.0.1+1
   provider: ^4.3.2+2
   qr_flutter: ^3.2.0
@@ -47,29 +47,30 @@ dependencies:
   webview_flutter: ^1.0.0
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
-  at_onboarding_flutter: ^1.0.0+1
-  at_client_mobile:
-  at_commons:
-  at_contact:
-  at_lookup:
+
+  at_onboarding_flutter: ^1.0.0+3
+  at_client_mobile: ^1.0.0+9
+  at_commons: ^1.0.1+6
+  at_contact: ^1.0.0+3
+  at_lookup: ^1.0.0+6
   atsign_authentication_helper:
   # at_contacts_flutter:
   # at_common_flutter:
   at_common_flutter:
-    path: /Users/rishabh1/Desktop/work/at_widgets/at_common_flutter
+    path: /Users/sarikagautam/Sites/packages/at_widgets/at_common_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_common_flutter
     #   ref: dev_env
 
   at_contacts_flutter:
-    path: /Users/rishabh1/Desktop/work/at_widgets/at_contacts_flutter
+    path: /Users/sarikagautam/Sites/packages/at_widgets/at_contacts_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_contacts_flutter
     #   ref: dev_env
   at_contacts_group_flutter:
-    path: /Users/rishabh1/Desktop/work/at_widgets/at_contacts_group_flutter
+    path: /Users/sarikagautam/Sites/packages/at_widgets/at_contacts_group_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_contacts_group_flutter

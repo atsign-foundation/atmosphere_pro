@@ -9,6 +9,8 @@ class MixedConstants {
   static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
   // static const String ROOT_DOMAIN = 'root.atsign.org';
+  
+  static const int ROOT_PORT = 64;
 
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';

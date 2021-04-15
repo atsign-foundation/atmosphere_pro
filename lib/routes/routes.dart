@@ -45,7 +45,7 @@ class SetupRoutes {
       Routes.GROUPS: (context) {
         Map<String, dynamic> args =
             ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
-        return GroupList(currentAtsign: args['currentAtsign']);
+        return GroupList();
       },
       Routes.FILE_PICKER: (context) => FilePickerScreen(),
       // Routes.SCAN_QR_SCREEN: (context) {
