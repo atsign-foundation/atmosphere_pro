@@ -9,7 +9,7 @@ class MixedConstants {
   static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
   // static const String ROOT_DOMAIN = 'root.atsign.org';
-  
+
   static const int ROOT_PORT = 64;
 
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
@@ -24,6 +24,9 @@ class MixedConstants {
   static const String HISTORY_KEY = 'historyKey';
   static const String HISTORY_BOX = 'historyBox';
 
-  static String appNamespace = '@mospherepro';
+  static String appNamespace = 'mospherepro';
   static String regex = '.$appNamespace@';
+
+  static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
+  static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
 }

@@ -67,14 +67,8 @@ class _HomeState extends State<Home> {
         authenticating = false;
       });
     } else {
-      // setState(() {
-      //   authenticating = true;
-      // });
       await Provider.of<WelcomeScreenProvider>(context, listen: false)
           .onboardingLoad(atSign: currentatSign);
-      // setState(() {
-      //   authenticating = false;
-      // });
     }
   }
 

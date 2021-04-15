@@ -159,8 +159,11 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
+  bool isSending = false;
   sendFiles(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
+    isSending = true;
+
     setStatus(SEND_FILES, Status.Loading);
     try {
       temporaryContactList = [];
@@ -193,12 +196,16 @@ class FileTransferProvider extends BaseModel {
       int id = DateTime.now().millisecondsSinceEpoch;
       // showFlushbar = null;
       flushbarStatus = FLUSHBAR_STATUS.IDLE;
-      temporaryContactList.forEach((contact) {
-        updateStatus(contact, id);
+      await Future.forEach(temporaryContactList, (contact) async {
+        await updateStatus(contact, id);
       });
-
+      // temporaryContactList.forEach((contact) {
+      //   updateStatus(contact, id);
+      // });
+      isSending = false;
       setStatus(SEND_FILES, Status.Done);
     } catch (error) {
+      isSending = false;
       setError(SEND_FILES, error.toString());
     }
   }
@@ -215,57 +222,86 @@ class FileTransferProvider extends BaseModel {
 
   // bool showFlushbar;
   updateStatus(AtContact contact, int id) async {
-    selectedFiles.forEach((element) {
-      transferStatus.add(FileTransferStatus(
-          contactName: contact.atSign,
-          fileName: element.name,
-          status: TransferStatus.PENDING,
-          id: id));
-      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .setFilesHistory(
-              id: id,
-              atSignName: contact.atSign,
-              historyType: HistoryType.send,
-              files: [
-            FilesDetail(
-              filePath: element.path,
-              id: id,
-              contactName: contact.atSign,
-              size: double.parse(element.size.toString()),
-              fileName: element.name.toString(),
-              type: element.name.split('.').last,
-            ),
-          ]);
-    });
+    try {
+      // setStatus(SEND_FILES, Status.Loading);
+      selectedFiles.forEach((element) {
+        transferStatus.add(FileTransferStatus(
+            contactName: contact.atSign,
+            fileName: element.name,
+            status: TransferStatus.PENDING,
+            id: id));
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .setFilesHistory(
+                id: id,
+                atSignName: contact.atSign,
+                historyType: HistoryType.send,
+                files: [
+              FilesDetail(
+                filePath: element.path,
+                id: id,
+                contactName: contact.atSign,
+                size: double.parse(element.size.toString()),
+                fileName: element.name.toString(),
+                type: element.name.split('.').last,
+              ),
+            ]);
+      });
 
-    if (contact == temporaryContactList.first) {
-      sentStatus = true;
-    }
-    for (var i = 0; i < selectedFiles.length; i++) {
-      bool tempStatus =
-          await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
-      if (i == 0 && contact.atSign == temporaryContactList.first.atSign) {
-        if (tempStatus) {
-          flushbarStatus = FLUSHBAR_STATUS.SENDING;
-        } else {
-          flushbarStatus = FLUSHBAR_STATUS.FAILED;
-        }
-        // showFlushbar = tempStatus;
+      if (contact == temporaryContactList.first) {
+        sentStatus = true;
       }
-      int index = transferStatus.indexWhere((element) =>
-          element.fileName == selectedFiles[i].name &&
-          contact.atSign == element.contactName);
-      if (index != 1) {
-        if (tempStatus) {
-          transferStatus[index].status = TransferStatus.DONE;
-        } else {
-          transferStatus[index].status = TransferStatus.FAILED;
+      await Future.forEach(selectedFiles, (PlatformFile queuedFile) async {
+        bool tempStatus =
+            await _backendService.sendFile(contact.atSign, queuedFile.path);
+        if (queuedFile.name == selectedFiles.first.name &&
+            contact.atSign == temporaryContactList.first.atSign) {
+          if (tempStatus) {
+            flushbarStatus = FLUSHBAR_STATUS.SENDING;
+          } else {
+            flushbarStatus = FLUSHBAR_STATUS.FAILED;
+          }
+          // showFlushbar = tempStatus;
         }
-      }
-      if (i == selectedFiles.length - 1 &&
-          contact == temporaryContactList.last) {}
+        int index = transferStatus.indexWhere((element) =>
+            element.fileName == queuedFile.name &&
+            contact.atSign == element.contactName);
+        if (index != 1) {
+          if (tempStatus) {
+            transferStatus[index].status = TransferStatus.DONE;
+          } else {
+            transferStatus[index].status = TransferStatus.FAILED;
+          }
+        }
+        // setStatus(SEND_FILES, Status.Done);
+      });
+    } catch (e) {
+      // setError(SEND_FILES, e.toString());
     }
+    // for (var i = 0; i < selectedFiles.length; i++) {
+    //   bool tempStatus =
+    //       await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
+    //   if (i == 0 && contact.atSign == temporaryContactList.first.atSign) {
+    //     if (tempStatus) {
+    //       flushbarStatus = FLUSHBAR_STATUS.SENDING;
+    //     } else {
+    //       flushbarStatus = FLUSHBAR_STATUS.FAILED;
+    //     }
+    //     // showFlushbar = tempStatus;
+    //   }
+    //   int index = transferStatus.indexWhere((element) =>
+    //       element.fileName == selectedFiles[i].name &&
+    //       contact.atSign == element.contactName);
+    //   if (index != 1) {
+    //     if (tempStatus) {
+    //       transferStatus[index].status = TransferStatus.DONE;
+    //     } else {
+    //       transferStatus[index].status = TransferStatus.FAILED;
+    //     }
+    //   }
+    //   // if (i == selectedFiles.length - 1 &&
+    //   //     contact == temporaryContactList.last) {}
+    // }
 
     // WelcomeScreenProvider().selectedContacts.clear();
     // selectedFiles.clear();
