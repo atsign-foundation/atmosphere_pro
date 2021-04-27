@@ -315,13 +315,11 @@ class FileTransferProvider extends BaseModel {
   sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
     var backendService = BackendService.getInstance();
-    var selectedFile = File(selectedFiles[0].path);
-    var bytes = selectedFile.readAsBytesSync();
-    print('file : ${selectedFile}');
+    String microSecondsSinceEpochId =
+        DateTime.now().microsecondsSinceEpoch.toString();
     String container =
         '${backendService.currentAtSign.substring(1, backendService.currentAtSign.length)}' +
-            DateTime.now().millisecondsSinceEpoch.toString();
-
+            microSecondsSinceEpochId;
     print('filebin container: ${container}');
 
     // encrypt file
@@ -331,29 +329,35 @@ class FileTransferProvider extends BaseModel {
             backendService.currentAtSign, contactList[0].contact.atSign);
     print('fileEncryptionKey : ${fileEncryptionKey}');
 
-    var encryptedFileContent = await backendService
-        .atClientInstance.encryptionService
-        .encryptFile(bytes, fileEncryptionKey);
+    for (var file in selectedFiles) {
+      var selectedFile = File(file.path);
+      var bytes = selectedFile.readAsBytesSync();
+      print('file : ${selectedFile}');
 
-    print('encryptedFileContent : ${encryptedFileContent}');
+      var encryptedFileContent = await backendService
+          .atClientInstance.encryptionService
+          .encryptFile(bytes, fileEncryptionKey);
 
-    // post
+      print('encryptedFileContent : ${encryptedFileContent}');
+
+      try {
+        var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
+            headers: <String, String>{"bin": container, "filename": file.name},
+            body: encryptedFileContent);
+        print('file upload ${response.body}');
+        print('container link: ${container}');
+      } catch (e) {
+        print('error in uploading');
+      }
+    }
+
     try {
-      var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
-          headers: <String, String>{
-            "bin": container,
-            "filename": selectedFiles[0].name
-          },
-          body: encryptedFileContent);
-      print('file upload ${response.body}');
-      print('container link: ${container}');
-
       AtKey atKey = AtKey()
         ..metadata = Metadata()
         ..metadata.ttr = -1
         ..metadata.ccd = true
         ..key =
-            '${MixedConstants.FILE_TRANSFER_KEY}-${DateTime.now().microsecondsSinceEpoch}'
+            '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}'
         ..sharedWith = contactList[0].contact.atSign
         ..metadata.ttl = 60000 * 60 * 24 * 6
         ..sharedBy = backendService.currentAtSign;
@@ -362,6 +366,8 @@ class FileTransferProvider extends BaseModel {
       // creating file url
       String downloadUrl =
           MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
+
+      print('download url: ${downloadUrl}');
 
       // put data
       var result = await backendService.atClientInstance
