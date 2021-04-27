@@ -21,7 +21,7 @@ class MixedConstants {
 
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;
-
+  
   // Hive Constants
   static const String HISTORY_KEY = 'historyKey';
   static const String HISTORY_BOX = 'historyBox';
