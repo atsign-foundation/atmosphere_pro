@@ -321,61 +321,70 @@ class FileTransferProvider extends BaseModel {
         '${backendService.currentAtSign.substring(1, backendService.currentAtSign.length)}' +
             microSecondsSinceEpochId;
     print('filebin container: ${container}');
+    bool isFilesUploaded = false;
 
-    // encrypt file
-    var fileEncryptionKey = await backendService
-        .atClientInstance.encryptionService
-        .generateFileEncryptionSharedKey(
-            backendService.currentAtSign, contactList[0].contact.atSign);
-    print('fileEncryptionKey : ${fileEncryptionKey}');
-
-    for (var file in selectedFiles) {
-      var selectedFile = File(file.path);
-      var bytes = selectedFile.readAsBytesSync();
-      print('file : ${selectedFile}');
-
-      var encryptedFileContent = await backendService
+    for (var groupContact in contactList) {
+      // encrypt file
+      var fileEncryptionKey = await backendService
           .atClientInstance.encryptionService
-          .encryptFile(bytes, fileEncryptionKey);
+          .generateFileEncryptionSharedKey(
+              backendService.currentAtSign, groupContact.contact.atSign);
+      print('fileEncryptionKey : ${fileEncryptionKey}');
 
-      print('encryptedFileContent : ${encryptedFileContent}');
+      if (!isFilesUploaded) {
+        for (var file in selectedFiles) {
+          var selectedFile = File(file.path);
+          var bytes = selectedFile.readAsBytesSync();
+          print('file : ${selectedFile}');
+
+          var encryptedFileContent = await backendService
+              .atClientInstance.encryptionService
+              .encryptFile(bytes, fileEncryptionKey);
+
+          print('encryptedFileContent : ${encryptedFileContent}');
+
+          try {
+            var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
+                headers: <String, String>{
+                  "bin": container,
+                  "filename": file.name
+                },
+                body: encryptedFileContent);
+            print('file upload ${response.body}');
+            print('container link: ${container}');
+          } catch (e) {
+            print('error in uploading');
+          }
+        }
+        isFilesUploaded = true;
+      }
 
       try {
-        var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
-            headers: <String, String>{"bin": container, "filename": file.name},
-            body: encryptedFileContent);
-        print('file upload ${response.body}');
-        print('container link: ${container}');
+        AtKey atKey = AtKey()
+          ..metadata = Metadata()
+          ..metadata.ttr = -1
+          ..metadata.ccd = true
+          ..key =
+              '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}'
+          ..sharedWith = groupContact.contact.atSign
+          ..metadata.ttl = 60000 * 60 * 24 * 6
+          ..sharedBy = backendService.currentAtSign;
+        print('atkey : ${atKey}');
+
+        // creating file url
+        String downloadUrl =
+            MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
+
+        print('download url: ${downloadUrl}');
+
+        // put data
+        var result = await backendService.atClientInstance
+            .put(atKey, downloadUrl); // jsonEncode missing
+
+        print('notification sent: ${result}');
       } catch (e) {
-        print('error in uploading');
+        print('Error in sending notification $e');
       }
-    }
-
-    try {
-      AtKey atKey = AtKey()
-        ..metadata = Metadata()
-        ..metadata.ttr = -1
-        ..metadata.ccd = true
-        ..key =
-            '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}'
-        ..sharedWith = contactList[0].contact.atSign
-        ..metadata.ttl = 60000 * 60 * 24 * 6
-        ..sharedBy = backendService.currentAtSign;
-      print('atkey : ${atKey}');
-
-      // creating file url
-      String downloadUrl =
-          MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
-
-      print('download url: ${downloadUrl}');
-
-      // put data
-      var result = await backendService.atClientInstance
-          .put(atKey, downloadUrl); // jsonEncode missing
-
-      print('notification sent: ${result}');
-    } catch (e) {
-      print('Error in upload $e');
     }
   }
 
