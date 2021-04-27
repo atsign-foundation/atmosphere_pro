@@ -285,7 +285,8 @@ class BackendService {
 
     var decryptedFile = await atClientInstance.encryptionService
         .decryptFile(encryptedFileInBytes, fileDecryptionKey);
-    var downloadedFile = File('/Users/apple/Downloads/$fileName');
+    var downloadedFile = File('${downloadDirectory.path}/$fileName');
+
     downloadedFile.writeAsBytesSync(decryptedFile);
   }
 
@@ -301,7 +302,7 @@ class BackendService {
       // return archive[0].content as Uint8List;
       for (var file in archive) {
         var unzipped = file.content as List<int>;
-        download(
+        await download(
           sharedByAtSign,
           // filebinPath,
           unzipped,
