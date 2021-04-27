@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:archive/archive_io.dart';
+import 'package:at_commons/at_builders.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
@@ -25,6 +28,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
+import 'package:http/http.dart' as http;
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -204,6 +208,7 @@ class BackendService {
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
+
     if (atKey == 'stream_id') {
       var valueObject = responseJson['value'];
       var streamId = valueObject.split(':')[0];
@@ -224,6 +229,89 @@ class BackendService {
             _streamCompletionCallBack,
             _streamReceiveCallBack);
       }
+
+      return;
+    }
+
+    if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
+      var value = responseJson['value'];
+
+      var decryptedMessage = await atClientInstance.encryptionService
+          .decrypt(value, fromAtSign)
+          // ignore: return_of_invalid_type_from_catch_error
+          .catchError((e) => print("error in decrypting: $e"));
+
+      print('decryptedMessage $decryptedMessage');
+
+      downloadFileFromBin(fromAtSign, decryptedMessage);
+    }
+  }
+
+  void download(
+    String sharedByAtSign,
+    // String encryptedFilePath,
+    Uint8List encryptedFileInBytes,
+    String fileName,
+  ) async {
+    // var atKey = AtKey()
+    //   ..key = fileKey
+    //   ..sharedBy = sharedByAtSign;
+    // var result = await atClientInstance.get(atKey);
+    // print('encryptedFilePath: ${result.value}');
+    // var encryptedFilePath = result.value;
+
+    // var encryptedFile = File('/Users/apple/Downloads/__houseofwaxrural6.png');
+    // var encryptedFileInBytes = encryptedFile.readAsBytesSync();
+    //
+    // var encryptedFileInBytes = await downloadFileFromBin(encryptedFilePath);
+    // var fileName =
+    //     encryptedFilePath.substring(encryptedFilePath.lastIndexOf('/') + 1);
+    print('decrypting file: $fileName');
+    var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
+      ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
+      ..sharedBy = sharedByAtSign
+      ..auth = true;
+    var encryptedFileSharedKey = await atClientInstance
+        .getRemoteSecondary()
+        .executeAndParse(fileDecryptionKeyLookUpBuilder);
+    var currentAtSignPrivateKey =
+        await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
+    var fileDecryptionKey = atClientInstance.decryptKey(
+        encryptedFileSharedKey, currentAtSignPrivateKey);
+    //  EncryptionUtil.decryptKey(
+    //     encryptedFileSharedKey, currentAtSignPrivateKey);
+    print(fileDecryptionKey);
+    print(encryptedFileInBytes);
+
+    var decryptedFile = await atClientInstance.encryptionService
+        .decryptFile(encryptedFileInBytes, fileDecryptionKey);
+    var downloadedFile = File('/Users/apple/Downloads/$fileName');
+    downloadedFile.writeAsBytesSync(decryptedFile);
+  }
+
+  Future<Uint8List> downloadFileFromBin(
+    String sharedByAtSign,
+    String filebinPath,
+    // String encryptedFilePath,
+  ) async {
+    http.Response response;
+    try {
+      response = await http.get(filebinPath);
+      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
+      // return archive[0].content as Uint8List;
+      for (var file in archive) {
+        var unzipped = file.content as List<int>;
+        download(
+          sharedByAtSign,
+          // filebinPath,
+          unzipped,
+          file.name,
+        );
+      }
+      // return unzipped.;
+    } catch (e) {
+      print('Error in download $e');
+      return null;
     }
   }
 

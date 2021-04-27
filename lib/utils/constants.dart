@@ -6,9 +6,9 @@ class MixedConstants {
   // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
 
   // for staging server
-  static const String ROOT_DOMAIN = 'root.atsign.wtf';
+  // static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
-  // static const String ROOT_DOMAIN = 'root.atsign.org';
+  static const String ROOT_DOMAIN = 'root.atsign.org';
 
   static const int ROOT_PORT = 64;
 
@@ -20,6 +20,8 @@ class MixedConstants {
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;
 
+  static const String FILEBIN_URL = 'https://filebin2.aws.atsign.cloud/';
+
   // Hive Constants
   static const String HISTORY_KEY = 'historyKey';
   static const String HISTORY_BOX = 'historyBox';
@@ -29,4 +31,6 @@ class MixedConstants {
 
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
+
+  static const String FILE_TRANSFER_KEY = 'filetransfer';
 }
