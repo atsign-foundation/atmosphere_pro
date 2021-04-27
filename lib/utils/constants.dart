@@ -6,13 +6,15 @@ class MixedConstants {
   // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
 
   // for staging server
-  static const String ROOT_DOMAIN = 'root.atsign.wtf';
+  // static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
-  // static const String ROOT_DOMAIN = 'root.atsign.org';
+  static const String ROOT_DOMAIN = 'root.atsign.org';
 
   static const int ROOT_PORT = 64;
 
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
+
+  static const String FILEBIN_URL = 'https://filebin2.aws.atsign.cloud/';
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
@@ -29,4 +31,5 @@ class MixedConstants {
 
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
+  static const String FILE_TRANSFER_KEY = 'filetransfer';
 }
