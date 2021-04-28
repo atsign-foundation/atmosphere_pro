@@ -61,7 +61,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.receivedHistory.name,
+                      widget.receivedHistory.name[0],
                       style: CustomTextStyles.primaryRegular16,
                     ),
                   ),
@@ -74,7 +74,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             await showDialog(
                               context: context,
                               builder: (context) => AddSingleContact(
-                                atSignName: widget.receivedHistory.name,
+                                atSignName: widget.receivedHistory.name[0],
                               ),
                             );
                             this.setState(() {});
@@ -95,7 +95,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.receivedHistory.name,
+                      widget.receivedHistory.name[0],
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                   ),
