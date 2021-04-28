@@ -5,7 +5,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 enum HistoryType { send, received }
 
 class FilesModel {
-  String name;
+  List<String> name;
   String handle;
   String date;
   int id;
@@ -24,14 +24,14 @@ class FilesModel {
       this.totalSize});
 
   FilesModel.fromJson(json) {
-    name = json['name'].toString();
+    name = jsonDecode(json['name']);
     handle = json['handle'].toString();
     date = json['date'].toString();
     id = json['id'];
     totalSize = double.parse(json['total_size'].toString());
 
     if (json['files'] != null) {
-      files = List<FilesDetail>();
+      files = <FilesDetail>[];
       json['files'].forEach((v) {
         if (v.runtimeType == String) {
           files.add(FilesDetail.fromJson(v));
@@ -44,7 +44,7 @@ class FilesModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
+    data['name'] = jsonEncode(this.name);
     data['handle'] = this.handle;
     data['date'] = this.date;
     data['total_size'] = this.totalSize;

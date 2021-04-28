@@ -239,18 +239,18 @@ class FileTransferProvider extends BaseModel {
                 listen: false)
             .setFilesHistory(
                 id: id,
-                atSignName: contact.atSign,
+                atSignName: [contact.atSign],
                 historyType: HistoryType.send,
                 files: [
-              FilesDetail(
-                filePath: element.path,
-                id: id,
-                contactName: contact.atSign,
-                size: double.parse(element.size.toString()),
-                fileName: element.name.toString(),
-                type: element.name.split('.').last,
-              ),
-            ]);
+                  FilesDetail(
+                    filePath: element.path,
+                    id: id,
+                    contactName: contact.atSign,
+                    size: double.parse(element.size.toString()),
+                    fileName: element.name.toString(),
+                    type: element.name.split('.').last,
+                  ),
+                ]);
       });
 
       if (contact == temporaryContactList.first) {
@@ -316,6 +316,7 @@ class FileTransferProvider extends BaseModel {
 
   sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
+    flushbarStatus = FLUSHBAR_STATUS.SENDING;
     FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
     var backendService = BackendService.getInstance();
     String microSecondsSinceEpochId =
@@ -384,9 +385,20 @@ class FileTransferProvider extends BaseModel {
         // put data
         var result = await backendService.atClientInstance
             .put(atKey, jsonEncode(filesToTransfer.toJson()));
+
+        FileHistory fileHistory = FileHistory(
+            filesToTransfer,
+            contactList.map((e) => e.contact.atSign).toList(),
+            HistoryType.send);
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .setFileTransferHistory(fileHistory);
+
         print('notification sent: ${result}');
+        flushbarStatus = FLUSHBAR_STATUS.IDLE;
       } catch (e) {
         print('Error in sending notification $e');
+        flushbarStatus = FLUSHBAR_STATUS.FAILED;
       }
     }
   }

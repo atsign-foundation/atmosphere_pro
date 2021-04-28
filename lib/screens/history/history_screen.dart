@@ -109,22 +109,22 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   indent: 16.toWidth,
                                 );
                               },
-                              itemCount: provider.testSentHistory.length,
+                              itemCount: provider.sentHistory.length,
                               // itemCount: 2,
                               itemBuilder: (context, index) {
                                 List<Map<String, Set<FilesDetail>>> tempList =
                                     [];
                                 List<int> idList = [];
-                                provider.testSentHistory.forEach((key, value) {
-                                  tempList.add(value);
-                                  idList.add(key);
-                                });
+                                // provider.sentHistory.forEach((key, value) {
+                                //   tempList.add(value);
+                                //   idList.add(key);
+                                // });
                                 print(idList);
                                 // print('TEMP LIST !====>${tempList[2]}');
                                 return SentFilesListTile(
                                   sentHistory: provider.sentHistory[index],
-                                  testList: tempList[index],
-                                  id: idList[index],
+                                  // testList: tempList[index],
+                                  // id: idList[index],
                                 );
                               },
                             ),
@@ -132,7 +132,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       //   child: Text('Some error occured'),
                       // ),
                       load: (provider) {
-                        provider.getRecievedHistory();
+                        provider.getSentHistory();
                       },
                     ),
                     ProviderHandler<HistoryProvider>(

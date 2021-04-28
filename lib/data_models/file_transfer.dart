@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FileTransfer {
@@ -20,8 +21,8 @@ class FileTransfer {
         ? DateTime.parse(json['expiry']).toLocal()
         : null;
     files = [];
-    json['files'].forEach((fileJson) {
-      FileData file = FileData.fromJson(jsonDecode(fileJson));
+    json['files'].forEach((element) {
+      FileData file = FileData.fromJson(jsonDecode(element));
       files.add(file);
     });
   }
@@ -68,6 +69,32 @@ class FileData {
     data['name'] = this.name;
     data['size'] = this.size;
     data['url'] = this.url;
+    return data;
+  }
+}
+
+class FileHistory {
+  FileTransfer fileDetails;
+  List<String> atsign;
+  HistoryType type;
+
+  FileHistory(this.fileDetails, this.atsign, this.type);
+  FileHistory.fromJson(Map<String, dynamic> json) {
+    fileDetails = FileTransfer.fromJson(json['fileDetails']);
+    atsign = [];
+    json['atsign'].forEach((element) {
+      atsign.add(element.toString());
+    });
+    type = json['type'] == HistoryType.send.toString()
+        ? HistoryType.send
+        : HistoryType.received;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['fileDetails'] = this.fileDetails;
+    data['atsign'] = this.atsign;
+    data['type'] = this.type.toString();
     return data;
   }
 }

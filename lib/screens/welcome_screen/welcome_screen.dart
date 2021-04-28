@@ -1,3 +1,4 @@
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -387,6 +388,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     height: 60.toHeight,
                                   ),
                                 ],
+                                InkWell(
+                                  onTap: () async {
+                                    List<String> response =
+                                        await BackendService.getInstance()
+                                            .atClientInstance
+                                            .getKeys(
+                                              regex: 'sentFiles',
+                                            );
+                                    print('response : ${response}');
+                                    response.forEach((key) async {
+                                      // if (key.contains('cached')) {
+                                      // the keys i have created
+                                      AtKey atKey = AtKey.fromString(key);
+                                      print('arkey:${atKey}');
+                                      var result =
+                                          await BackendService.getInstance()
+                                              .atClientInstance
+                                              .delete(atKey);
+                                      print('$key is deleted ? $result');
+                                      // }
+                                    });
+                                  },
+                                  child: Text('Delete'),
+                                )
                               ],
                             ),
                           ),

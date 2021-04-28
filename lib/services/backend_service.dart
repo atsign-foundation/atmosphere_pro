@@ -373,7 +373,7 @@ class BackendService {
       if (autoAcceptFiles && trustedSender) {
         DateTime date = DateTime.now();
         Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
-            atSignName: payload.name.toString(),
+            atSignName: [payload.name.toString()],
             historyType: HistoryType.received,
             files: [
               FilesDetail(
