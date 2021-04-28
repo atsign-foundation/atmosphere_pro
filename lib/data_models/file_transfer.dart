@@ -80,7 +80,7 @@ class FileHistory {
 
   FileHistory(this.fileDetails, this.atsign, this.type);
   FileHistory.fromJson(Map<String, dynamic> json) {
-    fileDetails = FileTransfer.fromJson(json['fileDetails']);
+    fileDetails = FileTransfer.fromJson(jsonDecode(json['fileDetails']));
     atsign = [];
     json['atsign'].forEach((element) {
       atsign.add(element.toString());

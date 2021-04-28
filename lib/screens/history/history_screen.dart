@@ -29,7 +29,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       historyProvider = Provider.of<HistoryProvider>(context);
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         print("fetched contacts");
-        historyProvider.getSentHistory();
+        // historyProvider.getSentHistory();
         historyProvider.getRecievedHistory();
       });
     }
@@ -59,8 +59,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                 child: TabBar(
                   onTap: (index) {
                     if (index == 0) {
-                      Provider.of<HistoryProvider>(context, listen: false)
-                          .getSentHistory();
+                      // Provider.of<HistoryProvider>(context, listen: false)
+                      //     .getSentHistory();
                     }
                     if (index == 1) {
                       Provider.of<HistoryProvider>(context, listen: false)
@@ -132,7 +132,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       //   child: Text('Some error occured'),
                       // ),
                       load: (provider) {
-                        provider.getSentHistory();
+                        // provider.getSentHistory();
                       },
                     ),
                     ProviderHandler<HistoryProvider>(
@@ -143,7 +143,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       },
                       showError: true,
                       successBuilder: (provider) => (provider
-                              .receivedHistory.isEmpty)
+                              .receivedHistoryNew.isEmpty)
                           ? Center(
                               child: Text(
                                 'No files received',
@@ -156,12 +156,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                               separatorBuilder: (context, index) => Divider(
                                 indent: 16.toWidth,
                               ),
-                              itemCount: provider.receivedHistory.length,
+                              itemCount: provider.receivedHistoryNew.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ReceivedFilesListTile(
                                   receivedHistory:
-                                      provider.receivedHistory[index],
+                                      provider.receivedHistoryNew[index],
                                 ),
                               ),
                             ),

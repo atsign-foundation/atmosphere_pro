@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,10 +17,10 @@ import 'package:flutter/cupertino.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
-  List<FileHistory> sentHistory = [];
-  List<List<FilesDetail>> tempList = [];
-  Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
-  static Map<int, Map<String, Set<FilesDetail>>> test = {};
+  List<FileHistory> sentHistory = [], receivedHistoryNew = [];
+  // List<List<FilesDetail>> tempList = [];
+  // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
+  // static Map<int, Map<String, Set<FilesDetail>>> test = {};
   List<FilesDetail> sentPhotos,
       sentVideos,
       sentAudio,
@@ -61,17 +62,17 @@ class HistoryProvider extends BaseModel {
       AtKey atKey = AtKey()..metadata = Metadata();
 
       if (historyType == HistoryType.received) {
-        // the file size come in bytes in reciever side
-        filesModel.files.forEach((file) {
-          file.size = file.size;
-          filesModel.totalSize += file.size;
-        });
-        receivedFileHistory['history'].insert(0, (filesModel.toJson()));
+        /// the file size come in bytes in reciever side
+        // filesModel.files.forEach((file) {
+        //   file.size = file.size;
+        //   filesModel.totalSize += file.size;
+        // });
+        // receivedFileHistory['history'].insert(0, (filesModel.toJson()));
 
-        atKey.key = 'receivedFiles';
+        // atKey.key = 'receivedFiles';
 
-        await backendService.atClientInstance
-            .put(atKey, json.encode(receivedFileHistory));
+        // await backendService.atClientInstance
+        //     .put(atKey, json.encode(receivedFileHistory));
       } else {
         // the file is in kB in sender side
         filesModel.files.forEach((file) {
@@ -111,34 +112,11 @@ class HistoryProvider extends BaseModel {
       Map historyFile = json.decode((keyValue.value) as String) as Map;
       sendFileHistory['history'] = historyFile['history'];
       historyFile['history'].forEach((value) {
-        FileHistory filesModel = FileHistory.fromJson((value));
+        FileHistory filesModel = FileHistory.fromJson(jsonDecode(value));
         filesModel.type = HistoryType.send;
         sentHistory.add(filesModel);
       });
     }
-
-    // for (int i = 0; i < sentHistory.length; i++) {
-    //   if (testSentHistory.containsKey(sentHistory[i].id)) {
-    //     if (testSentHistory[sentHistory[i].id]
-    //         .containsKey(sentHistory[i].name)) {
-    //       testSentHistory[sentHistory[i].id][sentHistory[i].name]
-    //           .add(sentHistory[i].files[0]);
-    //     } else {
-    //       testSentHistory[sentHistory[i].id].putIfAbsent(
-    //           sentHistory[i].name[0], () => [...sentHistory[i].files].toSet());
-    //     }
-    //   } else {
-    //     testSentHistory.putIfAbsent(
-    //         sentHistory[i].id,
-    //         () => {
-    //               sentHistory[i].name[0]: [...sentHistory[i].files].toSet()
-    //             });
-    //   }
-    // }
-
-    // sentHistory.forEach((element) {
-    //   tempList.add(element.files);
-    // });
 
     print('IN HISTORy---->${sentHistory}');
     setStatus(SENT_HISTORY, Status.Done);
@@ -149,114 +127,172 @@ class HistoryProvider extends BaseModel {
 
   getRecievedHistory() async {
     setStatus(RECEIVED_HISTORY, Status.Loading);
-    try {
-      receivedHistory = [];
-      AtKey key = AtKey()
-        ..key = 'receivedFiles'
-        ..metadata = Metadata();
-      var keyValue = await backendService.atClientInstance.get(key);
-      if (keyValue != null && keyValue.value != null) {
-        Map historyFile = json.decode((keyValue.value) as String) as Map;
-        receivedFileHistory['history'] = historyFile['history'];
-        historyFile['history'].forEach((value) {
-          FilesModel filesModel = FilesModel.fromJson((value));
-          filesModel.historyType = HistoryType.send;
-          receivedHistory.add(filesModel);
-        });
+    // try {
+    // receivedHistory = [];
+    // AtKey key = AtKey()
+    //   ..key = 'receivedFiles'
+    //   ..metadata = Metadata();
+    // var keyValue = await backendService.atClientInstance.get(key);
+    // if (keyValue != null && keyValue.value != null) {
+    //   Map historyFile = json.decode((keyValue.value) as String) as Map;
+    //   receivedFileHistory['history'] = historyFile['history'];
+    //   historyFile['history'].forEach((value) {
+    //     FilesModel filesModel = FilesModel.fromJson((value));
+    //     filesModel.historyType = HistoryType.send;
+    //     receivedHistory.add(filesModel);
+    //   });
 
-        finalReceivedHistory = [];
-        receivedHistory.forEach((atSign) {
-          atSign.files.forEach((file) {
-            finalReceivedHistory.add(file);
-          });
-        });
-        sortFiles(receivedHistory);
-        populateTabs();
+    //   finalReceivedHistory = [];
+    //   receivedHistory.forEach((atSign) {
+    //     atSign.files.forEach((file) {
+    //       finalReceivedHistory.add(file);
+    //     });
+    //   });
+
+    await getAllFileTransferData();
+    sortFiles(receivedHistory);
+    populateTabs();
+    // }
+    setStatus(RECEIVED_HISTORY, Status.Done);
+    // } catch (error) {
+    //   setError(RECEIVED_HISTORY, error.toString());
+    // }
+  }
+
+  addToReceiveFileHistory(
+    String sharedBy,
+    String decodedMsg,
+  ) async {
+    // receivedFileHistory['history'].insert(0, (fileHistory.toJson()));
+
+    FileHistory filesModel = FileHistory.fromJson((jsonDecode(decodedMsg)));
+    filesModel.atsign = [
+      sharedBy
+    ]; // This originally contains list of atsigns the data was shared with
+    // We change it to sharedBy
+    filesModel.type = HistoryType.received;
+    receivedHistoryNew.add(filesModel);
+  }
+
+  getAllFileTransferData() async {
+    receivedHistoryNew = [];
+
+    List<String> fileTransferResponse =
+        await backendService.atClientInstance.getKeys(
+      regex: MixedConstants.FILE_TRANSFER_KEY,
+    );
+
+    await Future.forEach(fileTransferResponse, (key) async {
+      print('key $key');
+      print('${key.split(':')[1]}');
+      print('${backendService.atClientInstance.currentAtSign}');
+      if ('@${key.split(':')[1]}'
+          .contains(backendService.atClientInstance.currentAtSign)) {
+        AtKey atKey = AtKey.fromString(key);
+        AtValue atvalue = await backendService.atClientInstance
+            .get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) => print("error in get $e"));
+
+        print('atvalue.value ${atvalue.value}');
+        FileHistory filesModel =
+            FileHistory.fromJson(jsonDecode(atvalue.value));
+        filesModel.atsign = [
+          atKey.sharedBy
+        ]; // This originally contains list of atsigns the data was shared with
+        // We change it to sharedBy
+        filesModel.type = HistoryType.received;
+        receivedHistoryNew.add(filesModel);
       }
-      setStatus(RECEIVED_HISTORY, Status.Done);
-    } catch (error) {
-      setError(RECEIVED_HISTORY, error.toString());
-    }
+    });
+
+    print('sentHistory length ${receivedHistoryNew.length}');
+
+    receivedHistoryNew.forEach((element) {
+      element.fileDetails.files.forEach((element2) {
+        print('file name : ${element2.name}');
+      });
+    });
   }
 
   sortFiles(List<FilesModel> filesList) async {
-    try {
-      setStatus(SORT_FILES, Status.Loading);
-      receivedAudio = [];
-      receivedApk = [];
-      receivedDocument = [];
-      receivedPhotos = [];
-      receivedVideos = [];
-      filesList.forEach((atSign) {
-        atSign.files.forEach((file) {
-          String fileExtension = file.fileName.split('.').last;
+    // try {
+    //   setStatus(SORT_FILES, Status.Loading);
+    //   receivedAudio = [];
+    //   receivedApk = [];
+    //   receivedDocument = [];
+    //   receivedPhotos = [];
+    //   receivedVideos = [];
+    //   filesList.forEach((atSign) {
+    //     atSign.files.forEach((file) {
+    //       String fileExtension = file.fileName.split('.').last;
 
-          if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-            receivedAudio.add(file);
-          }
-          if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-            receivedVideos.add(file);
-          }
-          if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-            receivedPhotos.add(file);
-          }
-          if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
-              FileTypes.PDF_TYPES.contains(fileExtension) ||
-              FileTypes.WORD_TYPES.contains(fileExtension) ||
-              FileTypes.EXEL_TYPES.contains(fileExtension)) {
-            receivedDocument.add(file);
-          }
-          if (FileTypes.APK_TYPES.contains(fileExtension)) {
-            receivedApk.add(file);
-          } else {}
-        });
-      });
+    //       if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
+    //         receivedAudio.add(file);
+    //       }
+    //       if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+    //         receivedVideos.add(file);
+    //       }
+    //       if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+    //         receivedPhotos.add(file);
+    //       }
+    //       if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+    //           FileTypes.PDF_TYPES.contains(fileExtension) ||
+    //           FileTypes.WORD_TYPES.contains(fileExtension) ||
+    //           FileTypes.EXEL_TYPES.contains(fileExtension)) {
+    //         receivedDocument.add(file);
+    //       }
+    //       if (FileTypes.APK_TYPES.contains(fileExtension)) {
+    //         receivedApk.add(file);
+    //       } else {}
+    //     });
+    //   });
 
-      setStatus(SORT_FILES, Status.Done);
-    } catch (e) {
-      setError(SORT_FILES, e.toString());
-    }
+    //   setStatus(SORT_FILES, Status.Done);
+    // } catch (e) {
+    //   setError(SORT_FILES, e.toString());
+    // }
   }
 
   populateTabs() {
-    try {
-      setStatus(POPULATE_TABS, Status.Loading);
+    // try {
+    //   setStatus(POPULATE_TABS, Status.Loading);
 
-      if (receivedApk.isNotEmpty) {
-        if (!tabs.contains(APK) || !tabs.contains(APK())) {
-          tabs.add(APK());
-          tabNames.add('APK');
-        }
-      }
-      if (receivedAudio.isNotEmpty) {
-        if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
-          tabs.add(Audios());
-          tabNames.add('Audios');
-        }
-      }
-      if (receivedDocument.isNotEmpty) {
-        if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
-          tabs.add(Documents());
-          tabNames.add('Documents');
-        }
-      }
-      if (receivedPhotos.isNotEmpty) {
-        if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
-          tabs.add(Photos());
-          tabNames.add('Photos');
-        }
-      }
-      if (receivedVideos.isNotEmpty) {
-        if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
-          tabs.add(Videos());
-          tabNames.add('Videos');
-        }
-      }
+    //   if (receivedApk.isNotEmpty) {
+    //     if (!tabs.contains(APK) || !tabs.contains(APK())) {
+    //       tabs.add(APK());
+    //       tabNames.add('APK');
+    //     }
+    //   }
+    //   if (receivedAudio.isNotEmpty) {
+    //     if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
+    //       tabs.add(Audios());
+    //       tabNames.add('Audios');
+    //     }
+    //   }
+    //   if (receivedDocument.isNotEmpty) {
+    //     if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
+    //       tabs.add(Documents());
+    //       tabNames.add('Documents');
+    //     }
+    //   }
+    //   if (receivedPhotos.isNotEmpty) {
+    //     if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
+    //       tabs.add(Photos());
+    //       tabNames.add('Photos');
+    //     }
+    //   }
+    //   if (receivedVideos.isNotEmpty) {
+    //     if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
+    //       tabs.add(Videos());
+    //       tabNames.add('Videos');
+    //     }
+    //   }
 
-      setStatus(POPULATE_TABS, Status.Done);
-    } catch (e) {
-      setError(POPULATE_TABS, e.toString());
-    }
+    //   setStatus(POPULATE_TABS, Status.Done);
+    // } catch (e) {
+    //   setError(POPULATE_TABS, e.toString());
+    // }
   }
 
   sortByName(List<FilesDetail> list) {

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
@@ -19,12 +20,14 @@ import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReceivedFilesListTile extends StatefulWidget {
-  final FilesModel receivedHistory;
-  final ContactProvider contactProvider;
+  final FileHistory receivedHistory;
+  // final ContactProvider contactProvider;
 
-  const ReceivedFilesListTile(
-      {Key key, this.receivedHistory, this.contactProvider})
-      : super(key: key);
+  const ReceivedFilesListTile({
+    Key key,
+    this.receivedHistory,
+    //  this.contactProvider
+  }) : super(key: key);
   @override
   _ReceivedFilesListTileState createState() => _ReceivedFilesListTileState();
 }
@@ -47,7 +50,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   @override
   Widget build(BuildContext context) {
-    sendTime = DateTime.parse(widget.receivedHistory.date);
+    // sendTime = DateTime.parse(widget.receivedHistory.date);
+    sendTime = DateTime.now();
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Column(
       children: [
@@ -61,46 +65,48 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.receivedHistory.name[0],
+                      widget.receivedHistory.atsign[0],
                       style: CustomTextStyles.primaryRegular16,
                     ),
                   ),
-                  ContactService()
-                          .allContactsList
-                          .contains(widget.receivedHistory.name)
-                      ? SizedBox()
-                      : GestureDetector(
-                          onTap: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => AddSingleContact(
-                                atSignName: widget.receivedHistory.name[0],
-                              ),
-                            );
-                            this.setState(() {});
-                          },
-                          child: Container(
-                            height: 20.toHeight,
-                            width: 20.toWidth,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.black,
-                            ),
-                          ),
-                        )
+                  // ContactService()
+                  //         .allContactsList
+                  //         .contains(widget.receivedHistory.name)
+                  //     ? SizedBox()
+                  //     : GestureDetector(
+                  //         onTap: () async {
+                  //           await showDialog(
+                  //             context: context,
+                  //             builder: (context) => AddSingleContact(
+                  //               atSignName: widget.receivedHistory.name[0],
+                  //             ),
+                  //           );
+                  //           this.setState(() {});
+                  //         },
+                  //         child: Container(
+                  //           height: 20.toHeight,
+                  //           width: 20.toWidth,
+                  //           child: Icon(
+                  //             Icons.add,
+                  //             color: Colors.black,
+                  //           ),
+                  //         ),
+                  //       )
                 ],
               ),
               SizedBox(height: 5.toHeight),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.receivedHistory.name[0],
-                      style: CustomTextStyles.secondaryRegular12,
-                    ),
-                  ),
-                ],
-              ),
+
+              /// atsign of sender
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: Text(
+              //         widget.receivedHistory.name[0],
+              //         style: CustomTextStyles.secondaryRegular12,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(
                 height: 8.toHeight,
               ),
@@ -109,7 +115,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.receivedHistory.files.length} Files',
+                      '${widget.receivedHistory.fileDetails.files.length} Files',
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                     SizedBox(width: 10.toHeight),
@@ -118,14 +124,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       style: CustomTextStyles.secondaryRegular12,
                     ),
                     SizedBox(width: 10.toHeight),
-                    Text(
-                      double.parse(widget.receivedHistory.totalSize
-                                  .toString()) <=
-                              1024
-                          ? '${widget.receivedHistory.totalSize} Kb '
-                          : '${(widget.receivedHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                      style: CustomTextStyles.secondaryRegular12,
-                    )
+                    // Text(
+                    //   double.parse(widget.receivedHistory.totalSize
+                    //               .toString()) <=
+                    //           1024
+                    //       ? '${widget.receivedHistory.totalSize} Kb '
+                    //       : '${(widget.receivedHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                    //   style: CustomTextStyles.secondaryRegular12,
+                    // )
                   ],
                 ),
               ),
@@ -194,43 +200,52 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 66.0 * widget.receivedHistory.files.length.toHeight,
+                    height: 66.0 *
+                        widget
+                            .receivedHistory.fileDetails.files.length.toHeight,
                     child: ListView.separated(
                         separatorBuilder: (context, index) => Divider(
                               indent: 80.toWidth,
                             ),
-                        itemCount: int.parse(
-                            widget.receivedHistory.files.length.toString()),
+                        itemCount: int.parse(widget
+                            .receivedHistory.fileDetails.files.length
+                            .toString()),
                         itemBuilder: (context, index) {
                           if (FileTypes.VIDEO_TYPES.contains(widget
-                              .receivedHistory.files[index].fileName
+                              .receivedHistory.fileDetails.files[index].name
                               ?.split('.')
                               ?.last)) {
-                            videoThumbnailBuilder(
-                                widget.receivedHistory.files[index].filePath);
+                            // videoThumbnailBuilder(
+                            //     widget.receivedHistory.files[index].filePath);
+
+                            Text('Video');
                           }
                           return ListTile(
                             onTap: () async {
-                              // preview file
-                              File test = File(
-                                  widget.receivedHistory.files[index].filePath);
-                              bool fileExists = await test.exists();
-                              if (fileExists) {
-                                await OpenFile.open(widget
-                                    .receivedHistory.files[index].filePath);
-                              } else {
-                                _showNoFileDialog(deviceTextFactor);
-                              }
+                              /// preview file => on tap of the file
+                              // File test = File(
+                              //     widget.receivedHistory.fileDetails.files[index].filePath);
+                              // bool fileExists = await test.exists();
+                              // if (fileExists) {
+                              //   await OpenFile.open(widget
+                              //       .receivedHistory.files[index].filePath);
+                              // } else {
+                              //   _showNoFileDialog(deviceTextFactor);
+                              // }
                             },
                             leading: Container(
                               height: 50.toHeight,
                               width: 50.toHeight,
-                              child: thumbnail(
-                                widget.receivedHistory.files[index].fileName
-                                    ?.split('.')
-                                    ?.last,
-                                widget.receivedHistory.files[index].filePath,
-                              ),
+                              child: Text(
+                                  '${widget.receivedHistory.fileDetails.files[index].name?.split('.')?.last}'),
+                              // thumbnail(
+                              //   widget.receivedHistory.fileDetails.files[index]
+                              //       .name
+                              //       ?.split('.')
+                              //       ?.last,
+                              //   widget.receivedHistory.fileDetails.files[index]
+                              //       .filePath,
+                              // ),
                             ),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,8 +254,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        widget.receivedHistory.files[index]
-                                            .fileName
+                                        widget.receivedHistory.fileDetails
+                                            .files[index].name
                                             .toString(),
                                         style:
                                             CustomTextStyles.primaryRegular16,
@@ -254,12 +269,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        double.parse(widget.receivedHistory
-                                                    .files[index].size
-                                                    .toString()) <=
-                                                1024
-                                            ? '${widget.receivedHistory.files[index].size} Kb '
-                                            : '${(widget.receivedHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                        'Size',
+                                        // double.parse(widget
+                                        //             .receivedHistory
+                                        //             .fileDetails
+                                        //             .files[index]
+                                        //             .size
+                                        //             .toString()) <=
+                                        //         1024
+                                        //     ? '${widget.receivedHistory.files[index].size} Kb '
+                                        //     : '${(widget.receivedHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                         style:
                                             CustomTextStyles.secondaryRegular12,
                                       ),
@@ -271,8 +290,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       ),
                                       SizedBox(width: 10.toHeight),
                                       Text(
-                                        widget.receivedHistory.files[index].type
-                                            .toString(),
+                                        'type',
+                                        // widget.receivedHistory.fileDetails
+                                        //     .files[index].type
+                                        //     .toString(),
                                         style:
                                             CustomTextStyles.secondaryRegular12,
                                       )
