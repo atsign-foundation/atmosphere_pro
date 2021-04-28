@@ -243,29 +243,38 @@ class BackendService {
 
       print('decryptedMessage $decryptedMessage');
 
+      // ignore: unawaited_futures
       downloadFileFromBin(fromAtSign, decryptedMessage);
     }
   }
 
-  void download(
+  Future<void> downloadFileFromBin(
     String sharedByAtSign,
-    // String encryptedFilePath,
+    String filebinPath,
+  ) async {
+    http.Response response;
+    try {
+      response = await http.get(filebinPath);
+      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
+      for (var file in archive) {
+        var unzipped = file.content as List<int>;
+        await decryptAndStore(
+          sharedByAtSign,
+          unzipped,
+          file.name,
+        );
+      }
+    } catch (e) {
+      print('Error in download $e');
+      return null;
+    }
+  }
+
+  void decryptAndStore(
+    String sharedByAtSign,
     Uint8List encryptedFileInBytes,
     String fileName,
   ) async {
-    // var atKey = AtKey()
-    //   ..key = fileKey
-    //   ..sharedBy = sharedByAtSign;
-    // var result = await atClientInstance.get(atKey);
-    // print('encryptedFilePath: ${result.value}');
-    // var encryptedFilePath = result.value;
-
-    // var encryptedFile = File('/Users/apple/Downloads/__houseofwaxrural6.png');
-    // var encryptedFileInBytes = encryptedFile.readAsBytesSync();
-    //
-    // var encryptedFileInBytes = await downloadFileFromBin(encryptedFilePath);
-    // var fileName =
-    //     encryptedFilePath.substring(encryptedFilePath.lastIndexOf('/') + 1);
     print('decrypting file: $fileName');
     var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
       ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
@@ -278,42 +287,12 @@ class BackendService {
         await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
     var fileDecryptionKey = atClientInstance.decryptKey(
         encryptedFileSharedKey, currentAtSignPrivateKey);
-    //  EncryptionUtil.decryptKey(
-    //     encryptedFileSharedKey, currentAtSignPrivateKey);
-    print(fileDecryptionKey);
-    print(encryptedFileInBytes);
 
     var decryptedFile = await atClientInstance.encryptionService
         .decryptFile(encryptedFileInBytes, fileDecryptionKey);
     var downloadedFile = File('${downloadDirectory.path}/$fileName');
 
     downloadedFile.writeAsBytesSync(decryptedFile);
-  }
-
-  Future<Uint8List> downloadFileFromBin(
-    String sharedByAtSign,
-    String filebinPath,
-    // String encryptedFilePath,
-  ) async {
-    http.Response response;
-    try {
-      response = await http.get(filebinPath);
-      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
-      // return archive[0].content as Uint8List;
-      for (var file in archive) {
-        var unzipped = file.content as List<int>;
-        await download(
-          sharedByAtSign,
-          // filebinPath,
-          unzipped,
-          file.name,
-        );
-      }
-      // return unzipped.;
-    } catch (e) {
-      print('Error in download $e');
-      return null;
-    }
   }
 
   void _streamCompletionCallBack(var streamId) async {
