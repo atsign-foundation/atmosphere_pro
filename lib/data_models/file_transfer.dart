@@ -20,8 +20,8 @@ class FileTransfer {
         ? DateTime.parse(json['expiry']).toLocal()
         : null;
     files = [];
-    json['files'].forEach((element) {
-      FileData file = FileData.fromJson(element);
+    json['files'].forEach((fileJson) {
+      FileData file = FileData.fromJson(jsonDecode(fileJson));
       files.add(file);
     });
   }
@@ -33,7 +33,6 @@ class FileTransfer {
     this.files.forEach((element) {
       data['files'].add(jsonEncode(element.toJson()));
     });
-
     data['expiry'] = this.expiry.toUtc().toString();
     return data;
   }

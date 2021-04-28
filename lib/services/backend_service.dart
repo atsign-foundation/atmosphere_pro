@@ -8,6 +8,7 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
@@ -250,11 +251,13 @@ class BackendService {
 
   Future<void> downloadFileFromBin(
     String sharedByAtSign,
-    String filebinPath,
+    String decryptedMessage,
   ) async {
-    http.Response response;
     try {
-      response = await http.get(Uri.parse(filebinPath));
+      FileTransfer receivedData =
+          FileTransfer.fromJson(jsonDecode(decryptedMessage));
+
+      var response = await http.get(Uri.parse(receivedData.url));
       var archive = ZipDecoder().decodeBytes(response.bodyBytes);
       for (var file in archive) {
         var unzipped = file.content as List<int>;
