@@ -105,6 +105,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 : ContactInitial(
                     initials:
                         contactList.first.atSign?.substring(1, 3) ?? 'hello',
+                    size: 60,
                   ),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -87,9 +87,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   initGroups() async {
     // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService().init(BackendService.getInstance().atClientInstance,
-          BackendService.getInstance().currentAtSign,
-    MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
+    await GroupService().init(
+        BackendService.getInstance().atClientInstance,
+        BackendService.getInstance().currentAtSign,
+        MixedConstants.ROOT_DOMAIN,
+        MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 
@@ -308,10 +310,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       CommonButton(
                                         TextStrings().buttonSend,
                                         () async {
-                                          filePickerModel.sendFiles(
+                                          // filePickerModel.sendFiles(
+                                          //     filePickerModel.selectedFiles,
+                                          //     _welcomeScreenProvider
+                                          //         .selectedContacts);
+
+                                          filePickerModel.sendFileWithFileBin(
                                               filePickerModel.selectedFiles,
                                               _welcomeScreenProvider
                                                   .selectedContacts);
+
                                           // _showScaffold(status: 0);
                                           // filePickerModel.sendFiles(filePickerModel.selectedFiles,
                                           //     _welcomeScreenProvider.selectedContacts);

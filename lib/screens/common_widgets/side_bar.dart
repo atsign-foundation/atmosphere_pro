@@ -189,6 +189,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     routeName: targetScreens[0],
                     showIconOnly: !isExpanded,
                     arguments: {
+                      'asSelectionScreen': true,
                       'singleSelection': false,
                       'showGroups': true,
                       'showContacts': true,

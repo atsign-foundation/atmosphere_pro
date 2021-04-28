@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
@@ -7,6 +8,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
+import 'package:http/http.dart';
 
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
@@ -307,6 +310,82 @@ class FileTransferProvider extends BaseModel {
     // selectedFiles.clear();
     // notifyListeners();
     // getStatus(id, contact.atSign);
+  }
+
+  sendFileWithFileBin(List<PlatformFile> selectedFiles,
+      List<GroupContactsModel> contactList) async {
+    var backendService = BackendService.getInstance();
+    String microSecondsSinceEpochId =
+        DateTime.now().microsecondsSinceEpoch.toString();
+    String container =
+        '${backendService.currentAtSign.substring(1, backendService.currentAtSign.length)}' +
+            microSecondsSinceEpochId;
+    print('filebin container: ${container}');
+    bool isFilesUploaded = false;
+
+    for (var groupContact in contactList) {
+      // encrypt file
+      var fileEncryptionKey = await backendService
+          .atClientInstance.encryptionService
+          .generateFileEncryptionSharedKey(
+              backendService.currentAtSign, groupContact.contact.atSign);
+      print('fileEncryptionKey : ${fileEncryptionKey}');
+
+      if (!isFilesUploaded) {
+        for (var file in selectedFiles) {
+          var selectedFile = File(file.path);
+          var bytes = selectedFile.readAsBytesSync();
+          print('file : ${selectedFile}');
+
+          var encryptedFileContent = await backendService
+              .atClientInstance.encryptionService
+              .encryptFile(bytes, fileEncryptionKey);
+
+          print('encryptedFileContent : ${encryptedFileContent}');
+
+          try {
+            var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
+                headers: <String, String>{
+                  "bin": container,
+                  "filename": file.name
+                },
+                body: encryptedFileContent);
+            print('file upload ${response.body}');
+            print('container link: ${container}');
+          } catch (e) {
+            print('error in uploading');
+          }
+        }
+        isFilesUploaded = true;
+      }
+
+      try {
+        AtKey atKey = AtKey()
+          ..metadata = Metadata()
+          ..metadata.ttr = -1
+          ..metadata.ccd = true
+          ..key =
+              '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}'
+          ..sharedWith = groupContact.contact.atSign
+          ..metadata.ttl = 60000 * 60 * 24 * 6
+          ..sharedBy = backendService.currentAtSign;
+        print('atkey : ${atKey}');
+
+        // creating file url
+        String downloadUrl =
+            MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
+
+        print('download url: ${downloadUrl}');
+
+        // put data
+        var result = await backendService.atClientInstance
+            .put(atKey, downloadUrl); // jsonEncode missing
+
+        print('notification sent: ${result}');
+      } catch (e) {
+        print('Error in sending notification $e');
+      }
+    }
   }
 
   TransferStatus getStatus(int id, String atSign) {
