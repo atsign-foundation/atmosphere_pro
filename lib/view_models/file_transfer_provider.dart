@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -314,6 +316,7 @@ class FileTransferProvider extends BaseModel {
 
   sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
+    FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
     var backendService = BackendService.getInstance();
     String microSecondsSinceEpochId =
         DateTime.now().microsecondsSinceEpoch.toString();
@@ -374,13 +377,13 @@ class FileTransferProvider extends BaseModel {
         // creating file url
         String downloadUrl =
             MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
+        filesToTransfer.url = downloadUrl;
 
-        print('download url: ${downloadUrl}');
+        print('file model: ${filesToTransfer.toJson()}');
 
         // put data
         var result = await backendService.atClientInstance
-            .put(atKey, downloadUrl); // jsonEncode missing
-
+            .put(atKey, jsonEncode(filesToTransfer.toJson()));
         print('notification sent: ${result}');
       } catch (e) {
         print('Error in sending notification $e');

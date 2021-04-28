@@ -254,7 +254,7 @@ class BackendService {
   ) async {
     http.Response response;
     try {
-      response = await http.get(filebinPath);
+      response = await http.get(Uri.parse(filebinPath));
       var archive = ZipDecoder().decodeBytes(response.bodyBytes);
       for (var file in archive) {
         var unzipped = file.content as List<int>;
