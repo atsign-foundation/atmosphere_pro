@@ -11,12 +11,10 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
 class TranferOverlappingContacts extends StatefulWidget {
-  final int id;
   final List<AtContact> selectedList;
 
   const TranferOverlappingContacts({
     Key key,
-    this.id,
     this.selectedList,
   }) : super(key: key);
 
@@ -28,9 +26,11 @@ class TranferOverlappingContacts extends StatefulWidget {
 class _TranferOverlappingContactsState
     extends State<TranferOverlappingContacts> {
   bool isExpanded = false;
+  int noOfContactsRow = 0;
   @override
   void initState() {
     widget.selectedList.removeAt(0);
+    noOfContactsRow = (widget.selectedList.length / 5).ceil();
     super.initState();
   }
 
@@ -43,7 +43,7 @@ class _TranferOverlappingContactsState
         });
       },
       child: Container(
-        height: (isExpanded) ? 300.toHeight : 60.toHeight,
+        height: (isExpanded) ? 170.toHeight * noOfContactsRow : 80.toHeight,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Color(0xffF86060).withAlpha(0),
@@ -165,18 +165,24 @@ class _TranferOverlappingContactsState
                       builder: (context, provider, __) {
                         return Container(
                           height: 200.toHeight,
-                          width: SizeConfig().screenWidth - 60.toWidth,
+                          width: SizeConfig().screenWidth - 20.toWidth,
                           child: GridView.count(
                             crossAxisCount: 5,
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5,
                             children: List.generate(
                               widget.selectedList.length,
                               (index) {
-                                TransferStatus individualStatus =
-                                    provider.getStatus(widget.id,
-                                        widget.selectedList[index].atSign);
-                                return FileTransferContacts(
-                                  contact: widget.selectedList[index],
-                                  status: individualStatus,
+                                // TransferStatus individualStatus =
+                                //     provider.getStatus(widget.id,
+                                //         widget.selectedList[index].atSign);
+                                // return FileTransferContacts(
+                                //   contact: widget.selectedList[index],
+                                //   status: individualStatus,
+                                // );
+                                return ContactInitial(
+                                  initials: widget.selectedList[index].atSign
+                                      .substring(1, 3),
                                 );
                               },
                             ),

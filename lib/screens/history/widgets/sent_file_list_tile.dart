@@ -43,15 +43,21 @@ class SentFilesListTile extends StatefulWidget {
 }
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
-  int fileLength;
+  int fileLength, fileSize = 0;
   List<FileData> filesList = [];
   List<String> contactList;
+
   @override
   void initState() {
     super.initState();
     fileLength = widget.sentHistory.fileDetails.files.length;
     contactList = widget.sentHistory.atsign;
     filesList = widget.sentHistory.fileDetails.files;
+
+    widget.sentHistory.fileDetails.files.forEach((element) {
+      print('all files:${element.size}');
+      fileSize += element.size;
+    });
     // widget.testList.forEach((key, value) {
     //   ContactService().contactList.forEach((element) {
     //     if (element.atSign == key) {
@@ -121,7 +127,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   children: [
                     Expanded(
                       child: Text(
-                        'widget.testList.keys.first',
+                        contactList[0],
                         style: CustomTextStyles.primaryRegular16,
                       ),
                     ),
@@ -168,13 +174,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
-                      // Text(
-                      //   double.parse(widget.sentHistory.totalSize.toString()) <=
-                      //           1024
-                      //       ? '${widget.sentHistory.totalSize} Kb '
-                      //       : '${(widget.sentHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                      //   style: CustomTextStyles.secondaryRegular12,
-                      // )
+                      Text(
+                        double.parse(fileSize.toString()) <= 1024
+                            ? '${fileSize} Kb '
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                        style: CustomTextStyles.secondaryRegular12,
+                      )
                     ],
                   ),
                 ),
@@ -185,10 +190,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        '{DateFormat(MM-dd-yyyy).format(sendTime)}',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
+                      widget.sentHistory.fileDetails.date != null
+                          ? Text(
+                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
+                              style: CustomTextStyles.secondaryRegular12,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : SizedBox(),
                       SizedBox(width: 10.toHeight),
                       Container(
                         color: ColorConstants.fontSecondary,
@@ -196,10 +205,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      Text(
-                        '{DateFormat(kk:mm).format(sendTime)}',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
+                      widget.sentHistory.fileDetails.date != null
+                          ? Text(
+                              '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
+                              style: CustomTextStyles.secondaryRegular12,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
@@ -277,7 +290,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   children: [
                     Container(
                       height:
-                          166.0 * widget.sentHistory.fileDetails.files.length,
+                          70.0 * widget.sentHistory.fileDetails.files.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
@@ -384,10 +397,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             height: 10.toHeight,
                           ),
                     (contactList.length < 2) ? Container() : SizedBox(),
-                    // TranferOverlappingContacts(
-                    //     selectedList: contactList.toList(),
-                    //     id: widget.id,
-                    //   ),
+                    TranferOverlappingContacts(
+                      selectedList:
+                          contactList.map((e) => AtContact(atSign: e)).toList(),
+                    ),
                     GestureDetector(
                       onTap: () {
                         setState(() {

@@ -23,14 +23,14 @@ class _HistoryScreenState extends State<HistoryScreen>
   HistoryProvider historyProvider;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (historyProvider == null) {
       _controller = TabController(length: 2, vsync: this, initialIndex: 0);
       historyProvider = Provider.of<HistoryProvider>(context);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      await WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         print("fetched contacts");
-        historyProvider.getSentHistory();
-        historyProvider.getRecievedHistory();
+        // await historyProvider.getSentHistory();
+        // historyProvider.getRecievedHistory();
       });
     }
 
@@ -57,13 +57,13 @@ class _HistoryScreenState extends State<HistoryScreen>
               Container(
                 height: 40,
                 child: TabBar(
-                  onTap: (index) {
+                  onTap: (index) async {
                     if (index == 0) {
-                      Provider.of<HistoryProvider>(context, listen: false)
+                      await Provider.of<HistoryProvider>(context, listen: false)
                           .getSentHistory();
                     }
                     if (index == 1) {
-                      Provider.of<HistoryProvider>(context, listen: false)
+                      await Provider.of<HistoryProvider>(context, listen: false)
                           .getRecievedHistory();
                     }
                   },

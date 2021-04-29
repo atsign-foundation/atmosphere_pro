@@ -6,10 +6,13 @@ import 'package:file_picker/file_picker.dart';
 class FileTransfer {
   String url;
   List<FileData> files;
-  DateTime expiry;
+  DateTime date, expiry;
   List<PlatformFile> platformFiles;
-  FileTransfer({this.url, this.files, this.expiry, this.platformFiles}) {
+  FileTransfer(
+      {this.url, this.files, this.expiry, this.platformFiles, this.date}) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
+    this.date = DateTime.now();
+
     if (files == null) {
       this.files = platformFileToFileData(platformFiles);
     }
@@ -20,6 +23,7 @@ class FileTransfer {
     expiry = json['expiry'] != null
         ? DateTime.parse(json['expiry']).toLocal()
         : null;
+    date = json['date'] != null ? DateTime.parse(json['date']).toLocal() : null;
     files = [];
     json['files'].forEach((element) {
       FileData file = FileData.fromJson(jsonDecode(element));
@@ -36,6 +40,7 @@ class FileTransfer {
     });
 
     data['expiry'] = this.expiry.toUtc().toString();
+    data['date'] = this.date.toUtc().toString();
     return data;
   }
 

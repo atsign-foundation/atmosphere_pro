@@ -88,12 +88,16 @@ class HistoryProvider extends BaseModel {
   }
 
   setFileTransferHistory(FileHistory fileHistory) async {
+    await getSentHistory();
     AtKey atKey = AtKey()
       ..metadata = Metadata()
       ..key = 'sentFiles';
     print('atkey : ${atKey} ');
     print('fileHistory: ${fileHistory.atsign}');
+    print('sendFileHistory : ${sendFileHistory['history'].length}');
     sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+    print(
+        'sendFileHistory after adding : ${sendFileHistory['history'].length}');
     var result = await backendService.atClientInstance
         .put(atKey, json.encode(sendFileHistory));
     print('file history saved: ${result}');
@@ -107,8 +111,10 @@ class HistoryProvider extends BaseModel {
       ..key = 'sentFiles'
       ..metadata = Metadata();
     var keyValue = await backendService.atClientInstance.get(key);
+    print('stored file values:${keyValue}');
     if (keyValue != null && keyValue.value != null) {
       Map historyFile = json.decode((keyValue.value) as String) as Map;
+      print('stored file values decoded:${historyFile}');
       sendFileHistory['history'] = historyFile['history'];
       historyFile['history'].forEach((value) {
         FileHistory filesModel = FileHistory.fromJson((value));
