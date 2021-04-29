@@ -46,7 +46,6 @@ class FileTransfer {
     this.files.forEach((element) {
       data['files'].add(jsonEncode(element.toJson()));
     });
-
     data['expiry'] = this.expiry.toUtc().toString();
     data['date'] = this.date.toUtc().toString();
     return data;
