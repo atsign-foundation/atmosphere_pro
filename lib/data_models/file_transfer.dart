@@ -4,8 +4,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FileTransfer {
-  String key;
-  String url;
+  String key, url, sender;
   List<FileData> files;
   DateTime date, expiry;
   List<PlatformFile> platformFiles;
@@ -26,6 +25,7 @@ class FileTransfer {
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
     url = json['url'];
+    sender = json['sender'];
     key = json['key'];
     expiry = json['expiry'] != null
         ? DateTime.parse(json['expiry']).toLocal()
@@ -41,6 +41,7 @@ class FileTransfer {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['url'] = this.url;
+    data['sender'] = this.sender;
     data['key'] = this.key;
     data['files'] = [];
     this.files.forEach((element) {
@@ -70,14 +71,16 @@ class FileData {
   int size;
   String url;
   String path;
+  String receiverPath;
 
-  FileData({this.name, this.size, this.url, this.path});
+  FileData({this.name, this.size, this.url, this.path, this.receiverPath});
 
   FileData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     size = json['size'];
     url = json['url'];
     path = json['path'];
+    receiverPath = json['receiverPath'];
   }
 
   Map<String, dynamic> toJson() {
@@ -86,6 +89,7 @@ class FileData {
     data['size'] = this.size;
     data['url'] = this.url;
     data['path'] = this.path;
+    data['receiverPath'] = this.receiverPath;
     return data;
   }
 }
@@ -97,7 +101,9 @@ class FileHistory {
 
   FileHistory(this.fileDetails, this.sharedWith, this.type);
   FileHistory.fromJson(Map<String, dynamic> json) {
-    fileDetails = FileTransfer.fromJson(json['fileDetails']);
+    if (json['fileDetails'] != null) {
+      fileDetails = FileTransfer.fromJson(json['fileDetails']);
+    }
     sharedWith = [];
 
     if (json['sharedWith'] != null) {

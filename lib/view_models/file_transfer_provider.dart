@@ -386,8 +386,9 @@ class FileTransferProvider extends BaseModel {
         filesToTransfer.url = downloadUrl;
         filesToTransfer.key =
             '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}';
+        filesToTransfer.sender = backendService.currentAtSign;
 
-        print('file model: ${filesToTransfer.toJson()}');
+        print('file model: ${filesToTransfer.sender}');
 
         // put data
         var result = await backendService.atClientInstance

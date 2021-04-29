@@ -29,6 +29,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
+import 'package:at_client/src/manager/sync_manager.dart';
 import 'package:http/http.dart' as http;
 
 class BackendService {
@@ -200,6 +201,7 @@ class BackendService {
   var userResponse = false;
   Future<void> _notificationCallBack(var response) async {
     print('response => $response');
+    await syncWithSecondary();
     response = response.replaceFirst('notification:', '');
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
@@ -245,19 +247,34 @@ class BackendService {
       print('decryptedMessage $decryptedMessage');
 
       // ignore: unawaited_futures
-      downloadFileFromBin(fromAtSign, decryptedMessage);
+
+      // downloadFileFromBin(fromAtSign, decryptedMessage);
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .addToReceiveFileHistory(fromAtSign, decryptedMessage);
+    }
+  }
+
+  syncWithSecondary() async {
+    SyncManager syncManager = atClientInstance.getSyncManager();
+    var isSynced = await syncManager.isInSync();
+    // print('already synced: $isSynced');
+    if (isSynced is bool && isSynced) {
+    } else {
+      await syncManager.sync();
+      // print('sync done');
     }
   }
 
   Future<void> downloadFileFromBin(
     String sharedByAtSign,
-    String decryptedMessage,
+    String url,
   ) async {
     try {
-      FileTransfer receivedData =
-          FileTransfer.fromJson(jsonDecode(decryptedMessage));
+      // FileTransfer receivedData =
+      //     FileTransfer.fromJson(jsonDecode(decryptedMessage));
 
-      var response = await http.get(Uri.parse(receivedData.url));
+      var response = await http.get(Uri.parse(url));
       var archive = ZipDecoder().decodeBytes(response.bodyBytes);
       for (var file in archive) {
         var unzipped = file.content as List<int>;
@@ -296,6 +313,7 @@ class BackendService {
     var downloadedFile = File('${downloadDirectory.path}/$fileName');
 
     downloadedFile.writeAsBytesSync(decryptedFile);
+    print('directory: ${downloadDirectory.path}/$fileName');
   }
 
   void _streamCompletionCallBack(var streamId) async {

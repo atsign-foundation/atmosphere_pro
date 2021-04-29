@@ -47,7 +47,7 @@ dependencies:
   webview_flutter: ^1.0.0
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
-  http: ^0.13.1
+  http: ^0.12.0+2
 
   # at_onboarding_flutter: ^1.0.0+3
   at_onboarding_flutter:
@@ -72,26 +72,35 @@ dependencies:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_contacts_flutter
     #   ref: dev_env
-  at_contacts_group_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
+  at_contacts_group_flutter: ^1.0.0
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_contacts_group_flutter
     #   ref: dev_env
 dependency_overrides:
-  at_common_flutter: 
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
+  at_contacts_flutter:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
   at_client:
     path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
- 
   at_lookup:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: at_lookup
       ref: dev_env
       version: ^1.0.0+4
-  # crypton: ^2.0.1
-  crypto: ^3.0.0
+  crypto: ^2.1.5
+  crypton: ^2.0.1
+  uuid: ^3.0.4
+  hive: ^2.0.4
+  pointycastle: ^2.0.0
+  asn1lib: ^0.8.1
+  flutter_slidable: ^0.6.0
+  file_picker: ^3.0.1
+  archive: ^3.1.2
+  path_provider: ^2.0.1
+  share: ^2.0.1
+  plugin_platform_interface: ^2.0.0
   at_commons:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
@@ -103,20 +112,8 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_tools.git
       path: at_utils
       ref: dev_env
-      version: ^1.0.1+4    
-  
-  at_persistence_secondary_server:
-    git:
-      url: https://github.com/atsign-foundation/at_server.git
-      path: at_secondary/at_persistence_secondary_server
-      ref: dev_env
       version: ^1.0.1+4
-  hive: ^2.0.4
-  uuid: ^3.0.4
-  http: ^0.13.1
-  pointycastle: ^3.0.1
-  encrypt: ^4.0.2
-  asn1lib: ^0.6.4
+  at_common_flutter: ^1.0.0    
 
 dev_dependencies:
   flutter_test:

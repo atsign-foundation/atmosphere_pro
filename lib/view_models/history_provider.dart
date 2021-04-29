@@ -17,7 +17,9 @@ import 'package:flutter/cupertino.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
-  List<FileHistory> sentHistory = [], receivedHistoryNew = [];
+  String ADD_RECEIVED_FILE = 'add_recieved_file';
+  List<FileHistory> sentHistory = [];
+  List<FileTransfer> receivedHistoryNew = [];
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
   // static Map<int, Map<String, Set<FilesDetail>>> test = {};
@@ -113,6 +115,7 @@ class HistoryProvider extends BaseModel {
   }
 
   getSentHistory() async {
+    print('getSentHistory');
     setStatus(SENT_HISTORY, Status.Loading);
     // try {
     sentHistory = [];
@@ -126,7 +129,7 @@ class HistoryProvider extends BaseModel {
       print('stored file values decoded:${historyFile}');
       sendFileHistory['history'] = historyFile['history'];
       historyFile['history'].forEach((value) {
-        FileHistory filesModel = FileHistory.fromJson(jsonDecode(value));
+        FileHistory filesModel = FileHistory.fromJson((value));
         filesModel.type = HistoryType.send;
         sentHistory.add(filesModel);
       });
@@ -177,15 +180,18 @@ class HistoryProvider extends BaseModel {
     String sharedBy,
     String decodedMsg,
   ) async {
+    setStatus(ADD_RECEIVED_FILE, Status.Loading);
     // receivedFileHistory['history'].insert(0, (fileHistory.toJson()));
 
-    FileHistory filesModel = FileHistory.fromJson((jsonDecode(decodedMsg)));
-    filesModel.atsign = [
-      sharedBy
-    ]; // This originally contains list of atsigns the data was shared with
+    FileTransfer filesModel = FileTransfer.fromJson((jsonDecode(decodedMsg)));
+    print('addToReceiveFileHistory: ${filesModel.sender}');
+    // filesModel.sharedWith = [ShareStatus(sharedBy, true)];
+    // This originally contains list of atsigns the data was shared with
     // We change it to sharedBy
-    filesModel.type = HistoryType.received;
+    // filesModel.type = HistoryType.received;
     receivedHistoryNew.add(filesModel);
+    await getAllFileTransferData();
+    setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
 
   getAllFileTransferData() async {
@@ -195,6 +201,8 @@ class HistoryProvider extends BaseModel {
         await backendService.atClientInstance.getKeys(
       regex: MixedConstants.FILE_TRANSFER_KEY,
     );
+
+    print('fileTransferResponse: ${fileTransferResponse}');
 
     await Future.forEach(fileTransferResponse, (key) async {
       print('key $key');
@@ -208,25 +216,26 @@ class HistoryProvider extends BaseModel {
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) => print("error in get $e"));
 
-        print('atvalue.value ${atvalue.value}');
-        FileHistory filesModel =
-            FileHistory.fromJson(jsonDecode(atvalue.value));
-        filesModel.atsign = [
-          atKey.sharedBy
-        ]; // This originally contains list of atsigns the data was shared with
-        // We change it to sharedBy
-        filesModel.type = HistoryType.received;
-        receivedHistoryNew.add(filesModel);
+        if (atvalue != null &&
+            atvalue.value != null &&
+            atvalue.value[0] != 'h') {
+          print('atvalue.value ${atvalue.value}');
+          FileTransfer filesModel =
+              FileTransfer.fromJson(jsonDecode(atvalue.value));
+
+          print('test detail:${filesModel.key}');
+
+          // filesModel.sharedWith = [ShareStatus(atKey.sharedBy, true)];
+
+          // This originally contains list of atsigns the data was shared with
+          // We change it to sharedBy
+          // filesModel.type = HistoryType.received;
+          if (filesModel.key != null) receivedHistoryNew.insert(0, filesModel);
+        }
       }
     });
 
     print('sentHistory length ${receivedHistoryNew.length}');
-
-    receivedHistoryNew.forEach((element) {
-      element.fileDetails.files.forEach((element2) {
-        print('file name : ${element2.name}');
-      });
-    });
   }
 
   sortFiles(List<FilesModel> filesList) async {
