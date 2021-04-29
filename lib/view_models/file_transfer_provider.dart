@@ -318,6 +318,11 @@ class FileTransferProvider extends BaseModel {
       List<GroupContactsModel> contactList) async {
     flushbarStatus = FLUSHBAR_STATUS.SENDING;
     FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
+    var shareStatus = <ShareStatus>[];
+    contactList.forEach((element) {
+      shareStatus.add(ShareStatus(element.contact.atSign, false));
+    });
+
     var backendService = BackendService.getInstance();
     String microSecondsSinceEpochId =
         DateTime.now().microsecondsSinceEpoch.toString();
@@ -379,6 +384,8 @@ class FileTransferProvider extends BaseModel {
         String downloadUrl =
             MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
         filesToTransfer.url = downloadUrl;
+        filesToTransfer.key =
+            '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}';
 
         print('file model: ${filesToTransfer.toJson()}');
 
@@ -386,13 +393,9 @@ class FileTransferProvider extends BaseModel {
         var result = await backendService.atClientInstance
             .put(atKey, jsonEncode(filesToTransfer.toJson()));
 
-        FileHistory fileHistory = FileHistory(
-            filesToTransfer,
-            contactList.map((e) => e.contact.atSign).toList(),
-            HistoryType.send);
-        Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-                listen: false)
-            .setFileTransferHistory(fileHistory);
+        shareStatus[shareStatus.indexWhere(
+                (element) => element.atsign == groupContact.contact.atSign)]
+            .isNotificationSend = result;
 
         print('notification sent: ${result}');
         flushbarStatus = FLUSHBAR_STATUS.IDLE;
@@ -401,6 +404,44 @@ class FileTransferProvider extends BaseModel {
         flushbarStatus = FLUSHBAR_STATUS.FAILED;
       }
     }
+
+    FileHistory fileHistory =
+        FileHistory(filesToTransfer, shareStatus, HistoryType.send);
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .setFileTransferHistory(fileHistory);
+  }
+
+  sendFileNotification(FileHistory fileHistory, String atsign) async {
+    print('sendFileNotification : ${fileHistory.fileDetails.key}');
+    print('sendFileNotification atsign : ${atsign}');
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      ..key = fileHistory.fileDetails.key
+      ..sharedWith = atsign
+      ..metadata.ttl = 60000 * 60 * 24 * 6
+      ..sharedBy = BackendService.getInstance().currentAtSign;
+    print('atkey : ${atKey}');
+
+    var result = await BackendService.getInstance()
+        .atClientInstance
+        .put(atKey, jsonEncode(fileHistory.fileDetails.toJson()));
+    print('notification sent: ${result}');
+
+    if (result is bool && result) {
+      fileHistory.sharedWith.forEach((element) {
+        print('shared with: ${element.atsign}, ${element.isNotificationSend}');
+        if (atsign == element.atsign) {
+          element.isNotificationSend = true;
+        }
+      });
+    }
+
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .setFileTransferHistory(fileHistory, isEdit: true);
   }
 
   TransferStatus getStatus(int id, String atSign) {

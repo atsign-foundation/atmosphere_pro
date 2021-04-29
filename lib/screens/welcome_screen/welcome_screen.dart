@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/Custom_heading.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
@@ -396,7 +399,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             .getKeys(
                                               regex: 'sentFiles',
                                             );
-                                    print('response : ${response}');
+
+                                    var sendFileHistory = {'history': []};
+                                    AtKey key = AtKey()
+                                      ..key = 'sentFiles'
+                                      ..metadata = Metadata();
+                                    var keyValue = await backendService
+                                        .atClientInstance
+                                        .get(key);
+
+                                    if (keyValue != null &&
+                                        keyValue.value != null) {
+                                      Map historyFile = json.decode(
+                                          (keyValue.value) as String) as Map;
+                                      print(
+                                          'stored file values decoded:${historyFile}');
+                                      sendFileHistory['history'] =
+                                          historyFile['history'];
+                                      historyFile['history'].forEach((value) {
+                                        FileHistory filesModel =
+                                            FileHistory.fromJson((value));
+                                      });
+                                    }
+
                                     response.forEach((key) async {
                                       // if (key.contains('cached')) {
                                       // the keys i have created

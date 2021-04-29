@@ -87,15 +87,23 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  setFileTransferHistory(FileHistory fileHistory) async {
+  setFileTransferHistory(FileHistory fileHistory, {bool isEdit = false}) async {
     await getSentHistory();
     AtKey atKey = AtKey()
       ..metadata = Metadata()
       ..key = 'sentFiles';
     print('atkey : ${atKey} ');
-    print('fileHistory: ${fileHistory.atsign}');
     print('sendFileHistory : ${sendFileHistory['history'].length}');
-    sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+    if (isEdit) {
+      int index = sentHistory.indexWhere((element) =>
+          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+      print('index: $index');
+      if (index > -1) {
+        sendFileHistory['history'][index] = fileHistory.toJson();
+      }
+    } else {
+      sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+    }
     print(
         'sendFileHistory after adding : ${sendFileHistory['history'].length}');
     var result = await backendService.atClientInstance

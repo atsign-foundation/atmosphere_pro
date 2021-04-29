@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,12 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
 class TranferOverlappingContacts extends StatefulWidget {
-  final List<AtContact> selectedList;
+  final List<ShareStatus> selectedList;
+  final FileHistory fileHistory;
 
-  const TranferOverlappingContacts({
-    Key key,
-    this.selectedList,
-  }) : super(key: key);
+  const TranferOverlappingContacts(
+      {Key key, this.selectedList, this.fileHistory})
+      : super(key: key);
 
   @override
   _TranferOverlappingContactsState createState() =>
@@ -29,8 +30,9 @@ class _TranferOverlappingContactsState
   int noOfContactsRow = 0;
   @override
   void initState() {
-    widget.selectedList.removeAt(0);
+    widget.selectedList;
     noOfContactsRow = (widget.selectedList.length / 5).ceil();
+    print('noOfContactsRow: ${noOfContactsRow}');
     super.initState();
   }
 
@@ -58,12 +60,12 @@ class _TranferOverlappingContactsState
                     : widget.selectedList.length,
                 (index) {
                   Uint8List image;
-                  if (widget?.selectedList[index]?.tags != null &&
-                      widget?.selectedList[index]?.tags['image'] != null) {
-                    List<int> intList =
-                        widget?.selectedList[index]?.tags['image'].cast<int>();
-                    image = Uint8List.fromList(intList);
-                  }
+                  // if (widget?.selectedList[index]?.tags != null &&
+                  //     widget?.selectedList[index]?.tags['image'] != null) {
+                  //   List<int> intList =
+                  //       widget?.selectedList[index]?.tags['image'].cast<int>();
+                  //   image = Uint8List.fromList(intList);
+                  // }
 
                   return Positioned(
                     left: 5 + double.parse((index * 10).toString()),
@@ -72,15 +74,13 @@ class _TranferOverlappingContactsState
                       height: 28.toHeight,
                       width: 28.toHeight,
                       decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: (widget?.selectedList[index]?.tags != null &&
-                              widget?.selectedList[index]?.tags['image'] !=
-                                  null)
+                      child: false
                           ? CustomCircleAvatar(
                               byteImage: image,
                               nonAsset: true,
                             )
                           : ContactInitial(
-                              initials: widget?.selectedList[index]?.atSign
+                              initials: widget?.selectedList[index]?.atsign
                                       ?.substring(1, 3) ??
                                   'hello',
                             ),
@@ -91,8 +91,7 @@ class _TranferOverlappingContactsState
             ),
             Positioned(
               top: 5.toHeight,
-              left: 40 +
-                  double.parse((widget.selectedList.length * 25).toString()),
+              left: 60.toWidth,
               child: Row(
                 // mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,16 +102,19 @@ class _TranferOverlappingContactsState
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              width: 160.toWidth,
+                              width: SizeConfig().screenWidth / 2,
                               child: Row(
                                 children: [
-                                  Container(
-                                    width: 60.toWidth,
-                                    child: Text(
-                                      '${widget?.selectedList[0]?.atSign}',
-                                      style:
-                                          CustomTextStyles.secondaryRegular14,
-                                      overflow: TextOverflow.ellipsis,
+                                  Expanded(
+                                    child: Container(
+                                      width: 100.toWidth,
+                                      child: Text(
+                                        '${widget?.selectedList[0]?.atsign}',
+                                        style:
+                                            CustomTextStyles.secondaryRegular14,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -170,6 +172,7 @@ class _TranferOverlappingContactsState
                             crossAxisCount: 5,
                             mainAxisSpacing: 5,
                             crossAxisSpacing: 5,
+                            childAspectRatio: 1,
                             children: List.generate(
                               widget.selectedList.length,
                               (index) {
@@ -180,9 +183,75 @@ class _TranferOverlappingContactsState
                                 //   contact: widget.selectedList[index],
                                 //   status: individualStatus,
                                 // );
-                                return ContactInitial(
-                                  initials: widget.selectedList[index].atSign
-                                      .substring(1, 3),
+                                print(
+                                    'initial: ${widget.selectedList[index].isNotificationSend}, ${widget.selectedList[index].atsign}');
+                                bool isNotified = widget
+                                    .selectedList[index].isNotificationSend;
+                                return Container(
+                                  height: 35.toHeight,
+                                  width: 35.toHeight,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: isNotified
+                                            ? Color(0xFF08CB21)
+                                            : Color(0xFFF86061),
+                                        width: 5),
+                                    borderRadius:
+                                        BorderRadius.circular(35.toHeight * 2),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width: 80.toHeight,
+                                        height: 80.toHeight,
+                                        child: ContactInitial(
+                                          initials: widget
+                                              .selectedList[index].atsign
+                                              .substring(1, 3),
+                                          size: 40,
+                                        ),
+                                      ),
+                                      Positioned(
+                                          right: 0,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: isNotified
+                                                  ? Color(0xFF08CB21)
+                                                  : Color(0xFFF86061),
+                                              border: Border.all(
+                                                  color: isNotified
+                                                      ? Color(0xFF08CB21)
+                                                      : Color(0xFFF86061),
+                                                  width: 5),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      35.toHeight),
+                                            ),
+                                            child: InkWell(
+                                              onTap: () {
+                                                if (isNotified) {
+                                                  return;
+                                                }
+                                                Provider.of<FileTransferProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .sendFileNotification(
+                                                        widget.fileHistory,
+                                                        widget
+                                                            .selectedList[index]
+                                                            .atsign);
+                                              },
+                                              child: Icon(
+                                                isNotified
+                                                    ? Icons.done
+                                                    : Icons.sync_sharp,
+                                                color: Colors.white,
+                                                size: 15,
+                                              ),
+                                            ),
+                                          ))
+                                    ],
+                                  ),
                                 );
                               },
                             ),

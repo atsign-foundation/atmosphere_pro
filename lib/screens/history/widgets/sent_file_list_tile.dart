@@ -51,7 +51,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   void initState() {
     super.initState();
     fileLength = widget.sentHistory.fileDetails.files.length;
-    contactList = widget.sentHistory.atsign;
+    if (widget.sentHistory.sharedWith != null) {
+      contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
+    } else {
+      contactList = [];
+    }
     filesList = widget.sentHistory.fileDetails.files;
 
     widget.sentHistory.fileDetails.files.forEach((element) {
@@ -115,10 +119,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 //         nonAsset: true,
                 //       )
                 //     :
-                ContactInitial(
-              initials: contactList[0]?.substring(1, 3) ?? 'hello',
-              size: 60,
-            ),
+                contactList.isNotEmpty
+                    ? ContactInitial(
+                        initials: contactList[0]?.substring(1, 3) ?? 'hello',
+                        size: 60,
+                      )
+                    : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -126,10 +132,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text(
-                        contactList[0],
-                        style: CustomTextStyles.primaryRegular16,
-                      ),
+                      child: contactList.length > 1
+                          ? Text(
+                              contactList[0],
+                              style: CustomTextStyles.primaryRegular16,
+                            )
+                          : SizedBox(),
                     ),
                     // ContactService()
                     //         .allContactsList
@@ -222,6 +230,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 (!isOpen)
                     ? GestureDetector(
                         onTap: () {
+                          widget.sentHistory.sharedWith.forEach((element) {
+                            print(
+                                'sentHistory: ${element.atsign}, ${element.isNotificationSend}');
+                          });
                           setState(() {
                             isOpen = !isOpen;
                           });
@@ -297,30 +309,30 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                               ),
                           itemCount: fileLength,
                           itemBuilder: (context, index) {
-                            // if (FileTypes.VIDEO_TYPES.contains(
-                            //     filesList[index].name?.split('.')?.last)) {
-                            //   videoThumbnailBuilder(filesList[index].filePath);
-                            // }
+                            if (FileTypes.VIDEO_TYPES.contains(
+                                filesList[index].name?.split('.')?.last)) {
+                              videoThumbnailBuilder(filesList[index].path);
+                            }
                             return ListTile(
                               onTap: () async {
-                                // preview file
-                                // File test = File(filesList[index].filePath);
-                                // bool fileExists = await test.exists();
-                                // if (fileExists) {
-                                //   await OpenFile.open(
-                                //       filesList[index].filePath);
-                                // } else {
-                                //   _showNoFileDialog(deviceTextFactor);
-                                // }
+                                File test = File(filesList[index].path);
+                                bool fileExists = await test.exists();
+                                print(
+                                    'test file: ${test}, fileExists: ${fileExists}');
+                                if (fileExists) {
+                                  await OpenFile.open(filesList[index].path);
+                                } else {
+                                  _showNoFileDialog(deviceTextFactor);
+                                }
                               },
-                              // leading: Container(
-                              //   height: 50.toHeight,
-                              //   width: 50.toHeight,
-                              //   child: thumbnail(
-                              //     filesList[index].name?.split('.')?.last,
-                              //     filesList[index].filePath,
-                              //   ),
-                              // ),
+                              leading: Container(
+                                height: 50.toHeight,
+                                width: 50.toHeight,
+                                child: thumbnail(
+                                  filesList[index].name?.split('.')?.last,
+                                  filesList[index].path,
+                                ),
+                              ),
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -393,14 +405,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           ),
                     (contactList.length < 2)
                         ? Container()
-                        : SizedBox(
-                            height: 10.toHeight,
-                          ),
-                    (contactList.length < 2) ? Container() : SizedBox(),
-                    TranferOverlappingContacts(
-                      selectedList:
-                          contactList.map((e) => AtContact(atSign: e)).toList(),
-                    ),
+                        : TranferOverlappingContacts(
+                            selectedList: widget.sentHistory.sharedWith.sublist(
+                                1, widget.sentHistory.sharedWith.length),
+                            fileHistory: widget.sentHistory),
                     GestureDetector(
                       onTap: () {
                         setState(() {

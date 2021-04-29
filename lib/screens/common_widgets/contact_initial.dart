@@ -20,7 +20,7 @@ class ContactInitial extends StatelessWidget {
       decoration: BoxDecoration(
         color:
             Color.fromARGB(255, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
-        borderRadius: BorderRadius.circular(size.toHeight),
+        borderRadius: BorderRadius.circular(size.toHeight * 2),
       ),
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: Center(
