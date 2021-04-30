@@ -35,7 +35,7 @@ class ReceivedFilesListTile extends StatefulWidget {
 }
 
 class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
-  bool isOpen = false;
+  bool isOpen = false, isDownloading = false, isDownloaded = false;
   DateTime sendTime;
   Uint8List videoThumbnail;
   int fileSize = 0;
@@ -95,9 +95,32 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         ? Text(
                             widget.receivedHistory.sender,
                             style: CustomTextStyles.primaryRegular16,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           )
                         : SizedBox(),
                   ),
+                  InkWell(
+                    onTap: () async {
+                      setState(() {
+                        isDownloading = true;
+                      });
+
+                      await BackendService.getInstance().downloadFileFromBin(
+                          widget.receivedHistory.sender,
+                          widget.receivedHistory.url);
+
+                      setState(() {
+                        isDownloaded = true;
+                        isDownloading = false;
+                      });
+                    },
+                    child: isDownloading
+                        ? CircularProgressIndicator()
+                        : isDownloaded
+                            ? Icon(Icons.done, color: Color(0xFF08CB21))
+                            : Icon(Icons.download_sharp),
+                  )
                   // ContactService()
                   //         .allContactsList
                   //         .contains(widget.receivedHistory.name)
@@ -263,24 +286,33 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 await OpenFile.open(
                                     widget.receivedHistory.files[index].path);
                               } else {
-                                // _showNoFileDialog(deviceTextFactor);
+                                _showNoFileDialog(deviceTextFactor);
                                 print('url: ${widget.receivedHistory.url}');
-                                await BackendService.getInstance()
-                                    .downloadFileFromBin(
-                                        widget.receivedHistory.sender,
-                                        widget.receivedHistory.url);
                               }
                             },
                             leading: Container(
-                              height: 50.toHeight,
-                              width: 50.toHeight,
-                              child: thumbnail(
-                                widget.receivedHistory.files[index].name
-                                    ?.split('.')
-                                    ?.last,
-                                widget.receivedHistory.files[index].path,
-                              ),
-                            ),
+                                height: 50.toHeight,
+                                width: 50.toHeight,
+                                child: FutureBuilder(
+                                    future: isFilePresent(widget
+                                        .receivedHistory.files[index].name),
+                                    builder: (context, snapshot) {
+                                      print('snapshot builder: ${snapshot}');
+                                      return snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              snapshot.data != null
+                                          ? thumbnail(
+                                              widget.receivedHistory
+                                                  .files[index].name
+                                                  ?.split('.')
+                                                  ?.last,
+                                              BackendService.getInstance()
+                                                      .downloadDirectory
+                                                      .path +
+                                                  '/${widget.receivedHistory.files[index].name}',
+                                              isFilePresent: snapshot.data)
+                                          : SizedBox();
+                                    })),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -371,17 +403,22 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     );
   }
 
-  Widget thumbnail(String extension, String path) {
+  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
     if (FileTypes.IMAGE_TYPES.contains(extension)) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(10.toHeight),
         child: Container(
           height: 50.toHeight,
           width: 50.toWidth,
-          child: Image.file(
-            File(path),
-            fit: BoxFit.cover,
-          ),
+          child: isFilePresent
+              ? Image.file(
+                  File(path),
+                  fit: BoxFit.cover,
+                )
+              : Icon(
+                  Icons.image,
+                  size: 40.toFont,
+                ),
         ),
       );
     } else {
@@ -468,5 +505,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
             ),
           );
         });
+  }
+
+  Future<bool> isFilePresent(String fileName) async {
+    String filePath =
+        BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+
+    File test = File(filePath);
+    bool fileExists = await test.exists();
+    return fileExists;
   }
 }
