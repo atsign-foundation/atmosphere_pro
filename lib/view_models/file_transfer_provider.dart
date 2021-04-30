@@ -316,6 +316,8 @@ class FileTransferProvider extends BaseModel {
 
   sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
+    setStatus(SEND_FILES, Status.Loading);
+
     flushbarStatus = FLUSHBAR_STATUS.SENDING;
     FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
     var shareStatus = <ShareStatus>[];
@@ -399,7 +401,7 @@ class FileTransferProvider extends BaseModel {
             .isNotificationSend = result;
 
         print('notification sent: ${result}');
-        flushbarStatus = FLUSHBAR_STATUS.IDLE;
+        flushbarStatus = FLUSHBAR_STATUS.FAILED;
       } catch (e) {
         print('Error in sending notification $e');
         flushbarStatus = FLUSHBAR_STATUS.FAILED;
@@ -411,6 +413,8 @@ class FileTransferProvider extends BaseModel {
     Provider.of<HistoryProvider>(NavService.navKey.currentContext,
             listen: false)
         .setFileTransferHistory(fileHistory);
+
+    setStatus(SEND_FILES, Status.Done);
   }
 
   sendFileNotification(FileHistory fileHistory, String atsign) async {

@@ -18,6 +18,7 @@ class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
   String ADD_RECEIVED_FILE = 'add_recieved_file';
+  String SET_FILE_HISTORY = 'set_flie_history';
   List<FileHistory> sentHistory = [];
   List<FileTransfer> recievedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
@@ -92,6 +93,7 @@ class HistoryProvider extends BaseModel {
   }
 
   setFileTransferHistory(FileHistory fileHistory, {bool isEdit = false}) async {
+    setStatus(SET_FILE_HISTORY, Status.Loading);
     await getSentHistory();
     AtKey atKey = AtKey()
       ..metadata = Metadata()
@@ -113,6 +115,7 @@ class HistoryProvider extends BaseModel {
     var result = await backendService.atClientInstance
         .put(atKey, json.encode(sendFileHistory));
     print('file history saved: ${result}');
+    setStatus(SET_FILE_HISTORY, Status.Done);
   }
 
   getSentHistory() async {

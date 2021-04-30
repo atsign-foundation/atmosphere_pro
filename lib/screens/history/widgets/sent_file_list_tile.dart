@@ -132,7 +132,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: contactList.length > 1
+                      child: contactList.isNotEmpty
                           ? Text(
                               contactList[0],
                               style: CustomTextStyles.primaryRegular16,
@@ -234,6 +234,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             print(
                                 'sentHistory: ${element.atsign}, ${element.isNotificationSend}');
                           });
+
                           setState(() {
                             isOpen = !isOpen;
                           });

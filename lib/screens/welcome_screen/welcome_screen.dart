@@ -80,6 +80,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           BackendService.getInstance().currentAtSign);
     });
     super.initState();
+
+    Provider.of<HistoryProvider>(context, listen: false).getSentHistory();
+    Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
   }
 
   setAtSign() async {
@@ -391,52 +394,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     height: 60.toHeight,
                                   ),
                                 ],
-                                InkWell(
-                                  onTap: () async {
-                                    List<String> response =
-                                        await BackendService.getInstance()
-                                            .atClientInstance
-                                            .getKeys(
-                                              regex: 'sentFiles',
-                                            );
-
-                                    var sendFileHistory = {'history': []};
-                                    AtKey key = AtKey()
-                                      ..key = 'sentFiles'
-                                      ..metadata = Metadata();
-                                    var keyValue = await backendService
-                                        .atClientInstance
-                                        .get(key);
-
-                                    if (keyValue != null &&
-                                        keyValue.value != null) {
-                                      Map historyFile = json.decode(
-                                          (keyValue.value) as String) as Map;
-                                      print(
-                                          'stored file values decoded:${historyFile}');
-                                      sendFileHistory['history'] =
-                                          historyFile['history'];
-                                      historyFile['history'].forEach((value) {
-                                        FileHistory filesModel =
-                                            FileHistory.fromJson((value));
-                                      });
-                                    }
-
-                                    response.forEach((key) async {
-                                      // if (key.contains('cached')) {
-                                      // the keys i have created
-                                      AtKey atKey = AtKey.fromString(key);
-                                      print('arkey:${atKey}');
-                                      var result =
-                                          await BackendService.getInstance()
-                                              .atClientInstance
-                                              .delete(atKey);
-                                      print('$key is deleted ? $result');
-                                      // }
-                                    });
-                                  },
-                                  child: Text('Delete'),
-                                )
                               ],
                             ),
                           ),

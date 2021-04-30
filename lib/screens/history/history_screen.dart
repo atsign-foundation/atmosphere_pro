@@ -29,8 +29,8 @@ class _HistoryScreenState extends State<HistoryScreen>
       historyProvider = Provider.of<HistoryProvider>(context);
       await WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         print("fetched contacts");
-        // await historyProvider.getSentHistory();
-        // historyProvider.getRecievedHistory();
+        historyProvider.getSentHistory();
+        historyProvider.getRecievedHistory();
       });
     }
 
