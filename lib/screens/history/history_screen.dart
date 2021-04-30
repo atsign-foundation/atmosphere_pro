@@ -143,7 +143,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       },
                       showError: true,
                       successBuilder: (provider) => (provider
-                              .receivedHistoryNew.isEmpty)
+                              .recievedHistoryLogs.isEmpty)
                           ? Center(
                               child: Text(
                                 'No files received',
@@ -156,12 +156,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                               separatorBuilder: (context, index) => Divider(
                                 indent: 16.toWidth,
                               ),
-                              itemCount: provider.receivedHistoryNew.length,
+                              itemCount: provider.recievedHistoryLogs.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ReceivedFilesListTile(
                                   receivedHistory:
-                                      provider.receivedHistoryNew[index],
+                                      provider.recievedHistoryLogs[index],
                                 ),
                               ),
                             ),

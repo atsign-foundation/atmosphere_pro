@@ -102,6 +102,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   ),
                   InkWell(
                     onTap: () async {
+                      var currentDate = DateTime.now();
+                      if (widget.receivedHistory.expiry
+                              .difference(currentDate) <
+                          Duration(seconds: 0)) {
+                        return;
+                      }
                       setState(() {
                         isDownloading = true;
                       });

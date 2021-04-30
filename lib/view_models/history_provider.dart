@@ -19,6 +19,7 @@ class HistoryProvider extends BaseModel {
   String RECEIVED_HISTORY = 'received_history';
   String ADD_RECEIVED_FILE = 'add_recieved_file';
   List<FileHistory> sentHistory = [];
+  List<FileTransfer> recievedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
@@ -189,12 +190,15 @@ class HistoryProvider extends BaseModel {
     // This originally contains list of atsigns the data was shared with
     // We change it to sharedBy
     // filesModel.type = HistoryType.received;
-    receivedHistoryNew.add(filesModel);
+    receivedHistoryNew.insert(0, filesModel);
+    recievedHistoryLogs.insert(0, filesModel);
+    await updateReceivedHistoryLogs();
     await getAllFileTransferData();
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
 
   getAllFileTransferData() async {
+    await getReceivedHistoryLog();
     receivedHistoryNew = [];
 
     List<String> fileTransferResponse =
@@ -230,12 +234,54 @@ class HistoryProvider extends BaseModel {
           // This originally contains list of atsigns the data was shared with
           // We change it to sharedBy
           // filesModel.type = HistoryType.received;
-          if (filesModel.key != null) receivedHistoryNew.insert(0, filesModel);
+          if (filesModel.key != null) {
+            receivedHistoryNew.insert(0, filesModel);
+
+            // checking if this data is already present in h=history logs or not
+            int index = recievedHistoryLogs
+                .indexWhere((element) => element.key == filesModel.key);
+            if (index == -1) {
+              print('new log found');
+              recievedHistoryLogs.insert(0, filesModel);
+            }
+          }
         }
       }
     });
 
     print('sentHistory length ${receivedHistoryNew.length}');
+    print('recievedHistoryLogs length: ${recievedHistoryLogs.length}');
+    updateReceivedHistoryLogs();
+  }
+
+  getReceivedHistoryLog() async {
+    recievedHistoryLogs = [];
+    AtKey key = AtKey()
+      ..metadata = Metadata()
+      ..key = 'receivedFiles';
+    var keyValue = await backendService.atClientInstance.get(key);
+    print('received file history:${keyValue}');
+    if (keyValue != null && keyValue.value != null) {
+      Map historyFile = json.decode((keyValue.value) as String) as Map;
+      receivedFileHistory['history'] = historyFile['history'];
+      historyFile['history'].forEach((value) {
+        FileTransfer filesModel = FileTransfer.fromJson((value));
+        recievedHistoryLogs.add(filesModel);
+      });
+    }
+
+    print('recievedHistoryLogs : ${recievedHistoryLogs}');
+  }
+
+  updateReceivedHistoryLogs() async {
+    AtKey key = AtKey()
+      ..metadata = Metadata()
+      ..key = 'receivedFiles';
+
+    receivedFileHistory['history'] = recievedHistoryLogs;
+    var result = await backendService.atClientInstance
+        .put(key, json.encode(receivedFileHistory));
+    print('received history logs updated: ${result}');
   }
 
   sortFiles(List<FilesModel> filesList) async {
