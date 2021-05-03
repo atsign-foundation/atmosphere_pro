@@ -37,7 +37,10 @@ class ReceivedFilesListTile extends StatefulWidget {
 }
 
 class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
-  bool isOpen = false, isDownloading = false, isDownloaded = false;
+  bool isOpen = false,
+      isDownloading = false,
+      isDownloaded = false,
+      isDownloadAvailable = false;
   DateTime sendTime;
   Uint8List videoThumbnail, image;
   int fileSize = 0;
@@ -55,12 +58,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     widget.receivedHistory.files.forEach((element) {
-      print('all files:${element.size}');
       fileSize += element.size;
     });
+
+    if (widget.receivedHistory.expiry.difference(DateTime.now()) >
+        Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
     getAtSignDetail();
   }
 
@@ -93,10 +99,18 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               widget.receivedHistory.sender != null
                   ? image != null
                       ? CustomCircleAvatar(byteImage: image, nonAsset: true)
-                      : ContactInitial(
-                          initials:
-                              widget.receivedHistory.sender.substring(1, 3),
-                          size: 55,
+                      : Container(
+                          height: 45.toHeight,
+                          width: 45.toHeight,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: ContactInitial(
+                            initials:
+                                widget.receivedHistory.sender.substring(1, 3),
+                            size: 45,
+                          ),
                         )
                   : SizedBox(),
           title: Column(
@@ -136,11 +150,20 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         isDownloading = false;
                       });
                     },
-                    child: isDownloading
-                        ? CircularProgressIndicator()
-                        : isDownloaded
-                            ? Icon(Icons.done, color: Color(0xFF08CB21))
-                            : Icon(Icons.download_sharp),
+                    child: isDownloadAvailable
+                        ? isDownloading
+                            ? CircularProgressIndicator()
+                            : isDownloaded
+                                ? Icon(
+                                    Icons.done,
+                                    color: Color(0xFF08CB21),
+                                    size: 25.toFont,
+                                  )
+                                : Icon(
+                                    Icons.download_sharp,
+                                    size: 25.toFont,
+                                  )
+                        : SizedBox(),
                   )
                   // ContactService()
                   //         .allContactsList
@@ -396,8 +419,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       });
                     },
                     child: Container(
-                      margin: EdgeInsets.only(left: 85.toWidth),
+                      margin: EdgeInsets.only(left: 85.toHeight),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Lesser Details',
@@ -438,7 +462,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 )
               : Icon(
                   Icons.image,
-                  size: 40.toFont,
+                  size: 30.toFont,
                 ),
         ),
       );
@@ -499,8 +523,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             child: Container(
-              height: 200.0,
-              width: 300.0,
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

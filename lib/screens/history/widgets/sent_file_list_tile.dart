@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
@@ -46,6 +47,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   int fileLength, fileSize = 0;
   List<FileData> filesList = [];
   List<String> contactList;
+  bool isOpen = false;
+  bool isDeepOpen = false;
+  // DateTime sendTime;
+  Uint8List videoThumbnail, image;
 
   @override
   void initState() {
@@ -62,6 +67,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
       print('all files:${element.size}');
       fileSize += element.size;
     });
+
+    getAtSignDetail();
     // widget.testList.forEach((key, value) {
     //   ContactService().contactList.forEach((element) {
     //     if (element.atSign == key) {
@@ -79,10 +86,22 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     //     .removeWhere((element) => element.atSign == widget.testList.keys.first);
   }
 
-  bool isOpen = false;
-  bool isDeepOpen = false;
-  // DateTime sendTime;
-  Uint8List videoThumbnail;
+  getAtSignDetail() async {
+    AtContact contact;
+    if (contactList[0] != null) {
+      contact = await getAtSignDetails(contactList[0]);
+    }
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted) {
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+        }
+      }
+    }
+  }
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -120,10 +139,21 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 //       )
                 //     :
                 contactList.isNotEmpty
-                    ? ContactInitial(
-                        initials: contactList[0]?.substring(1, 3) ?? 'hello',
-                        size: 60,
-                      )
+                    ? image != null
+                        ? CustomCircleAvatar(byteImage: image, nonAsset: true)
+                        : Container(
+                            height: 45.toHeight,
+                            width: 45.toHeight,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                            child: ContactInitial(
+                              initials:
+                                  contactList[0]?.substring(1, 3) ?? 'hello',
+                              size: 45,
+                            ),
+                          )
                     : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
