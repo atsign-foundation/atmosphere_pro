@@ -283,7 +283,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           ? Container()
                                           : OverlappingContacts(
                                               selectedList:
-                                                  provider.selectedContacts),
+                                                  provider.selectedContacts,
+                                              onChnage: (isUpdate) {
+                                                setState(() {});
+                                              },
+                                            ),
                                 ),
                                 SizedBox(
                                   height: 40.toHeight,
@@ -298,8 +302,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 SizedBox(
                                   height: 60.toHeight,
                                 ),
+
                                 if (_welcomeScreenProvider.selectedContacts !=
                                         null &&
+                                    _welcomeScreenProvider
+                                        .selectedContacts.isNotEmpty &&
                                     filePickerModel
                                         .selectedFiles.isNotEmpty) ...[
                                   Row(

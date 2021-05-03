@@ -362,9 +362,18 @@ class FileTransferProvider extends BaseModel {
                 },
                 body: encryptedFileContent);
             print('file upload ${response.body}');
+            // changing name of files
+            Map fileInfo = jsonDecode(response.body);
+            int indexToEdit = filesToTransfer.files
+                .indexWhere((element) => element.name == file.name);
+            if (indexToEdit > -1) {
+              filesToTransfer.files[indexToEdit].name =
+                  fileInfo['file']['filename'];
+            }
+
             print('container link: ${container}');
           } catch (e) {
-            print('error in uploading');
+            print('error in uploading: $e');
           }
         }
         isFilesUploaded = true;

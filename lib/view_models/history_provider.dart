@@ -209,14 +209,11 @@ class HistoryProvider extends BaseModel {
       regex: MixedConstants.FILE_TRANSFER_KEY,
     );
 
-    print('fileTransferResponse: ${fileTransferResponse}');
-
     await Future.forEach(fileTransferResponse, (key) async {
       print('key $key');
       print('${key.split(':')[1]}');
       print('${backendService.atClientInstance.currentAtSign}');
-      if ('@${key.split(':')[1]}'
-          .contains(backendService.atClientInstance.currentAtSign)) {
+      if (key.contains('cached')) {
         AtKey atKey = AtKey.fromString(key);
         AtValue atvalue = await backendService.atClientInstance
             .get(atKey)

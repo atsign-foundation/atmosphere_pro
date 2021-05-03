@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -37,7 +39,7 @@ class ReceivedFilesListTile extends StatefulWidget {
 class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   bool isOpen = false, isDownloading = false, isDownloaded = false;
   DateTime sendTime;
-  Uint8List videoThumbnail;
+  Uint8List videoThumbnail, image;
   int fileSize = 0;
 
   Future videoThumbnailBuilder(String path) async {
@@ -59,14 +61,24 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       print('all files:${element.size}');
       fileSize += element.size;
     });
-    changeFilePath();
+    getAtSignDetail();
   }
 
-  changeFilePath() {
-    widget.receivedHistory.files.forEach((element) {
-      element.path = '${BackendService.getInstance().downloadDirectory.path}/' +
-          '${element.name}';
-    });
+  getAtSignDetail() async {
+    AtContact contact;
+    if (widget.receivedHistory.sender != null) {
+      contact = await getAtSignDetails(widget.receivedHistory.sender);
+    }
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted) {
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+        }
+      }
+    }
   }
 
   @override
@@ -79,10 +91,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           leading:
               // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
               widget.receivedHistory.sender != null
-                  ? ContactInitial(
-                      initials: widget.receivedHistory.sender.substring(1, 3),
-                      size: 55,
-                    )
+                  ? image != null
+                      ? CustomCircleAvatar(byteImage: image, nonAsset: true)
+                      : ContactInitial(
+                          initials:
+                              widget.receivedHistory.sender.substring(1, 3),
+                          size: 55,
+                        )
                   : SizedBox(),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,16 +296,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           }
                           return ListTile(
                             onTap: () async {
-                              /// preview file => on tap of the file
-                              print(
-                                  'widget.receivedHistory.files[index].path : ${widget.receivedHistory.files[index].path}');
-                              File test = File(
-                                  widget.receivedHistory.files[index].path);
+                              String path = BackendService.getInstance()
+                                      .downloadDirectory
+                                      .path +
+                                  '/${widget.receivedHistory.files[index].name}';
+
+                              File test = File(path);
                               bool fileExists = await test.exists();
                               print('fileExists: ${fileExists}');
                               if (fileExists) {
-                                await OpenFile.open(
-                                    widget.receivedHistory.files[index].path);
+                                await OpenFile.open(path);
                               } else {
                                 _showNoFileDialog(deviceTextFactor);
                                 print('url: ${widget.receivedHistory.url}');
