@@ -68,6 +68,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   Uint8List image;
   AtContact contact;
   String name;
+  WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   bool isTablet = false, isExpanded = true, isLoading = false;
 
   @override
@@ -76,7 +77,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     // getEventCreator();
 
     isExpanded = widget.isExpanded;
+    _welcomeScreenProvider.isExpanded = true;
     getAtsignDetails();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _welcomeScreenProvider.isExpanded = false;
   }
 
   getAtsignDetails() async {
@@ -193,12 +201,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       'singleSelection': false,
                       'showGroups': true,
                       'showContacts': true,
-                      'selectedList': (s) {
-                        Provider.of<WelcomeScreenProvider>(
+                      'selectedList': (s) async {
+                        await Provider.of<WelcomeScreenProvider>(
                                 NavService.navKey.currentContext,
                                 listen: false)
                             .updateSelectedContacts(s);
-                        Navigator.pop(context);
                       }
                     },
                   ),
@@ -364,15 +371,18 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               builder: (context, provider, _) {
                                 return (provider.isAutoAccept == null)
                                     ? CircularProgressIndicator()
-                                    : CupertinoSwitch(
-                                        value: provider.isAutoAccept,
-                                        onChanged: (b) async {
-                                          provider.toggleAutoAccept(b);
-                                          await provider.getToggleStatus();
+                                    : Transform.scale(
+                                        scale: 1.8,
+                                        child: CupertinoSwitch(
+                                          value: provider.isAutoAccept,
+                                          onChanged: (b) async {
+                                            provider.toggleAutoAccept(b);
+                                            await provider.getToggleStatus();
 
-                                          setState(() {});
-                                        },
-                                        activeColor: Colors.black,
+                                            setState(() {});
+                                          },
+                                          activeColor: Colors.black,
+                                        ),
                                       );
                               },
                             ),

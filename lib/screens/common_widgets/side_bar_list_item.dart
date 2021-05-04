@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -8,8 +9,9 @@ class SideBarItem extends StatelessWidget {
   final String routeName;
   final Map<String, dynamic> arguments;
   final bool showIconOnly;
+  final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
 
-  const SideBarItem(
+  SideBarItem(
       {Key key,
       this.image,
       this.title,
@@ -21,7 +23,9 @@ class SideBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pop(context);
+        if (_welcomeScreenProvider.isExpanded) {
+          Navigator.pop(context);
+        }
         Navigator.pushNamed(context, routeName, arguments: arguments ?? {});
       },
       child: Container(

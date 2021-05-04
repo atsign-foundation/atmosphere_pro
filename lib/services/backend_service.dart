@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
@@ -249,20 +250,27 @@ class BackendService {
       // ignore: unawaited_futures
 
       // downloadFileFromBin(fromAtSign, decryptedMessage);
-      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .addToReceiveFileHistory(fromAtSign, decryptedMessage);
+
+      NotificationService().setOnNotificationClick(onNotificationClick);
+      await NotificationService().showNotification(fromAtSign, 'myfile', '40');
     }
   }
 
   syncWithSecondary() async {
-    SyncManager syncManager = atClientInstance.getSyncManager();
-    var isSynced = await syncManager.isInSync();
-    // print('already synced: $isSynced');
-    if (isSynced is bool && isSynced) {
-    } else {
-      await syncManager.sync();
-      // print('sync done');
+    try {
+      SyncManager syncManager = atClientInstance.getSyncManager();
+      var isSynced = await syncManager.isInSync();
+      print('already synced: $isSynced');
+      if (isSynced is bool && isSynced) {
+      } else {
+        await syncManager.sync();
+      }
+      print('sync done');
+    } catch (e) {
+      print('error in sync: $e');
     }
   }
 
@@ -600,5 +608,10 @@ class BackendService {
     });
   }
 
-  onNotificationClick(String payload) async {}
+  onNotificationClick(String payload) async {
+    await Navigator.push(
+      NavService.navKey.currentContext,
+      MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
+    );
+  }
 }

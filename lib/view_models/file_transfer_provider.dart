@@ -410,7 +410,7 @@ class FileTransferProvider extends BaseModel {
             .isNotificationSend = result;
 
         print('notification sent: ${result}');
-        flushbarStatus = FLUSHBAR_STATUS.FAILED;
+        flushbarStatus = FLUSHBAR_STATUS.IDLE;
       } catch (e) {
         print('Error in sending notification $e');
         flushbarStatus = FLUSHBAR_STATUS.FAILED;

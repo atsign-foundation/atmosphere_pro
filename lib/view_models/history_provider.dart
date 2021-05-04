@@ -195,7 +195,7 @@ class HistoryProvider extends BaseModel {
     // filesModel.type = HistoryType.received;
     receivedHistoryNew.insert(0, filesModel);
     recievedHistoryLogs.insert(0, filesModel);
-    await updateReceivedHistoryLogs();
+    await getReceivedHistoryLog();
     await getAllFileTransferData();
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
@@ -237,7 +237,7 @@ class HistoryProvider extends BaseModel {
           if (filesModel.key != null) {
             receivedHistoryNew.insert(0, filesModel);
 
-            // checking if this data is already present in h=history logs or not
+            // checking if this data is already present in history logs or not
             int index = recievedHistoryLogs
                 .indexWhere((element) => element.key == filesModel.key);
             if (index == -1) {

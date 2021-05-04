@@ -81,8 +81,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
     super.initState();
 
-    Provider.of<HistoryProvider>(context, listen: false).getSentHistory();
-    Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HistoryProvider>(context, listen: false).getSentHistory();
+      Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
+    });
   }
 
   setAtSign() async {
@@ -188,7 +190,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: SizeConfig().screenHeight,
               child: Stack(
                 children: [
-                  SizeConfig().isTablet(context) ? Customheading() : SizedBox(),
+                  SizeConfig().isTablet(context)
+                      ? Container(
+                          height: 90.toHeight,
+                          width: 90.toHeight,
+                          child: Customheading(),
+                        )
+                      : SizedBox(),
                   SizeConfig().isTablet(context)
                       ? Positioned(
                           right: 80,
@@ -207,7 +215,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     setState(() {
                                       isExpanded = !isExpanded;
                                     });
-                                    print('is expanded changed:${isExpanded}');
 
                                     Scaffold.of(context).openEndDrawer();
                                   },
@@ -339,6 +346,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           //     _welcomeScreenProvider.selectedContacts);
                                           // bool response = filePickerModel.sentStatus[0];
                                           // if (filePickerModel.sentStatus != null) {
+
                                           if (filePickerModel.flushbarStatus ==
                                               FLUSHBAR_STATUS.SENDING) {
                                             sendingFlushbar =
@@ -350,7 +358,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             sendingFlushbar =
                                                 _showScaffold(status: 2);
                                             await sendingFlushbar.show(context);
+                                          } else if (filePickerModel
+                                                  .flushbarStatus ==
+                                              FLUSHBAR_STATUS.IDLE) {
+                                            sendingFlushbar =
+                                                _showScaffold(status: 1);
+                                            await sendingFlushbar.show(context);
                                           }
+
                                           // filePickerModel.sendFiles(filePickerModel.selectedFiles,
                                           //     _welcomeScreenProvider.selectedContacts);
 

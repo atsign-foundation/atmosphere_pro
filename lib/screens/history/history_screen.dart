@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
+  final int tabIndex;
+  HistoryScreen({this.tabIndex = 0});
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -25,7 +27,8 @@ class _HistoryScreenState extends State<HistoryScreen>
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
-      _controller = TabController(length: 2, vsync: this, initialIndex: 0);
+      _controller =
+          TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
       historyProvider = Provider.of<HistoryProvider>(context);
       await WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         print("fetched contacts");
