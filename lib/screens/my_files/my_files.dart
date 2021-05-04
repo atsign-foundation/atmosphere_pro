@@ -56,8 +56,9 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
     await historyProvider.getRecievedHistory();
     _controller = TabController(
         length: historyProvider.tabs.length, vsync: this, initialIndex: 0);
-    isLoading = false;
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -166,15 +167,18 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                     Container(
                       height: 40,
                       child: TabBar(
-                        onTap: (index) {
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .getRecievedHistory();
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .sortFiles(historyProvider.receivedHistory);
-                          setState(() {
-                            runtimeType =
-                                historyProvider.tabs[index].runtimeType;
-                          });
+                        onTap: (index) async {
+                          print(
+                              'tapped : ${historyProvider.tabs[index].runtimeType}');
+                          // await Provider.of<HistoryProvider>(context,
+                          //         listen: false)
+                          //     .getRecievedHistory();
+                          // Provider.of<HistoryProvider>(context, listen: false)
+                          //     .sortFiles(historyProvider.recievedHistoryLogs);
+                          // setState(() {
+                          //   runtimeType =
+                          //       historyProvider.tabs[index].runtimeType;
+                          // });
                         },
                         isScrollable: true,
                         labelColor: ColorConstants.fontPrimary,

@@ -1,5 +1,7 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -15,34 +17,104 @@ class _AudiosState extends State<Audios> {
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
+      functionName: 'sort_files',
+      load: (provider) => provider.sortFiles(provider.recievedHistoryLogs),
       successBuilder: (provider) => Container(
         margin:
             EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
         child: ListView.builder(
-            itemCount: 10,
+            itemCount: provider.receivedAudio.length,
             itemBuilder: (context, index) {
               DateTime date =
                   DateTime.parse(provider.receivedAudio[index].date);
               return InkWell(
-                onTap: () {},
+                onTap: () {
+                  showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          margin: EdgeInsets.only(top: 20.toWidth),
+                          height: 180.toHeight,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 4,
+                                    color: ColorConstants.fontSecondary)
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30))),
+                          child: Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(top: 10.toHeight),
+                                  width: 50.toWidth,
+                                  height: 5.toHeight,
+                                  decoration: BoxDecoration(
+                                      color: ColorConstants.fontSecondary,
+                                      borderRadius: BorderRadius.circular(5)),
+                                )
+                              ],
+                            ),
+                            Container(
+                                margin: EdgeInsets.only(
+                                    left: 20.toWidth,
+                                    top: 10.toHeight,
+                                    right: 20.toWidth),
+                                child: Column(children: <Widget>[
+                                  ListTile(
+                                      onTap: () async {
+                                        await openDownloadsFolder(context);
+                                      },
+                                      title: Text(
+                                        'Open file location',
+                                        style:
+                                            CustomTextStyles.primaryRegular16,
+                                      )),
+                                  Divider(
+                                    thickness: 1,
+                                    color: ColorConstants.greyText,
+                                  ),
+                                  ListTile(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      title: Text(
+                                        'Cancel',
+                                        style:
+                                            CustomTextStyles.primaryRegular16,
+                                      )),
+                                ]))
+                          ]),
+                        );
+                      });
+                },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
                   child: ListTile(
                     tileColor: ColorConstants.listBackground,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3)),
-                    title: Text('A.Walker Faded . Mp3',
+                    title: Text(provider.receivedAudio[index].fileName,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
                       width: 50.toWidth,
                       height: 49.toHeight,
-                      decoration: BoxDecoration(
-                          color: ColorConstants.redText,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Image.asset(
-                        ImageConstants.musicFile,
-                        width: 40.toWidth,
-                        height: 40.toHeight,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.toHeight),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          height: 50.toHeight,
+                          width: 50.toWidth,
+                          child: Image.asset(
+                            ImageConstants.musicLogo,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     subtitle: Row(

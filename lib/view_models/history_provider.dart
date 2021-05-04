@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
@@ -171,7 +172,7 @@ class HistoryProvider extends BaseModel {
     //   });
 
     await getAllFileTransferData();
-    sortFiles(receivedHistory);
+    sortFiles(recievedHistoryLogs);
     populateTabs();
     // }
     setStatus(RECEIVED_HISTORY, Status.Done);
@@ -284,84 +285,93 @@ class HistoryProvider extends BaseModel {
     print('received history logs updated: ${result}');
   }
 
-  sortFiles(List<FilesModel> filesList) async {
-    // try {
-    //   setStatus(SORT_FILES, Status.Loading);
-    //   receivedAudio = [];
-    //   receivedApk = [];
-    //   receivedDocument = [];
-    //   receivedPhotos = [];
-    //   receivedVideos = [];
-    //   filesList.forEach((atSign) {
-    //     atSign.files.forEach((file) {
-    //       String fileExtension = file.fileName.split('.').last;
+  sortFiles(List<FileTransfer> filesList) async {
+    try {
+      setStatus(SORT_FILES, Status.Loading);
+      receivedAudio = [];
+      receivedApk = [];
+      receivedDocument = [];
+      receivedPhotos = [];
+      receivedVideos = [];
+      filesList.forEach((fileData) {
+        fileData.files.forEach((file) {
+          String fileExtension = file.name.split('.').last;
+          FilesDetail fileDetail = FilesDetail(
+            fileName: file.name,
+            filePath: BackendService.getInstance().downloadDirectory.path +
+                '/${file.name}',
+            size: double.parse(file.size.toString()),
+            date: fileData.date.toLocal().toString(),
+            type: file.name.split('.').last,
+            contactName: fileData.sender,
+          );
 
-    //       if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-    //         receivedAudio.add(file);
-    //       }
-    //       if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-    //         receivedVideos.add(file);
-    //       }
-    //       if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-    //         receivedPhotos.add(file);
-    //       }
-    //       if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
-    //           FileTypes.PDF_TYPES.contains(fileExtension) ||
-    //           FileTypes.WORD_TYPES.contains(fileExtension) ||
-    //           FileTypes.EXEL_TYPES.contains(fileExtension)) {
-    //         receivedDocument.add(file);
-    //       }
-    //       if (FileTypes.APK_TYPES.contains(fileExtension)) {
-    //         receivedApk.add(file);
-    //       } else {}
-    //     });
-    //   });
+          if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
+            receivedAudio.add(fileDetail);
+          }
+          if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+            receivedVideos.add(fileDetail);
+          }
+          if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+            receivedPhotos.add(fileDetail);
+          }
+          if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+              FileTypes.PDF_TYPES.contains(fileExtension) ||
+              FileTypes.WORD_TYPES.contains(fileExtension) ||
+              FileTypes.EXEL_TYPES.contains(fileExtension)) {
+            receivedDocument.add(fileDetail);
+          }
+          if (FileTypes.APK_TYPES.contains(fileExtension)) {
+            receivedApk.add(fileDetail);
+          } else {}
+        });
+      });
 
-    //   setStatus(SORT_FILES, Status.Done);
-    // } catch (e) {
-    //   setError(SORT_FILES, e.toString());
-    // }
+      setStatus(SORT_FILES, Status.Done);
+    } catch (e) {
+      setError(SORT_FILES, e.toString());
+    }
   }
 
   populateTabs() {
-    // try {
-    //   setStatus(POPULATE_TABS, Status.Loading);
+    try {
+      setStatus(POPULATE_TABS, Status.Loading);
 
-    //   if (receivedApk.isNotEmpty) {
-    //     if (!tabs.contains(APK) || !tabs.contains(APK())) {
-    //       tabs.add(APK());
-    //       tabNames.add('APK');
-    //     }
-    //   }
-    //   if (receivedAudio.isNotEmpty) {
-    //     if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
-    //       tabs.add(Audios());
-    //       tabNames.add('Audios');
-    //     }
-    //   }
-    //   if (receivedDocument.isNotEmpty) {
-    //     if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
-    //       tabs.add(Documents());
-    //       tabNames.add('Documents');
-    //     }
-    //   }
-    //   if (receivedPhotos.isNotEmpty) {
-    //     if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
-    //       tabs.add(Photos());
-    //       tabNames.add('Photos');
-    //     }
-    //   }
-    //   if (receivedVideos.isNotEmpty) {
-    //     if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
-    //       tabs.add(Videos());
-    //       tabNames.add('Videos');
-    //     }
-    //   }
+      if (receivedApk.isNotEmpty) {
+        if (!tabs.contains(APK) || !tabs.contains(APK())) {
+          tabs.add(APK());
+          tabNames.add('APK');
+        }
+      }
+      if (receivedAudio.isNotEmpty) {
+        if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
+          tabs.add(Audios());
+          tabNames.add('Audios');
+        }
+      }
+      if (receivedDocument.isNotEmpty) {
+        if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
+          tabs.add(Documents());
+          tabNames.add('Documents');
+        }
+      }
+      if (receivedPhotos.isNotEmpty) {
+        if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
+          tabs.add(Photos());
+          tabNames.add('Photos');
+        }
+      }
+      if (receivedVideos.isNotEmpty) {
+        if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
+          tabs.add(Videos());
+          tabNames.add('Videos');
+        }
+      }
 
-    //   setStatus(POPULATE_TABS, Status.Done);
-    // } catch (e) {
-    //   setError(POPULATE_TABS, e.toString());
-    // }
+      setStatus(POPULATE_TABS, Status.Done);
+    } catch (e) {
+      setError(POPULATE_TABS, e.toString());
+    }
   }
 
   sortByName(List<FilesDetail> list) {

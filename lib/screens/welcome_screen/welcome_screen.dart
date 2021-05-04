@@ -84,6 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HistoryProvider>(context, listen: false).getSentHistory();
       Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
+      WelcomeScreenProvider().isExpanded = false;
     });
   }
 

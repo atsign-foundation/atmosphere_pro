@@ -15,14 +15,11 @@ class _PhotosState extends State<Photos> {
   @override
   void initState() {
     print('in PHOTOS');
-    provider.getRecievedHistory();
-    provider.sortFiles(provider.receivedHistory);
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    provider.receivedPhotos.forEach((element) {});
     super.didChangeDependencies();
   }
 
