@@ -372,7 +372,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                 return (provider.isAutoAccept == null)
                                     ? CircularProgressIndicator()
                                     : Transform.scale(
-                                        scale: 1.8,
+                                        scale: SizeConfig().isTablet(context)
+                                            ? 1.8
+                                            : 1,
                                         child: CupertinoSwitch(
                                           value: provider.isAutoAccept,
                                           onChanged: (b) async {
