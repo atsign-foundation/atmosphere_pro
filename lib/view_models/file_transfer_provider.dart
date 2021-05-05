@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -44,6 +45,10 @@ class FileTransferProvider extends BaseModel {
   bool clearList = false;
   BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
+
+  final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
+  Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
+  StreamSink<FLUSHBAR_STATUS> get flushBarStatusSink => _flushBarStream.sink;
 
   setFiles() async {
     setStatus(PICK_FILES, Status.Loading);
@@ -316,9 +321,8 @@ class FileTransferProvider extends BaseModel {
 
   sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
+    flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
-
-    flushbarStatus = FLUSHBAR_STATUS.SENDING;
     FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
     var shareStatus = <ShareStatus>[];
     contactList.forEach((element) {
@@ -410,10 +414,10 @@ class FileTransferProvider extends BaseModel {
             .isNotificationSend = result;
 
         print('notification sent: ${result}');
-        flushbarStatus = FLUSHBAR_STATUS.IDLE;
+        flushBarStatusSink.add(FLUSHBAR_STATUS.IDLE);
       } catch (e) {
         print('Error in sending notification $e');
-        flushbarStatus = FLUSHBAR_STATUS.FAILED;
+        flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
       }
     }
 

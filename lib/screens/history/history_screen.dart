@@ -32,8 +32,8 @@ class _HistoryScreenState extends State<HistoryScreen>
       historyProvider = Provider.of<HistoryProvider>(context);
       await WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         print("fetched contacts");
-        historyProvider.getSentHistory();
-        historyProvider.getRecievedHistory();
+        await historyProvider.getSentHistory();
+        await historyProvider.getRecievedHistory();
       });
     }
 
@@ -62,12 +62,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                 child: TabBar(
                   onTap: (index) async {
                     if (index == 0) {
-                      await Provider.of<HistoryProvider>(context, listen: false)
-                          .getSentHistory();
+                      // await Provider.of<HistoryProvider>(context, listen: false)
+                      //     .getSentHistory();
                     }
                     if (index == 1) {
-                      await Provider.of<HistoryProvider>(context, listen: false)
-                          .getRecievedHistory();
+                      // await Provider.of<HistoryProvider>(context, listen: false)
+                      //     .getRecievedHistory();
                     }
                   },
                   labelColor: ColorConstants.fontPrimary,
@@ -106,43 +106,30 @@ class _HistoryScreenState extends State<HistoryScreen>
                               padding: EdgeInsets.only(bottom: 170.toHeight),
                               physics: AlwaysScrollableScrollPhysics(),
                               separatorBuilder: (context, index) {
-                                // print(
-                                //     'provider.testSentHistory.length====>${provider.testSentHistory.length}');
                                 return Divider(
                                   indent: 16.toWidth,
                                 );
                               },
                               itemCount: provider.sentHistory.length,
-                              // itemCount: 2,
                               itemBuilder: (context, index) {
-                                List<Map<String, Set<FilesDetail>>> tempList =
-                                    [];
-                                List<int> idList = [];
-                                // provider.sentHistory.forEach((key, value) {
-                                //   tempList.add(value);
-                                //   idList.add(key);
-                                // });
-                                print(idList);
-                                // print('TEMP LIST !====>${tempList[2]}');
                                 return SentFilesListTile(
                                   sentHistory: provider.sentHistory[index],
-                                  // testList: tempList[index],
-                                  // id: idList[index],
+                                  key: UniqueKey(),
                                 );
                               },
                             ),
-                      // errorBuilder: (provider) => Center(
-                      //   child: Text('Some error occured'),
-                      // ),
-                      load: (provider) {
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
+                      load: (provider) async {
                         // provider.getSentHistory();
                       },
                     ),
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.RECEIVED_HISTORY,
-
                       load: (provider) async {
-                        await provider.getRecievedHistory();
+                        print('loading received');
+                        // await provider.getRecievedHistory();
                       },
                       showError: true,
                       successBuilder: (provider) => (provider
@@ -163,14 +150,15 @@ class _HistoryScreenState extends State<HistoryScreen>
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ReceivedFilesListTile(
+                                  key: UniqueKey(),
                                   receivedHistory:
                                       provider.recievedHistoryLogs[index],
                                 ),
                               ),
                             ),
-                      // errorBuilder: (provider) => Center(
-                      //   child: Text('Some error occured'),
-                      // ),
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
                     ),
                   ],
                 ),

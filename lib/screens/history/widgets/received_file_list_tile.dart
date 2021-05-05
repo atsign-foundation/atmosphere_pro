@@ -335,28 +335,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               }
                             },
                             leading: Container(
-                                height: 50.toHeight,
-                                width: 50.toHeight,
-                                child: FutureBuilder(
-                                    future: isFilePresent(widget
-                                        .receivedHistory.files[index].name),
-                                    builder: (context, snapshot) {
-                                      print('snapshot builder: ${snapshot}');
-                                      return snapshot.connectionState ==
-                                                  ConnectionState.done &&
-                                              snapshot.data != null
-                                          ? thumbnail(
-                                              widget.receivedHistory
-                                                  .files[index].name
-                                                  ?.split('.')
-                                                  ?.last,
-                                              BackendService.getInstance()
-                                                      .downloadDirectory
-                                                      .path +
-                                                  '/${widget.receivedHistory.files[index].name}',
-                                              isFilePresent: snapshot.data)
-                                          : SizedBox();
-                                    })),
+                              height: 50.toHeight,
+                              width: 50.toHeight,
+                              child: FutureBuilder(
+                                  future: isFilePresent(
+                                      widget.receivedHistory.files[index].name),
+                                  builder: (context, snapshot) {
+                                    print('snapshot builder: ${snapshot}');
+                                    return snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.data != null
+                                        ? thumbnail(
+                                            widget.receivedHistory.files[index]
+                                                .name
+                                                ?.split('.')
+                                                ?.last,
+                                            BackendService.getInstance()
+                                                    .downloadDirectory
+                                                    .path +
+                                                '/${widget.receivedHistory.files[index].name}',
+                                            isFilePresent: snapshot.data)
+                                        : SizedBox();
+                                  }),
+                            ),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
