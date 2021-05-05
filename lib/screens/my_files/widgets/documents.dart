@@ -103,8 +103,12 @@ class _DocumentsState extends State<Documents> {
                     title: Text(provider.receivedDocument[index].fileName,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
-                      width: 50.toWidth,
-                      height: 49.toHeight,
+                      width: SizeConfig().isTablet(context)
+                          ? 30.toWidth
+                          : 50.toWidth,
+                      height: SizeConfig().isTablet(context)
+                          ? 30.toHeight
+                          : 49.toHeight,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.toHeight),
                         child: Container(

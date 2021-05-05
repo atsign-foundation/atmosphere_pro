@@ -102,14 +102,18 @@ class _AudiosState extends State<Audios> {
                     title: Text(provider.receivedAudio[index].fileName,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
-                      width: 50.toWidth,
-                      height: 49.toHeight,
+                      width: SizeConfig().isTablet(context)
+                          ? 30.toWidth
+                          : 50.toWidth,
+                      height: SizeConfig().isTablet(context)
+                          ? 30.toHeight
+                          : 50.toHeight,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.toHeight),
                         child: Container(
                           padding: EdgeInsets.only(left: 10),
-                          height: 50.toHeight,
-                          width: 50.toWidth,
+                          height: 40.toHeight,
+                          width: 40.toWidth,
                           child: Image.asset(
                             ImageConstants.musicLogo,
                             fit: BoxFit.cover,

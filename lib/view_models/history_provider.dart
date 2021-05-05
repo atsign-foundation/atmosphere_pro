@@ -37,7 +37,8 @@ class HistoryProvider extends BaseModel {
       receivedAudio,
       receivedApk,
       receivedDocument,
-      finalReceivedHistory = [];
+      finalReceivedHistory = [],
+      receivedUnknown = [];
   List<String> tabNames = ['Recents'];
 
   List<FilesModel> receivedHistory, receivedAudioModel = [];
@@ -120,65 +121,42 @@ class HistoryProvider extends BaseModel {
   }
 
   getSentHistory() async {
-    print('getSentHistory');
     setStatus(SENT_HISTORY, Status.Loading);
-    // try {
-    sentHistory = [];
-    AtKey key = AtKey()
-      ..key = 'sentFiles'
-      ..metadata = Metadata();
-    var keyValue = await backendService.atClientInstance.get(key);
-    print('stored file values:${keyValue}');
-    if (keyValue != null && keyValue.value != null) {
-      Map historyFile = json.decode((keyValue.value) as String) as Map;
-      print('stored file values decoded:${historyFile}');
-      sendFileHistory['history'] = historyFile['history'];
-      historyFile['history'].forEach((value) {
-        FileHistory filesModel = FileHistory.fromJson((value));
-        filesModel.type = HistoryType.send;
-        sentHistory.add(filesModel);
-      });
-    }
+    try {
+      sentHistory = [];
+      AtKey key = AtKey()
+        ..key = 'sentFiles'
+        ..metadata = Metadata();
+      var keyValue = await backendService.atClientInstance.get(key);
+      print('stored file values:${keyValue}');
+      if (keyValue != null && keyValue.value != null) {
+        Map historyFile = json.decode((keyValue.value) as String) as Map;
+        print('stored file values decoded:${historyFile}');
+        sendFileHistory['history'] = historyFile['history'];
+        historyFile['history'].forEach((value) {
+          FileHistory filesModel = FileHistory.fromJson((value));
+          filesModel.type = HistoryType.send;
+          sentHistory.add(filesModel);
+        });
+      }
 
-    print('IN HISTORy---->${sentHistory}');
-    setStatus(SENT_HISTORY, Status.Done);
-    // } catch (error) {
-    //   setError(SENT_HISTORY, error.toString());
-    // }
+      print('IN HISTORy---->${sentHistory}');
+      setStatus(SENT_HISTORY, Status.Done);
+    } catch (error) {
+      setError(SENT_HISTORY, error.toString());
+    }
   }
 
   getRecievedHistory() async {
     setStatus(RECEIVED_HISTORY, Status.Loading);
-    // try {
-    // receivedHistory = [];
-    // AtKey key = AtKey()
-    //   ..key = 'receivedFiles'
-    //   ..metadata = Metadata();
-    // var keyValue = await backendService.atClientInstance.get(key);
-    // if (keyValue != null && keyValue.value != null) {
-    //   Map historyFile = json.decode((keyValue.value) as String) as Map;
-    //   receivedFileHistory['history'] = historyFile['history'];
-    //   historyFile['history'].forEach((value) {
-    //     FilesModel filesModel = FilesModel.fromJson((value));
-    //     filesModel.historyType = HistoryType.send;
-    //     receivedHistory.add(filesModel);
-    //   });
-
-    //   finalReceivedHistory = [];
-    //   receivedHistory.forEach((atSign) {
-    //     atSign.files.forEach((file) {
-    //       finalReceivedHistory.add(file);
-    //     });
-    //   });
-
-    await getAllFileTransferData();
-    sortFiles(recievedHistoryLogs);
-    populateTabs();
-    // }
-    setStatus(RECEIVED_HISTORY, Status.Done);
-    // } catch (error) {
-    //   setError(RECEIVED_HISTORY, error.toString());
-    // }
+    try {
+      await getAllFileTransferData();
+      sortFiles(recievedHistoryLogs);
+      populateTabs();
+      setStatus(RECEIVED_HISTORY, Status.Done);
+    } catch (error) {
+      setError(RECEIVED_HISTORY, error.toString());
+    }
   }
 
   addToReceiveFileHistory(
@@ -293,6 +271,7 @@ class HistoryProvider extends BaseModel {
       receivedDocument = [];
       receivedPhotos = [];
       receivedVideos = [];
+      receivedUnknown = [];
       filesList.forEach((fileData) {
         fileData.files.forEach((file) {
           String fileExtension = file.name.split('.').last;
@@ -307,23 +286,45 @@ class HistoryProvider extends BaseModel {
           );
 
           if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-            receivedAudio.add(fileDetail);
+            int index = receivedAudio.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedAudio.add(fileDetail);
+            }
           }
           if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-            receivedVideos.add(fileDetail);
+            int index = receivedVideos.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedVideos.add(fileDetail);
+            }
           }
           if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-            receivedPhotos.add(fileDetail);
+            int index = receivedPhotos.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedPhotos.add(fileDetail);
+            }
           }
           if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
               FileTypes.PDF_TYPES.contains(fileExtension) ||
               FileTypes.WORD_TYPES.contains(fileExtension) ||
               FileTypes.EXEL_TYPES.contains(fileExtension)) {
-            receivedDocument.add(fileDetail);
+            int index = receivedDocument.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedDocument.add(fileDetail);
+            }
           }
           if (FileTypes.APK_TYPES.contains(fileExtension)) {
             receivedApk.add(fileDetail);
-          } else {}
+          } else {
+            int index = receivedUnknown.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedUnknown.add(fileDetail);
+            }
+          }
         });
       });
 

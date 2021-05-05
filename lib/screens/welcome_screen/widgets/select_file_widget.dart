@@ -180,6 +180,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                 }
                 return Consumer<FileTransferProvider>(
                     builder: (context, provider, _) {
+                  if (provider.selectedFiles.isEmpty) {
+                    return SizedBox();
+                  }
                   return Container(
                     decoration: BoxDecoration(
                       border: Border(
@@ -191,7 +194,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
                     child: ListTile(
                       title: Text(
-                        provider.selectedFiles[index].name.toString(),
+                        provider.selectedFiles[index]?.name.toString(),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.toFont,
