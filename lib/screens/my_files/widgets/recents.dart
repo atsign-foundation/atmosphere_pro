@@ -24,7 +24,8 @@ class _RecentsState extends State<Recents> {
       functionName: 'received_history',
       successBuilder: (provider) => (provider.finalReceivedHistory.isEmpty)
           ? Center(
-              child: Text('No files received'),
+              child: Text('No files received',
+                  style: TextStyle(fontSize: 15.toFont)),
             )
           : Container(
               margin: EdgeInsets.symmetric(

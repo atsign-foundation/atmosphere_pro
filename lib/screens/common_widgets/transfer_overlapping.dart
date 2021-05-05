@@ -81,7 +81,7 @@ class _TranferOverlappingContactsState
                           : ContactInitial(
                               initials: widget?.selectedList[index]?.atsign
                                       ?.substring(1, 3) ??
-                                  'hello',
+                                  '  ',
                             ),
                     ),
                   );
@@ -168,27 +168,17 @@ class _TranferOverlappingContactsState
                           height: 200.toHeight,
                           width: SizeConfig().screenWidth - 20.toWidth,
                           child: GridView.count(
-                            crossAxisCount: 5,
+                            crossAxisCount:
+                                SizeConfig().isTablet(context) ? 6 : 5,
                             mainAxisSpacing: 5,
                             crossAxisSpacing: 5,
                             childAspectRatio: 1,
                             children: List.generate(
                               widget.selectedList.length,
                               (index) {
-                                // TransferStatus individualStatus =
-                                //     provider.getStatus(widget.id,
-                                //         widget.selectedList[index].atSign);
-                                // return FileTransferContacts(
-                                //   contact: widget.selectedList[index],
-                                //   status: individualStatus,
-                                // );
-                                print(
-                                    'initial: ${widget.selectedList[index].isNotificationSend}, ${widget.selectedList[index].atsign}');
                                 bool isNotified = widget
                                     .selectedList[index].isNotificationSend;
                                 return Container(
-                                  height: 35.toHeight,
-                                  width: 35.toHeight,
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         color: isNotified
@@ -201,8 +191,8 @@ class _TranferOverlappingContactsState
                                   child: Stack(
                                     children: [
                                       Container(
-                                        width: 80.toHeight,
-                                        height: 80.toHeight,
+                                        width: 90.toHeight,
+                                        height: 90.toHeight,
                                         child: ContactInitial(
                                           initials: widget
                                               .selectedList[index].atsign
@@ -245,7 +235,7 @@ class _TranferOverlappingContactsState
                                                     ? Icons.done
                                                     : Icons.sync_sharp,
                                                 color: Colors.white,
-                                                size: 15,
+                                                size: 15.toFont,
                                               ),
                                             ),
                                           ))
