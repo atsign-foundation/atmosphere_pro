@@ -430,33 +430,34 @@ class FileTransferProvider extends BaseModel {
   sendFileNotification(FileHistory fileHistory, String atsign) async {
     print('sendFileNotification : ${fileHistory.fileDetails.key}');
     print('sendFileNotification atsign : ${atsign}');
-    AtKey atKey = AtKey()
-      ..metadata = Metadata()
-      ..metadata.ttr = -1
-      ..metadata.ccd = true
-      ..key = fileHistory.fileDetails.key
-      ..sharedWith = atsign
-      ..metadata.ttl = 60000 * 60 * 24 * 6
-      ..sharedBy = BackendService.getInstance().currentAtSign;
-    print('atkey : ${atKey}');
+    try {
+      AtKey atKey = AtKey()
+        ..metadata = Metadata()
+        ..metadata.ttr = -1
+        ..metadata.ccd = true
+        ..key = fileHistory.fileDetails.key
+        ..sharedWith = atsign
+        ..metadata.ttl = 60000 * 60 * 24 * 6
+        ..sharedBy = BackendService.getInstance().currentAtSign;
 
-    var result = await BackendService.getInstance()
-        .atClientInstance
-        .put(atKey, jsonEncode(fileHistory.fileDetails.toJson()));
-    print('notification sent: ${result}');
+      var result = await BackendService.getInstance()
+          .atClientInstance
+          .put(atKey, jsonEncode(fileHistory.fileDetails.toJson()));
 
-    if (result is bool && result) {
-      fileHistory.sharedWith.forEach((element) {
-        print('shared with: ${element.atsign}, ${element.isNotificationSend}');
-        if (atsign == element.atsign) {
-          element.isNotificationSend = true;
-        }
-      });
+      if (result is bool && result) {
+        fileHistory.sharedWith.forEach((element) {
+          if (atsign == element.atsign) {
+            element.isNotificationSend = true;
+          }
+        });
+      }
+
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .setFileTransferHistory(fileHistory, isEdit: true);
+    } catch (e) {
+      print('error in sending notification : $e');
     }
-
-    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-            listen: false)
-        .setFileTransferHistory(fileHistory, isEdit: true);
   }
 
   TransferStatus getStatus(int id, String atSign) {

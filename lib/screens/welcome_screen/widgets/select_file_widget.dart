@@ -274,8 +274,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(
-                  height: 50.toHeight,
-                  width: 50.toWidth,
+                  height: 40.toHeight,
+                  width: 40.toWidth,
                   child: Image.asset(
                     FileTypes.PDF_TYPES.contains(extension)
                         ? ImageConstants.pdfLogo

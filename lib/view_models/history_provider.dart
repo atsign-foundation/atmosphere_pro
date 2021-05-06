@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -166,18 +167,14 @@ class HistoryProvider extends BaseModel {
     String decodedMsg,
   ) async {
     setStatus(ADD_RECEIVED_FILE, Status.Loading);
-    // receivedFileHistory['history'].insert(0, (fileHistory.toJson()));
-
     FileTransfer filesModel = FileTransfer.fromJson((jsonDecode(decodedMsg)));
     print('addToReceiveFileHistory: ${filesModel.sender}');
-    // filesModel.sharedWith = [ShareStatus(sharedBy, true)];
-    // This originally contains list of atsigns the data was shared with
-    // We change it to sharedBy
-    // filesModel.type = HistoryType.received;
     receivedHistoryNew.insert(0, filesModel);
     recievedHistoryLogs.insert(0, filesModel);
     await getReceivedHistoryLog();
     await getAllFileTransferData();
+    await sortFiles(recievedHistoryLogs);
+    await populateTabs();
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
 
@@ -293,22 +290,19 @@ class HistoryProvider extends BaseModel {
             if (index == -1) {
               receivedAudio.add(fileDetail);
             }
-          }
-          if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+          } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
             int index = receivedVideos.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
             if (index == -1) {
               receivedVideos.add(fileDetail);
             }
-          }
-          if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+          } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
             int index = receivedPhotos.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
             if (index == -1) {
               receivedPhotos.add(fileDetail);
             }
-          }
-          if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+          } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
               FileTypes.PDF_TYPES.contains(fileExtension) ||
               FileTypes.WORD_TYPES.contains(fileExtension) ||
               FileTypes.EXEL_TYPES.contains(fileExtension)) {
@@ -317,9 +311,12 @@ class HistoryProvider extends BaseModel {
             if (index == -1) {
               receivedDocument.add(fileDetail);
             }
-          }
-          if (FileTypes.APK_TYPES.contains(fileExtension)) {
-            receivedApk.add(fileDetail);
+          } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
+            int index = receivedApk.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedApk.add(fileDetail);
+            }
           } else {
             int index = receivedUnknown.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
@@ -337,6 +334,8 @@ class HistoryProvider extends BaseModel {
   }
 
   populateTabs() {
+    tabs = [Recents()];
+    tabNames = ['Recents'];
     try {
       setStatus(POPULATE_TABS, Status.Loading);
 
@@ -370,6 +369,14 @@ class HistoryProvider extends BaseModel {
           tabNames.add('Videos');
         }
       }
+      if (receivedUnknown.isNotEmpty) {
+        if (!tabs.contains(Unknowns()) || !tabs.contains(Unknowns())) {
+          tabs.add(Unknowns());
+          tabNames.add('Unknowns');
+        }
+      }
+
+      print('tabs populated: ${tabs}');
 
       setStatus(POPULATE_TABS, Status.Done);
     } catch (e) {

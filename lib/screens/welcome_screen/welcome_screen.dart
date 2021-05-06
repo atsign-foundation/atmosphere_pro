@@ -357,10 +357,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       CommonButton(
                                         TextStrings().buttonSend,
                                         () async {
-                                          filePickerModel.sendFileWithFileBin(
-                                              filePickerModel.selectedFiles,
-                                              _welcomeScreenProvider
-                                                  .selectedContacts);
+                                          await filePickerModel
+                                              .sendFileWithFileBin(
+                                                  filePickerModel.selectedFiles,
+                                                  _welcomeScreenProvider
+                                                      .selectedContacts);
                                         },
                                       ),
                                     ],

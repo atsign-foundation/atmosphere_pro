@@ -36,7 +36,7 @@ class _DocumentsState extends State<Documents> {
                       builder: (BuildContext context) {
                         return Container(
                           margin: EdgeInsets.only(top: 20.toWidth),
-                          height: 180.toHeight,
+                          height: 190.toHeight,
                           decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(

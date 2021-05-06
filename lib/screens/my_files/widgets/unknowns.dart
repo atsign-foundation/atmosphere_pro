@@ -1,19 +1,20 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
-class Audios extends StatefulWidget {
+import 'downloads_folders.dart';
+
+class Unknowns extends StatefulWidget {
   @override
-  _AudiosState createState() => _AudiosState();
+  _UnknownsState createState() => _UnknownsState();
 }
 
-class _AudiosState extends State<Audios> {
+class _UnknownsState extends State<Unknowns> {
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
@@ -23,10 +24,10 @@ class _AudiosState extends State<Audios> {
         margin:
             EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
         child: ListView.builder(
-            itemCount: provider.receivedAudio.length,
+            itemCount: provider.receivedUnknown.length,
             itemBuilder: (context, index) {
               DateTime date =
-                  DateTime.parse(provider.receivedAudio[index].date);
+                  DateTime.parse(provider.receivedUnknown[index].date);
               return InkWell(
                 onTap: () {
                   showModalBottomSheet(
@@ -99,7 +100,7 @@ class _AudiosState extends State<Audios> {
                     tileColor: ColorConstants.listBackground,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3)),
-                    title: Text(provider.receivedAudio[index].fileName,
+                    title: Text(provider.receivedUnknown[index].fileName,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
                       width: SizeConfig().isTablet(context)
@@ -107,15 +108,35 @@ class _AudiosState extends State<Audios> {
                           : 50.toWidth,
                       height: SizeConfig().isTablet(context)
                           ? 30.toHeight
-                          : 50.toHeight,
+                          : 49.toHeight,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.toHeight),
                         child: Container(
                           padding: EdgeInsets.only(left: 10),
-                          height: 40.toHeight,
-                          width: 40.toWidth,
+                          height: 50.toHeight,
+                          width: 50.toWidth,
                           child: Image.asset(
-                            ImageConstants.musicLogo,
+                            FileTypes.PDF_TYPES.contains(provider
+                                    .receivedUnknown[index].fileName
+                                    .split('.')
+                                    .last)
+                                ? ImageConstants.pdfLogo
+                                : FileTypes.WORD_TYPES.contains(provider
+                                        .receivedUnknown[index].fileName
+                                        .split('.')
+                                        .last)
+                                    ? ImageConstants.wordLogo
+                                    : FileTypes.EXEL_TYPES.contains(provider
+                                            .receivedUnknown[index].fileName
+                                            .split('.')
+                                            .last)
+                                        ? ImageConstants.exelLogo
+                                        : FileTypes.TEXT_TYPES.contains(provider
+                                                .receivedUnknown[index].fileName
+                                                .split('.')
+                                                .last)
+                                            ? ImageConstants.txtLogo
+                                            : ImageConstants.unknownLogo,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -125,11 +146,11 @@ class _AudiosState extends State<Audios> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                              double.parse(provider.receivedAudio[index].size
+                              double.parse(provider.receivedUnknown[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)} Kb'
-                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)} Mb',
+                                  ? '${(provider.receivedUnknown[index].size).toStringAsFixed(2)} Kb'
+                                  : '${(provider.receivedUnknown[index].size / 1024).toStringAsFixed(2)} Mb',
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,
