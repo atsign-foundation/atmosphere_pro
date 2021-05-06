@@ -308,10 +308,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        setState(() {
-                          isLoading =
-                              BackendService.getInstance().authenticating;
-                        });
                         String atSign =
                             await BackendService.getInstance().getAtSign();
 
@@ -325,11 +321,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             atSignList: atSignList,
                           ),
                         );
-                        setState(() {
-                          isLoading =
-                              BackendService.getInstance().authenticating;
-                        });
-                        // await Navigator.pop(context);
                       },
                       child: Container(
                         height: 50,

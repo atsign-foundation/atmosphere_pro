@@ -31,9 +31,8 @@ class _HistoryScreenState extends State<HistoryScreen>
           TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
       historyProvider = Provider.of<HistoryProvider>(context);
       await WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        print("fetched contacts");
-        await historyProvider.getSentHistory();
-        await historyProvider.getRecievedHistory();
+        // await historyProvider.getSentHistory();
+        // await historyProvider.getRecievedHistory();
       });
     }
 

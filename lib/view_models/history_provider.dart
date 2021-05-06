@@ -108,9 +108,11 @@ class HistoryProvider extends BaseModel {
       print('index: $index');
       if (index > -1) {
         sendFileHistory['history'][index] = fileHistory.toJson();
+        sentHistory[index] = fileHistory;
       }
     } else {
       sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+      sentHistory.insert(0, fileHistory);
     }
     print(
         'sendFileHistory after adding : ${sendFileHistory['history'].length}');

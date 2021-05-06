@@ -63,7 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   ];
   List<String> transferMessages = [
     'Sending file ...',
-    'Sent the file',
+    'File sent',
     'Oops! something went wrong'
   ];
   String currentAtSign;
@@ -99,7 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
         sendingFlushbar = _showScaffold(status: 2);
         await sendingFlushbar.show(context);
-      } else if (flushbarStatus == FLUSHBAR_STATUS.IDLE) {
+      } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
         sendingFlushbar = _showScaffold(status: 1);
         await sendingFlushbar.show(context);
       }

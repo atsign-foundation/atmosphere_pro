@@ -323,42 +323,42 @@ class FileTransferProvider extends BaseModel {
       List<GroupContactsModel> contactList) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
-    FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
-    var shareStatus = <ShareStatus>[];
-    contactList.forEach((element) {
-      shareStatus.add(ShareStatus(element.contact.atSign, false));
-    });
+    try {
+      FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
+      var shareStatus = <ShareStatus>[];
+      contactList.forEach((element) {
+        shareStatus.add(ShareStatus(element.contact.atSign, false));
+      });
 
-    var backendService = BackendService.getInstance();
-    String microSecondsSinceEpochId =
-        DateTime.now().microsecondsSinceEpoch.toString();
-    String container =
-        '${backendService.currentAtSign.substring(1, backendService.currentAtSign.length)}' +
-            microSecondsSinceEpochId;
-    print('filebin container: ${container}');
-    bool isFilesUploaded = false;
+      var backendService = BackendService.getInstance();
+      String microSecondsSinceEpochId =
+          DateTime.now().microsecondsSinceEpoch.toString();
+      String container =
+          '${backendService.currentAtSign.substring(1, backendService.currentAtSign.length)}' +
+              microSecondsSinceEpochId;
+      print('filebin container: ${container}');
+      bool isFilesUploaded = false;
 
-    for (var groupContact in contactList) {
-      // encrypt file
-      var fileEncryptionKey = await backendService
-          .atClientInstance.encryptionService
-          .generateFileEncryptionSharedKey(
-              backendService.currentAtSign, groupContact.contact.atSign);
-      print('fileEncryptionKey : ${fileEncryptionKey}');
+      for (var groupContact in contactList) {
+        // encrypt file
+        var fileEncryptionKey = await backendService
+            .atClientInstance.encryptionService
+            .generateFileEncryptionSharedKey(
+                backendService.currentAtSign, groupContact.contact.atSign);
+        print('fileEncryptionKey : ${fileEncryptionKey}');
 
-      if (!isFilesUploaded) {
-        for (var file in selectedFiles) {
-          var selectedFile = File(file.path);
-          var bytes = selectedFile.readAsBytesSync();
-          print('file : ${selectedFile}');
+        if (!isFilesUploaded) {
+          for (var file in selectedFiles) {
+            var selectedFile = File(file.path);
+            var bytes = selectedFile.readAsBytesSync();
+            print('file : ${selectedFile}');
 
-          var encryptedFileContent = await backendService
-              .atClientInstance.encryptionService
-              .encryptFile(bytes, fileEncryptionKey);
+            var encryptedFileContent = await backendService
+                .atClientInstance.encryptionService
+                .encryptFile(bytes, fileEncryptionKey);
 
-          print('encryptedFileContent : ${encryptedFileContent}');
+            print('encryptedFileContent : ${encryptedFileContent}');
 
-          try {
             var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
                 headers: <String, String>{
                   "bin": container,
@@ -376,14 +376,10 @@ class FileTransferProvider extends BaseModel {
             }
 
             print('container link: ${container}');
-          } catch (e) {
-            print('error in uploading: $e');
           }
+          isFilesUploaded = true;
         }
-        isFilesUploaded = true;
-      }
 
-      try {
         AtKey atKey = AtKey()
           ..metadata = Metadata()
           ..metadata.ttr = -1
@@ -414,20 +410,21 @@ class FileTransferProvider extends BaseModel {
             .isNotificationSend = result;
 
         print('notification sent: ${result}');
-        flushBarStatusSink.add(FLUSHBAR_STATUS.IDLE);
-      } catch (e) {
-        print('Error in sending notification $e');
-        flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
       }
+      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+
+      FileHistory fileHistory =
+          FileHistory(filesToTransfer, shareStatus, HistoryType.send);
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .setFileTransferHistory(fileHistory);
+
+      setStatus(SEND_FILES, Status.Done);
+    } catch (e) {
+      print('error in sending file : $e');
+      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      setStatus(SEND_FILES, Status.Error);
     }
-
-    FileHistory fileHistory =
-        FileHistory(filesToTransfer, shareStatus, HistoryType.send);
-    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-            listen: false)
-        .setFileTransferHistory(fileHistory);
-
-    setStatus(SEND_FILES, Status.Done);
   }
 
   sendFileNotification(FileHistory fileHistory, String atsign) async {
@@ -482,4 +479,4 @@ class FileTransferProvider extends BaseModel {
   }
 }
 
-enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED }
+enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED, DONE }
