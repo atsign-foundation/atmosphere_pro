@@ -7,6 +7,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/Custom_heading.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -91,17 +92,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
       if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
         sendingFlushbar = _showScaffold(status: 0);
-        await sendingFlushbar.show(context);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
       } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
         sendingFlushbar = _showScaffold(status: 2);
-        await sendingFlushbar.show(context);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
       } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
         sendingFlushbar = _showScaffold(status: 1);
-        await sendingFlushbar.show(context);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
       }
     });
   }
@@ -135,8 +141,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       message: 'hello',
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
-      reverseAnimationCurve: Curves.decelerate,
-      forwardAnimationCurve: Curves.elasticOut,
+      // reverseAnimationCurve: Curves.decelerate,
+      // forwardAnimationCurve: Curves.elasticOut,
       backgroundColor: ColorConstants.scaffoldColor,
       boxShadows: [
         BoxShadow(

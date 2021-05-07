@@ -40,7 +40,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   bool isOpen = false,
       isDownloading = false,
       isDownloaded = false,
-      isDownloadAvailable = false;
+      isDownloadAvailable = false,
+      isFilesAvailableOfline = true;
   DateTime sendTime;
   Uint8List videoThumbnail, image;
   int fileSize = 0;
@@ -68,6 +69,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloadAvailable = true;
     }
     getAtSignDetail();
+    isFilesAlreadyDownloaded();
   }
 
   getAtSignDetail() async {
@@ -85,6 +87,20 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         }
       }
     }
+  }
+
+  isFilesAlreadyDownloaded() async {
+    widget.receivedHistory.files.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory.path +
+          '/${element.name}';
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        setState(() {
+          isFilesAvailableOfline = false;
+        });
+      }
+    });
   }
 
   @override
@@ -131,29 +147,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   ),
                   InkWell(
                     onTap: () async {
-                      var currentDate = DateTime.now();
-                      if (widget.receivedHistory.expiry
-                              .difference(currentDate) <
-                          Duration(seconds: 0)) {
-                        return;
-                      }
-                      setState(() {
-                        isDownloading = true;
-                      });
-
-                      await BackendService.getInstance().downloadFileFromBin(
-                          widget.receivedHistory.sender,
-                          widget.receivedHistory.url);
-
-                      setState(() {
-                        isDownloaded = true;
-                        isDownloading = false;
-                      });
+                      await downloadFiles(widget.receivedHistory);
                     },
                     child: isDownloadAvailable
                         ? isDownloading
                             ? CircularProgressIndicator()
-                            : isDownloaded
+                            : isDownloaded || isFilesAvailableOfline
                                 ? Icon(
                                     Icons.done,
                                     color: Color(0xFF08CB21),
@@ -165,46 +164,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   )
                         : SizedBox(),
                   )
-                  // ContactService()
-                  //         .allContactsList
-                  //         .contains(widget.receivedHistory.name)
-                  //     ? SizedBox()
-                  //     : GestureDetector(
-                  //         onTap: () async {
-                  //           await showDialog(
-                  //             context: context,
-                  //             builder: (context) => AddSingleContact(
-                  //               atSignName: widget.receivedHistory.name[0],
-                  //             ),
-                  //           );
-                  //           this.setState(() {});
-                  //         },
-                  //         child: Container(
-                  //           height: 20.toHeight,
-                  //           width: 20.toWidth,
-                  //           child: Icon(
-                  //             Icons.add,
-                  //             color: Colors.black,
-                  //           ),
-                  //         ),
-                  //       )
                 ],
               ),
               SizedBox(height: 5.toHeight),
-
-              // atsign of sender
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: widget.receivedHistory.sender != null
-              //           ? Text(
-              //               widget.receivedHistory.sender,
-              //               style: CustomTextStyles.secondaryRegular12,
-              //             )
-              //           : SizedBox(),
-              //     ),
-              //   ],
-              // ),
               SizedBox(
                 height: 8.toHeight,
               ),
@@ -560,5 +522,26 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     File test = File(filePath);
     bool fileExists = await test.exists();
     return fileExists;
+  }
+
+  downloadFiles(FileTransfer receivedHistory) async {
+    setState(() {
+      isDownloading = true;
+    });
+
+    var result = await BackendService.getInstance().downloadFileFromBin(
+        widget.receivedHistory.sender, widget.receivedHistory.url);
+
+    if (result is bool && result) {
+      setState(() {
+        isDownloaded = true;
+        isDownloading = false;
+      });
+    } else if (result is bool && !result) {
+      setState(() {
+        isDownloaded = false;
+        isDownloading = false;
+      });
+    }
   }
 }

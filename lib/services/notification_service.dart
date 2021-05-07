@@ -62,8 +62,8 @@ class NotificationService {
     });
   }
 
-  Future<void> showNotification(String from, String fileName, String fileSize,
-      {String id}) async {
+  Future<void> showNotification(String from,
+      {String fileName, String fileSize, String id}) async {
     var androidChannelSpecifics = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',

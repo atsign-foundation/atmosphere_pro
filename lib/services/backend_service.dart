@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
@@ -203,6 +204,7 @@ class BackendService {
   Future<void> _notificationCallBack(var response) async {
     print('response => $response');
     await syncWithSecondary();
+    print('syncing finish');
     response = response.replaceFirst('notification:', '');
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
@@ -212,7 +214,7 @@ class BackendService {
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
-
+    print('fromAtSign : $fromAtSign');
     if (atKey == 'stream_id') {
       var valueObject = responseJson['value'];
       var streamId = valueObject.split(':')[0];
@@ -236,10 +238,11 @@ class BackendService {
 
       return;
     }
-
+    print(' FILE_TRANSFER_KEY : ${atKey}');
     if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
       var value = responseJson['value'];
 
+      print('decrypting ');
       var decryptedMessage = await atClientInstance.encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
@@ -255,8 +258,10 @@ class BackendService {
           .addToReceiveFileHistory(fromAtSign, decryptedMessage);
 
       NotificationService().setOnNotificationClick(onNotificationClick);
-      await NotificationService().showNotification(fromAtSign, 'myfile', '40');
+      await NotificationService()
+          .showNotification(fromAtSign, fileName: 'myfile', fileSize: '40');
     }
+    print('fn call back end');
   }
 
   syncWithSecondary() async {
@@ -274,54 +279,108 @@ class BackendService {
     }
   }
 
-  Future<void> downloadFileFromBin(
+  Future downloadFileFromBin(
     String sharedByAtSign,
     String url,
   ) async {
+    bool isDownloaded = true;
     try {
-      // FileTransfer receivedData =
-      //     FileTransfer.fromJson(jsonDecode(decryptedMessage));
-
       var response = await http.get(Uri.parse(url));
       var archive = ZipDecoder().decodeBytes(response.bodyBytes);
       for (var file in archive) {
+        bool proceedToDownload = await proceedToFileDownload(file.name);
+        if (!proceedToDownload) {
+          isDownloaded = false;
+          continue;
+        }
+
+        print('isFilePresent: ${proceedToDownload}');
         var unzipped = file.content as List<int>;
-        await decryptAndStore(
+        bool result = await decryptAndStore(
           sharedByAtSign,
           unzipped,
           file.name,
         );
+
+        if (result is bool && !result) {
+          isDownloaded = false;
+        }
       }
+      return isDownloaded;
     } catch (e) {
       print('Error in download $e');
-      return null;
+      return false;
     }
   }
 
-  void decryptAndStore(
+  Future decryptAndStore(
     String sharedByAtSign,
     Uint8List encryptedFileInBytes,
     String fileName,
   ) async {
     print('decrypting file: $fileName');
-    var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
-      ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
-      ..sharedBy = sharedByAtSign
-      ..auth = true;
-    var encryptedFileSharedKey = await atClientInstance
-        .getRemoteSecondary()
-        .executeAndParse(fileDecryptionKeyLookUpBuilder);
-    var currentAtSignPrivateKey =
-        await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
-    var fileDecryptionKey = atClientInstance.decryptKey(
-        encryptedFileSharedKey, currentAtSignPrivateKey);
+    try {
+      var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
+        ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
+        ..sharedBy = sharedByAtSign
+        ..auth = true;
+      var encryptedFileSharedKey = await atClientInstance
+          .getRemoteSecondary()
+          .executeAndParse(fileDecryptionKeyLookUpBuilder);
+      var currentAtSignPrivateKey =
+          await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
+      var fileDecryptionKey = atClientInstance.decryptKey(
+          encryptedFileSharedKey, currentAtSignPrivateKey);
 
-    var decryptedFile = await atClientInstance.encryptionService
-        .decryptFile(encryptedFileInBytes, fileDecryptionKey);
-    var downloadedFile = File('${downloadDirectory.path}/$fileName');
+      var decryptedFile = await atClientInstance.encryptionService
+          .decryptFile(encryptedFileInBytes, fileDecryptionKey);
+      var downloadedFile = File('${downloadDirectory.path}/$fileName');
+      print('open file');
 
-    downloadedFile.writeAsBytesSync(decryptedFile);
-    print('directory: ${downloadDirectory.path}/$fileName');
+      downloadedFile.writeAsBytesSync(decryptedFile);
+      print('directory: ${downloadDirectory.path}/$fileName');
+      return true;
+    } catch (e) {
+      print('error in decryptAndStore : $e');
+      return false;
+    }
+  }
+
+  Future proceedToFileDownload(String fileName) async {
+    String path = downloadDirectory.path + '/$fileName';
+    File file = File(path);
+    bool isPresent, proceedToDownload = false;
+    isPresent = await file.exists();
+    if (isPresent) {
+      await showDialog(
+          context: NavService.navKey.currentContext,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(
+                  'A file named, "$fileName" already exists. Do you want to replace it?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      proceedToDownload = true;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Yes')),
+                TextButton(
+                    onPressed: () {
+                      proceedToDownload = false;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'))
+              ],
+            );
+          });
+    } else {
+      // when file with same name is not present , we can proceed to download
+      print('file not present');
+      return true;
+    }
+    print('proceedToDownload : ${proceedToDownload}');
+    return proceedToDownload;
   }
 
   void _streamCompletionCallBack(var streamId) async {
@@ -379,7 +438,7 @@ class BackendService {
           app_lifecycle_state != AppLifecycleState.resumed.toString()) {
         print("app not active $app_lifecycle_state");
         await NotificationService()
-            .showNotification(atsign, filename, filesize);
+            .showNotification(atsign, fileName: filename, fileSize: filesize);
       }
       NotificationPayload payload = NotificationPayload(
           file: filename, name: atsign, size: double.parse(filesize));

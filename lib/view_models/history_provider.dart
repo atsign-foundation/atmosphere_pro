@@ -21,6 +21,8 @@ class HistoryProvider extends BaseModel {
   String RECEIVED_HISTORY = 'received_history';
   String ADD_RECEIVED_FILE = 'add_recieved_file';
   String SET_FILE_HISTORY = 'set_flie_history';
+  String SET_RECEIVED_HISTORY = 'set_received_history';
+  String GET_ALL_FILE_DATA = 'get_all_file_data';
   List<FileHistory> sentHistory = [];
   List<FileTransfer> recievedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
@@ -179,7 +181,9 @@ class HistoryProvider extends BaseModel {
   }
 
   getAllFileTransferData() async {
+    setStatus(GET_ALL_FILE_DATA, Status.Loading);
     await getReceivedHistoryLog();
+    bool isNewLogsFound = false;
     receivedHistoryNew = [];
 
     List<String> fileTransferResponse =
@@ -207,11 +211,6 @@ class HistoryProvider extends BaseModel {
 
           print('test detail:${filesModel.key}');
 
-          // filesModel.sharedWith = [ShareStatus(atKey.sharedBy, true)];
-
-          // This originally contains list of atsigns the data was shared with
-          // We change it to sharedBy
-          // filesModel.type = HistoryType.received;
           if (filesModel.key != null) {
             receivedHistoryNew.insert(0, filesModel);
 
@@ -219,7 +218,7 @@ class HistoryProvider extends BaseModel {
             int index = recievedHistoryLogs
                 .indexWhere((element) => element.key == filesModel.key);
             if (index == -1) {
-              print('new log found');
+              isNewLogsFound = true;
               recievedHistoryLogs.insert(0, filesModel);
             }
           }
@@ -229,10 +228,14 @@ class HistoryProvider extends BaseModel {
 
     print('sentHistory length ${receivedHistoryNew.length}');
     print('recievedHistoryLogs length: ${recievedHistoryLogs.length}');
-    updateReceivedHistoryLogs();
+    if (isNewLogsFound) {
+      updateReceivedHistoryLogs();
+    }
+    setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 
   getReceivedHistoryLog() async {
+    setStatus(SET_RECEIVED_HISTORY, Status.Loading);
     recievedHistoryLogs = [];
     AtKey key = AtKey()
       ..metadata = Metadata()
@@ -249,6 +252,7 @@ class HistoryProvider extends BaseModel {
     }
 
     print('recievedHistoryLogs : ${recievedHistoryLogs}');
+    setStatus(SET_RECEIVED_HISTORY, Status.Done);
   }
 
   updateReceivedHistoryLogs() async {
