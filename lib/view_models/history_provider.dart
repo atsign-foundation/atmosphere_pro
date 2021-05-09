@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -156,7 +157,7 @@ class HistoryProvider extends BaseModel {
     setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
       await getAllFileTransferData();
-      sortFiles(recievedHistoryLogs);
+      await sortFiles(recievedHistoryLogs);
       populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
@@ -192,9 +193,6 @@ class HistoryProvider extends BaseModel {
     );
 
     await Future.forEach(fileTransferResponse, (key) async {
-      print('key $key');
-      print('${key.split(':')[1]}');
-      print('${backendService.atClientInstance.currentAtSign}');
       if (key.contains('cached')) {
         AtKey atKey = AtKey.fromString(key);
         AtValue atvalue = await backendService.atClientInstance
@@ -205,11 +203,8 @@ class HistoryProvider extends BaseModel {
         if (atvalue != null &&
             atvalue.value != null &&
             atvalue.value[0] != 'h') {
-          print('atvalue.value ${atvalue.value}');
           FileTransfer filesModel =
               FileTransfer.fromJson(jsonDecode(atvalue.value));
-
-          print('test detail:${filesModel.key}');
 
           if (filesModel.key != null) {
             receivedHistoryNew.insert(0, filesModel);
@@ -251,7 +246,6 @@ class HistoryProvider extends BaseModel {
       });
     }
 
-    print('recievedHistoryLogs : ${recievedHistoryLogs}');
     setStatus(SET_RECEIVED_HISTORY, Status.Done);
   }
 
@@ -275,8 +269,8 @@ class HistoryProvider extends BaseModel {
       receivedPhotos = [];
       receivedVideos = [];
       receivedUnknown = [];
-      filesList.forEach((fileData) {
-        fileData.files.forEach((file) {
+      await Future.forEach(filesList, (fileData) async {
+        await Future.forEach(fileData.files, (file) async {
           String fileExtension = file.name.split('.').last;
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
@@ -304,7 +298,14 @@ class HistoryProvider extends BaseModel {
             int index = receivedPhotos.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
             if (index == -1) {
-              receivedPhotos.add(fileDetail);
+              // checking is photo is downloaded or not
+              //if photo is downloaded then only it's shown in my files screen
+              File file = File(fileDetail.filePath);
+              bool isFileDownloaded = await file.exists();
+
+              if (isFileDownloaded) {
+                receivedPhotos.add(fileDetail);
+              }
             }
           } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
               FileTypes.PDF_TYPES.contains(fileExtension) ||

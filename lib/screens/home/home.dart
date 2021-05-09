@@ -49,6 +49,15 @@ class _HomeState extends State<Home> {
 
     acceptFiles();
     _checkForPermissionStatus();
+    BackendService.getInstance()
+        .isAuthuneticatingStream
+        .listen((isAuthenticating) {
+      if (mounted) {
+        setState(() {
+          authenticating = isAuthenticating;
+        });
+      }
+    });
   }
 
   var atClientPrefernce;
@@ -233,17 +242,8 @@ class _HomeState extends State<Home> {
                                   onPressed: authenticating
                                       ? () {}
                                       : () async {
-                                          setState(() {
-                                            authenticating =
-                                                _backendService.authenticating;
-                                          });
                                           await _backendService
                                               .checkToOnboard();
-
-                                          setState(() {
-                                            authenticating =
-                                                _backendService.authenticating;
-                                          });
                                         }),
                             ),
                           ),

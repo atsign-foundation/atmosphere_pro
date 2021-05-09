@@ -57,6 +57,12 @@ class BackendService {
   Flushbar receivingFlushbar;
   String onBoardError;
 
+  final _isAuthuneticatingStreamController = StreamController<bool>.broadcast();
+  Stream<bool> get isAuthuneticatingStream =>
+      _isAuthuneticatingStreamController.stream;
+  StreamSink<bool> get isAuthuneticatingSink =>
+      _isAuthuneticatingStreamController.sink;
+
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
     if (Platform.isIOS) {
@@ -92,6 +98,8 @@ class BackendService {
       ..namespace = MixedConstants.appNamespace
       ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = MixedConstants.ROOT_DOMAIN
+      ..syncRegex = MixedConstants.regex
+      ..outboundConnectionTimeout = MixedConstants.TIME_OUT
       ..hiveStoragePath = path;
     return _atClientPreference;
   }
@@ -196,6 +204,7 @@ class BackendService {
     await initializeContactsService(atClientInstance, currentAtSign);
 
     await atClientInstance.startMonitor(privateKey, _notificationCallBack);
+    print('monitor started');
     return true;
   }
 
@@ -365,6 +374,7 @@ class BackendService {
                       Navigator.of(context).pop();
                     },
                     child: Text('Yes')),
+                TextButton(onPressed: null, child: Text('')),
                 TextButton(
                     onPressed: () {
                       proceedToDownload = false;
@@ -529,6 +539,7 @@ class BackendService {
               await atClientServiceMap[atsign].atClient.currentAtSign;
 
           await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          await startMonitor(atsign: atsign, value: value);
           await initializeContactsService(atClientInstance, currentAtSign);
           // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
           await Navigator.pushNamedAndRemoveUntil(
@@ -610,6 +621,7 @@ class BackendService {
   checkToOnboard({String atSign}) async {
     try {
       authenticating = true;
+      isAuthuneticatingSink.add(authenticating);
       var atClientPrefernce;
       //  await getAtClientPreference();
       await getAtClientPreference()
@@ -623,6 +635,8 @@ class BackendService {
         domain: MixedConstants.ROOT_DOMAIN,
         appColor: Color.fromARGB(255, 240, 94, 62),
         onboard: (value, atsign) async {
+          authenticating = true;
+          isAuthuneticatingSink.add(authenticating);
           atClientServiceMap = value;
 
           String atSign =
@@ -633,6 +647,7 @@ class BackendService {
           _initBackendService();
           await initializeContactsService(atClientInstance, currentAtSign);
           authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
           // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
           await Navigator.pushNamedAndRemoveUntil(
               NavService.navKey.currentContext,
@@ -642,11 +657,13 @@ class BackendService {
         onError: (error) {
           print('Onboarding throws $error error');
           authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
         },
         // nextScreen: WelcomeScreen(),
       );
     } catch (e) {
       authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
     }
   }
 

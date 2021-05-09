@@ -110,7 +110,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     }
     await Provider.of<WelcomeScreenProvider>(context, listen: false)
         .getToggleStatus();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -525,8 +527,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           if (_formKey.currentState.validate()) {
                             await BackendService.getInstance()
                                 .deleteAtSignFromKeyChain(atsign);
-                            await Navigator.pushNamedAndRemoveUntil(
-                                context, Routes.HOME, (route) => false);
                           }
                         }),
                     Spacer(),

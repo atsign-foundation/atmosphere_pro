@@ -84,6 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     listenForFlushBarStatus();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await BackendService.getInstance().syncWithSecondary();
       await Provider.of<HistoryProvider>(context, listen: false)
           .getSentHistory();
       await Provider.of<HistoryProvider>(context, listen: false)
@@ -273,7 +274,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  TextStrings().welcomeUser(currentAtSign),
+                                  TextStrings().welcomeUser(
+                                      BackendService.getInstance()
+                                                  .atClientInstance !=
+                                              null
+                                          ? BackendService.getInstance()
+                                              .atClientInstance
+                                              .currentAtSign
+                                          : ''),
                                   style: GoogleFonts.playfairDisplay(
                                     textStyle: TextStyle(
                                       fontSize: 26.toFont,
