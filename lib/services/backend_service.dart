@@ -661,6 +661,8 @@ class BackendService {
         },
         // nextScreen: WelcomeScreen(),
       );
+      authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
     } catch (e) {
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
