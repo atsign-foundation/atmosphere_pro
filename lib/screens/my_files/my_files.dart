@@ -23,23 +23,9 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   TabController _controller;
   HistoryProvider historyProvider;
   bool isOpen = false;
+  List<Widget> tabs = [];
+  List<String> tabNames = [];
 
-  List<String> tabsHeading = [
-    TextStrings().recents,
-    TextStrings().photos,
-    TextStrings().videos,
-    TextStrings().audio,
-    TextStrings().apk,
-    TextStrings().documents,
-  ];
-  List<Widget> tabsWidgets = [
-    Recents(),
-    Photos(),
-    Videos(),
-    Audios(),
-    APK(),
-    Documents(),
-  ];
   bool isLoading = false;
   var runtimeType;
   @override
@@ -52,12 +38,12 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   }
 
   ini() async {
-    isLoading = true;
-    await historyProvider.getRecievedHistory();
-    _controller = TabController(
-        length: historyProvider.tabs.length, vsync: this, initialIndex: 0);
-    isLoading = false;
-    setState(() {});
+    tabs = [];
+    tabNames = [];
+    tabs = Provider.of<HistoryProvider>(context, listen: false).tabs;
+    tabNames = Provider.of<HistoryProvider>(context, listen: false).tabNames;
+    _controller =
+        TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }
 
   @override
@@ -70,7 +56,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
         showTitle: true,
         showLeadingIcon: true,
         titleText: TextStrings().myFiles,
-        trailingIcon: (historyProvider.tabs.length > 1 &&
+        trailingIcon: (tabs.length > 1 &&
                 (runtimeType == Videos ||
                     runtimeType == Documents ||
                     runtimeType == APK ||
@@ -159,23 +145,15 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
         child: (isLoading)
             ? Center(child: CircularProgressIndicator())
             : Container(
-                height: SizeConfig().screenHeight,
+                // reducing size by 75 , so that last list item will be shown
+                height: SizeConfig().screenHeight - 75,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 40,
                       child: TabBar(
-                        onTap: (index) {
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .getRecievedHistory();
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .sortFiles(historyProvider.receivedHistory);
-                          setState(() {
-                            runtimeType =
-                                historyProvider.tabs[index].runtimeType;
-                          });
-                        },
+                        onTap: (index) async {},
                         isScrollable: true,
                         labelColor: ColorConstants.fontPrimary,
                         indicatorWeight: 5.toHeight,
@@ -186,15 +164,14 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                             CustomTextStyles.secondaryRegular14,
                         controller: _controller,
                         tabs: List<Text>.generate(
-                            historyProvider.tabNames.length,
-                            (index) => Text(historyProvider.tabNames[index])),
+                            tabNames.length, (index) => Text(tabNames[index])),
                       ),
                     ),
                     Expanded(
                       child: TabBarView(
                         controller: _controller,
                         physics: ClampingScrollPhysics(),
-                        children: historyProvider.tabs,
+                        children: tabs,
                       ),
                     )
                   ],

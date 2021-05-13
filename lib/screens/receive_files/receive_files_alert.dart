@@ -161,21 +161,22 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
             DateTime date = DateTime.now();
             Provider.of<HistoryProvider>(context, listen: false)
                 .setFilesHistory(
-                    atSignName: payload.name.toString(),
+                    atSignName: [payload.name.toString()],
                     // id: payload.id,
                     historyType: HistoryType.received,
                     files: [
-                  FilesDetail(
-                      filePath: backendService.atClientPreference.downloadPath +
-                          '/' +
-                          payload.file,
-                      date: date.toString(),
-                      size: payload.size,
-                      fileName: payload.file,
-                      // id: payload.id,
-                      type: payload.file
-                          .substring(payload.file.lastIndexOf('.') + 1))
-                ]);
+                      FilesDetail(
+                          filePath:
+                              backendService.atClientPreference.downloadPath +
+                                  '/' +
+                                  payload.file,
+                          date: date.toString(),
+                          size: payload.size,
+                          fileName: payload.file,
+                          // id: payload.id,
+                          type: payload.file
+                              .substring(payload.file.lastIndexOf('.') + 1))
+                    ]);
 
             status = true;
             widget.onAccept;

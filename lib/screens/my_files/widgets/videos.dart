@@ -33,7 +33,7 @@ class _VideosState extends State<Videos> {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
       load: (provider) {
-        return provider.sortFiles(provider.receivedHistory);
+        return provider.sortFiles(provider.recievedHistoryLogs);
       },
       successBuilder: (provider) => Container(
         margin:

@@ -180,6 +180,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                 }
                 return Consumer<FileTransferProvider>(
                     builder: (context, provider, _) {
+                  if (provider.selectedFiles.isEmpty) {
+                    return SizedBox();
+                  }
                   return Container(
                     decoration: BoxDecoration(
                       border: Border(
@@ -191,7 +194,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
                     child: ListTile(
                       title: Text(
-                        provider.selectedFiles[index].name.toString(),
+                        provider.selectedFiles[index]?.name.toString(),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.toFont,
@@ -271,8 +274,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(
-                  height: 50.toHeight,
-                  width: 50.toWidth,
+                  height: 40.toHeight,
+                  width: 40.toWidth,
                   child: Image.asset(
                     FileTypes.PDF_TYPES.contains(extension)
                         ? ImageConstants.pdfLogo

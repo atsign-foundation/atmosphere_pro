@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
@@ -26,48 +28,80 @@ import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SentFilesListTile extends StatefulWidget {
-  final FilesModel sentHistory;
+  final FileHistory sentHistory;
   final ContactProvider contactProvider;
-  final int id;
+  // final int id;
   final Map<String, Set<FilesDetail>> testList;
 
-  const SentFilesListTile(
-      {Key key, this.sentHistory, this.contactProvider, this.testList, this.id})
-      : super(key: key);
+  const SentFilesListTile({
+    Key key,
+    this.sentHistory,
+    this.contactProvider,
+    this.testList,
+  }) : super(key: key);
   @override
   _SentFilesListTileState createState() => _SentFilesListTileState();
 }
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
-  int fileLength;
-  List<FilesDetail> filesList = [];
-  Set<AtContact> contactList;
+  int fileLength, fileSize = 0;
+  List<FileData> filesList = [];
+  List<String> contactList;
+  bool isOpen = false;
+  bool isDeepOpen = false;
+  // DateTime sendTime;
+  Uint8List videoThumbnail, image;
+
   @override
   void initState() {
     super.initState();
-    fileLength = 0;
-    contactList = Set<AtContact>();
-    widget.testList.forEach((key, value) {
-      ContactService().contactList.forEach((element) {
-        if (element.atSign == key) {
-          contactList.add(element);
-        }
-      });
-      fileLength = widget.testList[key].length;
-      print(widget.testList[key].length);
-      value.forEach((element) {
-        filesList.add(element);
-      });
+    fileLength = widget.sentHistory.fileDetails.files.length;
+    if (widget.sentHistory.sharedWith != null) {
+      contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
+    } else {
+      contactList = [];
+    }
+    filesList = widget.sentHistory.fileDetails.files;
+
+    widget.sentHistory.fileDetails.files.forEach((element) {
+      print('all files:${element.size}');
+      fileSize += element.size;
     });
+
+    getAtSignDetail();
+    // widget.testList.forEach((key, value) {
+    //   ContactService().contactList.forEach((element) {
+    //     if (element.atSign == key) {
+    //       contactList.add(element);
+    //     }
+    //   });
+    //   fileLength = widget.testList[key].length;
+    //   print(widget.testList[key].length);
+    //   value.forEach((element) {
+    //     filesList.add(element);
+    //   });
+    // });
+
     // contactList
     //     .removeWhere((element) => element.atSign == widget.testList.keys.first);
-    print('WIDGET ID===>${widget.id}');
   }
 
-  bool isOpen = false;
-  bool isDeepOpen = false;
-  DateTime sendTime;
-  Uint8List videoThumbnail;
+  getAtSignDetail() async {
+    AtContact contact;
+    if (contactList[0] != null) {
+      contact = await getAtSignDetails(contactList[0]);
+    }
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted) {
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+        }
+      }
+    }
+  }
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -82,30 +116,45 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   @override
   Widget build(BuildContext context) {
-    sendTime = DateTime.parse(widget.sentHistory.date);
+    // sendTime = DateTime.parse(widget.sentHistory.date);
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     Uint8List image;
     print('contactList====>$contactList');
-    if (contactList?.first?.tags != null &&
-        contactList?.first?.tags['image'] != null) {
-      List<int> intList = contactList?.first?.tags['image'].cast<int>();
-      image = Uint8List.fromList(intList);
-    }
+    // if (contactList?.first?.tags != null &&
+    //     contactList?.first?.tags['image'] != null) {
+    //   List<int> intList = contactList?.first?.tags['image'].cast<int>();
+    //   image = Uint8List.fromList(intList);
+    // }
     return Column(
       children: [
         Container(
           color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
           child: ListTile(
-            leading: (contactList?.first?.tags != null &&
-                    contactList?.first?.tags['image'] != null)
-                ? CustomCircleAvatar(
-                    byteImage: image,
-                    nonAsset: true,
-                  )
-                : ContactInitial(
-                    initials:
-                        contactList.first.atSign?.substring(1, 3) ?? 'hello',
-                  ),
+            leading:
+                //  (contactList?.first?.tags != null &&
+                //         contactList?.first?.tags['image'] != null)
+                //     ? CustomCircleAvatar(
+                //         byteImage: image,
+                //         nonAsset: true,
+                //       )
+                //     :
+                contactList.isNotEmpty
+                    ? image != null
+                        ? CustomCircleAvatar(byteImage: image, nonAsset: true)
+                        : Container(
+                            height: 45.toHeight,
+                            width: 45.toHeight,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                            child: ContactInitial(
+                              initials:
+                                  contactList[0]?.substring(1, 3) ?? 'hello',
+                              size: 45,
+                            ),
+                          )
+                    : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -113,34 +162,36 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text(
-                        widget.testList.keys.first,
-                        style: CustomTextStyles.primaryRegular16,
-                      ),
+                      child: contactList.isNotEmpty
+                          ? Text(
+                              contactList[0],
+                              style: CustomTextStyles.primaryRegular16,
+                            )
+                          : SizedBox(),
                     ),
-                    ContactService()
-                            .allContactsList
-                            .contains(widget.sentHistory.name)
-                        ? SizedBox()
-                        : GestureDetector(
-                            onTap: () async {
-                              await showDialog(
-                                context: context,
-                                builder: (context) => AddSingleContact(
-                                  atSignName: widget.sentHistory.name,
-                                ),
-                              );
-                              this.setState(() {});
-                            },
-                            child: Container(
-                              height: 20.toHeight,
-                              width: 20.toWidth,
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.black,
-                              ),
-                            ),
-                          )
+                    // ContactService()
+                    //         .allContactsList
+                    //         .contains(widget.sentHistory.atsign[0])
+                    //     ? SizedBox()
+                    //     : GestureDetector(
+                    //         onTap: () async {
+                    //           await showDialog(
+                    //             context: context,
+                    //             builder: (context) => AddSingleContact(
+                    //               atSignName: widget.sentHistory.atsign[0],
+                    //             ),
+                    //           );
+                    //           this.setState(() {});
+                    //         },
+                    //         child: Container(
+                    //           height: 20.toHeight,
+                    //           width: 20.toWidth,
+                    //           child: Icon(
+                    //             Icons.add,
+                    //             color: Colors.black,
+                    //           ),
+                    //         ),
+                    //       )
                   ],
                 ),
                 SizedBox(height: 5.toHeight),
@@ -162,10 +213,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                       ),
                       SizedBox(width: 10.toHeight),
                       Text(
-                        double.parse(widget.sentHistory.totalSize.toString()) <=
-                                1024
-                            ? '${widget.sentHistory.totalSize} Kb '
-                            : '${(widget.sentHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                        double.parse(fileSize.toString()) <= 1024
+                            ? '${fileSize} Kb '
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],
@@ -178,10 +228,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        '${DateFormat('MM-dd-yyyy').format(sendTime)}',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
+                      widget.sentHistory.fileDetails.date != null
+                          ? Text(
+                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
+                              style: CustomTextStyles.secondaryRegular12,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : SizedBox(),
                       SizedBox(width: 10.toHeight),
                       Container(
                         color: ColorConstants.fontSecondary,
@@ -189,10 +243,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      Text(
-                        '${DateFormat('kk:mm').format(sendTime)}',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
+                      widget.sentHistory.fileDetails.date != null
+                          ? Text(
+                              '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
+                              style: CustomTextStyles.secondaryRegular12,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
@@ -202,6 +260,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 (!isOpen)
                     ? GestureDetector(
                         onTap: () {
+                          widget.sentHistory.sharedWith.forEach((element) {
+                            print(
+                                'sentHistory: ${element.atsign}, ${element.isNotificationSend}');
+                          });
+
                           setState(() {
                             isOpen = !isOpen;
                           });
@@ -232,31 +295,32 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             ),
             trailing: Consumer<FileTransferProvider>(
               builder: (context, provider, _) {
-                TransferStatus test =
-                    provider.getStatus(widget.id, contactList.first.atSign);
-                return Container(
-                  height: 20.toHeight,
-                  width: 20.toHeight,
-                  child: Icon(
-                    test == TransferStatus.DONE
-                        ? Icons.check_circle_outline_outlined
-                        : test == TransferStatus.FAILED
-                            ? Icons.cancel_outlined
-                            : Icons.priority_high_rounded,
-                    color: test == TransferStatus.DONE
-                        ? Colors.green
-                        : test == TransferStatus.FAILED
-                            ? Colors.red
-                            : Colors.orange,
-                  ),
-                  // color: provider.tStatus[i].status ==
-                  //         TransferStatus.PENDING
-                  //     ? Colors.orange
-                  //     : provider.tStatus[i].status ==
-                  //             TransferStatus.DONE
-                  //         ? Colors.green
-                  // : Colors.red,
-                );
+                // TransferStatus test =
+                //     provider.getStatus(widget.id, contactList.first.atSign);
+                // return Container(
+                //   height: 20.toHeight,
+                //   width: 20.toHeight,
+                //   child: Icon(
+                //     test == TransferStatus.DONE
+                //         ? Icons.check_circle_outline_outlined
+                //         : test == TransferStatus.FAILED
+                //             ? Icons.cancel_outlined
+                //             : Icons.priority_high_rounded,
+                //     color: test == TransferStatus.DONE
+                //         ? Colors.green
+                //         : test == TransferStatus.FAILED
+                //             ? Colors.red
+                //             : Colors.orange,
+                //   ),
+                // color: provider.tStatus[i].status ==
+                //         TransferStatus.PENDING
+                //     ? Colors.orange
+                //     : provider.tStatus[i].status ==
+                //             TransferStatus.DONE
+                //         ? Colors.green
+                // : Colors.red,
+                // );
+                return SizedBox();
               },
             ),
           ),
@@ -268,7 +332,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 166.0 * widget.sentHistory.files.length,
+                      height:
+                          70.0 * widget.sentHistory.fileDetails.files.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
@@ -276,17 +341,17 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           itemCount: fileLength,
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList[index].fileName?.split('.')?.last)) {
-                              videoThumbnailBuilder(filesList[index].filePath);
+                                filesList[index].name?.split('.')?.last)) {
+                              videoThumbnailBuilder(filesList[index].path);
                             }
                             return ListTile(
                               onTap: () async {
-                                // preview file
-                                File test = File(filesList[index].filePath);
+                                File test = File(filesList[index].path);
                                 bool fileExists = await test.exists();
+                                print(
+                                    'test file: ${test}, fileExists: ${fileExists}');
                                 if (fileExists) {
-                                  await OpenFile.open(
-                                      filesList[index].filePath);
+                                  await OpenFile.open(filesList[index].path);
                                 } else {
                                   _showNoFileDialog(deviceTextFactor);
                                 }
@@ -295,8 +360,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 height: 50.toHeight,
                                 width: 50.toHeight,
                                 child: thumbnail(
-                                  filesList[index].fileName?.split('.')?.last,
-                                  filesList[index].filePath,
+                                  filesList[index].name?.split('.')?.last,
+                                  filesList[index].path,
                                 ),
                               ),
                               title: Column(
@@ -306,7 +371,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          filesList[index].fileName.toString(),
+                                          filesList[index].name.toString(),
                                           style:
                                               CustomTextStyles.primaryRegular16,
                                         ),
@@ -336,11 +401,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                               .secondaryRegular12,
                                         ),
                                         SizedBox(width: 10.toHeight),
-                                        Text(
-                                          filesList[index].type.toString(),
-                                          style: CustomTextStyles
-                                              .secondaryRegular12,
-                                        )
+                                        // Text(
+                                        //   filesList[index].type.toString(),
+                                        //   style: CustomTextStyles
+                                        //       .secondaryRegular12,
+                                        // )
                                       ],
                                     ),
                                   )
@@ -371,15 +436,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           ),
                     (contactList.length < 2)
                         ? Container()
-                        : SizedBox(
-                            height: 10.toHeight,
-                          ),
-                    (contactList.length < 2)
-                        ? Container()
                         : TranferOverlappingContacts(
-                            selectedList: contactList.toList(),
-                            id: widget.id,
-                          ),
+                            selectedList: widget.sentHistory.sharedWith.sublist(
+                                1, widget.sentHistory.sharedWith.length),
+                            fileHistory: widget.sentHistory),
                     GestureDetector(
                       onTap: () {
                         setState(() {

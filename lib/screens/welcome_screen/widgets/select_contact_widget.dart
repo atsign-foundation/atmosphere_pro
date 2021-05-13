@@ -84,6 +84,7 @@ class _ExpansionTileWidget extends StatelessWidget {
                           NavService.navKey.currentContext,
                           listen: false)
                       .updateSelectedContacts(s);
+                  onSelected(s.length);
                 },
                 // singleSelection: true,
               ),

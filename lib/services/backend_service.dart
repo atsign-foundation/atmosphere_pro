@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:archive/archive_io.dart';
+import 'package:at_commons/at_builders.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
@@ -21,10 +26,13 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
+import 'package:at_client/src/manager/sync_manager.dart';
+import 'package:http/http.dart' as http;
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -48,6 +56,12 @@ class BackendService {
   AnimationController controller;
   Flushbar receivingFlushbar;
   String onBoardError;
+
+  final _isAuthuneticatingStreamController = StreamController<bool>.broadcast();
+  Stream<bool> get isAuthuneticatingStream =>
+      _isAuthuneticatingStreamController.stream;
+  StreamSink<bool> get isAuthuneticatingSink =>
+      _isAuthuneticatingStreamController.sink;
 
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
@@ -84,6 +98,8 @@ class BackendService {
       ..namespace = MixedConstants.appNamespace
       ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = MixedConstants.ROOT_DOMAIN
+      ..syncRegex = MixedConstants.regex
+      ..outboundConnectionTimeout = MixedConstants.TIME_OUT
       ..hiveStoragePath = path;
     return _atClientPreference;
   }
@@ -188,6 +204,7 @@ class BackendService {
     await initializeContactsService(atClientInstance, currentAtSign);
 
     await atClientInstance.startMonitor(privateKey, _notificationCallBack);
+    print('monitor started');
     return true;
   }
 
@@ -195,6 +212,7 @@ class BackendService {
   var userResponse = false;
   Future<void> _notificationCallBack(var response) async {
     print('response => $response');
+    await syncWithSecondary();
     response = response.replaceFirst('notification:', '');
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
@@ -204,6 +222,7 @@ class BackendService {
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
+    print('fromAtSign : $fromAtSign');
     if (atKey == 'stream_id') {
       var valueObject = responseJson['value'];
       var streamId = valueObject.split(':')[0];
@@ -224,7 +243,161 @@ class BackendService {
             _streamCompletionCallBack,
             _streamReceiveCallBack);
       }
+
+      return;
     }
+    print(' FILE_TRANSFER_KEY : ${atKey}');
+    if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
+      var value = responseJson['value'];
+
+      print('decrypting ');
+      var decryptedMessage = await atClientInstance.encryptionService
+          .decrypt(value, fromAtSign)
+          // ignore: return_of_invalid_type_from_catch_error
+          .catchError((e) => print("error in decrypting: $e"));
+
+      print('decryptedMessage $decryptedMessage');
+
+      // ignore: unawaited_futures
+
+      // downloadFileFromBin(fromAtSign, decryptedMessage);
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .addToReceiveFileHistory(fromAtSign, decryptedMessage);
+
+      NotificationService().setOnNotificationClick(onNotificationClick);
+      await NotificationService()
+          .showNotification(fromAtSign, fileName: 'myfile', fileSize: '40');
+    }
+  }
+
+  syncWithSecondary() async {
+    try {
+      SyncManager syncManager = atClientInstance.getSyncManager();
+      var isSynced = await syncManager.isInSync();
+      print('already synced: $isSynced');
+      if (isSynced is bool && isSynced) {
+      } else {
+        await syncManager.sync();
+      }
+      print('sync done');
+    } catch (e) {
+      print('error in sync: $e');
+    }
+  }
+
+  Future downloadFileFromBin(
+    String sharedByAtSign,
+    String url,
+  ) async {
+    bool isDownloaded = true;
+    try {
+      var response = await http.get(Uri.parse(url));
+      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
+      for (var file in archive) {
+        bool proceedToDownload = await proceedToFileDownload(file.name);
+        if (!proceedToDownload) {
+          isDownloaded = false;
+          continue;
+        }
+
+        var unzipped = file.content as List<int>;
+        bool result = await decryptAndStore(
+          sharedByAtSign,
+          unzipped,
+          file.name,
+        );
+
+        if (result is bool && !result) {
+          isDownloaded = false;
+        } else {
+          // if download is completed, updating my files screen
+          var context = NavService.navKey.currentContext;
+          var recievedHistoryLogs =
+              Provider.of<HistoryProvider>(context, listen: false)
+                  .recievedHistoryLogs;
+          await Provider.of<HistoryProvider>(context, listen: false)
+              .sortFiles(recievedHistoryLogs);
+          Provider.of<HistoryProvider>(context, listen: false).populateTabs();
+        }
+      }
+
+      return isDownloaded;
+    } catch (e) {
+      print('Error in download $e');
+      return false;
+    }
+  }
+
+  Future decryptAndStore(
+    String sharedByAtSign,
+    Uint8List encryptedFileInBytes,
+    String fileName,
+  ) async {
+    print('decrypting file: $fileName');
+    try {
+      var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
+        ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
+        ..sharedBy = sharedByAtSign
+        ..auth = true;
+      var encryptedFileSharedKey = await atClientInstance
+          .getRemoteSecondary()
+          .executeAndParse(fileDecryptionKeyLookUpBuilder);
+      var currentAtSignPrivateKey =
+          await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
+      var fileDecryptionKey = atClientInstance.decryptKey(
+          encryptedFileSharedKey, currentAtSignPrivateKey);
+
+      var decryptedFile = await atClientInstance.encryptionService
+          .decryptFile(encryptedFileInBytes, fileDecryptionKey);
+      var downloadedFile = File('${downloadDirectory.path}/$fileName');
+      print('open file');
+
+      downloadedFile.writeAsBytesSync(decryptedFile);
+      print('directory: ${downloadDirectory.path}/$fileName');
+      return true;
+    } catch (e) {
+      print('error in decryptAndStore : $e');
+      return false;
+    }
+  }
+
+  Future proceedToFileDownload(String fileName) async {
+    String path = downloadDirectory.path + '/$fileName';
+    File file = File(path);
+    bool isPresent, proceedToDownload = false;
+    isPresent = await file.exists();
+    if (isPresent) {
+      await showDialog(
+          context: NavService.navKey.currentContext,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(
+                  'A file named, "$fileName" already exists. Do you want to replace it?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      proceedToDownload = true;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Yes')),
+                TextButton(onPressed: null, child: Text('')),
+                TextButton(
+                    onPressed: () {
+                      proceedToDownload = false;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'))
+              ],
+            );
+          });
+    } else {
+      // when file with same name is not present , we can proceed to download
+      print('file not present');
+      return true;
+    }
+    print('proceedToDownload : ${proceedToDownload}');
+    return proceedToDownload;
   }
 
   void _streamCompletionCallBack(var streamId) async {
@@ -282,7 +455,7 @@ class BackendService {
           app_lifecycle_state != AppLifecycleState.resumed.toString()) {
         print("app not active $app_lifecycle_state");
         await NotificationService()
-            .showNotification(atsign, filename, filesize);
+            .showNotification(atsign, fileName: filename, fileSize: filesize);
       }
       NotificationPayload payload = NotificationPayload(
           file: filename, name: atsign, size: double.parse(filesize));
@@ -302,7 +475,7 @@ class BackendService {
       if (autoAcceptFiles && trustedSender) {
         DateTime date = DateTime.now();
         Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
-            atSignName: payload.name.toString(),
+            atSignName: [payload.name.toString()],
             historyType: HistoryType.received,
             files: [
               FilesDetail(
@@ -373,6 +546,7 @@ class BackendService {
               await atClientServiceMap[atsign].atClient.currentAtSign;
 
           await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          await startMonitor(atsign: atsign, value: value);
           await initializeContactsService(atClientInstance, currentAtSign);
           // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
           await Navigator.pushNamedAndRemoveUntil(
@@ -454,6 +628,7 @@ class BackendService {
   checkToOnboard({String atSign}) async {
     try {
       authenticating = true;
+      isAuthuneticatingSink.add(authenticating);
       var atClientPrefernce;
       //  await getAtClientPreference();
       await getAtClientPreference()
@@ -467,6 +642,8 @@ class BackendService {
         domain: MixedConstants.ROOT_DOMAIN,
         appColor: Color.fromARGB(255, 240, 94, 62),
         onboard: (value, atsign) async {
+          authenticating = true;
+          isAuthuneticatingSink.add(authenticating);
           atClientServiceMap = value;
 
           String atSign =
@@ -477,6 +654,7 @@ class BackendService {
           _initBackendService();
           await initializeContactsService(atClientInstance, currentAtSign);
           authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
           // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
           await Navigator.pushNamedAndRemoveUntil(
               NavService.navKey.currentContext,
@@ -486,11 +664,15 @@ class BackendService {
         onError: (error) {
           print('Onboarding throws $error error');
           authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
         },
         // nextScreen: WelcomeScreen(),
       );
+      authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
     } catch (e) {
       authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
     }
   }
 
@@ -511,5 +693,10 @@ class BackendService {
     });
   }
 
-  onNotificationClick(String payload) async {}
+  onNotificationClick(String payload) async {
+    await Navigator.push(
+      NavService.navKey.currentContext,
+      MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
+    );
+  }
 }

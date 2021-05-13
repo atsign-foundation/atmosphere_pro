@@ -15,8 +15,10 @@ import 'package:provider/provider.dart';
 
 class OverlappingContacts extends StatefulWidget {
   final List<GroupContactsModel> selectedList;
+  final ValueChanged<bool> onChnage;
 
-  const OverlappingContacts({Key key, this.selectedList}) : super(key: key);
+  const OverlappingContacts({Key key, this.selectedList, this.onChnage})
+      : super(key: key);
 
   @override
   _OverlappingContactsState createState() => _OverlappingContactsState();
@@ -194,6 +196,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                 onRemove: () {
                                   provider.removeContacts(
                                       provider.selectedContacts[index]);
+                                  widget.onChnage(true);
                                 },
                                 name: provider?.selectedContacts[index]?.contact
                                         ?.atSign

@@ -14,13 +14,13 @@ class ContactInitial extends StatelessWidget {
   Widget build(BuildContext context) {
     Random r = Random();
     return Container(
-      height: size.toHeight,
-      width: size.toHeight,
+      height: size.toFont,
+      width: size.toFont,
 
       decoration: BoxDecoration(
         color:
             Color.fromARGB(255, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
-        borderRadius: BorderRadius.circular(size.toHeight),
+        borderRadius: BorderRadius.circular(size.toWidth),
       ),
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: Center(

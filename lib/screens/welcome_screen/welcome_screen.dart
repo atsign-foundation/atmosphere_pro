@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/Custom_heading.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -21,7 +27,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../services/size_config.dart';
-// import '../../view_models/file_picker_provider.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 import 'widgets/select_contact_widget.dart';
@@ -48,18 +53,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     SizedBox(),
     Icon(
       Icons.check_circle,
-      size: 13.toFont,
+      size: 15.toFont,
       color: ColorConstants.successColor,
     ),
     Icon(
       Icons.cancel,
-      size: 13.toFont,
+      size: 15.toFont,
       color: ColorConstants.redText,
     )
   ];
   List<String> transferMessages = [
     'Sending file ...',
-    'Sent the file',
+    'File sent',
     'Oops! something went wrong'
   ];
   String currentAtSign;
@@ -67,7 +72,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     isContactSelected = false;
     isFileSelected = false;
-    // backendService.onboard();
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -76,6 +80,37 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           BackendService.getInstance().currentAtSign);
     });
     super.initState();
+
+    listenForFlushBarStatus();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await BackendService.getInstance().syncWithSecondary();
+      await Provider.of<HistoryProvider>(context, listen: false)
+          .getSentHistory();
+      await Provider.of<HistoryProvider>(context, listen: false)
+          .getRecievedHistory();
+      WelcomeScreenProvider().isExpanded = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  listenForFlushBarStatus() {
+    FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
+      if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
+        sendingFlushbar = _showScaffold(status: 0);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
+      } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
+        sendingFlushbar = _showScaffold(status: 2);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
+      } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
+        sendingFlushbar = _showScaffold(status: 1);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
+      }
+    });
   }
 
   setAtSign() async {
@@ -87,9 +122,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   initGroups() async {
     // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService().init(BackendService.getInstance().atClientInstance,
-          BackendService.getInstance().currentAtSign,
-    MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
+    await GroupService().init(
+        BackendService.getInstance().atClientInstance,
+        BackendService.getInstance().currentAtSign,
+        MixedConstants.ROOT_DOMAIN,
+        MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 
@@ -105,8 +142,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       message: 'hello',
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
-      reverseAnimationCurve: Curves.decelerate,
-      forwardAnimationCurve: Curves.elasticOut,
+      // reverseAnimationCurve: Curves.decelerate,
+      // forwardAnimationCurve: Curves.elasticOut,
       backgroundColor: ColorConstants.scaffoldColor,
       boxShadows: [
         BoxShadow(
@@ -131,22 +168,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         },
         child: Text(
           TextStrings().buttonDismiss,
-          style: TextStyle(color: ColorConstants.fontPrimary),
+          style:
+              TextStyle(color: ColorConstants.fontPrimary, fontSize: 15.toFont),
         ),
       ),
       // showProgressIndicator: true,
       progressIndicatorBackgroundColor: Colors.blueGrey,
       titleText: Row(
         children: <Widget>[
-          transferStatus[status],
+          Padding(
+            padding: const EdgeInsets.only(top: 15.0),
+            child: transferStatus[status],
+          ),
           Padding(
             padding: EdgeInsets.only(
               left: 5.toWidth,
             ),
-            child: Text(
-              transferMessages[status],
-              style: TextStyle(
-                  color: ColorConstants.fadedText, fontSize: 10.toFont),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Text(
+                transferMessages[status],
+                style: TextStyle(
+                    color: ColorConstants.fadedText, fontSize: 15.toFont),
+              ),
             ),
           )
         ],
@@ -179,7 +223,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: SizeConfig().screenHeight,
               child: Stack(
                 children: [
-                  SizeConfig().isTablet(context) ? Customheading() : SizedBox(),
+                  SizeConfig().isTablet(context)
+                      ? Container(
+                          height: 90.toHeight,
+                          width: 90.toHeight,
+                          child: Customheading(),
+                        )
+                      : SizedBox(),
                   SizeConfig().isTablet(context)
                       ? Positioned(
                           right: 80,
@@ -198,7 +248,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     setState(() {
                                       isExpanded = !isExpanded;
                                     });
-                                    print('is expanded changed:${isExpanded}');
 
                                     Scaffold.of(context).openEndDrawer();
                                   },
@@ -225,7 +274,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  TextStrings().welcomeUser(currentAtSign),
+                                  TextStrings().welcomeUser(
+                                      BackendService.getInstance()
+                                                  .atClientInstance !=
+                                              null
+                                          ? BackendService.getInstance()
+                                              .atClientInstance
+                                              .currentAtSign
+                                          : ''),
                                   style: GoogleFonts.playfairDisplay(
                                     textStyle: TextStyle(
                                       fontSize: 26.toFont,
@@ -274,7 +330,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           ? Container()
                                           : OverlappingContacts(
                                               selectedList:
-                                                  provider.selectedContacts),
+                                                  provider.selectedContacts,
+                                              onChnage: (isUpdate) {
+                                                setState(() {});
+                                              },
+                                            ),
                                 ),
                                 SizedBox(
                                   height: 40.toHeight,
@@ -289,8 +349,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 SizedBox(
                                   height: 60.toHeight,
                                 ),
+
                                 if (_welcomeScreenProvider.selectedContacts !=
                                         null &&
+                                    _welcomeScreenProvider
+                                        .selectedContacts.isNotEmpty &&
                                     filePickerModel
                                         .selectedFiles.isNotEmpty) ...[
                                   Row(
@@ -308,69 +371,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       CommonButton(
                                         TextStrings().buttonSend,
                                         () async {
-                                          filePickerModel.sendFiles(
-                                              filePickerModel.selectedFiles,
-                                              _welcomeScreenProvider
-                                                  .selectedContacts);
-                                          // _showScaffold(status: 0);
-                                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                                          //     _welcomeScreenProvider.selectedContacts);
-                                          // bool response = filePickerModel.sentStatus[0];
-                                          // if (filePickerModel.sentStatus != null) {
-                                          if (filePickerModel.flushbarStatus ==
-                                              FLUSHBAR_STATUS.SENDING) {
-                                            sendingFlushbar =
-                                                _showScaffold(status: 0);
-                                            await sendingFlushbar.show(context);
-                                          } else if (filePickerModel
-                                                  .flushbarStatus ==
-                                              FLUSHBAR_STATUS.FAILED) {
-                                            sendingFlushbar =
-                                                _showScaffold(status: 2);
-                                            await sendingFlushbar.show(context);
-                                          }
-                                          // filePickerModel.sendFiles(filePickerModel.selectedFiles,
-                                          //     _welcomeScreenProvider.selectedContacts);
-
-                                          // bool response;
-
-                                          // response =
-                                          //     Provider.of<FileTransferProvider>(
-                                          //             context,
-                                          //             listen: false)
-                                          //         .sentStatus;
-
-                                          // bool response = true;
-                                          // bool response = await backendService.sendFile(
-                                          //     contactPickerModel.selectedContacts,
-                                          //     filePickerModel.selectedFiles[0].path);
-
-                                          // Provider.of<HistoryProvider>(context, listen: false)
-                                          //     .setFilesHistory(
-                                          //         atSignName: _filePickerProvider
-                                          //             .temporaryContactList[0].atSign,
-                                          //         historyType: HistoryType.send,
-                                          //         files: [
-                                          //       FilesDetail(
-                                          //           filePath:
-                                          //               filePickerModel.selectedFiles[0].path,
-                                          //           size: filePickerModel.totalSize,
-                                          //           fileName: filePickerModel.result.files[0].name
-                                          //               .toString(),
-                                          //           type: filePickerModel
-                                          //               .selectedFiles[0].extension
-                                          //               .toString())
-                                          //     ]);
-
-                                          // _showScaffold(status: 1);
-                                          // if (response != null &&
-                                          //     response == true) {
-                                          //   sendingFlushbar =
-                                          //       _showScaffold(status: 1);
-                                          //   await sendingFlushbar.show(context);
-                                          // } else {
-                                          //   _showScaffold(status: 2);
-                                          // }
+                                          await filePickerModel
+                                              .sendFileWithFileBin(
+                                                  filePickerModel.selectedFiles,
+                                                  _welcomeScreenProvider
+                                                      .selectedContacts);
                                         },
                                       ),
                                     ],

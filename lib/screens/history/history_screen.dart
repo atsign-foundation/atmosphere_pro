@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
+  final int tabIndex;
+  HistoryScreen({this.tabIndex = 0});
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -23,15 +25,11 @@ class _HistoryScreenState extends State<HistoryScreen>
   HistoryProvider historyProvider;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (historyProvider == null) {
-      _controller = TabController(length: 2, vsync: this, initialIndex: 0);
+      _controller =
+          TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
       historyProvider = Provider.of<HistoryProvider>(context);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        print("fetched contacts");
-        historyProvider.getSentHistory();
-        historyProvider.getRecievedHistory();
-      });
     }
 
     super.didChangeDependencies();
@@ -57,15 +55,8 @@ class _HistoryScreenState extends State<HistoryScreen>
               Container(
                 height: 40,
                 child: TabBar(
-                  onTap: (index) {
-                    if (index == 0) {
-                      Provider.of<HistoryProvider>(context, listen: false)
-                          .getSentHistory();
-                    }
-                    if (index == 1) {
-                      Provider.of<HistoryProvider>(context, listen: false)
-                          .getRecievedHistory();
-                    }
+                  onTap: (index) async {
+                    print('current tab: ${index}');
                   },
                   labelColor: ColorConstants.fontPrimary,
                   indicatorWeight: 5.toHeight,
@@ -103,47 +94,34 @@ class _HistoryScreenState extends State<HistoryScreen>
                               padding: EdgeInsets.only(bottom: 170.toHeight),
                               physics: AlwaysScrollableScrollPhysics(),
                               separatorBuilder: (context, index) {
-                                // print(
-                                //     'provider.testSentHistory.length====>${provider.testSentHistory.length}');
                                 return Divider(
                                   indent: 16.toWidth,
                                 );
                               },
-                              itemCount: provider.testSentHistory.length,
-                              // itemCount: 2,
+                              itemCount: provider.sentHistory.length,
                               itemBuilder: (context, index) {
-                                List<Map<String, Set<FilesDetail>>> tempList =
-                                    [];
-                                List<int> idList = [];
-                                provider.testSentHistory.forEach((key, value) {
-                                  tempList.add(value);
-                                  idList.add(key);
-                                });
-                                print(idList);
-                                // print('TEMP LIST !====>${tempList[2]}');
                                 return SentFilesListTile(
                                   sentHistory: provider.sentHistory[index],
-                                  testList: tempList[index],
-                                  id: idList[index],
+                                  key: UniqueKey(),
                                 );
                               },
                             ),
-                      // errorBuilder: (provider) => Center(
-                      //   child: Text('Some error occured'),
-                      // ),
-                      load: (provider) {
-                        provider.getRecievedHistory();
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
+                      load: (provider) async {
+                        // provider.getSentHistory();
                       },
                     ),
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.RECEIVED_HISTORY,
-
                       load: (provider) async {
-                        await provider.getRecievedHistory();
+                        print('loading received');
+                        // await provider.getRecievedHistory();
                       },
                       showError: true,
                       successBuilder: (provider) => (provider
-                              .receivedHistory.isEmpty)
+                              .recievedHistoryLogs.isEmpty)
                           ? Center(
                               child: Text(
                                 'No files received',
@@ -156,18 +134,19 @@ class _HistoryScreenState extends State<HistoryScreen>
                               separatorBuilder: (context, index) => Divider(
                                 indent: 16.toWidth,
                               ),
-                              itemCount: provider.receivedHistory.length,
+                              itemCount: provider.recievedHistoryLogs.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ReceivedFilesListTile(
+                                  key: UniqueKey(),
                                   receivedHistory:
-                                      provider.receivedHistory[index],
+                                      provider.recievedHistoryLogs[index],
                                 ),
                               ),
                             ),
-                      // errorBuilder: (provider) => Center(
-                      //   child: Text('Some error occured'),
-                      // ),
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
                     ),
                   ],
                 ),

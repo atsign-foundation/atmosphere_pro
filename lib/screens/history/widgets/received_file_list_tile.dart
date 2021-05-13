@@ -1,17 +1,18 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -19,20 +20,27 @@ import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReceivedFilesListTile extends StatefulWidget {
-  final FilesModel receivedHistory;
-  final ContactProvider contactProvider;
+  final FileTransfer receivedHistory;
+  // final ContactProvider contactProvider;
 
-  const ReceivedFilesListTile(
-      {Key key, this.receivedHistory, this.contactProvider})
-      : super(key: key);
+  const ReceivedFilesListTile({
+    Key key,
+    this.receivedHistory,
+    //  this.contactProvider
+  }) : super(key: key);
   @override
   _ReceivedFilesListTileState createState() => _ReceivedFilesListTileState();
 }
 
 class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
-  bool isOpen = false;
+  bool isOpen = false,
+      isDownloading = false,
+      isDownloaded = false,
+      isDownloadAvailable = false,
+      isFilesAvailableOfline = true;
   DateTime sendTime;
-  Uint8List videoThumbnail;
+  Uint8List videoThumbnail, image;
+  int fileSize = 0;
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -46,13 +54,77 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    widget.receivedHistory.files.forEach((element) {
+      fileSize += element.size;
+    });
+
+    if (widget.receivedHistory.expiry.difference(DateTime.now()) >
+        Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+    getAtSignDetail();
+    isFilesAlreadyDownloaded();
+  }
+
+  getAtSignDetail() async {
+    AtContact contact;
+    if (widget.receivedHistory.sender != null) {
+      contact = await getAtSignDetails(widget.receivedHistory.sender);
+    }
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted) {
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+        }
+      }
+    }
+  }
+
+  isFilesAlreadyDownloaded() async {
+    widget.receivedHistory.files.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory.path +
+          '/${element.name}';
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        setState(() {
+          isFilesAvailableOfline = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    sendTime = DateTime.parse(widget.receivedHistory.date);
+    sendTime = DateTime.now();
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Column(
       children: [
         ListTile(
-          leading: CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
+          leading:
+              // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
+              widget.receivedHistory.sender != null
+                  ? image != null
+                      ? CustomCircleAvatar(byteImage: image, nonAsset: true)
+                      : Container(
+                          height: 45.toHeight,
+                          width: 45.toHeight,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: ContactInitial(
+                            initials:
+                                widget.receivedHistory.sender.substring(1, 3),
+                            size: 45,
+                          ),
+                        )
+                  : SizedBox(),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -60,47 +132,37 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text(
-                      widget.receivedHistory.name,
-                      style: CustomTextStyles.primaryRegular16,
-                    ),
+                    child: widget.receivedHistory.sender != null
+                        ? Text(
+                            widget.receivedHistory.sender,
+                            style: CustomTextStyles.primaryRegular16,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : SizedBox(),
                   ),
-                  ContactService()
-                          .allContactsList
-                          .contains(widget.receivedHistory.name)
-                      ? SizedBox()
-                      : GestureDetector(
-                          onTap: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => AddSingleContact(
-                                atSignName: widget.receivedHistory.name,
-                              ),
-                            );
-                            this.setState(() {});
-                          },
-                          child: Container(
-                            height: 20.toHeight,
-                            width: 20.toWidth,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.black,
-                            ),
-                          ),
-                        )
+                  InkWell(
+                    onTap: () async {
+                      await downloadFiles(widget.receivedHistory);
+                    },
+                    child: isDownloadAvailable
+                        ? isDownloading
+                            ? CircularProgressIndicator()
+                            : isDownloaded || isFilesAvailableOfline
+                                ? Icon(
+                                    Icons.done,
+                                    color: Color(0xFF08CB21),
+                                    size: 25.toFont,
+                                  )
+                                : Icon(
+                                    Icons.download_sharp,
+                                    size: 25.toFont,
+                                  )
+                        : SizedBox(),
+                  )
                 ],
               ),
               SizedBox(height: 5.toHeight),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.receivedHistory.name,
-                      style: CustomTextStyles.secondaryRegular12,
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(
                 height: 8.toHeight,
               ),
@@ -119,11 +181,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     ),
                     SizedBox(width: 10.toHeight),
                     Text(
-                      double.parse(widget.receivedHistory.totalSize
-                                  .toString()) <=
-                              1024
-                          ? '${widget.receivedHistory.totalSize} Kb '
-                          : '${(widget.receivedHistory.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                      double.parse(fileSize.toString()) <= 1024
+                          ? '${fileSize} Kb '
+                          : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
                       style: CustomTextStyles.secondaryRegular12,
                     )
                   ],
@@ -136,10 +196,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      '${DateFormat('MM-dd-yyyy').format(sendTime)}',
-                      style: CustomTextStyles.secondaryRegular12,
-                    ),
+                    widget.receivedHistory.date != null
+                        ? Text(
+                            '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory.date)}',
+                            style: CustomTextStyles.secondaryRegular12,
+                          )
+                        : SizedBox(),
                     SizedBox(width: 10.toHeight),
                     Container(
                       color: ColorConstants.fontSecondary,
@@ -147,10 +209,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       width: 1.toWidth,
                     ),
                     SizedBox(width: 10.toHeight),
-                    Text(
-                      '${DateFormat('kk:mm').format(sendTime)}',
-                      style: CustomTextStyles.secondaryRegular12,
-                    ),
+                    widget.receivedHistory.date != null
+                        ? Text(
+                            '${DateFormat('kk:mm').format(widget.receivedHistory.date)}',
+                            style: CustomTextStyles.secondaryRegular12,
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
@@ -203,34 +267,54 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             widget.receivedHistory.files.length.toString()),
                         itemBuilder: (context, index) {
                           if (FileTypes.VIDEO_TYPES.contains(widget
-                              .receivedHistory.files[index].fileName
+                              .receivedHistory.files[index].name
                               ?.split('.')
                               ?.last)) {
-                            videoThumbnailBuilder(
-                                widget.receivedHistory.files[index].filePath);
+                            // videoThumbnailBuilder(
+                            //     widget.receivedHistory.files[index].filePath);
+
+                            Text('Video');
                           }
                           return ListTile(
                             onTap: () async {
-                              // preview file
-                              File test = File(
-                                  widget.receivedHistory.files[index].filePath);
+                              String path = BackendService.getInstance()
+                                      .downloadDirectory
+                                      .path +
+                                  '/${widget.receivedHistory.files[index].name}';
+
+                              File test = File(path);
                               bool fileExists = await test.exists();
+                              print('fileExists: ${fileExists}');
                               if (fileExists) {
-                                await OpenFile.open(widget
-                                    .receivedHistory.files[index].filePath);
+                                await OpenFile.open(path);
                               } else {
                                 _showNoFileDialog(deviceTextFactor);
+                                print('url: ${widget.receivedHistory.url}');
                               }
                             },
                             leading: Container(
                               height: 50.toHeight,
                               width: 50.toHeight,
-                              child: thumbnail(
-                                widget.receivedHistory.files[index].fileName
-                                    ?.split('.')
-                                    ?.last,
-                                widget.receivedHistory.files[index].filePath,
-                              ),
+                              child: FutureBuilder(
+                                  future: isFilePresent(
+                                      widget.receivedHistory.files[index].name),
+                                  builder: (context, snapshot) {
+                                    print('snapshot builder: ${snapshot}');
+                                    return snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.data != null
+                                        ? thumbnail(
+                                            widget.receivedHistory.files[index]
+                                                .name
+                                                ?.split('.')
+                                                ?.last,
+                                            BackendService.getInstance()
+                                                    .downloadDirectory
+                                                    .path +
+                                                '/${widget.receivedHistory.files[index].name}',
+                                            isFilePresent: snapshot.data)
+                                        : SizedBox();
+                                  }),
                             ),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,11 +323,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        widget.receivedHistory.files[index]
-                                            .fileName
+                                        widget.receivedHistory.files[index].name
                                             .toString(),
                                         style:
                                             CustomTextStyles.primaryRegular16,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -271,7 +356,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       ),
                                       SizedBox(width: 10.toHeight),
                                       Text(
-                                        widget.receivedHistory.files[index].type
+                                        widget.receivedHistory.files[index].name
+                                            .split('.')
+                                            .last
                                             .toString(),
                                         style:
                                             CustomTextStyles.secondaryRegular12,
@@ -291,8 +378,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       });
                     },
                     child: Container(
-                      margin: EdgeInsets.only(left: 85.toWidth),
+                      margin: EdgeInsets.only(left: 85.toHeight),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Lesser Details',
@@ -319,64 +407,71 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     );
   }
 
-  Widget thumbnail(String extension, String path) {
-    return FileTypes.IMAGE_TYPES.contains(extension)
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(10.toHeight),
-            child: Container(
-              height: 50.toHeight,
-              width: 50.toWidth,
-              child: Image.file(
-                File(path),
-                fit: BoxFit.cover,
-              ),
-            ),
-          )
-        : FileTypes.VIDEO_TYPES.contains(extension)
-            ? FutureBuilder(
-                future: videoThumbnailBuilder(path),
-                builder: (context, snapshot) => ClipRRect(
-                  borderRadius: BorderRadius.circular(10.toHeight),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10),
-                    height: 50.toHeight,
-                    width: 50.toWidth,
-                    child: (snapshot.data == null)
-                        ? Image.asset(
-                            ImageConstants.unknownLogo,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.memory(
-                            videoThumbnail,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, o, ot) =>
-                                CircularProgressIndicator(),
-                          ),
-                  ),
+  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+    if (FileTypes.IMAGE_TYPES.contains(extension)) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(10.toHeight),
+        child: Container(
+          height: 50.toHeight,
+          width: 50.toWidth,
+          child: isFilePresent
+              ? Image.file(
+                  File(path),
+                  fit: BoxFit.cover,
+                )
+              : Icon(
+                  Icons.image,
+                  size: 30.toFont,
                 ),
-              )
-            : ClipRRect(
+        ),
+      );
+    } else {
+      return FileTypes.VIDEO_TYPES.contains(extension)
+          ? FutureBuilder(
+              future: videoThumbnailBuilder(path),
+              builder: (context, snapshot) => ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(
                   padding: EdgeInsets.only(left: 10),
                   height: 50.toHeight,
                   width: 50.toWidth,
-                  child: Image.asset(
-                    FileTypes.PDF_TYPES.contains(extension)
-                        ? ImageConstants.pdfLogo
-                        : FileTypes.AUDIO_TYPES.contains(extension)
-                            ? ImageConstants.musicLogo
-                            : FileTypes.WORD_TYPES.contains(extension)
-                                ? ImageConstants.wordLogo
-                                : FileTypes.EXEL_TYPES.contains(extension)
-                                    ? ImageConstants.exelLogo
-                                    : FileTypes.TEXT_TYPES.contains(extension)
-                                        ? ImageConstants.txtLogo
-                                        : ImageConstants.unknownLogo,
-                    fit: BoxFit.cover,
-                  ),
+                  child: (snapshot.data == null)
+                      ? Image.asset(
+                          ImageConstants.unknownLogo,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.memory(
+                          videoThumbnail,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, o, ot) =>
+                              CircularProgressIndicator(),
+                        ),
                 ),
-              );
+              ),
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(10.toHeight),
+              child: Container(
+                padding: EdgeInsets.only(left: 10),
+                height: 50.toHeight,
+                width: 50.toWidth,
+                child: Image.asset(
+                  FileTypes.PDF_TYPES.contains(extension)
+                      ? ImageConstants.pdfLogo
+                      : FileTypes.AUDIO_TYPES.contains(extension)
+                          ? ImageConstants.musicLogo
+                          : FileTypes.WORD_TYPES.contains(extension)
+                              ? ImageConstants.wordLogo
+                              : FileTypes.EXEL_TYPES.contains(extension)
+                                  ? ImageConstants.exelLogo
+                                  : FileTypes.TEXT_TYPES.contains(extension)
+                                      ? ImageConstants.txtLogo
+                                      : ImageConstants.unknownLogo,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+    }
   }
 
   void _showNoFileDialog(double deviceTextFactor) {
@@ -387,8 +482,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             child: Container(
-              height: 200.0,
-              width: 300.0,
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -414,5 +509,37 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
             ),
           );
         });
+  }
+
+  Future<bool> isFilePresent(String fileName) async {
+    String filePath =
+        BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+
+    File test = File(filePath);
+    bool fileExists = await test.exists();
+    return fileExists;
+  }
+
+  downloadFiles(FileTransfer receivedHistory) async {
+    setState(() {
+      isDownloading = true;
+    });
+
+    var result = await BackendService.getInstance().downloadFileFromBin(
+        widget.receivedHistory.sender, widget.receivedHistory.url);
+
+    if (result is bool && result) {
+      if (mounted) {
+        setState(() {
+          isDownloaded = true;
+          isDownloading = false;
+        });
+      }
+    } else if (result is bool && !result) {
+      setState(() {
+        isDownloaded = false;
+        isDownloading = false;
+      });
+    }
   }
 }
