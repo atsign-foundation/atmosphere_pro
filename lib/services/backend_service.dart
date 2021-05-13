@@ -213,7 +213,6 @@ class BackendService {
   Future<void> _notificationCallBack(var response) async {
     print('response => $response');
     await syncWithSecondary();
-    print('syncing finish');
     response = response.replaceFirst('notification:', '');
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
@@ -270,7 +269,6 @@ class BackendService {
       await NotificationService()
           .showNotification(fromAtSign, fileName: 'myfile', fileSize: '40');
     }
-    print('fn call back end');
   }
 
   syncWithSecondary() async {
@@ -303,7 +301,6 @@ class BackendService {
           continue;
         }
 
-        print('isFilePresent: ${proceedToDownload}');
         var unzipped = file.content as List<int>;
         bool result = await decryptAndStore(
           sharedByAtSign,
@@ -313,8 +310,18 @@ class BackendService {
 
         if (result is bool && !result) {
           isDownloaded = false;
+        } else {
+          // if download is completed, updating my files screen
+          var context = NavService.navKey.currentContext;
+          var recievedHistoryLogs =
+              Provider.of<HistoryProvider>(context, listen: false)
+                  .recievedHistoryLogs;
+          await Provider.of<HistoryProvider>(context, listen: false)
+              .sortFiles(recievedHistoryLogs);
+          Provider.of<HistoryProvider>(context, listen: false).populateTabs();
         }
       }
+
       return isDownloaded;
     } catch (e) {
       print('Error in download $e');

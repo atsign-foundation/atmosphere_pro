@@ -2,21 +2,17 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -533,10 +529,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         widget.receivedHistory.sender, widget.receivedHistory.url);
 
     if (result is bool && result) {
-      setState(() {
-        isDownloaded = true;
-        isDownloading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isDownloaded = true;
+          isDownloading = false;
+        });
+      }
     } else if (result is bool && !result) {
       setState(() {
         isDownloaded = false;
