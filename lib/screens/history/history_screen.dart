@@ -30,10 +30,6 @@ class _HistoryScreenState extends State<HistoryScreen>
       _controller =
           TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
       historyProvider = Provider.of<HistoryProvider>(context);
-      await WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        // await historyProvider.getSentHistory();
-        // await historyProvider.getRecievedHistory();
-      });
     }
 
     super.didChangeDependencies();
@@ -60,14 +56,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                 height: 40,
                 child: TabBar(
                   onTap: (index) async {
-                    if (index == 0) {
-                      // await Provider.of<HistoryProvider>(context, listen: false)
-                      //     .getSentHistory();
-                    }
-                    if (index == 1) {
-                      // await Provider.of<HistoryProvider>(context, listen: false)
-                      //     .getRecievedHistory();
-                    }
+                    print('current tab: ${index}');
                   },
                   labelColor: ColorConstants.fontPrimary,
                   indicatorWeight: 5.toHeight,

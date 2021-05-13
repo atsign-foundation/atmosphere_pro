@@ -85,7 +85,7 @@ class NotificationService {
     );
     await _notificationsPlugin.show(
         0,
-        '$from wants to send you a file',
+        '$from sent you a file',
         'Open your app to see the file preview and take actions',
         platformChannelSpecifics,
         payload: jsonEncode(payload));
