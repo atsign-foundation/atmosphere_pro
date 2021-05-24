@@ -202,207 +202,214 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final filePickerModel = Provider.of<FileTransferProvider>(context);
 
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: SizeConfig().isTablet(context)
-            ? null
-            : CustomAppBar(
-                showLeadingicon: true,
-              ),
-        extendBody: true,
-        drawerScrimColor: Colors.transparent,
-        endDrawer: SideBarWidget(
-          isExpanded: true,
-        ),
-        body: Container(
-            width: double.infinity,
-            height: SizeConfig().screenHeight,
-            child: Container(
+    return Container(
+      color: ColorConstants.scaffoldColor,
+      child: SafeArea(
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: ColorConstants.scaffoldColor,
+          appBar: SizeConfig().isTablet(context)
+              ? null
+              : CustomAppBar(
+                  showLeadingicon: true,
+                ),
+          extendBody: true,
+          drawerScrimColor: Colors.transparent,
+          endDrawer: SideBarWidget(
+            isExpanded: true,
+          ),
+          body: Container(
               width: double.infinity,
               height: SizeConfig().screenHeight,
-              child: Stack(
-                children: [
-                  SizeConfig().isTablet(context)
-                      ? Container(
-                          height: 90.toHeight,
-                          width: 90.toHeight,
-                          child: Customheading(),
-                        )
-                      : SizedBox(),
-                  SizeConfig().isTablet(context)
-                      ? Positioned(
-                          right: 80,
-                          top: 100,
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.black,
-                            ),
-                            child: Builder(
-                              builder: (context) {
-                                return InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isExpanded = !isExpanded;
-                                    });
+              child: Container(
+                width: double.infinity,
+                height: SizeConfig().screenHeight,
+                child: Stack(
+                  children: [
+                    SizeConfig().isTablet(context)
+                        ? Container(
+                            height: 90.toHeight,
+                            width: 90.toHeight,
+                            child: Customheading(),
+                          )
+                        : SizedBox(),
+                    SizeConfig().isTablet(context)
+                        ? Positioned(
+                            right: 80,
+                            top: 100,
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.black,
+                              ),
+                              child: Builder(
+                                builder: (context) {
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        isExpanded = !isExpanded;
+                                      });
 
-                                    Scaffold.of(context).openEndDrawer();
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    color: Colors.white,
-                                  ),
-                                );
-                              },
+                                      Scaffold.of(context).openEndDrawer();
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        )
-                      : SizedBox(),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: SingleChildScrollView(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.toWidth, vertical: 20.toHeight),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  TextStrings().welcomeUser(
-                                      BackendService.getInstance()
-                                                  .atClientInstance !=
-                                              null
-                                          ? BackendService.getInstance()
-                                              .atClientInstance
-                                              .currentAtSign
-                                          : ''),
-                                  style: GoogleFonts.playfairDisplay(
-                                    textStyle: TextStyle(
-                                      fontSize: 26.toFont,
-                                      fontWeight: FontWeight.w800,
-                                      height: 1.3,
+                          )
+                        : SizedBox(),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: SingleChildScrollView(
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20.toWidth,
+                                  vertical: 20.toHeight),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    TextStrings().welcomeUser(
+                                        BackendService.getInstance()
+                                                    .atClientInstance !=
+                                                null
+                                            ? BackendService.getInstance()
+                                                .atClientInstance
+                                                .currentAtSign
+                                            : ''),
+                                    style: GoogleFonts.playfairDisplay(
+                                      textStyle: TextStyle(
+                                        fontSize: 26.toFont,
+                                        fontWeight: FontWeight.w800,
+                                        height: 1.3,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10.toHeight,
-                                ),
-                                Text(
-                                  TextStrings().welcomeRecipient,
-                                  style: TextStyle(
-                                    color: ColorConstants.fadedText,
-                                    fontSize: 13.toFont,
+                                  SizedBox(
+                                    height: 10.toHeight,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 67.toHeight,
-                                ),
-                                Text(
-                                  TextStrings().welcomeSendFilesTo,
-                                  style: TextStyle(
-                                    color: ColorConstants.fadedText,
-                                    fontSize: 12.toFont,
+                                  Text(
+                                    TextStrings().welcomeRecipient,
+                                    style: TextStyle(
+                                      color: ColorConstants.fadedText,
+                                      fontSize: 13.toFont,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 20.toHeight,
-                                ),
-                                SelectContactWidget(
-                                  (b) {
-                                    setState(() {
-                                      isContactSelected = b;
-                                    });
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 10.toHeight,
-                                ),
-                                // ProviderHandler<WelcomeScreenProvider>(),
-                                Consumer<WelcomeScreenProvider>(
-                                  builder: (context, provider, _) =>
-                                      (provider.selectedContacts.isEmpty)
-                                          ? Container()
-                                          : OverlappingContacts(
-                                              selectedList:
-                                                  provider.selectedContacts,
-                                              onChnage: (isUpdate) {
-                                                setState(() {});
-                                              },
-                                            ),
-                                ),
-                                SizedBox(
-                                  height: 40.toHeight,
-                                ),
-                                SelectFileWidget(
-                                  (b) {
-                                    setState(() {
-                                      isFileSelected = b;
-                                    });
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 60.toHeight,
-                                ),
-
-                                if (_welcomeScreenProvider.selectedContacts !=
-                                        null &&
-                                    _welcomeScreenProvider
-                                        .selectedContacts.isNotEmpty &&
-                                    filePickerModel
-                                        .selectedFiles.isNotEmpty) ...[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      CommonButton('Reset', () {
-                                        setState(() {
-                                          _welcomeScreenProvider
-                                              .selectedContacts
-                                              .clear();
-                                          filePickerModel.selectedFiles.clear();
-                                        });
-                                      }),
-                                      CommonButton(
-                                        TextStrings().buttonSend,
-                                        () async {
-                                          await filePickerModel
-                                              .sendFileWithFileBin(
-                                                  filePickerModel.selectedFiles,
-                                                  _welcomeScreenProvider
-                                                      .selectedContacts);
-                                        },
-                                      ),
-                                    ],
+                                  SizedBox(
+                                    height: 67.toHeight,
+                                  ),
+                                  Text(
+                                    TextStrings().welcomeSendFilesTo,
+                                    style: TextStyle(
+                                      color: ColorConstants.fadedText,
+                                      fontSize: 12.toFont,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.toHeight,
+                                  ),
+                                  SelectContactWidget(
+                                    (b) {
+                                      setState(() {
+                                        isContactSelected = b;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10.toHeight,
+                                  ),
+                                  // ProviderHandler<WelcomeScreenProvider>(),
+                                  Consumer<WelcomeScreenProvider>(
+                                    builder: (context, provider, _) =>
+                                        (provider.selectedContacts.isEmpty)
+                                            ? Container()
+                                            : OverlappingContacts(
+                                                selectedList:
+                                                    provider.selectedContacts,
+                                                onChnage: (isUpdate) {
+                                                  setState(() {});
+                                                },
+                                              ),
+                                  ),
+                                  SizedBox(
+                                    height: 40.toHeight,
+                                  ),
+                                  SelectFileWidget(
+                                    (b) {
+                                      setState(() {
+                                        isFileSelected = b;
+                                      });
+                                    },
                                   ),
                                   SizedBox(
                                     height: 60.toHeight,
                                   ),
+
+                                  if (_welcomeScreenProvider.selectedContacts !=
+                                          null &&
+                                      _welcomeScreenProvider
+                                          .selectedContacts.isNotEmpty &&
+                                      filePickerModel
+                                          .selectedFiles.isNotEmpty) ...[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CommonButton('Reset', () {
+                                          setState(() {
+                                            _welcomeScreenProvider
+                                                .selectedContacts
+                                                .clear();
+                                            filePickerModel.selectedFiles
+                                                .clear();
+                                          });
+                                        }),
+                                        CommonButton(
+                                          TextStrings().buttonSend,
+                                          () async {
+                                            await filePickerModel
+                                                .sendFileWithFileBin(
+                                                    filePickerModel
+                                                        .selectedFiles,
+                                                    _welcomeScreenProvider
+                                                        .selectedContacts);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 60.toHeight,
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizeConfig().isTablet(context)
-                          ? Container(
-                              height: SizeConfig().screenHeight,
-                              width: 100,
-                              child: SideBarWidget(
-                                isExpanded: false,
-                              ),
-                            )
-                          : SizedBox(),
-                    ],
-                  ),
-                ],
-              ),
-            )),
+                        SizeConfig().isTablet(context)
+                            ? Container(
+                                height: SizeConfig().screenHeight,
+                                width: 100,
+                                child: SideBarWidget(
+                                  isExpanded: false,
+                                ),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }

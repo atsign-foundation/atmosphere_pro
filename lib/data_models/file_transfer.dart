@@ -131,7 +131,7 @@ class ShareStatus {
 
   ShareStatus.fromJson(Map<String, dynamic> json) {
     atsign = json['atsign'];
-    isNotificationSend = json['isNotificationSend'];
+    isNotificationSend = json['isNotificationSend'] ?? false;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();

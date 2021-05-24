@@ -151,14 +151,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                       ),
                                     )
                                   : ContactInitial(
-                                      initials: (BackendService.getInstance()
-                                                  .currentAtSign
-                                                  .length >
-                                              4)
-                                          ? BackendService?.getInstance()
-                                              ?.currentAtSign
-                                              ?.substring(1, 3)
-                                          : 'LO'),
+                                      initials: BackendService?.getInstance()
+                                          .currentAtSign),
                               Flexible(
                                   child: Padding(
                                 padding: EdgeInsets.symmetric(
