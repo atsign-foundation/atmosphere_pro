@@ -71,8 +71,8 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                     : ContactInitial(
                         initials: widget.contact.tags != null &&
                                 widget.contact.tags['name'] != null
-                            ? widget.contact.tags['name'].substring(0, 2)
-                            : widget.contact.atSign.substring(1, 3),
+                            ? widget.contact.tags['name']
+                            : widget.contact.atSign,
                       )
               ],
             ),

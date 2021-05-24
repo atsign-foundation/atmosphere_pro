@@ -77,10 +77,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                             )
                           : ContactInitial(
                               initials: widget
-                                      ?.selectedList[index]?.contact?.atSign
-                                      ?.substring(1, 3) ??
-                                  widget?.selectedList[index]?.group?.groupName
-                                      ?.substring(0, 2),
+                                      ?.selectedList[index]?.contact?.atSign ??
+                                  widget?.selectedList[index]?.group?.groupName,
                             ),
                     ),
                   );
@@ -221,11 +219,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                         initials: provider
                                                 ?.selectedContacts[index]
                                                 ?.contact
-                                                ?.atSign
-                                                ?.substring(1, 3) ??
+                                                ?.atSign ??
                                             provider?.selectedContacts[index]
-                                                ?.group?.groupName
-                                                ?.substring(0, 2),
+                                                ?.group?.groupName,
                                       ),
                               );
                             },

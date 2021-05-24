@@ -193,8 +193,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                             )
                                           : ContactInitial(
                                               initials: provider
-                                                  .trustedContacts[index].atSign
-                                                  .substring(1, 3),
+                                                  .trustedContacts[index]
+                                                  .atSign,
                                             ),
                                     );
                                   },

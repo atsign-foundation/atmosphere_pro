@@ -119,8 +119,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             shape: BoxShape.circle,
                           ),
                           child: ContactInitial(
-                            initials:
-                                widget.receivedHistory.sender.substring(1, 3),
+                            initials: widget.receivedHistory.sender,
                             size: 45,
                           ),
                         )
@@ -515,8 +514,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     String filePath =
         BackendService.getInstance().downloadDirectory.path + '/${fileName}';
 
-    File test = File(filePath);
-    bool fileExists = await test.exists();
+    File file = File(filePath);
+    bool fileExists = await file.exists();
     return fileExists;
   }
 
