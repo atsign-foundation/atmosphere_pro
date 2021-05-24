@@ -119,8 +119,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             shape: BoxShape.circle,
                           ),
                           child: ContactInitial(
-                            initials:
-                                widget.receivedHistory.sender.substring(1, 3),
+                            initials: widget.receivedHistory.sender,
                             size: 45,
                           ),
                         )

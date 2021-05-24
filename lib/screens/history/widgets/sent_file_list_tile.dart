@@ -146,8 +146,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                               shape: BoxShape.circle,
                             ),
                             child: ContactInitial(
-                              initials:
-                                  contactList[0]?.substring(1, 3) ?? 'hello',
+                              initials: contactList[0] ?? '  ',
                               size: 45,
                             ),
                           )

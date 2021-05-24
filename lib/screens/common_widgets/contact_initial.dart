@@ -7,11 +7,18 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
+  int index;
 
-  const ContactInitial({Key key, this.size = 40, this.initials})
+  ContactInitial({Key key, this.size = 40, @required this.initials, this.index})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    if (initials.length < 3) {
+      index = initials.length;
+    } else {
+      index = 3;
+    }
+
     Random r = Random();
     return Container(
       height: size.toFont,
@@ -25,7 +32,7 @@ class ContactInitial extends StatelessWidget {
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: Center(
         child: Text(
-          initials.toUpperCase(),
+          initials.substring((index == 1) ? 0 : 1, index),
           style: CustomTextStyles.whiteBold(size: (size ~/ 3)),
         ),
       ),

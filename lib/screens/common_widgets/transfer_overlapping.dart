@@ -58,7 +58,7 @@ class _TranferOverlappingContactsState
                     ? 3
                     : widget.selectedList.length,
                 (index) {
-                  Uint8List image;
+                  // Uint8List image;
                   // if (widget?.selectedList[index]?.tags != null &&
                   //     widget?.selectedList[index]?.tags['image'] != null) {
                   //   List<int> intList =
@@ -73,16 +73,16 @@ class _TranferOverlappingContactsState
                       height: 28.toHeight,
                       width: 28.toHeight,
                       decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: false
-                          ? CustomCircleAvatar(
-                              byteImage: image,
-                              nonAsset: true,
-                            )
-                          : ContactInitial(
-                              initials: widget?.selectedList[index]?.atsign
-                                      ?.substring(1, 3) ??
-                                  '  ',
-                            ),
+                      child:
+                          // false
+                          //     ? CustomCircleAvatar(
+                          //         byteImage: image,
+                          //         nonAsset: true,
+                          //       )
+                          //     :
+                          ContactInitial(
+                        initials: widget?.selectedList[index]?.atsign ?? '  ',
+                      ),
                     ),
                   );
                 },
@@ -194,9 +194,8 @@ class _TranferOverlappingContactsState
                                         width: 90.toHeight,
                                         height: 90.toHeight,
                                         child: ContactInitial(
-                                          initials: widget
-                                              .selectedList[index].atsign
-                                              .substring(1, 3),
+                                          initials:
+                                              widget.selectedList[index].atsign,
                                           size: 40,
                                         ),
                                       ),
