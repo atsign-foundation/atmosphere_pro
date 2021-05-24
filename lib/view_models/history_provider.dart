@@ -89,7 +89,7 @@ class HistoryProvider extends BaseModel {
           filesModel.totalSize += file.size;
         });
         sendFileHistory['history'].insert(0, filesModel.toJson());
-        atKey.key = 'sentFiles';
+        atKey.key = MixedConstants.SENT_FILE_HISTORY;
         await backendService.atClientInstance
             .put(atKey, json.encode(sendFileHistory));
       }
@@ -103,13 +103,12 @@ class HistoryProvider extends BaseModel {
     await getSentHistory();
     AtKey atKey = AtKey()
       ..metadata = Metadata()
-      ..key = 'sentFiles';
-    print('atkey : ${atKey} ');
-    print('sendFileHistory : ${sendFileHistory['history'].length}');
+      ..key = MixedConstants.SENT_FILE_HISTORY;
+
     if (isEdit) {
       int index = sentHistory.indexWhere((element) =>
           element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
-      print('index: $index');
+
       if (index > -1) {
         sendFileHistory['history'][index] = fileHistory.toJson();
         sentHistory[index] = fileHistory;
@@ -118,8 +117,7 @@ class HistoryProvider extends BaseModel {
       sendFileHistory['history'].insert(0, (fileHistory.toJson()));
       sentHistory.insert(0, fileHistory);
     }
-    print(
-        'sendFileHistory after adding : ${sendFileHistory['history'].length}');
+
     var result = await backendService.atClientInstance
         .put(atKey, json.encode(sendFileHistory));
     print('file history saved: ${result}');
@@ -131,13 +129,12 @@ class HistoryProvider extends BaseModel {
     try {
       sentHistory = [];
       AtKey key = AtKey()
-        ..key = 'sentFiles'
+        ..key = MixedConstants.SENT_FILE_HISTORY
         ..metadata = Metadata();
       var keyValue = await backendService.atClientInstance.get(key);
-      print('stored file values:${keyValue}');
       if (keyValue != null && keyValue.value != null) {
         Map historyFile = json.decode((keyValue.value) as String) as Map;
-        print('stored file values decoded:${historyFile}');
+
         sendFileHistory['history'] = historyFile['history'];
         historyFile['history'].forEach((value) {
           FileHistory filesModel = FileHistory.fromJson((value));
@@ -146,7 +143,6 @@ class HistoryProvider extends BaseModel {
         });
       }
 
-      print('IN HISTORy---->${sentHistory}');
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
       setError(SENT_HISTORY, error.toString());
@@ -234,7 +230,7 @@ class HistoryProvider extends BaseModel {
     recievedHistoryLogs = [];
     AtKey key = AtKey()
       ..metadata = Metadata()
-      ..key = 'receivedFiles';
+      ..key = MixedConstants.RECEIVED_FILE_HISTORY;
     var keyValue = await backendService.atClientInstance.get(key);
     print('received file history:${keyValue}');
     if (keyValue != null && keyValue.value != null) {
@@ -252,7 +248,7 @@ class HistoryProvider extends BaseModel {
   updateReceivedHistoryLogs() async {
     AtKey key = AtKey()
       ..metadata = Metadata()
-      ..key = 'receivedFiles';
+      ..key = MixedConstants.RECEIVED_FILE_HISTORY;
 
     receivedFileHistory['history'] = recievedHistoryLogs;
     var result = await backendService.atClientInstance

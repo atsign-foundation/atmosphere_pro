@@ -1,15 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -357,13 +354,24 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 }
                               },
                               leading: Container(
-                                height: 50.toHeight,
-                                width: 50.toHeight,
-                                child: thumbnail(
-                                  filesList[index].name?.split('.')?.last,
-                                  filesList[index].path,
-                                ),
-                              ),
+                                  height: 50.toHeight,
+                                  width: 50.toHeight,
+                                  child: FutureBuilder(
+                                      future:
+                                          isFilePresent(filesList[index].path),
+                                      builder: (context, snapshot) {
+                                        return snapshot.connectionState ==
+                                                    ConnectionState.done &&
+                                                snapshot.data != null
+                                            ? thumbnail(
+                                                filesList[index]
+                                                    .name
+                                                    ?.split('.')
+                                                    ?.last,
+                                                filesList[index].path,
+                                                isFilePresent: snapshot.data)
+                                            : SizedBox();
+                                      })),
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -476,17 +484,22 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     );
   }
 
-  Widget thumbnail(String extension, String path) {
+  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
             child: Container(
               height: 50.toHeight,
               width: 50.toWidth,
-              child: Image.file(
-                File(path),
-                fit: BoxFit.cover,
-              ),
+              child: isFilePresent
+                  ? Image.file(
+                      File(path),
+                      fit: BoxFit.cover,
+                    )
+                  : Icon(
+                      Icons.image,
+                      size: 30.toFont,
+                    ),
             ),
           )
         : FileTypes.VIDEO_TYPES.contains(extension)
@@ -571,5 +584,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             ),
           );
         });
+  }
+
+  Future<bool> isFilePresent(String filePath) async {
+    File file = File(filePath);
+    bool fileExists = await file.exists();
+    return fileExists;
   }
 }

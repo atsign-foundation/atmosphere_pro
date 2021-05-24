@@ -515,8 +515,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     String filePath =
         BackendService.getInstance().downloadDirectory.path + '/${fileName}';
 
-    File test = File(filePath);
-    bool fileExists = await test.exists();
+    File file = File(filePath);
+    bool fileExists = await file.exists();
     return fileExists;
   }
 
