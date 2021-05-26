@@ -68,10 +68,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     isFilesAlreadyDownloaded();
   }
 
-  getAtSignDetail() async {
+  getAtSignDetail() {
     AtContact contact;
     if (widget.receivedHistory.sender != null) {
-      contact = await getAtSignDetails(widget.receivedHistory.sender);
+      contact = checkForCachedContactDetail(widget.receivedHistory.sender);
     }
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {

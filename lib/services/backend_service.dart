@@ -8,7 +8,6 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
@@ -26,7 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
@@ -192,7 +190,6 @@ class BackendService {
     }
 
     await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
-    await initializeContactsService(atClientInstance, currentAtSign);
     Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
             listen: false)
         .selectedFiles = [];
@@ -201,7 +198,6 @@ class BackendService {
         atClientPreference: atClientPreference,
         atClientServiceInstance: atClientServiceInstance);
     String privateKey = await getPrivateKey(atsign);
-    await initializeContactsService(atClientInstance, currentAtSign);
 
     await atClientInstance.startMonitor(privateKey, _notificationCallBack);
     print('monitor started');
