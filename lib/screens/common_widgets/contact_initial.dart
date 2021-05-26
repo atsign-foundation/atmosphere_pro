@@ -29,7 +29,7 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials.substring((index == 1) ? 0 : 1, index),
+          initials.substring((index == 1) ? 0 : 1, index).toUpperCase(),
           style: CustomTextStyles.whiteBold(size: (size ~/ 3)),
         ),
       ),

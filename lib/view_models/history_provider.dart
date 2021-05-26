@@ -157,6 +157,7 @@ class HistoryProvider extends BaseModel {
       populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
+      setStatus(RECEIVED_HISTORY, Status.Error);
       setError(RECEIVED_HISTORY, error.toString());
     }
   }
@@ -231,7 +232,8 @@ class HistoryProvider extends BaseModel {
     AtKey key = AtKey()
       ..metadata = Metadata()
       ..key = MixedConstants.RECEIVED_FILE_HISTORY;
-    var keyValue = await backendService.atClientInstance.get(key);
+    AtValue keyValue = await backendService.atClientInstance.get(key);
+
     print('received file history:${keyValue}');
     if (keyValue != null && keyValue.value != null) {
       Map historyFile = json.decode((keyValue.value) as String) as Map;

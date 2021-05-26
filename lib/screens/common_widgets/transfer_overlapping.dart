@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -58,13 +58,8 @@ class _TranferOverlappingContactsState
                     ? 3
                     : widget.selectedList.length,
                 (index) {
-                  // Uint8List image;
-                  // if (widget?.selectedList[index]?.tags != null &&
-                  //     widget?.selectedList[index]?.tags['image'] != null) {
-                  //   List<int> intList =
-                  //       widget?.selectedList[index]?.tags['image'].cast<int>();
-                  //   image = Uint8List.fromList(intList);
-                  // }
+                  Uint8List image = getCachedContactImage(
+                      widget?.selectedList[index]?.atsign);
 
                   return Positioned(
                     left: 5 + double.parse((index * 10).toString()),
@@ -73,16 +68,15 @@ class _TranferOverlappingContactsState
                       height: 28.toHeight,
                       width: 28.toHeight,
                       decoration: BoxDecoration(shape: BoxShape.circle),
-                      child:
-                          // false
-                          //     ? CustomCircleAvatar(
-                          //         byteImage: image,
-                          //         nonAsset: true,
-                          //       )
-                          //     :
-                          ContactInitial(
-                        initials: widget?.selectedList[index]?.atsign ?? '  ',
-                      ),
+                      child: image != null
+                          ? CustomCircleAvatar(
+                              byteImage: image,
+                              nonAsset: true,
+                            )
+                          : ContactInitial(
+                              initials:
+                                  widget?.selectedList[index]?.atsign ?? '  ',
+                            ),
                     ),
                   );
                 },
@@ -178,6 +172,10 @@ class _TranferOverlappingContactsState
                               (index) {
                                 bool isNotified = widget
                                     .selectedList[index].isNotificationSend;
+
+                                Uint8List image = getCachedContactImage(
+                                    widget.selectedList[index].atsign);
+
                                 return Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
@@ -193,11 +191,16 @@ class _TranferOverlappingContactsState
                                       Container(
                                         width: 90.toHeight,
                                         height: 90.toHeight,
-                                        child: ContactInitial(
-                                          initials:
-                                              widget.selectedList[index].atsign,
-                                          size: 40,
-                                        ),
+                                        child: image != null
+                                            ? CustomCircleAvatar(
+                                                byteImage: image,
+                                                nonAsset: true,
+                                              )
+                                            : ContactInitial(
+                                                initials: widget
+                                                    .selectedList[index].atsign,
+                                                size: 40,
+                                              ),
                                       ),
                                       Positioned(
                                           right: 0,
@@ -256,5 +259,19 @@ class _TranferOverlappingContactsState
         ),
       ),
     );
+  }
+
+  getCachedContactImage(String atsign) {
+    Uint8List image;
+    AtContact contact = checkForCachedContactDetail(atsign);
+
+    if (contact != null &&
+        contact.tags != null &&
+        contact.tags['image'] != null) {
+      List<int> intList = contact.tags['image'].cast<int>();
+      image = Uint8List.fromList(intList);
+    }
+
+    return image;
   }
 }

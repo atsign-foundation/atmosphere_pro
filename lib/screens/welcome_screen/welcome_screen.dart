@@ -77,7 +77,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await initializeContactsService(
           BackendService.getInstance().atClientInstance,
-          BackendService.getInstance().currentAtSign);
+          BackendService.getInstance().currentAtSign,
+          rootDomain: MixedConstants.ROOT_DOMAIN);
     });
     super.initState();
 
@@ -115,7 +116,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   setAtSign() async {
     currentAtSign = await backendService.getAtSign();
-    await getAtSignAndInitializeContacts();
     await initGroups();
     setState(() {});
   }
@@ -128,12 +128,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         MixedConstants.ROOT_DOMAIN,
         MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
-  }
-
-  getAtSignAndInitializeContacts() async {
-    await initializeContactsService(
-        backendService.atClientServiceInstance.atClient, currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   _showScaffold({int status = 0, bool shouldTimeout = true}) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -15,7 +16,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -47,7 +48,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   bool isOpen = false;
   bool isDeepOpen = false;
   // DateTime sendTime;
-  Uint8List videoThumbnail, image;
+  Uint8List videoThumbnail, firstContactImage;
 
   @override
   void initState() {
@@ -65,35 +66,20 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
       fileSize += element.size;
     });
 
-    getAtSignDetail();
-    // widget.testList.forEach((key, value) {
-    //   ContactService().contactList.forEach((element) {
-    //     if (element.atSign == key) {
-    //       contactList.add(element);
-    //     }
-    //   });
-    //   fileLength = widget.testList[key].length;
-    //   print(widget.testList[key].length);
-    //   value.forEach((element) {
-    //     filesList.add(element);
-    //   });
-    // });
-
-    // contactList
-    //     .removeWhere((element) => element.atSign == widget.testList.keys.first);
+    getContactImage();
   }
 
-  getAtSignDetail() async {
+  getContactImage() {
     AtContact contact;
     if (contactList[0] != null) {
-      contact = await getAtSignDetails(contactList[0]);
+      contact = checkForCachedContactDetail(contactList[0]);
     }
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
         if (mounted) {
           setState(() {
-            image = Uint8List.fromList(intList);
+            firstContactImage = Uint8List.fromList(intList);
           });
         }
       }
@@ -113,44 +99,30 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   @override
   Widget build(BuildContext context) {
-    // sendTime = DateTime.parse(widget.sentHistory.date);
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    Uint8List image;
-    print('contactList====>$contactList');
-    // if (contactList?.first?.tags != null &&
-    //     contactList?.first?.tags['image'] != null) {
-    //   List<int> intList = contactList?.first?.tags['image'].cast<int>();
-    //   image = Uint8List.fromList(intList);
-    // }
+
     return Column(
       children: [
         Container(
           color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
           child: ListTile(
-            leading:
-                //  (contactList?.first?.tags != null &&
-                //         contactList?.first?.tags['image'] != null)
-                //     ? CustomCircleAvatar(
-                //         byteImage: image,
-                //         nonAsset: true,
-                //       )
-                //     :
-                contactList.isNotEmpty
-                    ? image != null
-                        ? CustomCircleAvatar(byteImage: image, nonAsset: true)
-                        : Container(
-                            height: 45.toHeight,
-                            width: 45.toHeight,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              shape: BoxShape.circle,
-                            ),
-                            child: ContactInitial(
-                              initials: contactList[0] ?? '  ',
-                              size: 45,
-                            ),
-                          )
-                    : SizedBox(),
+            leading: contactList.isNotEmpty
+                ? firstContactImage != null
+                    ? CustomCircleAvatar(
+                        byteImage: firstContactImage, nonAsset: true)
+                    : Container(
+                        height: 45.toHeight,
+                        width: 45.toHeight,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                        child: ContactInitial(
+                          initials: contactList[0] ?? '  ',
+                          size: 45,
+                        ),
+                      )
+                : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -165,29 +137,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             )
                           : SizedBox(),
                     ),
-                    // ContactService()
-                    //         .allContactsList
-                    //         .contains(widget.sentHistory.atsign[0])
-                    //     ? SizedBox()
-                    //     : GestureDetector(
-                    //         onTap: () async {
-                    //           await showDialog(
-                    //             context: context,
-                    //             builder: (context) => AddSingleContact(
-                    //               atSignName: widget.sentHistory.atsign[0],
-                    //             ),
-                    //           );
-                    //           this.setState(() {});
-                    //         },
-                    //         child: Container(
-                    //           height: 20.toHeight,
-                    //           width: 20.toWidth,
-                    //           child: Icon(
-                    //             Icons.add,
-                    //             color: Colors.black,
-                    //           ),
-                    //         ),
-                    //       )
                   ],
                 ),
                 SizedBox(height: 5.toHeight),
