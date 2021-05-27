@@ -71,14 +71,17 @@ class FileData {
   int size;
   String url;
   String path;
+  bool isUploaded;
 
-  FileData({this.name, this.size, this.url, this.path});
+  FileData(
+      {this.name, this.size, this.url, this.path, this.isUploaded = false});
 
   FileData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     size = json['size'];
     url = json['url'];
     path = json['path'];
+    isUploaded = json['isUploaded'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +90,7 @@ class FileData {
     data['size'] = this.size;
     data['url'] = this.url;
     data['path'] = this.path;
+    data['isUploaded'] = this.isUploaded;
     return data;
   }
 }

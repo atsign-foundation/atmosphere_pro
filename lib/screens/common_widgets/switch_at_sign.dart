@@ -1,7 +1,10 @@
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -44,52 +47,56 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.atSignList.length,
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: isLoading
-                            ? () {}
-                            : () async {
-                                await backendService.checkToOnboard(
-                                    atSign: widget.atSignList[index]);
+                      itemBuilder: (context, index) {
+                        Uint8List image = CommonFunctions()
+                            .getCachedContactImage(widget.atSignList[index]);
+                        return GestureDetector(
+                          onTap: isLoading
+                              ? () {}
+                              : () async {
+                                  await backendService.checkToOnboard(
+                                      atSign: widget.atSignList[index]);
 
-                                Provider.of<WelcomeScreenProvider>(context,
-                                        listen: false)
-                                    .selectedContacts = [];
-                                Provider.of<FileTransferProvider>(context,
-                                        listen: false)
-                                    .selectedFiles = [];
-                                Navigator.pop(context);
-                                // Navigator.pop(context);
-                              },
-                        child: Padding(
-                          padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 20),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 40.toFont,
-                                width: 40.toFont,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, r.nextInt(255),
-                                      r.nextInt(255), r.nextInt(255)),
-                                  borderRadius:
-                                      BorderRadius.circular(50.toWidth),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    widget.atSignList[index]
-                                        .substring(0, 2)
-                                        .toUpperCase(),
-                                    style: CustomTextStyles.whiteBold(
-                                        size: (50 ~/ 3)),
+                                  Provider.of<WelcomeScreenProvider>(context,
+                                          listen: false)
+                                      .selectedContacts = [];
+                                  Provider.of<FileTransferProvider>(context,
+                                          listen: false)
+                                      .selectedFiles = [];
+                                  Navigator.pop(context);
+                                  // Navigator.pop(context);
+                                },
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(left: 10, right: 10, top: 20),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 40.toFont,
+                                  width: 40.toFont,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, r.nextInt(255),
+                                        r.nextInt(255), r.nextInt(255)),
+                                    borderRadius:
+                                        BorderRadius.circular(50.toWidth),
+                                  ),
+                                  child: Center(
+                                    child: image != null
+                                        ? CustomCircleAvatar(
+                                            byteImage: image,
+                                            nonAsset: true,
+                                          )
+                                        : ContactInitial(
+                                            initials: widget.atSignList[index]),
                                   ),
                                 ),
-                              ),
-                              Text(widget.atSignList[index],
-                                  style: TextStyle(fontSize: 15.toFont))
-                            ],
+                                Text(widget.atSignList[index],
+                                    style: TextStyle(fontSize: 15.toFont))
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     )),
                     SizedBox(
                       width: 20,

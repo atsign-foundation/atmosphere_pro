@@ -332,6 +332,21 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                               CustomTextStyles.primaryRegular16,
                                         ),
                                       ),
+                                      Container(
+                                        child: filesList[index].isUploaded !=
+                                                    null &&
+                                                filesList[index].isUploaded
+                                            ? Icon(
+                                                Icons.done,
+                                                color: Color(0xFF08CB21),
+                                                size: 25.toFont,
+                                              )
+                                            : Icon(
+                                                Icons.cancel,
+                                                color: Color(0xFFF86061),
+                                                size: 25.toFont,
+                                              ),
+                                      )
                                     ],
                                   ),
                                   SizedBox(width: 10.toHeight),

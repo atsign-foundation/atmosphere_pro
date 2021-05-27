@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
@@ -345,37 +345,33 @@ class FileTransferProvider extends BaseModel {
             .atClientInstance.encryptionService
             .generateFileEncryptionSharedKey(
                 backendService.currentAtSign, groupContact.contact.atSign);
-        print('fileEncryptionKey : ${fileEncryptionKey}');
 
         if (!isFilesUploaded) {
           for (var file in selectedFiles) {
             var selectedFile = File(file.path);
             var bytes = selectedFile.readAsBytesSync();
-            print('file : ${selectedFile}');
 
             var encryptedFileContent = await backendService
                 .atClientInstance.encryptionService
                 .encryptFile(bytes, fileEncryptionKey);
 
-            print('encryptedFileContent : ${encryptedFileContent}');
+            var response = await uploadFileToFilebin(
+                container, file.name, encryptedFileContent);
 
-            var response = await post(Uri.parse(MixedConstants.FILEBIN_URL),
-                headers: <String, String>{
-                  "bin": container,
-                  "filename": file.name
-                },
-                body: encryptedFileContent);
-            print('file upload ${response.body}');
-            // changing name of files
-            Map fileInfo = jsonDecode(response.body);
             int indexToEdit = filesToTransfer.files
                 .indexWhere((element) => element.name == file.name);
-            if (indexToEdit > -1) {
-              filesToTransfer.files[indexToEdit].name =
-                  fileInfo['file']['filename'];
-            }
 
-            print('container link: ${container}');
+            if (response != null && response is http.Response) {
+              // updating name and isUploaded when file upload is success.
+              Map fileInfo = jsonDecode(response.body);
+              if (indexToEdit > -1) {
+                filesToTransfer.files[indexToEdit].name =
+                    fileInfo['file']['filename'];
+                filesToTransfer.files[indexToEdit].isUploaded = true;
+              }
+            } else {
+              filesToTransfer.files[indexToEdit].isUploaded = false;
+            }
           }
           isFilesUploaded = true;
         }
@@ -399,8 +395,6 @@ class FileTransferProvider extends BaseModel {
             '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}';
         filesToTransfer.sender = backendService.currentAtSign;
 
-        print('file model: ${filesToTransfer.sender}');
-
         // put data
         var result = await backendService.atClientInstance
             .put(atKey, jsonEncode(filesToTransfer.toJson()));
@@ -408,8 +402,6 @@ class FileTransferProvider extends BaseModel {
         shareStatus[shareStatus.indexWhere(
                 (element) => element.atsign == groupContact.contact.atSign)]
             .isNotificationSend = result;
-
-        print('notification sent: ${result}');
       }
       flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
 
@@ -422,8 +414,9 @@ class FileTransferProvider extends BaseModel {
       setStatus(SEND_FILES, Status.Done);
     } catch (e) {
       print('error in sending file : $e');
-      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      setError(SEND_FILES, e.toString());
       setStatus(SEND_FILES, Status.Error);
+      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
     }
   }
 
@@ -457,6 +450,18 @@ class FileTransferProvider extends BaseModel {
           .setFileTransferHistory(fileHistory, isEdit: true);
     } catch (e) {
       print('error in sending notification : $e');
+    }
+  }
+
+  Future uploadFileToFilebin(
+      String container, String fileName, List<int> dataBytes) async {
+    try {
+      var response = await http.post(Uri.parse(MixedConstants.FILEBIN_URL),
+          headers: <String, String>{"bin": container, "filename": fileName},
+          body: dataBytes);
+      return response;
+    } catch (e) {
+      print('error in uploading file: ${e}');
     }
   }
 
