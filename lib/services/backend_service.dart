@@ -246,24 +246,18 @@ class BackendService {
     if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
       var value = responseJson['value'];
 
-      print('decrypting ');
       var decryptedMessage = await atClientInstance.encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print("error in decrypting: $e"));
 
       print('decryptedMessage $decryptedMessage');
-
-      // ignore: unawaited_futures
-
-      // downloadFileFromBin(fromAtSign, decryptedMessage);
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .addToReceiveFileHistory(fromAtSign, decryptedMessage);
 
       NotificationService().setOnNotificationClick(onNotificationClick);
-      await NotificationService()
-          .showNotification(fromAtSign, fileName: 'myfile', fileSize: '40');
+      await NotificationService().showNotification(fromAtSign);
     }
   }
 
@@ -450,8 +444,7 @@ class BackendService {
           app_lifecycle_state != null &&
           app_lifecycle_state != AppLifecycleState.resumed.toString()) {
         print("app not active $app_lifecycle_state");
-        await NotificationService()
-            .showNotification(atsign, fileName: filename, fileSize: filesize);
+        await NotificationService().showNotification(atsign);
       }
       NotificationPayload payload = NotificationPayload(
           file: filename, name: atsign, size: double.parse(filesize));

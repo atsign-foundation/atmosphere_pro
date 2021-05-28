@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -16,7 +15,6 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -62,7 +60,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     filesList = widget.sentHistory.fileDetails.files;
 
     widget.sentHistory.fileDetails.files.forEach((element) {
-      print('all files:${element.size}');
       fileSize += element.size;
     });
 
