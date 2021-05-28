@@ -32,6 +32,7 @@ import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/manager/sync_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -370,23 +371,43 @@ class BackendService {
           context: NavService.navKey.currentContext,
           builder: (context) {
             return AlertDialog(
-              content: Text(
-                  'A file named, "$fileName" already exists. Do you want to replace it?'),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      proceedToDownload = true;
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Yes')),
-                TextButton(onPressed: null, child: Text('')),
-                TextButton(
-                    onPressed: () {
-                      proceedToDownload = false;
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Cancel'))
-              ],
+              content: Container(
+                height: 150.toHeight,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'A file named, "$fileName" already exists. ',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text('Do you want to replace it ?'),
+                      SizedBox(
+                        height: 20.toHeight,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                proceedToDownload = true;
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Yes')),
+                          TextButton(onPressed: null, child: Text('')),
+                          TextButton(
+                              onPressed: () {
+                                proceedToDownload = false;
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
             );
           });
     } else {

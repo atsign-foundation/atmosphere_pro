@@ -278,51 +278,57 @@ class HistoryProvider extends BaseModel {
             contactName: fileData.sender,
           );
 
-          if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-            int index = receivedAudio.indexWhere(
-                (element) => element.fileName == fileDetail.fileName);
-            if (index == -1) {
-              receivedAudio.add(fileDetail);
-            }
-          } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-            int index = receivedVideos.indexWhere(
-                (element) => element.fileName == fileDetail.fileName);
-            if (index == -1) {
-              receivedVideos.add(fileDetail);
-            }
-          } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-            int index = receivedPhotos.indexWhere(
-                (element) => element.fileName == fileDetail.fileName);
-            if (index == -1) {
-              // checking is photo is downloaded or not
-              //if photo is downloaded then only it's shown in my files screen
-              File file = File(fileDetail.filePath);
-              bool isFileDownloaded = await file.exists();
+          // check if file exists
+          File tempFile = File(fileDetail.filePath);
+          bool isFileDownloaded = await tempFile.exists();
 
-              if (isFileDownloaded) {
-                receivedPhotos.add(fileDetail);
+          if (isFileDownloaded) {
+            if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
+              int index = receivedAudio.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedAudio.add(fileDetail);
               }
-            }
-          } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
-              FileTypes.PDF_TYPES.contains(fileExtension) ||
-              FileTypes.WORD_TYPES.contains(fileExtension) ||
-              FileTypes.EXEL_TYPES.contains(fileExtension)) {
-            int index = receivedDocument.indexWhere(
-                (element) => element.fileName == fileDetail.fileName);
-            if (index == -1) {
-              receivedDocument.add(fileDetail);
-            }
-          } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
-            int index = receivedApk.indexWhere(
-                (element) => element.fileName == fileDetail.fileName);
-            if (index == -1) {
-              receivedApk.add(fileDetail);
-            }
-          } else {
-            int index = receivedUnknown.indexWhere(
-                (element) => element.fileName == fileDetail.fileName);
-            if (index == -1) {
-              receivedUnknown.add(fileDetail);
+            } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+              int index = receivedVideos.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedVideos.add(fileDetail);
+              }
+            } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+              int index = receivedPhotos.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                // checking is photo is downloaded or not
+                //if photo is downloaded then only it's shown in my files screen
+                File file = File(fileDetail.filePath);
+                bool isFileDownloaded = await file.exists();
+
+                if (isFileDownloaded) {
+                  receivedPhotos.add(fileDetail);
+                }
+              }
+            } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+                FileTypes.PDF_TYPES.contains(fileExtension) ||
+                FileTypes.WORD_TYPES.contains(fileExtension) ||
+                FileTypes.EXEL_TYPES.contains(fileExtension)) {
+              int index = receivedDocument.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedDocument.add(fileDetail);
+              }
+            } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
+              int index = receivedApk.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedApk.add(fileDetail);
+              }
+            } else {
+              int index = receivedUnknown.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedUnknown.add(fileDetail);
+              }
             }
           }
         });
