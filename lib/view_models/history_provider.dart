@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
@@ -190,16 +190,14 @@ class HistoryProvider extends BaseModel {
     );
 
     await Future.forEach(fileTransferResponse, (key) async {
-      if (key.contains('cached')) {
+      if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
         AtValue atvalue = await backendService.atClientInstance
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) => print("error in get $e"));
 
-        if (atvalue != null &&
-            atvalue.value != null &&
-            atvalue.value[0] != 'h') {
+        if (atvalue != null && atvalue.value != null) {
           FileTransfer filesModel =
               FileTransfer.fromJson(jsonDecode(atvalue.value));
 
@@ -431,5 +429,17 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       setError(SORT_LIST, e.toString());
     }
+  }
+
+  bool checkRegexFromBlockedAtsign(String regex) {
+    bool isBlocked = false;
+    String atsign = regex.split('@')[regex.split('@').length - 1];
+
+    ContactService().blockContactList.forEach((element) {
+      if (element.atSign == '@${atsign}') {
+        isBlocked = true;
+      }
+    });
+    return isBlocked;
   }
 }
