@@ -372,6 +372,12 @@ class FileTransferProvider extends BaseModel {
             } else {
               filesToTransfer.files[indexToEdit].isUploaded = false;
             }
+
+            await File('${file.path}').copy(MixedConstants.SENT_FILE_DIRECTORY +
+                '/${filesToTransfer.files[indexToEdit].name}');
+
+            filesToTransfer.files[indexToEdit].path =
+                '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[indexToEdit].name}';
           }
           isFilesUploaded = true;
         }

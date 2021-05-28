@@ -34,4 +34,10 @@ class MixedConstants {
   static const String FILE_TRANSFER_KEY = 'filetransfer';
   static const String RECEIVED_FILE_HISTORY = 'receivedHistory';
   static const String SENT_FILE_HISTORY = 'sentHistory';
+
+  static String ApplicationDocumentsDirectory;
+
+  static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
+
+  static String get SENT_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
 }

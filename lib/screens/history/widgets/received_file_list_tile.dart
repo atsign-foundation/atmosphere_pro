@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -276,9 +277,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           }
                           return ListTile(
                             onTap: () async {
-                              String path = BackendService.getInstance()
-                                      .downloadDirectory
-                                      .path +
+                              String path = MixedConstants
+                                      .RECEIVED_FILE_DIRECTORY +
                                   '/${widget.receivedHistory.files[index].name}';
 
                               File test = File(path);

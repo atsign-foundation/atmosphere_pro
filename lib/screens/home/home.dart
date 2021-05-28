@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -14,6 +15,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart' show basename;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -42,6 +44,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    storeApplicationDocumentsDirectory();
     filePickerProvider =
         Provider.of<FileTransferProvider>(context, listen: false);
     _backendService = BackendService.getInstance();
@@ -58,6 +61,11 @@ class _HomeState extends State<Home> {
         });
       }
     });
+  }
+
+  storeApplicationDocumentsDirectory() async {
+    var _dir = await getApplicationDocumentsDirectory();
+    MixedConstants.ApplicationDocumentsDirectory = _dir.path;
   }
 
   var atClientPrefernce;

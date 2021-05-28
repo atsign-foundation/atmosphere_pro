@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -291,12 +292,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             }
                             return ListTile(
                               onTap: () async {
-                                File test = File(filesList[index].path);
+                                String _path =
+                                    MixedConstants.SENT_FILE_DIRECTORY +
+                                        '/${filesList[index].name}';
+                                File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
                                     'test file: ${test}, fileExists: ${fileExists}');
                                 if (fileExists) {
-                                  await OpenFile.open(filesList[index].path);
+                                  await OpenFile.open(_path);
                                 } else {
                                   _showNoFileDialog(deviceTextFactor);
                                 }
@@ -305,8 +309,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   height: 50.toHeight,
                                   width: 50.toHeight,
                                   child: FutureBuilder(
-                                      future:
-                                          isFilePresent(filesList[index].path),
+                                      future: isFilePresent(
+                                          MixedConstants.SENT_FILE_DIRECTORY +
+                                              '/${filesList[index].name}'),
                                       builder: (context, snapshot) {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
@@ -316,7 +321,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     .name
                                                     ?.split('.')
                                                     ?.last,
-                                                filesList[index].path,
+                                                MixedConstants
+                                                        .SENT_FILE_DIRECTORY +
+                                                    '/${filesList[index].name}',
                                                 isFilePresent: snapshot.data)
                                             : SizedBox();
                                       })),

@@ -346,7 +346,8 @@ class BackendService {
 
       var decryptedFile = await atClientInstance.encryptionService
           .decryptFile(encryptedFileInBytes, fileDecryptionKey);
-      var downloadedFile = File('${downloadDirectory.path}/$fileName');
+      var downloadedFile =
+          File('${MixedConstants.RECEIVED_FILE_DIRECTORY}/$fileName');
       print('open file');
 
       downloadedFile.writeAsBytesSync(decryptedFile);
