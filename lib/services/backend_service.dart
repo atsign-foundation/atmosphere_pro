@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive_io.dart';
 import 'package:at_commons/at_builders.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
@@ -219,6 +220,15 @@ class BackendService {
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
     print('fromAtSign : $fromAtSign');
+
+    // check for notification from blocked atsign
+    if (ContactService()
+            .blockContactList
+            .indexWhere((element) => element.atSign == fromAtSign) >
+        -1) {
+      return;
+    }
+
     if (atKey == 'stream_id') {
       var valueObject = responseJson['value'];
       var streamId = valueObject.split(':')[0];
@@ -226,9 +236,7 @@ class BackendService {
       fileLength = valueObject.split(':')[2];
       fileName = utf8.decode(base64.decode(fileName));
       userResponse =
-          await acceptStream(fromAtSign, fileName, fileLength, toAtSing
-              // id:id
-              );
+          await acceptStream(fromAtSign, fileName, fileLength, toAtSing);
 
       if (userResponse == true) {
         await atClientInstance.sendStreamAck(
@@ -239,7 +247,6 @@ class BackendService {
             _streamCompletionCallBack,
             _streamReceiveCallBack);
       }
-
       return;
     }
     print(' FILE_TRANSFER_KEY : ${atKey}');
@@ -251,13 +258,14 @@ class BackendService {
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print("error in decrypting: $e"));
 
-      print('decryptedMessage $decryptedMessage');
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .addToReceiveFileHistory(fromAtSign, decryptedMessage);
+      if (decryptedMessage != null) {
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .addToReceiveFileHistory(fromAtSign, decryptedMessage);
 
-      NotificationService().setOnNotificationClick(onNotificationClick);
-      await NotificationService().showNotification(fromAtSign);
+        NotificationService().setOnNotificationClick(onNotificationClick);
+        await NotificationService().showNotification(fromAtSign);
+      }
     }
   }
 
