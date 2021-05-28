@@ -162,17 +162,28 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  addToReceiveFileHistory(
-    String sharedBy,
-    String decodedMsg,
-  ) async {
+  addToReceiveFileHistory(String sharedBy, String decodedMsg,
+      {bool isUpdate = false}) async {
     setStatus(ADD_RECEIVED_FILE, Status.Loading);
     FileTransfer filesModel = FileTransfer.fromJson((jsonDecode(decodedMsg)));
     print('addToReceiveFileHistory: ${filesModel.sender}');
-    receivedHistoryNew.insert(0, filesModel);
-    recievedHistoryLogs.insert(0, filesModel);
-    await getReceivedHistoryLog();
-    await getAllFileTransferData();
+
+    if (filesModel.isUpdate) {
+      int index = recievedHistoryLogs
+          .indexWhere((element) => element?.key?.contains(filesModel.key));
+      if (index > -1) {
+        // sendFileHistory['history'][index] = filesModel.toJson();
+        recievedHistoryLogs[index] = filesModel;
+
+        print('recievedHistoryLogs[index] ${recievedHistoryLogs[index]}');
+      }
+    } else {
+      receivedHistoryNew.insert(0, filesModel);
+      recievedHistoryLogs.insert(0, filesModel);
+      await getReceivedHistoryLog();
+      await getAllFileTransferData();
+    }
+
     await sortFiles(recievedHistoryLogs);
     await populateTabs();
     setStatus(ADD_RECEIVED_FILE, Status.Done);

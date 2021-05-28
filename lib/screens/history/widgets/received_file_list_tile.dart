@@ -258,7 +258,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 66.0 * widget.receivedHistory.files.length.toHeight,
+                    height: 66.0 *
+                        (widget.receivedHistory.files.length -
+                                widget.receivedHistory.files
+                                    .where((element) =>
+                                        element.isUploaded == false)
+                                    .length)
+                            .toHeight,
                     child: ListView.separated(
                         separatorBuilder: (context, index) => Divider(
                               indent: 80.toWidth,
@@ -266,6 +272,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         itemCount: int.parse(
                             widget.receivedHistory.files.length.toString()),
                         itemBuilder: (context, index) {
+                          if (!widget.receivedHistory.files[index].isUploaded) {
+                            return SizedBox();
+                          }
                           if (FileTypes.VIDEO_TYPES.contains(widget
                               .receivedHistory.files[index].name
                               ?.split('.')

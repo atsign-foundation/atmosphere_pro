@@ -348,10 +348,21 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : Icon(
-                                                Icons.cancel,
-                                                color: Color(0xFFF86061),
-                                                size: 25.toFont,
+                                            : InkWell(
+                                                onTap: () async {
+                                                  Provider.of<FileTransferProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .reuploadFile(
+                                                          filesList,
+                                                          index,
+                                                          widget.sentHistory);
+                                                },
+                                                child: Icon(
+                                                  Icons.cancel,
+                                                  color: Color(0xFFF86061),
+                                                  size: 25.toFont,
+                                                ),
                                               ),
                                       )
                                     ],

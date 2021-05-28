@@ -325,6 +325,7 @@ class FileTransferProvider extends BaseModel {
     setStatus(SEND_FILES, Status.Loading);
     try {
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
+      filesToTransfer.isUpdate = true;
       var shareStatus = <ShareStatus>[];
       contactList.forEach((element) {
         shareStatus.add(ShareStatus(element.contact.atSign, false));
@@ -348,6 +349,21 @@ class FileTransferProvider extends BaseModel {
 
         if (!isFilesUploaded) {
           for (var file in selectedFiles) {
+            int indexToEdit = filesToTransfer.files
+                .indexWhere((element) => element.name == file.name);
+
+            /// TODO: To fail first file upload
+            if (indexToEdit == 0) {
+              filesToTransfer.files[indexToEdit].isUploaded = false;
+              await File('${file.path}').copy(
+                  MixedConstants.SENT_FILE_DIRECTORY +
+                      '/${filesToTransfer.files[indexToEdit].name}');
+
+              filesToTransfer.files[indexToEdit].path =
+                  '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[indexToEdit].name}';
+              continue;
+            }
+
             var selectedFile = File(file.path);
             var bytes = selectedFile.readAsBytesSync();
 
@@ -357,9 +373,6 @@ class FileTransferProvider extends BaseModel {
 
             var response = await uploadFileToFilebin(
                 container, file.name, encryptedFileContent);
-
-            int indexToEdit = filesToTransfer.files
-                .indexWhere((element) => element.name == file.name);
 
             if (response != null && response is http.Response) {
               // updating name and isUploaded when file upload is success.
@@ -424,6 +437,76 @@ class FileTransferProvider extends BaseModel {
       setStatus(SEND_FILES, Status.Error);
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
     }
+  }
+
+  reuploadFile(
+      List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
+    var filesToTransfer = _sentHistory.fileDetails;
+    var backendService = BackendService.getInstance();
+
+    var fileEncryptionKey = await backendService
+        .atClientInstance.encryptionService
+        .generateFileEncryptionSharedKey(
+            backendService.currentAtSign, _sentHistory.sharedWith[0].atsign);
+
+    var selectedFile = File(_filesList[_index].path);
+    var bytes = selectedFile.readAsBytesSync();
+
+    var encryptedFileContent = await backendService
+        .atClientInstance.encryptionService
+        .encryptFile(bytes, fileEncryptionKey);
+
+    String container =
+        filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
+    container = container.replaceAll('archive/', '');
+    container = container.replaceAll('/zip', '');
+
+    print('container $container');
+    print('_filesList[_index].name ${_filesList[_index].name}');
+
+    var response = await uploadFileToFilebin(
+        container, _filesList[_index].name, encryptedFileContent);
+
+    if (response != null && response is http.Response) {
+      print('response ${response.toString()}');
+      // updating name and isUploaded when file upload is success.
+      Map fileInfo = jsonDecode(response.body);
+      if (_index > -1) {
+        filesToTransfer.files[_index].name = fileInfo['file']['filename'];
+        filesToTransfer.files[_index].isUploaded = true;
+        await File('${_filesList[_index].path}').copy(
+            MixedConstants.SENT_FILE_DIRECTORY +
+                '/${filesToTransfer.files[_index].name}');
+
+        filesToTransfer.files[_index].path =
+            '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[_index].name}';
+      }
+    } else {
+      filesToTransfer.files[_index].isUploaded = false;
+    }
+
+    filesToTransfer.isUpdate = true;
+    for (var contact in _sentHistory.sharedWith) {
+      AtKey atKey = AtKey()
+        ..metadata = Metadata()
+        ..metadata.ttr = -1
+        ..metadata.ccd = true
+        ..key = filesToTransfer.key
+        ..sharedWith = contact.atsign
+        ..metadata.ttl = 60000 * 60 * 24 * 6
+        ..sharedBy = backendService.currentAtSign;
+      print('atkey : ${atKey}');
+      print('filesToTransfer ${filesToTransfer.toJson()}');
+
+      var result = await backendService.atClientInstance
+          .put(atKey, jsonEncode(filesToTransfer.toJson()));
+
+      contact.isNotificationSend = result;
+    }
+
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .setFileTransferHistory(_sentHistory, isEdit: true);
   }
 
   sendFileNotification(FileHistory fileHistory, String atsign) async {
