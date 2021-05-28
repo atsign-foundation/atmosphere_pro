@@ -53,12 +53,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     SizedBox(),
     Icon(
       Icons.check_circle,
-      size: 15.toFont,
+      size: 20.toFont,
       color: ColorConstants.successColor,
     ),
     Icon(
       Icons.cancel,
-      size: 15.toFont,
+      size: 20.toFont,
       color: ColorConstants.redText,
     )
   ];
@@ -101,11 +101,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
+      if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
+        Navigator.of(context).pop();
+      }
+
       if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
-        sendingFlushbar = _showScaffold(status: 0);
+        sendingFlushbar = _showScaffold(
+            status: 0, shouldTimeout: false, showLinearProgress: true);
         await sendingFlushbar.show(NavService.navKey.currentContext);
       } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
-        sendingFlushbar = _showScaffold(status: 2);
+        sendingFlushbar = _showScaffold(status: 2, shouldTimeout: false);
         await sendingFlushbar.show(NavService.navKey.currentContext);
       } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
         sendingFlushbar = _showScaffold(status: 1);
@@ -130,7 +135,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await GroupService().fetchGroupsAndContacts();
   }
 
-  _showScaffold({int status = 0, bool shouldTimeout = true}) {
+  _showScaffold(
+      {int status = 0,
+      bool shouldTimeout = true,
+      bool showLinearProgress = false}) {
+    String displayMessage = '';
+    if (status == 2) {
+      var transferProvider =
+          Provider.of<FileTransferProvider>(context, listen: false);
+
+      displayMessage = transferProvider.error['${transferProvider.SEND_FILES}'];
+    } else {
+      displayMessage = transferMessages[status];
+    }
+
     return Flushbar(
       title: transferMessages[status],
       message: 'hello',
@@ -139,6 +157,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       // reverseAnimationCurve: Curves.decelerate,
       // forwardAnimationCurve: Curves.elasticOut,
       backgroundColor: ColorConstants.scaffoldColor,
+      showProgressIndicator: showLinearProgress,
+      progressIndicatorController: null,
       boxShadows: [
         BoxShadow(
             color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
@@ -158,7 +178,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       mainButton: FlatButton(
         onPressed: () {
-          sendingFlushbar.dismiss();
+          if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
+            Navigator.of(context).pop();
+          }
         },
         child: Text(
           TextStrings().buttonDismiss,
@@ -178,12 +200,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             padding: EdgeInsets.only(
               left: 5.toWidth,
             ),
-            child: Padding(
+            child: Container(
+              width: SizeConfig().screenWidth * 0.5,
               padding: const EdgeInsets.only(top: 15.0),
               child: Text(
-                transferMessages[status],
+                '${displayMessage}',
                 style: TextStyle(
                     color: ColorConstants.fadedText, fontSize: 15.toFont),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           )
