@@ -395,17 +395,6 @@ class FileTransferProvider extends BaseModel {
           isFilesUploaded = true;
         }
 
-        AtKey atKey = AtKey()
-          ..metadata = Metadata()
-          ..metadata.ttr = -1
-          ..metadata.ccd = true
-          ..key =
-              '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}'
-          ..sharedWith = groupContact.contact.atSign
-          ..metadata.ttl = MixedConstants.FILE_TRANSFER_TTL
-          ..sharedBy = backendService.currentAtSign;
-        print('atkey : ${atKey}');
-
         // creating file url
         String downloadUrl =
             MixedConstants.FILEBIN_URL + 'archive/' + container + '/zip';
@@ -415,8 +404,11 @@ class FileTransferProvider extends BaseModel {
         filesToTransfer.sender = backendService.currentAtSign;
 
         // put data
-        var result = await backendService.atClientInstance
-            .put(atKey, jsonEncode(filesToTransfer.toJson()));
+        var result = await sendFileNotificationKey(
+          groupContact.contact.atSign,
+          '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}',
+          filesToTransfer,
+        );
 
         shareStatus[shareStatus.indexWhere(
                 (element) => element.atsign == groupContact.contact.atSign)]
@@ -439,74 +431,88 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  reuploadFile(
-      List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
-    var filesToTransfer = _sentHistory.fileDetails;
-    var backendService = BackendService.getInstance();
-
-    var fileEncryptionKey = await backendService
-        .atClientInstance.encryptionService
-        .generateFileEncryptionSharedKey(
-            backendService.currentAtSign, _sentHistory.sharedWith[0].atsign);
-
-    var selectedFile = File(_filesList[_index].path);
-    var bytes = selectedFile.readAsBytesSync();
-
-    var encryptedFileContent = await backendService
-        .atClientInstance.encryptionService
-        .encryptFile(bytes, fileEncryptionKey);
-
-    String container =
-        filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
-    container = container.replaceAll('archive/', '');
-    container = container.replaceAll('/zip', '');
-
-    print('container $container');
-    print('_filesList[_index].name ${_filesList[_index].name}');
-
-    var response = await uploadFileToFilebin(
-        container, _filesList[_index].name, encryptedFileContent);
-
-    if (response != null && response is http.Response) {
-      print('response ${response.toString()}');
-      // updating name and isUploaded when file upload is success.
-      Map fileInfo = jsonDecode(response.body);
-      if (_index > -1) {
-        filesToTransfer.files[_index].name = fileInfo['file']['filename'];
-        filesToTransfer.files[_index].isUploaded = true;
-        await File('${_filesList[_index].path}').copy(
-            MixedConstants.SENT_FILE_DIRECTORY +
-                '/${filesToTransfer.files[_index].name}');
-
-        filesToTransfer.files[_index].path =
-            '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[_index].name}';
-      }
-    } else {
-      filesToTransfer.files[_index].isUploaded = false;
-    }
-
-    filesToTransfer.isUpdate = true;
-    for (var contact in _sentHistory.sharedWith) {
+  sendFileNotificationKey(
+      String _atsign, String _key, FileTransfer _filesToTransfer) async {
+    try {
+      var backendService = BackendService.getInstance();
       AtKey atKey = AtKey()
         ..metadata = Metadata()
         ..metadata.ttr = -1
         ..metadata.ccd = true
-        ..key = filesToTransfer.key
-        ..sharedWith = contact.atsign
-        ..metadata.ttl = 60000 * 60 * 24 * 6
+        ..key = _key
+        ..sharedWith = _atsign
+        ..metadata.ttl = MixedConstants.FILE_TRANSFER_TTL
         ..sharedBy = backendService.currentAtSign;
       print('atkey : ${atKey}');
-      print('filesToTransfer ${filesToTransfer.toJson()}');
 
-      var result = await backendService.atClientInstance
-          .put(atKey, jsonEncode(filesToTransfer.toJson()));
+      // put data
+      var _result = await backendService.atClientInstance
+          .put(atKey, jsonEncode(_filesToTransfer.toJson()));
 
-      contact.isNotificationSend = result;
+      return _result;
+    } catch (e) {
+      print('Error in sendFileNotificationKey for $_atsign');
+      return false;
     }
+  }
 
-    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-            listen: false)
-        .setFileTransferHistory(_sentHistory, isEdit: true);
+  reuploadFile(
+      List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
+    try {
+      var filesToTransfer = _sentHistory.fileDetails;
+      var backendService = BackendService.getInstance();
+
+      var fileEncryptionKey = await backendService
+          .atClientInstance.encryptionService
+          .generateFileEncryptionSharedKey(
+              backendService.currentAtSign, _sentHistory.sharedWith[0].atsign);
+
+      var selectedFile = File(_filesList[_index].path);
+      var bytes = selectedFile.readAsBytesSync();
+
+      var encryptedFileContent = await backendService
+          .atClientInstance.encryptionService
+          .encryptFile(bytes, fileEncryptionKey);
+
+      String container =
+          filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
+      container = container.replaceAll('archive/', '');
+      container = container.replaceAll('/zip', '');
+
+      var response = await uploadFileToFilebin(
+          container, _filesList[_index].name, encryptedFileContent);
+
+      if (response != null && response is http.Response) {
+        // updating name and isUploaded when file upload is success.
+        Map fileInfo = jsonDecode(response.body);
+        if (_index > -1) {
+          filesToTransfer.files[_index].name = fileInfo['file']['filename'];
+          filesToTransfer.files[_index].isUploaded = true;
+          await File('${_filesList[_index].path}').copy(
+              MixedConstants.SENT_FILE_DIRECTORY +
+                  '/${filesToTransfer.files[_index].name}');
+
+          filesToTransfer.files[_index].path =
+              '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[_index].name}';
+        }
+      } else {
+        filesToTransfer.files[_index].isUploaded = false;
+      }
+
+      filesToTransfer.isUpdate = true;
+      for (var contact in _sentHistory.sharedWith) {
+        var result = await sendFileNotificationKey(
+            contact.atsign, filesToTransfer.key, filesToTransfer);
+
+        contact.isNotificationSend = result;
+      }
+
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .setFileTransferHistory(_sentHistory, isEdit: true);
+    } catch (e) {
+      print('Error in reuploadFile');
+    }
   }
 
   sendFileNotification(FileHistory fileHistory, String atsign) async {
