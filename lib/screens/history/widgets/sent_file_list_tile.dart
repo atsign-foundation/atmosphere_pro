@@ -285,6 +285,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 indent: 80.toWidth,
                               ),
                           itemCount: fileLength,
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
                                 filesList[index].name?.split('.')?.last)) {

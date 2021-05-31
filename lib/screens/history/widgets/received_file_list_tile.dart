@@ -104,135 +104,301 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   Widget build(BuildContext context) {
     sendTime = DateTime.now();
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    return Column(
-      children: [
-        ListTile(
-          leading:
-              // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
-              widget.receivedHistory.sender != null
-                  ? image != null
-                      ? CustomCircleAvatar(byteImage: image, nonAsset: true)
-                      : Container(
-                          height: 45.toHeight,
-                          width: 45.toHeight,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                          ),
-                          child: ContactInitial(
-                            initials: widget.receivedHistory.sender,
-                            size: 45,
-                          ),
-                        )
-                  : SizedBox(),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: widget.receivedHistory.sender != null
-                        ? Text(
-                            widget.receivedHistory.sender,
-                            style: CustomTextStyles.primaryRegular16,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+    return Container(
+      color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
+      child: Column(
+        children: [
+          ListTile(
+            leading:
+                // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
+                widget.receivedHistory.sender != null
+                    ? image != null
+                        ? CustomCircleAvatar(byteImage: image, nonAsset: true)
+                        : Container(
+                            height: 45.toHeight,
+                            width: 45.toHeight,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                            child: ContactInitial(
+                              initials: widget.receivedHistory.sender,
+                              size: 45,
+                            ),
                           )
-                        : SizedBox(),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      await downloadFiles(widget.receivedHistory);
-                    },
-                    child: isDownloadAvailable
-                        ? isDownloading
-                            ? CircularProgressIndicator()
-                            : isDownloaded || isFilesAvailableOfline
-                                ? Icon(
-                                    Icons.done,
-                                    color: Color(0xFF08CB21),
-                                    size: 25.toFont,
-                                  )
-                                : Icon(
-                                    Icons.download_sharp,
-                                    size: 25.toFont,
-                                  )
-                        : SizedBox(),
-                  )
-                ],
-              ),
-              SizedBox(height: 5.toHeight),
-              SizedBox(
-                height: 8.toHeight,
-              ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                    : SizedBox(),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${widget.receivedHistory.files.length} Files',
-                      style: CustomTextStyles.secondaryRegular12,
+                    Expanded(
+                      child: widget.receivedHistory.sender != null
+                          ? Text(
+                              widget.receivedHistory.sender,
+                              style: CustomTextStyles.primaryRegular16,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : SizedBox(),
                     ),
-                    SizedBox(width: 10.toHeight),
-                    Text(
-                      '.',
-                      style: CustomTextStyles.secondaryRegular12,
-                    ),
-                    SizedBox(width: 10.toHeight),
-                    Text(
-                      double.parse(fileSize.toString()) <= 1024
-                          ? '${fileSize} Kb '
-                          : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                      style: CustomTextStyles.secondaryRegular12,
+                    InkWell(
+                      onTap: () async {
+                        await downloadFiles(widget.receivedHistory);
+                      },
+                      child: isDownloadAvailable
+                          ? isDownloading
+                              ? CircularProgressIndicator()
+                              : isDownloaded || isFilesAvailableOfline
+                                  ? Icon(
+                                      Icons.done,
+                                      color: Color(0xFF08CB21),
+                                      size: 25.toFont,
+                                    )
+                                  : Icon(
+                                      Icons.download_sharp,
+                                      size: 25.toFont,
+                                    )
+                          : SizedBox(),
                     )
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 20.toHeight,
-              ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    widget.receivedHistory.date != null
-                        ? Text(
-                            '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory.date)}',
-                            style: CustomTextStyles.secondaryRegular12,
-                          )
-                        : SizedBox(),
-                    SizedBox(width: 10.toHeight),
-                    Container(
-                      color: ColorConstants.fontSecondary,
-                      height: 14.toHeight,
-                      width: 1.toWidth,
-                    ),
-                    SizedBox(width: 10.toHeight),
-                    widget.receivedHistory.date != null
-                        ? Text(
-                            '${DateFormat('kk:mm').format(widget.receivedHistory.date)}',
-                            style: CustomTextStyles.secondaryRegular12,
-                          )
-                        : SizedBox(),
-                  ],
+                SizedBox(height: 5.toHeight),
+                SizedBox(
+                  height: 8.toHeight,
                 ),
-              ),
-              SizedBox(
-                height: 3.toHeight,
-              ),
-              (!isOpen)
-                  ? GestureDetector(
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${widget.receivedHistory.files.length} Files',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Text(
+                        '.',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Text(
+                        double.parse(fileSize.toString()) <= 1024
+                            ? '${fileSize} Kb '
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                        style: CustomTextStyles.secondaryRegular12,
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      widget.receivedHistory.date != null
+                          ? Text(
+                              '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory.date)}',
+                              style: CustomTextStyles.secondaryRegular12,
+                            )
+                          : SizedBox(),
+                      SizedBox(width: 10.toHeight),
+                      Container(
+                        color: ColorConstants.fontSecondary,
+                        height: 14.toHeight,
+                        width: 1.toWidth,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      widget.receivedHistory.date != null
+                          ? Text(
+                              '${DateFormat('kk:mm').format(widget.receivedHistory.date)}',
+                              style: CustomTextStyles.secondaryRegular12,
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 3.toHeight,
+                ),
+                (!isOpen)
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Text(
+                                'More Details',
+                                style: CustomTextStyles.primaryBold14,
+                              ),
+                              Container(
+                                width: 22.toWidth,
+                                height: 22.toWidth,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
+          ),
+          (isOpen)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 66.0 *
+                          (widget.receivedHistory.files.length -
+                                  widget.receivedHistory.files
+                                      .where((element) =>
+                                          element.isUploaded == false)
+                                      .length)
+                              .toHeight,
+                      child: ListView.separated(
+                          separatorBuilder: (context, index) => Divider(
+                                indent: 80.toWidth,
+                              ),
+                          itemCount: int.parse(
+                              widget.receivedHistory.files.length.toString()),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            if (!widget
+                                .receivedHistory.files[index].isUploaded) {
+                              return SizedBox();
+                            }
+                            if (FileTypes.VIDEO_TYPES.contains(widget
+                                .receivedHistory.files[index].name
+                                ?.split('.')
+                                ?.last)) {
+                              // videoThumbnailBuilder(
+                              //     widget.receivedHistory.files[index].filePath);
+
+                              Text('Video');
+                            }
+                            return ListTile(
+                              onTap: () async {
+                                String path = MixedConstants
+                                        .RECEIVED_FILE_DIRECTORY +
+                                    '/${widget.receivedHistory.files[index].name}';
+
+                                File test = File(path);
+                                bool fileExists = await test.exists();
+                                print('fileExists: ${fileExists}');
+                                if (fileExists) {
+                                  await OpenFile.open(path);
+                                } else {
+                                  _showNoFileDialog(deviceTextFactor);
+                                  print('url: ${widget.receivedHistory.url}');
+                                }
+                              },
+                              leading: Container(
+                                height: 50.toHeight,
+                                width: 50.toHeight,
+                                child: FutureBuilder(
+                                    future: isFilePresent(widget
+                                        .receivedHistory.files[index].name),
+                                    builder: (context, snapshot) {
+                                      print('snapshot builder: ${snapshot}');
+                                      return snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              snapshot.data != null
+                                          ? thumbnail(
+                                              widget.receivedHistory
+                                                  .files[index].name
+                                                  ?.split('.')
+                                                  ?.last,
+                                              BackendService.getInstance()
+                                                      .downloadDirectory
+                                                      .path +
+                                                  '/${widget.receivedHistory.files[index].name}',
+                                              isFilePresent: snapshot.data)
+                                          : SizedBox();
+                                    }),
+                              ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          widget
+                                              .receivedHistory.files[index].name
+                                              .toString(),
+                                          style:
+                                              CustomTextStyles.primaryRegular16,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 10.toHeight),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          double.parse(widget.receivedHistory
+                                                      .files[index].size
+                                                      .toString()) <=
+                                                  1024
+                                              ? '${widget.receivedHistory.files[index].size} Kb '
+                                              : '${(widget.receivedHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                          style: CustomTextStyles
+                                              .secondaryRegular12,
+                                        ),
+                                        SizedBox(width: 10.toHeight),
+                                        Text(
+                                          '.',
+                                          style: CustomTextStyles
+                                              .secondaryRegular12,
+                                        ),
+                                        SizedBox(width: 10.toHeight),
+                                        Text(
+                                          widget
+                                              .receivedHistory.files[index].name
+                                              .split('.')
+                                              .last
+                                              .toString(),
+                                          style: CustomTextStyles
+                                              .secondaryRegular12,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
+                    ),
+                    GestureDetector(
                       onTap: () {
                         setState(() {
                           isOpen = !isOpen;
                         });
                       },
                       child: Container(
+                        margin: EdgeInsets.only(left: 85.toHeight),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'More Details',
+                              'Lesser Details',
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(
@@ -240,7 +406,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               height: 22.toWidth,
                               child: Center(
                                 child: Icon(
-                                  Icons.keyboard_arrow_down,
+                                  Icons.keyboard_arrow_up,
                                   color: Colors.black,
                                 ),
                               ),
@@ -248,170 +414,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           ],
                         ),
                       ),
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
-        (isOpen)
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 66.0 *
-                        (widget.receivedHistory.files.length -
-                                widget.receivedHistory.files
-                                    .where((element) =>
-                                        element.isUploaded == false)
-                                    .length)
-                            .toHeight,
-                    child: ListView.separated(
-                        separatorBuilder: (context, index) => Divider(
-                              indent: 80.toWidth,
-                            ),
-                        itemCount: int.parse(
-                            widget.receivedHistory.files.length.toString()),
-                        itemBuilder: (context, index) {
-                          if (!widget.receivedHistory.files[index].isUploaded) {
-                            return SizedBox();
-                          }
-                          if (FileTypes.VIDEO_TYPES.contains(widget
-                              .receivedHistory.files[index].name
-                              ?.split('.')
-                              ?.last)) {
-                            // videoThumbnailBuilder(
-                            //     widget.receivedHistory.files[index].filePath);
-
-                            Text('Video');
-                          }
-                          return ListTile(
-                            onTap: () async {
-                              String path = MixedConstants
-                                      .RECEIVED_FILE_DIRECTORY +
-                                  '/${widget.receivedHistory.files[index].name}';
-
-                              File test = File(path);
-                              bool fileExists = await test.exists();
-                              print('fileExists: ${fileExists}');
-                              if (fileExists) {
-                                await OpenFile.open(path);
-                              } else {
-                                _showNoFileDialog(deviceTextFactor);
-                                print('url: ${widget.receivedHistory.url}');
-                              }
-                            },
-                            leading: Container(
-                              height: 50.toHeight,
-                              width: 50.toHeight,
-                              child: FutureBuilder(
-                                  future: isFilePresent(
-                                      widget.receivedHistory.files[index].name),
-                                  builder: (context, snapshot) {
-                                    print('snapshot builder: ${snapshot}');
-                                    return snapshot.connectionState ==
-                                                ConnectionState.done &&
-                                            snapshot.data != null
-                                        ? thumbnail(
-                                            widget.receivedHistory.files[index]
-                                                .name
-                                                ?.split('.')
-                                                ?.last,
-                                            BackendService.getInstance()
-                                                    .downloadDirectory
-                                                    .path +
-                                                '/${widget.receivedHistory.files[index].name}',
-                                            isFilePresent: snapshot.data)
-                                        : SizedBox();
-                                  }),
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        widget.receivedHistory.files[index].name
-                                            .toString(),
-                                        style:
-                                            CustomTextStyles.primaryRegular16,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 10.toHeight),
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        double.parse(widget.receivedHistory
-                                                    .files[index].size
-                                                    .toString()) <=
-                                                1024
-                                            ? '${widget.receivedHistory.files[index].size} Kb '
-                                            : '${(widget.receivedHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                                        style:
-                                            CustomTextStyles.secondaryRegular12,
-                                      ),
-                                      SizedBox(width: 10.toHeight),
-                                      Text(
-                                        '.',
-                                        style:
-                                            CustomTextStyles.secondaryRegular12,
-                                      ),
-                                      SizedBox(width: 10.toHeight),
-                                      Text(
-                                        widget.receivedHistory.files[index].name
-                                            .split('.')
-                                            .last
-                                            .toString(),
-                                        style:
-                                            CustomTextStyles.secondaryRegular12,
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isOpen = !isOpen;
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 85.toHeight),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Lesser Details',
-                            style: CustomTextStyles.primaryBold14,
-                          ),
-                          Container(
-                            width: 22.toWidth,
-                            height: 22.toWidth,
-                            child: Center(
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                color: Colors.black,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
                     ),
-                  ),
-                ],
-              )
-            : Container()
-      ],
+                  ],
+                )
+              : Container()
+        ],
+      ),
     );
   }
 
