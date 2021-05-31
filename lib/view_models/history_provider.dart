@@ -20,12 +20,12 @@ import 'package:flutter/cupertino.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
-  String ADD_RECEIVED_FILE = 'add_recieved_file';
+  String ADD_RECEIVED_FILE = 'add_received_file';
   String SET_FILE_HISTORY = 'set_flie_history';
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
   List<FileHistory> sentHistory = [];
-  List<FileTransfer> recievedHistoryLogs = [];
+  List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
@@ -72,7 +72,7 @@ class HistoryProvider extends BaseModel {
       AtKey atKey = AtKey()..metadata = Metadata();
 
       if (historyType == HistoryType.received) {
-        /// the file size come in bytes in reciever side
+        /// the file size come in bytes in receiver side
         // filesModel.files.forEach((file) {
         //   file.size = file.size;
         //   filesModel.totalSize += file.size;
@@ -149,11 +149,11 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  getRecievedHistory() async {
+  getReceivedHistory() async {
     setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
       await getAllFileTransferData();
-      await sortFiles(recievedHistoryLogs);
+      await sortFiles(receivedHistoryLogs);
       populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
@@ -168,24 +168,24 @@ class HistoryProvider extends BaseModel {
     FileTransfer filesModel = FileTransfer.fromJson((jsonDecode(decodedMsg)));
 
     if (filesModel.isUpdate) {
-      int index = recievedHistoryLogs
+      int index = receivedHistoryLogs
           .indexWhere((element) => element?.key?.contains(filesModel.key));
       if (index > -1) {
-        recievedHistoryLogs[index] = filesModel;
+        receivedHistoryLogs[index] = filesModel;
       }
     } else {
       receivedHistoryNew.insert(0, filesModel);
-      recievedHistoryLogs.insert(0, filesModel);
+      receivedHistoryLogs.insert(0, filesModel);
     }
 
-    await sortFiles(recievedHistoryLogs);
+    await sortFiles(receivedHistoryLogs);
     await populateTabs();
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
 
   getAllFileTransferData() async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
-    recievedHistoryLogs = [];
+    receivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
         await backendService.atClientInstance.getKeys(
@@ -207,14 +207,14 @@ class HistoryProvider extends BaseModel {
               FileTransfer.fromJson(jsonDecode(atvalue.value));
 
           if (filesModel.key != null) {
-            recievedHistoryLogs.insert(0, filesModel);
+            receivedHistoryLogs.insert(0, filesModel);
           }
         }
       }
     });
 
     print('sentHistory length ${receivedHistoryNew.length}');
-    print('recievedHistoryLogs length: ${recievedHistoryLogs.length}');
+    print('receivedHistoryLogs length: ${receivedHistoryLogs.length}');
     setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 

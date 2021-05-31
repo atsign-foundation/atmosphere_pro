@@ -309,11 +309,11 @@ class BackendService {
         } else {
           // if download is completed, updating my files screen
           var context = NavService.navKey.currentContext;
-          var recievedHistoryLogs =
+          var receivedHistoryLogs =
               Provider.of<HistoryProvider>(context, listen: false)
-                  .recievedHistoryLogs;
+                  .receivedHistoryLogs;
           await Provider.of<HistoryProvider>(context, listen: false)
-              .sortFiles(recievedHistoryLogs);
+              .sortFiles(receivedHistoryLogs);
           Provider.of<HistoryProvider>(context, listen: false).populateTabs();
         }
       }

@@ -19,7 +19,7 @@ class _APKState extends State<APK> {
           EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
       child: ProviderHandler<HistoryProvider>(
         functionName: 'received_history',
-        load: (provider) => provider.getRecievedHistory(),
+        load: (provider) => provider.getReceivedHistory(),
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,
             itemBuilder: (context, index) {

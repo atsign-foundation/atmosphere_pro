@@ -359,7 +359,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                           widget.sentHistory);
                                                 },
                                                 child: Icon(
-                                                  Icons.cancel,
+                                                  Icons.refresh,
                                                   color: Color(0xFFF86061),
                                                   size: 25.toFont,
                                                 ),

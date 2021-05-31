@@ -353,16 +353,16 @@ class FileTransferProvider extends BaseModel {
                 .indexWhere((element) => element.name == file.name);
 
             /// TODO: To fail first file upload
-            if (indexToEdit == 0) {
-              filesToTransfer.files[indexToEdit].isUploaded = false;
-              await File('${file.path}').copy(
-                  MixedConstants.SENT_FILE_DIRECTORY +
-                      '/${filesToTransfer.files[indexToEdit].name}');
+            // if (indexToEdit == 0) {
+            //   filesToTransfer.files[indexToEdit].isUploaded = false;
+            //   await File('${file.path}').copy(
+            //       MixedConstants.SENT_FILE_DIRECTORY +
+            //           '/${filesToTransfer.files[indexToEdit].name}');
 
-              filesToTransfer.files[indexToEdit].path =
-                  '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[indexToEdit].name}';
-              continue;
-            }
+            //   filesToTransfer.files[indexToEdit].path =
+            //       '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[indexToEdit].name}';
+            //   continue;
+            // }
 
             var selectedFile = File(file.path);
             var bytes = selectedFile.readAsBytesSync();
