@@ -35,6 +35,9 @@ class MixedConstants {
   static const String RECEIVED_FILE_HISTORY = 'receivedHistory';
   static const String SENT_FILE_HISTORY = 'sentHistory';
 
+  /// Currently set to 60 days
+  static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
+
   static String ApplicationDocumentsDirectory;
 
   static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';

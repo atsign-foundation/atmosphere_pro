@@ -325,7 +325,7 @@ class FileTransferProvider extends BaseModel {
     setStatus(SEND_FILES, Status.Loading);
     try {
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
-      filesToTransfer.isUpdate = true;
+      filesToTransfer.isUpdate = false;
       var shareStatus = <ShareStatus>[];
       contactList.forEach((element) {
         shareStatus.add(ShareStatus(element.contact.atSign, false));
@@ -402,7 +402,7 @@ class FileTransferProvider extends BaseModel {
           ..key =
               '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}'
           ..sharedWith = groupContact.contact.atSign
-          ..metadata.ttl = 60000 * 60 * 24 * 6
+          ..metadata.ttl = MixedConstants.FILE_TRANSFER_TTL
           ..sharedBy = backendService.currentAtSign;
         print('atkey : ${atKey}');
 
