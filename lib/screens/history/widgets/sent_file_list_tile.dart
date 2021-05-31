@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -9,6 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -17,7 +17,6 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -43,6 +42,8 @@ class SentFilesListTile extends StatefulWidget {
 }
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
+  /// A boolean to reinitialize fileResending
+  bool isWidgetRebuilt;
   int fileLength, fileSize = 0;
   List<FileData> filesList = [];
   List<String> contactList;
@@ -51,10 +52,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   // DateTime sendTime;
   Uint8List videoThumbnail, firstContactImage;
 
+  List<bool> fileResending = [];
+
   @override
   void initState() {
     super.initState();
+    isWidgetRebuilt = true;
     fileLength = widget.sentHistory.fileDetails.files.length;
+    fileResending = List<bool>.generate(fileLength, (i) => false);
     if (widget.sentHistory.sharedWith != null) {
       contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
     } else {
@@ -101,6 +106,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   @override
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+
+    /// To set fileResending to false after file has been resent
+    if (isWidgetRebuilt) {
+      fileLength = widget.sentHistory.fileDetails.files.length;
+      fileResending = List<bool>.generate(fileLength, (i) => false);
+      isWidgetRebuilt = false;
+    }
 
     return Column(
       children: [
@@ -349,22 +361,39 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : InkWell(
-                                                onTap: () async {
-                                                  Provider.of<FileTransferProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .reuploadFile(
-                                                          filesList,
-                                                          index,
-                                                          widget.sentHistory);
-                                                },
-                                                child: Icon(
-                                                  Icons.refresh,
-                                                  color: Color(0xFFF86061),
-                                                  size: 25.toFont,
-                                                ),
-                                              ),
+                                            : fileResending[index]
+                                                ? TypingIndicator(
+                                                    showIndicator: true,
+                                                    flashingCircleBrightColor:
+                                                        ColorConstants.dullText,
+                                                    flashingCircleDarkColor:
+                                                        ColorConstants
+                                                            .fadedText,
+                                                  )
+                                                : InkWell(
+                                                    onTap: () async {
+                                                      setState(() {
+                                                        fileResending[index] =
+                                                            true;
+                                                      });
+                                                      await Provider.of<
+                                                                  FileTransferProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .reuploadFile(
+                                                              filesList,
+                                                              index,
+                                                              widget
+                                                                  .sentHistory);
+
+                                                      isWidgetRebuilt = true;
+                                                    },
+                                                    child: Icon(
+                                                      Icons.refresh,
+                                                      color: Color(0xFFF86061),
+                                                      size: 25.toFont,
+                                                    ),
+                                                  ),
                                       )
                                     ],
                                   ),
