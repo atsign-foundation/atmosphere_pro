@@ -114,7 +114,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     //   fileResending = List<bool>.generate(fileLength, (i) => false);
     //   isWidgetRebuilt = false;
     // }
-
     return Column(
       children: [
         Container(
@@ -125,28 +124,94 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     ? CustomCircleAvatar(
                         byteImage: firstContactImage, nonAsset: true)
                     : Container(
-                        height: 45.toHeight,
                         width: 45.toHeight,
-                        // decoration: BoxDecoration(
-                        //   color: Colors.black,
-                        //   shape: BoxShape.circle,
-                        // ),
+                        height: 45.toHeight,
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: widget.sentHistory.sharedWith[0]
                                       .isNotificationSend
                                   ? Color(0xFF08CB21)
                                   : Color(0xFFF86061),
-                              width: widget.sentHistory.sharedWith[0]
-                                      .isNotificationSend
-                                  ? 1
-                                  : 4),
-                          borderRadius: BorderRadius.circular(35.toHeight * 2),
+                              width: 2),
+                          borderRadius: BorderRadius.circular(45.toHeight * 2),
                         ),
-                        child: ContactInitial(
-                          initials: contactList[0] ?? '  ',
-                          size: 45,
-                        ),
+                        child: isResendingToFirstContact
+                            ? TypingIndicator(
+                                showIndicator: true,
+                                flashingCircleBrightColor:
+                                    ColorConstants.dullText,
+                                flashingCircleDarkColor:
+                                    ColorConstants.fadedText,
+                              )
+                            : Stack(
+                                children: [
+                                  Container(
+                                    width: 45.toHeight,
+                                    height: 45.toHeight,
+                                    child: firstContactImage != null
+                                        ? CustomCircleAvatar(
+                                            byteImage: firstContactImage,
+                                            nonAsset: true,
+                                          )
+                                        : ContactInitial(
+                                            initials: contactList[0],
+                                            size: 40,
+                                          ),
+                                  ),
+                                  Positioned(
+                                      right: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: widget
+                                                  .sentHistory
+                                                  .sharedWith[0]
+                                                  .isNotificationSend
+                                              ? Color(0xFF08CB21)
+                                              : Color(0xFFF86061),
+                                          border: Border.all(
+                                              color: widget
+                                                      .sentHistory
+                                                      .sharedWith[0]
+                                                      .isNotificationSend
+                                                  ? Color(0xFF08CB21)
+                                                  : Color(0xFFF86061),
+                                              width: 5),
+                                          borderRadius: BorderRadius.circular(
+                                              35.toHeight),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            if (widget.sentHistory.sharedWith[0]
+                                                .isNotificationSend) {
+                                              return;
+                                            }
+
+                                            setState(() {
+                                              isResendingToFirstContact = true;
+                                            });
+                                            await Provider.of<
+                                                        FileTransferProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .sendFileNotification(
+                                                    widget.sentHistory,
+                                                    widget.sentHistory
+                                                        .sharedWith[0].atsign);
+
+                                            isResendingToFirstContact = false;
+                                          },
+                                          child: Icon(
+                                            widget.sentHistory.sharedWith[0]
+                                                    .isNotificationSend
+                                                ? Icons.done
+                                                : Icons.refresh,
+                                            color: Colors.white,
+                                            size: 10.toFont,
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              ),
                       )
                 : SizedBox(),
             title: Column(
@@ -264,36 +329,36 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     : Container(),
               ],
             ),
-            trailing: contactList.isNotEmpty
-                ? (widget.sentHistory.sharedWith[0].isNotificationSend
-                    ? SizedBox()
-                    : InkWell(
-                        onTap: () async {
-                          setState(() {
-                            isResendingToFirstContact = true;
-                          });
-                          await Provider.of<FileTransferProvider>(context,
-                                  listen: false)
-                              .sendFileNotification(widget.sentHistory,
-                                  widget.sentHistory.sharedWith[0].atsign);
+            // trailing: contactList.isNotEmpty
+            //     ? (widget.sentHistory.sharedWith[0].isNotificationSend
+            //         ? SizedBox()
+            //         : InkWell(
+            //             onTap: () async {
+            //               setState(() {
+            //                 isResendingToFirstContact = true;
+            //               });
+            //               await Provider.of<FileTransferProvider>(context,
+            //                       listen: false)
+            //                   .sendFileNotification(widget.sentHistory,
+            //                       widget.sentHistory.sharedWith[0].atsign);
 
-                          isResendingToFirstContact = false;
-                        },
-                        child: isResendingToFirstContact
-                            ? TypingIndicator(
-                                showIndicator: true,
-                                flashingCircleBrightColor:
-                                    ColorConstants.dullText,
-                                flashingCircleDarkColor:
-                                    ColorConstants.fadedText,
-                              )
-                            : Icon(
-                                Icons.refresh,
-                                color: Color(0xFFF86061),
-                                size: 25.toFont,
-                              ),
-                      ))
-                : SizedBox(),
+            //               isResendingToFirstContact = false;
+            //             },
+            //             child: isResendingToFirstContact
+            //                 ? TypingIndicator(
+            //                     showIndicator: true,
+            //                     flashingCircleBrightColor:
+            //                         ColorConstants.dullText,
+            //                     flashingCircleDarkColor:
+            //                         ColorConstants.fadedText,
+            //                   )
+            //                 : Icon(
+            //                     Icons.refresh,
+            //                     color: Color(0xFFF86061),
+            //                     size: 25.toFont,
+            //                   ),
+            //           ))
+            //     : SizedBox(),
           ),
         ),
         (isOpen)

@@ -173,6 +173,7 @@ class _TranferOverlappingContactsState
                             mainAxisSpacing: 5,
                             crossAxisSpacing: 5,
                             childAspectRatio: 1,
+                            physics: NeverScrollableScrollPhysics(),
                             children: List.generate(
                               widget.selectedList.length,
                               (index) {
