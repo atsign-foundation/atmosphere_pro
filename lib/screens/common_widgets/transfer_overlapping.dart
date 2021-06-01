@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -27,8 +29,12 @@ class _TranferOverlappingContactsState
     extends State<TranferOverlappingContacts> {
   bool isExpanded = false;
   int noOfContactsRow = 0;
+  List<bool> atsignResharing = [];
+
   @override
   void initState() {
+    atsignResharing =
+        List<bool>.generate(widget.selectedList.length, (i) => false);
     widget.selectedList;
     noOfContactsRow = (widget.selectedList.length / 5).ceil();
     print('noOfContactsRow: ${noOfContactsRow}');
@@ -186,63 +192,83 @@ class _TranferOverlappingContactsState
                                     borderRadius:
                                         BorderRadius.circular(35.toHeight * 2),
                                   ),
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        width: 90.toHeight,
-                                        height: 90.toHeight,
-                                        child: image != null
-                                            ? CustomCircleAvatar(
-                                                byteImage: image,
-                                                nonAsset: true,
-                                              )
-                                            : ContactInitial(
-                                                initials: widget
-                                                    .selectedList[index].atsign,
-                                                size: 40,
-                                              ),
-                                      ),
-                                      Positioned(
-                                          right: 0,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: isNotified
-                                                  ? Color(0xFF08CB21)
-                                                  : Color(0xFFF86061),
-                                              border: Border.all(
-                                                  color: isNotified
-                                                      ? Color(0xFF08CB21)
-                                                      : Color(0xFFF86061),
-                                                  width: 5),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      35.toHeight),
+                                  child: atsignResharing[index]
+                                      ? TypingIndicator(
+                                          showIndicator: true,
+                                          flashingCircleBrightColor:
+                                              ColorConstants.dullText,
+                                          flashingCircleDarkColor:
+                                              ColorConstants.fadedText,
+                                        )
+                                      : Stack(
+                                          children: [
+                                            Container(
+                                              width: 90.toHeight,
+                                              height: 90.toHeight,
+                                              child: image != null
+                                                  ? CustomCircleAvatar(
+                                                      byteImage: image,
+                                                      nonAsset: true,
+                                                    )
+                                                  : ContactInitial(
+                                                      initials: widget
+                                                          .selectedList[index]
+                                                          .atsign,
+                                                      size: 40,
+                                                    ),
                                             ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (isNotified) {
-                                                  return;
-                                                }
-                                                Provider.of<FileTransferProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .sendFileNotification(
-                                                        widget.fileHistory,
-                                                        widget
-                                                            .selectedList[index]
-                                                            .atsign);
-                                              },
-                                              child: Icon(
-                                                isNotified
-                                                    ? Icons.done
-                                                    : Icons.sync_sharp,
-                                                color: Colors.white,
-                                                size: 15.toFont,
-                                              ),
-                                            ),
-                                          ))
-                                    ],
-                                  ),
+                                            Positioned(
+                                                right: 0,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: isNotified
+                                                        ? Color(0xFF08CB21)
+                                                        : Color(0xFFF86061),
+                                                    border: Border.all(
+                                                        color: isNotified
+                                                            ? Color(0xFF08CB21)
+                                                            : Color(0xFFF86061),
+                                                        width: 5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            35.toHeight),
+                                                  ),
+                                                  child: InkWell(
+                                                    onTap: () async {
+                                                      if (isNotified) {
+                                                        return;
+                                                      }
+
+                                                      setState(() {
+                                                        atsignResharing[index] =
+                                                            true;
+                                                      });
+                                                      await Provider.of<
+                                                                  FileTransferProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .sendFileNotification(
+                                                              widget
+                                                                  .fileHistory,
+                                                              widget
+                                                                  .selectedList[
+                                                                      index]
+                                                                  .atsign);
+
+                                                      atsignResharing[index] =
+                                                          false;
+                                                    },
+                                                    child: Icon(
+                                                      isNotified
+                                                          ? Icons.done
+                                                          : Icons.refresh,
+                                                      color: Colors.white,
+                                                      size: 15.toFont,
+                                                    ),
+                                                  ),
+                                                ))
+                                          ],
+                                        ),
                                 );
                               },
                             ),

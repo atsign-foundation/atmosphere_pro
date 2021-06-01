@@ -353,7 +353,7 @@ class FileTransferProvider extends BaseModel {
                 .indexWhere((element) => element.name == file.name);
 
             /// TODO: To fail first file upload
-            // if (indexToEdit == 0) {
+            // if (indexToEdit != 0) {
             //   filesToTransfer.files[indexToEdit].isUploaded = false;
             //   await File('${file.path}').copy(
             //       MixedConstants.SENT_FILE_DIRECTORY +
@@ -402,6 +402,14 @@ class FileTransferProvider extends BaseModel {
         filesToTransfer.key =
             '${MixedConstants.FILE_TRANSFER_KEY}-${microSecondsSinceEpochId}';
         filesToTransfer.sender = backendService.currentAtSign;
+
+        /// TODO: To fail first user
+        // if (contactList.indexOf(groupContact) != 0) {
+        //   shareStatus[shareStatus.indexWhere(
+        //           (element) => element.atsign == groupContact.contact.atSign)]
+        //       .isNotificationSend = false;
+        //   continue;
+        // }
 
         // put data
         var result = await sendFileNotificationKey(
