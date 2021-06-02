@@ -28,7 +28,7 @@ class _PhotosState extends State<Photos> {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
       load: (provider) {
-        provider.getRecievedHistory();
+        provider.getReceivedHistory();
       },
       successBuilder: (provider) => Container(
         margin:
