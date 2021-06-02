@@ -150,9 +150,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                         fit: BoxFit.fill,
                                       ),
                                     )
-                                  : ContactInitial(
-                                      initials: BackendService?.getInstance()
-                                          .currentAtSign),
+                                  : BackendService.getInstance()
+                                              .currentAtSign !=
+                                          null
+                                      ? ContactInitial(
+                                          initials:
+                                              BackendService?.getInstance()
+                                                  .currentAtSign)
+                                      : SizedBox(),
                               Flexible(
                                   child: Padding(
                                 padding: EdgeInsets.symmetric(

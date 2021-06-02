@@ -652,7 +652,6 @@ class BackendService {
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
-      currentAtSign = atSign;
       await Onboarding(
         atsign: atSign,
         context: NavService.navKey.currentContext,
@@ -666,6 +665,7 @@ class BackendService {
 
           String atSign =
               await atClientServiceMap[atsign].atClient.currentAtSign;
+          currentAtSign = atSign;
 
           await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
           await startMonitor(atsign: atsign, value: value);
