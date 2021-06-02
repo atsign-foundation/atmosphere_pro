@@ -64,7 +64,12 @@ class _HomeState extends State<Home> {
   }
 
   storeApplicationDocumentsDirectory() async {
-    var _dir = await getApplicationDocumentsDirectory();
+    var _dir;
+    if (Platform.isIOS) {
+      _dir = await getApplicationDocumentsDirectory();
+    } else {
+      _dir = await getExternalStorageDirectory();
+    }
     MixedConstants.ApplicationDocumentsDirectory = _dir.path;
   }
 
