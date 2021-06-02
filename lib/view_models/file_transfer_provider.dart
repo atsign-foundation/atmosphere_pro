@@ -404,7 +404,7 @@ class FileTransferProvider extends BaseModel {
         filesToTransfer.sender = backendService.currentAtSign;
 
         /// TODO: To fail first user
-        // if (contactList.indexOf(groupContact) != 0) {
+        // if (contactList.indexOf(groupContact) == 0) {
         //   shareStatus[shareStatus.indexWhere(
         //           (element) => element.atsign == groupContact.contact.atSign)]
         //       .isNotificationSend = false;
@@ -482,8 +482,8 @@ class FileTransferProvider extends BaseModel {
           .atClientInstance.encryptionService
           .encryptFile(bytes, fileEncryptionKey);
 
-      String container =
-          filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
+      String container
+       = filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
       container = container.replaceAll('archive/', '');
       container = container.replaceAll('/zip', '');
 
@@ -519,7 +519,10 @@ class FileTransferProvider extends BaseModel {
               listen: false)
           .setFileTransferHistory(_sentHistory, isEdit: true);
     } catch (e) {
-      print('Error in reuploadFile');
+      print('Error in reuploadFile $e');
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .setFileTransferHistory(_sentHistory, isEdit: true);
     }
   }
 
@@ -552,6 +555,9 @@ class FileTransferProvider extends BaseModel {
               listen: false)
           .setFileTransferHistory(fileHistory, isEdit: true);
     } catch (e) {
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .setFileTransferHistory(fileHistory, isEdit: true);
       print('error in sending notification : $e');
     }
   }
