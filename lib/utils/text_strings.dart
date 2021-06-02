@@ -128,7 +128,7 @@ class TextStrings {
   String choice2 = 'Other files';
 
   // history no file to open
-  String noFileFound = 'Sorry, unable to open this file';
+  String noFileFound = 'Sorry, file not found';
 
   List<String> contactFields = [
     'firstname.persona',

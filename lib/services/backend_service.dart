@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive_io.dart';
 import 'package:at_commons/at_builders.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
@@ -31,6 +32,7 @@ import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/manager/sync_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -219,6 +221,15 @@ class BackendService {
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
     print('fromAtSign : $fromAtSign');
+
+    // check for notification from blocked atsign
+    if (ContactService()
+            .blockContactList
+            .indexWhere((element) => element.atSign == fromAtSign) >
+        -1) {
+      return;
+    }
+
     if (atKey == 'stream_id') {
       var valueObject = responseJson['value'];
       var streamId = valueObject.split(':')[0];
@@ -226,9 +237,7 @@ class BackendService {
       fileLength = valueObject.split(':')[2];
       fileName = utf8.decode(base64.decode(fileName));
       userResponse =
-          await acceptStream(fromAtSign, fileName, fileLength, toAtSing
-              // id:id
-              );
+          await acceptStream(fromAtSign, fileName, fileLength, toAtSing);
 
       if (userResponse == true) {
         await atClientInstance.sendStreamAck(
@@ -239,31 +248,25 @@ class BackendService {
             _streamCompletionCallBack,
             _streamReceiveCallBack);
       }
-
       return;
     }
     print(' FILE_TRANSFER_KEY : ${atKey}');
     if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
       var value = responseJson['value'];
 
-      print('decrypting ');
       var decryptedMessage = await atClientInstance.encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print("error in decrypting: $e"));
 
-      print('decryptedMessage $decryptedMessage');
+      if (decryptedMessage != null) {
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .addToReceiveFileHistory(fromAtSign, decryptedMessage);
 
-      // ignore: unawaited_futures
-
-      // downloadFileFromBin(fromAtSign, decryptedMessage);
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .addToReceiveFileHistory(fromAtSign, decryptedMessage);
-
-      NotificationService().setOnNotificationClick(onNotificationClick);
-      await NotificationService()
-          .showNotification(fromAtSign, fileName: 'myfile', fileSize: '40');
+        NotificationService().setOnNotificationClick(onNotificationClick);
+        await NotificationService().showNotification(fromAtSign);
+      }
     }
   }
 
@@ -369,23 +372,43 @@ class BackendService {
           context: NavService.navKey.currentContext,
           builder: (context) {
             return AlertDialog(
-              content: Text(
-                  'A file named, "$fileName" already exists. Do you want to replace it?'),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      proceedToDownload = true;
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Yes')),
-                TextButton(onPressed: null, child: Text('')),
-                TextButton(
-                    onPressed: () {
-                      proceedToDownload = false;
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Cancel'))
-              ],
+              content: Container(
+                height: 150.toHeight,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'A file named, "$fileName" already exists. ',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text('Do you want to replace it ?'),
+                      SizedBox(
+                        height: 20.toHeight,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                proceedToDownload = true;
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Yes')),
+                          TextButton(onPressed: null, child: Text('')),
+                          TextButton(
+                              onPressed: () {
+                                proceedToDownload = false;
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
             );
           });
     } else {
@@ -451,8 +474,7 @@ class BackendService {
           app_lifecycle_state != null &&
           app_lifecycle_state != AppLifecycleState.resumed.toString()) {
         print("app not active $app_lifecycle_state");
-        await NotificationService()
-            .showNotification(atsign, fileName: filename, fileSize: filesize);
+        await NotificationService().showNotification(atsign);
       }
       NotificationPayload payload = NotificationPayload(
           file: filename, name: atsign, size: double.parse(filesize));
@@ -631,7 +653,6 @@ class BackendService {
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
-      currentAtSign = atSign;
       await Onboarding(
         atsign: atSign,
         context: NavService.navKey.currentContext,
@@ -645,6 +666,7 @@ class BackendService {
 
           String atSign =
               await atClientServiceMap[atsign].atClient.currentAtSign;
+          currentAtSign = atSign;
 
           await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
           await startMonitor(atsign: atsign, value: value);

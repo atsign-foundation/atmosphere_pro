@@ -69,7 +69,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     filesList = widget.sentHistory.fileDetails.files;
 
     widget.sentHistory.fileDetails.files.forEach((element) {
-      print('all files:${element.size}');
       fileSize += element.size;
     });
 

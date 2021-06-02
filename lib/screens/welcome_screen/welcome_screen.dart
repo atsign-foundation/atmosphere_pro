@@ -1,13 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/Custom_heading.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
@@ -141,16 +135,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       {int status = 0,
       bool shouldTimeout = true,
       bool showLinearProgress = false}) {
-    String displayMessage = '';
-    if (status == 2) {
-      var transferProvider =
-          Provider.of<FileTransferProvider>(context, listen: false);
-
-      displayMessage = transferProvider.error['${transferProvider.SEND_FILES}'];
-    } else {
-      displayMessage = transferMessages[status];
-    }
-
     return Flushbar(
       title: transferMessages[status],
       message: 'hello',
@@ -206,7 +190,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               width: SizeConfig().screenWidth * 0.5,
               padding: const EdgeInsets.only(top: 15.0),
               child: Text(
-                '${displayMessage}',
+                transferMessages[status],
                 style: TextStyle(
                     color: ColorConstants.fadedText, fontSize: 15.toFont),
                 maxLines: 1,

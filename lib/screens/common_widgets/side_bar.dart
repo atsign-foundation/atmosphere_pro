@@ -150,9 +150,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                         fit: BoxFit.fill,
                                       ),
                                     )
-                                  : ContactInitial(
-                                      initials: BackendService?.getInstance()
-                                          .currentAtSign),
+                                  : BackendService.getInstance()
+                                              .currentAtSign !=
+                                          null
+                                      ? ContactInitial(
+                                          initials:
+                                              BackendService?.getInstance()
+                                                  .currentAtSign)
+                                      : SizedBox(),
                               Flexible(
                                   child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -338,61 +343,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               : SizedBox(),
                         ]),
                       )),
-
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-
-                  isExpanded
-                      ? ListTile(
-                          leading: isExpanded
-                              ? Text(
-                                  TextStrings().sidebarAutoAcceptFile,
-                                  style: TextStyle(
-                                      color: ColorConstants.fadedText,
-                                      fontSize: 14.toFont,
-                                      letterSpacing: 0.1),
-                                )
-                              : SizedBox(),
-                          title: Transform.scale(
-                            scale: 0.6,
-                            child: Consumer<WelcomeScreenProvider>(
-                              builder: (context, provider, _) {
-                                return (provider.isAutoAccept == null)
-                                    ? CircularProgressIndicator()
-                                    : Transform.scale(
-                                        scale: SizeConfig().isTablet(context)
-                                            ? 1.8
-                                            : 1,
-                                        child: CupertinoSwitch(
-                                          value: provider.isAutoAccept,
-                                          onChanged: (b) async {
-                                            provider.toggleAutoAccept(b);
-                                            await provider.getToggleStatus();
-
-                                            setState(() {});
-                                          },
-                                          activeColor: Colors.black,
-                                        ),
-                                      );
-                              },
-                            ),
-                          ),
-                        )
-                      : Container(
-                          padding: EdgeInsets.only(right: 35),
-                          child: CupertinoSwitch(
-                            value: BackendService.getInstance().autoAcceptFiles,
-                            onChanged: (b) {
-                              setState(() {
-                                BackendService.getInstance().autoAcceptFiles =
-                                    b;
-                              });
-                            },
-                            activeColor: Colors.black,
-                          ),
-                        ),
-                  // SizedBox(
-                  //   height: 14.toHeight,
-                  // ),
                   Padding(
                     padding: EdgeInsets.only(left: 16.toWidth),
                     child: isExpanded
