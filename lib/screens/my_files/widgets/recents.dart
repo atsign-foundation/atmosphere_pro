@@ -20,7 +20,7 @@ class _RecentsState extends State<Recents> {
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
-      load: (provider) => provider.getRecievedHistory(),
+      load: (provider) => provider.getReceivedHistory(),
       functionName: 'received_history',
       successBuilder: (provider) => (provider.finalReceivedHistory.isEmpty)
           ? Center(

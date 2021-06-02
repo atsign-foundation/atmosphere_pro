@@ -8,13 +8,16 @@ class FileTransfer {
   List<FileData> files;
   DateTime date, expiry;
   List<PlatformFile> platformFiles;
-  FileTransfer(
-      {this.url,
-      this.files,
-      this.expiry,
-      this.platformFiles,
-      this.date,
-      this.key}) {
+  bool isUpdate;
+  FileTransfer({
+    this.url,
+    this.files,
+    this.expiry,
+    this.platformFiles,
+    this.date,
+    this.key,
+    isUpdate = false,
+  }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = DateTime.now();
 
@@ -24,6 +27,7 @@ class FileTransfer {
   }
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
+    isUpdate = json['isUpdate'];
     url = json['url'];
     sender = json['sender'];
     key = json['key'];
@@ -40,6 +44,7 @@ class FileTransfer {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
+    data['isUpdate'] = isUpdate;
     data['url'] = this.url;
     data['sender'] = this.sender;
     data['key'] = this.key;

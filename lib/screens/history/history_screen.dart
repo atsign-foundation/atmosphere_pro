@@ -102,7 +102,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                               itemBuilder: (context, index) {
                                 return SentFilesListTile(
                                   sentHistory: provider.sentHistory[index],
-                                  key: UniqueKey(),
+                                  key: Key(provider
+                                      .sentHistory[index].fileDetails.key),
                                 );
                               },
                             ),
@@ -117,11 +118,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                       functionName: historyProvider.RECEIVED_HISTORY,
                       load: (provider) async {
                         print('loading received');
-                        // await provider.getRecievedHistory();
+                        // await provider.getReceivedHistory();
                       },
                       showError: true,
                       successBuilder: (provider) => (provider
-                              .recievedHistoryLogs.isEmpty)
+                              .receivedHistoryLogs.isEmpty)
                           ? Center(
                               child: Text(
                                 'No files received',
@@ -134,13 +135,13 @@ class _HistoryScreenState extends State<HistoryScreen>
                               separatorBuilder: (context, index) => Divider(
                                 indent: 16.toWidth,
                               ),
-                              itemCount: provider.recievedHistoryLogs.length,
+                              itemCount: provider.receivedHistoryLogs.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ReceivedFilesListTile(
                                   key: UniqueKey(),
                                   receivedHistory:
-                                      provider.recievedHistoryLogs[index],
+                                      provider.receivedHistoryLogs[index],
                                 ),
                               ),
                             ),

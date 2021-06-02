@@ -8,7 +8,9 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -40,6 +42,8 @@ class SentFilesListTile extends StatefulWidget {
 }
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
+  /// A boolean to reinitialize fileResending
+  // bool isWidgetRebuilt;
   int fileLength, fileSize = 0;
   List<FileData> filesList = [];
   List<String> contactList;
@@ -48,10 +52,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   // DateTime sendTime;
   Uint8List videoThumbnail, firstContactImage;
 
+  List<bool> fileResending = [];
+  bool isResendingToFirstContact = false;
+
   @override
   void initState() {
     super.initState();
+    // isWidgetRebuilt = true;
     fileLength = widget.sentHistory.fileDetails.files.length;
+    fileResending = List<bool>.generate(fileLength, (i) => false);
     if (widget.sentHistory.sharedWith != null) {
       contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
     } else {
@@ -98,6 +107,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
 
+    /// To set fileResending to false after file has been resent
+    // if (isWidgetRebuilt) {
+    //   fileLength = widget.sentHistory.fileDetails.files.length;
+    //   fileResending = List<bool>.generate(fileLength, (i) => false);
+    //   isWidgetRebuilt = false;
+    // }
     return Column(
       children: [
         Container(
@@ -108,16 +123,94 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     ? CustomCircleAvatar(
                         byteImage: firstContactImage, nonAsset: true)
                     : Container(
-                        height: 45.toHeight,
                         width: 45.toHeight,
+                        height: 45.toHeight,
                         decoration: BoxDecoration(
-                          color: Colors.black,
-                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: widget.sentHistory.sharedWith[0]
+                                      .isNotificationSend
+                                  ? Color(0xFF08CB21)
+                                  : Color(0xFFF86061),
+                              width: 2),
+                          borderRadius: BorderRadius.circular(45.toHeight * 2),
                         ),
-                        child: ContactInitial(
-                          initials: contactList[0] ?? '  ',
-                          size: 45,
-                        ),
+                        child: isResendingToFirstContact
+                            ? TypingIndicator(
+                                showIndicator: true,
+                                flashingCircleBrightColor:
+                                    ColorConstants.dullText,
+                                flashingCircleDarkColor:
+                                    ColorConstants.fadedText,
+                              )
+                            : Stack(
+                                children: [
+                                  Container(
+                                    width: 45.toHeight,
+                                    height: 45.toHeight,
+                                    child: firstContactImage != null
+                                        ? CustomCircleAvatar(
+                                            byteImage: firstContactImage,
+                                            nonAsset: true,
+                                          )
+                                        : ContactInitial(
+                                            initials: contactList[0],
+                                            size: 40,
+                                          ),
+                                  ),
+                                  Positioned(
+                                      right: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: widget
+                                                  .sentHistory
+                                                  .sharedWith[0]
+                                                  .isNotificationSend
+                                              ? Color(0xFF08CB21)
+                                              : Color(0xFFF86061),
+                                          border: Border.all(
+                                              color: widget
+                                                      .sentHistory
+                                                      .sharedWith[0]
+                                                      .isNotificationSend
+                                                  ? Color(0xFF08CB21)
+                                                  : Color(0xFFF86061),
+                                              width: 5),
+                                          borderRadius: BorderRadius.circular(
+                                              35.toHeight),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            if (widget.sentHistory.sharedWith[0]
+                                                .isNotificationSend) {
+                                              return;
+                                            }
+
+                                            setState(() {
+                                              isResendingToFirstContact = true;
+                                            });
+                                            await Provider.of<
+                                                        FileTransferProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .sendFileNotification(
+                                                    widget.sentHistory,
+                                                    widget.sentHistory
+                                                        .sharedWith[0].atsign);
+
+                                            isResendingToFirstContact = false;
+                                          },
+                                          child: Icon(
+                                            widget.sentHistory.sharedWith[0]
+                                                    .isNotificationSend
+                                                ? Icons.done
+                                                : Icons.refresh,
+                                            color: Colors.white,
+                                            size: 10.toFont,
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              ),
                       )
                 : SizedBox(),
             title: Column(
@@ -235,36 +328,36 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     : Container(),
               ],
             ),
-            trailing: Consumer<FileTransferProvider>(
-              builder: (context, provider, _) {
-                // TransferStatus test =
-                //     provider.getStatus(widget.id, contactList.first.atSign);
-                // return Container(
-                //   height: 20.toHeight,
-                //   width: 20.toHeight,
-                //   child: Icon(
-                //     test == TransferStatus.DONE
-                //         ? Icons.check_circle_outline_outlined
-                //         : test == TransferStatus.FAILED
-                //             ? Icons.cancel_outlined
-                //             : Icons.priority_high_rounded,
-                //     color: test == TransferStatus.DONE
-                //         ? Colors.green
-                //         : test == TransferStatus.FAILED
-                //             ? Colors.red
-                //             : Colors.orange,
-                //   ),
-                // color: provider.tStatus[i].status ==
-                //         TransferStatus.PENDING
-                //     ? Colors.orange
-                //     : provider.tStatus[i].status ==
-                //             TransferStatus.DONE
-                //         ? Colors.green
-                // : Colors.red,
-                // );
-                return SizedBox();
-              },
-            ),
+            // trailing: contactList.isNotEmpty
+            //     ? (widget.sentHistory.sharedWith[0].isNotificationSend
+            //         ? SizedBox()
+            //         : InkWell(
+            //             onTap: () async {
+            //               setState(() {
+            //                 isResendingToFirstContact = true;
+            //               });
+            //               await Provider.of<FileTransferProvider>(context,
+            //                       listen: false)
+            //                   .sendFileNotification(widget.sentHistory,
+            //                       widget.sentHistory.sharedWith[0].atsign);
+
+            //               isResendingToFirstContact = false;
+            //             },
+            //             child: isResendingToFirstContact
+            //                 ? TypingIndicator(
+            //                     showIndicator: true,
+            //                     flashingCircleBrightColor:
+            //                         ColorConstants.dullText,
+            //                     flashingCircleDarkColor:
+            //                         ColorConstants.fadedText,
+            //                   )
+            //                 : Icon(
+            //                     Icons.refresh,
+            //                     color: Color(0xFFF86061),
+            //                     size: 25.toFont,
+            //                   ),
+            //           ))
+            //     : SizedBox(),
           ),
         ),
         (isOpen)
@@ -281,6 +374,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 indent: 80.toWidth,
                               ),
                           itemCount: fileLength,
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
                                 filesList[index].name?.split('.')?.last)) {
@@ -288,12 +382,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             }
                             return ListTile(
                               onTap: () async {
-                                File test = File(filesList[index].path);
+                                String _path =
+                                    MixedConstants.SENT_FILE_DIRECTORY +
+                                        '/${filesList[index].name}';
+                                File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
                                     'test file: ${test}, fileExists: ${fileExists}');
                                 if (fileExists) {
-                                  await OpenFile.open(filesList[index].path);
+                                  await OpenFile.open(_path);
                                 } else {
                                   _showNoFileDialog(deviceTextFactor);
                                 }
@@ -302,8 +399,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   height: 50.toHeight,
                                   width: 50.toHeight,
                                   child: FutureBuilder(
-                                      future:
-                                          isFilePresent(filesList[index].path),
+                                      future: isFilePresent(
+                                          MixedConstants.SENT_FILE_DIRECTORY +
+                                              '/${filesList[index].name}'),
                                       builder: (context, snapshot) {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
@@ -313,7 +411,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     .name
                                                     ?.split('.')
                                                     ?.last,
-                                                filesList[index].path,
+                                                MixedConstants
+                                                        .SENT_FILE_DIRECTORY +
+                                                    '/${filesList[index].name}',
                                                 isFilePresent: snapshot.data)
                                             : SizedBox();
                                       })),
@@ -338,11 +438,41 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : Icon(
-                                                Icons.cancel,
-                                                color: Color(0xFFF86061),
-                                                size: 25.toFont,
-                                              ),
+                                            : fileResending[index]
+                                                ? TypingIndicator(
+                                                    showIndicator: true,
+                                                    flashingCircleBrightColor:
+                                                        ColorConstants.dullText,
+                                                    flashingCircleDarkColor:
+                                                        ColorConstants
+                                                            .fadedText,
+                                                  )
+                                                : InkWell(
+                                                    onTap: () async {
+                                                      setState(() {
+                                                        fileResending[index] =
+                                                            true;
+                                                      });
+                                                      await Provider.of<
+                                                                  FileTransferProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .reuploadFile(
+                                                              filesList,
+                                                              index,
+                                                              widget
+                                                                  .sentHistory);
+
+                                                      // isWidgetRebuilt = true;
+                                                      fileResending[index] =
+                                                          false;
+                                                    },
+                                                    child: Icon(
+                                                      Icons.refresh,
+                                                      color: Color(0xFFF86061),
+                                                      size: 25.toFont,
+                                                    ),
+                                                  ),
                                       )
                                     ],
                                   ),

@@ -25,6 +25,7 @@ import '../../services/size_config.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 import 'widgets/select_contact_widget.dart';
+import 'package:path_provider/path_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -84,7 +85,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await Provider.of<HistoryProvider>(context, listen: false)
           .getSentHistory();
       await Provider.of<HistoryProvider>(context, listen: false)
-          .getRecievedHistory();
+          .getReceivedHistory();
       WelcomeScreenProvider().isExpanded = false;
     });
   }
