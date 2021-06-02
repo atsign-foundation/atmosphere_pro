@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/view_models/blocked_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -8,7 +9,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-
+import 'dart:io';
 import 'routes/routes.dart';
 
 class MyApp extends StatefulWidget {
@@ -19,6 +20,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var initialRoute, routes;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid || Platform.isIOS) {
+      initialRoute = SetupRoutes.initialRoute;
+      routes = SetupRoutes.routes;
+    } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      initialRoute = DesktopSetupRoutes.initialRoute;
+      routes = DesktopSetupRoutes.routes;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -47,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         },
         title: 'AtSign Atmosphere Pro',
         debugShowCheckedModeBanner: false,
-        initialRoute: SetupRoutes.initialRoute,
+        initialRoute: initialRoute,
         navigatorKey: NavService.navKey,
         theme: ThemeData(
             fontFamily: 'HelveticaNeu',
@@ -60,7 +75,7 @@ class _MyAppState extends State<MyApp> {
             buttonBarTheme: ButtonBarThemeData(
               alignment: MainAxisAlignment.center,
             )),
-        routes: SetupRoutes.routes,
+        routes: routes,
       ),
     );
   }
