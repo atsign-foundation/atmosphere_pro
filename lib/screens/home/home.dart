@@ -1,23 +1,21 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' show basename;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -30,40 +28,82 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  NotificationService _notificationService;
   bool onboardSuccess = false;
   bool sharingStatus = false;
-  BackendService backendService;
-  // bool userAcceptance;
+  BackendService _backendService;
+
   final Permission _cameraPermission = Permission.camera;
   final Permission _storagePermission = Permission.storage;
-  Completer c = Completer();
+
   bool authenticating = false;
-  StreamSubscription _intentDataStreamSubscription;
+
   List<SharedMediaFile> _sharedFiles;
-  FilePickerProvider filePickerProvider;
+  FileTransferProvider filePickerProvider;
+  String activeAtSign;
+
   @override
   void initState() {
     super.initState();
+    storeApplicationDocumentsDirectory();
     filePickerProvider =
-        Provider.of<FilePickerProvider>(context, listen: false);
-    _notificationService = NotificationService();
-    _initBackendService();
+        Provider.of<FileTransferProvider>(context, listen: false);
+    _backendService = BackendService.getInstance();
     _checkToOnboard();
+
     acceptFiles();
     _checkForPermissionStatus();
+    BackendService.getInstance()
+        .isAuthuneticatingStream
+        .listen((isAuthenticating) {
+      if (mounted) {
+        setState(() {
+          authenticating = isAuthenticating;
+        });
+      }
+    });
+  }
+
+  storeApplicationDocumentsDirectory() async {
+    var _dir;
+    if (Platform.isIOS) {
+      _dir = await getApplicationDocumentsDirectory();
+    } else {
+      _dir = await getExternalStorageDirectory();
+    }
+    MixedConstants.ApplicationDocumentsDirectory = _dir.path;
+  }
+
+  var atClientPrefernce;
+  void _checkToOnboard() async {
+    setState(() {
+      authenticating = true;
+    });
+    String currentatSign = await _backendService.getAtSign();
+    await _backendService
+        .getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+
+    if (currentatSign == null || currentatSign == '') {
+      setState(() {
+        authenticating = false;
+      });
+    } else {
+      await Provider.of<WelcomeScreenProvider>(context, listen: false)
+          .onboardingLoad(atSign: currentatSign);
+    }
   }
 
   void acceptFiles() async {
-    _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) async {
+    await ReceiveSharingIntent.getMediaStream().listen(
+        (List<SharedMediaFile> value) async {
       _sharedFiles = value;
 
       if (value.isNotEmpty) {
         value.forEach((element) async {
           File file = File(element.path);
-          double length = await file.length() / 1024;
-          await FilePickerProvider.appClosedSharedFiles.add(PlatformFile(
+          var length = await file.length();
+          await FileTransferProvider.appClosedSharedFiles.add(PlatformFile(
               name: basename(file.path),
               path: file.path,
               size: length.round(),
@@ -73,7 +113,7 @@ class _HomeState extends State<Home> {
 
         print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
         // check to see if atsign is paired
-        var atsign = await backendService.currentAtsign;
+        var atsign = await _backendService.currentAtsign;
         if (atsign != null) {
           BuildContext c = NavService.navKey.currentContext;
           await Navigator.pushNamedAndRemoveUntil(
@@ -91,61 +131,25 @@ class _HomeState extends State<Home> {
       if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
         _sharedFiles.forEach((element) async {
           File file = File(element.path);
-          var length = await file.length() / 1024;
+          var length = await file.length();
           PlatformFile fileToBeAdded = PlatformFile(
               name: basename(file.path),
               path: file.path,
               size: length.round(),
               bytes: await file.readAsBytes());
-          FilePickerProvider.appClosedSharedFiles.add(fileToBeAdded);
+          FileTransferProvider.appClosedSharedFiles.add(fileToBeAdded);
           filePickerProvider.setFiles();
         });
 
-        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+        print("Shared second:" +
+            (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
       }
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
     });
   }
 
-  String state;
-  void _initBackendService() {
-    backendService = BackendService.getInstance();
-    _notificationService.setOnNotificationClick(onNotificationClick);
-    SystemChannels.lifecycle.setMessageHandler((msg) {
-      state = msg;
-      debugPrint('SystemChannels> $msg');
-      backendService.app_lifecycle_state = msg;
-      if (backendService.monitorConnection != null &&
-          backendService.monitorConnection.isInValid()) {
-        backendService.startMonitor();
-      }
-    });
-  }
-
-  void _checkToOnboard() async {
-    // onboard call to get the already setup atsigns
-    await backendService.onboard().then((isChecked) async {
-      if (!isChecked) {
-        c.complete(true);
-        print("onboard returned: $isChecked");
-      } else {
-        await backendService.startMonitor();
-        onboardSuccess = true;
-        if (FilePickerProvider().selectedFiles.isNotEmpty) {
-          BuildContext cd = NavService.navKey.currentContext;
-          await Navigator.pushReplacementNamed(cd, Routes.WELCOME_SCREEN);
-        }
-
-        await getTrustedContact();
-
-        c.complete(true);
-      }
-    }).catchError((error) async {
-      c.complete(true);
-      print("Error in authenticating: $error");
-    });
-  }
+  bool isAuth = false;
 
   void _checkForPermissionStatus() async {
     final existingCameraStatus = await _cameraPermission.status;
@@ -156,11 +160,6 @@ class _HomeState extends State<Home> {
     if (existingStorageStatus != PermissionStatus.granted) {
       await _storagePermission.request();
     }
-  }
-
-  getTrustedContact() async {
-    await Provider.of<ContactProvider>(context, listen: false)
-        .getTrustedContact();
   }
 
   onNotificationClick(String payload) async {}
@@ -197,6 +196,8 @@ class _HomeState extends State<Home> {
                         ),
                         child: Image.asset(
                           ImageConstants.logoIcon,
+                          height: 50.toHeight,
+                          width: 50.toHeight,
                         ),
                       ),
                     ),
@@ -218,6 +219,7 @@ class _HomeState extends State<Home> {
                               style: GoogleFonts.playfairDisplay(
                                 textStyle: TextStyle(
                                   fontSize: 38.toFont,
+                                  letterSpacing: 0.1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -249,25 +251,13 @@ class _HomeState extends State<Home> {
                             child: Align(
                               alignment: Alignment.topRight,
                               child: CustomButton(
-                                buttonText: TextStrings().buttonStart,
-                                onPressed: () async {
-                                  this.setState(() {
-                                    authenticating = true;
-                                  });
-                                  await c.future;
-                                  if (onboardSuccess) {
-                                    await Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        Routes.WELCOME_SCREEN,
-                                        (route) => false);
-                                  } else {
-                                    await Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        Routes.SCAN_QR_SCREEN,
-                                        (route) => false);
-                                  }
-                                },
-                              ),
+                                  buttonText: TextStrings().buttonStart,
+                                  onPressed: authenticating
+                                      ? () {}
+                                      : () async {
+                                          await _backendService
+                                              .checkToOnboard();
+                                        }),
                             ),
                           ),
                         ],
@@ -279,10 +269,26 @@ class _HomeState extends State<Home> {
             ),
           ),
           authenticating
-              ? Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          ColorConstants.redText)),
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  ColorConstants.redText)),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Logging in',
+                            style: CustomTextStyles.orangeMedium16,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 )
               : SizedBox()
         ],

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
@@ -5,7 +7,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,17 @@ class RemoveTrustedContact extends StatefulWidget {
 }
 
 class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
+  Uint8List image;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.contact.tags != null && widget.contact.tags['image'] != null) {
+      List<int> intList = widget.contact.tags['image'].cast<int>();
+      image = Uint8List.fromList(intList);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -44,23 +57,22 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         ],
       ),
       content: Container(
-        height: 280.toHeight,
+        height: 300.toHeight,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                (widget.contact.tags != null &&
-                        widget.contact.tags['image'] != null)
+                (image != null)
                     ? CustomCircleAvatar(
-                        byteImage: widget.contact.tags['image'],
+                        byteImage: image,
                         nonAsset: true,
                       )
                     : ContactInitial(
                         initials: widget.contact.tags != null &&
                                 widget.contact.tags['name'] != null
-                            ? widget.contact.tags['name'].substring(0, 2)
-                            : widget.contact.atSign.substring(1, 3),
+                            ? widget.contact.tags['name']
+                            : widget.contact.atSign,
                       )
               ],
             ),
@@ -106,7 +118,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    (Provider.of<ContactProvider>(context)
+                    (Provider.of<TrustedContactProvider>(context)
                             .trustedContactOperation)
                         ? CircularProgressIndicator()
                         : CustomButton(
@@ -114,10 +126,10 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                             buttonText: 'Yes',
                             width: 200.toWidth,
                             onPressed: () async {
-                              await Provider.of<ContactProvider>(context,
+                              await Provider.of<TrustedContactProvider>(context,
                                       listen: false)
                                   .removeTrustedContacts(widget.contact);
-                              await Provider.of<ContactProvider>(context,
+                              await Provider.of<TrustedContactProvider>(context,
                                       listen: false)
                                   .setTrustedContact();
                               await Navigator.pop(context);
@@ -126,13 +138,19 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                   ],
                 ),
                 SizedBox(height: 10.toHeight),
-                CustomButton(
-                  buttonText: 'No',
-                  isInverted: true,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                (Provider.of<TrustedContactProvider>(context)
+                        .trustedContactOperation)
+                    ? SizedBox()
+                    : CustomButton(
+                        buttonText: 'No',
+                        isInverted: true,
+                        onPressed: () {
+                          Provider.of<TrustedContactProvider>(context,
+                                  listen: false)
+                              .trustedContactOperation = false;
+                          Navigator.pop(context);
+                        },
+                      ),
               ],
             )
           ],

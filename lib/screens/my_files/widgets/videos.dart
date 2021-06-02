@@ -8,6 +8,8 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import 'downloads_folders.dart';
+
 class Videos extends StatefulWidget {
   @override
   _VideosState createState() => _VideosState();
@@ -31,7 +33,7 @@ class _VideosState extends State<Videos> {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
       load: (provider) {
-        return provider.sortFiles(provider.receivedHistory);
+        return provider.sortFiles(provider.receivedHistoryLogs);
       },
       successBuilder: (provider) => Container(
         margin:
@@ -42,9 +44,10 @@ class _VideosState extends State<Videos> {
               DateTime date =
                   DateTime.parse(provider.receivedVideos[index].date);
               return InkWell(
-                onTap: () {
+                onTap: () async {
                   print(
                       'provider.receivedVideos[index].size====>${provider.receivedVideos[index].size}');
+                  await openDownloadsFolder(context);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),

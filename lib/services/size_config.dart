@@ -22,6 +22,15 @@ class SizeConfig {
   double refHeight;
   double refWidth;
 
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 700;
+
+  bool isTablet(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 700 &&
+      MediaQuery.of(context).size.width < 1200;
+  // bool isDesktop(BuildContext context) =>
+  //     MediaQuery.of(context).size.width >= 1200;
+
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;

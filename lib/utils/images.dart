@@ -3,7 +3,7 @@ class ImageConstants {
 
   static String welcomeBackground = '$_basePath/welcome_bg.png';
   static String logoIcon = '$_basePath/logo.png';
-  static String myFiles = '$_basePath/myfiles.png';
+  // static String myFiles = '$_basePath/myfiles.png';
   static String group = '$_basePath/group.png';
   static String trustedsenders = '$_basePath/trustedsenders.png';
   static String drawerIcon = '$_basePath/menu.png';
@@ -35,4 +35,15 @@ class ImageConstants {
   static String documentFile = '$_basePath/documentFile.png';
   static String exclamation = '$_basePath/exclamation.png';
   static String close = '$_basePath/close.png';
+  static String trustedSender = '$_basePath/trusted_sender.png';
+  static String myFiles = '$_basePath/my_files.png';
+  static String groups = '$_basePath/groups.png';
+  // TEST FILE DELETE WHEN IN PRODUCTION
+  static String test = '$_basePath/test.jpg';
+
+  // Sample profile pictures
+  static String barbara = '$_basePath/barbara.jpg';
+  static String colin = '$_basePath/colin.jpg';
+  static String kevin = '$_basePath/kevin.jpg';
+  static String filePreview = '$_basePath/filePreview.jpg';
 }

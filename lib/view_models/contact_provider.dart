@@ -200,17 +200,13 @@ class ContactProvider extends BaseModel {
   selectContacts(AtContact contact) {
     setStatus(SelectContact, Status.Loading);
     try {
-      print('IN SELECT;');
       if (selectedContacts.length <= 3) {
-        print('in 1');
         selectedContacts.add(contact);
       } else {
-        print('in 2');
         limitReached = true;
       }
 
       setStatus(SelectContact, Status.Done);
-      print('LIMIT REACHED=====>$limitReached');
     } catch (error) {
       setError(SelectContact, error.toString());
     }
@@ -268,7 +264,7 @@ class ContactProvider extends BaseModel {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
-      var result = await backendService.atClientInstance.put(
+      await backendService.atClientInstance.put(
         trustedContactsKey,
         json.encode({"trustedContacts": trustedContacts}),
       );

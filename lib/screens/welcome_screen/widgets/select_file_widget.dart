@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -24,7 +24,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   bool isLoading = false;
 
   Uint8List videoThumbnail;
-  FilePickerProvider filePickerProvider;
+  FileTransferProvider filePickerProvider;
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
@@ -39,7 +39,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   @override
   void initState() {
     filePickerProvider =
-        Provider.of<FilePickerProvider>(context, listen: false);
+        Provider.of<FileTransferProvider>(context, listen: false);
     super.initState();
   }
 
@@ -47,7 +47,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   void didChangeDependencies() async {
     if (filePickerProvider == null) {
       filePickerProvider =
-          Provider.of<FilePickerProvider>(context, listen: false);
+          Provider.of<FileTransferProvider>(context, listen: false);
       await filePickerProvider.setFiles();
     }
     super.didChangeDependencies();
@@ -61,8 +61,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             child: Container(
-              height: 200.0,
-              width: 300.0,
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -75,7 +75,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   FlatButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        providerCallback<FilePickerProvider>(context,
+                        providerCallback<FileTransferProvider>(context,
                             task: (provider) =>
                                 provider.pickFiles(provider.MEDIA),
                             taskName: (provider) => provider.PICK_FILES,
@@ -96,7 +96,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   FlatButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        providerCallback<FilePickerProvider>(context,
+                        providerCallback<FileTransferProvider>(context,
                             task: (provider) =>
                                 provider.pickFiles(provider.FILES),
                             taskName: (provider) => provider.PICK_FILES,
@@ -146,7 +146,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                       double.parse(filePickerProvider.totalSize.toString()) <=
                               1024
                           ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
-                          : '${(filePickerProvider.totalSize / 1024).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
+                          : '${(filePickerProvider.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
                       style: TextStyle(
                         color: ColorConstants.fadedText,
                         fontSize: 10.toFont,
@@ -178,10 +178,11 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   videoThumbnailBuilder(
                       filePickerProvider.selectedFiles[index].path);
                 }
-                return Consumer<FilePickerProvider>(
+                return Consumer<FileTransferProvider>(
                     builder: (context, provider, _) {
-                  print(
-                      'CONSUMER FILES=======>${provider.selectedFiles.length}');
+                  if (provider.selectedFiles.isEmpty) {
+                    return SizedBox();
+                  }
                   return Container(
                     decoration: BoxDecoration(
                       border: Border(
@@ -193,7 +194,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     ),
                     child: ListTile(
                       title: Text(
-                        provider.selectedFiles[index].name.toString(),
+                        provider.selectedFiles[index]?.name.toString(),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.toFont,
@@ -205,7 +206,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                 1024
                             ? '${provider.selectedFiles[index].size} Kb' +
                                 ' . ${provider.selectedFiles[index].extension}'
-                            : '${(provider.selectedFiles[index].size / 1024).toStringAsFixed(2)} Mb' +
+                            : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
                                 ' . ${provider.selectedFiles[index].extension}',
                         style: TextStyle(
                           color: ColorConstants.fadedText,
@@ -273,8 +274,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(
-                  height: 50.toHeight,
-                  width: 50.toWidth,
+                  height: 40.toHeight,
+                  width: 40.toWidth,
                   child: Image.asset(
                     FileTypes.PDF_TYPES.contains(extension)
                         ? ImageConstants.pdfLogo

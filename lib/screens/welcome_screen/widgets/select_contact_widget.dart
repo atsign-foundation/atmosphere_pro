@@ -1,11 +1,9 @@
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,25 +18,16 @@ class SelectContactWidget extends StatefulWidget {
 class _SelectContactWidgetState extends State<SelectContactWidget> {
   String headerText;
 
-  ContactProvider contactProvider;
-
   @override
   void initState() {
     headerText = TextStrings().welcomeContactPlaceholder;
+
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context);
-    }
-
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Theme(
       data: ThemeData(
         dividerColor: Colors.transparent,
@@ -82,17 +71,25 @@ class _ExpansionTileWidget extends StatelessWidget {
       ),
       trailing: InkWell(
         onTap: () async {
-          await Navigator.pushNamed(context, Routes.CONTACT_SCREEN, arguments: {
-            'currentAtsign': BackendService.getInstance().currentAtsign,
-            'context': NavService.navKey.currentContext,
-            'asSelectionScreen': true,
-            'selectedList': (s) {
-              Provider.of<WelcomeScreenProvider>(
-                      NavService.navKey.currentContext,
-                      listen: false)
-                  .updateSelectedContacts(s);
-            }
-          });
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GroupContactView(
+                asSelectionScreen: true,
+                // singleSelection: true,
+                showGroups: true,
+                showContacts: true,
+                selectedList: (s) {
+                  Provider.of<WelcomeScreenProvider>(
+                          NavService.navKey.currentContext,
+                          listen: false)
+                      .updateSelectedContacts(s);
+                  onSelected(s.length);
+                },
+                // singleSelection: true,
+              ),
+            ),
+          );
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),

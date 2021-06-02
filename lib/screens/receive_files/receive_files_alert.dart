@@ -1,18 +1,22 @@
 import 'dart:convert';
+import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
+
+import '../../view_models/file_transfer_provider.dart';
 
 class ReceiveFilesAlert extends StatefulWidget {
   final Function() onAccept;
@@ -26,11 +30,14 @@ class ReceiveFilesAlert extends StatefulWidget {
   _ReceiveFilesAlertState createState() => _ReceiveFilesAlertState();
 }
 
-class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
+class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
+    with TickerProviderStateMixin {
+  AnimationController progressController;
   NotificationPayload payload;
   bool status = false;
   BackendService backendService = BackendService.getInstance();
-  ContactProvider contactProvider;
+
+  Flushbar flushbar;
   @override
   void initState() {
     Map<String, dynamic> test =
@@ -40,17 +47,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
   }
 
   @override
-  void didChangeDependencies() {
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context);
-    }
-
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print("payload => ${widget.payload}");
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.toWidth),
@@ -66,8 +63,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
           ),
           GestureDetector(
             onTap: () {
-              contactProvider.blockUnblockContact(
-                  atSign: payload.name, blockAction: true);
+              // contactProvider.blockUnblockContact(
+              //     atSign: payload.name, blockAction: true);
               status = false;
               NotificationService().cancelNotifications();
               widget.sharingStatus(status);
@@ -158,29 +155,49 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert> {
       actions: [
         CustomButton(
           buttonText: TextStrings().accept,
-          onPressed: () {
+          onPressed: () async {
+            progressController = AnimationController(vsync: this);
+            backendService.controller = progressController;
             DateTime date = DateTime.now();
             Provider.of<HistoryProvider>(context, listen: false)
                 .setFilesHistory(
-                    atSignName: payload.name.toString(),
+                    atSignName: [payload.name.toString()],
+                    // id: payload.id,
                     historyType: HistoryType.received,
                     files: [
-                  FilesDetail(
-                      filePath: backendService.atClientPreference.downloadPath +
-                          '/' +
-                          payload.file,
-                      date: date.toString(),
-                      size: payload.size,
-                      fileName: payload.file,
-                      type: payload.file
-                          .substring(payload.file.lastIndexOf('.') + 1))
-                ]);
+                      FilesDetail(
+                          filePath:
+                              backendService.atClientPreference.downloadPath +
+                                  '/' +
+                                  payload.file,
+                          date: date.toString(),
+                          size: payload.size,
+                          fileName: payload.file,
+                          // id: payload.id,
+                          type: payload.file
+                              .substring(payload.file.lastIndexOf('.') + 1))
+                    ]);
 
             status = true;
             widget.onAccept;
             NotificationService().cancelNotifications();
             Navigator.pop(context);
             widget.sharingStatus(status);
+            if (FileTransferProvider().sentStatus != null &&
+                FileTransferProvider().sentStatus) {
+              flushbar = CustomFlushBar()
+                  .getFlushbar(TextStrings().receivingFile, progressController);
+
+              await flushbar.show(context);
+              // Future.delayed(Duration(seconds: 2), () async {
+              // print('lolololololololo');
+              await showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => AddContactDialog(),
+              );
+              // });
+            }
           },
         ),
         SizedBox(

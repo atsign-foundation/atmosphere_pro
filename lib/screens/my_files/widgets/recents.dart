@@ -1,17 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Recents extends StatefulWidget {
@@ -21,19 +18,14 @@ class Recents extends StatefulWidget {
 
 class _RecentsState extends State<Recents> {
   @override
-  void initState() {
-    Provider.of<HistoryProvider>(context, listen: false).getRecievedHistory();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
-      load: (provider) => provider.getRecievedHistory(),
+      load: (provider) => provider.getReceivedHistory(),
       functionName: 'received_history',
       successBuilder: (provider) => (provider.finalReceivedHistory.isEmpty)
           ? Center(
-              child: Text('No files received'),
+              child: Text('No files received',
+                  style: TextStyle(fontSize: 15.toFont)),
             )
           : Container(
               margin: EdgeInsets.symmetric(
@@ -46,8 +38,8 @@ class _RecentsState extends State<Recents> {
                     (index) {
                   return thumbnail(
                       provider.finalReceivedHistory[index].fileName
-                          .split('.')
-                          .last,
+                          ?.split('.')
+                          ?.last,
                       provider.finalReceivedHistory[index].filePath);
                 }),
               ),
@@ -60,12 +52,22 @@ Widget thumbnail(String extension, String path) {
   return FileTypes.IMAGE_TYPES.contains(extension)
       ? ClipRRect(
           borderRadius: BorderRadius.circular(10.toHeight),
-          child: Container(
-            height: 50.toHeight,
-            width: 50.toWidth,
-            child: Image.file(
-              File(path),
-              fit: BoxFit.cover,
+          child: GestureDetector(
+            onTap: () async {
+              // preview file
+              File test = File(path);
+              bool fileExists = await test.exists();
+              if (fileExists) {
+                await OpenFile.open(path);
+              }
+            },
+            child: Container(
+              height: 50.toHeight,
+              width: 50.toWidth,
+              child: Image.file(
+                File(path),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         )
@@ -74,43 +76,55 @@ Widget thumbnail(String extension, String path) {
               future: videoThumbnailBuilder(path),
               builder: (context, snapshot) => ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  height: 50.toHeight,
-                  width: 50.toWidth,
-                  child: (snapshot.data == null)
-                      ? Image.asset(
-                          ImageConstants.unknownLogo,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.memory(
-                          videoThumbnail,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, o, ot) =>
-                              CircularProgressIndicator(),
-                        ),
+                child: GestureDetector(
+                  onTap: () async {
+                    await openDownloadsFolder(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    height: 50.toHeight,
+                    width: 50.toWidth,
+                    child: (snapshot.data == null)
+                        ? Image.asset(
+                            ImageConstants.unknownLogo,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.memory(
+                            videoThumbnail,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, o, ot) =>
+                                CircularProgressIndicator(),
+                          ),
+                  ),
                 ),
               ),
             )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(10.toHeight),
-              child: Container(
-                padding: EdgeInsets.only(left: 10),
-                height: 50.toHeight,
-                width: 50.toWidth,
-                child: Image.asset(
-                  FileTypes.PDF_TYPES.contains(extension)
-                      ? ImageConstants.pdfLogo
-                      : FileTypes.AUDIO_TYPES.contains(extension)
-                          ? ImageConstants.musicLogo
-                          : FileTypes.WORD_TYPES.contains(extension)
-                              ? ImageConstants.wordLogo
-                              : FileTypes.EXEL_TYPES.contains(extension)
-                                  ? ImageConstants.exelLogo
-                                  : FileTypes.TEXT_TYPES.contains(extension)
-                                      ? ImageConstants.txtLogo
-                                      : ImageConstants.unknownLogo,
-                  fit: BoxFit.cover,
+          : Builder(
+              builder: (context) => ClipRRect(
+                borderRadius: BorderRadius.circular(10.toHeight),
+                child: GestureDetector(
+                  onTap: () async {
+                    await openDownloadsFolder(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    height: 50.toHeight,
+                    width: 50.toWidth,
+                    child: Image.asset(
+                      FileTypes.PDF_TYPES.contains(extension)
+                          ? ImageConstants.pdfLogo
+                          : FileTypes.AUDIO_TYPES.contains(extension)
+                              ? ImageConstants.musicLogo
+                              : FileTypes.WORD_TYPES.contains(extension)
+                                  ? ImageConstants.wordLogo
+                                  : FileTypes.EXEL_TYPES.contains(extension)
+                                      ? ImageConstants.exelLogo
+                                      : FileTypes.TEXT_TYPES.contains(extension)
+                                          ? ImageConstants.txtLogo
+                                          : ImageConstants.unknownLogo,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             );

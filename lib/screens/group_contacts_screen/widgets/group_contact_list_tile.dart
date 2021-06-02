@@ -55,16 +55,14 @@ class _ContactListTileState extends State<ContactListTile> {
         title: Text(
           widget.name,
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 14.toFont,
-          ),
+              color: Colors.black, fontSize: 14.toFont, letterSpacing: 0.1),
         ),
         subtitle: Text(
           widget.atSign,
           style: TextStyle(
-            color: ColorConstants.fadedText,
-            fontSize: 14.toFont,
-          ),
+              color: ColorConstants.fadedText,
+              fontSize: 14.toFont,
+              letterSpacing: 0.1),
         ),
         trailing: (widget.plainView)
             ? Container(
@@ -88,8 +86,8 @@ class _ContactListTileState extends State<ContactListTile> {
         leading: Stack(
           children: [
             Container(
-              height: 40.toWidth,
-              width: 40.toWidth,
+              height: 40.toHeight,
+              width: 40.toHeight,
               decoration: BoxDecoration(
                 color: Colors.black,
                 shape: BoxShape.circle,

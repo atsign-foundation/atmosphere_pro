@@ -1,25 +1,38 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:archive/archive_io.dart';
+import 'package:at_commons/at_builders.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
+import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
-import 'package:flutter_keychain/flutter_keychain.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
+import 'package:at_client/src/manager/sync_manager.dart';
+import 'package:http/http.dart' as http;
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -30,43 +43,65 @@ class BackendService {
   }
   AtClientService atClientServiceInstance;
   AtClientImpl atClientInstance;
-  String _atsign;
+  String currentAtSign;
   Function ask_user_acceptance;
   String app_lifecycle_state;
   AtClientPreference atClientPreference;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
-  String get currentAtsign => _atsign;
+  String get currentAtsign => currentAtSign;
   OutboundConnection monitorConnection;
   Directory downloadDirectory;
   double bytesReceived = 0.0;
   AnimationController controller;
-  Future<bool> onboard({String atsign}) async {
-    atClientServiceInstance = AtClientService();
+  Flushbar receivingFlushbar;
+  String onBoardError;
+
+  final _isAuthuneticatingStreamController = StreamController<bool>.broadcast();
+  Stream<bool> get isAuthuneticatingStream =>
+      _isAuthuneticatingStreamController.stream;
+  StreamSink<bool> get isAuthuneticatingSink =>
+      _isAuthuneticatingStreamController.sink;
+
+  setDownloadPath(
+      {String atsign, atClientPreference, atClientServiceInstance}) async {
     if (Platform.isIOS) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
     } else {
       downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
-
-    final appSupportDirectory =
-        await path_provider.getApplicationSupportDirectory();
-    print("paths => $downloadDirectory $appSupportDirectory");
-    String path = appSupportDirectory.path;
-    atClientPreference = AtClientPreference();
-
-    atClientPreference.isLocalStoreRequired = true;
-    atClientPreference.commitLogPath = path;
-    atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
-    atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
-    atClientPreference.hiveStoragePath = path;
-    atClientPreference.downloadPath = downloadDirectory.path;
-    atClientPreference.outboundConnectionTimeout = MixedConstants.TIME_OUT;
-    var result = await atClientServiceInstance.onboard(
+    if (atClientServiceMap[atsign] == null) {
+      final appSupportDirectory =
+          await path_provider.getApplicationSupportDirectory();
+      print("paths => $downloadDirectory $appSupportDirectory");
+    }
+    await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference, atsign: atsign);
     atClientInstance = atClientServiceInstance.atClient;
-    return result;
+  }
+
+  Future<AtClientPreference> getAtClientPreference() async {
+    if (Platform.isIOS) {
+      downloadDirectory =
+          await path_provider.getApplicationDocumentsDirectory();
+    } else {
+      downloadDirectory = await path_provider.getExternalStorageDirectory();
+    }
+    final appDocumentDirectory =
+        await path_provider.getApplicationSupportDirectory();
+    String path = appDocumentDirectory.path;
+    var _atClientPreference = AtClientPreference()
+      ..isLocalStoreRequired = true
+      ..commitLogPath = path
+      ..downloadPath = downloadDirectory.path
+      ..namespace = MixedConstants.appNamespace
+      ..syncStrategy = SyncStrategy.IMMEDIATE
+      ..rootDomain = MixedConstants.ROOT_DOMAIN
+      ..syncRegex = MixedConstants.regex
+      ..outboundConnectionTimeout = MixedConstants.TIME_OUT
+      ..hiveStoragePath = path;
+    return _atClientPreference;
   }
 
   // QR code scan
@@ -77,7 +112,7 @@ class BackendService {
         List<String> params = qrCodeString.split(':');
         if (params?.length == 2) {
           await authenticateWithCram(params[0], cramSecret: params[1]);
-          _atsign = params[0];
+          currentAtSign = params[0];
           await startMonitor();
           c.complete(AUTH_SUCCESS);
           await Navigator.pushNamed(context, Routes.PRIVATE_KEY_GEN_SCREEN);
@@ -111,12 +146,19 @@ class BackendService {
         atsign, atClientPreference,
         jsonData: jsonData, decryptKey: decryptKey);
     atClientInstance = atClientServiceInstance.atClient;
-    _atsign = atsign;
+    currentAtSign = atsign;
     return result;
   }
 
   ///Fetches atsign from device keychain.
   Future<String> getAtSign() async {
+    // return await atClientServiceInstance.getAtSign();
+    await getAtClientPreference().then((value) {
+      return atClientPreference = value;
+    });
+
+    atClientServiceInstance = AtClientService();
+
     return await atClientServiceInstance.getAtSign();
   }
 
@@ -138,14 +180,29 @@ class BackendService {
     return await atClientServiceInstance.getEncryptedKeys(atsign);
   }
 
+  Map<String, AtClientService> atClientServiceMap = {};
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
-  Future<bool> startMonitor() async {
-    _atsign = await getAtSign();
-    String privateKey = await getPrivateKey(_atsign);
-    // monitorConnection =
+  Future<bool> startMonitor({value, atsign}) async {
+    if (value.containsKey(atsign)) {
+      currentAtSign = atsign;
+      atClientServiceMap = value;
+      atClientInstance = value[atsign].atClient;
+      atClientServiceInstance = value[atsign];
+    }
+
+    await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
+    Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .selectedFiles = [];
+    await setDownloadPath(
+        atsign: atsign,
+        atClientPreference: atClientPreference,
+        atClientServiceInstance: atClientServiceInstance);
+    String privateKey = await getPrivateKey(atsign);
+
     await atClientInstance.startMonitor(privateKey, _notificationCallBack);
-    print("Monitor started");
+    print('monitor started');
     return true;
   }
 
@@ -153,20 +210,35 @@ class BackendService {
   var userResponse = false;
   Future<void> _notificationCallBack(var response) async {
     print('response => $response');
+    await syncWithSecondary();
     response = response.replaceFirst('notification:', '');
     var responseJson = jsonDecode(response);
     var notificationKey = responseJson['key'];
     var fromAtSign = responseJson['from'];
+    var toAtSing = responseJson['to'];
+    // var id = responseJson['id'];
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
+    print('fromAtSign : $fromAtSign');
+
+    // check for notification from blocked atsign
+    if (ContactService()
+            .blockContactList
+            .indexWhere((element) => element.atSign == fromAtSign) >
+        -1) {
+      return;
+    }
+
     if (atKey == 'stream_id') {
       var valueObject = responseJson['value'];
       var streamId = valueObject.split(':')[0];
       var fileName = valueObject.split(':')[1];
       fileLength = valueObject.split(':')[2];
       fileName = utf8.decode(base64.decode(fileName));
-      userResponse = await acceptStream(fromAtSign, fileName, fileLength);
+      userResponse =
+          await acceptStream(fromAtSign, fileName, fileLength, toAtSing);
+
       if (userResponse == true) {
         await atClientInstance.sendStreamAck(
             streamId,
@@ -176,11 +248,179 @@ class BackendService {
             _streamCompletionCallBack,
             _streamReceiveCallBack);
       }
+      return;
+    }
+    print(' FILE_TRANSFER_KEY : ${atKey}');
+    if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
+      var value = responseJson['value'];
+
+      var decryptedMessage = await atClientInstance.encryptionService
+          .decrypt(value, fromAtSign)
+          // ignore: return_of_invalid_type_from_catch_error
+          .catchError((e) => print("error in decrypting: $e"));
+
+      if (decryptedMessage != null) {
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .addToReceiveFileHistory(fromAtSign, decryptedMessage);
+
+        NotificationService().setOnNotificationClick(onNotificationClick);
+        await NotificationService().showNotification(fromAtSign);
+      }
     }
   }
 
+  syncWithSecondary() async {
+    try {
+      SyncManager syncManager = atClientInstance.getSyncManager();
+      var isSynced = await syncManager.isInSync();
+      print('already synced: $isSynced');
+      if (isSynced is bool && isSynced) {
+      } else {
+        await syncManager.sync();
+      }
+      print('sync done');
+    } catch (e) {
+      print('error in sync: $e');
+    }
+  }
+
+  Future downloadFileFromBin(
+    String sharedByAtSign,
+    String url,
+  ) async {
+    bool isDownloaded = true;
+    try {
+      var response = await http.get(Uri.parse(url));
+      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
+      for (var file in archive) {
+        bool proceedToDownload = await proceedToFileDownload(file.name);
+        if (!proceedToDownload) {
+          isDownloaded = false;
+          continue;
+        }
+
+        var unzipped = file.content as List<int>;
+        bool result = await decryptAndStore(
+          sharedByAtSign,
+          unzipped,
+          file.name,
+        );
+
+        if (result is bool && !result) {
+          isDownloaded = false;
+        } else {
+          // if download is completed, updating my files screen
+          var context = NavService.navKey.currentContext;
+          var receivedHistoryLogs =
+              Provider.of<HistoryProvider>(context, listen: false)
+                  .receivedHistoryLogs;
+          await Provider.of<HistoryProvider>(context, listen: false)
+              .sortFiles(receivedHistoryLogs);
+          Provider.of<HistoryProvider>(context, listen: false).populateTabs();
+        }
+      }
+
+      return isDownloaded;
+    } catch (e) {
+      print('Error in download $e');
+      return false;
+    }
+  }
+
+  Future decryptAndStore(
+    String sharedByAtSign,
+    Uint8List encryptedFileInBytes,
+    String fileName,
+  ) async {
+    print('decrypting file: $fileName');
+    try {
+      var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
+        ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
+        ..sharedBy = sharedByAtSign
+        ..auth = true;
+      var encryptedFileSharedKey = await atClientInstance
+          .getRemoteSecondary()
+          .executeAndParse(fileDecryptionKeyLookUpBuilder);
+      var currentAtSignPrivateKey =
+          await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
+      var fileDecryptionKey = atClientInstance.decryptKey(
+          encryptedFileSharedKey, currentAtSignPrivateKey);
+
+      var decryptedFile = await atClientInstance.encryptionService
+          .decryptFile(encryptedFileInBytes, fileDecryptionKey);
+      var downloadedFile =
+          File('${MixedConstants.RECEIVED_FILE_DIRECTORY}/$fileName');
+      print('open file');
+
+      downloadedFile.writeAsBytesSync(decryptedFile);
+      print('directory: ${downloadDirectory.path}/$fileName');
+      return true;
+    } catch (e) {
+      print('error in decryptAndStore : $e');
+      return false;
+    }
+  }
+
+  Future proceedToFileDownload(String fileName) async {
+    String path = downloadDirectory.path + '/$fileName';
+    File file = File(path);
+    bool isPresent, proceedToDownload = false;
+    isPresent = await file.exists();
+    if (isPresent) {
+      await showDialog(
+          context: NavService.navKey.currentContext,
+          builder: (context) {
+            return AlertDialog(
+              content: Container(
+                height: 150.toHeight,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'A file named, "$fileName" already exists. ',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text('Do you want to replace it ?'),
+                      SizedBox(
+                        height: 20.toHeight,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                proceedToDownload = true;
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Yes')),
+                          TextButton(onPressed: null, child: Text('')),
+                          TextButton(
+                              onPressed: () {
+                                proceedToDownload = false;
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+    } else {
+      // when file with same name is not present , we can proceed to download
+      print('file not present');
+      return true;
+    }
+    print('proceedToDownload : ${proceedToDownload}');
+    return proceedToDownload;
+  }
+
   void _streamCompletionCallBack(var streamId) async {
-    print('FILE TRANSFER COMPLETE FOR STRAM : $streamId');
     DateTime now = DateTime.now();
     int historyFileCount = 0;
     Provider.of<HistoryProvider>(NavService.navKey.currentContext,
@@ -193,9 +433,18 @@ class BackendService {
     var value = {'timeStamp': now, 'length': historyFileCount};
     HiveService().writeData(
         MixedConstants.HISTORY_BOX, MixedConstants.HISTORY_KEY, value);
+    receivingFlushbar =
+        CustomFlushBar().getFlushbar(TextStrings().fileReceived, null);
+
+    await receivingFlushbar.show(NavService.navKey.currentContext);
   }
 
-  void _streamReceiveCallBack(var bytesReceived) {}
+  void _streamReceiveCallBack(var bytesReceived) async {
+    receivingFlushbar =
+        CustomFlushBar().getFlushbar(TextStrings().fileSent, null);
+
+    await receivingFlushbar.show(NavService.navKey.currentContext);
+  }
 
   // send a file
   Future<bool> sendFile(String atSign, String filePath) async {
@@ -215,61 +464,124 @@ class BackendService {
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
 
   // acknowledge file transfer
-  Future<bool> acceptStream(
-      String atsign, String filename, String filesize) async {
-    print("from:$atsign file:$filename size:$filesize");
-    BuildContext context = NavService.navKey.currentContext;
-    // ContactProvider contactProvider =
-    //     Provider.of<ContactProvider>(context, listen: false);
+  acceptStream(String atsign, String filename, String filesize, String receiver,
+      {String id}) async {
+    print("from:$atsign file:$filename size:$receiver");
+    if (receiver == currentAtSign && atsign != currentAtSign) {
+      BuildContext context = NavService.navKey.currentContext;
 
-    // for (AtContact blockeduser in contactProvider.blockedContactList) {
-    //   if (atsign == blockeduser.atSign) {
-    //     return false;
-    //   }
-    // }
+      if (!autoAcceptFiles &&
+          app_lifecycle_state != null &&
+          app_lifecycle_state != AppLifecycleState.resumed.toString()) {
+        print("app not active $app_lifecycle_state");
+        await NotificationService().showNotification(atsign);
+      }
+      NotificationPayload payload = NotificationPayload(
+          file: filename, name: atsign, size: double.parse(filesize));
 
-    if (!autoAcceptFiles &&
-        app_lifecycle_state != null &&
-        app_lifecycle_state != AppLifecycleState.resumed.toString()) {
-      print("app not active $app_lifecycle_state");
-      await NotificationService().showNotification(atsign, filename, filesize);
+      bool userAcceptance;
+
+      bool trustedSender = false;
+      TrustedContactProvider trustedContactProvider =
+          Provider.of<TrustedContactProvider>(context, listen: false);
+
+      trustedContactProvider.trustedContacts.forEach((element) {
+        if (element.atSign == atsign) {
+          trustedSender = true;
+        }
+      });
+
+      if (autoAcceptFiles && trustedSender) {
+        DateTime date = DateTime.now();
+        Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
+            atSignName: [payload.name.toString()],
+            historyType: HistoryType.received,
+            files: [
+              FilesDetail(
+                  filePath:
+                      atClientPreference.downloadPath + '/' + payload.file,
+                  size: payload.size,
+                  date: date.toString(),
+                  fileName: payload.file,
+                  type:
+                      payload.file.substring(payload.file.lastIndexOf('.') + 1))
+            ]);
+        userAcceptance = true;
+      } else {
+        await showDialog(
+          context: context,
+          builder: (context) => ReceiveFilesAlert(
+            payload: jsonEncode(payload),
+            sharingStatus: (s) {
+              userAcceptance = s;
+              print('STATUS====>$s');
+            },
+          ),
+        );
+      }
+
+      return userAcceptance;
     }
-    NotificationPayload payload = NotificationPayload(
-        file: filename, name: atsign, size: double.parse(filesize));
+  }
 
-    bool userAcceptance;
-    if (autoAcceptFiles) {
-      DateTime date = DateTime.now();
-      Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
-          atSignName: payload.name.toString(),
-          historyType: HistoryType.received,
-          files: [
-            FilesDetail(
-                filePath: atClientPreference.downloadPath + '/' + payload.file,
-                size: payload.size,
-                date: date.toString(),
-                fileName: payload.file,
-                type: payload.file.substring(payload.file.lastIndexOf('.') + 1))
-          ]);
-      userAcceptance = true;
-    } else {
-      await showDialog(
-        context: context,
-        builder: (context) => ReceiveFilesAlert(
-          payload: jsonEncode(payload),
-          sharingStatus: (s) {
-            userAcceptance = s;
-            print('STATUS====>$s');
-          },
-        ),
-      );
-    }
-
-    return userAcceptance;
+  static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
+  Future<List<String>> getAtsignList() async {
+    var atSignsList = await _keyChainManager.getAtSignListFromKeychain();
+    return atSignsList;
   }
 
   deleteAtSignFromKeyChain(String atsign) async {
-    await FlutterKeychain.remove(key: '@atsign');
+    List<String> atSignList = await getAtsignList();
+
+    await atClientServiceMap[atsign].deleteAtSignFromKeychain(atsign);
+
+    if (atSignList != null) {
+      atSignList.removeWhere((element) => element == currentAtSign);
+    }
+
+    var atClientPrefernce;
+    await getAtClientPreference().then((value) => atClientPrefernce = value);
+    var tempAtsign;
+    if (atSignList == null || atSignList.isEmpty) {
+      tempAtsign = '';
+    } else {
+      tempAtsign = atSignList.first;
+    }
+
+    if (tempAtsign == '') {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
+          Routes.HOME, (Route<dynamic> route) => false);
+    } else {
+      await Onboarding(
+        atsign: tempAtsign,
+        context: NavService.navKey.currentContext,
+        atClientPreference: atClientPrefernce,
+        domain: MixedConstants.ROOT_DOMAIN,
+        appColor: Color.fromARGB(255, 240, 94, 62),
+        onboard: (value, atsign) async {
+          atClientServiceMap = value;
+
+          String atSign =
+              await atClientServiceMap[atsign].atClient.currentAtSign;
+
+          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          await startMonitor(atsign: atsign, value: value);
+          await initializeContactsService(atClientInstance, currentAtSign);
+          // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+          await Navigator.pushNamedAndRemoveUntil(
+              NavService.navKey.currentContext,
+              Routes.HOME,
+              (Route<dynamic> route) => false);
+        },
+        onError: (error) {
+          print('Onboarding throws $error error');
+        },
+        // nextScreen: WelcomeScreen(),
+      );
+    }
+    // if (atClientInstance != null) {
+    //   await startMonitor();
+    // }
   }
 
   Future<bool> checkAtsign(String atSign) async {
@@ -312,7 +624,7 @@ class BackendService {
       var lastname = result.value;
 
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.length == 0) {
+      if (name.fileLength == 0) {
         name = atSign.substring(1);
       }
 
@@ -328,5 +640,82 @@ class BackendService {
       contactDetails['image'] = null;
     }
     return contactDetails;
+  }
+
+  bool authenticating = false;
+
+  checkToOnboard({String atSign}) async {
+    try {
+      authenticating = true;
+      isAuthuneticatingSink.add(authenticating);
+      var atClientPrefernce;
+      //  await getAtClientPreference();
+      await getAtClientPreference()
+          .then((value) => atClientPrefernce = value)
+          .catchError((e) => print(e));
+      await Onboarding(
+        atsign: atSign,
+        context: NavService.navKey.currentContext,
+        atClientPreference: atClientPrefernce,
+        domain: MixedConstants.ROOT_DOMAIN,
+        appColor: Color.fromARGB(255, 240, 94, 62),
+        onboard: (value, atsign) async {
+          authenticating = true;
+          isAuthuneticatingSink.add(authenticating);
+          atClientServiceMap = value;
+
+          String atSign =
+              await atClientServiceMap[atsign].atClient.currentAtSign;
+          currentAtSign = atSign;
+
+          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          await startMonitor(atsign: atsign, value: value);
+          _initBackendService();
+          await initializeContactsService(atClientInstance, currentAtSign);
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+          // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+          await Navigator.pushNamedAndRemoveUntil(
+              NavService.navKey.currentContext,
+              Routes.WELCOME_SCREEN,
+              (Route<dynamic> route) => false);
+        },
+        onError: (error) {
+          print('Onboarding throws $error error');
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+        },
+        // nextScreen: WelcomeScreen(),
+      );
+      authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
+    } catch (e) {
+      authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
+    }
+  }
+
+  String state;
+  NotificationService _notificationService;
+  void _initBackendService() async {
+    _notificationService = NotificationService();
+    _notificationService.cancelNotifications();
+    _notificationService.setOnNotificationClick(onNotificationClick);
+
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+      print('set message handler');
+      state = msg;
+      debugPrint('SystemChannels> $msg');
+      app_lifecycle_state = msg;
+
+      return null;
+    });
+  }
+
+  onNotificationClick(String payload) async {
+    await Navigator.push(
+      NavService.navKey.currentContext,
+      MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
+    );
   }
 }

@@ -1,16 +1,19 @@
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/file_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
+  final int tabIndex;
+  HistoryScreen({this.tabIndex = 0});
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -20,21 +23,13 @@ class _HistoryScreenState extends State<HistoryScreen>
   TabController _controller;
   bool isOpen = false;
   HistoryProvider historyProvider;
-  ContactProvider contactProvider;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (historyProvider == null) {
-      _controller = TabController(length: 2, vsync: this, initialIndex: 0);
+      _controller =
+          TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
       historyProvider = Provider.of<HistoryProvider>(context);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        print("fetched contacts");
-        historyProvider.getSentHistory();
-        historyProvider.getRecievedHistory();
-      });
-    }
-    if (contactProvider == null) {
-      contactProvider = Provider.of<ContactProvider>(context, listen: false);
     }
 
     super.didChangeDependencies();
@@ -60,15 +55,8 @@ class _HistoryScreenState extends State<HistoryScreen>
               Container(
                 height: 40,
                 child: TabBar(
-                  onTap: (index) {
-                    if (index == 0) {
-                      Provider.of<HistoryProvider>(context, listen: false)
-                          .getSentHistory();
-                    }
-                    if (index == 1) {
-                      Provider.of<HistoryProvider>(context, listen: false)
-                          .getRecievedHistory();
-                    }
+                  onTap: (index) async {
+                    print('current tab: ${index}');
                   },
                   labelColor: ColorConstants.fontPrimary,
                   indicatorWeight: 5.toHeight,
@@ -80,9 +68,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                   tabs: [
                     Text(
                       TextStrings().sent,
+                      style: TextStyle(letterSpacing: 0.1),
                     ),
                     Text(
                       TextStrings().received,
+                      style: TextStyle(letterSpacing: 0.1),
                     )
                   ],
                 ),
@@ -97,38 +87,47 @@ class _HistoryScreenState extends State<HistoryScreen>
                       successBuilder: (provider) => (provider
                               .sentHistory.isEmpty)
                           ? Center(
-                              child: Text('No files sent'),
+                              child: Text('No files sent',
+                                  style: TextStyle(fontSize: 15.toFont)),
                             )
                           : ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),
                               physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
-                              ),
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  indent: 16.toWidth,
+                                );
+                              },
                               itemCount: provider.sentHistory.length,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FilesListTile(
-                                    sentHistory: provider.sentHistory[index],
-                                    contactProvider: contactProvider),
-                              ),
+                              itemBuilder: (context, index) {
+                                return SentFilesListTile(
+                                  sentHistory: provider.sentHistory[index],
+                                  key: Key(provider
+                                      .sentHistory[index].fileDetails.key),
+                                );
+                              },
                             ),
-                      // errorBuilder: (provider) => Center(
-                      //   child: Text('Some error occured'),
-                      // ),
-                      load: (provider) {},
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
+                      load: (provider) async {
+                        // provider.getSentHistory();
+                      },
                     ),
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.RECEIVED_HISTORY,
-
                       load: (provider) async {
-                        await provider.getRecievedHistory();
+                        print('loading received');
+                        // await provider.getReceivedHistory();
                       },
                       showError: true,
                       successBuilder: (provider) => (provider
-                              .receivedHistory.isEmpty)
+                              .receivedHistoryLogs.isEmpty)
                           ? Center(
-                              child: Text('No files received'),
+                              child: Text(
+                                'No files received',
+                                style: TextStyle(fontSize: 15.toFont),
+                              ),
                             )
                           : ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),
@@ -136,18 +135,19 @@ class _HistoryScreenState extends State<HistoryScreen>
                               separatorBuilder: (context, index) => Divider(
                                 indent: 16.toWidth,
                               ),
-                              itemCount: provider.receivedHistory.length,
+                              itemCount: provider.receivedHistoryLogs.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: FilesListTile(
-                                  sentHistory: provider.receivedHistory[index],
-                                  contactProvider: contactProvider,
+                                child: ReceivedFilesListTile(
+                                  key: UniqueKey(),
+                                  receivedHistory:
+                                      provider.receivedHistoryLogs[index],
                                 ),
                               ),
                             ),
-                      // errorBuilder: (provider) => Center(
-                      //   child: Text('Some error occured'),
-                      // ),
+                      errorBuilder: (provider) => Center(
+                        child: Text('Some error occured'),
+                      ),
                     ),
                   ],
                 ),

@@ -1,13 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +20,16 @@ import 'package:flutter/cupertino.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
-  List<FilesModel> sentHistory = [];
+  String ADD_RECEIVED_FILE = 'add_received_file';
+  String SET_FILE_HISTORY = 'set_flie_history';
+  String SET_RECEIVED_HISTORY = 'set_received_history';
+  String GET_ALL_FILE_DATA = 'get_all_file_data';
+  List<FileHistory> sentHistory = [];
+  List<FileTransfer> receivedHistoryLogs = [];
+  List<FileTransfer> receivedHistoryNew = [];
+  // List<List<FilesDetail>> tempList = [];
+  // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
+  // static Map<int, Map<String, Set<FilesDetail>>> test = {};
   List<FilesDetail> sentPhotos,
       sentVideos,
       sentAudio,
@@ -27,7 +41,9 @@ class HistoryProvider extends BaseModel {
       receivedAudio,
       receivedApk,
       receivedDocument,
-      finalReceivedHistory = [];
+      finalReceivedHistory = [],
+      receivedUnknown = [];
+  List<String> tabNames = ['Recents'];
 
   List<FilesModel> receivedHistory, receivedAudioModel = [];
   List<Widget> tabs = [Recents()];
@@ -40,39 +56,41 @@ class HistoryProvider extends BaseModel {
 
   setFilesHistory(
       {HistoryType historyType,
-      String atSignName,
-      List<FilesDetail> files}) async {
+      List<String> atSignName,
+      List<FilesDetail> files,
+      @required int id}) async {
     try {
       DateTime now = DateTime.now();
       FilesModel filesModel = FilesModel(
           name: atSignName,
+          id: id,
           historyType: historyType,
           date: now.toString(),
           files: files);
       filesModel.totalSize = 0.0;
 
       AtKey atKey = AtKey()..metadata = Metadata();
-      var result;
+
       if (historyType == HistoryType.received) {
-        // the file size come in bytes in reciever side
-        filesModel.files.forEach((file) {
-          file.size = file.size / 1024;
-          filesModel.totalSize += file.size;
-        });
-        receivedFileHistory['history'].insert(0, (filesModel.toJson()));
+        /// the file size come in bytes in receiver side
+        // filesModel.files.forEach((file) {
+        //   file.size = file.size;
+        //   filesModel.totalSize += file.size;
+        // });
+        // receivedFileHistory['history'].insert(0, (filesModel.toJson()));
 
-        atKey.key = 'receivedFiles';
+        // atKey.key = 'receivedFiles';
 
-        result = await backendService.atClientInstance
-            .put(atKey, json.encode(receivedFileHistory));
+        // await backendService.atClientInstance
+        //     .put(atKey, json.encode(receivedFileHistory));
       } else {
         // the file is in kB in sender side
         filesModel.files.forEach((file) {
           filesModel.totalSize += file.size;
         });
         sendFileHistory['history'].insert(0, filesModel.toJson());
-        atKey.key = 'sentFiles';
-        result = await backendService.atClientInstance
+        atKey.key = MixedConstants.SENT_FILE_HISTORY;
+        await backendService.atClientInstance
             .put(atKey, json.encode(sendFileHistory));
       }
     } catch (e) {
@@ -80,20 +98,47 @@ class HistoryProvider extends BaseModel {
     }
   }
 
+  setFileTransferHistory(FileHistory fileHistory, {bool isEdit = false}) async {
+    setStatus(SET_FILE_HISTORY, Status.Loading);
+    await getSentHistory();
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..key = MixedConstants.SENT_FILE_HISTORY;
+
+    if (isEdit) {
+      int index = sentHistory.indexWhere((element) =>
+          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+
+      if (index > -1) {
+        sendFileHistory['history'][index] = fileHistory.toJson();
+        sentHistory[index] = fileHistory;
+      }
+    } else {
+      sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+      sentHistory.insert(0, fileHistory);
+    }
+
+    var result = await backendService.atClientInstance
+        .put(atKey, json.encode(sendFileHistory));
+    print('file history saved: ${result}');
+    setStatus(SET_FILE_HISTORY, Status.Done);
+  }
+
   getSentHistory() async {
     setStatus(SENT_HISTORY, Status.Loading);
     try {
       sentHistory = [];
       AtKey key = AtKey()
-        ..key = 'sentFiles'
+        ..key = MixedConstants.SENT_FILE_HISTORY
         ..metadata = Metadata();
       var keyValue = await backendService.atClientInstance.get(key);
       if (keyValue != null && keyValue.value != null) {
         Map historyFile = json.decode((keyValue.value) as String) as Map;
+
         sendFileHistory['history'] = historyFile['history'];
         historyFile['history'].forEach((value) {
-          FilesModel filesModel = FilesModel.fromJson((value));
-          filesModel.historyType = HistoryType.send;
+          FileHistory filesModel = FileHistory.fromJson((value));
+          filesModel.type = HistoryType.send;
           sentHistory.add(filesModel);
         });
       }
@@ -104,39 +149,74 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  getRecievedHistory() async {
+  getReceivedHistory() async {
     setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
-      receivedHistory = [];
-      AtKey key = AtKey()
-        ..key = 'receivedFiles'
-        ..metadata = Metadata();
-      var keyValue = await backendService.atClientInstance.get(key);
-      if (keyValue != null && keyValue.value != null) {
-        Map historyFile = json.decode((keyValue.value) as String) as Map;
-        receivedFileHistory['history'] = historyFile['history'];
-        historyFile['history'].forEach((value) {
-          FilesModel filesModel = FilesModel.fromJson((value));
-          filesModel.historyType = HistoryType.send;
-          receivedHistory.add(filesModel);
-        });
-
-        finalReceivedHistory = [];
-        receivedHistory.forEach((atSign) {
-          atSign.files.forEach((file) {
-            finalReceivedHistory.add(file);
-          });
-        });
-        sortFiles(receivedHistory);
-        populateTabs();
-      }
+      await getAllFileTransferData();
+      await sortFiles(receivedHistoryLogs);
+      populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
+      setStatus(RECEIVED_HISTORY, Status.Error);
       setError(RECEIVED_HISTORY, error.toString());
     }
   }
 
-  sortFiles(List<FilesModel> filesList) async {
+  addToReceiveFileHistory(String sharedBy, String decodedMsg,
+      {bool isUpdate = false}) async {
+    setStatus(ADD_RECEIVED_FILE, Status.Loading);
+    FileTransfer filesModel = FileTransfer.fromJson((jsonDecode(decodedMsg)));
+
+    if (filesModel.isUpdate) {
+      int index = receivedHistoryLogs
+          .indexWhere((element) => element?.key?.contains(filesModel.key));
+      if (index > -1) {
+        receivedHistoryLogs[index] = filesModel;
+      }
+    } else {
+      receivedHistoryNew.insert(0, filesModel);
+      receivedHistoryLogs.insert(0, filesModel);
+    }
+
+    await sortFiles(receivedHistoryLogs);
+    await populateTabs();
+    setStatus(ADD_RECEIVED_FILE, Status.Done);
+  }
+
+  getAllFileTransferData() async {
+    setStatus(GET_ALL_FILE_DATA, Status.Loading);
+    receivedHistoryLogs = [];
+
+    List<String> fileTransferResponse =
+        await backendService.atClientInstance.getKeys(
+      regex: MixedConstants.FILE_TRANSFER_KEY,
+    );
+
+    await Future.forEach(fileTransferResponse, (key) async {
+      if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
+        AtKey atKey = AtKey.fromString(key);
+        AtValue atvalue = await backendService.atClientInstance
+            .get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) => print("error in get $e"));
+
+        if (atvalue != null && atvalue.value != null) {
+          FileTransfer filesModel =
+              FileTransfer.fromJson(jsonDecode(atvalue.value));
+
+          if (filesModel.key != null) {
+            receivedHistoryLogs.insert(0, filesModel);
+          }
+        }
+      }
+    });
+
+    print('sentHistory length ${receivedHistoryNew.length}');
+    print('receivedHistoryLogs length: ${receivedHistoryLogs.length}');
+    setStatus(GET_ALL_FILE_DATA, Status.Done);
+  }
+
+  sortFiles(List<FileTransfer> filesList) async {
     try {
       setStatus(SORT_FILES, Status.Loading);
       receivedAudio = [];
@@ -144,28 +224,73 @@ class HistoryProvider extends BaseModel {
       receivedDocument = [];
       receivedPhotos = [];
       receivedVideos = [];
-      filesList.forEach((atSign) {
-        atSign.files.forEach((file) {
-          String fileExtension = file.fileName.split('.').last;
+      receivedUnknown = [];
+      await Future.forEach(filesList, (fileData) async {
+        await Future.forEach(fileData.files, (file) async {
+          String fileExtension = file.name.split('.').last;
+          FilesDetail fileDetail = FilesDetail(
+            fileName: file.name,
+            filePath: BackendService.getInstance().downloadDirectory.path +
+                '/${file.name}',
+            size: double.parse(file.size.toString()),
+            date: fileData.date.toLocal().toString(),
+            type: file.name.split('.').last,
+            contactName: fileData.sender,
+          );
 
-          if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-            receivedAudio.add(file);
+          // check if file exists
+          File tempFile = File(fileDetail.filePath);
+          bool isFileDownloaded = await tempFile.exists();
+
+          if (isFileDownloaded) {
+            if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
+              int index = receivedAudio.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedAudio.add(fileDetail);
+              }
+            } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+              int index = receivedVideos.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedVideos.add(fileDetail);
+              }
+            } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+              int index = receivedPhotos.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                // checking is photo is downloaded or not
+                //if photo is downloaded then only it's shown in my files screen
+                File file = File(fileDetail.filePath);
+                bool isFileDownloaded = await file.exists();
+
+                if (isFileDownloaded) {
+                  receivedPhotos.add(fileDetail);
+                }
+              }
+            } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+                FileTypes.PDF_TYPES.contains(fileExtension) ||
+                FileTypes.WORD_TYPES.contains(fileExtension) ||
+                FileTypes.EXEL_TYPES.contains(fileExtension)) {
+              int index = receivedDocument.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedDocument.add(fileDetail);
+              }
+            } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
+              int index = receivedApk.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedApk.add(fileDetail);
+              }
+            } else {
+              int index = receivedUnknown.indexWhere(
+                  (element) => element.fileName == fileDetail.fileName);
+              if (index == -1) {
+                receivedUnknown.add(fileDetail);
+              }
+            }
           }
-          if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-            receivedVideos.add(file);
-          }
-          if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-            receivedPhotos.add(file);
-          }
-          if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
-              FileTypes.PDF_TYPES.contains(fileExtension) ||
-              FileTypes.WORD_TYPES.contains(fileExtension) ||
-              FileTypes.EXEL_TYPES.contains(fileExtension)) {
-            receivedDocument.add(file);
-          }
-          if (FileTypes.APK_TYPES.contains(fileExtension)) {
-            receivedApk.add(file);
-          } else {}
         });
       });
 
@@ -176,34 +301,49 @@ class HistoryProvider extends BaseModel {
   }
 
   populateTabs() {
+    tabs = [Recents()];
+    tabNames = ['Recents'];
     try {
       setStatus(POPULATE_TABS, Status.Loading);
 
       if (receivedApk.isNotEmpty) {
         if (!tabs.contains(APK) || !tabs.contains(APK())) {
           tabs.add(APK());
+          tabNames.add('APK');
         }
       }
       if (receivedAudio.isNotEmpty) {
         if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
           tabs.add(Audios());
+          tabNames.add('Audios');
         }
       }
       if (receivedDocument.isNotEmpty) {
         if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
           tabs.add(Documents());
+          tabNames.add('Documents');
         }
       }
       if (receivedPhotos.isNotEmpty) {
         if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
           tabs.add(Photos());
+          tabNames.add('Photos');
         }
       }
       if (receivedVideos.isNotEmpty) {
         if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
           tabs.add(Videos());
+          tabNames.add('Videos');
         }
       }
+      if (receivedUnknown.isNotEmpty) {
+        if (!tabs.contains(Unknowns()) || !tabs.contains(Unknowns())) {
+          tabs.add(Unknowns());
+          tabNames.add('Unknowns');
+        }
+      }
+
+      print('tabs populated: ${tabs}');
 
       setStatus(POPULATE_TABS, Status.Done);
     } catch (e) {
@@ -255,5 +395,17 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       setError(SORT_LIST, e.toString());
     }
+  }
+
+  bool checkRegexFromBlockedAtsign(String regex) {
+    bool isBlocked = false;
+    String atsign = regex.split('@')[regex.split('@').length - 1];
+
+    ContactService().blockContactList.forEach((element) {
+      if (element.atSign == '@${atsign}') {
+        isBlocked = true;
+      }
+    });
+    return isBlocked;
   }
 }

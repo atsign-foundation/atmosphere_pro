@@ -1,12 +1,12 @@
 import 'package:atsign_atmosphere_pro/view_models/blocked_contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_picker_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 
 import 'routes/routes.dart';
@@ -25,18 +25,26 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<HistoryProvider>(
             create: (context) => HistoryProvider()),
-        ChangeNotifierProvider<AddContactProvider>(
-            create: (context) => AddContactProvider()),
-        ChangeNotifierProvider<FilePickerProvider>(
-            create: (context) => FilePickerProvider()),
+        ChangeNotifierProvider<FileTransferProvider>(
+            create: (context) => FileTransferProvider()),
         ChangeNotifierProvider<ContactProvider>(
             create: (context) => ContactProvider()),
         ChangeNotifierProvider<BlockedContactProvider>(
             create: (context) => BlockedContactProvider()),
         ChangeNotifierProvider<WelcomeScreenProvider>(
-            create: (context) => WelcomeScreenProvider())
+            create: (context) => WelcomeScreenProvider()),
+        ChangeNotifierProvider(create: (context) => TrustedContactProvider())
       ],
       child: MaterialApp(
+        builder: (BuildContext context, Widget child) {
+          final MediaQueryData data = MediaQuery.of(context);
+          return MediaQuery(
+            data: data.copyWith(
+                textScaleFactor:
+                    data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor),
+            child: child,
+          );
+        },
         title: 'AtSign Atmosphere Pro',
         debugShowCheckedModeBanner: false,
         initialRoute: SetupRoutes.initialRoute,
