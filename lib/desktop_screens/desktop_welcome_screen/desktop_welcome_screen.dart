@@ -1,15 +1,13 @@
-import 'package:at_common_flutter/widgets/custom_input_field.dart';
-import 'package:at_contacts_group_flutter/widgets/custom_input_field.dart';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 
 class DesktopWelcomeScreen extends StatefulWidget {
   @override
@@ -17,7 +15,6 @@ class DesktopWelcomeScreen extends StatefulWidget {
 }
 
 class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
-
   final List<String> menuItemsIcons = [
     ImageConstants.contactsIcon,
     ImageConstants.transferHistoryIcon,
@@ -58,8 +55,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               ContactInitial(
                 initials: 'Levina',
                 size: 30,
-                maxSize: (80.0-30.0),
-                minSize: 50
+                maxSize: (80.0 - 30.0),
+                minSize: 50,
               )
             ],
           ),
@@ -78,59 +75,25 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               ),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: true ? 100.toHeight : 0),
-                InkWell(
-                  child: Image.asset(
-                    menuItemsIcons[0],
-                    height: 22.toHeight,
-                    color: ColorConstants.fadedText,
-                  ),
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[1],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[2],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[3],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[4],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[5],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[6],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 20.toHeight : 0),
-                Image.asset(
-                  menuItemsIcons[7],
-                  height: 22.toHeight,
-                  color: ColorConstants.fadedText,
-                ),
-                SizedBox(height: true ? 100.toHeight : 0),
+                // SizedBox(height: 100.toHeight),
+                SideBarIcon(menuItemsIcons[0]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[1]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[2]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[3]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[4]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[5]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[6]),
+                SizedBox(height: 40.toHeight),
+                SideBarIcon(menuItemsIcons[7]),
+                // SizedBox(height: 100.toHeight),
               ],
             ),
           ),
@@ -143,7 +106,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Welcome @John!',
@@ -175,7 +138,23 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       SizedBox(
                         height: 20.toHeight,
                       ),
-                      sendFileTo()
+                      sendFileTo(),
+                      SizedBox(
+                        height: 20.toHeight,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CommonButton(
+                          'Send',
+                          () {},
+                          color: ColorConstants.orangeColor,
+                          border: 3,
+                          height: 45,
+                          width: 110,
+                          fontSize: 20,
+                          removePadding: true,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -221,5 +200,40 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   ),
                 ),
         ));
+  }
+}
+
+class SideBarIcon extends StatefulWidget {
+  final String image;
+  SideBarIcon(this.image);
+  @override
+  _SideBarIconState createState() => _SideBarIconState();
+}
+
+class _SideBarIconState extends State<SideBarIcon> {
+  bool isHovered = false;
+
+  hoverActivation(bool _newValue) {
+    setState(() {
+      isHovered = _newValue;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: isHovered ? SystemMouseCursors.click : SystemMouseCursors.text,
+      onEnter: (event) {
+        hoverActivation(true);
+      },
+      onExit: (event) {
+        hoverActivation(false);
+      },
+      child: Image.asset(
+        widget.image,
+        height: 22.toHeight,
+        color: ColorConstants.fadedText,
+      ),
+    );
   }
 }
