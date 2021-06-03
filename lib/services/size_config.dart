@@ -21,6 +21,7 @@ class SizeConfig {
   double profileDrawerWidth;
   double refHeight;
   double refWidth;
+  double textFactor = 1.0;
 
   bool isMobile(BuildContext context) =>
       MediaQuery.of(context).size.width < 700;
@@ -28,8 +29,8 @@ class SizeConfig {
   bool isTablet(BuildContext context) =>
       MediaQuery.of(context).size.width >= 700 &&
       MediaQuery.of(context).size.width < 1200;
-  // bool isDesktop(BuildContext context) =>
-  //     MediaQuery.of(context).size.width >= 1200;
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 1200;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -63,9 +64,16 @@ class SizeConfig {
       safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 120;
       safeBlockVertical = (screenHeight - _safeAreaVertical) / 120;
     }
+    if (screenWidth > 700) {
+      textFactor = 0.8;
+    }
   }
 
   double getWidthRatio(double val) {
+    if (screenWidth > 700) {
+      return val;
+    }
+
     double res = (val / refWidth) * 100;
     double temp = res * blockSizeHorizontal;
     // print("width$temp");
@@ -74,18 +82,24 @@ class SizeConfig {
   }
 
   double getHeightRatio(double val) {
+    if (screenWidth > 700) {
+      return val;
+    }
     double res = (val / refHeight) * 100;
     double temp = res * blockSizeVertical;
     return temp;
   }
 
   double getFontRatio(double val) {
+    if (screenWidth > 700) {
+      return val;
+    }
     double res = (val / refWidth) * 100;
     double temp = 0.0;
     if (screenWidth < screenHeight) {
-      temp = res * safeBlockHorizontal;
+      temp = res * safeBlockHorizontal * textFactor;
     } else {
-      temp = res * safeBlockVertical;
+      temp = res * safeBlockVertical * textFactor;
     }
     // print('$val,$temp,$refHeight,$refWidth');
     return temp;

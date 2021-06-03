@@ -43,6 +43,12 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
+  static TextStyle primaryRegularBold18 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 18.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
   static TextStyle secondaryRegular12 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 12.toFont,
@@ -105,4 +111,13 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle greyText16 =
+      TextStyle(color: ColorConstants.greyText, fontSize: 16);
+
+  static TextStyle greyText15 =
+      TextStyle(color: ColorConstants.greyText, fontSize: 15);
+
+  static TextStyle greyText12 =
+      TextStyle(color: ColorConstants.greyText, fontSize: 12);
 }
