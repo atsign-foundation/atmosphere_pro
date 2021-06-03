@@ -68,6 +68,20 @@ class CustomTextStyles {
         letterSpacing: 0.1,
         fontWeight: FontWeight.w700,
       );
+
+  static TextStyle blackBold({int size = 16}) => TextStyle(
+        color: Colors.black,
+        fontSize: size.toFont,
+        letterSpacing: 0.1,
+        fontWeight: FontWeight.w700,
+      );
+
+  static TextStyle blackPlayfairDisplay26 = TextStyle(
+    fontFamily: 'PlayfairDisplay',
+    fontSize: 26.toFont,
+    color: Colors.black,
+  );
+
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontWeight: FontWeight.w700,
