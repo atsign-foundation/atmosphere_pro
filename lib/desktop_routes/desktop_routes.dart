@@ -1,5 +1,5 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_scree.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSetupRoutes {
