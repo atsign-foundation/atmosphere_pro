@@ -17,17 +17,6 @@ class DesktopWelcomeScreen extends StatefulWidget {
 }
 
 class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
-  final List<String> menuItemsTitle = [
-    TextStrings().sidebarContact,
-    TextStrings().sidebarTransferHistory,
-    TextStrings().sidebarBlockedUser,
-    TextStrings().myFiles,
-    TextStrings().groups,
-    TextStrings().sidebarTermsAndConditions,
-    TextStrings().sidebarPrivacyPolicy,
-    TextStrings().sidebarFaqs,
-    TextStrings().sidebarTrustedSenders
-  ];
 
   final List<String> menuItemsIcons = [
     ImageConstants.contactsIcon,
@@ -39,18 +28,6 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
     ImageConstants.trustedSendersIcon,
-  ];
-
-  final List<String> targetScreens = [
-    Routes.CONTACT_SCREEN,
-    Routes.HISTORY,
-    Routes.BLOCKED_USERS,
-    Routes.MY_FILES,
-    Routes.GROUPS,
-    Routes.WEBSITE_SCREEN,
-    Routes.WEBSITE_SCREEN,
-    Routes.FAQ_SCREEN,
-    Routes.TRUSTED_CONTACTS
   ];
 
   @override
@@ -81,6 +58,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               ContactInitial(
                 initials: 'Levina',
                 size: 30,
+                maxSize: (80.0-30.0),
+                minSize: 50
               )
             ],
           ),
@@ -164,10 +143,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 100.toHeight,
-                      ),
                       Text(
                         'Welcome @John!',
                         style: CustomTextStyles.blackPlayfairDisplay26,
