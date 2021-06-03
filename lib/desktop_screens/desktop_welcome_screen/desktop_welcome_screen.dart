@@ -27,161 +27,195 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.trustedSendersIcon,
   ];
 
+  bool isHoveredOnSidebarSwitch = false;
+
+  hoverActivation(bool _newValue) {
+    setState(() {
+      isHoveredOnSidebarSwitch = _newValue;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: Container(
-          padding: const EdgeInsets.all(15.0),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 0.1,
-              ),
-            ),
-          ),
-          child: AppBar(
-            leading: Image.asset(
-              ImageConstants.logoIcon,
-              height: 50.toHeight,
-              width: 50.toHeight,
-            ),
-            actions: [
-              Icon(Icons.notification_important),
-              SizedBox(width: 15),
-              ContactInitial(
-                initials: 'Levina',
-                size: 30,
-                maxSize: (80.0 - 30.0),
-                minSize: 50,
-              )
-            ],
-          ),
-        ),
-      ),
-      body: Row(
-        children: [
-          Container(
-            width: 70,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0),
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
             decoration: BoxDecoration(
               border: Border(
-                right: BorderSide(
+                bottom: BorderSide(
                   color: Colors.black,
                   width: 0.1,
                 ),
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // SizedBox(height: 100.toHeight),
-                SideBarIcon(menuItemsIcons[0]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[1]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[2]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[3]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[4]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[5]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[6]),
-                SizedBox(height: 40.toHeight),
-                SideBarIcon(menuItemsIcons[7]),
-                // SizedBox(height: 100.toHeight),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Container(
-                  width: (SizeConfig().screenWidth - 70) / 2,
-                  height: SizeConfig().screenHeight - 80,
-                  padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Welcome @John!',
-                        style: CustomTextStyles.blackPlayfairDisplay26,
-                      ),
-                      SizedBox(
-                        height: 20.toHeight,
-                      ),
-                      Text(
-                        'Type a receipient and start sending them files.',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
-                      SizedBox(
-                        height: 50.toHeight,
-                      ),
-                      Text(
-                        TextStrings().welcomeSendFilesTo,
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
-                      SizedBox(
-                        height: 20.toHeight,
-                      ),
-                      sendFileTo(isSelectContacts: true),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Text(TextStrings().welcomeFilePlaceholder,
-                          style: CustomTextStyles.secondaryRegular12),
-                      SizedBox(
-                        height: 20.toHeight,
-                      ),
-                      sendFileTo(),
-                      SizedBox(
-                        height: 20.toHeight,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: CommonButton(
-                          'Send',
-                          () {},
-                          color: ColorConstants.orangeColor,
-                          border: 3,
-                          height: 45,
-                          width: 110,
-                          fontSize: 20,
-                          removePadding: true,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  width: (SizeConfig().screenWidth - 70) / 2,
-                  height: SizeConfig().screenHeight - 80,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        ImageConstants.welcomeDesktop,
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
+            child: AppBar(
+              leading: Image.asset(
+                ImageConstants.logoIcon,
+                height: 50.toHeight,
+                width: 50.toHeight,
+              ),
+              actions: [
+                Icon(Icons.notification_important),
+                SizedBox(width: 15),
+                ContactInitial(
+                  initials: 'Levina',
+                  size: 30,
+                  maxSize: (80.0 - 30.0),
+                  minSize: 50,
                 )
               ],
             ),
           ),
-        ],
-      ),
-    );
+        ),
+        body: Stack(children: [
+          Row(
+            children: [
+              Container(
+                width: 70,
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(
+                      color: Colors.black,
+                      width: 0.1,
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // SizedBox(height: 100.toHeight),
+                    SideBarIcon(menuItemsIcons[0]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[1]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[2]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[3]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[4]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[5]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[6]),
+                    SizedBox(height: 40.toHeight),
+                    SideBarIcon(menuItemsIcons[7]),
+                    // SizedBox(height: 100.toHeight),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: (SizeConfig().screenWidth - 70) / 2,
+                      height: SizeConfig().screenHeight - 80,
+                      padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
+                      color: ColorConstants.LIGHT_BLUE_BG,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Welcome @John!',
+                            style: CustomTextStyles.blackPlayfairDisplay26,
+                          ),
+                          SizedBox(
+                            height: 20.toHeight,
+                          ),
+                          Text(
+                            'Type a receipient and start sending them files.',
+                            style: CustomTextStyles.secondaryRegular12,
+                          ),
+                          SizedBox(
+                            height: 50.toHeight,
+                          ),
+                          Text(
+                            TextStrings().welcomeSendFilesTo,
+                            style: CustomTextStyles.secondaryRegular12,
+                          ),
+                          SizedBox(
+                            height: 20.toHeight,
+                          ),
+                          sendFileTo(isSelectContacts: true),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Text(TextStrings().welcomeFilePlaceholder,
+                              style: CustomTextStyles.secondaryRegular12),
+                          SizedBox(
+                            height: 20.toHeight,
+                          ),
+                          sendFileTo(),
+                          SizedBox(
+                            height: 20.toHeight,
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: CommonButton(
+                              'Send',
+                              () {},
+                              color: ColorConstants.orangeColor,
+                              border: 3,
+                              height: 45,
+                              width: 110,
+                              fontSize: 20,
+                              removePadding: true,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: (SizeConfig().screenWidth - 70) / 2,
+                      height: SizeConfig().screenHeight - 80,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            ImageConstants.welcomeDesktop,
+                          ),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 40,
+            left: 50,
+            child: MouseRegion(
+              cursor: isHoveredOnSidebarSwitch
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.text,
+              onEnter: (event) {
+                hoverActivation(true);
+              },
+              onExit: (event) {
+                hoverActivation(false);
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.toWidth),
+                    color: Colors.black),
+                child: Icon(Icons.arrow_forward_ios_sharp,
+                    size: 20, color: Colors.white),
+              ),
+            ),
+          )
+        ]));
   }
 
   Widget sendFileTo({bool isSelectContacts = false}) {
     return Container(
         decoration: BoxDecoration(
-          color: ColorConstants.inputFieldColor,
+          color: Colors.white,
         ),
         child: ListTile(
           trailing: isSelectContacts
