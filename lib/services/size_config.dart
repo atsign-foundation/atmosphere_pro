@@ -70,7 +70,7 @@ class SizeConfig {
   }
 
   double getWidthRatio(double val) {
-    if (screenWidth > 700) {
+    if (screenWidth >= 1200) {
       return val;
     }
 
@@ -82,7 +82,7 @@ class SizeConfig {
   }
 
   double getHeightRatio(double val) {
-    if (screenWidth > 700) {
+    if (screenWidth >= 1200) {
       return val;
     }
     double res = (val / refHeight) * 100;
@@ -91,7 +91,7 @@ class SizeConfig {
   }
 
   double getFontRatio(double val) {
-    if (screenWidth > 700) {
+    if (screenWidth >= 1200) {
       return val;
     }
     double res = (val / refWidth) * 100;
