@@ -299,6 +299,7 @@ class _DesktopTranferOverlappingContactsState
   }
 
   getCachedContactImage(String atsign) {
+    //TODO: remove this when integrating to sdk
     return null;
     Uint8List image;
     AtContact contact = checkForCachedContactDetail(atsign);
