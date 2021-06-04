@@ -8,6 +8,53 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
+
+class DesktopWelcomeScreenStart extends StatefulWidget {
+  @override
+  _DesktopWelcomeScreenStartState createState() => _DesktopWelcomeScreenStartState();
+}
+
+class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0),
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.black,
+                  width: 0.1,
+                ),
+              ),
+            ),
+            child: AppBar(
+              leading: Image.asset(
+                ImageConstants.logoIcon,
+                height: 50.toHeight,
+                width: 50.toHeight,
+              ),
+              actions: [
+                Icon(Icons.notifications, size:30),
+                SizedBox(width: 30),
+                ContactInitial(
+                  initials: 'Levina',
+                  size: 30,
+                  maxSize: (80.0 - 30.0),
+                  minSize: 50,
+                )
+              ],
+            ),
+          ),
+        ),
+        body: DesktopWelcomeScreen()
+    );
+  }
+}
 
 class DesktopWelcomeScreen extends StatefulWidget {
   @override
@@ -37,39 +84,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
-          child: Container(
-            padding: const EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 0.1,
-                ),
-              ),
-            ),
-            child: AppBar(
-              leading: Image.asset(
-                ImageConstants.logoIcon,
-                height: 50.toHeight,
-                width: 50.toHeight,
-              ),
-              actions: [
-                Icon(Icons.notification_important),
-                SizedBox(width: 15),
-                ContactInitial(
-                  initials: 'Levina',
-                  size: 30,
-                  maxSize: (80.0 - 30.0),
-                  minSize: 50,
-                )
-              ],
-            ),
-          ),
-        ),
+        drawer: DesktopSideBarWidget(),
         body: Stack(children: [
           Row(
             children: [
@@ -186,29 +202,37 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
             ],
           ),
           Positioned(
-            top: 40,
-            left: 50,
-            child: MouseRegion(
-              cursor: isHoveredOnSidebarSwitch
-                  ? SystemMouseCursors.click
-                  : SystemMouseCursors.text,
-              onEnter: (event) {
-                hoverActivation(true);
-              },
-              onExit: (event) {
-                hoverActivation(false);
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.toWidth),
-                    color: Colors.black),
-                child: Icon(Icons.arrow_forward_ios_sharp,
-                    size: 20, color: Colors.white),
-              ),
-            ),
-          )
+              top: 40,
+              left: 50,
+              child: MouseRegion(
+                cursor: isHoveredOnSidebarSwitch
+                    ? SystemMouseCursors.click
+                    : SystemMouseCursors.text,
+                onEnter: (event) {
+                  hoverActivation(true);
+                },
+                onExit: (event) {
+                  hoverActivation(false);
+                },
+                child: Builder(
+                  builder: (context) {
+                    return InkWell(
+                      onTap: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child:  Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.toWidth),
+                            color: Colors.black),
+                        child: Icon(Icons.arrow_forward_ios_sharp,
+                            size: 20, color: Colors.white),
+                      ),);
+                    },
+                  ),
+                ),
+          ),
         ]));
   }
 

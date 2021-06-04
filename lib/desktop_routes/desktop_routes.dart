@@ -7,7 +7,7 @@ class DesktopSetupRoutes {
 
   static Map<String, WidgetBuilder> get routes {
     return {
-      DesktopRoutes.DESKTOP_HOME: (context) => DesktopWelcomeScreen(),
+      DesktopRoutes.DESKTOP_HOME: (context) => DesktopWelcomeScreenStart(),
     };
   }
 }
