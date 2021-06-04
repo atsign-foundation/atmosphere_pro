@@ -249,6 +249,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               color: Colors.white,
             ),
             child: ListTile(
+              title: showContent ? Text((isSelectContacts ? '18 contacts added' : '2 files selected'),style: CustomTextStyles.desktopSecondaryRegular18) : SizedBox(),
               trailing: isSelectContacts
                   ? Container(
                       padding: EdgeInsets.symmetric(vertical: 15),
