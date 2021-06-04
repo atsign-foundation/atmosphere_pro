@@ -70,12 +70,6 @@ class CustomTextStyles {
         fontWeight: FontWeight.w700,
       );
 
-  static TextStyle blackPlayfairDisplay26 = TextStyle(
-    fontFamily: 'PlayfairDisplay',
-    fontSize: 26.toFont,
-    color: Colors.black,
-  );
-
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontWeight: FontWeight.w700,
@@ -119,4 +113,30 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
+
+  /// Desktop
+
+  static TextStyle desktopSecondaryRegular18 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopSecondaryRegularBold18 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
+  static TextStyle desktopBlackPlayfairDisplay26 = TextStyle(
+    fontFamily: 'PlayfairDisplay',
+    fontSize: 44,
+    color: Colors.black,
+  );
+
+  static TextStyle desktopPrimaryRegular14 = TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 }

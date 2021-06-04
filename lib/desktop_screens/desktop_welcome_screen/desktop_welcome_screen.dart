@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_files.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -9,10 +10,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   @override
-  _DesktopWelcomeScreenStartState createState() => _DesktopWelcomeScreenStartState();
+  _DesktopWelcomeScreenStartState createState() =>
+      _DesktopWelcomeScreenStartState();
 }
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
@@ -39,7 +42,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                 width: 50.toHeight,
               ),
               actions: [
-                Icon(Icons.notifications, size:30),
+                Icon(Icons.notifications, size: 30),
                 SizedBox(width: 30),
                 ContactInitial(
                   initials: 'Levina',
@@ -51,8 +54,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
             ),
           ),
         ),
-        body: DesktopWelcomeScreen()
-    );
+        body: DesktopWelcomeScreen());
   }
 }
 
@@ -74,13 +76,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.trustedSendersIcon,
   ];
 
-  bool isHoveredOnSidebarSwitch = false;
-
-  hoverActivation(bool _newValue) {
-    setState(() {
-      isHoveredOnSidebarSwitch = _newValue;
-    });
-  }
+  bool showContent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +124,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     Container(
                       width: (SizeConfig().screenWidth - 70) / 2,
                       height: SizeConfig().screenHeight - 80,
-                      padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
+                      padding: EdgeInsets.symmetric(horizontal: 50),
                       color: ColorConstants.LIGHT_BLUE_BG,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,21 +132,22 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         children: [
                           Text(
                             'Welcome @John!',
-                            style: CustomTextStyles.blackPlayfairDisplay26,
+                            style:
+                                CustomTextStyles.desktopBlackPlayfairDisplay26,
                           ),
                           SizedBox(
                             height: 20.toHeight,
                           ),
                           Text(
                             'Type a receipient and start sending them files.',
-                            style: CustomTextStyles.secondaryRegular12,
+                            style: CustomTextStyles.desktopSecondaryRegular18,
                           ),
                           SizedBox(
                             height: 50.toHeight,
                           ),
                           Text(
                             TextStrings().welcomeSendFilesTo,
-                            style: CustomTextStyles.secondaryRegular12,
+                            style: CustomTextStyles.desktopSecondaryRegular18,
                           ),
                           SizedBox(
                             height: 20.toHeight,
@@ -160,7 +157,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                             height: 30,
                           ),
                           Text(TextStrings().welcomeFilePlaceholder,
-                              style: CustomTextStyles.secondaryRegular12),
+                              style:
+                                  CustomTextStyles.desktopSecondaryRegular18),
                           SizedBox(
                             height: 20.toHeight,
                           ),
@@ -184,80 +182,89 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         ],
                       ),
                     ),
-                    Container(
-                      width: (SizeConfig().screenWidth - 70) / 2,
-                      height: SizeConfig().screenHeight - 80,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            ImageConstants.welcomeDesktop,
-                          ),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    )
+                    showContent
+                        ? Container(
+                            width: (SizeConfig().screenWidth - 70) / 2,
+                            height: SizeConfig().screenHeight - 80,
+                            color: ColorConstants.LIGHT_BLUE_BG,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 30),
+                            child: Column(
+                              children: [
+                                DesktopSelectedContacts(),
+                                Divider(
+                                  height: 20,
+                                  thickness: 5,
+                                ),
+                                // DesktopSelectedFiles(),
+                              ],
+                            ))
+                        : Container(
+                            width: (SizeConfig().screenWidth - 70) / 2,
+                            height: SizeConfig().screenHeight - 80,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  ImageConstants.welcomeDesktop,
+                                ),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          )
                   ],
                 ),
               ),
             ],
           ),
           Positioned(
-              top: 40,
-              left: 50,
-              child: MouseRegion(
-                cursor: isHoveredOnSidebarSwitch
-                    ? SystemMouseCursors.click
-                    : SystemMouseCursors.text,
-                onEnter: (event) {
-                  hoverActivation(true);
-                },
-                onExit: (event) {
-                  hoverActivation(false);
-                },
-                child: Builder(
-                  builder: (context) {
-                    return InkWell(
-                      onTap: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      child:  Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.toWidth),
-                            color: Colors.black),
-                        child: Icon(Icons.arrow_forward_ios_sharp,
-                            size: 20, color: Colors.white),
-                      ),);
-                    },
-                  ),
-                ),
+            top: 40,
+            left: 50,
+            child: InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.toWidth),
+                    color: Colors.black),
+                child: Icon(Icons.arrow_forward_ios_sharp,
+                    size: 20, color: Colors.white),
+              ),
+            ),
           ),
         ]));
   }
 
   Widget sendFileTo({bool isSelectContacts = false}) {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
-        child: ListTile(
-          trailing: isSelectContacts
-              ? Container(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Image.asset(
-                    ImageConstants.contactsIcon,
-                    color: Colors.black,
-                  ),
-                )
-              : Container(
-                  padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                  child: Icon(
-                    Icons.add_circle,
-                    color: Colors.black,
-                  ),
-                ),
-        ));
+    return InkWell(
+        onTap: () {
+          setState(() {
+            showContent = !showContent;
+          });
+        },
+        child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: ListTile(
+              trailing: isSelectContacts
+                  ? Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      child: Image.asset(
+                        ImageConstants.contactsIcon,
+                        color: Colors.black,
+                      ),
+                    )
+                  : Container(
+                      padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                      child: Icon(
+                        Icons.add_circle,
+                        color: Colors.black,
+                      ),
+                    ),
+            )));
   }
 }
 
@@ -279,19 +286,28 @@ class _SideBarIconState extends State<SideBarIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: isHovered ? SystemMouseCursors.click : SystemMouseCursors.text,
-      onEnter: (event) {
-        hoverActivation(true);
-      },
-      onExit: (event) {
-        hoverActivation(false);
-      },
+    return InkWell(
+      onTap: () {},
       child: Image.asset(
         widget.image,
         height: 22.toHeight,
         color: ColorConstants.fadedText,
       ),
     );
+
+    //  MouseRegion(
+    //   cursor: isHovered ? SystemMouseCursors.click : SystemMouseCursors.text,
+    //   onEnter: (event) {
+    //     hoverActivation(true);
+    //   },
+    //   onExit: (event) {
+    //     hoverActivation(false);
+    //   },
+    //   child: Image.asset(
+    //     widget.image,
+    //     height: 22.toHeight,
+    //     color: ColorConstants.fadedText,
+    //   ),
+    // );
   }
 }

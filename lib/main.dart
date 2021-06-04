@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HiveService().initHive();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowMinSize(const Size(1080, 700));
+    setWindowMinSize(const Size(1200, 700));
     setWindowMaxSize(Size.infinite);
   }
   runApp(MyApp());
