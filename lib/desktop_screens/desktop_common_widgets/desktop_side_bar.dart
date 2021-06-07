@@ -68,11 +68,11 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
     return Stack(
       children: [
         Container(
-          width: 350,
+          width: 325,
           color: ColorConstants.inputFieldColor,
           child: Container(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: ListView(
                 children: [
                   SizedBox(height: 20.toHeight),
@@ -149,14 +149,15 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
                   ),
                   SizedBox(height: 20.toHeight),
                   SideBarItem(
-                      image: menuItemsIcons[6],
-                      title: menuItemsTitle[6],
-                      routeName: targetScreens[6],
-                      showIconOnly: false,
-                      arguments: {
-                        'title': menuItemsTitle[6],
-                        'url': MixedConstants.PRIVACY_POLICY
-                      },isDesktop: true,
+                    image: menuItemsIcons[6],
+                    title: menuItemsTitle[6],
+                    routeName: targetScreens[6],
+                    showIconOnly: false,
+                    arguments: {
+                      'title': menuItemsTitle[6],
+                      'url': MixedConstants.PRIVACY_POLICY
+                    },
+                    isDesktop: true,
                   ),
                   SizedBox(height: 20.toHeight),
                   SideBarItem(

@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_files.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -221,19 +222,23 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
           Positioned(
             top: 40,
             left: 50,
-            child: InkWell(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
+            child: Builder(
+              builder: (context) {
+                return InkWell(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.toWidth),
+                        color: Colors.black),
+                    child: Icon(Icons.arrow_forward_ios_sharp,
+                        size: 20, color: Colors.white),
+                  ),
+                );
               },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.toWidth),
-                    color: Colors.black),
-                child: Icon(Icons.arrow_forward_ios_sharp,
-                    size: 20, color: Colors.white),
-              ),
             ),
           ),
         ]));
@@ -287,16 +292,14 @@ class SideBarIcon extends StatefulWidget {
 class _SideBarIconState extends State<SideBarIcon> {
   bool isHovered = false;
 
-  hoverActivation(bool _newValue) {
-    setState(() {
-      isHovered = _newValue;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        if (widget.image == ImageConstants.transferHistoryIcon) {
+          Navigator.of(context).pushNamed(DesktopRoutes.DESKTOP_HISTORY);
+        }
+      },
       child: Image.asset(
         widget.image,
         height: 22.toHeight,
@@ -318,5 +321,11 @@ class _SideBarIconState extends State<SideBarIcon> {
     //     color: ColorConstants.fadedText,
     //   ),
     // );
+
+    // hoverActivation(bool _newValue) {
+    //   setState(() {
+    //     isHovered = _newValue;
+    //   });
+    // }
   }
 }
