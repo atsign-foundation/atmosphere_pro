@@ -189,15 +189,17 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                             color: ColorConstants.LIGHT_BLUE_BG,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 30),
-                            child: Column(
-                              children: [
-                                DesktopSelectedContacts(),
-                                Divider(
-                                  height: 20,
-                                  thickness: 5,
-                                ),
-                                // DesktopSelectedFiles(),
-                              ],
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  DesktopSelectedContacts(),
+                                  Divider(
+                                    height: 20,
+                                    thickness: 5,
+                                  ),
+                                  DesktopSelectedFiles(),
+                                ],
+                              ),
                             ))
                         : Container(
                             width: (SizeConfig().screenWidth - 70) / 2,
@@ -249,7 +251,13 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               color: Colors.white,
             ),
             child: ListTile(
-              title: showContent ? Text((isSelectContacts ? '18 contacts added' : '2 files selected'),style: CustomTextStyles.desktopSecondaryRegular18) : SizedBox(),
+              title: showContent
+                  ? Text(
+                      (isSelectContacts
+                          ? '18 contacts added'
+                          : '2 files selected'),
+                      style: CustomTextStyles.desktopSecondaryRegular18)
+                  : SizedBox(),
               trailing: isSelectContacts
                   ? Container(
                       padding: EdgeInsets.symmetric(vertical: 15),

@@ -10,7 +10,7 @@ class DesktopSelectedContacts extends StatelessWidget {
       RichText(
         text: TextSpan(
           text: 'Selected person',
-          style: CustomTextStyles.desktopSecondaryRegularBold18,
+          style: CustomTextStyles.desktopPrimaryBold18,
           children: [
             TextSpan(
               text: '  18 people selected',
@@ -22,33 +22,32 @@ class DesktopSelectedContacts extends StatelessWidget {
       SizedBox(
         height: 30,
       ),
-      GridView.count(
-        // physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        crossAxisCount: 7,
-        childAspectRatio: 0.75,
-        // (  SizeConfig().screenHeight - 80 - 250) /
-        //    (SizeConfig().screenWidth - 70) / 2,
-        children: List.generate(20, (index) {
-          return InkWell(
-            onTap: () {},
-            child: customPersonVerticalTile(
+      Align(
+        alignment: Alignment.center,
+        child: Wrap(
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          runSpacing: 10.0,
+          spacing: 30.0,
+          children: List.generate(20, (index) {
+            return customPersonVerticalTile(
               'Levina',
               '@levina',
-            ),
-          );
-        }),
-      )
+            );
+          }),
+        ),
+      ),
     ]);
   }
 
   Widget customPersonVerticalTile(String title, String subTitle) {
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Stack(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        InkWell(
+          onTap: () {},
+          child: Stack(
             children: [
               ContactInitial(
                 initials: title ?? ' ',
@@ -63,33 +62,33 @@ class DesktopSelectedContacts extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(width: 10.toHeight),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: CustomTextStyles.desktopPrimaryRegular14,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 5.toHeight),
-                subTitle != null
-                    ? Text(
-                        subTitle,
-                        style: CustomTextStyles.secondaryRegular12,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    : SizedBox(),
-              ],
-            ),
-          )
-        ],
-      ),
+        ),
+        SizedBox(width: 10.toHeight),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: CustomTextStyles.desktopPrimaryRegular14,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 5.toHeight),
+              subTitle != null
+                  ? Text(
+                      subTitle,
+                      style: CustomTextStyles.secondaryRegular12,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  : SizedBox(),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

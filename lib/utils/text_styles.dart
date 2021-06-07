@@ -122,8 +122,14 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopSecondaryRegularBold18 = TextStyle(
+  static TextStyle desktopSecondaryBold18 = TextStyle(
       color: ColorConstants.fontSecondary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
+  static TextStyle desktopPrimaryBold18 = TextStyle(
+      color: ColorConstants.fontPrimary,
       fontSize: 18,
       letterSpacing: 0.1,
       fontWeight: FontWeight.bold);
