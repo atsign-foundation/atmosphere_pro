@@ -25,23 +25,24 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-class DesktopSentFilesListTile extends StatefulWidget {
+class DesktopReceivedFilesListTile extends StatefulWidget {
   final FileHistory sentHistory;
   final ContactProvider contactProvider;
   final bool isSelected;
 
-  const DesktopSentFilesListTile(
+  const DesktopReceivedFilesListTile(
       {Key key,
       this.sentHistory,
       this.contactProvider,
       this.isSelected = false})
       : super(key: key);
   @override
-  _DesktopSentFilesListTileState createState() =>
-      _DesktopSentFilesListTileState();
+  _DesktopReceivedFilesListTileState createState() =>
+      _DesktopReceivedFilesListTileState();
 }
 
-class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
+class _DesktopReceivedFilesListTileState
+    extends State<DesktopReceivedFilesListTile> {
   int fileLength, fileSize = 0;
   List<FileData> filesList = [];
   List<String> contactList;
@@ -114,102 +115,37 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
     return Column(
       children: [
         Container(
-          color: (widget.isSelected) ? ColorConstants.selected_list : null,
+          color: (widget.isSelected)
+              ? ColorConstants.receivedSelectedTileColor
+              : null,
           child: ListTile(
             leading: contactList.isNotEmpty
                 ? firstContactImage != null
                     ? CustomCircleAvatar(
                         byteImage: firstContactImage, nonAsset: true)
-                    : Container(
-                        width: 45.toHeight,
-                        height: 45.toHeight,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: widget.sentHistory.sharedWith[0]
-                                      .isNotificationSend
-                                  ? Color(0xFF08CB21)
-                                  : Color(0xFFF86061),
-                              width: 2),
-                          borderRadius: BorderRadius.circular(45.toHeight * 2),
-                        ),
-                        child: isResendingToFirstContact
-                            ? TypingIndicator(
-                                showIndicator: true,
-                                flashingCircleBrightColor:
-                                    ColorConstants.dullText,
-                                flashingCircleDarkColor:
-                                    ColorConstants.fadedText,
-                              )
-                            : Stack(
-                                children: [
-                                  Container(
-                                    width: 100.toHeight,
-                                    height: 100.toHeight,
-                                    child: firstContactImage != null
-                                        ? CustomCircleAvatar(
-                                            byteImage: firstContactImage,
-                                            nonAsset: true,
-                                          )
-                                        : ContactInitial(
-                                            initials: contactList[0],
-                                            size: 45,
-                                          ),
-                                  ),
-                                  Positioned(
-                                      right: 0,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: widget
-                                                  .sentHistory
-                                                  .sharedWith[0]
-                                                  .isNotificationSend
-                                              ? Color(0xFF08CB21)
-                                              : Color(0xFFF86061),
-                                          border: Border.all(
-                                              color: widget
-                                                      .sentHistory
-                                                      .sharedWith[0]
-                                                      .isNotificationSend
-                                                  ? Color(0xFF08CB21)
-                                                  : Color(0xFFF86061),
-                                              width: 5),
-                                          borderRadius: BorderRadius.circular(
-                                              35.toHeight),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            if (widget.sentHistory.sharedWith[0]
-                                                .isNotificationSend) {
-                                              return;
-                                            }
-
-                                            setState(() {
-                                              isResendingToFirstContact = true;
-                                            });
-                                            await Provider.of<
-                                                        FileTransferProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .sendFileNotification(
-                                                    widget.sentHistory,
-                                                    widget.sentHistory
-                                                        .sharedWith[0].atsign);
-
-                                            isResendingToFirstContact = false;
-                                          },
-                                          child: Icon(
-                                            widget.sentHistory.sharedWith[0]
-                                                    .isNotificationSend
-                                                ? Icons.done
-                                                : Icons.refresh,
-                                            color: Colors.white,
-                                            size: 10.toFont,
-                                          ),
-                                        ),
-                                      ))
-                                ],
+                    : isResendingToFirstContact
+                        ? TypingIndicator(
+                            showIndicator: true,
+                            flashingCircleBrightColor: ColorConstants.dullText,
+                            flashingCircleDarkColor: ColorConstants.fadedText,
+                          )
+                        : Stack(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                child: firstContactImage != null
+                                    ? CustomCircleAvatar(
+                                        byteImage: firstContactImage,
+                                        nonAsset: true,
+                                      )
+                                    : ContactInitial(
+                                        initials: contactList[0],
+                                        size: 50,
+                                      ),
                               ),
-                      )
+                            ],
+                          )
                 : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

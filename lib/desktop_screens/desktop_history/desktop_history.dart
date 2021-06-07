@@ -1,4 +1,7 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_details.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_list_tile.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_details.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
@@ -23,18 +26,38 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
     with SingleTickerProviderStateMixin {
   TabController _controller;
   HistoryProvider historyProvider;
-  int selectedIndex = 0;
+  int sentSelectedIndex = 0, receivedSelectedIndex = 0;
   FileHistory selectedFileData;
+  bool isSentTab = true;
 
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
       _controller =
           TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
+      _controller.addListener(onTabChanged);
       historyProvider = Provider.of<HistoryProvider>(context);
     }
-
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(onTabChanged);
+    super.dispose();
+  }
+
+  onTabChanged({int index}) {
+    if (index == null) {
+      index = _controller.index;
+    }
+    if (index == 0) {
+      isSentTab = true;
+    } else if (index == 1) {
+      isSentTab = false;
+      selectedFileData = null;
+    }
+    setState(() {});
   }
 
   @override
@@ -48,15 +71,12 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           Container(
             color: ColorConstants.fadedBlue,
             height: SizeConfig().screenHeight,
-            width: SizeConfig().screenWidth * 0.5,
+            width: SizeConfig().screenWidth * 0.45,
             child: Column(
               children: [
                 Container(
                   height: 40.toHeight,
                   child: TabBar(
-                    onTap: (index) async {
-                      print('current tab: ${index}');
-                    },
                     labelColor: ColorConstants.fontPrimary,
                     indicatorWeight: 5,
                     indicatorColor: Colors.black,
@@ -103,7 +123,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                     return InkWell(
                                       onTap: () {
                                         setState(() {
-                                          selectedIndex = index;
+                                          sentSelectedIndex = index;
                                           selectedFileData =
                                               provider.sentHistory[index];
                                         });
@@ -113,7 +133,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                             provider.sentHistory[index],
                                         key: Key(provider.sentHistory[index]
                                             .fileDetails.key),
-                                        isSelected: index == selectedIndex
+                                        isSelected: index == sentSelectedIndex
                                             ? true
                                             : false,
                                       ),
@@ -131,34 +151,47 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                       ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.RECEIVED_HISTORY,
                         load: (provider) async {
-                          print('loading received');
-                          // await provider.getReceivedHistory();
+                          await provider.getReceivedHistory();
                         },
                         showError: true,
-                        successBuilder: (provider) => (provider
-                                .receivedHistoryLogs.isEmpty)
-                            ? Center(
-                                child: Text(
-                                  'No files received',
-                                  style: TextStyle(fontSize: 15.toFont),
-                                ),
-                              )
-                            : ListView.separated(
-                                padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) => Divider(
-                                  indent: 16.toWidth,
-                                ),
-                                itemCount: provider.receivedHistoryLogs.length,
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ReceivedFilesListTile(
-                                    key: UniqueKey(),
-                                    receivedHistory:
-                                        provider.receivedHistoryLogs[index],
+                        successBuilder: (provider) {
+                          return (provider.receivedHistoryLogs.isEmpty)
+                              ? Center(
+                                  child: Text(
+                                    'No files received',
+                                    style: TextStyle(fontSize: 15.toFont),
                                   ),
-                                ),
-                              ),
+                                )
+                              : ListView.separated(
+                                  padding:
+                                      EdgeInsets.only(bottom: 170.toHeight),
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  separatorBuilder: (context, index) => Divider(
+                                    indent: 16.toWidth,
+                                  ),
+                                  itemCount:
+                                      provider.receivedHistoryLogs.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          receivedSelectedIndex = index;
+                                        });
+                                      },
+                                      child: DesktopReceivedFilesListTile(
+                                        key: UniqueKey(),
+                                        sentHistory:
+                                            provider.sentHistory[index],
+                                        isSelected:
+                                            index == receivedSelectedIndex
+                                                ? true
+                                                : false,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                        },
                         errorBuilder: (provider) => Center(
                           child: Text('Some error occured'),
                         ),
@@ -169,109 +202,11 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
               ],
             ),
           ),
-          Container(
-            color: ColorConstants.selago,
-            height: SizeConfig().screenHeight,
-            width: SizeConfig().screenWidth * 0.5,
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Details',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                SizedBox(height: 15.toHeight),
-                Row(
-                  children: <Widget>[
-                    getFIleImage(),
-                    SizedBox(width: 25),
-                    getFIleImage(),
-                    Expanded(
-                      child: SizedBox(),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(backgroundColor:
-                          MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                        return ColorConstants.dark_red;
-                      }), textStyle:
-                          MaterialStateProperty.resolveWith<TextStyle>(
-                              (Set<MaterialState> states) {
-                        return TextStyle(color: Colors.white);
-                      })),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.refresh,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            Text(
-                              'Resend',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 15.toHeight),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '2 files . ',
-                      style: CustomTextStyles.greyText15,
-                    ),
-                    Text('250 MB', style: CustomTextStyles.greyText15),
-                  ],
-                ),
-                SizedBox(height: 15.toHeight),
-                Text('Successfully transfered',
-                    style: CustomTextStyles.greyText15),
-                SizedBox(height: 15.toHeight),
-                Text('August 12 2020', style: CustomTextStyles.greyText15),
-                SizedBox(height: 15.toHeight),
-                Text('To', style: CustomTextStyles.greyText15),
-                SizedBox(height: 15.toHeight),
-                selectedFileData != null
-                    ? DesktopTranferOverlappingContacts(
-                        selectedList: selectedFileData.sharedWith
-                            .sublist(1, selectedFileData.sharedWith.length),
-                        fileHistory: selectedFileData)
-                    : SizedBox()
-              ],
-            ),
-          )
+          isSentTab
+              ? DesktopSentFileDetails(selectedFileData: selectedFileData)
+              : DesktopReceivedFileDetails(selectedFileData: selectedFileData)
         ],
       )),
-    );
-  }
-
-  getFIleImage({String filepath, String fileName}) {
-    return Row(
-      children: [
-        SizedBox(
-          height: 60,
-          width: 60,
-          child: Image.asset(ImageConstants.pdfLogo),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('File name',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
-              SizedBox(height: 5),
-              Text('250 MB', style: CustomTextStyles.greyText16),
-            ],
-          ),
-        )
-      ],
     );
   }
 }

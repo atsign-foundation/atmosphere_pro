@@ -3,7 +3,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:file_picker/file_picker.dart';
 
 class DemoData {
-  getFileHistoryData() {
+  List<FileHistory> getFileHistoryData() {
     List<FileHistory> fileHistorys = <FileHistory>[];
     for (int i = 0; i < 11; i++) {
       FileTransfer fileTransfer = FileTransfer(

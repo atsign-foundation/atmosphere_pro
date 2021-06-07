@@ -4,7 +4,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/des
 import 'package:flutter/material.dart';
 
 class DesktopSetupRoutes {
-  static String initialRoute = DesktopRoutes.DESKTOP_HISTORY;
+  static String initialRoute = DesktopRoutes.DESKTOP_HOME;
 
   static Map<String, WidgetBuilder> get routes {
     return {

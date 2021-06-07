@@ -19,10 +19,11 @@ class ColorConstants {
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
-  static const Color selago = Color(0xFFFBF7FB);
+  static const Color selago = Color(0xFFFFFAFA);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
   static const Color selected_list = Color(0xFFFEF7F7);
   static const Color dark_red = Color(0xFFB00021);
+  static const Color receivedSelectedTileColor = Color(0xFFF0EFFF);
 }
 
 class ContactInitialsColors {
