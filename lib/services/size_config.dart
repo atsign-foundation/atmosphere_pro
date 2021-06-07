@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class SizeConfig {
   SizeConfig._();
@@ -22,6 +23,7 @@ class SizeConfig {
   double refHeight;
   double refWidth;
   double textFactor = 1.0;
+  // bool isDesktop = false;
 
   bool isMobile(BuildContext context) =>
       MediaQuery.of(context).size.width < 700;
@@ -38,6 +40,10 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     refHeight = 812;
     refWidth = 375;
+
+    // if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    //   isDesktop = true;
+    // }
 
     deviceTextFactor = _mediaQueryData.textScaleFactor;
 
@@ -71,6 +77,7 @@ class SizeConfig {
 
   double getWidthRatio(double val) {
     if (screenWidth >= 1200) {
+      // if (isDesktop) {
       return val;
     }
 
@@ -83,6 +90,7 @@ class SizeConfig {
 
   double getHeightRatio(double val) {
     if (screenWidth >= 1200) {
+      // if (isDesktop) {
       return val;
     }
     double res = (val / refHeight) * 100;
@@ -92,6 +100,7 @@ class SizeConfig {
 
   double getFontRatio(double val) {
     if (screenWidth >= 1200) {
+      // if (isDesktop) {
       return val;
     }
     double res = (val / refWidth) * 100;
