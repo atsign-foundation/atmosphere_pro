@@ -72,30 +72,46 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           Container(
             color: ColorConstants.fadedBlue,
             height: SizeConfig().screenHeight,
-            width: SizeConfig().screenWidth * 0.5,
+            width: (SizeConfig().screenWidth * 0.5 - 35),
             child: Column(
               children: [
-                Container(
-                  height: 40.toHeight,
-                  child: TabBar(
-                    labelColor: ColorConstants.fontPrimary,
-                    indicatorWeight: 5,
-                    indicatorColor: Colors.black,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    labelStyle: CustomTextStyles.primaryBold14,
-                    unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
-                    controller: _controller,
-                    tabs: [
-                      Text(
-                        TextStrings().sent,
-                        style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                Stack(
+                  children: [
+                    Container(
+                      height: 80,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: TabBar(
+                        labelColor: ColorConstants.fontPrimary,
+                        indicatorWeight: 5,
+                        indicatorColor: Colors.black,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        labelStyle: CustomTextStyles.primaryBold14,
+                        unselectedLabelStyle:
+                            CustomTextStyles.secondaryRegular14,
+                        controller: _controller,
+                        tabs: [
+                          Text(
+                            TextStrings().sent,
+                            style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                          ),
+                          Text(
+                            TextStrings().received,
+                            style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                          )
+                        ],
                       ),
-                      Text(
-                        TextStrings().received,
-                        style: TextStyle(letterSpacing: 0.1, fontSize: 20),
-                      )
-                    ],
-                  ),
+                    ),
+                    Positioned(
+                        top: 30,
+                        left: 30,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Icon(Icons.arrow_back,
+                              size: 20, color: Colors.black),
+                        )),
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
@@ -266,7 +282,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
             ),
           ),
           Container(
-            width: SizeConfig().screenWidth * 0.5,
+            width: (SizeConfig().screenWidth * 0.5 - 35),
             child: isSentTab
                 ? DesktopSentFileDetails(selectedFileData: selectedFileData)
                 : DesktopReceivedFileDetails(
