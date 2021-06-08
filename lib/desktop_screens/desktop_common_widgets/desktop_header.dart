@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class DdesktopHeader extends StatelessWidget {
   final String title;
+  final ValueChanged<bool> onFilter;
   List<String> options = [
     'By type',
     'By name',
@@ -13,7 +15,7 @@ class DdesktopHeader extends StatelessWidget {
     'add-btn'
   ];
   bool showBackIcon;
-  DdesktopHeader({this.title, this.showBackIcon = true});
+  DdesktopHeader({this.title, this.showBackIcon = true, this.onFilter});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +25,7 @@ class DdesktopHeader extends StatelessWidget {
           showBackIcon
               ? InkWell(
                   onTap: () {
-                    Navigator.of(context).pop();
+                    DesktopSetupRoutes.nested_pop();
                   },
                   child: Icon(Icons.arrow_back),
                 )
@@ -46,53 +48,14 @@ class DdesktopHeader extends StatelessWidget {
           ),
           SizedBox(width: 15),
           InkWell(
-              onTap: () {},
-              child: Container(
-                width: 100,
-                child: DropdownButton(
-                  icon: Icon(Icons.filter_list_sharp),
-                  underline: SizedBox(),
-                  isExpanded: true,
-                  autofocus: false,
-                  value: 'By type',
-                  onChanged: (val) {},
-                  selectedItemBuilder: (BuildContext context) {
-                    return options.map((String value) {
-                      return Text(
-                        '',
-                        style: const TextStyle(color: Colors.white),
-                      );
-                    }).toList();
-                  },
-                  items: options.map((String option) {
-                    return DropdownMenuItem<String>(
-                      value: option == 'add-btn' ? null : option,
-                      child: option == 'add-btn'
-                          ? Text('add button')
-                          : Container(
-                              width: 300,
-                              child: Row(children: [
-                                SizedBox(
-                                  width: 70,
-                                  child: Text(option),
-                                ),
-                                Checkbox(
-                                  value: true,
-                                  onChanged: (value) {},
-                                  activeColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                  ),
-                                )
-                              ]),
-                            ),
-                    );
-                  }).toList(),
-                ),
-              )),
-          SizedBox(width: 20),
+            onTap: () {
+              onFilter(true);
+            },
+            child: Container(
+              child: Icon(Icons.filter_list_sharp),
+            ),
+          ),
+          SizedBox(width: 10),
         ],
       ),
     );

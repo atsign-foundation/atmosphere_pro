@@ -13,15 +13,17 @@ class _DesktopRecentsState extends State<DesktopRecents> {
       child: Container(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Wrap(
-            alignment: WrapAlignment.start,
-            runAlignment: WrapAlignment.start,
-            runSpacing: 10.0,
-            spacing: 30.0,
-            children: List.generate(
-              50,
-              (index) => DesktopFileCard(
-                title: 'audio.mp3',
+          child: Align(
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.start,
+              runSpacing: 10.0,
+              spacing: 30.0,
+              children: List.generate(
+                50,
+                (index) => DesktopFileCard(
+                  title: 'audio.mp3',
+                ),
               ),
             ),
           ),

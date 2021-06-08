@@ -10,11 +10,12 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
-  static var _provider = Provider.of<NestedRouteProvider>(NavService.navKey.currentContext, listen:false);
+  static var _provider = Provider.of<NestedRouteProvider>(
+      NavService.navKey.currentContext,
+      listen: false);
   static Map<String, WidgetBuilder> get routes {
     return {
       DesktopRoutes.DESKTOP_HOME: (context) => DesktopWelcomeScreenStart(),
-      DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
     };
   }
 
@@ -33,11 +34,16 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL: (context) =>
           WelcomeScreenHome(),
       DesktopRoutes.DESKTOP_HISTORY: (context) => DesktopHistoryScreen(),
+      DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
     };
   }
 
   static Future nested_push(String value,
       {Object arguments, Function callbackAfterNavigation}) {
+    if (_provider.current_route != null) {
+      var _res = nested_push_replacement(value);
+      return _res;
+    }
     _provider.update(value);
     return Navigator.of(NavService.nestedNavKey.currentContext)
         .pushNamed(value, arguments: arguments)
