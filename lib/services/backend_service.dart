@@ -336,7 +336,7 @@ class BackendService {
     print('decrypting file: $fileName');
     try {
       var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
-        ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
+        ..atKey = 'file_shared_key'
         ..sharedBy = sharedByAtSign
         ..auth = true;
       var encryptedFileSharedKey = await atClientInstance

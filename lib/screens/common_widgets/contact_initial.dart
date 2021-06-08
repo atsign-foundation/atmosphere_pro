@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,13 @@ class ContactInitial extends StatelessWidget {
   final String initials;
   int index;
 
-  ContactInitial({Key key, this.size = 40, @required this.initials, this.index, this.maxSize, this.minSize})
+  ContactInitial(
+      {Key key,
+      this.size = 40,
+      @required this.initials,
+      this.index,
+      this.maxSize,
+      this.minSize})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -24,8 +28,11 @@ class ContactInitial extends StatelessWidget {
       height: size.toFont,
       width: size.toFont,
       constraints: BoxConstraints(
-              minHeight: minSize ?? double.infinity, minWidth: minSize ?? double.infinity, maxHeight: maxSize ?? double.infinity, maxWidth: maxSize ?? double.infinity,
-              ),
+        minHeight: minSize ?? double.infinity,
+        minWidth: minSize ?? double.infinity,
+        maxHeight: maxSize ?? double.infinity,
+        maxWidth: maxSize ?? double.infinity,
+      ),
       decoration: BoxDecoration(
         color: ContactInitialsColors.getColor(initials),
         borderRadius: BorderRadius.circular((size.toFont)),
