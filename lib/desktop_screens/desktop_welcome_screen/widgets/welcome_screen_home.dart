@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class WelcomeScreenHome extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         body: Row(
       children: [
         Container(
-          width: (SizeConfig().screenWidth - 70) / 2,
+          width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
           height: SizeConfig().screenHeight - 80,
           padding: EdgeInsets.symmetric(horizontal: 50),
           color: ColorConstants.LIGHT_BLUE_BG,
@@ -82,7 +83,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         ),
         showContent
             ? Container(
-                width: (SizeConfig().screenWidth - 70) / 2,
+                width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
                 height: SizeConfig().screenHeight - 80,
                 color: ColorConstants.LIGHT_BLUE_BG,
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
@@ -99,7 +100,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   ),
                 ))
             : Container(
-                width: (SizeConfig().screenWidth - 70) / 2,
+                width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
                 height: SizeConfig().screenHeight - 80,
                 decoration: BoxDecoration(
                   image: DecorationImage(

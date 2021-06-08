@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
@@ -73,7 +74,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           Container(
             color: ColorConstants.fadedBlue,
             height: SizeConfig().screenHeight,
-            width: (SizeConfig().screenWidth * 0.5 - 35),
+            width: (SizeConfig().screenWidth * 0.5 - (MixedConstants.SIDEBAR_WIDTH/2)),
             child: Column(
               children: [
                 Stack(
@@ -283,7 +284,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
             ),
           ),
           Container(
-            width: (SizeConfig().screenWidth * 0.5 - 35),
+            width: (SizeConfig().screenWidth * 0.5 - (MixedConstants.SIDEBAR_WIDTH/2)),
             child: isSentTab
                 ? DesktopSentFileDetails(selectedFileData: selectedFileData)
                 : DesktopReceivedFileDetails(

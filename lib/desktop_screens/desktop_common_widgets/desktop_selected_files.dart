@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopSelectedFiles extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: (((SizeConfig().screenWidth - 70) / 2) - 80),
+      width: (((SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2) - 80),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

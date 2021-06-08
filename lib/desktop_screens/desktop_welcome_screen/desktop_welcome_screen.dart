@@ -17,6 +17,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/des
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
           Row(
             children: [
               Container(
-                width: 70,
+                width: MixedConstants.SIDEBAR_WIDTH,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
@@ -247,7 +248,7 @@ class SideBarIcon extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (image == ImageConstants.transferHistoryIcon) {
-              DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+              DesktopSetupRoutes.nested_push(routeName);
             }
           },
           child: Image.asset(
