@@ -38,6 +38,9 @@ class MixedConstants {
   /// Currently set to 60 days
   static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
 
+  /// Sibebar width
+  static const double SIDEBAR_WIDTH = 70;
+
   static String ApplicationDocumentsDirectory;
 
   static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';

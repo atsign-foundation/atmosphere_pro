@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_files.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -7,11 +8,14 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   @override
@@ -24,38 +28,39 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
-          child: Container(
-            padding: const EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 0.1,
-                ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: Container(
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black,
+                width: 0.1,
               ),
-            ),
-            child: AppBar(
-              leading: Image.asset(
-                ImageConstants.logoIcon,
-                height: 50.toHeight,
-                width: 50.toHeight,
-              ),
-              actions: [
-                Icon(Icons.notifications, size: 30),
-                SizedBox(width: 30),
-                ContactInitial(
-                  initials: 'Levina',
-                  size: 30,
-                  maxSize: (80.0 - 30.0),
-                  minSize: 50,
-                )
-              ],
             ),
           ),
+          child: AppBar(
+            leading: Image.asset(
+              ImageConstants.logoIcon,
+              height: 50.toHeight,
+              width: 50.toHeight,
+            ),
+            actions: [
+              Icon(Icons.notifications, size: 30),
+              SizedBox(width: 30),
+              ContactInitial(
+                initials: 'Levina',
+                size: 30,
+                maxSize: (80.0 - 30.0),
+                minSize: 50,
+              )
+            ],
+          ),
         ),
-        body: DesktopWelcomeScreen());
+      ),
+      body: DesktopWelcomeScreen(),
+    );
   }
 }
 
@@ -81,14 +86,16 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var routeBuilders = DesktopSetupRoutes.routeBuilders(context);
     return Scaffold(
         drawer: DesktopSideBarWidget(),
         body: Stack(children: [
           Row(
             children: [
               Container(
-                width: 70,
+                width: MixedConstants.SIDEBAR_WIDTH,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border(
                     right: BorderSide(
                       color: Colors.black,
@@ -96,125 +103,52 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     ),
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // SizedBox(height: 100.toHeight),
-                    SideBarIcon(menuItemsIcons[0]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[1]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[2]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[3]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[4]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[5]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[6]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[7]),
-                    // SizedBox(height: 100.toHeight),
-                  ],
+                child: ProviderHandler<NestedRouteProvider>(
+                  functionName: Provider.of<NestedRouteProvider>(
+                          NavService.navKey.currentContext,
+                          listen: false)
+                      .Routes,
+                  showError: true,
+                  load: (provider) {
+                    provider.init();
+                  },
+                  successBuilder: (provider) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // SizedBox(height: 100.toHeight),
+                      SideBarIcon(menuItemsIcons[0], ''),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(
+                          menuItemsIcons[1], DesktopRoutes.DESKTOP_HISTORY),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(menuItemsIcons[2], ''),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(menuItemsIcons[3], ''),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(menuItemsIcons[4], ''),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(menuItemsIcons[5], ''),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(menuItemsIcons[6], ''),
+                      SizedBox(height: 40.toHeight),
+                      SideBarIcon(menuItemsIcons[7], ''),
+                      // SizedBox(height: 100.toHeight),
+                    ],
+                  ),
+                  errorBuilder: (provider) => Center(
+                    child: Text('Some error occured'),
+                  ),
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      width: (SizeConfig().screenWidth - 70) / 2,
-                      height: SizeConfig().screenHeight - 80,
-                      padding: EdgeInsets.symmetric(horizontal: 50),
-                      color: ColorConstants.LIGHT_BLUE_BG,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Welcome @John!',
-                            style:
-                                CustomTextStyles.desktopBlackPlayfairDisplay26,
-                          ),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          Text(
-                            'Type a receipient and start sending them files.',
-                            style: CustomTextStyles.desktopSecondaryRegular18,
-                          ),
-                          SizedBox(
-                            height: 50.toHeight,
-                          ),
-                          Text(
-                            TextStrings().welcomeSendFilesTo,
-                            style: CustomTextStyles.desktopSecondaryRegular18,
-                          ),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          sendFileTo(isSelectContacts: true),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Text(TextStrings().welcomeFilePlaceholder,
-                              style:
-                                  CustomTextStyles.desktopSecondaryRegular18),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          sendFileTo(),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: CommonButton(
-                              'Send',
-                              () {},
-                              color: ColorConstants.orangeColor,
-                              border: 3,
-                              height: 45,
-                              width: 110,
-                              fontSize: 20,
-                              removePadding: true,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    showContent
-                        ? Container(
-                            width: (SizeConfig().screenWidth - 70) / 2,
-                            height: SizeConfig().screenHeight - 80,
-                            color: ColorConstants.LIGHT_BLUE_BG,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 30),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  DesktopSelectedContacts(),
-                                  Divider(
-                                    height: 20,
-                                    thickness: 5,
-                                  ),
-                                  DesktopSelectedFiles(),
-                                ],
-                              ),
-                            ))
-                        : Container(
-                            width: (SizeConfig().screenWidth - 70) / 2,
-                            height: SizeConfig().screenHeight - 80,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  ImageConstants.welcomeDesktop,
-                                ),
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          )
-                  ],
+                child: Navigator(
+                  key: NavService.nestedNavKey,
+                  initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
+                  onGenerateRoute: (routeSettings) {
+                    return MaterialPageRoute(builder: (context) {
+                      return routeBuilders[routeSettings.name](context);
+                    });
+                  },
                 ),
               ),
             ],
@@ -282,32 +216,40 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
   }
 }
 
-class SideBarIcon extends StatefulWidget {
-  final String image;
-  SideBarIcon(this.image);
-  @override
-  _SideBarIconState createState() => _SideBarIconState();
-}
-
-class _SideBarIconState extends State<SideBarIcon> {
+// ignore: must_be_immutable
+class SideBarIcon extends StatelessWidget {
+  final String image, routeName;
+  SideBarIcon(this.image, this.routeName);
   bool isHovered = false;
+  bool isCurrentRoute = false;
+  var nestedProvider = Provider.of<NestedRouteProvider>(
+      NavService.navKey.currentContext,
+      listen: false);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (widget.image == ImageConstants.transferHistoryIcon) {
-          Navigator.of(context).pushNamed(DesktopRoutes.DESKTOP_HISTORY);
-        } else if (widget.image == ImageConstants.myFiles) {
-          Navigator.of(context).pushNamed(DesktopRoutes.DEKSTOP_MYFILES);
-        }
-      },
-      child: Image.asset(
-        widget.image,
-        height: 22.toHeight,
-        color: ColorConstants.fadedText,
-      ),
-    );
+    isCurrentRoute = nestedProvider.current_route == routeName ? true : false;
+    return Container(
+        width: 32,
+        height: 32,
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color:
+              isCurrentRoute ? ColorConstants.orangeColor : Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          onTap: () {
+            if (routeName != null && routeName != '') {
+              DesktopSetupRoutes.nested_push(routeName);
+            }
+          },
+          child: Image.asset(
+            image,
+            height: 22,
+            color: isCurrentRoute ? Colors.white : ColorConstants.fadedText,
+          ),
+        ));
 
     //  MouseRegion(
     //   cursor: isHovered ? SystemMouseCursors.click : SystemMouseCursors.text,
