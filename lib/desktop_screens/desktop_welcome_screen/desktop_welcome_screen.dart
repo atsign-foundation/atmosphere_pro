@@ -298,6 +298,8 @@ class _SideBarIconState extends State<SideBarIcon> {
       onTap: () {
         if (widget.image == ImageConstants.transferHistoryIcon) {
           Navigator.of(context).pushNamed(DesktopRoutes.DESKTOP_HISTORY);
+        } else if (widget.image == ImageConstants.myFiles) {
+          Navigator.of(context).pushNamed(DesktopRoutes.DEKSTOP_MYFILES);
         }
       },
       child: Image.asset(

@@ -140,6 +140,12 @@ class CustomTextStyles {
   static TextStyle greyText12 =
       TextStyle(color: ColorConstants.greyText, fontSize: 12);
 
+  static TextStyle primaryRegular20 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
   static TextStyle desktopSecondaryRegular18 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,

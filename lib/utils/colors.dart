@@ -24,6 +24,9 @@ class ColorConstants {
   static const Color selected_list = Color(0xFFFEF7F7);
   static const Color dark_red = Color(0xFFB00021);
   static const Color receivedSelectedTileColor = Color(0xFFF0EFFF);
+  static const Color light_grey = Color(0xFFBFBFBF);
+  static const Color light_border_color = Color(0xFFEEF1F4);
+
   static const Color LIGHT_BLUE_BG = Color(0xFFF8FBFF);
 }
 
