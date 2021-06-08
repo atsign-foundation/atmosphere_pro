@@ -216,13 +216,7 @@ class _SideBarIconState extends State<SideBarIcon> {
     return InkWell(
       onTap: () {
         if (widget.image == ImageConstants.transferHistoryIcon) {
-          // Navigator.of(context).pushNamed(DesktopRoutes.DESKTOP_HISTORY);
-          Navigator.of(NavService.nestedNavKey.currentContext).push(
-            DesktopSetupRoutes.nested_routes(DesktopRoutes.DESKTOP_HISTORY)
-            // MaterialPageRoute(
-            //   builder: (context) => DesktopHistoryScreen(),
-            // ),
-          );
+          DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
         }
       },
       child: Image.asset(
