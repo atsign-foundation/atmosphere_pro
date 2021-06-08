@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_files.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -7,11 +8,13 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   @override
@@ -24,38 +27,39 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
-          child: Container(
-            padding: const EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 0.1,
-                ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: Container(
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black,
+                width: 0.1,
               ),
-            ),
-            child: AppBar(
-              leading: Image.asset(
-                ImageConstants.logoIcon,
-                height: 50.toHeight,
-                width: 50.toHeight,
-              ),
-              actions: [
-                Icon(Icons.notifications, size: 30),
-                SizedBox(width: 30),
-                ContactInitial(
-                  initials: 'Levina',
-                  size: 30,
-                  maxSize: (80.0 - 30.0),
-                  minSize: 50,
-                )
-              ],
             ),
           ),
+          child: AppBar(
+            leading: Image.asset(
+              ImageConstants.logoIcon,
+              height: 50.toHeight,
+              width: 50.toHeight,
+            ),
+            actions: [
+              Icon(Icons.notifications, size: 30),
+              SizedBox(width: 30),
+              ContactInitial(
+                initials: 'Levina',
+                size: 30,
+                maxSize: (80.0 - 30.0),
+                minSize: 50,
+              )
+            ],
+          ),
         ),
-        body: DesktopWelcomeScreen());
+      ),
+      body: DesktopWelcomeScreen(),
+    );
   }
 }
 
@@ -81,6 +85,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var routeBuilders = DesktopSetupRoutes.routeBuilders(context);
     return Scaffold(
         drawer: DesktopSideBarWidget(),
         body: Stack(children: [
@@ -89,6 +94,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               Container(
                 width: 70,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border(
                     right: BorderSide(
                       color: Colors.black,
@@ -120,101 +126,14 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      width: (SizeConfig().screenWidth - 70) / 2,
-                      height: SizeConfig().screenHeight - 80,
-                      padding: EdgeInsets.symmetric(horizontal: 50),
-                      color: ColorConstants.LIGHT_BLUE_BG,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Welcome @John!',
-                            style:
-                                CustomTextStyles.desktopBlackPlayfairDisplay26,
-                          ),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          Text(
-                            'Type a receipient and start sending them files.',
-                            style: CustomTextStyles.desktopSecondaryRegular18,
-                          ),
-                          SizedBox(
-                            height: 50.toHeight,
-                          ),
-                          Text(
-                            TextStrings().welcomeSendFilesTo,
-                            style: CustomTextStyles.desktopSecondaryRegular18,
-                          ),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          sendFileTo(isSelectContacts: true),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Text(TextStrings().welcomeFilePlaceholder,
-                              style:
-                                  CustomTextStyles.desktopSecondaryRegular18),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          sendFileTo(),
-                          SizedBox(
-                            height: 20.toHeight,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: CommonButton(
-                              'Send',
-                              () {},
-                              color: ColorConstants.orangeColor,
-                              border: 3,
-                              height: 45,
-                              width: 110,
-                              fontSize: 20,
-                              removePadding: true,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    showContent
-                        ? Container(
-                            width: (SizeConfig().screenWidth - 70) / 2,
-                            height: SizeConfig().screenHeight - 80,
-                            color: ColorConstants.LIGHT_BLUE_BG,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 30),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  DesktopSelectedContacts(),
-                                  Divider(
-                                    height: 20,
-                                    thickness: 5,
-                                  ),
-                                  DesktopSelectedFiles(),
-                                ],
-                              ),
-                            ))
-                        : Container(
-                            width: (SizeConfig().screenWidth - 70) / 2,
-                            height: SizeConfig().screenHeight - 80,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  ImageConstants.welcomeDesktop,
-                                ),
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          )
-                  ],
+                child: Navigator(
+                  key: NavService.nestedNavKey,
+                  initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
+                  onGenerateRoute: (routeSettings) {
+                    return MaterialPageRoute(builder: (context) {
+                      return routeBuilders[routeSettings.name](context);
+                    });
+                  },
                 ),
               ),
             ],
@@ -297,7 +216,13 @@ class _SideBarIconState extends State<SideBarIcon> {
     return InkWell(
       onTap: () {
         if (widget.image == ImageConstants.transferHistoryIcon) {
-          Navigator.of(context).pushNamed(DesktopRoutes.DESKTOP_HISTORY);
+          // Navigator.of(context).pushNamed(DesktopRoutes.DESKTOP_HISTORY);
+          Navigator.of(NavService.nestedNavKey.currentContext).push(
+            DesktopSetupRoutes.nested_routes(DesktopRoutes.DESKTOP_HISTORY)
+            // MaterialPageRoute(
+            //   builder: (context) => DesktopHistoryScreen(),
+            // ),
+          );
         }
       },
       child: Image.asset(
