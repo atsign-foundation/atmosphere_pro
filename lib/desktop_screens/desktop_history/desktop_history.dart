@@ -15,6 +15,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
@@ -106,7 +107,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                         left: 30,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pop();
+                            DesktopSetupRoutes.nested_pop();    
                           },
                           child: Icon(Icons.arrow_back,
                               size: 20, color: Colors.black),

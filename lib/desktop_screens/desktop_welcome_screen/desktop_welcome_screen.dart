@@ -15,6 +15,8 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart'
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:provider/provider.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   @override
@@ -102,28 +104,46 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     ),
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // SizedBox(height: 100.toHeight),
-                    SideBarIcon(menuItemsIcons[0]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[1]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[2]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[3]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[4]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[5]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[6]),
-                    SizedBox(height: 40.toHeight),
-                    SideBarIcon(menuItemsIcons[7]),
-                    // SizedBox(height: 100.toHeight),
-                  ],
-                ),
+                child:  ProviderHandler<NestedRouteProvider>(
+                      functionName: Provider.of<NestedRouteProvider>(NavService.navKey.currentContext, listen:false).Routes,
+                      showError: true,
+                      load: (provider) {
+                        provider.init();
+                      },
+                      successBuilder: (provider) => Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // SizedBox(height: 100.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[0], ''),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[1], DesktopRoutes.DESKTOP_HISTORY),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[2], ''),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[3], ''),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[4], ''),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[5], ''),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[6], ''),
+                            SizedBox(height: 40.toHeight),
+                            SideBarIcon(
+                                menuItemsIcons[7], ''),
+                            // SizedBox(height: 100.toHeight),
+                          ],
+                        ),
+                        errorBuilder: (provider) => Center(
+                          child: Text('Some error occured'),
+                        ),
+                  ),
               ),
               Expanded(
                 child: Navigator(
@@ -201,30 +221,44 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
   }
 }
 
-class SideBarIcon extends StatefulWidget {
-  final String image;
-  SideBarIcon(this.image);
-  @override
-  _SideBarIconState createState() => _SideBarIconState();
-}
-
-class _SideBarIconState extends State<SideBarIcon> {
+// ignore: must_be_immutable
+class SideBarIcon extends StatelessWidget {
+  final String image, routeName;
+  SideBarIcon(this.image, this.routeName);
   bool isHovered = false;
+  bool isCurrentRoute = false;
+  var nestedProvider = Provider.of<NestedRouteProvider>(NavService.navKey.currentContext, listen:false);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (widget.image == ImageConstants.transferHistoryIcon) {
-          DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
-        }
-      },
-      child: Image.asset(
-        widget.image,
-        height: 22.toHeight,
-        color: ColorConstants.fadedText,
-      ),
-    );
+    if (nestedProvider.nested_route_stack.isNotEmpty) {
+      isCurrentRoute = nestedProvider.nested_route_stack[
+                  nestedProvider.nested_route_stack.length - 1] ==
+              routeName
+          ? true
+          : false;
+    }
+    return Container(
+        width: 32,
+        height: 32,
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color:
+              isCurrentRoute ? ColorConstants.orangeColor : Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          onTap: () {
+            if (image == ImageConstants.transferHistoryIcon) {
+              DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+            }
+          },
+          child: Image.asset(
+            image,
+            height: 22,
+            color: isCurrentRoute ? Colors.white : ColorConstants.fadedText,
+          ),
+        ));
 
     //  MouseRegion(
     //   cursor: isHovered ? SystemMouseCursors.click : SystemMouseCursors.text,
