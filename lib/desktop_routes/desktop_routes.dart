@@ -36,29 +36,30 @@ class DesktopSetupRoutes {
 
   static Future nested_push(String value,
       {Object arguments, Function callbackAfterNavigation}) {
-    if(_provider.topMostRoute() == value){
-      Navigator.of(NavService.nestedNavKey.currentContext)
+    _provider.update(value);
+    return Navigator.of(NavService.nestedNavKey.currentContext)
+        .pushNamed(value, arguments: arguments)
+        .then((response) {
+      if (callbackAfterNavigation != null) {
+        callbackAfterNavigation();
+      }
+    });
+  }
+
+  static Future nested_push_replacement(String value,
+      {Object arguments, Function callbackAfterNavigation}) {
+    _provider.update(value);
+    return Navigator.of(NavService.nestedNavKey.currentContext)
         .pushReplacementNamed(value, arguments: arguments)
         .then((response) {
-          if (callbackAfterNavigation != null) {
-            callbackAfterNavigation();
-          }
-        });
-    } else {
-      _provider.add(value);
-      return Navigator.of(NavService.nestedNavKey.currentContext)
-          .pushNamed(value, arguments: arguments)
-          .then((response) {
-        if (callbackAfterNavigation != null) {
-          callbackAfterNavigation();
-        }
-      });
-    }
-    
+      if (callbackAfterNavigation != null) {
+        callbackAfterNavigation();
+      }
+    });
   }
 
   static Future nested_pop() {
-    _provider.removeLast();
+    _provider.update(null);
     Navigator.of(NavService.nestedNavKey.currentContext).pop();
   }
 }
@@ -66,25 +67,14 @@ class DesktopSetupRoutes {
 class NestedRouteProvider extends BaseModel {
   String Routes = 'routes';
   NestedRouteProvider();
-  List<String> nested_route_stack = [];
+  String current_route;
 
   init() {
     setStatus(Routes, Status.Done);
   }
 
-  topMostRoute() {
-    if(nested_route_stack.isNotEmpty){
-      return nested_route_stack[nested_route_stack.length -1];
-    }
-  }
-
-  add(String value) {
-    nested_route_stack.add(value);
-    setStatus(Routes, Status.Done);
-  }
-
-  removeLast() {
-    nested_route_stack.removeLast();
+  update(String value) {
+    current_route = value;
     setStatus(Routes, Status.Done);
   }
 }

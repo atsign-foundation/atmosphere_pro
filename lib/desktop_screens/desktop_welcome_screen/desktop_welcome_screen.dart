@@ -231,13 +231,10 @@ class SideBarIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (nestedProvider.nested_route_stack.isNotEmpty) {
-      isCurrentRoute = nestedProvider.nested_route_stack[
-                  nestedProvider.nested_route_stack.length - 1] ==
+    isCurrentRoute = nestedProvider.current_route ==
               routeName
           ? true
           : false;
-    }
     return Container(
         width: 32,
         height: 32,
