@@ -5,4 +5,6 @@ class DesktopRoutes {
   static const String DESKTOP_HISTORY = 'desktop_history';
   static const String DEKSTOP_MYFILES = 'desktop_my_files';
   static const String DESKTOP_TRUSTED_SENDER = 'desktop_trusted_sender';
+  static const String DESKTOP_EMPTY_TRUSTED_SENDER =
+      'desktop_empty_trusted_sender';
 }

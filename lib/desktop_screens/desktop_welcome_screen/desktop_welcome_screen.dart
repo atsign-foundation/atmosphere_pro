@@ -129,7 +129,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       SideBarIcon(menuItemsIcons[4], ''),
                       SizedBox(height: 40.toHeight),
                       SideBarIcon(menuItemsIcons[5],
-                          DesktopRoutes.DESKTOP_TRUSTED_SENDER),
+                          DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER),
                       SizedBox(height: 40.toHeight),
                       SideBarIcon(menuItemsIcons[6], ''),
                       SizedBox(height: 40.toHeight),
