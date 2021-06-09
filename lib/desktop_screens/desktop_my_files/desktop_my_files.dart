@@ -118,6 +118,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                                 (index) => Text(tabNames[index])),
                           ),
                         ),
+                        SizedBox(height: 15),
                         Expanded(
                           child: TabBarView(
                             controller: _controller,

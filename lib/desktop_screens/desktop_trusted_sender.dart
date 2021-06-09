@@ -30,7 +30,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
               children: <Widget>[
                 SizedBox(height: 20),
                 DesktopHeader(
-                  title: 'Trusted Sender',
+                  title: 'Trusted Senders',
                   isTitleCentered: true,
                   onFilter: (val) {},
                   actions: [
@@ -125,7 +125,13 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                     children: List.generate(40, (index) {
                       return InkWell(
                         onTap: () {
-                          print('tapped');
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => RemoveTrustedContact(
+                              contact: AtContact(atSign: '@levina'),
+                            ),
+                          );
                         },
                         child: DesktopCustomPersonVerticalTile(
                             title: 'Levina',
