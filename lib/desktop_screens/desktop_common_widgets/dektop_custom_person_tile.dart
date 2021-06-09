@@ -14,25 +14,22 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        InkWell(
-          onTap: () {},
-          child: Stack(
-            children: [
-              ContactInitial(
-                initials: title ?? ' ',
-                size: 30,
-                maxSize: (80.0 - 30.0),
-                minSize: 50,
-              ),
-              showCancelIcon
-                  ? Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Icon(Icons.cancel),
-                    )
-                  : SizedBox(),
-            ],
-          ),
+        Stack(
+          children: [
+            ContactInitial(
+              initials: title ?? ' ',
+              size: 30,
+              maxSize: (80.0 - 30.0),
+              minSize: 50,
+            ),
+            showCancelIcon
+                ? Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Icon(Icons.cancel),
+                  )
+                : SizedBox(),
+          ],
         ),
         SizedBox(width: 10.toHeight),
         Container(
