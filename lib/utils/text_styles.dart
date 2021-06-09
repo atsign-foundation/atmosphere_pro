@@ -49,6 +49,12 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.bold);
 
+  static TextStyle primaryRegular18 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontSize: 18.toFont,
+    letterSpacing: 0.1,
+  );
+
   static TextStyle secondaryRegular12 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 12.toFont,
@@ -68,6 +74,14 @@ class CustomTextStyles {
         letterSpacing: 0.1,
         fontWeight: FontWeight.w700,
       );
+
+  static TextStyle blackBold({int size = 16}) => TextStyle(
+        color: Colors.black,
+        fontSize: size.toFont,
+        letterSpacing: 0.1,
+        fontWeight: FontWeight.w700,
+      );
+
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontWeight: FontWeight.w700,
@@ -112,12 +126,53 @@ class CustomTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// Desktop
+
   static TextStyle greyText16 =
       TextStyle(color: ColorConstants.greyText, fontSize: 16);
 
   static TextStyle greyText15 =
       TextStyle(color: ColorConstants.greyText, fontSize: 15);
 
+  static TextStyle orangeext15 =
+      TextStyle(color: ColorConstants.orangeColor, fontSize: 15);
+
   static TextStyle greyText12 =
       TextStyle(color: ColorConstants.greyText, fontSize: 12);
+
+  static TextStyle primaryRegular20 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
+  static TextStyle desktopSecondaryRegular18 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopSecondaryBold18 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
+  static TextStyle desktopPrimaryBold18 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.bold);
+
+  static TextStyle desktopBlackPlayfairDisplay26 = TextStyle(
+    fontFamily: 'PlayfairDisplay',
+    fontSize: 44,
+    color: Colors.black,
+  );
+
+  static TextStyle desktopPrimaryRegular14 = TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 }

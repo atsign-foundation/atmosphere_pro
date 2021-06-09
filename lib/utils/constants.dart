@@ -27,7 +27,7 @@ class MixedConstants {
   static const String HISTORY_BOX = 'historyBox';
 
   static String appNamespace = 'mospherepro';
-  static String regex = '.$appNamespace@';
+  static String regex = '(.$appNamespace|atconnections|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})';
 
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
@@ -37,6 +37,9 @@ class MixedConstants {
 
   /// Currently set to 60 days
   static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
+
+  /// Sibebar width
+  static const double SIDEBAR_WIDTH = 70;
 
   static String ApplicationDocumentsDirectory;
 

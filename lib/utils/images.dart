@@ -46,4 +46,7 @@ class ImageConstants {
   static String colin = '$_basePath/colin.jpg';
   static String kevin = '$_basePath/kevin.jpg';
   static String filePreview = '$_basePath/filePreview.jpg';
+
+  // Desktop
+  static String welcomeDesktop = '$_basePath/welcome_screen.png';
 }

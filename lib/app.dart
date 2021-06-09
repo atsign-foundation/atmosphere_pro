@@ -48,7 +48,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) => BlockedContactProvider()),
         ChangeNotifierProvider<WelcomeScreenProvider>(
             create: (context) => WelcomeScreenProvider()),
-        ChangeNotifierProvider(create: (context) => TrustedContactProvider())
+        ChangeNotifierProvider(create: (context) => TrustedContactProvider()),
+        ChangeNotifierProvider(create: (context) => NestedRouteProvider())
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget child) {

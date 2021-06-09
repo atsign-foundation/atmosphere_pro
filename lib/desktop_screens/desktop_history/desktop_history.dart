@@ -1,4 +1,8 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/demo_data/file_transfer_data.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_details.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_list_tile.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_details.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
@@ -11,6 +15,8 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
@@ -23,18 +29,38 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
     with SingleTickerProviderStateMixin {
   TabController _controller;
   HistoryProvider historyProvider;
-  int selectedIndex = 0;
+  int sentSelectedIndex = 0, receivedSelectedIndex = 0;
   FileHistory selectedFileData;
+  bool isSentTab = true;
 
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
       _controller =
           TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
+      _controller.addListener(onTabChanged);
       historyProvider = Provider.of<HistoryProvider>(context);
     }
-
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(onTabChanged);
+    super.dispose();
+  }
+
+  onTabChanged({int index}) {
+    if (index == null) {
+      index = _controller.index;
+    }
+    if (index == 0) {
+      isSentTab = true;
+    } else if (index == 1) {
+      isSentTab = false;
+      selectedFileData = null;
+    }
+    setState(() {});
   }
 
   @override
@@ -48,121 +74,209 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           Container(
             color: ColorConstants.fadedBlue,
             height: SizeConfig().screenHeight,
-            width: SizeConfig().screenWidth * 0.5,
+            width: (SizeConfig().screenWidth * 0.5 - (MixedConstants.SIDEBAR_WIDTH/2)),
             child: Column(
               children: [
-                Container(
-                  height: 40.toHeight,
-                  child: TabBar(
-                    onTap: (index) async {
-                      print('current tab: ${index}');
-                    },
-                    labelColor: ColorConstants.fontPrimary,
-                    indicatorWeight: 5,
-                    indicatorColor: Colors.black,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    labelStyle: CustomTextStyles.primaryBold14,
-                    unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
-                    controller: _controller,
-                    tabs: [
-                      Text(
-                        TextStrings().sent,
-                        style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                Stack(
+                  children: [
+                    Container(
+                      height: 80,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: TabBar(
+                        labelColor: ColorConstants.fontPrimary,
+                        indicatorWeight: 5,
+                        indicatorColor: Colors.black,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        labelStyle: CustomTextStyles.primaryBold14,
+                        unselectedLabelStyle:
+                            CustomTextStyles.secondaryRegular14,
+                        controller: _controller,
+                        tabs: [
+                          Text(
+                            TextStrings().sent,
+                            style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                          ),
+                          Text(
+                            TextStrings().received,
+                            style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                          )
+                        ],
                       ),
-                      Text(
-                        TextStrings().received,
-                        style: TextStyle(letterSpacing: 0.1, fontSize: 20),
-                      )
-                    ],
-                  ),
+                    ),
+                    Positioned(
+                        top: 30,
+                        left: 30,
+                        child: InkWell(
+                          onTap: () {
+                            DesktopSetupRoutes.nested_pop();    
+                          },
+                          child: Icon(Icons.arrow_back,
+                              size: 20, color: Colors.black),
+                        )),
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
                     controller: _controller,
                     children: [
-                      ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.SENT_HISTORY,
-                        showError: true,
-                        successBuilder: (provider) {
-                          return (provider.sentHistory.isEmpty)
-                              ? Center(
-                                  child: Text('No files sent',
-                                      style: TextStyle(fontSize: 15.toFont)),
-                                )
-                              : ListView.separated(
-                                  padding:
-                                      EdgeInsets.only(bottom: 170.toHeight),
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  separatorBuilder: (context, index) {
-                                    return Divider(
-                                      indent: 16.toWidth,
-                                    );
-                                  },
-                                  itemCount: provider.sentHistory.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedIndex = index;
-                                          selectedFileData =
-                                              provider.sentHistory[index];
-                                        });
-                                      },
-                                      child: DesktopSentFilesListTile(
-                                        sentHistory:
-                                            provider.sentHistory[index],
-                                        key: Key(provider.sentHistory[index]
-                                            .fileDetails.key),
-                                        isSelected: index == selectedIndex
-                                            ? true
-                                            : false,
-                                      ),
-                                    );
-                                  },
-                                );
-                        },
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
-                        load: (provider) async {
-                          provider.getSentHistory();
-                        },
-                      ),
-                      ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.RECEIVED_HISTORY,
-                        load: (provider) async {
-                          print('loading received');
-                          // await provider.getReceivedHistory();
-                        },
-                        showError: true,
-                        successBuilder: (provider) => (provider
-                                .receivedHistoryLogs.isEmpty)
-                            ? Center(
-                                child: Text(
-                                  'No files received',
-                                  style: TextStyle(fontSize: 15.toFont),
-                                ),
-                              )
-                            : ListView.separated(
-                                padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) => Divider(
-                                  indent: 16.toWidth,
-                                ),
-                                itemCount: provider.receivedHistoryLogs.length,
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ReceivedFilesListTile(
-                                    key: UniqueKey(),
-                                    receivedHistory:
-                                        provider.receivedHistoryLogs[index],
-                                  ),
-                                ),
+                      FutureBuilder(builder: (BuildContext context, snapshot) {
+                        var sentHistory = DemoData().getFileHistoryData();
+                        return ListView.separated(
+                          padding: EdgeInsets.only(bottom: 170.toHeight),
+                          physics: AlwaysScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              indent: 16.toWidth,
+                            );
+                          },
+                          itemCount: sentHistory.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  sentSelectedIndex = index;
+                                  selectedFileData = sentHistory[index];
+                                });
+                              },
+                              child: DesktopSentFilesListTile(
+                                sentHistory: sentHistory[index],
+                                key: Key(sentHistory[index].fileDetails.key),
+                                isSelected:
+                                    index == sentSelectedIndex ? true : false,
                               ),
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
-                      ),
+                            );
+                          },
+                        );
+                      }),
+                      // ProviderHandler<HistoryProvider>(
+                      //   functionName: historyProvider.SENT_HISTORY,
+                      //   showError: true,
+                      //   successBuilder: (provider) {
+                      //     return (provider.sentHistory.isEmpty)
+                      //         ? Center(
+                      //             child: Text('No files sent',
+                      //                 style: TextStyle(fontSize: 15.toFont)),
+                      //           )
+                      //         : ListView.separated(
+                      //             padding:
+                      //                 EdgeInsets.only(bottom: 170.toHeight),
+                      //             physics: AlwaysScrollableScrollPhysics(),
+                      //             separatorBuilder: (context, index) {
+                      //               return Divider(
+                      //                 indent: 16.toWidth,
+                      //               );
+                      //             },
+                      //             itemCount: provider.sentHistory.length,
+                      //             itemBuilder: (context, index) {
+                      //               return InkWell(
+                      //                 onTap: () {
+                      //                   setState(() {
+                      //                     sentSelectedIndex = index;
+                      //                     selectedFileData =
+                      //                         provider.sentHistory[index];
+                      //                   });
+                      //                 },
+                      //                 child: DesktopSentFilesListTile(
+                      //                   sentHistory:
+                      //                       provider.sentHistory[index],
+                      //                   key: Key(provider.sentHistory[index]
+                      //                       .fileDetails.key),
+                      //                   isSelected: index == sentSelectedIndex
+                      //                       ? true
+                      //                       : false,
+                      //                 ),
+                      //               );
+                      //             },
+                      //           );
+                      //   },
+                      //   errorBuilder: (provider) => Center(
+                      //     child: Text('Some error occured'),
+                      //   ),
+                      //   load: (provider) async {
+                      //     provider.getSentHistory();
+                      //   },
+                      // ),
+
+                      FutureBuilder(builder: (BuildContext context, snapshot) {
+                        List<FileTransfer> receivedHistoryLogs = [];
+                        var sentHistory = DemoData().getFileHistoryData();
+                        DemoData().getFileHistoryData().forEach((element) {
+                          receivedHistoryLogs.add(element.fileDetails);
+                        });
+                        return ListView.separated(
+                          padding: EdgeInsets.only(bottom: 170.toHeight),
+                          physics: AlwaysScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => Divider(
+                            indent: 16.toWidth,
+                          ),
+                          itemCount: receivedHistoryLogs.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  receivedSelectedIndex = index;
+                                });
+                              },
+                              child: DesktopReceivedFilesListTile(
+                                key: UniqueKey(),
+                                sentHistory: sentHistory[index],
+                                isSelected: index == receivedSelectedIndex
+                                    ? true
+                                    : false,
+                              ),
+                            ),
+                          ),
+                        );
+                      })
+                      // ProviderHandler<HistoryProvider>(
+                      //   functionName: historyProvider.RECEIVED_HISTORY,
+                      //   load: (provider) async {
+                      //     await provider.getReceivedHistory();
+                      //   },
+                      //   showError: true,
+                      //   successBuilder: (provider) {
+                      //     return (provider.receivedHistoryLogs.isEmpty)
+                      //         ? Center(
+                      //             child: Text(
+                      //               'No files received',
+                      //               style: TextStyle(fontSize: 15.toFont),
+                      //             ),
+                      //           )
+                      //         : ListView.separated(
+                      //             padding:
+                      //                 EdgeInsets.only(bottom: 170.toHeight),
+                      //             physics: AlwaysScrollableScrollPhysics(),
+                      //             separatorBuilder: (context, index) => Divider(
+                      //               indent: 16.toWidth,
+                      //             ),
+                      //             itemCount:
+                      //                 provider.receivedHistoryLogs.length,
+                      //             itemBuilder: (context, index) => Padding(
+                      //               padding: const EdgeInsets.all(8.0),
+                      //               child: InkWell(
+                      //                 onTap: () {
+                      //                   setState(() {
+                      //                     receivedSelectedIndex = index;
+                      //                   });
+                      //                 },
+                      //                 child: DesktopReceivedFilesListTile(
+                      //                   key: UniqueKey(),
+                      //                   sentHistory:
+                      //                       provider.sentHistory[index],
+                      //                   isSelected:
+                      //                       index == receivedSelectedIndex
+                      //                           ? true
+                      //                           : false,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           );
+                      //   },
+                      //   errorBuilder: (provider) => Center(
+                      //     child: Text('Some error occured'),
+                      //   ),
+                      // ),
                     ],
                   ),
                 )
@@ -170,108 +284,14 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
             ),
           ),
           Container(
-            color: ColorConstants.selago,
-            height: SizeConfig().screenHeight,
-            width: SizeConfig().screenWidth * 0.5,
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Details',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                SizedBox(height: 15.toHeight),
-                Row(
-                  children: <Widget>[
-                    getFIleImage(),
-                    SizedBox(width: 25),
-                    getFIleImage(),
-                    Expanded(
-                      child: SizedBox(),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(backgroundColor:
-                          MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                        return ColorConstants.dark_red;
-                      }), textStyle:
-                          MaterialStateProperty.resolveWith<TextStyle>(
-                              (Set<MaterialState> states) {
-                        return TextStyle(color: Colors.white);
-                      })),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.refresh,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            Text(
-                              'Resend',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 15.toHeight),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '2 files . ',
-                      style: CustomTextStyles.greyText15,
-                    ),
-                    Text('250 MB', style: CustomTextStyles.greyText15),
-                  ],
-                ),
-                SizedBox(height: 15.toHeight),
-                Text('Successfully transfered',
-                    style: CustomTextStyles.greyText15),
-                SizedBox(height: 15.toHeight),
-                Text('August 12 2020', style: CustomTextStyles.greyText15),
-                SizedBox(height: 15.toHeight),
-                Text('To', style: CustomTextStyles.greyText15),
-                SizedBox(height: 15.toHeight),
-                selectedFileData != null
-                    ? DesktopTranferOverlappingContacts(
-                        selectedList: selectedFileData.sharedWith
-                            .sublist(1, selectedFileData.sharedWith.length),
-                        fileHistory: selectedFileData)
-                    : SizedBox()
-              ],
-            ),
+            width: (SizeConfig().screenWidth * 0.5 - (MixedConstants.SIDEBAR_WIDTH/2)),
+            child: isSentTab
+                ? DesktopSentFileDetails(selectedFileData: selectedFileData)
+                : DesktopReceivedFileDetails(
+                    selectedFileData: selectedFileData),
           )
         ],
       )),
-    );
-  }
-
-  getFIleImage({String filepath, String fileName}) {
-    return Row(
-      children: [
-        SizedBox(
-          height: 60,
-          width: 60,
-          child: Image.asset(ImageConstants.pdfLogo),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('File name',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
-              SizedBox(height: 5),
-              Text('250 MB', style: CustomTextStyles.greyText16),
-            ],
-          ),
-        )
-      ],
     );
   }
 }

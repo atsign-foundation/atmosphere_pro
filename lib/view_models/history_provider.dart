@@ -4,6 +4,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/demo_data/file_transfer_data.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
@@ -125,7 +126,9 @@ class HistoryProvider extends BaseModel {
   }
 
   getSentHistory() async {
-    setStatus(SENT_HISTORY, Status.Loading);
+    sentHistory = DemoData().getFileHistoryData();
+    setStatus(SENT_HISTORY, Status.Done);
+    return;
     try {
       sentHistory = [];
       AtKey key = AtKey()
@@ -150,7 +153,13 @@ class HistoryProvider extends BaseModel {
   }
 
   getReceivedHistory() async {
-    setStatus(RECEIVED_HISTORY, Status.Loading);
+    print('getReceivedHistory');
+    receivedHistoryLogs = [];
+    DemoData().getFileHistoryData().forEach((element) {
+      receivedHistoryLogs.add(element.fileDetails);
+    });
+    setStatus(RECEIVED_HISTORY, Status.Done);
+    return;
     try {
       await getAllFileTransferData();
       await sortFiles(receivedHistoryLogs);

@@ -57,7 +57,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         ],
       ),
       content: Container(
-        height: 300.toHeight,
+        height: 260.toHeight,
         child: Column(
           children: [
             Row(
@@ -73,6 +73,9 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                                 widget.contact.tags['name'] != null
                             ? widget.contact.tags['name']
                             : widget.contact.atSign,
+                        size: 30,
+                        maxSize: (80.0 - 30.0),
+                        minSize: 50,
                       )
               ],
             ),
