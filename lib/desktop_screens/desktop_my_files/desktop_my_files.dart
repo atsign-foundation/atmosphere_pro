@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
@@ -72,13 +73,34 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 20),
-                        DdesktopHeader(
+                        DesktopHeader(
                             title: "My Files",
                             onFilter: (val) {
                               setState(() {
                                 _isFilterOption = !_isFilterOption;
                               });
-                            }),
+                            },
+                            actions: [
+                              DesktopCustomInputField(
+                                backgroundColor: Colors.white,
+                                hintText: 'Search...',
+                                icon: Icons.search,
+                                height: 45,
+                                iconColor: ColorConstants.greyText,
+                              ),
+                              SizedBox(width: 15),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _isFilterOption = !_isFilterOption;
+                                  });
+                                },
+                                child: Container(
+                                  child: Icon(Icons.filter_list_sharp),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                            ]),
                         Container(
                           height: 40,
                           child: TabBar(
@@ -148,9 +170,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                         getFilterOptionWidget('By name', false),
                         getFilterOptionWidget('By size', false),
                         getFilterOptionWidget('By date', false),
-                        SizedBox(
-                          height: 15,
-                        ),
+                        SizedBox(height: 15),
                         TextButton(
                           onPressed: () {},
                           style: ButtonStyle(backgroundColor:
@@ -160,7 +180,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                             },
                           ), fixedSize: MaterialStateProperty.resolveWith<Size>(
                             (Set<MaterialState> states) {
-                              return Size(100, 40);
+                              return Size(120, 40);
                             },
                           )),
                           child: Text(
