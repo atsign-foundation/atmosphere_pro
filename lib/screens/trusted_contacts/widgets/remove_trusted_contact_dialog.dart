@@ -13,14 +13,19 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class RemoveTrustedContact extends StatefulWidget {
-  final String image;
+  final String image, title;
   final String name;
   final String atSign;
   final AtContact contact;
 
   const RemoveTrustedContact(
-      {Key key, this.image, this.name, this.atSign, this.contact})
-      : super(key: key);
+    this.title, {
+    Key key,
+    this.image,
+    this.name,
+    this.atSign,
+    this.contact,
+  }) : super(key: key);
 
   @override
   _RemoveTrustedContactState createState() => _RemoveTrustedContactState();
@@ -49,7 +54,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         children: [
           Expanded(
             child: Text(
-              pro_text_strings.TextStrings().removeTrustedSender,
+              widget.title,
               style: CustomTextStyles.secondaryRegular16,
               textAlign: TextAlign.center,
             ),

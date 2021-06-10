@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/des
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
@@ -96,6 +97,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => RemoveTrustedContact(
+                              TextStrings().removeTrustedSender,
                               contact: AtContact(atSign: '@levina'),
                             ),
                           );
@@ -129,6 +131,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => RemoveTrustedContact(
+                              TextStrings().removeTrustedSender,
                               contact: AtContact(atSign: '@levina'),
                             ),
                           );

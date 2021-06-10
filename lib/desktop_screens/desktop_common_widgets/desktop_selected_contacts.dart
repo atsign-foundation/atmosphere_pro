@@ -32,7 +32,7 @@ class DesktopSelectedContacts extends StatelessWidget {
           children: List.generate(20, (index) {
             return customPersonVerticalTile(
               'Levina',
-              '@levina',
+              '@kevin',
             );
           }),
         ),
