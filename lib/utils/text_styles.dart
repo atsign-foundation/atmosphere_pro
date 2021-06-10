@@ -146,6 +146,18 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.bold);
 
+  static TextStyle primaryNormal20 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle blueNormal20 = TextStyle(
+      color: ColorConstants.blueText,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
   static TextStyle desktopSecondaryRegular18 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,
@@ -175,4 +187,23 @@ class CustomTextStyles {
       fontSize: 14,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
+
+  static TextStyle desktopPrimaryRegular18 = TextStyle(
+      color: Colors.black,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopPrimaryRegular16 = TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopPrimaryRegular24 = TextStyle(
+    color: Colors.black,
+    fontSize: 24,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w600,
+  );
 }

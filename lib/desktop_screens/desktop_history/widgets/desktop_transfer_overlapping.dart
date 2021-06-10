@@ -164,7 +164,7 @@ class _DesktopTranferOverlappingContactsState
                       builder: (context, provider, __) {
                         return Container(
                           height: 200,
-                          width: 450,
+                          width: 400,
                           child: GridView.count(
                             crossAxisCount:
                                 SizeConfig().isTablet(context) ? 6 : 5,
@@ -183,11 +183,6 @@ class _DesktopTranferOverlappingContactsState
 
                                 return Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: isNotified
-                                            ? Color(0xFF08CB21)
-                                            : Color(0xFFF86061),
-                                        width: 5),
                                     borderRadius:
                                         BorderRadius.circular(35.toHeight * 2),
                                   ),

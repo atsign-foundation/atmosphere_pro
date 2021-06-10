@@ -82,11 +82,22 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.trustedSendersIcon,
   ];
 
+  final List<String> routes = [
+    DesktopRoutes.DEKSTOP_CONTACTS_SCREEN,
+    DesktopRoutes.DESKTOP_HISTORY,
+    DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN,
+    DesktopRoutes.DEKSTOP_MYFILES,
+    DesktopRoutes.DESKTOP_GROUP,
+    DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER,
+    '',
+    '',
+    '',
+  ];
+
   bool showContent = false;
 
   @override
   Widget build(BuildContext context) {
-    var routeBuilders = DesktopSetupRoutes.routeBuilders(context);
     return Scaffold(
         drawer: DesktopSideBarWidget(),
         body: Stack(children: [
@@ -116,24 +127,25 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // SizedBox(height: 100.toHeight),
-                      SideBarIcon(menuItemsIcons[0], ''),
+                      SideBarIcon(menuItemsIcons[0], routes[0], arguments: {
+                        'isBlockedScreen': false,
+                      }),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(
-                          menuItemsIcons[1], DesktopRoutes.DESKTOP_HISTORY),
+                      SideBarIcon(menuItemsIcons[1], routes[1]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[2], ''),
+                      SideBarIcon(menuItemsIcons[2], routes[2], arguments: {
+                        'isBlockedScreen': true,
+                      }),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(
-                          menuItemsIcons[3], DesktopRoutes.DEKSTOP_MYFILES),
+                      SideBarIcon(menuItemsIcons[3], routes[3]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[4], ''),
+                      SideBarIcon(menuItemsIcons[4], routes[4]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[5],
-                          DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER),
+                      SideBarIcon(menuItemsIcons[5], routes[5]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[6], ''),
+                      SideBarIcon(menuItemsIcons[6], routes[6]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[7], ''),
+                      SideBarIcon(menuItemsIcons[7], routes[7]),
                       // SizedBox(height: 100.toHeight),
                     ],
                   ),
@@ -147,6 +159,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   key: NavService.nestedNavKey,
                   initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
                   onGenerateRoute: (routeSettings) {
+                    var routeBuilders = DesktopSetupRoutes.routeBuilders(
+                        context, routeSettings);
                     return MaterialPageRoute(builder: (context) {
                       return routeBuilders[routeSettings.name](context);
                     });
@@ -221,7 +235,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 // ignore: must_be_immutable
 class SideBarIcon extends StatelessWidget {
   final String image, routeName;
-  SideBarIcon(this.image, this.routeName);
+  final Map<String, dynamic> arguments;
+  SideBarIcon(this.image, this.routeName, {this.arguments});
   bool isHovered = false;
   bool isCurrentRoute = false;
   var nestedProvider = Provider.of<NestedRouteProvider>(
@@ -243,7 +258,7 @@ class SideBarIcon extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (routeName != null && routeName != '') {
-              DesktopSetupRoutes.nested_push(routeName);
+              DesktopSetupRoutes.nested_push(routeName, arguments: arguments);
             }
           },
           child: Image.asset(

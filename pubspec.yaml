@@ -61,11 +61,12 @@ dependencies:
   #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
   at_client_mobile: ^1.0.0+9
   at_commons: ^1.0.1+6
-  # at_contact: ^1.0.0+3
-  # at_lookup: ^1.0.0+6
+  at_contact: ^1.0.0+3
+  at_lookup: ^1.0.0+6
+  # atsign_authentication_helper:
   # at_contacts_flutter:
   # at_common_flutter:
-  # at_common_flutter: ^1.0.0
+  at_common_flutter: ^1.0.0
     # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
@@ -73,7 +74,7 @@ dependencies:
     #   ref: dev_env
 
   at_contacts_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
 
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
@@ -81,39 +82,23 @@ dependencies:
     #   ref: dev_env
   # at_contacts_group_flutter: ^1.0.0
   at_contacts_group_flutter:
-  #  path:  /Users/apple/Desktop/client_projects/at_widgets/at_contacts_group_flutter
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
+   path:  /Users/apple/Desktop/client_projects/at_widgets/at_contacts_group_flutter
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_contacts_group_flutter
     #   ref: dev_env
 dependency_overrides:
   at_contacts_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
-  
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
+  at_client:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
   at_lookup:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: at_lookup
       ref: dev_env
       version: ^1.0.0+4
-  at_common_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
-  at_contact: 
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_contact
-      ref: namespace_migration  
-  # at_contacts_flutter:
-  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
-  at_client:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
-  # at_lookup:
-  #   git:
-  #     url: https://github.com/atsign-foundation/at_libraries.git
-  #     path: at_lookup
-  #     ref: dev_env
-  #     version: ^1.0.0+4
   crypto: ^2.1.5
   crypton: ^2.0.1
   uuid: ^3.0.4
@@ -128,19 +113,20 @@ dependency_overrides:
   plugin_platform_interface: ^2.0.0
   webview_flutter: ^2.0.4
   url_launcher: ^6.0.3
-  permission_handler: ^6.1.3  
-
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: trunk
-  
+  permission_handler: ^6.1.3
   at_commons:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
       path: at_commons
-      ref: trunk
+      ref: file_transfer
+      version: ^1.0.1+4
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: dev_env
+      version: ^1.0.1+4
+  at_common_flutter: ^1.0.0    
 
 dev_dependencies:
   flutter_test:

@@ -7,6 +7,8 @@ class CommonButton extends StatelessWidget {
   final double border, height, width, fontSize;
   final Color color;
   final bool removePadding;
+  final Color textColor;
+  final Widget leading;
   const CommonButton(
     this.title,
     this.onTap, {
@@ -16,6 +18,8 @@ class CommonButton extends StatelessWidget {
     this.width,
     this.removePadding = false,
     this.fontSize,
+    this.textColor,
+    this.leading,
   });
 
   @override
@@ -35,12 +39,21 @@ class CommonButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(border ?? 20.toFont),
         ),
         child: Center(
-          child: Text(
-            title ?? '',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: fontSize ?? 15.toFont,
-                letterSpacing: 0.1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              leading ?? SizedBox(),
+              SizedBox(
+                width: leading != null ? 5 : 0,
+              ),
+              Text(
+                title ?? '',
+                style: TextStyle(
+                    color: textColor ?? Colors.white,
+                    fontSize: fontSize ?? 15.toFont,
+                    letterSpacing: 0.1),
+              ),
+            ],
           ),
         ),
       ),
