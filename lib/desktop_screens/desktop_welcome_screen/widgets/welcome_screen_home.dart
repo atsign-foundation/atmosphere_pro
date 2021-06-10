@@ -1,4 +1,4 @@
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
@@ -10,13 +10,16 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
+enum CurrentScreen { PlaceolderImage, ContactsScreen, SelectedItems }
+
 class WelcomeScreenHome extends StatefulWidget {
   @override
   _WelcomeScreenHomeState createState() => _WelcomeScreenHomeState();
 }
 
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
-  bool showContent = false;
+  // bool showContent = false, showSelectedItems = false;
+  CurrentScreen _currentScreen = CurrentScreen.PlaceolderImage;
 
   @override
   Widget build(BuildContext context) {
@@ -82,54 +85,83 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             ],
           ),
         ),
-        showContent
-            ? SizedBox(
-                width:
-                    (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) /
-                        2,
-                height: SizeConfig().screenHeight - 80,
-                child: DesktopContactsScreen(),
-              )
-            // Container(
-            //     width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
-            //     height: SizeConfig().screenHeight - 80,
-            //     color: ColorConstants.LIGHT_BLUE_BG,
-            //     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-            //     child: SingleChildScrollView(
-            //       child: Column(
-            //         children: [
-            //           DesktopSelectedContacts(),
-            //           Divider(
-            //             height: 20,
-            //             thickness: 5,
-            //           ),
-            //           DesktopSelectedFiles(),
-            //         ],
-            //       ),
-            //     ))
-            : Container(
-                width:
-                    (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) /
-                        2,
-                height: SizeConfig().screenHeight - 80,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      ImageConstants.welcomeDesktop,
-                    ),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              )
+        currentScreen(),
       ],
     ));
+  }
+
+  // ignore: missing_return
+  Widget currentScreen() {
+    switch (_currentScreen) {
+      case CurrentScreen.PlaceolderImage:
+        return _placeholderImage();
+      case CurrentScreen.ContactsScreen:
+        return _contactsScreen();
+      case CurrentScreen.SelectedItems:
+        return _selectedItems();
+    }
+  }
+
+  Widget _selectedItems() {
+    return Container(
+      width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+      height: SizeConfig().screenHeight - 80,
+      color: ColorConstants.LIGHT_BLUE_BG,
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            DesktopSelectedContacts(),
+            Divider(
+              height: 20,
+              thickness: 5,
+            ),
+            DesktopSelectedFiles(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _contactsScreen() {
+    return SizedBox(
+      width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+      height: SizeConfig().screenHeight - 80,
+      child: DesktopSelectContactsScreen(
+        onArrowBackTap: () {
+          setState(() {
+            _currentScreen = CurrentScreen.PlaceolderImage;
+          });
+        },
+        onDoneTap: () {
+          setState(() {
+            _currentScreen = CurrentScreen.SelectedItems;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _placeholderImage() {
+    return Container(
+      width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+      height: SizeConfig().screenHeight - 80,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            ImageConstants.welcomeDesktop,
+          ),
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
   }
 
   Widget sendFileTo({bool isSelectContacts = false}) {
     return InkWell(
         onTap: () {
           setState(() {
-            showContent = !showContent;
+            _currentScreen = CurrentScreen.ContactsScreen;
           });
         },
         child: Container(
@@ -137,7 +169,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               color: Colors.white,
             ),
             child: ListTile(
-              title: showContent
+              title: _currentScreen != CurrentScreen.PlaceolderImage
                   ? Text(
                       (isSelectContacts
                           ? '18 contacts added'

@@ -1,4 +1,3 @@
-import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_contacts_custom_list_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_vertical_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -9,21 +8,28 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class DesktopContactsScreen extends StatefulWidget {
-  const DesktopContactsScreen({Key key}) : super(key: key);
+class DesktopSelectContactsScreen extends StatefulWidget {
+  final Function onArrowBackTap, onDoneTap;
+  DesktopSelectContactsScreen(
+      {Key key, @required this.onArrowBackTap, @required this.onDoneTap})
+      : super(key: key);
 
   @override
-  _DesktopContactsScreenState createState() => _DesktopContactsScreenState();
+  _DesktopSelectContactsScreenState createState() =>
+      _DesktopSelectContactsScreenState();
 }
 
-class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
+class _DesktopSelectContactsScreenState
+    extends State<DesktopSelectContactsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ColorConstants.inputFieldColor,
         appBar: AppBar(
           backgroundColor: ColorConstants.inputFieldColor,
-          leading: Icon(Icons.arrow_back, size: 25, color: Colors.black),
+          leading: InkWell(
+              onTap: widget.onArrowBackTap,
+              child: Icon(Icons.arrow_back, size: 25, color: Colors.black)),
           title: Text(
             'Select Person',
             style: CustomTextStyles.desktopPrimaryBold18,
@@ -141,7 +147,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                 ),
                 CommonButton(
                   'Done',
-                  () {},
+                  widget.onDoneTap,
                   color: ColorConstants.orangeColor,
                   border: 3,
                   height: 45,
