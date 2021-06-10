@@ -1,5 +1,5 @@
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/bottom_sheet.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_bottom_sheet.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
