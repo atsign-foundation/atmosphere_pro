@@ -152,6 +152,12 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
+  static TextStyle blueNormal20 = TextStyle(
+      color: ColorConstants.blueText,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
   static TextStyle desktopSecondaryRegular18 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,

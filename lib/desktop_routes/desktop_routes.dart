@@ -30,21 +30,30 @@ class DesktopSetupRoutes {
     }
   }
 
-  static Map<String, WidgetBuilder> routeBuilders(BuildContext context) {
+  static Map<String, WidgetBuilder> routeBuilders(
+      BuildContext context, RouteSettings routeSettings) {
     return {
       DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL: (context) =>
           WelcomeScreenHome(),
       DesktopRoutes.DESKTOP_HISTORY: (context) => DesktopHistoryScreen(),
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
-      DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) =>
-          DesktopContactsScreen(),
+      DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
+        Map<String, dynamic> args =
+            routeSettings.arguments as Map<String, dynamic>;
+        return DesktopContactsScreen(isBlockedScreen: args['isBlockedScreen']);
+      },
+      DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
+        Map<String, dynamic> args =
+            routeSettings.arguments as Map<String, dynamic>;
+        return DesktopContactsScreen(isBlockedScreen: args['isBlockedScreen']);
+      },
     };
   }
 
   static Future nested_push(String value,
       {Object arguments, Function callbackAfterNavigation}) {
     if (_provider.current_route != null) {
-      var _res = nested_push_replacement(value);
+      var _res = nested_push_replacement(value, arguments: arguments);
       return _res;
     }
     _provider.update(value);

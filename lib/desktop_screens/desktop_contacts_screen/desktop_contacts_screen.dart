@@ -4,12 +4,13 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DesktopContactsScreen extends StatelessWidget {
-  const DesktopContactsScreen({Key key}) : super(key: key);
+  final bool isBlockedScreen;
+  DesktopContactsScreen({Key key, this.isBlockedScreen = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -128,23 +129,38 @@ class DesktopContactsScreen extends StatelessWidget {
           ),
           Text('@levinat', style: CustomTextStyles.desktopSecondaryRegular18),
           Spacer(),
-          Icon(
-            Icons.star,
-            color: ColorConstants.orangeColor,
-          ),
+          isBlockedScreen ? _forBlockScreen() : _forContactsScreen(),
           SizedBox(
             width: 50,
           ),
-          Image.asset(
-            AllImages().SEND,
-            width: 21.toWidth,
-            height: 18.toHeight,
-          ),
-          SizedBox(
-            width: 30,
-          ),
         ],
       ),
+    );
+  }
+
+  Widget _forContactsScreen() {
+    return Row(
+      children: [
+        Icon(
+          Icons.star,
+          color: ColorConstants.orangeColor,
+        ),
+        SizedBox(
+          width: 50,
+        ),
+        Image.asset(
+          AllImages().SEND,
+          width: 21.toWidth,
+          height: 18.toHeight,
+        ),
+      ],
+    );
+  }
+
+  Widget _forBlockScreen() {
+    return Text(
+      'Unblock',
+      style: CustomTextStyles.blueNormal20,
     );
   }
 }
