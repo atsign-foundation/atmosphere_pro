@@ -13,4 +13,14 @@ class DesktopRoutes {
   static const DESKTOP_GROUP = 'desktop_group';
   static const DESKTOP_GROUP_VIEW = 'desktop_group_view';
   static const DESKT_FAQ = 'desktop_faq';
+
+  /// Group left half routes
+  static const String DESKTOP_GROUP_LEFT_INITIAL = 'desktop_group_left_initial';
+  static const String DESKTOP_GROUP_LIST = 'desktop_group_list';
+
+  /// Group right half routes
+  static const String DESKTOP_GROUP_RIGHT_INITIAL =
+      'desktop_group_right_initial';
+  static const String DESKTOP_NEW_GROUP = 'desktop_new_group';
+  static const String DESKTOP_GROUP_DETAIL = 'desktop_group_detail';
 }

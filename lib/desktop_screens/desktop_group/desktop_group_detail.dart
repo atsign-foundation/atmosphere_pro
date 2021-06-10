@@ -2,6 +2,7 @@ import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_person_vertical_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,10 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
               Column(
                 children: [
                   Image.asset(
-                    AllImages().GROUP_PHOTO,
+                    ImageConstants.welcomeDesktop,
                     height: 272.toHeight,
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
-                    package: 'at_mosphere_pro',
                   ),
                   SizedBox(
                     height: 60.toHeight,

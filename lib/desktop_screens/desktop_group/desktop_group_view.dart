@@ -15,10 +15,10 @@ class _DesktopGroupViewState extends State<DesktopGroupView> {
       width: SizeConfig().screenWidth,
       child: Row(
         children: [
-          Container(
-            width: SizeConfig().screenWidth / 2 - 35,
-            child: DesktopGroupList(),
-          ),
+          // Container(
+          //   width: SizeConfig().screenWidth / 2 - 35,
+          //   child: DesktopGroupList(),
+          // ),
           Container(
             width: SizeConfig().screenWidth / 2 - 35,
             child: DesktopGroupDetail(),

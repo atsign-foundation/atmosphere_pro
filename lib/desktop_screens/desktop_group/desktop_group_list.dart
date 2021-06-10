@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class DesktopGroupList extends StatefulWidget {
+  final Function onDone;
+  DesktopGroupList(this.onDone);
   @override
   _DesktopGroupListState createState() => _DesktopGroupListState();
 }
@@ -33,7 +35,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
               ),
               SizedBox(width: 15),
               TextButton(
-                onPressed: () {},
+                onPressed: widget.onDone,
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
