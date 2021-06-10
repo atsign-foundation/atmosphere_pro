@@ -1,13 +1,19 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_empty_group.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_view.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/widgets/welcome_screen_home.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
@@ -47,6 +53,15 @@ class DesktopSetupRoutes {
             routeSettings.arguments as Map<String, dynamic>;
         return DesktopContactsScreen(isBlockedScreen: args['isBlockedScreen']);
       },
+      DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
+      DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
+          DesktopEmptySender(),
+      DesktopRoutes.DESKTOP_GROUP: (context) => DesktopEmptyGroup(),
+      DesktopRoutes.DESKTOP_GROUP_VIEW: (context) => DesktopGroupView(),
+      DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
+            title: 'FAQ',
+            url: '${MixedConstants.WEBSITE_URL}/faqs',
+          )
     };
   }
 

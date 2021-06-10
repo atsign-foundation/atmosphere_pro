@@ -1,6 +1,6 @@
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 // ignore: must_be_immutable
 class DesktopCustomInputField extends StatelessWidget {
@@ -41,7 +41,7 @@ class DesktopCustomInputField extends StatelessWidget {
           color: backgroundColor ?? ColorConstants.inputFieldColor,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: ColorConstants.light_grey)),
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Row(
@@ -51,14 +51,14 @@ class DesktopCustomInputField extends StatelessWidget {
               child: TextField(
                 readOnly: isReadOnly,
                 style: TextStyle(
-                  fontSize: 10.toFont,
+                  fontSize: 15.toFont,
                 ),
                 decoration: InputDecoration(
                   hintText: hintText,
                   enabledBorder: InputBorder.none,
                   border: InputBorder.none,
                   hintStyle: TextStyle(
-                      color: ColorConstants.light_grey, fontSize: 10.toFont),
+                      color: ColorConstants.light_grey, fontSize: 15.toFont),
                 ),
                 onTap: onTap as void Function() ?? () {},
                 onChanged: (val) {
@@ -76,9 +76,12 @@ class DesktopCustomInputField extends StatelessWidget {
                 ? InkWell(
                     onTap: onIconTap as void Function() ??
                         onTap as void Function(),
-                    child: Icon(
-                      icon,
-                      color: iconColor ?? ColorConstants.fadedText,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Icon(
+                        icon,
+                        color: iconColor ?? ColorConstants.fadedText,
+                      ),
                     ),
                   )
                 : SizedBox()

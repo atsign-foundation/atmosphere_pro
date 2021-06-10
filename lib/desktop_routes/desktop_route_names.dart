@@ -7,4 +7,10 @@ class DesktopRoutes {
   static const String DEKSTOP_CONTACTS_SCREEN = 'desktop_contacts_screen';
   static const String DEKSTOP_BLOCKED_CONTACTS_SCREEN =
       'desktop_blocked_contacts_screen';
+  static const String DESKTOP_TRUSTED_SENDER = 'desktop_trusted_sender';
+  static const String DESKTOP_EMPTY_TRUSTED_SENDER =
+      'desktop_empty_trusted_sender';
+  static const DESKTOP_GROUP = 'desktop_group';
+  static const DESKTOP_GROUP_VIEW = 'desktop_group_view';
+  static const DESKT_FAQ = 'desktop_faq';
 }
