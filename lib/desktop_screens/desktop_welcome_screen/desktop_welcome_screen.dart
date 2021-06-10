@@ -82,6 +82,18 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.trustedSendersIcon,
   ];
 
+  final List<String> routes = [
+    DesktopRoutes.DEKSTOP_CONTACTS_SCREEN,
+    DesktopRoutes.DESKTOP_HISTORY,
+    '',
+    DesktopRoutes.DEKSTOP_MYFILES,
+    '',
+    '',
+    '',
+    '',
+    '',
+  ];
+
   bool showContent = false;
 
   @override
@@ -116,23 +128,21 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // SizedBox(height: 100.toHeight),
-                      SideBarIcon(menuItemsIcons[0], ''),
+                      SideBarIcon(menuItemsIcons[0], routes[0]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(
-                          menuItemsIcons[1], DesktopRoutes.DESKTOP_HISTORY),
+                      SideBarIcon(menuItemsIcons[1], routes[1]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[2], ''),
+                      SideBarIcon(menuItemsIcons[2], routes[2]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(
-                          menuItemsIcons[3], DesktopRoutes.DEKSTOP_MYFILES),
+                      SideBarIcon(menuItemsIcons[3], routes[3]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[4], ''),
+                      SideBarIcon(menuItemsIcons[4], routes[4]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[5], ''),
+                      SideBarIcon(menuItemsIcons[5], routes[5]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[6], ''),
+                      SideBarIcon(menuItemsIcons[6], routes[6]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[7], ''),
+                      SideBarIcon(menuItemsIcons[7], routes[7]),
                       // SizedBox(height: 100.toHeight),
                     ],
                   ),

@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
@@ -35,6 +36,8 @@ class DesktopSetupRoutes {
           WelcomeScreenHome(),
       DesktopRoutes.DESKTOP_HISTORY: (context) => DesktopHistoryScreen(),
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
+      DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) =>
+          DesktopContactsScreen(),
     };
   }
 
