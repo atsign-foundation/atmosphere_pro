@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_contacts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
@@ -82,25 +83,34 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
           ),
         ),
         showContent
-            ? Container(
-                width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+            ? SizedBox(
+                width:
+                    (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) /
+                        2,
                 height: SizeConfig().screenHeight - 80,
-                color: ColorConstants.LIGHT_BLUE_BG,
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      DesktopSelectedContacts(),
-                      Divider(
-                        height: 20,
-                        thickness: 5,
-                      ),
-                      DesktopSelectedFiles(),
-                    ],
-                  ),
-                ))
+                child: DesktopContactsScreen(),
+              )
+            // Container(
+            //     width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+            //     height: SizeConfig().screenHeight - 80,
+            //     color: ColorConstants.LIGHT_BLUE_BG,
+            //     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+            //     child: SingleChildScrollView(
+            //       child: Column(
+            //         children: [
+            //           DesktopSelectedContacts(),
+            //           Divider(
+            //             height: 20,
+            //             thickness: 5,
+            //           ),
+            //           DesktopSelectedFiles(),
+            //         ],
+            //       ),
+            //     ))
             : Container(
-                width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+                width:
+                    (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) /
+                        2,
                 height: SizeConfig().screenHeight - 80,
                 decoration: BoxDecoration(
                   image: DecorationImage(

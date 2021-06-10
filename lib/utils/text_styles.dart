@@ -175,4 +175,16 @@ class CustomTextStyles {
       fontSize: 14,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
+
+  static TextStyle desktopPrimaryRegular18 = TextStyle(
+      color: Colors.black,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopPrimaryRegular16 = TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 }

@@ -7,6 +7,7 @@ class CommonButton extends StatelessWidget {
   final double border, height, width, fontSize;
   final Color color;
   final bool removePadding;
+  final Color textColor;
   const CommonButton(
     this.title,
     this.onTap, {
@@ -16,6 +17,7 @@ class CommonButton extends StatelessWidget {
     this.width,
     this.removePadding = false,
     this.fontSize,
+    this.textColor,
   });
 
   @override
@@ -38,7 +40,7 @@ class CommonButton extends StatelessWidget {
           child: Text(
             title ?? '',
             style: TextStyle(
-                color: Colors.white,
+                color: textColor ?? Colors.white,
                 fontSize: fontSize ?? 15.toFont,
                 letterSpacing: 0.1),
           ),
