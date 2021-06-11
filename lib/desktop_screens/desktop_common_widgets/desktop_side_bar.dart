@@ -1,23 +1,13 @@
-import 'dart:typed_data';
-
-import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DesktopSideBarWidget extends StatefulWidget {
   DesktopSideBarWidget();
@@ -52,15 +42,15 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
   ];
 
   final List<String> targetScreens = [
-    Routes.CONTACT_SCREEN,
-    Routes.HISTORY,
-    Routes.BLOCKED_USERS,
-    Routes.MY_FILES,
-    Routes.GROUPS,
-    Routes.WEBSITE_SCREEN,
-    Routes.WEBSITE_SCREEN,
-    Routes.FAQ_SCREEN,
-    Routes.TRUSTED_CONTACTS
+    DesktopRoutes.DEKSTOP_CONTACTS_SCREEN,
+    DesktopRoutes.DESKTOP_HISTORY,
+    DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN,
+    DesktopRoutes.DEKSTOP_MYFILES,
+    DesktopRoutes.DESKTOP_GROUP,
+    DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER,
+    '',
+    '',
+    '',
   ];
 
   @override
@@ -83,16 +73,7 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
                     routeName: targetScreens[0],
                     showIconOnly: false,
                     arguments: {
-                      'asSelectionScreen': true,
-                      'singleSelection': false,
-                      'showGroups': true,
-                      'showContacts': true,
-                      'selectedList': (s) async {
-                        await Provider.of<WelcomeScreenProvider>(
-                                NavService.navKey.currentContext,
-                                listen: false)
-                            .updateSelectedContacts(s);
-                      }
+                      'isBlockedScreen': false,
                     },
                     isDesktop: true,
                   ),
@@ -111,6 +92,9 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
                     routeName: targetScreens[2],
                     showIconOnly: false,
                     isDesktop: true,
+                    arguments: {
+                      'isBlockedScreen': true,
+                    },
                   ),
                   SizedBox(height: 20.toHeight),
                   SideBarItem(
