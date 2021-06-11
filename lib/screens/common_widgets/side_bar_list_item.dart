@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,22 @@ class SideBarItem extends StatelessWidget {
       this.title,
       this.routeName,
       this.arguments,
-      this.showIconOnly = false, this.isDesktop = false})
+      this.showIconOnly = false,
+      this.isDesktop = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        if (isDesktop) {
+          if (routeName != null && routeName != '') {
+            Navigator.of(context).pop();
+            return DesktopSetupRoutes.nested_push(routeName,
+                arguments: arguments);
+          }
+          return null;
+        }
+
         if (_welcomeScreenProvider.isExpanded) {
           Navigator.pop(context);
         }
