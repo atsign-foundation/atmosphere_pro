@@ -84,14 +84,12 @@ class DesktopSetupRoutes {
 
   static Map<String, WidgetBuilder> groupRightRouteBuilders(
     BuildContext context,
-    RouteSettings routeSettings,
-    Function initialRouteOnArrowBackTap,
-    Function initialRouteOnDoneTap,
-  ) {
+    RouteSettings routeSettings, {
+    @required Function initialRouteOnArrowBackTap,
+    @required Function initialRouteOnDoneTap,
+  }) {
     return {
       DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL: (context) {
-        Map<String, dynamic> args =
-            routeSettings.arguments as Map<String, dynamic>;
         return DesktopSelectContactsScreen(
           onDoneTap: initialRouteOnDoneTap,
           onArrowBackTap: initialRouteOnArrowBackTap,
@@ -100,9 +98,6 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_NEW_GROUP: (context) {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
-        print('args ${args}');
-
-        print('onDone ${args['onDone']}');
         return DesktopNewGroup(
           onPop: args['onPop'],
           onDone: args['onDone'],
