@@ -1,17 +1,15 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_files.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
@@ -24,39 +22,64 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 }
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
+  bool showSwitchAtsign = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
-        child: Container(
-          padding: const EdgeInsets.all(15.0),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 0.1,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(15.0),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.black,
+                    width: 0.1,
+                  ),
+                ),
+              ),
+              child: AppBar(
+                leading: Image.asset(
+                  ImageConstants.logoIcon,
+                  height: 50.toHeight,
+                  width: 50.toHeight,
+                ),
+                actions: [
+                  Icon(Icons.notifications, size: 30),
+                  SizedBox(width: 30),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        showSwitchAtsign = !showSwitchAtsign;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        ContactInitial(
+                          initials: 'Levina',
+                          size: 30,
+                          maxSize: (80.0 - 30.0),
+                          minSize: 50,
+                        ),
+                        Icon(Icons.arrow_drop_down)
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
-          ),
-          child: AppBar(
-            leading: Image.asset(
-              ImageConstants.logoIcon,
-              height: 50.toHeight,
-              width: 50.toHeight,
-            ),
-            actions: [
-              Icon(Icons.notifications, size: 30),
-              SizedBox(width: 30),
-              ContactInitial(
-                initials: 'Levina',
-                size: 30,
-                maxSize: (80.0 - 30.0),
-                minSize: 50,
-              )
-            ],
-          ),
+            showSwitchAtsign
+                ? Positioned(
+                    top: 60,
+                    right: 50,
+                    child: DesktopSwitchAtsign(),
+                  )
+                : SizedBox()
+          ],
         ),
       ),
       body: DesktopWelcomeScreen(),

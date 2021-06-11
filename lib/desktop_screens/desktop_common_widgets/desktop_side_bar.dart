@@ -53,6 +53,8 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
     '',
   ];
 
+  bool showCloseIcon = true;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -165,23 +167,29 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
             ),
           ),
         ),
-        Positioned(
-          top: 50,
-          left: 305,
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.toWidth),
-                  color: Colors.black),
-              child: Icon(Icons.arrow_back_ios, size: 20, color: Colors.white),
-            ),
-          ),
-        )
+        showCloseIcon
+            ? Positioned(
+                top: 50,
+                left: 305,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      showCloseIcon = false;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.toWidth),
+                        color: Colors.black),
+                    child: Icon(Icons.arrow_back_ios,
+                        size: 20, color: Colors.white),
+                  ),
+                ),
+              )
+            : SizedBox()
       ],
     );
   }

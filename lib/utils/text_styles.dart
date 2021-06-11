@@ -164,6 +164,24 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
+  static TextStyle desktopSecondaryRegular16 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 16,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopSecondaryRegular14 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 14,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.w500);
+
+  static TextStyle desktopSecondaryRegular12 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 12,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.w500);
+
   static TextStyle desktopSecondaryBold18 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,
