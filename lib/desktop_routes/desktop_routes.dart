@@ -93,6 +93,7 @@ class DesktopSetupRoutes {
         return DesktopSelectContactsScreen(
           onDoneTap: initialRouteOnDoneTap,
           onArrowBackTap: initialRouteOnArrowBackTap,
+          showButtonOptions: false,
         );
       },
       DesktopRoutes.DESKTOP_NEW_GROUP: (context) {
