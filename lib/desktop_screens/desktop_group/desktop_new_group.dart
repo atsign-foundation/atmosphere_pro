@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dek
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_bottom_sheet.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -43,11 +44,6 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             ),
           )
         ],
-        // bottomSheet: DesktopGroupBottomSheet(
-        //   onPressed: widget.onDone,
-        //   message: '18 Contacts Selected',
-        //   buttontext: 'Done2',
-        // ),
         body: Stack(
           children: [
             Column(
@@ -55,26 +51,42 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                 SizedBox(height: 20.toHeight),
                 GestureDetector(
                   onTap: () async {},
-                  child: Container(
-                    margin: EdgeInsets.only(left: 15),
-                    width: 100.toWidth,
-                    height: 100.toWidth,
-                    decoration: BoxDecoration(
-                      color: ColorConstants.dividerColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: false
-                          ? SizedBox(
-                              width: 68.toWidth,
-                              height: 68.toWidth,
-                              // child: CircleAvatar(
-                              //   backgroundImage:
-                              //       Image.memory().image,
-                              // ),
-                            )
-                          : SizedBox(),
-                    ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
+                        width: 100.toWidth,
+                        height: 100.toWidth,
+                        decoration: BoxDecoration(
+                          color: ColorConstants.dividerColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: false
+                              ? SizedBox(
+                                  width: 68.toWidth,
+                                  height: 68.toWidth,
+                                  // child: CircleAvatar(
+                                  //   backgroundImage:
+                                  //       Image.memory().image,
+                                  // ),
+                                )
+                              : SizedBox(),
+                        ),
+                      ),
+                      Positioned(
+                          bottom: -5,
+                          right: -5,
+                          child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: ColorConstants.fadedbackground,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.image)))
+                    ],
                   ),
                 ),
                 SizedBox(height: 15),
@@ -90,48 +102,49 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 5),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 15.0),
-                              child: Container(
-                                width: 330.toWidth,
-                                height: 50.toHeight,
-                                decoration: BoxDecoration(
-                                  color: ColorConstants.listBackground,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: TextField(
-                                        readOnly: false,
-                                        style: TextStyle(
-                                          fontSize: 15.toFont,
-                                        ),
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter Group Name',
-                                          enabledBorder: InputBorder.none,
-                                          border: InputBorder.none,
-                                          hintStyle:
-                                              TextStyle(fontSize: 15.toFont),
-                                        ),
-                                        onTap: () {},
-                                        onChanged: (val) {},
-                                        // controller: textController,
-                                        onSubmitted: (str) {},
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15.0),
+                            child: Container(
+                              width: ((SizeConfig().screenWidth -
+                                          MixedConstants.SIDEBAR_WIDTH) /
+                                      2) -
+                                  150,
+                              height: 50.toHeight,
+                              decoration: BoxDecoration(
+                                color: ColorConstants.listBackground,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextField(
+                                      readOnly: false,
+                                      style: TextStyle(
+                                        fontSize: 15.toFont,
                                       ),
-                                    ),
-                                    InkWell(
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter Group Name',
+                                        enabledBorder: UnderlineInputBorder(),
+                                        border: UnderlineInputBorder(),
+                                        hintStyle:
+                                            TextStyle(fontSize: 15.toFont),
+                                      ),
                                       onTap: () {},
-                                      child: Icon(
-                                        Icons.emoji_emotions_outlined,
-                                        color: Colors.grey,
-                                        size: 20.toFont,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                      onChanged: (val) {},
+                                      // controller: textController,
+                                      onSubmitted: (str) {},
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Icon(
+                                      Icons.emoji_emotions_outlined,
+                                      color: Colors.grey,
+                                      size: 20.toFont,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),

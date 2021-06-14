@@ -49,4 +49,5 @@ class ImageConstants {
 
   // Desktop
   static String welcomeDesktop = '$_basePath/welcome_screen.png';
+  static String groupPhotoDesktop = '$_basePath/group_photo.png';
 }
