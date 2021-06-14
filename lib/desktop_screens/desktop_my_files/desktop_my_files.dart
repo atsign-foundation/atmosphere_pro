@@ -1,5 +1,7 @@
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_photos.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
@@ -47,11 +49,13 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
     tabNames = Provider.of<HistoryProvider>(context, listen: false).tabNames;
     tabs = [
       DesktopRecents(),
+      DesktopPhotos(),
       DesktopVideos(),
       DesktopAudios(),
+      DesktopAPK(),
       DesktopDocuments()
     ];
-    tabNames = ['Recent', 'Videos', 'Audio', 'Document'];
+    tabNames = ['Recent', 'Photos', 'Videos', 'Music', 'APK', 'Document'];
     _controller =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }
@@ -103,6 +107,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                             ]),
                         Container(
                           height: 40,
+                          padding: EdgeInsets.only(left: 50),
                           child: TabBar(
                             onTap: (index) async {},
                             isScrollable: true,
