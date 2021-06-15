@@ -19,7 +19,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
               alignment: WrapAlignment.start,
               runAlignment: WrapAlignment.start,
               runSpacing: 10.0,
-              spacing: 30.0,
+              spacing: 15.0,
               children: List.generate(
                 50,
                 (index) => DesktopFileCard(

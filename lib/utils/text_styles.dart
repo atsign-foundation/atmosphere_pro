@@ -31,6 +31,12 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
+  static TextStyle black16 = TextStyle(
+      color: Colors.black,
+      fontSize: 16.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
   static TextStyle secondaryRegular14 = TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 14.toFont,

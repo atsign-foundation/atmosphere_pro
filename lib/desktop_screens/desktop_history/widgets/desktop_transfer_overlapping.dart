@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -163,14 +164,14 @@ class _DesktopTranferOverlappingContactsState
                     child: Consumer<FileTransferProvider>(
                       builder: (context, provider, __) {
                         return Container(
-                          height: 200,
-                          width: 400,
+                          height: 350,
+                          width: 350,
                           child: GridView.count(
                             crossAxisCount:
                                 SizeConfig().isTablet(context) ? 6 : 5,
                             mainAxisSpacing: 5,
                             crossAxisSpacing: 5,
-                            childAspectRatio: 1,
+                            childAspectRatio: 1 / 1.7,
                             physics: NeverScrollableScrollPhysics(),
                             children: List.generate(
                               widget.selectedList.length,
@@ -197,30 +198,27 @@ class _DesktopTranferOverlappingContactsState
                                       : Stack(
                                           children: [
                                             Container(
-                                              width: 90.toHeight,
-                                              height: 90.toHeight,
-                                              child: image != null
-                                                  ? CustomCircleAvatar(
-                                                      byteImage: image,
-                                                      nonAsset: true,
-                                                    )
-                                                  : ContactInitial(
-                                                      initials: widget
-                                                          .selectedList[index]
-                                                          .atsign,
-                                                      size: 40,
-                                                    ),
-                                            ),
+                                                width: 80.toHeight,
+                                                height: 160.toHeight,
+                                                child: image != null
+                                                    ? CustomCircleAvatar(
+                                                        byteImage: image,
+                                                        nonAsset: true,
+                                                      )
+                                                    : DesktopCustomPersonVerticalTile(
+                                                        title: 'Levina',
+                                                        subTitle: '@levina',
+                                                        showCancelIcon: false)),
                                             Positioned(
                                                 right: 0,
                                                 child: Container(
                                                   height: SizeConfig()
                                                           .isDesktop(context)
-                                                      ? 35
+                                                      ? 20
                                                       : null,
                                                   width: SizeConfig()
                                                           .isDesktop(context)
-                                                      ? 35
+                                                      ? 20
                                                       : null,
                                                   decoration: BoxDecoration(
                                                     color: isNotified
@@ -268,7 +266,7 @@ class _DesktopTranferOverlappingContactsState
                                                       size: SizeConfig()
                                                               .isDesktop(
                                                                   context)
-                                                          ? 25.toFont
+                                                          ? 10.toFont
                                                           : 15.toFont,
                                                     ),
                                                   ),
