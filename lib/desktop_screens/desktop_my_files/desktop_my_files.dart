@@ -55,7 +55,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
       DesktopAPK(),
       DesktopDocuments()
     ];
-    tabNames = ['Recent', 'Photos', 'Videos', 'Music', 'APK', 'Document'];
+    tabNames = ['Recents', 'Photos', 'Videos', 'Music', 'APK', 'Documents'];
     _controller =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }
