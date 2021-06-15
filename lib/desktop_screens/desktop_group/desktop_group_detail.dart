@@ -1,7 +1,7 @@
-import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_person_vertical_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -26,7 +26,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
               Column(
                 children: [
                   Image.asset(
-                    ImageConstants.welcomeDesktop,
+                    ImageConstants.groupPhotoDesktop,
                     height: 272.toHeight,
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
@@ -66,13 +66,17 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                 top: 240.toHeight,
                 child: Container(
                   height: 80.toHeight,
-                  width: SizeConfig().screenWidth * 0.92,
+                  width: (((SizeConfig().screenWidth -
+                              MixedConstants.SIDEBAR_WIDTH) /
+                          2) -
+                      30 -
+                      30),
                   margin: EdgeInsets.symmetric(
                       horizontal: 15.toWidth, vertical: 0.toHeight),
                   padding: EdgeInsets.symmetric(
                       horizontal: 15.toWidth, vertical: 10.toHeight),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(6.0),
                     color: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
                         : Colors.black,
@@ -99,20 +103,29 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                               children: [
                                 Container(
                                   width: 250.toWidth,
-                                  child: Text(
-                                    'Group name',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    // softWrap: false,
-                                    style: TextStyle(
-                                      color: ColorConstants.greyText,
-                                      fontSize: 16.toFont,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: 'Group name   ',
+                                      style: TextStyle(
+                                        color: ColorConstants.fontPrimary,
+                                        fontSize: 16.toFont,
+                                      ),
+                                      children: [
+                                        WidgetSpan(
+                                          child: Icon(
+                                            Icons.edit,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
                                 Text(
                                   '10 members',
-                                  style: CustomTextStyles.greyText15,
+                                  style:
+                                      CustomTextStyles.desktopPrimaryRegular14,
                                 ),
                               ],
                             ),

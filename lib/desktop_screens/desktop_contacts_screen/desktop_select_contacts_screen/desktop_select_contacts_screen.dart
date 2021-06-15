@@ -10,8 +10,12 @@ import 'package:flutter/widgets.dart';
 
 class DesktopSelectContactsScreen extends StatefulWidget {
   final Function onArrowBackTap, onDoneTap;
+  final bool showButtonOptions;
   DesktopSelectContactsScreen(
-      {Key key, @required this.onArrowBackTap, @required this.onDoneTap})
+      {Key key,
+      @required this.onArrowBackTap,
+      @required this.onDoneTap,
+      this.showButtonOptions = true})
       : super(key: key);
 
   @override
@@ -41,25 +45,27 @@ class _DesktopSelectContactsScreenState
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              Row(
-                children: [
-                  _changePreferenceButton('Recent', 70,
-                      color: ColorConstants.light_grey,
-                      textColor: ColorConstants.fadedText),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  _changePreferenceButton('Favourites', 80,
-                      color: ColorConstants.light_grey,
-                      textColor: ColorConstants.fadedText),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  _changePreferenceButton('All Members', 100,
-                      color: ColorConstants.orangeColor,
-                      textColor: Colors.white),
-                ],
-              ),
+              widget.showButtonOptions
+                  ? Row(
+                      children: [
+                        _changePreferenceButton('Recent', 70,
+                            color: ColorConstants.light_grey,
+                            textColor: ColorConstants.fadedText),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        _changePreferenceButton('Favourites', 80,
+                            color: ColorConstants.light_grey,
+                            textColor: ColorConstants.fadedText),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        _changePreferenceButton('All Members', 100,
+                            color: ColorConstants.orangeColor,
+                            textColor: Colors.white),
+                      ],
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 7,
               ),
