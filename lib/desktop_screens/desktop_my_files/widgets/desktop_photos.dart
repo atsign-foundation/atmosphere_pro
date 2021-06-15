@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -25,41 +26,25 @@ class _DesktopPhotosState extends State<DesktopPhotos> {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
-      functionName: 'sort_files',
-      load: (provider) {
-        provider.getReceivedHistory();
-      },
-      successBuilder: (provider) => Container(
-        margin:
-            EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
-        child: GridView.count(
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 3,
-          children: List.generate(provider.receivedPhotos.length, (index) {
-            return GestureDetector(
-              onTap: () async {
-                // preview file
-                File test = File(provider.receivedPhotos[index].filePath);
-                bool fileExists = await test.exists();
-                if (fileExists) {
-                  await OpenFile.open(provider.receivedPhotos[index].filePath);
-                }
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.toHeight),
-                child: Container(
-                  height: 50.toHeight,
-                  width: 50.toWidth,
-                  child: Image.file(
-                    File(provider.receivedPhotos[index].filePath),
-                    fit: BoxFit.cover,
-                  ),
+    return SingleChildScrollView(
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.start,
+              runSpacing: 10.0,
+              spacing: 30.0,
+              children: List.generate(
+                50,
+                (index) => DesktopFileCard(
+                  title: 'audio.mp3',
                 ),
               ),
-            );
-          }),
+            ),
+          ),
         ),
       ),
     );

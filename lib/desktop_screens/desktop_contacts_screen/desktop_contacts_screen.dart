@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 
 class DesktopContactsScreen extends StatelessWidget {
   final bool isBlockedScreen;
-  DesktopContactsScreen({Key key, this.isBlockedScreen = false})
+  final Function onBackPressed;
+  DesktopContactsScreen(
+      {Key key, this.isBlockedScreen = false, this.onBackPressed})
       : super(key: key);
 
   @override
@@ -26,9 +28,10 @@ class DesktopContactsScreen extends StatelessWidget {
                   width: 10,
                 ),
                 InkWell(
-                  onTap: () {
-                    DesktopSetupRoutes.nested_pop();
-                  },
+                  onTap: onBackPressed ??
+                      () {
+                        DesktopSetupRoutes.nested_pop();
+                      },
                   child: Icon(Icons.arrow_back, size: 25, color: Colors.black),
                 ),
                 SizedBox(

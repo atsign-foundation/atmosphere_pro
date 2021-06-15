@@ -55,7 +55,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
           Expanded(
             child: Text(
               widget.title,
-              style: CustomTextStyles.secondaryRegular16,
+              style: CustomTextStyles.black16,
               textAlign: TextAlign.center,
             ),
           ),
