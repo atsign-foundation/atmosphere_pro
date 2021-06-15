@@ -83,19 +83,19 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
         isContactSelecttion
             ? Expanded(
                 child: DesktopSelectContactsScreen(
-                  onArrowBackTap: () {
-                    setState(() {
-                      isContactSelecttion = !isContactSelecttion;
-                    });
-                  },
-                  onDoneTap: () {
-                    setState(() {
-                      isContactSelecttion = false;
-                    });
-                    DesktopSetupRoutes.nested_push(
-                        DesktopRoutes.DESKTOP_TRUSTED_SENDER);
-                  },
-                ),
+                    onArrowBackTap: () {
+                      setState(() {
+                        isContactSelecttion = !isContactSelecttion;
+                      });
+                    },
+                    onDoneTap: () {
+                      setState(() {
+                        isContactSelecttion = false;
+                      });
+                      DesktopSetupRoutes.nested_push(
+                          DesktopRoutes.DESKTOP_TRUSTED_SENDER);
+                    },
+                    showButtonOptions: false),
               )
             : SizedBox()
       ],
