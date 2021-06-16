@@ -26,7 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+// import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
@@ -65,15 +65,17 @@ class BackendService {
 
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
-    if (Platform.isIOS) {
-      downloadDirectory =
-          await path_provider.getApplicationDocumentsDirectory();
-    } else {
-      downloadDirectory = await path_provider.getExternalStorageDirectory();
-    }
+    // if (Platform.isIOS) {
+    //   downloadDirectory =
+    //       await path_provider.getApplicationDocumentsDirectory();
+    // } else {
+    //   downloadDirectory = await path_provider.getExternalStorageDirectory();
+    // }
+    downloadDirectory = Directory('/Users/apple/Desktop/');
     if (atClientServiceMap[atsign] == null) {
-      final appSupportDirectory =
-          await path_provider.getApplicationSupportDirectory();
+      // final appSupportDirectory =
+      //     await path_provider.getApplicationSupportDirectory();
+      final appSupportDirectory = Directory('/Users/apple/Desktop/');
       print("paths => $downloadDirectory $appSupportDirectory");
     }
     await atClientServiceInstance.onboard(
@@ -82,14 +84,15 @@ class BackendService {
   }
 
   Future<AtClientPreference> getAtClientPreference() async {
-    if (Platform.isIOS) {
-      downloadDirectory =
-          await path_provider.getApplicationDocumentsDirectory();
-    } else {
-      downloadDirectory = await path_provider.getExternalStorageDirectory();
-    }
-    final appDocumentDirectory =
-        await path_provider.getApplicationSupportDirectory();
+    // if (Platform.isIOS) {
+    //   downloadDirectory =
+    //       await path_provider.getApplicationDocumentsDirectory();
+    // } else {
+    //   downloadDirectory = await path_provider.getExternalStorageDirectory();
+    // }
+    downloadDirectory = Directory('/Users/apple/Desktop/');
+    final appDocumentDirectory = Directory('/Users/apple/Desktop/');
+    // await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     var _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
@@ -344,16 +347,16 @@ class BackendService {
           .executeAndParse(fileDecryptionKeyLookUpBuilder);
       var currentAtSignPrivateKey =
           await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
-      var fileDecryptionKey = atClientInstance.decryptKey(
-          encryptedFileSharedKey, currentAtSignPrivateKey);
+      // var fileDecryptionKey = atClientInstance.decryptKey(
+      //     encryptedFileSharedKey, currentAtSignPrivateKey);
 
-      var decryptedFile = await atClientInstance.encryptionService
-          .decryptFile(encryptedFileInBytes, fileDecryptionKey);
-      var downloadedFile =
-          File('${MixedConstants.RECEIVED_FILE_DIRECTORY}/$fileName');
+      // var decryptedFile = await atClientInstance.encryptionService
+      //     .decryptFile(encryptedFileInBytes, fileDecryptionKey);
+      // var downloadedFile =
+      //     File('${MixedConstants.RECEIVED_FILE_DIRECTORY}/$fileName');
       print('open file');
 
-      downloadedFile.writeAsBytesSync(decryptedFile);
+      // downloadedFile.writeAsBytesSync(decryptedFile);
       print('directory: ${downloadDirectory.path}/$fileName');
       return true;
     } catch (e) {
@@ -670,7 +673,7 @@ class BackendService {
 
           await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
           await startMonitor(atsign: atsign, value: value);
-          _initBackendService();
+          initBackendService();
           await initializeContactsService(atClientInstance, currentAtSign);
           authenticating = false;
           isAuthuneticatingSink.add(authenticating);
@@ -697,7 +700,7 @@ class BackendService {
 
   String state;
   NotificationService _notificationService;
-  void _initBackendService() async {
+  void initBackendService() async {
     _notificationService = NotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);

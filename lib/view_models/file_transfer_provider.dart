@@ -340,12 +340,14 @@ class FileTransferProvider extends BaseModel {
       print('filebin container: ${container}');
       bool isFilesUploaded = false;
 
+      /// TODO: Uncomment these to make file-transfer work
+      /// OR replace this file
       for (var groupContact in contactList) {
         // encrypt file
-        var fileEncryptionKey = await backendService
-            .atClientInstance.encryptionService
-            .generateFileEncryptionSharedKey(
-                backendService.currentAtSign, groupContact.contact.atSign);
+        // var fileEncryptionKey = await backendService
+        //     .atClientInstance.encryptionService
+        //     .generateFileEncryptionSharedKey(
+        //         backendService.currentAtSign, groupContact.contact.atSign);
 
         if (!isFilesUploaded) {
           for (var file in selectedFiles) {
@@ -367,24 +369,24 @@ class FileTransferProvider extends BaseModel {
             var selectedFile = File(file.path);
             var bytes = selectedFile.readAsBytesSync();
 
-            var encryptedFileContent = await backendService
-                .atClientInstance.encryptionService
-                .encryptFile(bytes, fileEncryptionKey);
+            // var encryptedFileContent = await backendService
+            //     .atClientInstance.encryptionService
+            //     .encryptFile(bytes, fileEncryptionKey);
 
-            var response = await uploadFileToFilebin(
-                container, file.name, encryptedFileContent);
+            // var response = await uploadFileToFilebin(
+            //     container, file.name, encryptedFileContent);
 
-            if (response != null && response is http.Response) {
-              // updating name and isUploaded when file upload is success.
-              Map fileInfo = jsonDecode(response.body);
-              if (indexToEdit > -1) {
-                filesToTransfer.files[indexToEdit].name =
-                    fileInfo['file']['filename'];
-                filesToTransfer.files[indexToEdit].isUploaded = true;
-              }
-            } else {
-              filesToTransfer.files[indexToEdit].isUploaded = false;
-            }
+            // if (response != null && response is http.Response) {
+            //   // updating name and isUploaded when file upload is success.
+            //   Map fileInfo = jsonDecode(response.body);
+            //   if (indexToEdit > -1) {
+            //     filesToTransfer.files[indexToEdit].name =
+            //         fileInfo['file']['filename'];
+            //     filesToTransfer.files[indexToEdit].isUploaded = true;
+            //   }
+            // } else {
+            //   filesToTransfer.files[indexToEdit].isUploaded = false;
+            // }
 
             await File('${file.path}').copy(MixedConstants.SENT_FILE_DIRECTORY +
                 '/${filesToTransfer.files[indexToEdit].name}');
@@ -470,42 +472,42 @@ class FileTransferProvider extends BaseModel {
       var filesToTransfer = _sentHistory.fileDetails;
       var backendService = BackendService.getInstance();
 
-      var fileEncryptionKey = await backendService
-          .atClientInstance.encryptionService
-          .generateFileEncryptionSharedKey(
-              backendService.currentAtSign, _sentHistory.sharedWith[0].atsign);
+      // var fileEncryptionKey = await backendService
+      //     .atClientInstance.encryptionService
+      //     .generateFileEncryptionSharedKey(
+      //         backendService.currentAtSign, _sentHistory.sharedWith[0].atsign);
 
       var selectedFile = File(_filesList[_index].path);
       var bytes = selectedFile.readAsBytesSync();
 
-      var encryptedFileContent = await backendService
-          .atClientInstance.encryptionService
-          .encryptFile(bytes, fileEncryptionKey);
+      // var encryptedFileContent = await backendService
+      //     .atClientInstance.encryptionService
+      //     .encryptFile(bytes, fileEncryptionKey);
 
-      String container
-       = filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
+      String container =
+          filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
       container = container.replaceAll('archive/', '');
       container = container.replaceAll('/zip', '');
 
-      var response = await uploadFileToFilebin(
-          container, _filesList[_index].name, encryptedFileContent);
+      // var response = await uploadFileToFilebin(
+      //     container, _filesList[_index].name, encryptedFileContent);
 
-      if (response != null && response is http.Response) {
-        // updating name and isUploaded when file upload is success.
-        Map fileInfo = jsonDecode(response.body);
-        if (_index > -1) {
-          filesToTransfer.files[_index].name = fileInfo['file']['filename'];
-          filesToTransfer.files[_index].isUploaded = true;
-          await File('${_filesList[_index].path}').copy(
-              MixedConstants.SENT_FILE_DIRECTORY +
-                  '/${filesToTransfer.files[_index].name}');
+      // if (response != null && response is http.Response) {
+      //   // updating name and isUploaded when file upload is success.
+      //   Map fileInfo = jsonDecode(response.body);
+      //   if (_index > -1) {
+      //     filesToTransfer.files[_index].name = fileInfo['file']['filename'];
+      //     filesToTransfer.files[_index].isUploaded = true;
+      //     await File('${_filesList[_index].path}').copy(
+      //         MixedConstants.SENT_FILE_DIRECTORY +
+      //             '/${filesToTransfer.files[_index].name}');
 
-          filesToTransfer.files[_index].path =
-              '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[_index].name}';
-        }
-      } else {
-        filesToTransfer.files[_index].isUploaded = false;
-      }
+      //     filesToTransfer.files[_index].path =
+      //         '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[_index].name}';
+      //   }
+      // } else {
+      //   filesToTransfer.files[_index].isUploaded = false;
+      // }
 
       filesToTransfer.isUpdate = true;
       for (var contact in _sentHistory.sharedWith) {

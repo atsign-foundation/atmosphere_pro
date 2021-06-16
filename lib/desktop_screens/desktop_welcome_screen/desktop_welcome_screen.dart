@@ -2,6 +2,8 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -23,6 +25,42 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool showSwitchAtsign = false;
+  BackendService backendService = BackendService.getInstance();
+  var atClientPrefernce;
+  bool authenticating = false;
+
+  @override
+  void initState() {
+    _checkToOnboard();
+    super.initState();
+  }
+
+  void _checkToOnboard() async {
+    String currentatSign = await backendService.getAtSign();
+    print('currentatSign $currentatSign');
+    await backendService
+        .getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+
+    // if (currentatSign != null && currentatSign != '') {
+    //   await CustomOnboarding.onboard(
+    //       atSign: currentatSign,
+    //       atClientPrefernce: atClientPrefernce,
+    //       showLoader: showLoader);
+    // }
+    await CustomOnboarding.onboard(
+        atSign: currentatSign,
+        atClientPrefernce: atClientPrefernce,
+        showLoader: showLoader);
+  }
+
+  void showLoader(bool loaderState) {
+    setState(() {
+      authenticating = loaderState;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
