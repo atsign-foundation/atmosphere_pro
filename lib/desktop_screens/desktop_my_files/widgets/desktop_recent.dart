@@ -14,11 +14,12 @@ class _DesktopRecentsState extends State<DesktopRecents> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Align(
+            alignment: Alignment.topLeft,
             child: Wrap(
               alignment: WrapAlignment.start,
               runAlignment: WrapAlignment.start,
               runSpacing: 10.0,
-              spacing: 30.0,
+              spacing: 15.0,
               children: List.generate(
                 50,
                 (index) => DesktopFileCard(

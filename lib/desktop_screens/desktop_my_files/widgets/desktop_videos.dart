@@ -14,6 +14,7 @@ class _DesktopVideosState extends State<DesktopVideos> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Align(
+            alignment: Alignment.topLeft,
             child: Wrap(
               alignment: WrapAlignment.start,
               runAlignment: WrapAlignment.start,

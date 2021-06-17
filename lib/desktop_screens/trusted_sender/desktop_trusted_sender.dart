@@ -149,7 +149,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
             _isFilterOption
                 ? Positioned(
                     right: 15,
-                    top: 20,
+                    top: 55,
                     child: Container(
                       width: 150,
                       padding: EdgeInsets.only(

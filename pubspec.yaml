@@ -23,15 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # window_size:
-  #   git:
-  #     url: git://github.com/google/flutter-desktop-embedding.git
-  #     path: plugins/window_size
-  #     ref: 927f8cbc09b35d85245c095f2db8df9b186f6618
-  desktop_window: ^0.4.0
-
   archive: ^2.0.13
+  desktop_window: ^0.4.0
   cupertino_icons: ^0.1.3
   file_picker: ^2.0.10
   filesystem_picker: ^1.0.3
@@ -44,23 +37,22 @@ dependencies:
   intl: ^0.16.1
   open_file: ^3.0.3
   pedantic: ^1.11.0
-  permission_handler: ^5.0.1+1
+  permission_handler: ^6.1.3
   provider: ^4.3.2+2
   qr_flutter: ^3.2.0
   receive_sharing_intent: ^1.4.1
   rxdart: ^0.24.1
   share: ^0.6.5+2
-  url_launcher: ^5.7.10
+  url_launcher: ^6.0.3
   video_thumbnail: ^0.2.2
-  webview_flutter: ^1.0.0
+  webview_flutter: ^2.0.4
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
   http: ^0.12.0+2
-  path_provider: ^2.0.2
 
-  at_onboarding_flutter: ^1.0.0+4
+  at_onboarding_flutter: ^1.0.0+3
   # at_onboarding_flutter:
-  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
   at_client_mobile: ^1.0.0+9
   at_commons: ^1.0.1+6
   at_contact: ^1.0.0+3
@@ -76,15 +68,14 @@ dependencies:
     #   ref: dev_env
 
   at_contacts_flutter:
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
-
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
     #   path: at_contacts_flutter
     #   ref: dev_env
   # at_contacts_group_flutter: ^1.0.0
   at_contacts_group_flutter:
-   path:  /Users/apple/Desktop/client_projects/at_widgets/at_contacts_group_flutter
+   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
     # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
     # git:
     #   url: https://github.com/atsign-foundation/at_widgets.git
@@ -94,7 +85,7 @@ dependency_overrides:
   at_onboarding_flutter:
     path: /Users/apple/Desktop/client_projects/at_widgets/at_onboarding_flutter
   at_contacts_flutter:
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
   at_client:
     path: /Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client
   at_client_mobile:
@@ -123,9 +114,6 @@ dependency_overrides:
   path_provider: ^2.0.1
   share: ^2.0.1
   plugin_platform_interface: ^2.0.0
-  webview_flutter: ^2.0.4
-  url_launcher: ^6.0.3
-  permission_handler: ^6.1.3
   at_commons:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
@@ -182,9 +170,6 @@ flutter:
         - asset: assets/fonts/HelveticaExtraBold.ttf
           weight: 800
           # style: italic
-    - family: PlayfairDisplay
-      fonts:
-        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-Bold.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
@@ -193,4 +178,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
