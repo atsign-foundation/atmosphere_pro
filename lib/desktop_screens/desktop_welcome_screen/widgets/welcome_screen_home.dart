@@ -1,3 +1,4 @@
+import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -20,9 +21,12 @@ class WelcomeScreenHome extends StatefulWidget {
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   // bool showContent = false, showSelectedItems = false;
   CurrentScreen _currentScreen = CurrentScreen.PlaceolderImage;
-
+  List _selectedList = [];
   @override
   Widget build(BuildContext context) {
+    if (_selectedList.isNotEmpty) {
+      _currentScreen = CurrentScreen.SelectedItems;
+    }
     return Scaffold(
         body: Row(
       children: [
@@ -85,7 +89,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             ],
           ),
         ),
-        currentScreen(),
+        Expanded(child: currentScreen()),
       ],
     ));
   }
@@ -94,9 +98,32 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   Widget currentScreen() {
     switch (_currentScreen) {
       case CurrentScreen.PlaceolderImage:
-        return _placeholderImage();
+        return _selectedList.isNotEmpty
+            ? _selectedItems()
+            : _placeholderImage();
       case CurrentScreen.ContactsScreen:
-        return _contactsScreen();
+        return GroupContactView(
+            asSelectionScreen: true,
+            singleSelection: false,
+            showGroups: false,
+            showContacts: true,
+            isDesktop: true,
+            selectedList: (_list) {
+              setState(() {
+                _selectedList = _list;
+              });
+            },
+            onBackArrowTap: () {
+              setState(() {
+                _currentScreen = CurrentScreen.PlaceolderImage;
+              });
+            },
+            onDoneTap: () {
+              setState(() {
+                _currentScreen = CurrentScreen.SelectedItems;
+              });
+            });
+      // return _contactsScreen();
       case CurrentScreen.SelectedItems:
         return _selectedItems();
     }
@@ -111,7 +138,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            DesktopSelectedContacts(),
+            DesktopSelectedContacts(_selectedList),
             Divider(
               height: 20,
               thickness: 5,
