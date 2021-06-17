@@ -71,11 +71,11 @@ class BackendService {
     // } else {
     //   downloadDirectory = await path_provider.getExternalStorageDirectory();
     // }
-    downloadDirectory = Directory('/Users/apple/Desktop/');
+    downloadDirectory = Directory(MixedConstants.path);
     if (atClientServiceMap[atsign] == null) {
       // final appSupportDirectory =
       //     await path_provider.getApplicationSupportDirectory();
-      final appSupportDirectory = Directory('/Users/apple/Desktop/');
+      final appSupportDirectory = Directory(MixedConstants.path);
       print("paths => $downloadDirectory $appSupportDirectory");
     }
     await atClientServiceInstance.onboard(
@@ -90,8 +90,8 @@ class BackendService {
     // } else {
     //   downloadDirectory = await path_provider.getExternalStorageDirectory();
     // }
-    downloadDirectory = Directory('/Users/apple/Desktop/');
-    final appDocumentDirectory = Directory('/Users/apple/Desktop/');
+    downloadDirectory = Directory(MixedConstants.path);
+    final appDocumentDirectory = Directory(MixedConstants.path);
     // await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     var _atClientPreference = AtClientPreference()

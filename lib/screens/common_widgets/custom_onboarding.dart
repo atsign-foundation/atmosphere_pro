@@ -1,3 +1,4 @@
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -34,6 +35,7 @@ class CustomOnboarding {
         if (showLoader != null) {
           showLoader(false);
         }
+        initServices();
         // await Navigator.pushNamedAndRemoveUntil(
         //     NavService.navKey.currentContext,
         //     Routes.WELCOME_SCREEN,
@@ -43,5 +45,11 @@ class CustomOnboarding {
         print('Onboarding throws $error error');
       },
     );
+  }
+
+  static initServices() {
+    initializeContactsService(BackendService.getInstance().atClientInstance,
+        BackendService.getInstance().atClientInstance.currentAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }
