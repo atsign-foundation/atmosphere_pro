@@ -55,10 +55,10 @@ packages:
   at_common_flutter:
     dependency: "direct main"
     description:
-      name: at_common_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
+      path: "/Users/apple/Desktop/client_projects/at_widgets/at_common_flutter"
+      relative: false
+    source: path
+    version: "2.0.0"
   at_commons:
     dependency: "direct main"
     description:
@@ -124,7 +124,7 @@ packages:
     description:
       path: at_server_status
       ref: trunk
-      resolved-ref: d1a97ab4856f8b01a1529e23a6905bd8a2a59629
+      resolved-ref: "2ddf2e47da50515a64c13486cf0813472844b198"
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
     version: "0.2.0"
@@ -142,7 +142,7 @@ packages:
     description:
       path: base2e15
       ref: trunk
-      resolved-ref: d1a97ab4856f8b01a1529e23a6905bd8a2a59629
+      resolved-ref: "2ddf2e47da50515a64c13486cf0813472844b198"
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
     version: "0.3.0-null-safety"
@@ -202,6 +202,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   crypto:
     dependency: "direct overridden"
     description:
@@ -228,7 +235,7 @@ packages:
     description:
       path: dart_utf7
       ref: trunk
-      resolved-ref: d1a97ab4856f8b01a1529e23a6905bd8a2a59629
+      resolved-ref: "2ddf2e47da50515a64c13486cf0813472844b198"
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
     version: "0.2.1-null-safety"
@@ -280,7 +287,28 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2+2"
+    version: "3.0.3"
+  file_selector:
+    dependency: "direct main"
+    description:
+      name: file_selector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0+2"
+  file_selector_macos:
+    dependency: "direct main"
+    description:
+      name: file_selector_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
+  file_selector_platform_interface:
+    dependency: transitive
+    description:
+      name: file_selector_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3+1"
   filesystem_picker:
     dependency: "direct main"
     description:
@@ -354,6 +382,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_toastr:
+    dependency: transitive
+    description:
+      name: flutter_toastr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -505,7 +540,7 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.11.0"
+    version: "1.11.1"
   permission_handler:
     dependency: "direct main"
     description:
@@ -685,7 +720,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.6"
+    version: "6.0.7"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -762,7 +797,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.5"
+    version: "2.2.4"
   xdg_directories:
     dependency: transitive
     description:

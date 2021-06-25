@@ -1,7 +1,9 @@
 import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_empty_group.dart';
+import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_detail.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_view.dart';
@@ -30,15 +32,15 @@ class DesktopSetupRoutes {
     };
   }
 
-  // ignore: missing_return
-  static MaterialPageRoute<dynamic> nested_routes(name) {
-    switch (name) {
-      case DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL:
-        return MaterialPageRoute(builder: (context) => DesktopWelcomeScreen());
-      case DesktopRoutes.DESKTOP_HISTORY:
-        return MaterialPageRoute(builder: (context) => DesktopHistoryScreen());
-    }
-  }
+  // // ignore: missing_return
+  // static MaterialPageRoute<dynamic> nested_routes(name) {
+  //   switch (name) {
+  //     case DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL:
+  //       return MaterialPageRoute(builder: (context) => DesktopWelcomeScreen());
+  //     case DesktopRoutes.DESKTOP_HISTORY:
+  //       return MaterialPageRoute(builder: (context) => DesktopHistoryScreen());
+  //   }
+  // }
 
   static Map<String, WidgetBuilder> routeBuilders(
       BuildContext context, RouteSettings routeSettings) {
@@ -69,7 +71,15 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
-      DesktopRoutes.DESKTOP_GROUP: (context) => DesktopEmptyGroup(),
+      DesktopRoutes.DESKTOP_GROUP: (context) {
+        Map<String, dynamic> args =
+            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+        DesktopGroupSetupRoutes.setExitFunction(() {
+          DesktopSetupRoutes.nested_pop();
+        });
+        return DesktopGroupInitialScreen();
+      },
+      // =>  DesktopEmptyGroup(),
       DesktopRoutes.DESKTOP_GROUP_VIEW: (context) => DesktopGroupView(),
       DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
             title: 'FAQ',
@@ -81,8 +91,8 @@ class DesktopSetupRoutes {
   static Map<String, WidgetBuilder> groupLeftRouteBuilders(
       BuildContext context, RouteSettings routeSettings) {
     return {
-      DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) =>
-          DesktopEmptyGroup(),
+      // DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) =>
+      //     DesktopEmptyGroup(),
       DesktopRoutes.DESKTOP_GROUP_LIST: (context) {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;

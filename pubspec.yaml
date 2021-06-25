@@ -58,6 +58,10 @@ dependencies:
   http: ^0.12.0+2
   path_provider: ^2.0.2
 
+  # desktop - dependencies
+  file_selector: ^0.7.0
+  file_selector_macos: ^0.0.3
+
   at_onboarding_flutter: ^1.0.0+4
   # at_onboarding_flutter:
   #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
@@ -91,8 +95,6 @@ dependencies:
     #   path: at_contacts_group_flutter
     #   ref: dev_env
 dependency_overrides:
-  at_onboarding_flutter:
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_onboarding_flutter
   at_contacts_flutter:
     path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
   at_client:
@@ -109,6 +111,8 @@ dependency_overrides:
       path: at_lookup
       ref: dev_env
       version: ^1.0.0+4
+  at_onboarding_flutter:
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_onboarding_flutter
   crypto: ^2.1.5
   crypton: ^2.0.1
   convert: ^3.0.0
