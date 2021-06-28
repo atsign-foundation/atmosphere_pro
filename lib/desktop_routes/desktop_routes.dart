@@ -1,5 +1,5 @@
+import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_empty_group.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_detail.dart';
@@ -48,14 +48,23 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_HISTORY: (context) => DesktopHistoryScreen(),
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
-        Map<String, dynamic> args =
-            routeSettings.arguments as Map<String, dynamic>;
-        return DesktopContactsScreen(isBlockedScreen: args['isBlockedScreen']);
+        return DesktopContactsScreen(
+          UniqueKey(),
+          () {
+            DesktopSetupRoutes.nested_pop();
+          },
+        );
       },
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
-        return DesktopContactsScreen(isBlockedScreen: args['isBlockedScreen']);
+        return DesktopContactsScreen(
+          UniqueKey(),
+          () {
+            DesktopSetupRoutes.nested_pop();
+          },
+          isBlockedScreen: args['isBlockedScreen'],
+        );
       },
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
