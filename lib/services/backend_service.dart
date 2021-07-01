@@ -31,6 +31,7 @@ import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/manager/sync_manager.dart';
+import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:http/http.dart' as http;
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
@@ -263,8 +264,6 @@ class BackendService {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
                 listen: false)
             .addToReceiveFileHistory(fromAtSign, decryptedMessage);
-
-        NotificationService().setOnNotificationClick(onNotificationClick);
         await NotificationService().showNotification(fromAtSign);
       }
     }
@@ -285,79 +284,11 @@ class BackendService {
     }
   }
 
-  Future downloadFileFromBin(
-    String sharedByAtSign,
-    String url,
-  ) async {
-    bool isDownloaded = true;
-    try {
-      var response = await http.get(Uri.parse(url));
-      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
-      for (var file in archive) {
-        bool proceedToDownload = await proceedToFileDownload(file.name);
-        if (!proceedToDownload) {
-          isDownloaded = false;
-          continue;
-        }
-
-        var unzipped = file.content as List<int>;
-        bool result = await decryptAndStore(
-          sharedByAtSign,
-          unzipped,
-          file.name,
-        );
-
-        if (result is bool && !result) {
-          isDownloaded = false;
-        } else {
-          // if download is completed, updating my files screen
-          var context = NavService.navKey.currentContext;
-          var receivedHistoryLogs =
-              Provider.of<HistoryProvider>(context, listen: false)
-                  .receivedHistoryLogs;
-          await Provider.of<HistoryProvider>(context, listen: false)
-              .sortFiles(receivedHistoryLogs);
-          Provider.of<HistoryProvider>(context, listen: false).populateTabs();
-        }
-      }
-
-      return isDownloaded;
-    } catch (e) {
-      print('Error in download $e');
-      return false;
-    }
-  }
-
-  Future decryptAndStore(
-    String sharedByAtSign,
-    Uint8List encryptedFileInBytes,
-    String fileName,
-  ) async {
-    print('decrypting file: $fileName');
-    try {
-      var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
-        ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
-        ..sharedBy = sharedByAtSign
-        ..auth = true;
-      var encryptedFileSharedKey = await atClientInstance
-          .getRemoteSecondary()
-          .executeAndParse(fileDecryptionKeyLookUpBuilder);
-      var currentAtSignPrivateKey =
-          await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
-      var fileDecryptionKey = atClientInstance.decryptKey(
-          encryptedFileSharedKey, currentAtSignPrivateKey);
-
-      var decryptedFile = await atClientInstance.encryptionService
-          .decryptFile(encryptedFileInBytes, fileDecryptionKey);
-      var downloadedFile =
-          File('${MixedConstants.RECEIVED_FILE_DIRECTORY}/$fileName');
-      print('open file');
-
-      downloadedFile.writeAsBytesSync(decryptedFile);
-      print('directory: ${downloadDirectory.path}/$fileName');
+  downloadFile(String transferId, String sharedBy) async {
+    var files = await atClientInstance.downloadFile(transferId, sharedBy);
+    if (files is List<File>) {
       return true;
-    } catch (e) {
-      print('error in decryptAndStore : $e');
+    } else {
       return false;
     }
   }

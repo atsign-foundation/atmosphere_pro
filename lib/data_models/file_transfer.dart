@@ -16,10 +16,10 @@ class FileTransfer {
     this.platformFiles,
     this.date,
     this.key,
-    isUpdate = false,
+    this.isUpdate = false,
   }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
-    this.date = DateTime.now();
+    this.date = date ?? DateTime.now();
 
     if (files == null) {
       this.files = platformFileToFileData(platformFiles);

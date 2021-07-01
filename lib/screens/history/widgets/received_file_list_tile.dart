@@ -541,8 +541,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloading = true;
     });
 
-    var result = await BackendService.getInstance().downloadFileFromBin(
-        widget.receivedHistory.sender, widget.receivedHistory.url);
+    var result = await BackendService.getInstance().downloadFile(
+        widget.receivedHistory.key, widget.receivedHistory.sender);
 
     if (result is bool && result) {
       if (mounted) {

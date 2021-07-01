@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:at_client/src/stream/file_transfer_object.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -98,7 +99,17 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  setFileTransferHistory(FileHistory fileHistory, {bool isEdit = false}) async {
+  setFileTransferHistory(
+      FileTransferObject fileTransferObject,
+      List<String> sharedWithAtsigns,
+      Map<String, FileTransferObject> fileShareResult,
+      {bool isEdit = false}) async {
+    FileHistory fileHistory = convertFileTransferObjectToFileHistory(
+      fileTransferObject,
+      sharedWithAtsigns,
+      fileShareResult,
+    );
+
     setStatus(SET_FILE_HISTORY, Status.Loading);
     await getSentHistory();
     AtKey atKey = AtKey()
@@ -138,7 +149,6 @@ class HistoryProvider extends BaseModel {
         sendFileHistory['history'] = historyFile['history'];
         historyFile['history'].forEach((value) {
           FileHistory filesModel = FileHistory.fromJson((value));
-          filesModel.type = HistoryType.send;
           sentHistory.add(filesModel);
         });
       }
@@ -153,6 +163,7 @@ class HistoryProvider extends BaseModel {
     setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
       await getAllFileTransferData();
+      sortReceivedNotifications();
       await sortFiles(receivedHistoryLogs);
       populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
@@ -165,7 +176,12 @@ class HistoryProvider extends BaseModel {
   addToReceiveFileHistory(String sharedBy, String decodedMsg,
       {bool isUpdate = false}) async {
     setStatus(ADD_RECEIVED_FILE, Status.Loading);
-    FileTransfer filesModel = FileTransfer.fromJson((jsonDecode(decodedMsg)));
+    FileTransferObject fileTransferObject =
+        FileTransferObject.fromJson((jsonDecode(decodedMsg)));
+
+    FileTransfer filesModel =
+        convertFiletransferObjectToFileTransfer(fileTransferObject);
+    filesModel.sender = sharedBy;
 
     if (filesModel.isUpdate) {
       int index = receivedHistoryLogs
@@ -201,8 +217,11 @@ class HistoryProvider extends BaseModel {
             .catchError((e) => print("error in get $e"));
 
         if (atvalue != null && atvalue.value != null) {
+          FileTransferObject fileTransferObject =
+              FileTransferObject.fromJson(jsonDecode(atvalue.value));
           FileTransfer filesModel =
-              FileTransfer.fromJson(jsonDecode(atvalue.value));
+              convertFiletransferObjectToFileTransfer(fileTransferObject);
+          filesModel.sender = '@' + key.split('@').last;
 
           if (filesModel.key != null) {
             receivedHistoryLogs.insert(0, filesModel);
@@ -351,6 +370,10 @@ class HistoryProvider extends BaseModel {
     }
   }
 
+  sortReceivedNotifications() {
+    receivedHistoryLogs.sort((a, b) => b.date.compareTo(a.date));
+  }
+
   sortByName(List<FilesDetail> list) {
     try {
       setStatus(SORT_LIST, Status.Loading);
@@ -407,5 +430,52 @@ class HistoryProvider extends BaseModel {
       }
     });
     return isBlocked;
+  }
+
+  FileTransfer convertFiletransferObjectToFileTransfer(
+      FileTransferObject fileTransferObject) {
+    List<FileData> files = [];
+    fileTransferObject.fileStatus.forEach((fileDetail) {
+      files.add(FileData(
+          name: fileDetail.fileName,
+          size: fileDetail.size,
+          isUploaded: fileDetail.isUploaded));
+    });
+
+    return FileTransfer(
+      url: fileTransferObject.fileUrl,
+      files: files,
+      date: fileTransferObject.date,
+      key: fileTransferObject.transferId,
+    );
+  }
+
+  FileHistory convertFileTransferObjectToFileHistory(
+      FileTransferObject fileTransferObject,
+      List<String> sharedWithAtsigns,
+      Map<String, FileTransferObject> fileShareResult) {
+    List<FileData> files = [];
+    var sthareStatus = <ShareStatus>[];
+
+    fileTransferObject.fileStatus.forEach((fileDetail) {
+      files.add(FileData(
+          name: fileDetail.fileName,
+          size: fileDetail.size,
+          isUploaded: fileDetail.isUploaded));
+    });
+
+    FileTransfer fileTransfer = FileTransfer(
+      key: fileTransferObject.transferId,
+      date: fileTransferObject.date,
+      files: files,
+      url: fileTransferObject.fileUrl,
+    );
+
+    sharedWithAtsigns.forEach((atsign) {
+      sthareStatus
+          .add(ShareStatus(atsign, fileShareResult[atsign].sharedStatus));
+    });
+
+    return FileHistory(fileTransfer, sthareStatus, HistoryType.send);
   }
 }
