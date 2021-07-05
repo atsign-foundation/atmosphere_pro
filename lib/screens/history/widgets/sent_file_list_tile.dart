@@ -192,12 +192,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                         FileTransferProvider>(
                                                     context,
                                                     listen: false)
-                                                .sendFileNotification(
+                                                .reSendFileNotification(
                                                     widget.sentHistory,
                                                     widget.sentHistory
                                                         .sharedWith[0].atsign);
 
-                                            isResendingToFirstContact = false;
+                                            setState(() {
+                                              isResendingToFirstContact = false;
+                                            });
                                           },
                                           child: Icon(
                                             widget.sentHistory.sharedWith[0]
@@ -384,7 +386,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
-                                        '/${filesList[index].name}';
+                                        '/sent-files'
+                                            '/${filesList[index].name}';
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
@@ -401,6 +404,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   child: FutureBuilder(
                                       future: isFilePresent(
                                           MixedConstants.SENT_FILE_DIRECTORY +
+                                              '/sent-files' +
                                               '/${filesList[index].name}'),
                                       builder: (context, snapshot) {
                                         return snapshot.connectionState ==
@@ -413,6 +417,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     ?.last,
                                                 MixedConstants
                                                         .SENT_FILE_DIRECTORY +
+                                                    '/sent-files' +
                                                     '/${filesList[index].name}',
                                                 isFilePresent: snapshot.data)
                                             : SizedBox();
@@ -457,15 +462,17 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .reuploadFile(
+                                                          .reuploadFiles(
                                                               filesList,
                                                               index,
                                                               widget
                                                                   .sentHistory);
 
                                                       // isWidgetRebuilt = true;
-                                                      fileResending[index] =
-                                                          false;
+                                                      setState(() {
+                                                        fileResending[index] =
+                                                            false;
+                                                      });
                                                     },
                                                     child: Icon(
                                                       Icons.refresh,
