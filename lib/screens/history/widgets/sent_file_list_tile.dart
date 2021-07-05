@@ -192,7 +192,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                         FileTransferProvider>(
                                                     context,
                                                     listen: false)
-                                                .sendFileNotification(
+                                                .reSendFileNotification(
                                                     widget.sentHistory,
                                                     widget.sentHistory
                                                         .sharedWith[0].atsign);

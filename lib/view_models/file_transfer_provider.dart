@@ -383,16 +383,19 @@ class FileTransferProvider extends BaseModel {
       List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
     var _atclient = BackendService.getInstance().atClientInstance;
-
     try {
       File file = File(MixedConstants.SENT_FILE_DIRECTORY +
           '/sent-files/' +
           _filesList[_index].name);
       bool fileExists = await file.exists();
+      if (!fileExists) {
+        throw ('file not found');
+      }
 
       var uploadStatus = await _atclient
           .reuploadFiles([file], _sentHistory.fileTransferObject);
-      if (uploadStatus is List<FileStatus>) {
+
+      if (uploadStatus is List<FileStatus> && uploadStatus.isNotEmpty) {
         if (uploadStatus[0].isUploaded) {
           var index = _sentHistory.fileDetails.files
               .indexWhere((element) => element.name == _filesList[_index].name);
@@ -401,18 +404,16 @@ class FileTransferProvider extends BaseModel {
             _sentHistory.fileDetails.files[index].isUploaded = true;
           }
 
-          var index2 = _sentHistory.fileTransferObject.fileStatus.indexWhere(
+          var i = _sentHistory.fileTransferObject.fileStatus.indexWhere(
               (element) => element.fileName == _filesList[_index].name);
-
-          if (index2 > -1) {
-            _sentHistory.fileTransferObject.fileStatus[index2].isUploaded =
-                true;
+          if (i > -1) {
+            _sentHistory.fileTransferObject.fileStatus[i].isUploaded = true;
           }
 
           // sending file upload notification to every atsign
           await Future.forEach(_sentHistory.sharedWith,
               (ShareStatus sharedWith) async {
-            await sendFileNotification(_sentHistory, sharedWith.atsign);
+            await reSendFileNotification(_sentHistory, sharedWith.atsign);
           });
         }
       }
@@ -422,7 +423,7 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  sendFileNotification(FileHistory fileHistory, String atsign) async {
+  reSendFileNotification(FileHistory fileHistory, String atsign) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
     var _atclient = BackendService.getInstance().atClientInstance;
 
