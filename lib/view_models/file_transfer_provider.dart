@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
 import 'package:http/http.dart' as http;
+import 'package:at_client/src/stream/file_transfer_object.dart';
 
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
@@ -32,6 +33,8 @@ class FileTransferProvider extends BaseModel {
   String VIDEO_THUMBNAIL = 'video_thumbnail';
   String ACCEPT_FILES = 'accept_files';
   String SEND_FILES = 'send_files';
+  String RETRY_NOTIFICATION = 'retry_notification';
+  String RETRY_UPLOAD = 'retry_upload';
   List<SharedMediaFile> _sharedFiles;
   FilePickerResult result;
   PlatformFile file;
@@ -338,7 +341,7 @@ class FileTransferProvider extends BaseModel {
       });
 
       var uploadResult = await _atclient.uploadFile(_files, _atSigns);
-      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .setFileTransferHistory(
               uploadResult[_atSigns[0]], _atSigns, uploadResult);
@@ -376,102 +379,79 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  reuploadFile(
+  reuploadFiles(
       List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
-    // try {
-    //   var filesToTransfer = _sentHistory.fileDetails;
-    //   var backendService = BackendService.getInstance();
+    setStatus(RETRY_NOTIFICATION, Status.Loading);
+    var _atclient = BackendService.getInstance().atClientInstance;
 
-    //   var fileEncryptionKey = await backendService
-    //       .atClientInstance.encryptionService
-    //       .generateFileEncryptionSharedKey(
-    //           backendService.currentAtSign, _sentHistory.sharedWith[0].atsign);
+    try {
+      File file = File(MixedConstants.SENT_FILE_DIRECTORY +
+          '/sent-files/' +
+          _filesList[_index].name);
+      bool fileExists = await file.exists();
 
-    //   var selectedFile = File(_filesList[_index].path);
-    //   var bytes = selectedFile.readAsBytesSync();
+      var uploadStatus = await _atclient
+          .reuploadFiles([file], _sentHistory.fileTransferObject);
+      if (uploadStatus is List<FileStatus>) {
+        if (uploadStatus[0].isUploaded) {
+          var index = _sentHistory.fileDetails.files
+              .indexWhere((element) => element.name == _filesList[_index].name);
 
-    //   var encryptedFileContent = await backendService
-    //       .atClientInstance.encryptionService
-    //       .encryptFile(bytes, fileEncryptionKey);
+          if (index > -1) {
+            _sentHistory.fileDetails.files[index].isUploaded = true;
+          }
 
-    //   String container
-    //    = filesToTransfer.url.replaceAll(MixedConstants.FILEBIN_URL, '');
-    //   container = container.replaceAll('archive/', '');
-    //   container = container.replaceAll('/zip', '');
+          var index2 = _sentHistory.fileTransferObject.fileStatus.indexWhere(
+              (element) => element.fileName == _filesList[_index].name);
 
-    //   var response = await uploadFileToFilebin(
-    //       container, _filesList[_index].name, encryptedFileContent);
+          if (index2 > -1) {
+            _sentHistory.fileTransferObject.fileStatus[index2].isUploaded =
+                true;
+          }
 
-    //   if (response != null && response is http.Response) {
-    //     // updating name and isUploaded when file upload is success.
-    //     Map fileInfo = jsonDecode(response.body);
-    //     if (_index > -1) {
-    //       filesToTransfer.files[_index].name = fileInfo['file']['filename'];
-    //       filesToTransfer.files[_index].isUploaded = true;
-    //       await File('${_filesList[_index].path}').copy(
-    //           MixedConstants.SENT_FILE_DIRECTORY +
-    //               '/${filesToTransfer.files[_index].name}');
-
-    //       filesToTransfer.files[_index].path =
-    //           '${MixedConstants.SENT_FILE_DIRECTORY}/${filesToTransfer.files[_index].name}';
-    //     }
-    //   } else {
-    //     filesToTransfer.files[_index].isUploaded = false;
-    //   }
-
-    //   filesToTransfer.isUpdate = true;
-    //   for (var contact in _sentHistory.sharedWith) {
-    //     var result = await sendFileNotificationKey(
-    //         contact.atsign, filesToTransfer.key, filesToTransfer);
-
-    //     contact.isNotificationSend = result;
-    //   }
-
-    //   Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-    //           listen: false)
-    //       .setFileTransferHistory(_sentHistory, isEdit: true);
-    // } catch (e) {
-    //   print('Error in reuploadFile $e');
-    //   Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-    //           listen: false)
-    //       .setFileTransferHistory(_sentHistory, isEdit: true);
-    // }
+          // sending file upload notification to every atsign
+          await Future.forEach(_sentHistory.sharedWith,
+              (ShareStatus sharedWith) async {
+            await sendFileNotification(_sentHistory, sharedWith.atsign);
+          });
+        }
+      }
+      setStatus(RETRY_NOTIFICATION, Status.Done);
+    } catch (e) {
+      setStatus(RETRY_NOTIFICATION, Status.Error);
+    }
   }
 
   sendFileNotification(FileHistory fileHistory, String atsign) async {
-    // print('sendFileNotification : ${fileHistory.fileDetails.key}');
-    // print('sendFileNotification atsign : ${atsign}');
-    // try {
-    //   AtKey atKey = AtKey()
-    //     ..metadata = Metadata()
-    //     ..metadata.ttr = -1
-    //     ..metadata.ccd = true
-    //     ..key = fileHistory.fileDetails.key
-    //     ..sharedWith = atsign
-    //     ..metadata.ttl = 60000 * 60 * 24 * 6
-    //     ..sharedBy = BackendService.getInstance().currentAtSign;
+    setStatus(RETRY_NOTIFICATION, Status.Loading);
+    var _atclient = BackendService.getInstance().atClientInstance;
 
-    //   var result = await BackendService.getInstance()
-    //       .atClientInstance
-    //       .put(atKey, jsonEncode(fileHistory.fileDetails.toJson()));
+    try {
+      var sendResponse = await _atclient.shareFiles(
+          [atsign],
+          fileHistory.fileTransferObject.transferId,
+          fileHistory.fileTransferObject.fileUrl,
+          fileHistory.fileTransferObject.fileEncryptionKey,
+          fileHistory.fileTransferObject.fileStatus,
+          date: fileHistory.fileTransferObject.date);
 
-    //   if (result is bool && result) {
-    //     fileHistory.sharedWith.forEach((element) {
-    //       if (atsign == element.atsign) {
-    //         element.isNotificationSend = true;
-    //       }
-    //     });
-    //   }
+      if (sendResponse[atsign].sharedStatus) {
+        var indexToUpdate = fileHistory.sharedWith.indexWhere(
+          (element) => element.atsign == atsign,
+        );
 
-    //   Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-    //           listen: false)
-    //       .setFileTransferHistory(fileHistory, isEdit: true);
-    // } catch (e) {
-    //   Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-    //           listen: false)
-    //       .setFileTransferHistory(fileHistory, isEdit: true);
-    //   print('error in sending notification : $e');
-    // }
+        if (indexToUpdate > -1) {
+          fileHistory.sharedWith[indexToUpdate].isNotificationSend = true;
+        }
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .updateFileHistoryDetail(fileHistory);
+
+        setStatus(RETRY_NOTIFICATION, Status.Done);
+      }
+    } catch (e) {
+      setStatus(RETRY_NOTIFICATION, Status.Error);
+    }
   }
 
   Future uploadFileToFilebin(

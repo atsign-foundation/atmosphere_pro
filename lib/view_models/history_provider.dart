@@ -100,10 +100,11 @@ class HistoryProvider extends BaseModel {
   }
 
   setFileTransferHistory(
-      FileTransferObject fileTransferObject,
-      List<String> sharedWithAtsigns,
-      Map<String, FileTransferObject> fileShareResult,
-      {bool isEdit = false}) async {
+    FileTransferObject fileTransferObject,
+    List<String> sharedWithAtsigns,
+    Map<String, FileTransferObject> fileShareResult, {
+    bool isEdit = false,
+  }) async {
     FileHistory fileHistory = convertFileTransferObjectToFileHistory(
       fileTransferObject,
       sharedWithAtsigns,
@@ -133,6 +134,24 @@ class HistoryProvider extends BaseModel {
         .put(atKey, json.encode(sendFileHistory));
     print('file history saved: ${result}');
     setStatus(SET_FILE_HISTORY, Status.Done);
+  }
+
+  updateFileHistoryDetail(FileHistory fileHistory) async {
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..key = MixedConstants.SENT_FILE_HISTORY;
+
+    int index = sentHistory.indexWhere((element) =>
+        element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+
+    if (index > -1) {
+      sendFileHistory['history'][index] = fileHistory.toJson();
+      sentHistory[index] = fileHistory;
+    }
+    var result = await backendService.atClientInstance
+        .put(atKey, json.encode(sendFileHistory));
+
+    return result;
   }
 
   getSentHistory() async {
@@ -476,6 +495,7 @@ class HistoryProvider extends BaseModel {
           .add(ShareStatus(atsign, fileShareResult[atsign].sharedStatus));
     });
 
-    return FileHistory(fileTransfer, sthareStatus, HistoryType.send);
+    return FileHistory(
+        fileTransfer, sthareStatus, HistoryType.send, fileTransferObject);
   }
 }

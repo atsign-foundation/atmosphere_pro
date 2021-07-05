@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -104,23 +104,30 @@ class FileHistory {
   FileTransfer fileDetails;
   List<ShareStatus> sharedWith;
   HistoryType type;
+  FileTransferObject fileTransferObject;
 
-  FileHistory(this.fileDetails, this.sharedWith, this.type);
-  FileHistory.fromJson(Map<String, dynamic> json) {
-    if (json['fileDetails'] != null) {
-      fileDetails = FileTransfer.fromJson(json['fileDetails']);
+  FileHistory(
+      this.fileDetails, this.sharedWith, this.type, this.fileTransferObject);
+  FileHistory.fromJson(Map<String, dynamic> data) {
+    if (data['fileDetails'] != null) {
+      fileDetails = FileTransfer.fromJson(data['fileDetails']);
     }
     sharedWith = [];
 
-    if (json['sharedWith'] != null) {
-      json['sharedWith'].forEach((element) {
+    if (data['sharedWith'] != null) {
+      data['sharedWith'].forEach((element) {
         ShareStatus shareStatus = ShareStatus.fromJson(element);
         sharedWith.add(shareStatus);
       });
     }
-    type = json['type'] == HistoryType.send.toString()
+    type = data['type'] == HistoryType.send.toString()
         ? HistoryType.send
         : HistoryType.received;
+
+    if (data['fileTransferObject'] != null) {
+      fileTransferObject =
+          FileTransferObject.fromJson(jsonDecode(data['fileTransferObject']));
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -128,6 +135,7 @@ class FileHistory {
     data['fileDetails'] = this.fileDetails;
     data['sharedWith'] = this.sharedWith;
     data['type'] = this.type.toString();
+    data['fileTransferObject'] = jsonEncode(this.fileTransferObject.toJson());
     return data;
   }
 }
