@@ -142,6 +142,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   key: UniqueKey(),
                                   receivedHistory:
                                       provider.receivedHistoryLogs[index],
+                                  isWidgetOpen: provider
+                                      .receivedHistoryLogs[index].isWidgetOpen,
                                 ),
                               ),
                             ),

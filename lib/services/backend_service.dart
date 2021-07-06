@@ -264,15 +264,6 @@ class BackendService {
     }
   }
 
-  downloadFile(String transferId, String sharedBy) async {
-    var files = await atClientInstance.downloadFile(transferId, sharedBy);
-    if (files is List<File>) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   Future proceedToFileDownload(String fileName) async {
     String path = downloadDirectory.path + '/$fileName';
     File file = File(path);

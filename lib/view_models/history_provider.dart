@@ -26,6 +26,7 @@ class HistoryProvider extends BaseModel {
   String SET_FILE_HISTORY = 'set_flie_history';
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
+  String DOWNLOAD_FILE = 'download_file';
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
@@ -513,5 +514,31 @@ class HistoryProvider extends BaseModel {
 
     return FileHistory(
         fileTransfer, sthareStatus, HistoryType.send, fileTransferObject);
+  }
+
+  downloadFiles(String transferId, String sharedBy, bool isWidgetOpen) async {
+    try {
+      var index = receivedHistoryLogs
+          .indexWhere((element) => element.key == transferId);
+      if (index > -1) {
+        receivedHistoryLogs[index].isDownloading = true;
+        receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
+      }
+      notifyListeners();
+
+      var files = await backendService.atClientInstance
+          .downloadFile(transferId, sharedBy);
+      receivedHistoryLogs[index].isDownloading = false;
+      setStatus(DOWNLOAD_FILE, Status.Done);
+
+      if (files is List<File>) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('error in downloading file: $e');
+      return false;
+    }
   }
 }
