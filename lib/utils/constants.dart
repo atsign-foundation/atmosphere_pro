@@ -42,5 +42,6 @@ class MixedConstants {
 
   static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
 
-  static String get SENT_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
+  static String get SENT_FILE_DIRECTORY =>
+      '$ApplicationDocumentsDirectory' + '/sent-files/';
 }

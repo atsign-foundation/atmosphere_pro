@@ -14,20 +14,22 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReceivedFilesListTile extends StatefulWidget {
   final FileTransfer receivedHistory;
-  // final ContactProvider contactProvider;
+  final bool isWidgetOpen;
 
   const ReceivedFilesListTile({
     Key key,
     this.receivedHistory,
-    //  this.contactProvider
+    this.isWidgetOpen = false,
   }) : super(key: key);
   @override
   _ReceivedFilesListTileState createState() => _ReceivedFilesListTileState();
@@ -56,7 +58,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   @override
   void initState() {
-    super.initState();
+    isOpen = widget.isWidgetOpen;
     widget.receivedHistory.files.forEach((element) {
       fileSize += element.size;
     });
@@ -67,6 +69,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     }
     getAtSignDetail();
     isFilesAlreadyDownloaded();
+    super.initState();
   }
 
   getAtSignDetail() {
@@ -148,7 +151,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         await downloadFiles(widget.receivedHistory);
                       },
                       child: isDownloadAvailable
-                          ? isDownloading
+                          ? widget.receivedHistory.isDownloading
                               ? CircularProgressIndicator()
                               : isDownloaded || isFilesAvailableOfline
                                   ? Icon(
@@ -537,24 +540,22 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   downloadFiles(FileTransfer receivedHistory) async {
-    setState(() {
-      isDownloading = true;
-    });
-
-    var result = await BackendService.getInstance().downloadFile(
-        widget.receivedHistory.key, widget.receivedHistory.sender);
+    var result = await Provider.of<HistoryProvider>(context, listen: false)
+        .downloadFiles(
+      widget.receivedHistory.key,
+      widget.receivedHistory.sender,
+      isOpen,
+    );
 
     if (result is bool && result) {
       if (mounted) {
         setState(() {
           isDownloaded = true;
-          isDownloading = false;
         });
       }
     } else if (result is bool && !result) {
       setState(() {
         isDownloaded = false;
-        isDownloading = false;
       });
     }
   }

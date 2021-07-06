@@ -9,6 +9,8 @@ class FileTransfer {
   DateTime date, expiry;
   List<PlatformFile> platformFiles;
   bool isUpdate;
+  bool isDownloading;
+  bool isWidgetOpen;
   FileTransfer({
     this.url,
     this.files,
@@ -17,6 +19,8 @@ class FileTransfer {
     this.date,
     this.key,
     this.isUpdate = false,
+    this.isDownloading = false,
+    this.isWidgetOpen = false,
   }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
@@ -28,6 +32,8 @@ class FileTransfer {
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
     isUpdate = json['isUpdate'];
+    isDownloading = json['isDownloading'];
+    isWidgetOpen = json['isWidgetOpen'];
     url = json['url'];
     sender = json['sender'];
     key = json['key'];
@@ -45,6 +51,8 @@ class FileTransfer {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['isUpdate'] = isUpdate;
+    data['isDownloading'] = isDownloading;
+    data['isWidgetOpen'] = isWidgetOpen;
     data['url'] = this.url;
     data['sender'] = this.sender;
     data['key'] = this.key;
@@ -77,9 +85,18 @@ class FileData {
   String url;
   String path;
   bool isUploaded;
+  bool isUploading;
+  bool isDownloading;
 
-  FileData(
-      {this.name, this.size, this.url, this.path, this.isUploaded = false});
+  FileData({
+    this.name,
+    this.size,
+    this.url,
+    this.path,
+    this.isUploaded = false,
+    isUploading = false,
+    isDownloading = false,
+  });
 
   FileData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -87,6 +104,8 @@ class FileData {
     url = json['url'];
     path = json['path'];
     isUploaded = json['isUploaded'] ?? false;
+    isUploading = json['isUploading'] ?? false;
+    isDownloading = json['isDownloading'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +115,8 @@ class FileData {
     data['url'] = this.url;
     data['path'] = this.path;
     data['isUploaded'] = this.isUploaded;
+    data['isUploading'] = this.isUploading;
+    data['isDownloading'] = this.isDownloading;
     return data;
   }
 }

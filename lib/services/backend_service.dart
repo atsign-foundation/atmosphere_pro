@@ -231,26 +231,6 @@ class BackendService {
       return;
     }
 
-    if (atKey == 'stream_id') {
-      var valueObject = responseJson['value'];
-      var streamId = valueObject.split(':')[0];
-      var fileName = valueObject.split(':')[1];
-      fileLength = valueObject.split(':')[2];
-      fileName = utf8.decode(base64.decode(fileName));
-      userResponse =
-          await acceptStream(fromAtSign, fileName, fileLength, toAtSing);
-
-      if (userResponse == true) {
-        await atClientInstance.sendStreamAck(
-            streamId,
-            fileName,
-            int.parse(fileLength),
-            fromAtSign,
-            _streamCompletionCallBack,
-            _streamReceiveCallBack);
-      }
-      return;
-    }
     print(' FILE_TRANSFER_KEY : ${atKey}');
     if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
       var value = responseJson['value'];
@@ -263,7 +243,7 @@ class BackendService {
       if (decryptedMessage != null) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
                 listen: false)
-            .addToReceiveFileHistory(fromAtSign, decryptedMessage);
+            .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
         await NotificationService().showNotification(fromAtSign);
       }
     }
@@ -281,15 +261,6 @@ class BackendService {
       print('sync done');
     } catch (e) {
       print('error in sync: $e');
-    }
-  }
-
-  downloadFile(String transferId, String sharedBy) async {
-    var files = await atClientInstance.downloadFile(transferId, sharedBy);
-    if (files is List<File>) {
-      return true;
-    } else {
-      return false;
     }
   }
 
