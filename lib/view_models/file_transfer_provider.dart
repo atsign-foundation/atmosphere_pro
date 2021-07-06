@@ -384,9 +384,8 @@ class FileTransferProvider extends BaseModel {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
     var _atclient = BackendService.getInstance().atClientInstance;
     try {
-      File file = File(MixedConstants.SENT_FILE_DIRECTORY +
-          '/sent-files/' +
-          _filesList[_index].name);
+      File file =
+          File(MixedConstants.SENT_FILE_DIRECTORY + _filesList[_index].name);
       bool fileExists = await file.exists();
       if (!fileExists) {
         throw ('file not found');

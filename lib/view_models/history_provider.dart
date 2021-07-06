@@ -22,6 +22,7 @@ class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
   String ADD_RECEIVED_FILE = 'add_received_file';
+  String UPDATE_RECEIVED_RECORD = 'update_received_record';
   String SET_FILE_HISTORY = 'set_flie_history';
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
@@ -192,14 +193,29 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  addToReceiveFileHistory(String sharedBy, String decodedMsg,
-      {bool isUpdate = false}) async {
-    setStatus(ADD_RECEIVED_FILE, Status.Loading);
+  checkForUpdatedOrNewNotification(String sharedBy, String decodedMsg) async {
+    setStatus(UPDATE_RECEIVED_RECORD, Status.Loading);
     FileTransferObject fileTransferObject =
         FileTransferObject.fromJson((jsonDecode(decodedMsg)));
-
     FileTransfer filesModel =
         convertFiletransferObjectToFileTransfer(fileTransferObject);
+    filesModel.sender = sharedBy;
+
+    //check id data with same key already present
+    var index = receivedHistoryLogs
+        .indexWhere((element) => element.key == fileTransferObject.transferId);
+
+    if (index > -1) {
+      receivedHistoryLogs[index] = filesModel;
+    } else {
+      await addToReceiveFileHistory(sharedBy, filesModel);
+    }
+    setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
+  }
+
+  addToReceiveFileHistory(String sharedBy, FileTransfer filesModel,
+      {bool isUpdate = false}) async {
+    setStatus(ADD_RECEIVED_FILE, Status.Loading);
     filesModel.sender = sharedBy;
 
     if (filesModel.isUpdate) {
