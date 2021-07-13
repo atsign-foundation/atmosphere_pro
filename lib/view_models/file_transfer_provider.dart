@@ -382,6 +382,15 @@ class FileTransferProvider extends BaseModel {
   reuploadFiles(
       List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .updateFileSendingStatus(
+      isUploading: true,
+      isUploaded: false,
+      id: _sentHistory.fileDetails.key,
+      filename: _filesList[_index].name,
+    );
+
     var _atclient = BackendService.getInstance().atClientInstance;
     try {
       File file =
@@ -414,11 +423,28 @@ class FileTransferProvider extends BaseModel {
               (ShareStatus sharedWith) async {
             await reSendFileNotification(_sentHistory, sharedWith.atsign);
           });
+
+          Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                  listen: false)
+              .updateFileSendingStatus(
+            isUploading: false,
+            isUploaded: true,
+            id: _sentHistory.fileDetails.key,
+            filename: _filesList[_index].name,
+          );
         }
       }
       setStatus(RETRY_NOTIFICATION, Status.Done);
     } catch (e) {
       setStatus(RETRY_NOTIFICATION, Status.Error);
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .updateFileSendingStatus(
+        isUploading: false,
+        isUploaded: true,
+        id: _sentHistory.fileDetails.key,
+        filename: _filesList[_index].name,
+      );
     }
   }
 

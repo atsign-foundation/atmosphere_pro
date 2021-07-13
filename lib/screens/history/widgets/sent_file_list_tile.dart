@@ -443,7 +443,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : fileResending[index]
+                                            : filesList[index].isUploading
                                                 ? TypingIndicator(
                                                     showIndicator: true,
                                                     flashingCircleBrightColor:
@@ -454,10 +454,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                   )
                                                 : InkWell(
                                                     onTap: () async {
-                                                      setState(() {
-                                                        fileResending[index] =
-                                                            true;
-                                                      });
                                                       await Provider.of<
                                                                   FileTransferProvider>(
                                                               context,
@@ -467,12 +463,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                               index,
                                                               widget
                                                                   .sentHistory);
-
-                                                      // isWidgetRebuilt = true;
-                                                      setState(() {
-                                                        fileResending[index] =
-                                                            false;
-                                                      });
                                                     },
                                                     child: Icon(
                                                       Icons.refresh,

@@ -27,7 +27,7 @@ class TextStrings {
   //sidebar menu texts
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
-  String sidebarBlockedUser = 'Blocked User';
+  String sidebarBlockedUser = 'Blocked @Signs';
   String sidebarMyFiles = 'My Files';
   String sidebarTrustedSenders = 'Trusted Senders';
   String sidebarMyGroups = 'My Groups';

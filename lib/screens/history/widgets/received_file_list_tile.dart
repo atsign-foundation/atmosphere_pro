@@ -63,8 +63,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       fileSize += element.size;
     });
 
-    if (widget.receivedHistory.expiry.difference(DateTime.now()) >
-        Duration(seconds: 0)) {
+    var expiryDate = widget.receivedHistory.date.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
     getAtSignDetail();
@@ -554,9 +554,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
       }
     } else if (result is bool && !result) {
-      setState(() {
-        isDownloaded = false;
-      });
+      if (mounted) {
+        setState(() {
+          isDownloaded = false;
+        });
+      }
     }
   }
 }

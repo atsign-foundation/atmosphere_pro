@@ -486,6 +486,25 @@ class HistoryProvider extends BaseModel {
     );
   }
 
+  updateFileSendingStatus(
+      {bool isUploading, bool isUploaded, String id, String filename}) {
+    var index =
+        sentHistory.indexWhere((element) => element.fileDetails.key == id);
+    if (index > -1) {
+      var fileIndex = sentHistory[index]
+          .fileDetails
+          .files
+          .indexWhere((element) => element.name == filename);
+
+      if (fileIndex > -1) {
+        sentHistory[index].fileDetails.files[fileIndex].isUploading =
+            isUploading;
+        sentHistory[index].fileDetails.files[fileIndex].isUploaded = isUploaded;
+      }
+    }
+    notifyListeners();
+  }
+
   FileHistory convertFileTransferObjectToFileHistory(
       FileTransferObject fileTransferObject,
       List<String> sharedWithAtsigns,
