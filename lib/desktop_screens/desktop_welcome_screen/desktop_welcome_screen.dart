@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/des
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   @override
@@ -204,9 +205,19 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       SizedBox(height: 40.toHeight),
                       SideBarIcon(menuItemsIcons[5], routes[5]),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[6], routes[6]),
+                      SideBarIcon(
+                        menuItemsIcons[6],
+                        routes[6],
+                        isUrlLauncher: true,
+                        arguments: {"url": MixedConstants.TERMS_CONDITIONS},
+                      ),
                       SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[7], routes[7]),
+                      SideBarIcon(
+                        menuItemsIcons[7],
+                        routes[7],
+                        isUrlLauncher: true,
+                        arguments: {"url": MixedConstants.PRIVACY_POLICY},
+                      ),
                       // SizedBox(height: 100.toHeight),
                     ],
                   ),
@@ -297,7 +308,9 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 class SideBarIcon extends StatelessWidget {
   final String image, routeName;
   final Map<String, dynamic> arguments;
-  SideBarIcon(this.image, this.routeName, {this.arguments});
+  final bool isUrlLauncher;
+  SideBarIcon(this.image, this.routeName,
+      {this.arguments, this.isUrlLauncher = false});
   bool isHovered = false;
   bool isCurrentRoute = false;
   var nestedProvider = Provider.of<NestedRouteProvider>(
@@ -320,6 +333,11 @@ class SideBarIcon extends StatelessWidget {
           onTap: () {
             if (routeName != null && routeName != '') {
               DesktopSetupRoutes.nested_push(routeName, arguments: arguments);
+            }
+            if ((isUrlLauncher) &&
+                (arguments != null) &&
+                (arguments['url'] != null)) {
+              _launchInBrowser(arguments['url']);
             }
           },
           child: Image.asset(
@@ -349,5 +367,17 @@ class SideBarIcon extends StatelessWidget {
     //     isHovered = _newValue;
     //   });
     // }
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

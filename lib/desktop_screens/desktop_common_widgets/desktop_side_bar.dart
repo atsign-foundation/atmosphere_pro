@@ -48,9 +48,9 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
     DesktopRoutes.DEKSTOP_MYFILES,
     DesktopRoutes.DESKTOP_GROUP,
     DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER,
-    '',
-    '',
-    '',
+    null,
+    null,
+    null,
   ];
 
   bool showCloseIcon = true;
@@ -142,7 +142,7 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
                     showIconOnly: false,
                     arguments: {
                       'title': menuItemsTitle[6],
-                      'url': MixedConstants.PRIVACY_POLICY
+                      'url': MixedConstants.TERMS_CONDITIONS
                     },
                     isDesktop: true,
                   ),
@@ -153,6 +153,10 @@ class _DesktopSideBarWidgetState extends State<DesktopSideBarWidget> {
                     routeName: targetScreens[7],
                     showIconOnly: false,
                     isDesktop: true,
+                    arguments: {
+                      'title': menuItemsTitle[7],
+                      'url': MixedConstants.PRIVACY_POLICY
+                    },
                   ),
                   // SizedBox(height: 20.toHeight),
                   // Text(
