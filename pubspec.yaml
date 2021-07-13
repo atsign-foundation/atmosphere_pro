@@ -1,5 +1,5 @@
 name: atsign_atmosphere_pro
-description: A new Flutter project.
+description: A file sharing application using @protocol platform
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0+8
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -49,44 +49,17 @@ dependencies:
   hive_flutter: ^0.3.1
   http: ^0.13.0
 
-  at_onboarding_flutter: ^2.0.0
-  # at_onboarding_flutter:
-  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
-  at_client_mobile: ^1.0.0+9
-  at_commons: ^1.0.1+6
-  at_contact: ^2.0.0
-  at_lookup: ^1.0.0+6
-  # at_contacts_flutter:
-  # at_common_flutter:
-  at_common_flutter: ^1.0.0
-    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
-    # git:
-    #   url: https://github.com/atsign-foundation/at_widgets.git
-    #   path: at_common_flutter
-    #   ref: dev_env
-
-  at_contacts_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
-    
-  # at_contacts_group_flutter: ^1.0.0
-  at_contacts_group_flutter:
-   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
-    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
-   
-dependency_overrides:
-  at_contacts_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
-  at_client:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
-  # at_client: ^2.0.0
-  # at_client_mobile: ^2.0.0
+  at_onboarding_flutter: ^2.1.2
   at_client_mobile:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: trunk
+    path: ../atcompany_projects/at_client_sdk/at_client_mobile
+  at_commons: ^2.0.1
+  at_contact: ^2.0.0
+  at_lookup: ^2.0.1
+  at_common_flutter: ^2.0.0
+  at_contacts_flutter: ^2.0.1
+  at_contacts_group_flutter: ^2.0.1
+
+dependency_overrides:
   crypto: 
   crypton: ^2.0.1
   uuid: ^3.0.4
@@ -99,20 +72,12 @@ dependency_overrides:
   path_provider: ^2.0.1
   share: ^2.0.1
   plugin_platform_interface: ^2.0.0
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: trunk
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: trunk
-  # at_common_flutter: ^1.0.0    
-  at_common_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
 
+  at_client_mobile:
+    path: ../atcompany_projects/at_client_sdk/at_client_mobile
+  at_client:
+    path: ../atcompany_projects/at_client_sdk/at_client
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
