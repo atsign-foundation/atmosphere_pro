@@ -351,7 +351,7 @@ class _DesktopReceivedFilesListTileState
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .reuploadFile(
+                                                          .reuploadFiles(
                                                               filesList,
                                                               index,
                                                               widget

@@ -190,7 +190,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                         FileTransferProvider>(
                                                     context,
                                                     listen: false)
-                                                .sendFileNotification(
+                                                .reSendFileNotification(
                                                     widget.sentHistory,
                                                     widget.sentHistory
                                                         .sharedWith[0].atsign);
@@ -415,7 +415,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .reuploadFile(
+                                                          .reuploadFiles(
                                                               filesList,
                                                               index,
                                                               widget

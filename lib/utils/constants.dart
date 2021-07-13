@@ -3,12 +3,12 @@ class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
 
   // for local server
-  // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
+  static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
 
   // for staging server
   // static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
-  static const String ROOT_DOMAIN = 'root.atsign.org';
+  // static const String ROOT_DOMAIN = 'root.atsign.org';
 
   static const int ROOT_PORT = 64;
 
@@ -32,9 +32,9 @@ class MixedConstants {
 
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
-  static const String FILE_TRANSFER_KEY = 'filetransfer';
-  static const String RECEIVED_FILE_HISTORY = 'receivedHistory';
-  static const String SENT_FILE_HISTORY = 'sentHistory';
+  static const String FILE_TRANSFER_KEY = 'file_transfer_';
+  static const String RECEIVED_FILE_HISTORY = 'receivedHistory_v2';
+  static const String SENT_FILE_HISTORY = 'sentHistory_v2';
 
   /// Currently set to 60 days
   static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
@@ -49,9 +49,9 @@ class MixedConstants {
 
   static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
 
-  static String get SENT_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
-
   // temp
   // static String path = '/Users/apple/Desktop/';
   static String path = '/Users/sachinsingh/Documents/temp_path_@mosphere_pro/';
+  static String get SENT_FILE_DIRECTORY =>
+      '$ApplicationDocumentsDirectory' + '/sent-files/';
 }

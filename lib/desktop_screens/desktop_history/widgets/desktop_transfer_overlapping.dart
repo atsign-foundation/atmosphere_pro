@@ -247,7 +247,7 @@ class _DesktopTranferOverlappingContactsState
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .sendFileNotification(
+                                                          .reSendFileNotification(
                                                               widget
                                                                   .fileHistory,
                                                               widget
