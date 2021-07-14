@@ -28,12 +28,12 @@ class CustomOnboarding {
         if (showLoader != null) {
           showLoader(true);
         }
-        _backendService.atClientServiceMap = value;
-        _backendService.currentAtSign = await _backendService
-            .atClientServiceMap[atsign].atClient.currentAtSign;
+        // _backendService.atClientServiceMap = value;
+        // _backendService.currentAtSign = await _backendService
+        //     .atClientServiceMap[atsign].atClient.currentAtSign;
 
-        await _backendService.atClientServiceMap[atsign]
-            .makeAtSignPrimary(atsign);
+        // await _backendService.atClientServiceMap[atsign]
+        //     .makeAtSignPrimary(atsign);
 
         // await _backendService.atClientServiceMap[atsign]
         //     .makeAtSignPrimary(atsign);
