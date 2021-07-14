@@ -23,4 +23,17 @@ class CommonFunctions {
 
     return image;
   }
+
+  getCachedContactName(String atsign) {
+    String _name;
+    AtContact contact = checkForCachedContactDetail(atsign);
+
+    if (contact != null &&
+        contact.tags != null &&
+        contact.tags['name'] != null) {
+      _name = contact.tags['name'].toString();
+    }
+
+    return _name;
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
@@ -40,7 +41,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Welcome @John!',
+                'Welcome !' +
+                    (BackendService.getInstance().atClientInstance != null
+                        ? '${BackendService.getInstance().atClientInstance.currentAtSign}'
+                        : ''),
                 style: CustomTextStyles.desktopBlackPlayfairDisplay26,
               ),
               SizedBox(

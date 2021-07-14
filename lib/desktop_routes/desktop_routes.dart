@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_grou
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_view.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_new_group.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
@@ -23,12 +24,14 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
+  // static String initialRoute = DesktopRoutes.DESKTOP_WELCOME;
   static var _provider = Provider.of<NestedRouteProvider>(
       NavService.navKey.currentContext,
       listen: false);
   static Map<String, WidgetBuilder> get routes {
     return {
-      DesktopRoutes.DESKTOP_HOME: (context) => DesktopWelcomeScreenStart(),
+      DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(key: UniqueKey()),
+      DesktopRoutes.DESKTOP_WELCOME: (context) => DesktopWelcomeScreenStart(),
     };
   }
 

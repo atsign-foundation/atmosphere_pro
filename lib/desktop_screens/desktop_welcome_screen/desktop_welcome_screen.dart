@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
@@ -26,45 +27,58 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool showSwitchAtsign = false;
-  BackendService backendService = BackendService.getInstance();
-  var atClientPrefernce;
-  bool authenticating = false;
+  // BackendService backendService = BackendService.getInstance();
+  // var atClientPrefernce;
+  // bool authenticating = false;
 
-  @override
-  void initState() {
-    _checkToOnboard();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _checkToOnboard();
+  //   super.initState();
+  // }
 
-  void _checkToOnboard() async {
-    String currentatSign = await backendService.getAtSign();
-    print('currentatSign $currentatSign');
-    await backendService
-        .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
+  // void _checkToOnboard() async {
+  //   String currentatSign = await backendService.getAtSign();
+  //   print('currentatSign $currentatSign');
+  //   await backendService
+  //       .getAtClientPreference()
+  //       .then((value) => atClientPrefernce = value)
+  //       .catchError((e) => print(e));
 
-    // if (currentatSign != null && currentatSign != '') {
-    //   await CustomOnboarding.onboard(
-    //       atSign: currentatSign,
-    //       atClientPrefernce: atClientPrefernce,
-    //       showLoader: showLoader);
-    // }
-    await CustomOnboarding.onboard(
-        atSign: currentatSign,
-        atClientPrefernce: atClientPrefernce,
-        showLoader: showLoader);
-  }
+  //   // if (currentatSign != null && currentatSign != '') {
+  //   //   await CustomOnboarding.onboard(
+  //   //       atSign: currentatSign,
+  //   //       atClientPrefernce: atClientPrefernce,
+  //   //       showLoader: showLoader);
+  //   // }
+  //   await CustomOnboarding.onboard(
+  //       atSign: currentatSign,
+  //       atClientPrefernce: atClientPrefernce,
+  //       showLoader: showLoader);
+  // }
 
-  void showLoader(bool loaderState) {
-    setState(() {
-      authenticating = loaderState;
-    });
+  // void showLoader(bool loaderState) {
+  //   setState(() {
+  //     authenticating = loaderState;
+  //   });
+  // }
+
+  List<String> atsignList;
+
+  cleanKeyChain() async {
+    // var _keyChainManager = KeyChainManager.getInstance();
+    // var _atSignsList = await _keyChainManager.getAtSignListFromKeychain();
+    // _atSignsList?.forEach((element) {
+    //   _keyChainManager.deleteAtSignFromKeychain(element);
+    // });
+    // print('Keychain cleaned');
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    // cleanKeyChain();
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
@@ -91,7 +105,15 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                   Icon(Icons.notifications, size: 30),
                   SizedBox(width: 30),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      if (atsignList == null) {
+                        atsignList = await BackendService.getInstance()
+                            .atClientServiceMap[BackendService.getInstance()
+                                .atClientInstance
+                                .currentAtSign]
+                            .getAtsignList();
+                      }
+
                       setState(() {
                         showSwitchAtsign = !showSwitchAtsign;
                       });
@@ -99,7 +121,9 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                     child: Row(
                       children: [
                         ContactInitial(
-                          initials: 'Levina',
+                          initials: BackendService.getInstance()
+                              .atClientInstance
+                              .currentAtSign,
                           size: 30,
                           maxSize: (80.0 - 30.0),
                           minSize: 50,
@@ -111,17 +135,26 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                 ],
               ),
             ),
-            showSwitchAtsign
-                ? Positioned(
-                    top: 60,
-                    right: 50,
-                    child: DesktopSwitchAtsign(),
-                  )
-                : SizedBox()
+            // showSwitchAtsign
+            //     ? Positioned(
+            //         top: 60,
+            //         right: 50,
+            //         child: DesktopSwitchAtsign(atSignList: atsignList),
+            //       )
+            //     : SizedBox()
           ],
         ),
       ),
-      body: DesktopWelcomeScreen(),
+      body: Stack(clipBehavior: Clip.none, children: [
+        DesktopWelcomeScreen(),
+        showSwitchAtsign
+            ? Positioned(
+                top: -10,
+                right: 50,
+                child: DesktopSwitchAtsign(atSignList: atsignList),
+              )
+            : SizedBox()
+      ]),
     );
   }
 }
