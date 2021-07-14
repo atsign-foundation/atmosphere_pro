@@ -1,9 +1,8 @@
 import 'dart:typed_data';
-import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -58,12 +57,10 @@ class _DesktopTranferOverlappingContactsState
         child: Stack(
           children: [
             Stack(
-              children: List<Positioned>.generate(
-                (widget.selectedList.length > 3)
-                    ? 3
-                    : widget.selectedList.length,
+              children: List.generate(
+                widget.selectedList.length - 1,
                 (index) {
-                  Uint8List image = getCachedContactImage(
+                  Uint8List image = CommonFunctions().getCachedContactImage(
                       widget?.selectedList[index]?.atsign);
 
                   return Positioned(
@@ -174,13 +171,17 @@ class _DesktopTranferOverlappingContactsState
                             childAspectRatio: 1 / 1.7,
                             physics: NeverScrollableScrollPhysics(),
                             children: List.generate(
-                              widget.selectedList.length,
+                              widget.selectedList.length - 1,
                               (index) {
                                 bool isNotified = widget
                                     .selectedList[index].isNotificationSend;
 
-                                Uint8List image = getCachedContactImage(
+                                String name = CommonFunctions().getContactName(
                                     widget.selectedList[index].atsign);
+
+                                Uint8List image = CommonFunctions()
+                                    .getCachedContactImage(
+                                        widget.selectedList[index].atsign);
 
                                 return Container(
                                   decoration: BoxDecoration(
@@ -204,10 +205,12 @@ class _DesktopTranferOverlappingContactsState
                                                     ? CustomCircleAvatar(
                                                         byteImage: image,
                                                         nonAsset: true,
-                                                      )
+                                                        size: 10)
                                                     : DesktopCustomPersonVerticalTile(
-                                                        title: 'Levina',
-                                                        subTitle: '@levina',
+                                                        title: widget
+                                                            .selectedList[index]
+                                                            .atsign,
+                                                        subTitle: name,
                                                         showCancelIcon: false)),
                                             Positioned(
                                                 right: 0,
@@ -289,21 +292,5 @@ class _DesktopTranferOverlappingContactsState
         ),
       ),
     );
-  }
-
-  getCachedContactImage(String atsign) {
-    //TODO: remove this when integrating to sdk
-    return null;
-    Uint8List image;
-    AtContact contact = checkForCachedContactDetail(atsign);
-
-    if (contact != null &&
-        contact.tags != null &&
-        contact.tags['image'] != null) {
-      List<int> intList = contact.tags['image'].cast<int>();
-      image = Uint8List.fromList(intList);
-    }
-
-    return image;
   }
 }

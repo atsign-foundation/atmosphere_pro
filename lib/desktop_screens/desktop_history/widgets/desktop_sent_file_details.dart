@@ -1,14 +1,36 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
-class DesktopSentFileDetails extends StatelessWidget {
+class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory selectedFileData;
-  DesktopSentFileDetails({this.selectedFileData});
+  UniqueKey key;
+  DesktopSentFileDetails({this.key, this.selectedFileData});
+
+  @override
+  _DesktopSentFileDetailsState createState() => _DesktopSentFileDetailsState();
+}
+
+class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
+  int fileCount = 0;
+  int fileSize = 0;
+
+  @override
+  void initState() {
+    fileCount = widget.selectedFileData.fileDetails.files.length;
+
+    widget.selectedFileData.fileDetails.files.forEach((element) {
+      fileSize += element.size;
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,39 +45,58 @@ class DesktopSentFileDetails extends StatelessWidget {
           Text('Details',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           SizedBox(height: 15.toHeight),
-          Row(
+          Column(
             children: <Widget>[
-              getImagePlaceholder(),
-              SizedBox(width: 25),
-              getImagePlaceholder(),
-              Expanded(
-                child: SizedBox(),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: ButtonStyle(backgroundColor:
-                    MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                  return ColorConstants.dark_red;
-                }), textStyle: MaterialStateProperty.resolveWith<TextStyle>(
-                    (Set<MaterialState> states) {
-                  return TextStyle(color: Colors.white);
-                })),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: 20,
+              Align(
+                alignment: Alignment.center,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  runSpacing: 10.0,
+                  spacing: 20.0,
+                  children: List.generate(
+                      widget.selectedFileData.fileDetails.files.length,
+                      (index) {
+                    return Container(
+                      child: ListTile(
+                        title: Text(
+                          widget.selectedFileData.fileDetails.files[index]?.name
+                              .toString(),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.toFont,
+                          ),
+                        ),
+                        subtitle: Text(
+                          double.parse(widget.selectedFileData.fileDetails
+                                      .files[index].size
+                                      .toString()) <=
+                                  1024
+                              ? '${widget.selectedFileData.fileDetails.files[index].size} Kb' +
+                                  ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}'
+                              : '${(widget.selectedFileData.fileDetails.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                  ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}',
+                          style: TextStyle(
+                            color: ColorConstants.fadedText,
+                            fontSize: 14.toFont,
+                          ),
+                        ),
+                        leading: CommonFunctions().thumbnail(
+                            widget
+                                .selectedFileData.fileDetails.files[index].name
+                                .split('.')
+                                .last
+                                .toString(),
+                            MixedConstants.SENT_FILE_DIRECTORY +
+                                widget.selectedFileData.fileDetails.files[index]
+                                    .name),
+                        trailing: IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () {},
+                        ),
                       ),
-                      Text(
-                        'Resend',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+                    );
+                  }),
                 ),
               )
             ],
@@ -64,24 +105,28 @@ class DesktopSentFileDetails extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '2 files . ',
+                '${fileCount.toString()} files . ',
                 style: CustomTextStyles.greyText15,
               ),
-              Text('250 MB', style: CustomTextStyles.greyText15),
+              fileSize > 1024
+                  ? Text('${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB',
+                      style: CustomTextStyles.greyText15)
+                  : Text('${fileSize.toStringAsFixed(2)} KB',
+                      style: CustomTextStyles.greyText15),
             ],
           ),
           SizedBox(height: 15.toHeight),
           Text('Successfully transfered', style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
-          Text('August 12 2020', style: CustomTextStyles.greyText15),
+          Text('${widget.selectedFileData.fileDetails.date.toLocal()}',
+              style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           Text('To', style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
-          selectedFileData != null
+          widget.selectedFileData != null
               ? DesktopTranferOverlappingContacts(
-                  selectedList: selectedFileData.sharedWith
-                      .sublist(1, selectedFileData.sharedWith.length),
-                  fileHistory: selectedFileData)
+                  selectedList: widget.selectedFileData.sharedWith,
+                  fileHistory: widget.selectedFileData)
               : SizedBox()
         ],
       ),

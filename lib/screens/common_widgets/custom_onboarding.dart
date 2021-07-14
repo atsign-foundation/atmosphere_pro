@@ -6,7 +6,9 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
@@ -36,7 +38,9 @@ class CustomOnboarding {
         if (showLoader != null) {
           showLoader(false);
         }
-        initServices();
+        await initServices();
+        await getTransferData();
+
         // await Navigator.pushNamedAndRemoveUntil(
         //     NavService.navKey.currentContext,
         //     Routes.WELCOME_SCREEN,
@@ -66,5 +70,13 @@ class CustomOnboarding {
     await GroupService().fetchGroupsAndContacts();
 
     print('group init done');
+  }
+
+  static getTransferData() async {
+    HistoryProvider historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
+    await historyProvider.getSentHistory();
+    await historyProvider.getReceivedHistory();
   }
 }

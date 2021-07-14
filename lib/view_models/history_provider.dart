@@ -158,9 +158,7 @@ class HistoryProvider extends BaseModel {
   }
 
   getSentHistory() async {
-    sentHistory = DemoData().getFileHistoryData();
-    setStatus(SENT_HISTORY, Status.Done);
-    return;
+    setStatus(SENT_HISTORY, Status.Loading);
     try {
       sentHistory = [];
       AtKey key = AtKey()
@@ -184,13 +182,8 @@ class HistoryProvider extends BaseModel {
   }
 
   getReceivedHistory() async {
-    print('getReceivedHistory');
+    setStatus(RECEIVED_HISTORY, Status.Loading);
     receivedHistoryLogs = [];
-    DemoData().getFileHistoryData().forEach((element) {
-      receivedHistoryLogs.add(element.fileDetails);
-    });
-    setStatus(RECEIVED_HISTORY, Status.Done);
-    return;
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
