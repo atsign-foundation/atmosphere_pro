@@ -101,9 +101,7 @@ dependency_overrides:
   path_provider: ^2.0.1
   share: ^2.0.1
   plugin_platform_interface: ^2.0.0
-  webview_flutter: ^2.0.4
-  url_launcher: ^6.0.3
-  permission_handler: ^6.1.3
+  permission_handler: ^8.1.2
   at_commons:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
@@ -162,9 +160,6 @@ flutter:
         - asset: assets/fonts/HelveticaExtraBold.ttf
           weight: 800
           # style: italic
-    - family: PlayfairDisplay
-      fonts:
-        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-Bold.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
@@ -173,4 +168,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
