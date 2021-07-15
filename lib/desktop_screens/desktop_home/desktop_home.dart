@@ -1,10 +1,11 @@
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DesktopHome extends StatefulWidget {
@@ -50,38 +51,111 @@ class _DesktopHomeState extends State<DesktopHome> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.black,
-                    width: 0.1,
-                  ),
+      body: Row(
+        children: [
+          Container(
+              width:
+                  (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+              padding: EdgeInsets.all(36),
+
+              /// If we remove this Scaffold then it doesnt login
+              child: Scaffold(
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      ImageConstants.logoIcon,
+                      height: 80.toHeight,
+                      width: 80.toHeight,
+                    ),
+                    SizedBox(
+                      height: 28,
+                    ),
+                    Text(
+                      'File transfer.',
+                      style: CustomTextStyles.desktopBlackPlayfairDisplay26,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "It's safe!",
+                      style: CustomTextStyles.desktopBlackPlayfairDisplay26,
+                    ),
+                    Spacer(),
+                    Text(
+                      '@sign',
+                      style: CustomTextStyles.secondaryRegular16,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                        onTap: () {},
+                        child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: ColorConstants.textBoxBg,
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            child: ListTile(
+                              title: Text('Enter @sign',
+                                  style: CustomTextStyles
+                                      .desktopSecondaryRegular18),
+                            ))),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: CommonButton(
+                        'Send',
+                        () {},
+                        color: ColorConstants.orangeColor,
+                        border: 7,
+                        height: 50,
+                        width: double.infinity,
+                        fontSize: 20,
+                        removePadding: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 14,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "Don't have an @sign? Get now.",
+                        style: CustomTextStyles.orangeMedium16,
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      '@mosphere',
+                      style: CustomTextStyles.blackBold(size: 14),
+                    ),
+                    Text(
+                      'The @company Copyrights',
+                      style: CustomTextStyles.secondaryRegular14,
+                    ),
+                  ],
                 ),
-              ),
-              child: AppBar(
-                leading: Image.asset(
-                  ImageConstants.logoIcon,
-                  height: 50.toHeight,
-                  width: 50.toHeight,
+              )),
+          Expanded(
+              child: Container(
+            width:
+                (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
+            height: SizeConfig().screenHeight,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  ImageConstants.homeBgDesktop,
                 ),
-                actions: [
-                  Icon(Icons.notifications, size: 30),
-                  SizedBox(width: 30),
-                ],
+                fit: BoxFit.fill,
               ),
             ),
-          ],
-        ),
-      ),
-      body: Center(
-        child: Text('alala'),
+          )),
+        ],
       ),
     );
   }
