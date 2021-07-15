@@ -159,6 +159,9 @@ flutter:
           weight: 700
         - asset: assets/fonts/HelveticaExtraBold.ttf
           weight: 800
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-Bold.ttf
           # style: italic
   #   - family: Trajan Pro
   #     fonts:
