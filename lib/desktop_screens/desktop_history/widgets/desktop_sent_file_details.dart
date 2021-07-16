@@ -1,12 +1,17 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory selectedFileData;
@@ -48,7 +53,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
           Column(
             children: <Widget>[
               Align(
-                alignment: Alignment.center,
+                alignment: Alignment.topLeft,
                 child: Wrap(
                   alignment: WrapAlignment.start,
                   runAlignment: WrapAlignment.start,
@@ -58,41 +63,76 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                       widget.selectedFileData.fileDetails.files.length,
                       (index) {
                     return Container(
-                      child: ListTile(
-                        title: Text(
-                          widget.selectedFileData.fileDetails.files[index]?.name
-                              .toString(),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.toFont,
-                          ),
-                        ),
-                        subtitle: Text(
-                          double.parse(widget.selectedFileData.fileDetails
-                                      .files[index].size
-                                      .toString()) <=
-                                  1024
-                              ? '${widget.selectedFileData.fileDetails.files[index].size} Kb' +
-                                  ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}'
-                              : '${(widget.selectedFileData.fileDetails.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
-                                  ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}',
-                          style: TextStyle(
-                            color: ColorConstants.fadedText,
-                            fontSize: 14.toFont,
-                          ),
-                        ),
-                        leading: CommonFunctions().thumbnail(
+                      child: Container(
+                        width: 250,
+                        child: ListTile(
+                          title: Text(
                             widget
-                                .selectedFileData.fileDetails.files[index].name
-                                .split('.')
-                                .last
+                                .selectedFileData.fileDetails.files[index]?.name
                                 .toString(),
-                            MixedConstants.SENT_FILE_DIRECTORY +
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14.toFont,
+                            ),
+                          ),
+                          subtitle: Text(
+                            double.parse(widget.selectedFileData.fileDetails
+                                        .files[index].size
+                                        .toString()) <=
+                                    1024
+                                ? '${widget.selectedFileData.fileDetails.files[index].size} Kb' +
+                                    ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}'
+                                : '${(widget.selectedFileData.fileDetails.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                    ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}',
+                            style: TextStyle(
+                              color: ColorConstants.fadedText,
+                              fontSize: 14.toFont,
+                            ),
+                          ),
+                          leading: InkWell(
+                            onTap: () async {
+                              await OpenFile.open(
+                                  MixedConstants.DESKTOP_SENT_DIR +
+                                      widget.selectedFileData.fileDetails
+                                          .files[index].name);
+                            },
+                            child: CommonFunctions().thumbnail(
                                 widget.selectedFileData.fileDetails.files[index]
-                                    .name),
-                        trailing: IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () {},
+                                    .name
+                                    .split('.')
+                                    .last
+                                    .toString(),
+                                MixedConstants.DESKTOP_SENT_DIR +
+                                    widget.selectedFileData.fileDetails
+                                        .files[index].name),
+                          ),
+                          trailing: IconButton(
+                            icon: widget.selectedFileData.fileDetails
+                                    .files[index].isUploaded
+                                ? Icon(
+                                    Icons.done,
+                                    color: Color(0xFF08CB21),
+                                    size: 25.toFont,
+                                  )
+                                : widget.selectedFileData.fileDetails
+                                        .files[index].isUploading
+                                    ? TypingIndicator(
+                                        showIndicator: true,
+                                        flashingCircleBrightColor:
+                                            ColorConstants.dullText,
+                                        flashingCircleDarkColor:
+                                            ColorConstants.fadedText,
+                                      )
+                                    : Icon(Icons.refresh),
+                            onPressed: () async {
+                              await Provider.of<FileTransferProvider>(context,
+                                      listen: false)
+                                  .reuploadFiles(
+                                      widget.selectedFileData.fileDetails.files,
+                                      index,
+                                      widget.selectedFileData);
+                            },
+                          ),
                         ),
                       ),
                     );
@@ -118,7 +158,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
           SizedBox(height: 15.toHeight),
           Text('Successfully transfered', style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
-          Text('${widget.selectedFileData.fileDetails.date.toLocal()}',
+          Text(
+              '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData.fileDetails.date)}',
               style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           Text('To', style: CustomTextStyles.greyText15),

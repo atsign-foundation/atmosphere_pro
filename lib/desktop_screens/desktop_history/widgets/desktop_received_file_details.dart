@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DesktopReceivedFileDetails extends StatefulWidget {
@@ -22,6 +23,7 @@ class DesktopReceivedFileDetails extends StatefulWidget {
 class _DesktopReceivedFileDetailsState
     extends State<DesktopReceivedFileDetails> {
   int fileCount = 0, fileSize = 0;
+  bool isDownloadAvailable = false;
 
   @override
   void initState() {
@@ -30,6 +32,12 @@ class _DesktopReceivedFileDetailsState
     widget.fileTransfer.files.forEach((element) {
       fileSize += element.size;
     });
+
+    var expiryDate = widget.fileTransfer.date.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+
     super.initState();
   }
 
@@ -101,20 +109,22 @@ class _DesktopReceivedFileDetailsState
                             }),
                         trailing: widget.fileTransfer.isDownloading
                             ? CircularProgressIndicator()
-                            : IconButton(
-                                icon: Icon(Icons.download),
-                                onPressed: () async {
-                                  var response =
-                                      await Provider.of<HistoryProvider>(
-                                              context,
-                                              listen: false)
-                                          .downloadFiles(
-                                    widget.fileTransfer.key,
-                                    widget.fileTransfer.sender,
-                                    false,
-                                  );
-                                },
-                              ),
+                            : isDownloadAvailable
+                                ? IconButton(
+                                    icon: Icon(Icons.download),
+                                    onPressed: () async {
+                                      var response =
+                                          await Provider.of<HistoryProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .downloadFiles(
+                                        widget.fileTransfer.key,
+                                        widget.fileTransfer.sender,
+                                        false,
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
                       ),
                     );
                   }),
@@ -137,9 +147,8 @@ class _DesktopReceivedFileDetailsState
             ],
           ),
           SizedBox(height: 15.toHeight),
-          Text('Receiving', style: CustomTextStyles.orangeext15),
-          SizedBox(height: 15.toHeight),
-          Text('August 12 2020', style: CustomTextStyles.greyText15),
+          Text('${DateFormat("MM-dd-yyyy").format(widget.fileTransfer.date)}',
+              style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           SizedBox(height: 15.toHeight),
         ],
