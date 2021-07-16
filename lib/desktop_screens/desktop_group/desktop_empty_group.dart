@@ -22,97 +22,97 @@ class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
     return Container(
       width: SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH,
       color: ColorConstants.fadedBlue,
-      child: createBtnTapped
-          ? Row(
-              children: [
-                Expanded(
-                  child: Navigator(
-                    key: NavService.groupLeftHalfNavKey,
-                    initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
-                    onGenerateRoute: (routeSettings) {
-                      var routeBuilders =
-                          DesktopSetupRoutes.groupLeftRouteBuilders(
-                              context, routeSettings);
-                      return MaterialPageRoute(builder: (context) {
-                        return routeBuilders[routeSettings.name](context);
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Navigator(
-                    key: NavService.groupRightHalfNavKey,
-                    initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
-                    onGenerateRoute: (routeSettings) {
-                      var routeBuilders =
-                          DesktopSetupRoutes.groupRightRouteBuilders(
-                        context,
-                        routeSettings,
-                        initialRouteOnArrowBackTap: () {
-                          setState(() {
-                            createBtnTapped = false;
-                          });
-                        },
-                        initialRouteOnDoneTap:
-                            _navigator(DesktopRoutes.DESKTOP_NEW_GROUP),
-                      );
-                      return MaterialPageRoute(builder: (context) {
-                        return routeBuilders[routeSettings.name](context);
-                      });
-                    },
-                  ),
-                )
-              ],
-            )
-          : _emptyGroup(),
+      // child: createBtnTapped
+      //     ? Row(
+      //         children: [
+      //           Expanded(
+      //             child: Navigator(
+      //               key: NavService.groupLeftHalfNavKey,
+      //               initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
+      //               onGenerateRoute: (routeSettings) {
+      //                 var routeBuilders =
+      //                     DesktopSetupRoutes.groupLeftRouteBuilders(
+      //                         context, routeSettings);
+      //                 return MaterialPageRoute(builder: (context) {
+      //                   return routeBuilders[routeSettings.name](context);
+      //                 });
+      //               },
+      //             ),
+      //           ),
+      //           Expanded(
+      //             child: Navigator(
+      //               key: NavService.groupRightHalfNavKey,
+      //               initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
+      //               onGenerateRoute: (routeSettings) {
+      //                 var routeBuilders =
+      //                     DesktopSetupRoutes.groupRightRouteBuilders(
+      //                   context,
+      //                   routeSettings,
+      //                   initialRouteOnArrowBackTap: () {
+      //                     setState(() {
+      //                       createBtnTapped = false;
+      //                     });
+      //                   },
+      //                   initialRouteOnDoneTap:
+      //                       _navigator(DesktopRoutes.DESKTOP_NEW_GROUP),
+      //                 );
+      //                 return MaterialPageRoute(builder: (context) {
+      //                   return routeBuilders[routeSettings.name](context);
+      //                 });
+      //               },
+      //             ),
+      //           )
+      //         ],
+      //       )
+      //     : _emptyGroup(),
     );
   }
 
-  _navigator(String _route) {
-    switch (_route) {
-      case DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL:
-        return () {
-          Navigator.of(NavService.groupRightHalfNavKey.currentContext)
-              .pushNamed(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL);
-        };
-      case DesktopRoutes.DESKTOP_GROUP_LIST:
-        return () {
-          Navigator.of(NavService.groupLeftHalfNavKey.currentContext)
-              .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
-                  arguments: {
-                'onDone': _navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
-              });
-        };
-      case DesktopRoutes.DESKTOP_GROUP_DETAIL:
-        return () {
-          Navigator.of(NavService.groupRightHalfNavKey.currentContext)
-              .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                  arguments: {});
-        };
+  // _navigator(String _route) {
+  //   switch (_route) {
+  //     case DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL:
+  //       return () {
+  //         Navigator.of(NavService.groupRightHalfNavKey.currentContext)
+  //             .pushNamed(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL);
+  //       };
+  //     case DesktopRoutes.DESKTOP_GROUP_LIST:
+  //       return () {
+  //         Navigator.of(NavService.groupLeftHalfNavKey.currentContext)
+  //             .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
+  //                 arguments: {
+  //               'onDone': _navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
+  //             });
+  //       };
+  //     case DesktopRoutes.DESKTOP_GROUP_DETAIL:
+  //       return () {
+  //         Navigator.of(NavService.groupRightHalfNavKey.currentContext)
+  //             .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
+  //                 arguments: {});
+  //       };
 
-      case DesktopRoutes.DESKTOP_NEW_GROUP:
-        return () {
-          Navigator.of(NavService.groupRightHalfNavKey.currentContext)
-              .pushNamed(DesktopRoutes.DESKTOP_NEW_GROUP, arguments: {
-            'onPop': () {
-              Navigator.of(NavService.groupRightHalfNavKey.currentContext)
-                  .pop();
-            },
-            'onDone': () {
-              Navigator.of(NavService.groupLeftHalfNavKey.currentContext)
-                  .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
-                      arguments: {
-                    'onDone':
-                        _navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
-                  });
-              Navigator.of(NavService.groupRightHalfNavKey.currentContext)
-                  .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                      arguments: {});
-            }
-          });
-        };
-    }
-  }
+  //     case DesktopRoutes.DESKTOP_NEW_GROUP:
+  //       return () {
+  //         Navigator.of(NavService.groupRightHalfNavKey.currentContext)
+  //             .pushNamed(DesktopRoutes.DESKTOP_NEW_GROUP, arguments: {
+  //           'onPop': () {
+  //             Navigator.of(NavService.groupRightHalfNavKey.currentContext)
+  //                 .pop();
+  //           },
+  //           'onDone': () {
+  //             Navigator.of(NavService.groupLeftHalfNavKey.currentContext)
+  //                 .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
+  //                     arguments: {
+  //                   'onDone':
+  //                       _navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
+  //                 });
+  //             Navigator.of(NavService.groupRightHalfNavKey.currentContext)
+  //                 .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
+  //                     arguments: {});
+  //           }
+  //         });
+  //       };
+  //   }
+  // }
 
   Widget _emptyGroup() {
     return Column(

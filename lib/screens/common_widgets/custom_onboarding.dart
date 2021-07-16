@@ -4,6 +4,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -28,7 +29,8 @@ class CustomOnboarding {
         print('atsign $atsign');
 
         if (showLoader != null) {
-          showLoader(true, atsign);
+          // showLoader(true, atsign);
+          LoadingDialog().showTextLoader('Initialising for $atsign');
         }
         // _backendService.atClientServiceMap = value;
         // _backendService.currentAtSign = await _backendService
@@ -49,12 +51,15 @@ class CustomOnboarding {
 
         if (showLoader != null) {
           showLoader(false, '');
+          LoadingDialog().hide();
         }
 
         // await Navigator.pushNamedAndRemoveUntil(
         //     NavService.navKey.currentContext,
         //     Routes.WELCOME_SCREEN,
         //     (Route<dynamic> route) => false);
+
+        NavService.resetNestedNavKey();
 
         await Navigator.pushNamedAndRemoveUntil(
             NavService.navKey.currentContext,

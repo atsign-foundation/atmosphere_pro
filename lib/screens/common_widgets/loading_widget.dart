@@ -39,7 +39,7 @@ class LoadingDialog {
     }
   }
 
-  showText(String text, {TextStyle style}) {
+  showTextLoader(String text, {TextStyle style}) {
     if (!_showing) {
       _showing = true;
       NavService.navKey.currentState

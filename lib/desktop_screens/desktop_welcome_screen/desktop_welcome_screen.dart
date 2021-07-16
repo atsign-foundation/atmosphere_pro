@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -26,9 +27,21 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 }
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
-  bool showSwitchAtsign = false;
+  bool showSwitchAtsign = false, authenticating = false;
+  String currentatSign;
 
   List<String> atsignList;
+
+  void _showLoader(bool loaderState, String authenticatingForAtsign) {
+    if (mounted) {
+      setState(() {
+        if (loaderState) {
+          currentatSign = authenticatingForAtsign;
+        }
+        authenticating = loaderState;
+      });
+    }
+  }
 
   cleanKeyChain() async {
     var _keyChainManager = KeyChainManager.getInstance();
@@ -116,8 +129,12 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
             ? Positioned(
                 top: 0,
                 right: 50,
-                child: DesktopSwitchAtsign(atSignList: atsignList),
+                child: DesktopSwitchAtsign(
+                    atSignList: atsignList, showLoader: _showLoader),
               )
+            : SizedBox(),
+        authenticating
+            ? LoadingDialog().showTextLoader('Initialising for $currentatSign')
             : SizedBox()
       ]),
     );
