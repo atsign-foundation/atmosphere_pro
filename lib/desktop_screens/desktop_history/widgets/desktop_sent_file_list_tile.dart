@@ -2,13 +2,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -48,9 +48,9 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
   bool isOpen = false;
   bool isDeepOpen = false;
   Uint8List videoThumbnail, firstContactImage;
-
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
+  String contactName;
 
   @override
   void initState() {
@@ -68,6 +68,11 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
     widget.sentHistory.fileDetails.files.forEach((element) {
       fileSize += element.size;
     });
+
+    if (widget.sentHistory.sharedWith.isNotEmpty) {
+      contactName = CommonFunctions()
+          .getContactName(widget.sentHistory.sharedWith[0].atsign);
+    }
 
     // getContactImage();
   }
@@ -190,7 +195,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                         FileTransferProvider>(
                                                     context,
                                                     listen: false)
-                                                .sendFileNotification(
+                                                .reSendFileNotification(
                                                     widget.sentHistory,
                                                     widget.sentHistory
                                                         .sharedWith[0].atsign);
@@ -222,10 +227,13 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         contactList.isNotEmpty
-                            ? Text(
-                                'atsign name',
-                                style: CustomTextStyles.primaryRegularBold18,
-                              )
+                            ? contactName != null
+                                ? Text(
+                                    contactName,
+                                    style:
+                                        CustomTextStyles.primaryRegularBold18,
+                                  )
+                                : SizedBox()
                             : SizedBox(),
                         SizedBox(height: 10),
                         contactList.isNotEmpty
@@ -415,7 +423,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .reuploadFile(
+                                                          .reuploadFiles(
                                                               filesList,
                                                               index,
                                                               widget

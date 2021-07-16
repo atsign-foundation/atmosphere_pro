@@ -192,12 +192,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                         FileTransferProvider>(
                                                     context,
                                                     listen: false)
-                                                .sendFileNotification(
+                                                .reSendFileNotification(
                                                     widget.sentHistory,
                                                     widget.sentHistory
                                                         .sharedWith[0].atsign);
 
-                                            isResendingToFirstContact = false;
+                                            setState(() {
+                                              isResendingToFirstContact = false;
+                                            });
                                           },
                                           child: Icon(
                                             widget.sentHistory.sharedWith[0]
@@ -378,17 +380,19 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
                                 filesList[index].name?.split('.')?.last)) {
-                              videoThumbnailBuilder(filesList[index].path);
+                              videoThumbnailBuilder(
+                                MixedConstants.SENT_FILE_DIRECTORY +
+                                    filesList[index].name,
+                              );
                             }
                             return ListTile(
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
-                                        '/${filesList[index].name}';
+                                        filesList[index].name;
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
-                                print(
-                                    'test file: ${test}, fileExists: ${fileExists}');
+
                                 if (fileExists) {
                                   await OpenFile.open(_path);
                                 } else {
@@ -400,8 +404,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   width: 50.toHeight,
                                   child: FutureBuilder(
                                       future: isFilePresent(
-                                          MixedConstants.SENT_FILE_DIRECTORY +
-                                              '/${filesList[index].name}'),
+                                        MixedConstants.SENT_FILE_DIRECTORY +
+                                            filesList[index].name,
+                                      ),
                                       builder: (context, snapshot) {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
@@ -413,7 +418,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     ?.last,
                                                 MixedConstants
                                                         .SENT_FILE_DIRECTORY +
-                                                    '/${filesList[index].name}',
+                                                    filesList[index].name,
                                                 isFilePresent: snapshot.data)
                                             : SizedBox();
                                       })),
@@ -438,7 +443,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : fileResending[index]
+                                            : filesList[index].isUploading
                                                 ? TypingIndicator(
                                                     showIndicator: true,
                                                     flashingCircleBrightColor:
@@ -449,23 +454,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                   )
                                                 : InkWell(
                                                     onTap: () async {
-                                                      setState(() {
-                                                        fileResending[index] =
-                                                            true;
-                                                      });
                                                       await Provider.of<
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .reuploadFile(
+                                                          .reuploadFiles(
                                                               filesList,
                                                               index,
                                                               widget
                                                                   .sentHistory);
-
-                                                      // isWidgetRebuilt = true;
-                                                      fileResending[index] =
-                                                          false;
                                                     },
                                                     child: Icon(
                                                       Icons.refresh,

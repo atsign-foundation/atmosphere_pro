@@ -116,7 +116,7 @@ class _DesktopSelectContactsScreenState
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 14),
-                      child: customPersonVerticalTile('Alexa', '@alexa'),
+                      child: customPersonVerticalTile('Alexa', '@alexa', () {}),
                     );
                   },
                 ),

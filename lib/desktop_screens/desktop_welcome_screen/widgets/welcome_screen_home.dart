@@ -1,5 +1,9 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
+import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -11,6 +15,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 enum CurrentScreen { PlaceolderImage, ContactsScreen, SelectedItems }
 
@@ -22,7 +27,20 @@ class WelcomeScreenHome extends StatefulWidget {
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   // bool showContent = false, showSelectedItems = false;
   CurrentScreen _currentScreen = CurrentScreen.PlaceolderImage;
+  FileTransferProvider _filePickerProvider;
+  WelcomeScreenProvider _welcomeScreenProvider;
   List _selectedList = [];
+
+  @override
+  void initState() {
+    _filePickerProvider =
+        Provider.of<FileTransferProvider>(context, listen: false);
+    _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_selectedList.isNotEmpty) {
@@ -81,7 +99,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 alignment: Alignment.centerRight,
                 child: CommonButton(
                   'Send',
-                  () {},
+                  () async {
+                    await _filePickerProvider.sendFileWithFileBin(
+                        _filePickerProvider.selectedFiles,
+                        _welcomeScreenProvider.selectedContacts);
+                  },
                   color: ColorConstants.orangeColor,
                   border: 3,
                   height: 45,
@@ -113,9 +135,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             showContacts: true,
             isDesktop: true,
             selectedList: (_list) {
-              setState(() {
-                _selectedList = _list;
-              });
+              Provider.of<WelcomeScreenProvider>(
+                      NavService.navKey.currentContext,
+                      listen: false)
+                  .updateSelectedContacts(_list);
             },
             onBackArrowTap: () {
               setState(() {
@@ -142,12 +165,24 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            DesktopSelectedContacts(_selectedList),
+            DesktopSelectedContacts((val) {
+              if (_welcomeScreenProvider.selectedContacts.isEmpty &&
+                  _filePickerProvider.selectedFiles.isEmpty) {
+                _currentScreen = CurrentScreen.PlaceolderImage;
+              }
+              setState(() {});
+            }),
             Divider(
               height: 20,
               thickness: 5,
             ),
-            DesktopSelectedFiles(),
+            DesktopSelectedFiles((val) {
+              if (_welcomeScreenProvider.selectedContacts.isEmpty &&
+                  _filePickerProvider.selectedFiles.isEmpty) {
+                _currentScreen = CurrentScreen.PlaceolderImage;
+              }
+              setState(() {});
+            }),
           ],
         ),
       ),
@@ -190,10 +225,17 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   Widget sendFileTo({bool isSelectContacts = false}) {
     return InkWell(
-        onTap: () {
-          setState(() {
+        onTap: () async {
+          if (isSelectContacts) {
             _currentScreen = CurrentScreen.ContactsScreen;
-          });
+          } else {
+            var file = await desktopImagePicker();
+            if (file != null) {
+              _filePickerProvider.selectedFiles = file;
+              _currentScreen = CurrentScreen.SelectedItems;
+            }
+          }
+          setState(() {});
         },
         child: Container(
             decoration: BoxDecoration(
@@ -203,8 +245,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               title: _currentScreen != CurrentScreen.PlaceolderImage
                   ? Text(
                       (isSelectContacts
-                          ? '18 contacts added'
-                          : '2 files selected'),
+                          ? '${_welcomeScreenProvider.selectedContacts.length} contacts added'
+                          : '${_filePickerProvider.selectedFiles.length} files selected'),
                       style: CustomTextStyles.desktopSecondaryRegular18)
                   : SizedBox(),
               trailing: isSelectContacts

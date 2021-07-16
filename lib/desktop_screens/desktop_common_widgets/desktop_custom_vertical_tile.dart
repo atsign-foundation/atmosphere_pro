@@ -3,7 +3,8 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
-Widget customPersonVerticalTile(String title, String subTitle) {
+Widget customPersonVerticalTile(
+    String title, String subTitle, Function onCancel) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -21,7 +22,14 @@ Widget customPersonVerticalTile(String title, String subTitle) {
             Positioned(
               top: 0,
               right: 0,
-              child: Icon(Icons.cancel),
+              child: InkWell(
+                onTap: () {
+                  if (onCancel != null) {
+                    onCancel();
+                  }
+                },
+                child: Icon(Icons.cancel),
+              ),
             ),
           ],
         ),

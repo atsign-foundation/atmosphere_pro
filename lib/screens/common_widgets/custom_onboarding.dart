@@ -8,7 +8,9 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
@@ -41,12 +43,18 @@ class CustomOnboarding {
         print('monitor started from custom onboard');
         _backendService.initBackendService();
         await ContactProvider().initContactImpl();
-
         await initServices();
+        await getTransferData();
+        await initGroups();
 
         if (showLoader != null) {
           showLoader(false);
         }
+
+        // await Navigator.pushNamedAndRemoveUntil(
+        //     NavService.navKey.currentContext,
+        //     Routes.WELCOME_SCREEN,
+        //     (Route<dynamic> route) => false);
 
         await Navigator.pushNamedAndRemoveUntil(
             NavService.navKey.currentContext,
@@ -84,8 +92,6 @@ class CustomOnboarding {
         BackendService.getInstance().atClientInstance.currentAtSign,
         MixedConstants.ROOT_DOMAIN,
         64);
-
-    await initGroups();
   }
 
   static initGroups() async {
@@ -98,5 +104,13 @@ class CustomOnboarding {
     await GroupService().fetchGroupsAndContacts();
 
     print('group init done');
+  }
+
+  static getTransferData() async {
+    HistoryProvider historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
+    await historyProvider.getSentHistory();
+    await historyProvider.getReceivedHistory();
   }
 }

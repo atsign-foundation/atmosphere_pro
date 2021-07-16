@@ -1,13 +1,45 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class DesktopReceivedFileDetails extends StatelessWidget {
-  final FileHistory selectedFileData;
-  DesktopReceivedFileDetails({this.selectedFileData});
+class DesktopReceivedFileDetails extends StatefulWidget {
+  final FileTransfer fileTransfer;
+  final UniqueKey key;
+  DesktopReceivedFileDetails({this.fileTransfer, this.key});
+
+  @override
+  _DesktopReceivedFileDetailsState createState() =>
+      _DesktopReceivedFileDetailsState();
+}
+
+class _DesktopReceivedFileDetailsState
+    extends State<DesktopReceivedFileDetails> {
+  int fileCount = 0, fileSize = 0;
+  bool isDownloadAvailable = false;
+
+  @override
+  void initState() {
+    fileCount = widget.fileTransfer.files.length;
+
+    widget.fileTransfer.files.forEach((element) {
+      fileSize += element.size;
+    });
+
+    var expiryDate = widget.fileTransfer.date.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,30 +54,101 @@ class DesktopReceivedFileDetails extends StatelessWidget {
           Text('Details',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           SizedBox(height: 15.toHeight),
-          Row(
+          Column(
             children: <Widget>[
-              getImagePlaceholder(),
-              SizedBox(width: 25),
-              getImagePlaceholder(),
-              Expanded(
-                child: SizedBox(),
-              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  runSpacing: 10.0,
+                  spacing: 20.0,
+                  children:
+                      List.generate(widget.fileTransfer.files.length, (index) {
+                    return Container(
+                      width: 250,
+                      child: ListTile(
+                        title: Text(
+                          widget.fileTransfer.files[index]?.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.toFont,
+                          ),
+                        ),
+                        subtitle: Text(
+                          double.parse(widget.fileTransfer.files[index].size
+                                      .toString()) <=
+                                  1024
+                              ? '${widget.fileTransfer.files[index].size} Kb' +
+                                  ' . ${widget.fileTransfer.files[index].name.split('.').last}'
+                              : '${(widget.fileTransfer.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                  ' . ${widget.fileTransfer.files[index].name.split('.').last}',
+                          style: TextStyle(
+                            color: ColorConstants.fadedText,
+                            fontSize: 14.toFont,
+                          ),
+                        ),
+                        leading: FutureBuilder(
+                            future: CommonFunctions().isFilePresent(
+                                MixedConstants.path +
+                                    widget.fileTransfer.files[index].name),
+                            builder: (context, snapshot) {
+                              return snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      snapshot.data != null
+                                  ? CommonFunctions().thumbnail(
+                                      widget.fileTransfer.files[index].name
+                                          ?.split('.')
+                                          ?.last,
+                                      MixedConstants.path +
+                                          '/${widget.fileTransfer.files[index].name}',
+                                      isFilePresent: snapshot.data)
+                                  : SizedBox();
+                            }),
+                        trailing: widget.fileTransfer.isDownloading
+                            ? CircularProgressIndicator()
+                            : isDownloadAvailable
+                                ? IconButton(
+                                    icon: Icon(Icons.download),
+                                    onPressed: () async {
+                                      var response =
+                                          await Provider.of<HistoryProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .downloadFiles(
+                                        widget.fileTransfer.key,
+                                        widget.fileTransfer.sender,
+                                        false,
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
+                      ),
+                    );
+                  }),
+                ),
+              )
             ],
           ),
           SizedBox(height: 15.toHeight),
           Row(
             children: <Widget>[
               Text(
-                '2 files . ',
+                '${fileCount} files . ',
                 style: CustomTextStyles.greyText15,
               ),
-              Text('250 MB', style: CustomTextStyles.greyText15),
+              fileSize > 1024
+                  ? Text('${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB',
+                      style: CustomTextStyles.greyText15)
+                  : Text('${(fileSize).toStringAsFixed(2)} MB',
+                      style: CustomTextStyles.greyText15),
             ],
           ),
           SizedBox(height: 15.toHeight),
-          Text('Receiving', style: CustomTextStyles.orangeext15),
-          SizedBox(height: 15.toHeight),
-          Text('August 12 2020', style: CustomTextStyles.greyText15),
+          Text('${DateFormat("MM-dd-yyyy").format(widget.fileTransfer.date)}',
+              style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           SizedBox(height: 15.toHeight),
         ],

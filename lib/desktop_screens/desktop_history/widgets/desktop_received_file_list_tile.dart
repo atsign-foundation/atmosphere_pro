@@ -2,12 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -16,23 +14,21 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
-import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class DesktopReceivedFilesListTile extends StatefulWidget {
-  final FileHistory sentHistory;
+  final FileTransfer receivedHistory;
   final ContactProvider contactProvider;
   final bool isSelected;
 
   const DesktopReceivedFilesListTile(
       {Key key,
-      this.sentHistory,
+      this.receivedHistory,
       this.contactProvider,
       this.isSelected = false})
       : super(key: key);
@@ -57,16 +53,13 @@ class _DesktopReceivedFilesListTileState
   void initState() {
     super.initState();
     // isWidgetRebuilt = true;
-    fileLength = widget.sentHistory.fileDetails.files.length;
+    fileLength = widget.receivedHistory.files.length;
     fileResending = List<bool>.generate(fileLength, (i) => false);
-    if (widget.sentHistory.sharedWith != null) {
-      contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
-    } else {
-      contactList = [];
-    }
-    filesList = widget.sentHistory.fileDetails.files;
+    contactList = [widget.receivedHistory.sender];
 
-    widget.sentHistory.fileDetails.files.forEach((element) {
+    filesList = widget.receivedHistory.files;
+
+    widget.receivedHistory.files.forEach((element) {
       fileSize += element.size;
     });
 
@@ -104,13 +97,6 @@ class _DesktopReceivedFilesListTileState
   @override
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-
-    /// To set fileResending to false after file has been resent
-    // if (isWidgetRebuilt) {
-    //   fileLength = widget.sentHistory.fileDetails.files.length;
-    //   fileResending = List<bool>.generate(fileLength, (i) => false);
-    //   isWidgetRebuilt = false;
-    // }
 
     return Column(
       children: [
@@ -223,9 +209,9 @@ class _DesktopReceivedFilesListTileState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      widget.sentHistory.fileDetails.date != null
+                      widget.receivedHistory.date != null
                           ? Text(
-                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
+                              '${DateFormat("MM-dd-yyyy").format(widget.receivedHistory.date)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -238,9 +224,9 @@ class _DesktopReceivedFilesListTileState
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      widget.sentHistory.fileDetails.date != null
+                      widget.receivedHistory.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
+                              '${DateFormat('kk: mm').format(widget.receivedHistory.date)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -261,8 +247,7 @@ class _DesktopReceivedFilesListTileState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height:
-                          70.0 * widget.sentHistory.fileDetails.files.length,
+                      height: 70.0 * widget.receivedHistory.files.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
@@ -290,27 +275,28 @@ class _DesktopReceivedFilesListTileState
                                 }
                               },
                               leading: Container(
-                                  height: 50.toHeight,
-                                  width: 50.toHeight,
-                                  child: FutureBuilder(
-                                      future: isFilePresent(
-                                          MixedConstants.SENT_FILE_DIRECTORY +
-                                              '/${filesList[index].name}'),
-                                      builder: (context, snapshot) {
-                                        return snapshot.connectionState ==
-                                                    ConnectionState.done &&
-                                                snapshot.data != null
-                                            ? thumbnail(
-                                                filesList[index]
-                                                    .name
-                                                    ?.split('.')
-                                                    ?.last,
-                                                MixedConstants
-                                                        .SENT_FILE_DIRECTORY +
-                                                    '/${filesList[index].name}',
-                                                isFilePresent: snapshot.data)
-                                            : SizedBox();
-                                      })),
+                                height: 50.toHeight,
+                                width: 50.toHeight,
+                                child: FutureBuilder(
+                                    future: isFilePresent(
+                                        MixedConstants.SENT_FILE_DIRECTORY +
+                                            '/${filesList[index].name}'),
+                                    builder: (context, snapshot) {
+                                      return snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              snapshot.data != null
+                                          ? thumbnail(
+                                              filesList[index]
+                                                  .name
+                                                  ?.split('.')
+                                                  ?.last,
+                                              MixedConstants
+                                                      .SENT_FILE_DIRECTORY +
+                                                  '/${filesList[index].name}',
+                                              isFilePresent: snapshot.data)
+                                          : SizedBox();
+                                    }),
+                              ),
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -347,17 +333,7 @@ class _DesktopReceivedFilesListTileState
                                                         fileResending[index] =
                                                             true;
                                                       });
-                                                      await Provider.of<
-                                                                  FileTransferProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .reuploadFile(
-                                                              filesList,
-                                                              index,
-                                                              widget
-                                                                  .sentHistory);
 
-                                                      // isWidgetRebuilt = true;
                                                       fileResending[index] =
                                                           false;
                                                     },
@@ -421,12 +397,6 @@ class _DesktopReceivedFilesListTileState
                               ),
                             ],
                           ),
-                    (contactList.length < 2)
-                        ? Container()
-                        : TranferOverlappingContacts(
-                            selectedList: widget.sentHistory.sharedWith.sublist(
-                                1, widget.sentHistory.sharedWith.length),
-                            fileHistory: widget.sentHistory),
                     GestureDetector(
                       onTap: () {
                         setState(() {
