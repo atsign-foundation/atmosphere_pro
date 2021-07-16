@@ -28,7 +28,7 @@ class CustomOnboarding {
         print('atsign $atsign');
 
         if (showLoader != null) {
-          showLoader(true);
+          showLoader(true, atsign);
         }
         // _backendService.atClientServiceMap = value;
         // _backendService.currentAtSign = await _backendService
@@ -48,7 +48,7 @@ class CustomOnboarding {
         await initGroups();
 
         if (showLoader != null) {
-          showLoader(false);
+          showLoader(false, '');
         }
 
         // await Navigator.pushNamedAndRemoveUntil(

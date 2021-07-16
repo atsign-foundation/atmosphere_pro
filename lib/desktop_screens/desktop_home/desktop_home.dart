@@ -45,31 +45,47 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   @override
   void initState() {
-    _checkToOnboardinHome();
+    _checkToOnboard();
     super.initState();
   }
 
-  void _checkToOnboardinHome() async {
+  void _checkToOnboard() async {
     currentatSign = await backendService.getAtSign();
+
+    if (currentatSign.isEmpty) {
+      currentatSign = null;
+    }
+
     if (mounted) {
       setState(() {});
     }
-    print('currentatSign $currentatSign');
+    print('currentatSign $currentatSign, ${(currentatSign != null)}');
     await backendService
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
         .catchError((e) => print(e));
 
-    await CustomOnboarding.onboard(
-        atSign: currentatSign,
-        atClientPrefernce: atClientPrefernce,
-        showLoader: showLoaderInHome);
+    if (currentatSign != null) {
+      await _onBoard(currentatSign);
+    }
   }
 
-  void showLoaderInHome(bool loaderState) {
-    setState(() {
-      authenticating = loaderState;
-    });
+  Future<void> _onBoard(String _atsign) async {
+    await CustomOnboarding.onboard(
+        atSign: _atsign,
+        atClientPrefernce: atClientPrefernce,
+        showLoader: _showLoader);
+  }
+
+  void _showLoader(bool loaderState, String authenticatingForAtsign) {
+    if (mounted) {
+      setState(() {
+        if (loaderState) {
+          currentatSign = authenticatingForAtsign;
+        }
+        authenticating = loaderState;
+      });
+    }
   }
 
   @override
@@ -115,7 +131,11 @@ class _DesktopHomeState extends State<DesktopHome> {
                       height: 10,
                     ),
                     InkWell(
-                        onTap: () {},
+                        onTap: currentatSign != null
+                            ? () {}
+                            : () {
+                                _onBoard('');
+                              },
                         child: Container(
                             height: 50,
                             decoration: BoxDecoration(
@@ -133,15 +153,23 @@ class _DesktopHomeState extends State<DesktopHome> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: CommonButton(
-                        currentatSign != null ? 'Authenticating...' : 'Start',
-                        currentatSign != null ? null : () {},
+                        authenticating
+                            ? 'Initialising for $currentatSign...'
+                            : (currentatSign != null
+                                ? 'Authenticating...'
+                                : 'Start'),
+                        currentatSign != null
+                            ? null
+                            : () {
+                                _onBoard('');
+                              },
                         color: currentatSign != null
                             ? ColorConstants.dullText
                             : ColorConstants.orangeColor,
                         border: 7,
                         height: 50,
                         width: double.infinity,
-                        fontSize: 20,
+                        fontSize: authenticating ? 17 : 20,
                         removePadding: true,
                       ),
                     ),

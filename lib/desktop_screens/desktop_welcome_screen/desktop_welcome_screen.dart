@@ -27,51 +27,16 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool showSwitchAtsign = false;
-  // BackendService backendService = BackendService.getInstance();
-  // var atClientPrefernce;
-  // bool authenticating = false;
-
-  // @override
-  // void initState() {
-  //   _checkToOnboard();
-  //   super.initState();
-  // }
-
-  // void _checkToOnboard() async {
-  //   String currentatSign = await backendService.getAtSign();
-  //   print('currentatSign $currentatSign');
-  //   await backendService
-  //       .getAtClientPreference()
-  //       .then((value) => atClientPrefernce = value)
-  //       .catchError((e) => print(e));
-
-  //   // if (currentatSign != null && currentatSign != '') {
-  //   //   await CustomOnboarding.onboard(
-  //   //       atSign: currentatSign,
-  //   //       atClientPrefernce: atClientPrefernce,
-  //   //       showLoader: showLoader);
-  //   // }
-  //   await CustomOnboarding.onboard(
-  //       atSign: currentatSign,
-  //       atClientPrefernce: atClientPrefernce,
-  //       showLoader: showLoader);
-  // }
-
-  // void showLoader(bool loaderState) {
-  //   setState(() {
-  //     authenticating = loaderState;
-  //   });
-  // }
 
   List<String> atsignList;
 
   cleanKeyChain() async {
-    // var _keyChainManager = KeyChainManager.getInstance();
-    // var _atSignsList = await _keyChainManager.getAtSignListFromKeychain();
-    // _atSignsList?.forEach((element) {
-    //   _keyChainManager.deleteAtSignFromKeychain(element);
-    // });
-    // print('Keychain cleaned');
+    var _keyChainManager = KeyChainManager.getInstance();
+    var _atSignsList = await _keyChainManager.getAtSignListFromKeychain();
+    _atSignsList?.forEach((element) {
+      _keyChainManager.deleteAtSignFromKeychain(element);
+    });
+    print('Keychain cleaned');
   }
 
   @override
@@ -81,7 +46,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
+        preferredSize: Size.fromHeight(MixedConstants.APPBAR_HEIGHT),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -149,7 +114,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         DesktopWelcomeScreen(),
         showSwitchAtsign
             ? Positioned(
-                top: -10,
+                top: 0,
                 right: 50,
                 child: DesktopSwitchAtsign(atSignList: atsignList),
               )

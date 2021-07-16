@@ -39,6 +39,22 @@ class LoadingDialog {
     }
   }
 
+  showText(String text, {TextStyle style}) {
+    if (!_showing) {
+      _showing = true;
+      NavService.navKey.currentState
+          .push(CustomPopupRoutes(
+              pageBuilder: (_, __, ___) {
+                print("building loader");
+                return Center(
+                  child: onlyText(text, style: style),
+                );
+              },
+              barrierDismissible: false))
+          .then((_) {});
+    }
+  }
+
   onlyText(String text, {TextStyle style}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
