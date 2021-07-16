@@ -51,4 +51,8 @@ class ImageConstants {
   static String welcomeDesktop = '$_basePath/welcome_screen.png';
   static String groupPhotoDesktop = '$_basePath/group_photo.png';
   static String homeBgDesktop = '$_basePath/home_bg.png';
+
+  static String homeCaraousel1 = '$_basePath/home_caraousel_1.png';
+  static String homeCaraousel2 = '$_basePath/home_caraousel_2.png';
+  static String homeCaraousel3 = '$_basePath/home_caraousel_3.png';
 }

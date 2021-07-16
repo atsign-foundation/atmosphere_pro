@@ -38,20 +38,27 @@ packages:
       url: "https://github.com/atsign-foundation/at_widgets.git"
     source: git
     version: "2.0.1"
+  at_base2e15:
+    dependency: transitive
+    description:
+      name: at_base2e15
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   at_client:
     dependency: "direct overridden"
     description:
       path: "/Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client"
       relative: false
     source: path
-    version: "1.1.0"
+    version: "2.0.2"
   at_client_mobile:
     dependency: "direct main"
     description:
       path: "/Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client_mobile"
       relative: false
     source: path
-    version: "1.0.0+11"
+    version: "2.0.2"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -74,7 +81,7 @@ packages:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "1.0.0+5"
   at_contacts_flutter:
     dependency: "direct main"
     description:
@@ -111,14 +118,14 @@ packages:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+8"
+    version: "2.0.1"
   at_persistence_spec:
     dependency: transitive
     description:
       name: at_persistence_spec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+3"
+    version: "2.0.0"
   at_server_status:
     dependency: transitive
     description:
@@ -127,6 +134,13 @@ packages:
       resolved-ref: "3f6a5808cf441664c6b4aa1480ac90123a86ce8b"
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
+    version: "1.0.0"
+  at_utf7:
+    dependency: transitive
+    description:
+      name: at_utf7
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.0"
   at_utils:
     dependency: "direct overridden"
@@ -137,15 +151,6 @@ packages:
       url: "https://github.com/atsign-foundation/at_tools.git"
     source: git
     version: "0.0.0"
-  base2e15:
-    dependency: transitive
-    description:
-      path: base2e15
-      ref: trunk
-      resolved-ref: "3f6a5808cf441664c6b4aa1480ac90123a86ce8b"
-      url: "https://github.com/atsign-foundation/at_libraries.git"
-    source: git
-    version: "0.3.0-null-safety"
   biometric_storage:
     dependency: "direct overridden"
     description:
@@ -160,6 +165,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   characters:
     dependency: transitive
     description:
@@ -229,16 +241,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
-  dart_utf7:
-    dependency: transitive
-    description:
-      path: dart_utf7
-      ref: trunk
-      resolved-ref: "3f6a5808cf441664c6b4aa1480ac90123a86ce8b"
-      url: "https://github.com/atsign-foundation/at_libraries.git"
-    source: git
-    version: "0.2.1-null-safety"
+    version: "0.1.3"
   desktop_window:
     dependency: "direct main"
     description:
@@ -348,21 +351,21 @@ packages:
       name: flutter_keychain
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "1.0.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.0"
+    version: "2.0.2"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "2.0.0+1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -414,7 +417,7 @@ packages:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "1.1.2"
   hive:
     dependency: "direct main"
     description:
@@ -428,7 +431,7 @@ packages:
       name: hive_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "0.3.1"
   http:
     dependency: "direct main"
     description:
@@ -449,7 +452,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.17.0"
+    version: "0.16.1"
   js:
     dependency: transitive
     description:
@@ -507,7 +510,7 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -554,7 +557,7 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.1.2"
+    version: "6.1.3"
   permission_handler_platform_interface:
     dependency: transitive
     description:
@@ -596,21 +599,21 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "4.3.3"
   qr:
     dependency: transitive
     description:
       name: qr
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "1.3.0"
   qr_flutter:
     dependency: "direct main"
     description:
       name: qr_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "3.2.0"
   receive_sharing_intent:
     dependency: "direct main"
     description:
@@ -624,7 +627,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.1"
+    version: "0.24.1"
   share:
     dependency: "direct main"
     description:
@@ -727,7 +730,7 @@ packages:
       name: timezone
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.0"
+    version: "0.5.9"
   typed_data:
     dependency: transitive
     description:
@@ -777,13 +780,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  utf7:
-    dependency: transitive
-    description:
-      name: utf7
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
   uuid:
     dependency: "direct overridden"
     description:
@@ -804,7 +800,7 @@ packages:
       name: video_thumbnail
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.3"
+    version: "0.2.5+1"
   webview_flutter:
     dependency: "direct main"
     description:
@@ -835,4 +831,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.13.0 <3.0.0"
-  flutter: ">=2.2.0"
+  flutter: ">=2.0.1"

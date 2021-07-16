@@ -52,6 +52,8 @@ dependencies:
   file_selector: ^0.8.2
   file_selector_macos: ^0.0.3
 
+  carousel_slider: ^4.0.0
+
   at_onboarding_flutter: ^1.0.0+3
   # at_onboarding_flutter:
     # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
@@ -70,23 +72,23 @@ dependencies:
     #   ref: dev_env
 
   at_contacts_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
    
   at_contacts_group_flutter:
-   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
+   path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_group_flutter
   
 dependency_overrides:
   at_contact: ^1.0.0+3
   permission_handler: ^6.1.3
   http: ^0.13.3
   at_onboarding_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_onboarding_flutter
   at_contacts_flutter:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
   at_client:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+    path: /Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client
   at_client_mobile:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
+    path: /Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client_mobile
     # git:
     #   url: https://github.com/atsign-foundation/at_client_sdk.git
     #   path: at_client
@@ -124,7 +126,7 @@ dependency_overrides:
       ref: dev_env
       version: ^1.0.1+4
   at_common_flutter: 
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_common_flutter
   biometric_storage: ^2.0.2
   logging: ^1.0.0
 
@@ -168,9 +170,10 @@ flutter:
         - asset: assets/fonts/HelveticaExtraBold.ttf
           weight: 800
           # style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-Bold.ttf
+
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
