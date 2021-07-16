@@ -4,7 +4,12 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/demo_data/file_transfer_data.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_photos.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_unknowns.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_videos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
@@ -360,42 +365,46 @@ class HistoryProvider extends BaseModel {
   populateTabs() {
     tabs = [Recents()];
     tabNames = ['Recents'];
+    bool isDesktop = false;
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      isDesktop = true;
+    }
     try {
       setStatus(POPULATE_TABS, Status.Loading);
 
       if (receivedApk.isNotEmpty) {
         if (!tabs.contains(APK) || !tabs.contains(APK())) {
-          tabs.add(APK());
+          tabs.add(isDesktop ? DesktopAPK() : APK());
           tabNames.add('APK');
         }
       }
       if (receivedAudio.isNotEmpty) {
         if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
-          tabs.add(Audios());
+          tabs.add(isDesktop ? DesktopAudios() : Audios());
           tabNames.add('Audios');
         }
       }
       if (receivedDocument.isNotEmpty) {
         if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
-          tabs.add(Documents());
+          tabs.add(isDesktop ? DesktopDocuments() : Documents());
           tabNames.add('Documents');
         }
       }
       if (receivedPhotos.isNotEmpty) {
         if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
-          tabs.add(Photos());
+          tabs.add(isDesktop ? DesktopPhotos() : Photos());
           tabNames.add('Photos');
         }
       }
       if (receivedVideos.isNotEmpty) {
         if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
-          tabs.add(Videos());
+          tabs.add(isDesktop ? DesktopVideos() : Videos());
           tabNames.add('Videos');
         }
       }
       if (receivedUnknown.isNotEmpty) {
         if (!tabs.contains(Unknowns()) || !tabs.contains(Unknowns())) {
-          tabs.add(Unknowns());
+          tabs.add(isDesktop ? DesktopUnknowns() : Unknowns());
           tabNames.add('Unknowns');
         }
       }
@@ -549,6 +558,10 @@ class HistoryProvider extends BaseModel {
 
       var files = await backendService.atClientInstance
           .downloadFile(transferId, sharedBy);
+
+      await sortFiles(receivedHistoryLogs);
+      populateTabs();
+      print('audios: ${receivedAudio.length}');
       receivedHistoryLogs[index].isDownloading = false;
       setStatus(DOWNLOAD_FILE, Status.Done);
 
