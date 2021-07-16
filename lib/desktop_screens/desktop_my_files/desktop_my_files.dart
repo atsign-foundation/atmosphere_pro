@@ -35,10 +35,8 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
   @override
   void initState() {
     historyProvider = HistoryProvider();
-    tabs = [Recents(), Videos(), Audios(), Documents()];
     ini();
     setState(() {});
-    print('tabs: ${tabs}');
     super.initState();
   }
 
@@ -47,15 +45,6 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
     tabNames = [];
     tabs = Provider.of<HistoryProvider>(context, listen: false).tabs;
     tabNames = Provider.of<HistoryProvider>(context, listen: false).tabNames;
-    tabs = [
-      DesktopRecents(),
-      DesktopPhotos(),
-      DesktopVideos(),
-      DesktopAudios(),
-      DesktopAPK(),
-      DesktopDocuments()
-    ];
-    tabNames = ['Recents', 'Photos', 'Videos', 'Music', 'APK', 'Documents'];
     _controller =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }

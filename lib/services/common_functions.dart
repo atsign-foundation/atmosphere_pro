@@ -42,6 +42,7 @@ class CommonFunctions {
   }
 
   Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+    path = path.trim();
     var videoThumbnail;
     if (FileTypes.VIDEO_TYPES.contains(extension)) {
       videoThumbnail = videoThumbnailBuilder(path);
@@ -67,21 +68,25 @@ class CommonFunctions {
         : FileTypes.VIDEO_TYPES.contains(extension)
             ? FutureBuilder(
                 future: videoThumbnailBuilder(path),
-                builder: (context, snapshot) => (snapshot.data == null)
-                    ? CircularProgressIndicator()
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(10.toHeight),
-                        child: Container(
-                          height: 50.toHeight,
-                          width: 50.toWidth,
-                          child: Image.memory(
+                builder: (context, snapshot) => ClipRRect(
+                  borderRadius: BorderRadius.circular(10.toHeight),
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    height: 50.toHeight,
+                    width: 50.toWidth,
+                    child: (snapshot.data == null)
+                        ? Image.asset(
+                            ImageConstants.unknownLogo,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.memory(
                             videoThumbnail,
                             fit: BoxFit.cover,
                             errorBuilder: (context, o, ot) =>
                                 CircularProgressIndicator(),
                           ),
-                        ),
-                      ),
+                  ),
+                ),
               )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
