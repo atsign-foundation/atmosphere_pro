@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart
 import 'package:flutter/material.dart';
 // import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideBarItem extends StatelessWidget {
   final String image;
@@ -31,6 +32,9 @@ class SideBarItem extends StatelessWidget {
             Navigator.of(context).pop();
             return DesktopSetupRoutes.nested_push(routeName,
                 arguments: arguments);
+          }
+          if (arguments['url'] != null) {
+            _launchInBrowser(arguments['url']);
           }
           return null;
         }
@@ -65,5 +69,17 @@ class SideBarItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
