@@ -42,7 +42,7 @@ class FileTransferProvider extends BaseModel {
   List<PlatformFile> selectedFiles = [];
   List<FileTransferStatus> transferStatus = [];
   Map<String, List<Map<String, bool>>> transferStatusMap = {};
-  bool sentStatus = false;
+  bool sentStatus = false, isFileSending = false;
   Uint8List videoThumbnail;
   double totalSize = 0;
   bool clearList = false;
@@ -510,6 +510,11 @@ class FileTransferProvider extends BaseModel {
     });
 
     return status;
+  }
+
+  updateFileSendingStatus(bool val) {
+    isFileSending = val;
+    notifyListeners();
   }
 }
 

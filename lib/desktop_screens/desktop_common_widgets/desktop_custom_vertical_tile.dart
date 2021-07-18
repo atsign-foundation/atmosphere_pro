@@ -1,10 +1,19 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:provider/provider.dart';
 
 Widget customPersonVerticalTile(
     String title, String subTitle, Function onCancel) {
+  // if file is being uploaded.
+  bool isCancelIcon = !Provider.of<FileTransferProvider>(
+          NavService.navKey.currentContext,
+          listen: false)
+      .isFileSending;
+
   return Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,7 +37,7 @@ Widget customPersonVerticalTile(
                     onCancel();
                   }
                 },
-                child: Icon(Icons.cancel),
+                child: isCancelIcon ? Icon(Icons.cancel) : SizedBox(),
               ),
             ),
           ],
