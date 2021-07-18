@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class DesktopReceivedFileDetails extends StatefulWidget {
@@ -133,8 +134,11 @@ class _DesktopReceivedFileDetailsState
                                             ConnectionState.done &&
                                         snapshot.data != null
                                     ? InkWell(
-                                        onTap: () {
-                                          // TODO: implement preview
+                                        onTap: () async {
+                                          await OpenFile.open(
+                                              MixedConstants.path +
+                                                  widget.fileTransfer
+                                                      .files[index].name);
                                         },
                                         child: CommonFunctions().thumbnail(
                                             widget
@@ -188,7 +192,8 @@ class _DesktopReceivedFileDetailsState
             ],
           ),
           SizedBox(height: 15.toHeight),
-          Text('${DateFormat("MM-dd-yyyy").format(widget.fileTransfer.date)}',
+          Text(
+              '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer.date)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer.date)}',
               style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           SizedBox(height: 15.toHeight),

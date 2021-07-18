@@ -202,10 +202,14 @@ class _DesktopTranferOverlappingContactsState
                                                 width: 80.toHeight,
                                                 height: 160.toHeight,
                                                 child: image != null
-                                                    ? CustomCircleAvatar(
-                                                        byteImage: image,
-                                                        nonAsset: true,
-                                                        size: 10)
+                                                    ? DesktopCustomPersonVerticalTile(
+                                                        title: widget
+                                                            .selectedList[index]
+                                                            .atsign,
+                                                        subTitle: name,
+                                                        showCancelIcon: false,
+                                                        showImage: true,
+                                                        image: image)
                                                     : DesktopCustomPersonVerticalTile(
                                                         title: widget
                                                             .selectedList[index]

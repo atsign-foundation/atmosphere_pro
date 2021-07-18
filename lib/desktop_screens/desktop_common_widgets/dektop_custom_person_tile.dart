@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,17 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class DesktopCustomPersonVerticalTile extends StatelessWidget {
   final String title, subTitle;
-  final bool showCancelIcon;
+  final bool showCancelIcon, showImage;
+  final Uint8List image;
+  final double size;
+
   DesktopCustomPersonVerticalTile(
-      {this.title, this.subTitle, this.showCancelIcon = true});
+      {this.title,
+      this.subTitle,
+      this.showCancelIcon = true,
+      this.showImage = false,
+      this.image,
+      this.size = 50});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,12 +26,17 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
       children: <Widget>[
         Stack(
           children: [
-            ContactInitial(
-              initials: title ?? ' ',
-              size: 30,
-              maxSize: (80.0 - 30.0),
-              minSize: 50,
-            ),
+            showImage
+                ? CircleAvatar(
+                    radius: (size / 2).toFont,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: Image.memory(image).image)
+                : ContactInitial(
+                    initials: title ?? ' ',
+                    size: 30,
+                    maxSize: (80.0 - 30.0),
+                    minSize: 50,
+                  ),
             showCancelIcon
                 ? Positioned(
                     top: 0,
