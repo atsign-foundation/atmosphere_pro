@@ -31,7 +31,8 @@ class DesktopSetupRoutes {
   static Map<String, WidgetBuilder> get routes {
     return {
       DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(key: UniqueKey()),
-      DesktopRoutes.DESKTOP_WELCOME: (context) => DesktopWelcomeScreenStart(),
+      DesktopRoutes.DESKTOP_WELCOME: (context) =>
+          DesktopWelcomeScreenStart(key: UniqueKey()),
     };
   }
 

@@ -12,7 +12,10 @@ import 'package:flutter/material.dart';
 
 class DesktopSwitchAtsign extends StatefulWidget {
   final List<String> atSignList;
-  DesktopSwitchAtsign({Key key, @required this.atSignList}) : super(key: key);
+  final Function showLoader;
+  DesktopSwitchAtsign(
+      {Key key, @required this.atSignList, @required this.showLoader})
+      : super(key: key);
 
   @override
   State<DesktopSwitchAtsign> createState() => _DesktopSwitchAtsignState();
@@ -23,12 +26,6 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   bool isLoading = false;
   var atClientPrefernce;
   bool authenticating = false;
-
-  void showLoaderInHome(bool loaderState) {
-    setState(() {
-      authenticating = loaderState;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +89,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                 await CustomOnboarding.onboard(
                     atSign: '',
                     atClientPrefernce: atClientPrefernce,
-                    showLoader: showLoaderInHome);
+                    showLoader: widget.showLoader);
 
                 setState(() {
                   isLoading = false;
@@ -144,7 +141,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
               await CustomOnboarding.onboard(
                   atSign: _atsign,
                   atClientPrefernce: atClientPrefernce,
-                  showLoader: showLoaderInHome);
+                  showLoader: widget.showLoader);
 
               // Provider.of<WelcomeScreenProvider>(context, listen: false)
               //     .selectedContacts = [];

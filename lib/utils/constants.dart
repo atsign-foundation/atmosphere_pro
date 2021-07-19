@@ -51,7 +51,7 @@ class MixedConstants {
 
   // temp
   // static String path = '/Users/apple/Desktop/';
-  static String path = '/Users/sachinsingh/Documents/temp_path_@mosphere_pro/';
+  static String path = '/Users/apple/Documents/temp_atmosphere/';
 
   static String DESKTOP_SENT_DIR = '$path' + '/sent-files/';
 
