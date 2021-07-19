@@ -3,6 +3,7 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -32,6 +33,7 @@ class CustomOnboarding {
         print('atsign $atsign');
         if (!isInit) {
           Navigator.pop(NavService.navKey.currentContext);
+          await DesktopSetupRoutes.nested_pop();
         }
 
         if (showLoader != null) {
