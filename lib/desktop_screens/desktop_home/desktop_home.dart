@@ -74,7 +74,10 @@ class _DesktopHomeState extends State<DesktopHome> {
     await CustomOnboarding.onboard(
         atSign: _atsign,
         atClientPrefernce: atClientPrefernce,
-        showLoader: _showLoader);
+        showLoader: _showLoader,
+        isInit: true);
+
+    currentatSign = '';
   }
 
   void _showLoader(bool loaderState, String authenticatingForAtsign) {

@@ -21,6 +21,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
+  const DesktopWelcomeScreenStart({Key key}) : super(key: key);
   @override
   _DesktopWelcomeScreenStartState createState() =>
       _DesktopWelcomeScreenStartState();
@@ -124,7 +125,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         ),
       ),
       body: Stack(clipBehavior: Clip.none, children: [
-        DesktopWelcomeScreen(),
+        DesktopWelcomeScreen(key: UniqueKey()),
         showSwitchAtsign
             ? Positioned(
                 top: 0,
@@ -142,6 +143,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
 }
 
 class DesktopWelcomeScreen extends StatefulWidget {
+  const DesktopWelcomeScreen({Key key}) : super(key: key);
   @override
   _DesktopWelcomeScreenState createState() => _DesktopWelcomeScreenState();
 }
@@ -242,6 +244,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                 ),
               ),
               Expanded(
+                key: UniqueKey(),
                 child: Navigator(
                   key: NavService.nestedNavKey,
                   initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,

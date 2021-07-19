@@ -17,7 +17,10 @@ class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
 
   static onboard(
-      {String atSign, atClientPrefernce, Function showLoader}) async {
+      {String atSign,
+      atClientPrefernce,
+      Function showLoader,
+      bool isInit = false}) async {
     await Onboarding(
       atsign: atSign,
       context: NavService.navKey.currentContext,
@@ -27,20 +30,15 @@ class CustomOnboarding {
       onboard: (value, atsign) async {
         print('value $value');
         print('atsign $atsign');
+        if (!isInit) {
+          Navigator.pop(NavService.navKey.currentContext);
+        }
 
         if (showLoader != null) {
           // showLoader(true, atsign);
           LoadingDialog().showTextLoader('Initialising for $atsign');
         }
-        // _backendService.atClientServiceMap = value;
-        // _backendService.currentAtSign = await _backendService
-        //     .atClientServiceMap[atsign].atClient.currentAtSign;
 
-        // await _backendService.atClientServiceMap[atsign]
-        //     .makeAtSignPrimary(atsign);
-
-        // await _backendService.atClientServiceMap[atsign]
-        //     .makeAtSignPrimary(atsign);
         await _backendService.startMonitor(atsign: atsign, value: value);
         print('monitor started from custom onboard');
         _backendService.initBackendService();
@@ -54,32 +52,10 @@ class CustomOnboarding {
           LoadingDialog().hide();
         }
 
-        // await Navigator.pushNamedAndRemoveUntil(
-        //     NavService.navKey.currentContext,
-        //     Routes.WELCOME_SCREEN,
-        //     (Route<dynamic> route) => false);
-
-        NavService.resetNestedNavKey();
-
-        await Navigator.pushNamedAndRemoveUntil(
-            NavService.navKey.currentContext,
-            DesktopRoutes.DESKTOP_WELCOME,
-            (Route<dynamic> route) => false);
-
-        ////////
-        // authenticating = true;
-        // isAuthuneticatingSink.add(authenticating);
-        // atClientServiceMap = value;
-
-        // String atSign = await atClientServiceMap[atsign].atClient.currentAtSign;
-        // currentAtSign = atSign;
-
-        // await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
-        // await startMonitor(atsign: atsign, value: value);
-        // initBackendService();
-        // await initializeContactsService(atClientInstance, currentAtSign);
-        // authenticating = false;
-        // isAuthuneticatingSink.add(authenticating);
+        await Navigator.pushNamed(
+          NavService.navKey.currentContext,
+          DesktopRoutes.DESKTOP_WELCOME,
+        );
       },
       onError: (error) {
         print('Onboarding throws $error error');
