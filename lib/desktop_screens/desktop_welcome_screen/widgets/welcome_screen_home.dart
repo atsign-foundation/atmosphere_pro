@@ -1,6 +1,7 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -30,6 +31,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   FileTransferProvider _filePickerProvider;
   WelcomeScreenProvider _welcomeScreenProvider;
   List _selectedList = [];
+  bool isFileSending = false;
 
   @override
   void initState() {
@@ -38,6 +40,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
         NavService.navKey.currentContext,
         listen: false);
+    isFileSending = _filePickerProvider.isFileSending;
     super.initState();
   }
 
@@ -97,20 +100,46 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: CommonButton(
-                  'Send',
-                  () async {
-                    await _filePickerProvider.sendFileWithFileBin(
-                        _filePickerProvider.selectedFiles,
-                        _welcomeScreenProvider.selectedContacts);
-                  },
-                  color: ColorConstants.orangeColor,
-                  border: 3,
-                  height: 45,
-                  width: 110,
-                  fontSize: 20,
-                  removePadding: true,
-                ),
+                child: isFileSending
+                    ? Container(
+                        height: 45,
+                        width: 110,
+                        color: ColorConstants.orangeColor,
+                        child: TypingIndicator(
+                          showIndicator: true,
+                          flashingCircleBrightColor: Colors.white,
+                          flashingCircleDarkColor: ColorConstants.orangeColor,
+                        ),
+                      )
+                    : CommonButton(
+                        'Send',
+                        () async {
+                          if (isFileSending) return;
+                          print('sending file');
+
+                          setState(() {
+                            _filePickerProvider.updateFileSendingStatus(true);
+                            isFileSending = true;
+                          });
+
+                          await _filePickerProvider.sendFileWithFileBin(
+                              _filePickerProvider.selectedFiles,
+                              _welcomeScreenProvider.selectedContacts);
+
+                          setState(() {
+                            _filePickerProvider.updateFileSendingStatus(false);
+                            isFileSending = false;
+                          });
+                        },
+                        color: isFileSending
+                            ? ColorConstants.greyText
+                            : ColorConstants.orangeColor,
+                        border: 3,
+                        height: 45,
+                        width: 110,
+                        fontSize: 20,
+                        removePadding: true,
+                      ),
               )
             ],
           ),
@@ -182,7 +211,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 _currentScreen = CurrentScreen.PlaceolderImage;
               }
               setState(() {});
-            }),
+            }, showCancelIcon: !isFileSending),
           ],
         ),
       ),

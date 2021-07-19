@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class DesktopSelectedContacts extends StatefulWidget {
   ValueChanged<bool> onChange;
-  DesktopSelectedContacts(this.onChange);
+  bool showCancelIcon;
+  DesktopSelectedContacts(this.onChange, {this.showCancelIcon = false});
 
   @override
   _DesktopSelectedContactsState createState() =>

@@ -37,7 +37,6 @@ class _TranferOverlappingContactsState
         List<bool>.generate(widget.selectedList.length, (i) => false);
     widget.selectedList;
     noOfContactsRow = (widget.selectedList.length / 5).ceil();
-    print('noOfContactsRow: ${noOfContactsRow}');
     super.initState();
   }
 

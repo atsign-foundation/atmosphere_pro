@@ -41,6 +41,12 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
       _controller.addListener(onTabChanged);
       historyProvider = Provider.of<HistoryProvider>(context);
+      if (historyProvider.sentHistory.isNotEmpty) {
+        selectedSentFileData = historyProvider.sentHistory[0];
+      }
+      if (historyProvider.receivedHistoryLogs.isNotEmpty) {
+        receivedFileData = historyProvider.receivedHistoryLogs[0];
+      }
     }
     super.didChangeDependencies();
   }
@@ -59,7 +65,6 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
       isSentTab = true;
     } else if (index == 1) {
       isSentTab = false;
-      selectedSentFileData = null;
     }
     setState(() {});
   }

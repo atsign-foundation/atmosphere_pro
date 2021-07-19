@@ -37,6 +37,7 @@ class TrustedContactProvider extends BaseModel {
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
       setError(AddTrustedContacts, error.toString());
+      setStatus(AddTrustedContacts, Status.Error);
     }
   }
 
@@ -87,7 +88,7 @@ class TrustedContactProvider extends BaseModel {
 
   getTrustedContact() async {
     setStatus(GetTrustedContacts, Status.Loading);
-
+    fetchedTrustedContact = [];
     try {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
