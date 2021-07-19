@@ -151,26 +151,7 @@ class _DesktopReceivedFileDetailsState
                                       )
                                     : SizedBox();
                               }),
-                          trailing: SizedBox()
-                          // widget.fileTransfer.isDownloading
-                          //     ? CircularProgressIndicator()
-                          //     : isDownloadAvailable
-                          //         ? IconButton(
-                          //             icon: Icon(Icons.download),
-                          //             onPressed: () async {
-                          //               var response =
-                          //                   await Provider.of<HistoryProvider>(
-                          //                           context,
-                          //                           listen: false)
-                          //                       .downloadFiles(
-                          //                 widget.fileTransfer.key,
-                          //                 widget.fileTransfer.sender,
-                          //                 false,
-                          //               );
-                          //             },
-                          //           )
-                          //         : SizedBox(),
-                          ),
+                          trailing: SizedBox()),
                     );
                   }),
                 ),
