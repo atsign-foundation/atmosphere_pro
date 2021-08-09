@@ -98,7 +98,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
       if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
-        Navigator.of(context).pop();
+        await sendingFlushbar.dismiss();
       }
 
       if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
@@ -165,7 +165,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       mainButton: FlatButton(
         onPressed: () {
           if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
-            Navigator.of(context).pop();
+            sendingFlushbar.dismiss();
           }
         },
         child: Text(

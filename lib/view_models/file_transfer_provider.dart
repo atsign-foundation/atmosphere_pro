@@ -337,7 +337,13 @@ class FileTransferProvider extends BaseModel {
       });
 
       contactList.forEach((groupContact) {
-        _atSigns.add(groupContact.contact.atSign);
+        if (groupContact.contact != null) {
+          _atSigns.add(groupContact.contact.atSign);
+        } else if (groupContact.group != null) {
+          groupContact.group.members.forEach((member) {
+            _atSigns.add(member.atSign);
+          });
+        }
       });
 
       var uploadResult = await _atclient.uploadFile(_files, _atSigns);

@@ -20,9 +20,9 @@ class _RecentsState extends State<Recents> {
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
-      load: (provider) => provider.getReceivedHistory(),
+      load: (provider) => provider.getrecentHistoryFiles(),
       functionName: 'received_history',
-      successBuilder: (provider) => (provider.finalReceivedHistory.isEmpty)
+      successBuilder: (provider) => (provider.recentFile.isEmpty)
           ? Center(
               child: Text('No files received',
                   style: TextStyle(fontSize: 15.toFont)),
@@ -34,13 +34,10 @@ class _RecentsState extends State<Recents> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 crossAxisCount: 3,
-                children: List.generate(provider.finalReceivedHistory.length,
-                    (index) {
+                children: List.generate(provider.recentFile.length, (index) {
                   return thumbnail(
-                      provider.finalReceivedHistory[index].fileName
-                          ?.split('.')
-                          ?.last,
-                      provider.finalReceivedHistory[index].filePath);
+                      provider.recentFile[index].fileName?.split('.')?.last,
+                      provider.recentFile[index].filePath);
                 }),
               ),
             ),
