@@ -44,7 +44,7 @@ class HistoryProvider extends BaseModel {
       receivedAudio,
       receivedApk,
       receivedDocument,
-      finalReceivedHistory = [],
+      recentFile = [],
       receivedUnknown = [];
   List<String> tabNames = ['Recents'];
 
@@ -280,6 +280,7 @@ class HistoryProvider extends BaseModel {
       receivedPhotos = [];
       receivedVideos = [];
       receivedUnknown = [];
+      recentFile = [];
       await Future.forEach(filesList, (fileData) async {
         await Future.forEach(fileData.files, (file) async {
           String fileExtension = file.name.split('.').last;
@@ -348,11 +349,40 @@ class HistoryProvider extends BaseModel {
           }
         });
       });
-
+      getrecentHistoryFiles();
       setStatus(SORT_FILES, Status.Done);
     } catch (e) {
       setError(SORT_FILES, e.toString());
     }
+  }
+
+  getrecentHistoryFiles() async {
+    // finding last 15 received files data for recent tab
+    var lastTenFilesData = receivedHistoryLogs.sublist(
+        0, receivedHistoryLogs.length > 15 ? 15 : receivedHistoryLogs.length);
+
+    await Future.forEach(lastTenFilesData, (fileData) async {
+      await Future.forEach(fileData.files, (FileData file) async {
+        FilesDetail fileDetail = FilesDetail(
+          fileName: file.name,
+          filePath: BackendService.getInstance().downloadDirectory.path +
+              '/${file.name}',
+          size: double.parse(file.size.toString()),
+          date: fileData.date.toLocal().toString(),
+          type: file.name.split('.').last,
+          contactName: fileData.sender,
+        );
+
+        File tempFile = File(fileDetail.filePath);
+        bool isFileDownloaded = await tempFile.exists();
+
+        if (isFileDownloaded) {
+          recentFile.add(fileDetail);
+        }
+      });
+    });
+
+    print('recentFile data : ${recentFile.length}');
   }
 
   populateTabs() {
@@ -536,28 +566,31 @@ class HistoryProvider extends BaseModel {
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen) async {
-    try {
-      var index = receivedHistoryLogs
-          .indexWhere((element) => element.key == transferId);
-      if (index > -1) {
-        receivedHistoryLogs[index].isDownloading = true;
-        receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
-      }
-      notifyListeners();
+    // try {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
+    if (index > -1) {
+      receivedHistoryLogs[index].isDownloading = true;
+      receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
+    }
+    notifyListeners();
 
-      var files = await backendService.atClientInstance
-          .downloadFile(transferId, sharedBy);
-      receivedHistoryLogs[index].isDownloading = false;
+    var files = await backendService.atClientInstance
+        .downloadFile(transferId, sharedBy);
+    receivedHistoryLogs[index].isDownloading = false;
+
+    if (files is List<File>) {
+      await sortFiles(receivedHistoryLogs);
+      populateTabs();
       setStatus(DOWNLOAD_FILE, Status.Done);
-
-      if (files is List<File>) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('error in downloading file: $e');
+      return true;
+    } else {
+      setStatus(DOWNLOAD_FILE, Status.Done);
       return false;
     }
+    // } catch (e) {
+    //   print('error in downloading file: $e');
+    //   return false;
+    // }
   }
 }

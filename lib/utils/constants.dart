@@ -27,7 +27,8 @@ class MixedConstants {
   static const String HISTORY_BOX = 'historyBox';
 
   static String appNamespace = 'mospherepro';
-  static String regex = '.$appNamespace@';
+  static String regex =
+      '(.$appNamespace|atconnections|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})';
 
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';

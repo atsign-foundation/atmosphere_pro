@@ -6,6 +6,7 @@ import 'package:archive/archive_io.dart';
 import 'package:at_commons/at_builders.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
@@ -574,7 +575,8 @@ class BackendService {
             await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
             await startMonitor(atsign: atsign, value: value);
             _initBackendService();
-            await initializeContactsService(atClientInstance, currentAtSign);
+            initializeContactsService(atClientInstance, currentAtSign);
+            initializeGroupService(atClientInstance, currentAtSign);
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);
             // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );

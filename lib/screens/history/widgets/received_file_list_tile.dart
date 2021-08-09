@@ -63,13 +63,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       fileSize += element.size;
     });
 
+    checkForDownloadAvailability();
+    getAtSignDetail();
+    isFilesAlreadyDownloaded();
+    super.initState();
+  }
+
+  checkForDownloadAvailability() {
     var expiryDate = widget.receivedHistory.date.add(Duration(days: 6));
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
-    getAtSignDetail();
-    isFilesAlreadyDownloaded();
-    super.initState();
+
+// if fileList is not hab=ving any file then download icon will not be shown
+    var isFileUploaded = false;
+    widget.receivedHistory.files.forEach((FileData fileData) {
+      if (fileData.isUploaded) {
+        isFileUploaded = true;
+      }
+    });
+
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
   }
 
   getAtSignDetail() {
