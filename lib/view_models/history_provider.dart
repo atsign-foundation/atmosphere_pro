@@ -566,31 +566,31 @@ class HistoryProvider extends BaseModel {
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen) async {
-    // try {
-    var index =
-        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
-    if (index > -1) {
-      receivedHistoryLogs[index].isDownloading = true;
-      receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
-    }
-    notifyListeners();
+    try {
+      var index = receivedHistoryLogs
+          .indexWhere((element) => element.key == transferId);
+      if (index > -1) {
+        receivedHistoryLogs[index].isDownloading = true;
+        receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
+      }
+      notifyListeners();
 
-    var files = await backendService.atClientInstance
-        .downloadFile(transferId, sharedBy);
-    receivedHistoryLogs[index].isDownloading = false;
+      var files = await backendService.atClientInstance
+          .downloadFile(transferId, sharedBy);
+      receivedHistoryLogs[index].isDownloading = false;
 
-    if (files is List<File>) {
-      await sortFiles(receivedHistoryLogs);
-      populateTabs();
-      setStatus(DOWNLOAD_FILE, Status.Done);
-      return true;
-    } else {
-      setStatus(DOWNLOAD_FILE, Status.Done);
+      if (files is List<File>) {
+        await sortFiles(receivedHistoryLogs);
+        populateTabs();
+        setStatus(DOWNLOAD_FILE, Status.Done);
+        return true;
+      } else {
+        setStatus(DOWNLOAD_FILE, Status.Done);
+        return false;
+      }
+    } catch (e) {
+      print('error in downloading file: $e');
       return false;
     }
-    // } catch (e) {
-    //   print('error in downloading file: $e');
-    //   return false;
-    // }
   }
 }
