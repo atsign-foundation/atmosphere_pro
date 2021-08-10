@@ -24,6 +24,9 @@ class ColorConstants {
 
 class ContactInitialsColors {
   static Color getColor(String atsign) {
+    if (atsign.length == 1) {
+      atsign = atsign + ' ';
+    }
     switch (atsign[1].toUpperCase()) {
       case 'A':
         return Color(0xFFAA0DFE);

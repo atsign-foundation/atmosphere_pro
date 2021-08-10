@@ -566,9 +566,9 @@ class HistoryProvider extends BaseModel {
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen) async {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
-      var index = receivedHistoryLogs
-          .indexWhere((element) => element.key == transferId);
       if (index > -1) {
         receivedHistoryLogs[index].isDownloading = true;
         receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
@@ -590,6 +590,8 @@ class HistoryProvider extends BaseModel {
       }
     } catch (e) {
       print('error in downloading file: $e');
+      receivedHistoryLogs[index].isDownloading = false;
+      setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
     }
   }
