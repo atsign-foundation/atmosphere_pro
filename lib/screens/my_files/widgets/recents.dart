@@ -3,7 +3,9 @@ import 'dart:typed_data';
 
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -30,19 +32,59 @@ class _RecentsState extends State<Recents> {
           : Container(
               margin: EdgeInsets.symmetric(
                   vertical: 10.toHeight, horizontal: 10.toWidth),
-              child: GridView.count(
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                children: List.generate(provider.recentFile.length, (index) {
-                  return thumbnail(
-                      provider.recentFile[index].fileName?.split('.')?.last,
-                      provider.recentFile[index].filePath);
-                }),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Wrap(
+                    alignment: WrapAlignment.start,
+                    runAlignment: WrapAlignment.start,
+                    runSpacing: 10.0,
+                    spacing: 15.0,
+                    children: List.generate(
+                        provider.recentFile.length,
+                        (index) => fileCard(provider.recentFile[index].fileName,
+                            provider.recentFile[index].filePath))),
               ),
             ),
     );
   }
+}
+
+Widget fileCard(String title, String filePath) {
+  return Container(
+    child: Column(
+      children: <Widget>[
+        filePath != null
+            ? Container(
+                width: 60,
+                height: 60,
+                child: thumbnail(filePath.split('.').last, filePath))
+            : Container(
+                width: 60,
+                height: 60,
+                child: ClipRect(
+                  child: Image.asset(ImageConstants.emptyTrustedSenders,
+                      fit: BoxFit.fill),
+                ),
+              ),
+        title != null
+            ? Container(
+                width: 100,
+                height: 30,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(color: Color(0xFF8A8E95)),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )
+            : SizedBox()
+      ],
+    ),
+  );
 }
 
 Widget thumbnail(String extension, String path) {
@@ -125,6 +167,15 @@ Widget thumbnail(String extension, String path) {
                 ),
               ),
             );
+}
+
+Future<bool> isFilePresent(String fileName) async {
+  String filePath =
+      BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+
+  File file = File(filePath);
+  bool fileExists = await file.exists();
+  return fileExists;
 }
 
 Uint8List videoThumbnail;
