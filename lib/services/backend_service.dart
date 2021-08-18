@@ -10,6 +10,7 @@ import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
@@ -38,11 +39,13 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
+
   BackendService._internal();
 
   factory BackendService.getInstance() {
     return _singleton;
   }
+
   AtClientService atClientServiceInstance;
   AtClientImpl atClientInstance;
   String currentAtSign;
@@ -51,6 +54,7 @@ class BackendService {
   AtClientPreference atClientPreference;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
+
   String get currentAtsign => currentAtSign;
   OutboundConnection monitorConnection;
   Directory downloadDirectory;
@@ -60,8 +64,10 @@ class BackendService {
   String onBoardError;
 
   final _isAuthuneticatingStreamController = StreamController<bool>.broadcast();
+
   Stream<bool> get isAuthuneticatingStream =>
       _isAuthuneticatingStreamController.stream;
+
   StreamSink<bool> get isAuthuneticatingSink =>
       _isAuthuneticatingStreamController.sink;
 
@@ -183,6 +189,7 @@ class BackendService {
   }
 
   Map<String, AtClientService> atClientServiceMap = {};
+
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   Future<bool> startMonitor({value, atsign}) async {
@@ -210,6 +217,7 @@ class BackendService {
 
   var fileLength;
   var userResponse = false;
+
   Future<void> _notificationCallBack(var response) async {
     print('response => $response');
     await syncWithSecondary();
@@ -246,8 +254,38 @@ class BackendService {
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
         await NotificationService().showNotification(fromAtSign);
+
+        BuildContext context = NavService.navKey.currentContext;
+        bool trustedSender = false;
+        TrustedContactProvider trustedContactProvider =
+            Provider.of<TrustedContactProvider>(context, listen: false);
+
+        trustedContactProvider.trustedContacts.forEach((element) {
+          if (element.atSign == fromAtSign) {
+            trustedSender = true;
+          }
+        });
+
+        print('trustedSender = $trustedSender');
+        if (trustedSender) {
+          await downloadFiles(context, atKey.split('.').first, fromAtSign);
+        }
       }
     }
+  }
+
+  downloadFiles(BuildContext context, String key, String fromAtSign) async {
+    print('downloadFiles atKey = $key');
+    print('downloadFiles fromAtSign = $fromAtSign');
+
+    var result = await Provider.of<HistoryProvider>(context, listen: false)
+        .downloadFiles(
+      key,
+      fromAtSign,
+      false,
+    );
+    if (result is bool && result) {
+    } else if (result is bool && !result) {}
   }
 
   syncWithSecondary() async {
@@ -428,6 +466,7 @@ class BackendService {
   }
 
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
+
   Future<List<String>> getAtsignList() async {
     var atSignsList = await _keyChainManager.getAtSignListFromKeychain();
     return atSignsList;
@@ -603,6 +642,7 @@ class BackendService {
 
   String state;
   NotificationService _notificationService;
+
   void _initBackendService() async {
     _notificationService = NotificationService();
     _notificationService.cancelNotifications();
