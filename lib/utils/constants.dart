@@ -27,13 +27,14 @@ class MixedConstants {
   static const String HISTORY_BOX = 'historyBox';
 
   static String appNamespace = 'mospherepro';
-  static String regex = '.$appNamespace@';
+  static String regex =
+      '(.$appNamespace|atconnections|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})';
 
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
-  static const String FILE_TRANSFER_KEY = 'filetransfer';
-  static const String RECEIVED_FILE_HISTORY = 'receivedHistory';
-  static const String SENT_FILE_HISTORY = 'sentHistory';
+  static const String FILE_TRANSFER_KEY = 'file_transfer_';
+  static const String RECEIVED_FILE_HISTORY = 'receivedHistory_v2';
+  static const String SENT_FILE_HISTORY = 'sentHistory_v2';
 
   /// Currently set to 60 days
   static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
@@ -42,5 +43,9 @@ class MixedConstants {
 
   static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
 
-  static String get SENT_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
+  static String get SENT_FILE_DIRECTORY =>
+      '$ApplicationDocumentsDirectory' + '/sent-files/';
+
+  // Onboarding API key - requires different key for production
+  static String ONBOARD_API_KEY = '477b-876u-bcez-c42z-6a3d';
 }

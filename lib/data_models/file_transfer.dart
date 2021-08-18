@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -9,6 +9,8 @@ class FileTransfer {
   DateTime date, expiry;
   List<PlatformFile> platformFiles;
   bool isUpdate;
+  bool isDownloading;
+  bool isWidgetOpen;
   FileTransfer({
     this.url,
     this.files,
@@ -16,10 +18,12 @@ class FileTransfer {
     this.platformFiles,
     this.date,
     this.key,
-    isUpdate = false,
+    this.isUpdate = false,
+    this.isDownloading = false,
+    this.isWidgetOpen = false,
   }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
-    this.date = DateTime.now();
+    this.date = date ?? DateTime.now();
 
     if (files == null) {
       this.files = platformFileToFileData(platformFiles);
@@ -28,6 +32,8 @@ class FileTransfer {
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
     isUpdate = json['isUpdate'];
+    isDownloading = json['isDownloading'];
+    isWidgetOpen = json['isWidgetOpen'];
     url = json['url'];
     sender = json['sender'];
     key = json['key'];
@@ -45,6 +51,8 @@ class FileTransfer {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['isUpdate'] = isUpdate;
+    data['isDownloading'] = isDownloading;
+    data['isWidgetOpen'] = isWidgetOpen;
     data['url'] = this.url;
     data['sender'] = this.sender;
     data['key'] = this.key;
@@ -77,9 +85,18 @@ class FileData {
   String url;
   String path;
   bool isUploaded;
+  bool isUploading;
+  bool isDownloading;
 
-  FileData(
-      {this.name, this.size, this.url, this.path, this.isUploaded = false});
+  FileData({
+    this.name,
+    this.size,
+    this.url,
+    this.path,
+    this.isUploaded = false,
+    isUploading = false,
+    isDownloading = false,
+  });
 
   FileData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -87,6 +104,8 @@ class FileData {
     url = json['url'];
     path = json['path'];
     isUploaded = json['isUploaded'] ?? false;
+    isUploading = json['isUploading'] ?? false;
+    isDownloading = json['isDownloading'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +115,8 @@ class FileData {
     data['url'] = this.url;
     data['path'] = this.path;
     data['isUploaded'] = this.isUploaded;
+    data['isUploading'] = this.isUploading;
+    data['isDownloading'] = this.isDownloading;
     return data;
   }
 }
@@ -104,23 +125,30 @@ class FileHistory {
   FileTransfer fileDetails;
   List<ShareStatus> sharedWith;
   HistoryType type;
+  FileTransferObject fileTransferObject;
 
-  FileHistory(this.fileDetails, this.sharedWith, this.type);
-  FileHistory.fromJson(Map<String, dynamic> json) {
-    if (json['fileDetails'] != null) {
-      fileDetails = FileTransfer.fromJson(json['fileDetails']);
+  FileHistory(
+      this.fileDetails, this.sharedWith, this.type, this.fileTransferObject);
+  FileHistory.fromJson(Map<String, dynamic> data) {
+    if (data['fileDetails'] != null) {
+      fileDetails = FileTransfer.fromJson(data['fileDetails']);
     }
     sharedWith = [];
 
-    if (json['sharedWith'] != null) {
-      json['sharedWith'].forEach((element) {
+    if (data['sharedWith'] != null) {
+      data['sharedWith'].forEach((element) {
         ShareStatus shareStatus = ShareStatus.fromJson(element);
         sharedWith.add(shareStatus);
       });
     }
-    type = json['type'] == HistoryType.send.toString()
+    type = data['type'] == HistoryType.send.toString()
         ? HistoryType.send
         : HistoryType.received;
+
+    if (data['fileTransferObject'] != null) {
+      fileTransferObject =
+          FileTransferObject.fromJson(jsonDecode(data['fileTransferObject']));
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -128,6 +156,7 @@ class FileHistory {
     data['fileDetails'] = this.fileDetails;
     data['sharedWith'] = this.sharedWith;
     data['type'] = this.type.toString();
+    data['fileTransferObject'] = jsonEncode(this.fileTransferObject.toJson());
     return data;
   }
 }

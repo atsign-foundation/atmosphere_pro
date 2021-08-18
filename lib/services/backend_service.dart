@@ -6,6 +6,7 @@ import 'package:archive/archive_io.dart';
 import 'package:at_commons/at_builders.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
@@ -31,6 +32,7 @@ import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/manager/sync_manager.dart';
+import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:http/http.dart' as http;
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 
@@ -230,26 +232,6 @@ class BackendService {
       return;
     }
 
-    if (atKey == 'stream_id') {
-      var valueObject = responseJson['value'];
-      var streamId = valueObject.split(':')[0];
-      var fileName = valueObject.split(':')[1];
-      fileLength = valueObject.split(':')[2];
-      fileName = utf8.decode(base64.decode(fileName));
-      userResponse =
-          await acceptStream(fromAtSign, fileName, fileLength, toAtSing);
-
-      if (userResponse == true) {
-        await atClientInstance.sendStreamAck(
-            streamId,
-            fileName,
-            int.parse(fileLength),
-            fromAtSign,
-            _streamCompletionCallBack,
-            _streamReceiveCallBack);
-      }
-      return;
-    }
     print(' FILE_TRANSFER_KEY : ${atKey}');
     if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
       var value = responseJson['value'];
@@ -262,9 +244,7 @@ class BackendService {
       if (decryptedMessage != null) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
                 listen: false)
-            .addToReceiveFileHistory(fromAtSign, decryptedMessage);
-
-        NotificationService().setOnNotificationClick(onNotificationClick);
+            .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
         await NotificationService().showNotification(fromAtSign);
       }
     }
@@ -282,83 +262,6 @@ class BackendService {
       print('sync done');
     } catch (e) {
       print('error in sync: $e');
-    }
-  }
-
-  Future downloadFileFromBin(
-    String sharedByAtSign,
-    String url,
-  ) async {
-    bool isDownloaded = true;
-    try {
-      var response = await http.get(Uri.parse(url));
-      var archive = ZipDecoder().decodeBytes(response.bodyBytes);
-      for (var file in archive) {
-        bool proceedToDownload = await proceedToFileDownload(file.name);
-        if (!proceedToDownload) {
-          isDownloaded = false;
-          continue;
-        }
-
-        var unzipped = file.content as List<int>;
-        bool result = await decryptAndStore(
-          sharedByAtSign,
-          unzipped,
-          file.name,
-        );
-
-        if (result is bool && !result) {
-          isDownloaded = false;
-        } else {
-          // if download is completed, updating my files screen
-          var context = NavService.navKey.currentContext;
-          var receivedHistoryLogs =
-              Provider.of<HistoryProvider>(context, listen: false)
-                  .receivedHistoryLogs;
-          await Provider.of<HistoryProvider>(context, listen: false)
-              .sortFiles(receivedHistoryLogs);
-          Provider.of<HistoryProvider>(context, listen: false).populateTabs();
-        }
-      }
-
-      return isDownloaded;
-    } catch (e) {
-      print('Error in download $e');
-      return false;
-    }
-  }
-
-  Future decryptAndStore(
-    String sharedByAtSign,
-    Uint8List encryptedFileInBytes,
-    String fileName,
-  ) async {
-    print('decrypting file: $fileName');
-    try {
-      var fileDecryptionKeyLookUpBuilder = LookupVerbBuilder()
-        ..atKey = AT_FILE_ENCRYPTION_SHARED_KEY
-        ..sharedBy = sharedByAtSign
-        ..auth = true;
-      var encryptedFileSharedKey = await atClientInstance
-          .getRemoteSecondary()
-          .executeAndParse(fileDecryptionKeyLookUpBuilder);
-      var currentAtSignPrivateKey =
-          await atClientInstance.getLocalSecondary().getEncryptionPrivateKey();
-      var fileDecryptionKey = atClientInstance.decryptKey(
-          encryptedFileSharedKey, currentAtSignPrivateKey);
-
-      var decryptedFile = await atClientInstance.encryptionService
-          .decryptFile(encryptedFileInBytes, fileDecryptionKey);
-      var downloadedFile =
-          File('${MixedConstants.RECEIVED_FILE_DIRECTORY}/$fileName');
-      print('open file');
-
-      downloadedFile.writeAsBytesSync(decryptedFile);
-      print('directory: ${downloadDirectory.path}/$fileName');
-      return true;
-    } catch (e) {
-      print('error in decryptAndStore : $e');
-      return false;
     }
   }
 
@@ -553,31 +456,32 @@ class BackendService {
           Routes.HOME, (Route<dynamic> route) => false);
     } else {
       await Onboarding(
-        atsign: tempAtsign,
-        context: NavService.navKey.currentContext,
-        atClientPreference: atClientPrefernce,
-        domain: MixedConstants.ROOT_DOMAIN,
-        appColor: Color.fromARGB(255, 240, 94, 62),
-        onboard: (value, atsign) async {
-          atClientServiceMap = value;
+          atsign: tempAtsign,
+          context: NavService.navKey.currentContext,
+          atClientPreference: atClientPrefernce,
+          domain: MixedConstants.ROOT_DOMAIN,
+          appColor: Color.fromARGB(255, 240, 94, 62),
+          onboard: (value, atsign) async {
+            atClientServiceMap = value;
 
-          String atSign =
-              await atClientServiceMap[atsign].atClient.currentAtSign;
+            String atSign =
+                await atClientServiceMap[atsign].atClient.currentAtSign;
 
-          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
-          await startMonitor(atsign: atsign, value: value);
-          await initializeContactsService(atClientInstance, currentAtSign);
-          // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
-          await Navigator.pushNamedAndRemoveUntil(
-              NavService.navKey.currentContext,
-              Routes.HOME,
-              (Route<dynamic> route) => false);
-        },
-        onError: (error) {
-          print('Onboarding throws $error error');
-        },
-        // nextScreen: WelcomeScreen(),
-      );
+            await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+            await startMonitor(atsign: atsign, value: value);
+            await initializeContactsService(atClientInstance, currentAtSign);
+            // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+            await Navigator.pushNamedAndRemoveUntil(
+                NavService.navKey.currentContext,
+                Routes.HOME,
+                (Route<dynamic> route) => false);
+          },
+          onError: (error) {
+            print('Onboarding throws $error error');
+          },
+          appAPIKey: MixedConstants.ONBOARD_API_KEY
+          // nextScreen: WelcomeScreen(),
+          );
     }
     // if (atClientInstance != null) {
     //   await startMonitor();
@@ -654,39 +558,41 @@ class BackendService {
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
       await Onboarding(
-        atsign: atSign,
-        context: NavService.navKey.currentContext,
-        atClientPreference: atClientPrefernce,
-        domain: MixedConstants.ROOT_DOMAIN,
-        appColor: Color.fromARGB(255, 240, 94, 62),
-        onboard: (value, atsign) async {
-          authenticating = true;
-          isAuthuneticatingSink.add(authenticating);
-          atClientServiceMap = value;
+          atsign: atSign,
+          context: NavService.navKey.currentContext,
+          atClientPreference: atClientPrefernce,
+          domain: MixedConstants.ROOT_DOMAIN,
+          appColor: Color.fromARGB(255, 240, 94, 62),
+          onboard: (value, atsign) async {
+            authenticating = true;
+            isAuthuneticatingSink.add(authenticating);
+            atClientServiceMap = value;
 
-          String atSign =
-              await atClientServiceMap[atsign].atClient.currentAtSign;
-          currentAtSign = atSign;
+            String atSign =
+                await atClientServiceMap[atsign].atClient.currentAtSign;
+            currentAtSign = atSign;
 
-          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
-          await startMonitor(atsign: atsign, value: value);
-          _initBackendService();
-          await initializeContactsService(atClientInstance, currentAtSign);
-          authenticating = false;
-          isAuthuneticatingSink.add(authenticating);
-          // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
-          await Navigator.pushNamedAndRemoveUntil(
-              NavService.navKey.currentContext,
-              Routes.WELCOME_SCREEN,
-              (Route<dynamic> route) => false);
-        },
-        onError: (error) {
-          print('Onboarding throws $error error');
-          authenticating = false;
-          isAuthuneticatingSink.add(authenticating);
-        },
-        // nextScreen: WelcomeScreen(),
-      );
+            await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+            await startMonitor(atsign: atsign, value: value);
+            _initBackendService();
+            initializeContactsService(atClientInstance, currentAtSign);
+            initializeGroupService(atClientInstance, currentAtSign);
+            authenticating = false;
+            isAuthuneticatingSink.add(authenticating);
+            // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
+            await Navigator.pushNamedAndRemoveUntil(
+                NavService.navKey.currentContext,
+                Routes.WELCOME_SCREEN,
+                (Route<dynamic> route) => false);
+          },
+          onError: (error) {
+            print('Onboarding throws $error error');
+            authenticating = false;
+            isAuthuneticatingSink.add(authenticating);
+          },
+          appAPIKey: MixedConstants.ONBOARD_API_KEY
+          // nextScreen: WelcomeScreen(),
+          );
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
     } catch (e) {
