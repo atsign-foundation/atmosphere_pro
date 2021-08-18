@@ -338,10 +338,13 @@ class FileTransferProvider extends BaseModel {
 
       contactList.forEach((groupContact) {
         if (groupContact.contact != null) {
-          _atSigns.add(groupContact.contact.atSign);
+          var index =
+              _atSigns.indexWhere((el) => el == groupContact.contact.atSign);
+          if (index == -1) _atSigns.add(groupContact.contact.atSign);
         } else if (groupContact.group != null) {
           groupContact.group.members.forEach((member) {
-            _atSigns.add(member.atSign);
+            var index = _atSigns.indexWhere((el) => el == member.atSign);
+            if (index == -1) _atSigns.add(member.atSign);
           });
         }
       });

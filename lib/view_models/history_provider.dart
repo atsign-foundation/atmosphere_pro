@@ -375,8 +375,10 @@ class HistoryProvider extends BaseModel {
 
         File tempFile = File(fileDetail.filePath);
         bool isFileDownloaded = await tempFile.exists();
+        int index = recentFile
+            .indexWhere((element) => element.fileName == fileDetail.fileName);
 
-        if (isFileDownloaded) {
+        if (isFileDownloaded && index == -1) {
           recentFile.add(fileDetail);
         }
       });

@@ -279,7 +279,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 66.0 *
+                      height: 70.0 *
                           (widget.receivedHistory.files.length -
                                   widget.receivedHistory.files
                                       .where((element) =>

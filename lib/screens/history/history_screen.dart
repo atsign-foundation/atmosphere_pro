@@ -36,6 +36,15 @@ class _HistoryScreenState extends State<HistoryScreen>
   }
 
   @override
+  dispose() {
+    // closing all open received files widgets widgets.
+    historyProvider.receivedHistoryLogs.forEach((element) {
+      element.isWidgetOpen = false;
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,
@@ -132,9 +141,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                           : ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),
                               physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
-                              ),
+                              separatorBuilder: (context, index) =>
+                                  Divider(indent: 16.toWidth),
                               itemCount: provider.receivedHistoryLogs.length,
                               itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
