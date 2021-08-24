@@ -87,6 +87,10 @@ class _ExpansionTileWidget extends StatelessWidget {
                   onSelected(s.length);
                 },
                 // singleSelection: true,
+                contactSelectedHistory: Provider.of<WelcomeScreenProvider>(
+                        NavService.navKey.currentContext,
+                        listen: false)
+                    .selectedContacts,
               ),
             ),
           );

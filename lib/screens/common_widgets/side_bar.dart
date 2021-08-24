@@ -207,7 +207,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                 NavService.navKey.currentContext,
                                 listen: false)
                             .updateSelectedContacts(s);
-                      }
+                      },
+                      'showSelectedData': Provider.of<WelcomeScreenProvider>(
+                              NavService.navKey.currentContext,
+                              listen: false)
+                          .selectedContacts
                     },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
@@ -435,6 +439,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   key: _formKey,
                   child: TextFormField(
                     textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15.toFont),
                     validator: (value) {
                       if (value != atsign) {
                         return "The @sign doesn't match. Please retype.";

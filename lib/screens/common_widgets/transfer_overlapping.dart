@@ -37,7 +37,6 @@ class _TranferOverlappingContactsState
         List<bool>.generate(widget.selectedList.length, (i) => false);
     widget.selectedList;
     noOfContactsRow = (widget.selectedList.length / 5).ceil();
-    print('noOfContactsRow: ${noOfContactsRow}');
     super.initState();
   }
 
@@ -164,117 +163,115 @@ class _TranferOverlappingContactsState
                     top: 50.toHeight,
                     child: Consumer<FileTransferProvider>(
                       builder: (context, provider, __) {
-                        return Container(
-                          height: 200.toHeight,
-                          width: SizeConfig().screenWidth - 20.toWidth,
-                          child: GridView.count(
-                            crossAxisCount:
-                                SizeConfig().isTablet(context) ? 6 : 5,
-                            mainAxisSpacing: 5,
-                            crossAxisSpacing: 5,
-                            childAspectRatio: 1,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: List.generate(
-                              widget.selectedList.length,
-                              (index) {
-                                bool isNotified = widget
-                                    .selectedList[index].isNotificationSend;
+                        return Align(
+                            alignment: Alignment.topLeft,
+                            child: Wrap(
+                              alignment: WrapAlignment.start,
+                              runAlignment: WrapAlignment.start,
+                              runSpacing: 10.0,
+                              spacing: 15.0,
+                              children: List.generate(
+                                widget.selectedList.length,
+                                (index) {
+                                  bool isNotified = widget
+                                      .selectedList[index].isNotificationSend;
 
-                                Uint8List image = getCachedContactImage(
-                                    widget.selectedList[index].atsign);
+                                  Uint8List image = getCachedContactImage(
+                                      widget.selectedList[index].atsign);
 
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: isNotified
-                                            ? Color(0xFF08CB21)
-                                            : Color(0xFFF86061),
-                                        width: 5),
-                                    borderRadius:
-                                        BorderRadius.circular(35.toHeight * 2),
-                                  ),
-                                  child: atsignResharing[index]
-                                      ? TypingIndicator(
-                                          showIndicator: true,
-                                          flashingCircleBrightColor:
-                                              ColorConstants.dullText,
-                                          flashingCircleDarkColor:
-                                              ColorConstants.fadedText,
-                                        )
-                                      : Stack(
-                                          children: [
-                                            Container(
-                                              width: 90.toHeight,
-                                              height: 90.toHeight,
-                                              child: image != null
-                                                  ? CustomCircleAvatar(
-                                                      byteImage: image,
-                                                      nonAsset: true,
-                                                    )
-                                                  : ContactInitial(
-                                                      initials: widget
-                                                          .selectedList[index]
-                                                          .atsign,
-                                                      size: 40,
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: isNotified
+                                              ? Color(0xFF08CB21)
+                                              : Color(0xFFF86061),
+                                          width: 5),
+                                      borderRadius: BorderRadius.circular(
+                                          35.toHeight * 2),
+                                    ),
+                                    child: atsignResharing[index]
+                                        ? TypingIndicator(
+                                            showIndicator: true,
+                                            flashingCircleBrightColor:
+                                                ColorConstants.dullText,
+                                            flashingCircleDarkColor:
+                                                ColorConstants.fadedText,
+                                          )
+                                        : Stack(
+                                            children: [
+                                              Container(
+                                                width: 70.toHeight,
+                                                height: 70.toHeight,
+                                                child: image != null
+                                                    ? CustomCircleAvatar(
+                                                        byteImage: image,
+                                                        nonAsset: true,
+                                                      )
+                                                    : ContactInitial(
+                                                        initials: widget
+                                                            .selectedList[index]
+                                                            .atsign,
+                                                        size: 40,
+                                                      ),
+                                              ),
+                                              Positioned(
+                                                  right: 0,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: isNotified
+                                                          ? Color(0xFF08CB21)
+                                                          : Color(0xFFF86061),
+                                                      border: Border.all(
+                                                          color: isNotified
+                                                              ? Color(
+                                                                  0xFF08CB21)
+                                                              : Color(
+                                                                  0xFFF86061),
+                                                          width: 5),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              35.toHeight),
                                                     ),
-                                            ),
-                                            Positioned(
-                                                right: 0,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: isNotified
-                                                        ? Color(0xFF08CB21)
-                                                        : Color(0xFFF86061),
-                                                    border: Border.all(
-                                                        color: isNotified
-                                                            ? Color(0xFF08CB21)
-                                                            : Color(0xFFF86061),
-                                                        width: 5),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            35.toHeight),
-                                                  ),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      if (isNotified) {
-                                                        return;
-                                                      }
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        if (isNotified) {
+                                                          return;
+                                                        }
 
-                                                      setState(() {
+                                                        setState(() {
+                                                          atsignResharing[
+                                                              index] = true;
+                                                        });
+                                                        await Provider.of<
+                                                                    FileTransferProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .reSendFileNotification(
+                                                                widget
+                                                                    .fileHistory,
+                                                                widget
+                                                                    .selectedList[
+                                                                        index]
+                                                                    .atsign);
+
                                                         atsignResharing[index] =
-                                                            true;
-                                                      });
-                                                      await Provider.of<
-                                                                  FileTransferProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .reSendFileNotification(
-                                                              widget
-                                                                  .fileHistory,
-                                                              widget
-                                                                  .selectedList[
-                                                                      index]
-                                                                  .atsign);
-
-                                                      atsignResharing[index] =
-                                                          false;
-                                                    },
-                                                    child: Icon(
-                                                      isNotified
-                                                          ? Icons.done
-                                                          : Icons.refresh,
-                                                      color: Colors.white,
-                                                      size: 15.toFont,
+                                                            false;
+                                                      },
+                                                      child: Icon(
+                                                        isNotified
+                                                            ? Icons.done
+                                                            : Icons.refresh,
+                                                        color: Colors.white,
+                                                        size: 15.toFont,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ))
-                                          ],
-                                        ),
-                                );
-                              },
-                            ),
-                          ),
-                        );
+                                                  ))
+                                            ],
+                                          ),
+                                  );
+                                },
+                              ),
+                            ));
                       },
                     ),
                   )

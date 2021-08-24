@@ -55,12 +55,12 @@ Widget fileCard(String title, String filePath) {
       children: <Widget>[
         filePath != null
             ? Container(
-                width: 60,
-                height: 60,
+                width: 80.toHeight,
+                height: 80.toHeight,
                 child: thumbnail(filePath.split('.').last, filePath))
             : Container(
-                width: 60,
-                height: 60,
+                width: 80.toHeight,
+                height: 80.toHeight,
                 child: ClipRect(
                   child: Image.asset(ImageConstants.emptyTrustedSenders,
                       fit: BoxFit.fill),
@@ -68,13 +68,14 @@ Widget fileCard(String title, String filePath) {
               ),
         title != null
             ? Container(
-                width: 100,
-                height: 30,
+                width: 100.toHeight,
+                height: 30.toHeight,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Text(
                     title,
-                    style: TextStyle(color: Color(0xFF8A8E95)),
+                    style: TextStyle(
+                        color: Color(0xFF8A8E95), fontSize: 12.toFont),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
