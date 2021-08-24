@@ -14,7 +14,6 @@ class _PhotosState extends State<Photos> {
   HistoryProvider provider = HistoryProvider();
   @override
   void initState() {
-    print('in PHOTOS');
     super.initState();
   }
 
@@ -30,38 +29,44 @@ class _PhotosState extends State<Photos> {
       load: (provider) {
         provider.getReceivedHistory();
       },
-      successBuilder: (provider) => Container(
-        margin:
-            EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
-        child: GridView.count(
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 3,
-          children: List.generate(provider.receivedPhotos.length, (index) {
-            return GestureDetector(
-              onTap: () async {
-                // preview file
-                File test = File(provider.receivedPhotos[index].filePath);
-                bool fileExists = await test.exists();
-                if (fileExists) {
-                  await OpenFile.open(provider.receivedPhotos[index].filePath);
-                }
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.toHeight),
-                child: Container(
-                  height: 50.toHeight,
-                  width: 50.toWidth,
-                  child: Image.file(
-                    File(provider.receivedPhotos[index].filePath),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
+      successBuilder: (provider) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+              vertical: 10.toHeight, horizontal: 10.toWidth),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Wrap(
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.start,
+                runSpacing: 10.0,
+                spacing: 15.0,
+                children:
+                    List.generate(provider.receivedPhotos.length, (index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      File test = File(provider.receivedPhotos[index].filePath);
+                      bool fileExists = await test.exists();
+                      if (fileExists) {
+                        await OpenFile.open(
+                            provider.receivedPhotos[index].filePath);
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.toHeight),
+                      child: Container(
+                        height: 100.toHeight,
+                        width: 100.toHeight,
+                        child: Image.file(
+                          File(provider.receivedPhotos[index].filePath),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  );
+                })),
+          ),
+        );
+      },
     );
   }
 }

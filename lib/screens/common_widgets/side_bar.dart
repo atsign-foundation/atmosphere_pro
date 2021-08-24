@@ -435,6 +435,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   key: _formKey,
                   child: TextFormField(
                     textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15.toFont),
                     validator: (value) {
                       if (value != atsign) {
                         return "The @sign doesn't match. Please retype.";

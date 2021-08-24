@@ -106,7 +106,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   @override
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-
     return Column(
       children: [
         Container(
@@ -317,36 +316,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     : Container(),
               ],
             ),
-            // trailing: contactList.isNotEmpty
-            //     ? (widget.sentHistory.sharedWith[0].isNotificationSend
-            //         ? SizedBox()
-            //         : InkWell(
-            //             onTap: () async {
-            //               setState(() {
-            //                 isResendingToFirstContact = true;
-            //               });
-            //               await Provider.of<FileTransferProvider>(context,
-            //                       listen: false)
-            //                   .sendFileNotification(widget.sentHistory,
-            //                       widget.sentHistory.sharedWith[0].atsign);
-
-            //               isResendingToFirstContact = false;
-            //             },
-            //             child: isResendingToFirstContact
-            //                 ? TypingIndicator(
-            //                     showIndicator: true,
-            //                     flashingCircleBrightColor:
-            //                         ColorConstants.dullText,
-            //                     flashingCircleDarkColor:
-            //                         ColorConstants.fadedText,
-            //                   )
-            //                 : Icon(
-            //                     Icons.refresh,
-            //                     color: Color(0xFFF86061),
-            //                     size: 25.toFont,
-            //                   ),
-            //           ))
-            //     : SizedBox(),
           ),
         ),
         (isOpen)
@@ -356,8 +325,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height:
-                          70.0 * widget.sentHistory.fileDetails.files.length,
+                      height: (SizeConfig().isTablet(context)
+                              ? 80.0.toHeight
+                              : 70.0.toHeight) *
+                          widget.sentHistory.fileDetails.files.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
