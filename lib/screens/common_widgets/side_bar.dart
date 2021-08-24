@@ -207,7 +207,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                 NavService.navKey.currentContext,
                                 listen: false)
                             .updateSelectedContacts(s);
-                      }
+                      },
+                      'showSelectedData': Provider.of<WelcomeScreenProvider>(
+                              NavService.navKey.currentContext,
+                              listen: false)
+                          .selectedContacts
                     },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),

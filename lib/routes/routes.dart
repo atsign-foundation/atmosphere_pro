@@ -39,11 +39,13 @@ class SetupRoutes {
         Map<String, dynamic> args =
             ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
         return GroupContactView(
-            asSelectionScreen: args['asSelectionScreen'],
-            singleSelection: args['singleSelection'],
-            showGroups: args['showGroups'],
-            showContacts: args['showContacts'],
-            selectedList: args['selectedList']);
+          asSelectionScreen: args['asSelectionScreen'],
+          singleSelection: args['singleSelection'],
+          showGroups: args['showGroups'],
+          showContacts: args['showContacts'],
+          selectedList: args['selectedList'],
+          contactSelectedHistory: args['showSelectedData'],
+        );
       },
       Routes.GROUPS: (context) {
         Map<String, dynamic> args =
