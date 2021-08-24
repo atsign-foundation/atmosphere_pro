@@ -283,11 +283,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 (!isOpen)
                     ? GestureDetector(
                         onTap: () {
-                          widget.sentHistory.sharedWith.forEach((element) {
-                            print(
-                                'sentHistory: ${element.atsign}, ${element.isNotificationSend}');
-                          });
-
                           setState(() {
                             isOpen = !isOpen;
                           });
@@ -296,7 +291,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                'More Details',
+                                'Show Details',
                                 style: CustomTextStyles.primaryBold14,
                               ),
                               Container(
@@ -504,7 +499,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         child: Row(
                           children: [
                             Text(
-                              'Lesser Details',
+                              'Hide Details',
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(
