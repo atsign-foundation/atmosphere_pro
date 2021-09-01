@@ -134,8 +134,9 @@ class HistoryProvider extends BaseModel {
 
     var result = await backendService.atClientInstance
         .put(atKey, json.encode(sendFileHistory));
-    print('file history saved: ${result}');
+
     setStatus(SET_FILE_HISTORY, Status.Done);
+    return result;
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
@@ -152,7 +153,6 @@ class HistoryProvider extends BaseModel {
     }
     var result = await backendService.atClientInstance
         .put(atKey, json.encode(sendFileHistory));
-
     return result;
   }
 

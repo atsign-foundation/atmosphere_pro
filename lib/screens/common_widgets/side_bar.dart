@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
@@ -313,12 +314,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        String atSign =
-                            await BackendService.getInstance().getAtSign();
-
-                        var atSignList = await BackendService.getInstance()
-                            .atClientServiceMap[atSign]
-                            .getAtsignList();
+                        var atSignList = await KeychainUtil.getAtsignList();
                         await showModalBottomSheet(
                           context: NavService.navKey.currentContext,
                           backgroundColor: Colors.transparent,
