@@ -94,12 +94,7 @@ Widget thumbnail(String extension, String path) {
           borderRadius: BorderRadius.circular(10.toHeight),
           child: GestureDetector(
             onTap: () async {
-              // preview file
-              File test = File(path);
-              bool fileExists = await test.exists();
-              if (fileExists) {
-                await OpenFile.open(path);
-              }
+              await openFilePath(path);
             },
             child: Container(
               height: 50.toHeight,
@@ -118,7 +113,8 @@ Widget thumbnail(String extension, String path) {
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: GestureDetector(
                   onTap: () async {
-                    await openDownloadsFolder(context);
+                    //   await openDownloadsFolder(context);
+                    await openFilePath(path);
                   },
                   child: Container(
                     padding: EdgeInsets.only(left: 10),
@@ -144,7 +140,8 @@ Widget thumbnail(String extension, String path) {
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: GestureDetector(
                   onTap: () async {
-                    await openDownloadsFolder(context);
+                    await openFilePath(path);
+                    //   await openDownloadsFolder(context);
                   },
                   child: Container(
                     padding: EdgeInsets.only(left: 10),
@@ -185,8 +182,8 @@ Future videoThumbnailBuilder(String path) async {
   videoThumbnail = await VideoThumbnail.thumbnailData(
     video: path,
     imageFormat: ImageFormat.JPEG,
-    maxWidth:
-        50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+    maxWidth: 50,
+    // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
     quality: 100,
   );
   return videoThumbnail;
