@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 class HiveService {
   initHive() async {
     Directory downloadDirectory;
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
     } else {

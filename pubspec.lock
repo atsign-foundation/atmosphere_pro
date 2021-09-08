@@ -28,13 +28,13 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.0"
+    version: "2.6.1"
   at_backupkey_flutter:
     dependency: transitive
     description:
       path: at_backupkey_flutter
       ref: trunk
-      resolved-ref: "39d8f296de64e59bfe90ab9db8c30ebcf51f696d"
+      resolved-ref: "10b763cc812d60119305bdefcf1137007a5f5bec"
       url: "https://github.com/atsign-foundation/at_widgets.git"
     source: git
     version: "2.0.1"
@@ -48,21 +48,21 @@ packages:
   at_client:
     dependency: "direct overridden"
     description:
-      path: "/Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client"
+      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client"
       relative: false
     source: path
-    version: "2.0.2"
+    version: "2.0.4"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: "/Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client_mobile"
+      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile"
       relative: false
     source: path
-    version: "2.0.2"
+    version: "2.0.3"
   at_common_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/apple/Desktop/client_projects/at_widgets/at_common_flutter"
+      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_common_flutter"
       relative: false
     source: path
     version: "2.0.0"
@@ -70,45 +70,43 @@ packages:
     dependency: "direct main"
     description:
       path: at_commons
-      ref: file_transfer
-      resolved-ref: "86802fae55a5cabe016209b581398fecc4383bd7"
+      ref: trunk
+      resolved-ref: "4fc075240037e200a66ec436dbbf9478c3557922"
       url: "https://github.com/atsign-foundation/at_tools.git"
     source: git
-    version: "1.0.1+4"
+    version: "2.0.5"
   at_contact:
     dependency: "direct main"
     description:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+5"
+    version: "2.0.3"
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter"
+      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_contacts_flutter"
       relative: false
     source: path
     version: "2.0.1"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/apple/Desktop/client_projects/at_widgets/at_contacts_group_flutter"
+      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_contacts_group_flutter"
       relative: false
     source: path
     version: "2.0.1"
   at_lookup:
     dependency: "direct main"
     description:
-      path: at_lookup
-      ref: dev_env
-      resolved-ref: "8f36caad8b58e27cf93345abf05183f257f3139f"
-      url: "https://github.com/atsign-foundation/at_libraries.git"
-    source: git
-    version: "1.0.0+7"
+      name: at_lookup
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/apple/Desktop/client_projects/at_widgets/at_onboarding_flutter"
+      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_onboarding_flutter"
       relative: false
     source: path
     version: "1.0.0+4"
@@ -118,7 +116,7 @@ packages:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.6"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -131,10 +129,10 @@ packages:
     description:
       path: at_server_status
       ref: trunk
-      resolved-ref: "202f0eb6cd3af72b966ad4258074ade4754ce92f"
+      resolved-ref: a6ab1879f569e96b3127fadef802c8ebbfd1a733
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
-    version: "1.0.0"
+    version: "1.0.2"
   at_utf7:
     dependency: transitive
     description:
@@ -351,7 +349,7 @@ packages:
       name: flutter_keychain
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "2.0.1"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -446,13 +444,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  internet_connection_checker:
+    dependency: transitive
+    description:
+      name: internet_connection_checker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+2"
   intl:
     dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.1"
+    version: "0.17.0"
   js:
     dependency: transitive
     description:
@@ -480,7 +485,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.3.0"
   mime:
     dependency: transitive
     description:
@@ -565,13 +570,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.6.0"
-  pin_code_fields:
-    dependency: transitive
-    description:
-      name: pin_code_fields
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.2.0"
   platform:
     dependency: transitive
     description:
@@ -730,7 +728,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "0.3.0"
   timezone:
     dependency: transitive
     description:
