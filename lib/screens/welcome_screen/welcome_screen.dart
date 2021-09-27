@@ -115,16 +115,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   initPackages() async {
     // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await initializeContactsService(
-        BackendService.getInstance().atClientServiceInstance.atClientManager,
-        BackendService.getInstance().currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+    await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
-    await GroupService().init(
-        BackendService.getInstance().atClientServiceInstance.atClientManager,
-        BackendService.getInstance().currentAtSign,
-        MixedConstants.ROOT_DOMAIN,
-        MixedConstants.ROOT_PORT);
+    await GroupService()
+        .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 

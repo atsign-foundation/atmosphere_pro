@@ -214,17 +214,13 @@ class BackendService {
   }
 
   syncWithSecondary() async {
-    try {
-      if (syncService != null) {
-        syncService = atClientManager.syncService;
-      }
-      var isSynced = await syncService.isInSync();
-      if (isSynced is bool && !isSynced) {
-        await syncService.sync();
-      }
-    } catch (e) {
-      print('error in sync: $e');
-    }
+    syncService = AtClientManager.getInstance().syncService;
+    syncService.sync(onDone: _onSuccessCallback);
+    syncService.setOnDone(_onSuccessCallback);
+  }
+
+  _onSuccessCallback() {
+    print('sync success');
   }
 
   Future proceedToFileDownload(String fileName) async {
@@ -549,10 +545,8 @@ class BackendService {
     // start monitor and package initializations.
     await startMonitor();
     _initBackendService();
-    initializeContactsService(
-        atClientServiceInstance.atClientManager, currentAtSign);
-    initializeGroupService(
-        atClientServiceInstance.atClientManager, currentAtSign);
+    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
     // clearing file and contact informations.
     Provider.of<WelcomeScreenProvider>(NavService.navKey.currentState.context,

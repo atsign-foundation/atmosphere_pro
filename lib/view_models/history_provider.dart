@@ -21,6 +21,7 @@ import 'package:at_client/src/stream/file_transfer_object.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
+  String RECENT_HISTORY = 'recent_history';
   String ADD_RECEIVED_FILE = 'add_received_file';
   String UPDATE_RECEIVED_RECORD = 'update_received_record';
   String SET_FILE_HISTORY = 'set_flie_history';
@@ -358,31 +359,37 @@ class HistoryProvider extends BaseModel {
 
   getrecentHistoryFiles() async {
     // finding last 15 received files data for recent tab
-    var lastTenFilesData = receivedHistoryLogs.sublist(
-        0, receivedHistoryLogs.length > 15 ? 15 : receivedHistoryLogs.length);
+    setStatus(RECENT_HISTORY, Status.Loading);
+    try {
+      var lastTenFilesData = receivedHistoryLogs.sublist(
+          0, receivedHistoryLogs.length > 15 ? 15 : receivedHistoryLogs.length);
 
-    await Future.forEach(lastTenFilesData, (fileData) async {
-      await Future.forEach(fileData.files, (FileData file) async {
-        FilesDetail fileDetail = FilesDetail(
-          fileName: file.name,
-          filePath: BackendService.getInstance().downloadDirectory.path +
-              '/${file.name}',
-          size: double.parse(file.size.toString()),
-          date: fileData.date.toLocal().toString(),
-          type: file.name.split('.').last,
-          contactName: fileData.sender,
-        );
+      await Future.forEach(lastTenFilesData, (fileData) async {
+        await Future.forEach(fileData.files, (FileData file) async {
+          FilesDetail fileDetail = FilesDetail(
+            fileName: file.name,
+            filePath: BackendService.getInstance().downloadDirectory.path +
+                '/${file.name}',
+            size: double.parse(file.size.toString()),
+            date: fileData.date.toLocal().toString(),
+            type: file.name.split('.').last,
+            contactName: fileData.sender,
+          );
 
-        File tempFile = File(fileDetail.filePath);
-        bool isFileDownloaded = await tempFile.exists();
-        int index = recentFile
-            .indexWhere((element) => element.fileName == fileDetail.fileName);
+          File tempFile = File(fileDetail.filePath);
+          bool isFileDownloaded = await tempFile.exists();
+          int index = recentFile
+              .indexWhere((element) => element.fileName == fileDetail.fileName);
 
-        if (isFileDownloaded && index == -1) {
-          recentFile.add(fileDetail);
-        }
+          if (isFileDownloaded && index == -1) {
+            recentFile.add(fileDetail);
+          }
+        });
       });
-    });
+      setStatus(RECENT_HISTORY, Status.Done);
+    } catch (e) {
+      setStatus(RECENT_HISTORY, Status.Error);
+    }
 
     print('recentFile data : ${recentFile.length}');
   }

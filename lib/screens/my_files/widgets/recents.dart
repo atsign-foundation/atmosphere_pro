@@ -23,7 +23,7 @@ class _RecentsState extends State<Recents> {
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       load: (provider) => provider.getrecentHistoryFiles(),
-      functionName: 'received_history',
+      functionName: 'recent_history',
       successBuilder: (provider) => (provider.recentFile.isEmpty)
           ? Center(
               child: Text('No files received',
