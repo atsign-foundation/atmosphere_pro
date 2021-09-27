@@ -123,7 +123,7 @@ class BackendService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    return await KeychainUtil.getAtSign();
+    return await KeychainUtil.getPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
