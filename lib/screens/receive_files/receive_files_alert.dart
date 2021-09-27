@@ -63,8 +63,6 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
           ),
           GestureDetector(
             onTap: () {
-              // contactProvider.blockUnblockContact(
-              //     atSign: payload.name, blockAction: true);
               status = false;
               NotificationService().cancelNotifications();
               widget.sharingStatus(status);

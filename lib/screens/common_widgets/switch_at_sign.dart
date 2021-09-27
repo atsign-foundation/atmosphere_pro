@@ -57,12 +57,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                   await backendService.checkToOnboard(
                                       atSign: widget.atSignList[index]);
 
-                                  Provider.of<WelcomeScreenProvider>(context,
-                                          listen: false)
-                                      .selectedContacts = [];
-                                  Provider.of<FileTransferProvider>(context,
-                                          listen: false)
-                                      .selectedFiles = [];
                                   Navigator.pop(context);
                                   // Navigator.pop(context);
                                 },

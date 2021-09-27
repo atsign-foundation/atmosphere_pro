@@ -86,7 +86,7 @@ class FileTransferProvider extends BaseModel {
           allowMultiple: true,
           type: choice == MEDIA ? FileType.media : FileType.any,
           allowCompression: true,
-          withData: true);
+          withReadStream: true);
 
       if (result?.files != null) {
         selectedFiles = tempList;

@@ -35,14 +35,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isContactSelected;
   bool isFileSelected;
-  // ContactProvider contactProvider;
   WelcomeScreenProvider _welcomeScreenProvider;
   Flushbar sendingFlushbar;
   BackendService backendService = BackendService.getInstance();
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
   bool isExpanded = true;
-  // FilePickerProvider _filePickerProvider;
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -69,25 +67,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     isFileSelected = false;
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      WelcomeScreenProvider().isExpanded = false;
-      await initializeContactsService(
-          BackendService.getInstance().atClientInstance,
-          BackendService.getInstance().currentAtSign,
-          rootDomain: MixedConstants.ROOT_DOMAIN);
-    });
-    super.initState();
 
     listenForFlushBarStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await BackendService.getInstance().syncWithSecondary();
+      WelcomeScreenProvider().isExpanded = false;
+      await initPackages();
       await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
               listen: false)
           .getSentHistory();
       await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
               listen: false)
           .getReceivedHistory();
+      await BackendService.getInstance().syncWithSecondary();
     });
+    super.initState();
   }
 
   @override
@@ -117,17 +110,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   setAtSign() async {
     currentAtSign = await backendService.getAtSign();
-    await initGroups();
     setState(() {});
   }
 
-  initGroups() async {
+  initPackages() async {
     // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService().init(
-        BackendService.getInstance().atClientInstance,
-        BackendService.getInstance().currentAtSign,
-        MixedConstants.ROOT_DOMAIN,
-        MixedConstants.ROOT_PORT);
+    await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+
+    await GroupService()
+        .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 
@@ -288,7 +279,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                                     .atClientInstance !=
                                                 null
                                             ? BackendService.getInstance()
-                                                .atClientInstance
                                                 .currentAtSign
                                             : ''),
                                     style: GoogleFonts.playfairDisplay(
