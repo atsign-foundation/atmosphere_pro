@@ -31,6 +31,11 @@ class HistoryProvider extends BaseModel {
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
+
+  // on first transfer history fetch, we show loader in history screen.
+  // on second attempt we keep the status as idle.
+  bool isFirstDataFetched = false;
+
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
   // static Map<int, Map<String, Set<FilesDetail>>> test = {};
@@ -182,7 +187,9 @@ class HistoryProvider extends BaseModel {
   }
 
   getReceivedHistory() async {
-    setStatus(RECEIVED_HISTORY, Status.Loading);
+    print('isFirstDataFetched : ${isFirstDataFetched}');
+    setStatus(
+        RECEIVED_HISTORY, isFirstDataFetched ? Status.Idle : Status.Loading);
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
@@ -238,7 +245,7 @@ class HistoryProvider extends BaseModel {
 
   getAllFileTransferData() async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
-    receivedHistoryLogs = [];
+    List<FileTransfer> tempReceivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
         await backendService.atClientInstance.getKeys(
@@ -248,24 +255,31 @@ class HistoryProvider extends BaseModel {
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
+
         AtValue atvalue = await backendService.atClientInstance
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) => print("error in get $e"));
 
         if (atvalue != null && atvalue.value != null) {
-          FileTransferObject fileTransferObject =
-              FileTransferObject.fromJson(jsonDecode(atvalue.value));
-          FileTransfer filesModel =
-              convertFiletransferObjectToFileTransfer(fileTransferObject);
-          filesModel.sender = '@' + key.split('@').last;
+          try {
+            FileTransferObject fileTransferObject =
+                FileTransferObject.fromJson(jsonDecode(atvalue.value));
+            FileTransfer filesModel =
+                convertFiletransferObjectToFileTransfer(fileTransferObject);
+            filesModel.sender = '@' + key.split('@').last;
 
-          if (filesModel.key != null) {
-            receivedHistoryLogs.insert(0, filesModel);
+            if (filesModel.key != null) {
+              tempReceivedHistoryLogs.insert(0, filesModel);
+            }
+          } catch (e) {
+            print('error in getAllFileTransferData : $e');
           }
         }
       }
     });
+
+    receivedHistoryLogs = tempReceivedHistoryLogs;
 
     print('sentHistory length ${receivedHistoryNew.length}');
     print('receivedHistoryLogs length: ${receivedHistoryLogs.length}');

@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -31,6 +32,7 @@ import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:at_client/src/service/sync_service.dart';
+import 'package:at_client/src/service/sync_service_impl.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -157,7 +159,6 @@ class BackendService {
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
-    await syncWithSecondary();
     var notificationKey = response.key;
     var fromAtSign = response.from;
 
@@ -219,8 +220,25 @@ class BackendService {
     syncService.setOnDone(_onSuccessCallback);
   }
 
-  _onSuccessCallback() {
-    print('sync success');
+  _onSuccessCallback(SyncResult syncStatus) async {
+    var historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentState.context,
+        listen: false);
+
+    print(
+        'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
+    if (syncStatus.dataChange && !historyProvider.isFirstDataFetched) {
+      historyProvider.isFirstDataFetched = true;
+      if (historyProvider.status[historyProvider.SENT_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getSentHistory();
+      }
+
+      if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getReceivedHistory();
+      }
+    }
   }
 
   Future proceedToFileDownload(String fileName) async {
@@ -541,6 +559,8 @@ class BackendService {
     currentAtSign = onboardedAtsign;
     syncService = atClientManager.syncService;
     await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
+
+    syncWithSecondary();
 
     // start monitor and package initializations.
     await startMonitor();
