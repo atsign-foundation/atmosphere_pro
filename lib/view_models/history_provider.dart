@@ -31,6 +31,11 @@ class HistoryProvider extends BaseModel {
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
+
+  // on first transfer history fetch, we show loader in history screen.
+  // on second attempt we keep the status as idle.
+  bool isSyncedDataFetched = false;
+
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
   // static Map<int, Map<String, Set<FilesDetail>>> test = {};
@@ -166,13 +171,16 @@ class HistoryProvider extends BaseModel {
         ..metadata = Metadata();
       var keyValue = await backendService.atClientInstance.get(key);
       if (keyValue != null && keyValue.value != null) {
-        Map historyFile = json.decode((keyValue.value) as String) as Map;
-
-        sendFileHistory['history'] = historyFile['history'];
-        historyFile['history'].forEach((value) {
-          FileHistory filesModel = FileHistory.fromJson((value));
-          sentHistory.add(filesModel);
-        });
+        try {
+          Map historyFile = json.decode((keyValue.value) as String) as Map;
+          sendFileHistory['history'] = historyFile['history'];
+          historyFile['history'].forEach((value) {
+            FileHistory filesModel = FileHistory.fromJson((value));
+            sentHistory.add(filesModel);
+          });
+        } catch (e) {
+          print('error in file model conversion in getSentHistory: $e');
+        }
       }
 
       setStatus(SENT_HISTORY, Status.Done);
@@ -238,7 +246,7 @@ class HistoryProvider extends BaseModel {
 
   getAllFileTransferData() async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
-    receivedHistoryLogs = [];
+    List<FileTransfer> tempReceivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
         await backendService.atClientInstance.getKeys(
@@ -248,24 +256,31 @@ class HistoryProvider extends BaseModel {
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
+
         AtValue atvalue = await backendService.atClientInstance
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) => print("error in get $e"));
 
         if (atvalue != null && atvalue.value != null) {
-          FileTransferObject fileTransferObject =
-              FileTransferObject.fromJson(jsonDecode(atvalue.value));
-          FileTransfer filesModel =
-              convertFiletransferObjectToFileTransfer(fileTransferObject);
-          filesModel.sender = '@' + key.split('@').last;
+          try {
+            FileTransferObject fileTransferObject =
+                FileTransferObject.fromJson(jsonDecode(atvalue.value));
+            FileTransfer filesModel =
+                convertFiletransferObjectToFileTransfer(fileTransferObject);
+            filesModel.sender = '@' + key.split('@').last;
 
-          if (filesModel.key != null) {
-            receivedHistoryLogs.insert(0, filesModel);
+            if (filesModel.key != null) {
+              tempReceivedHistoryLogs.insert(0, filesModel);
+            }
+          } catch (e) {
+            print('error in getAllFileTransferData file model conversion: $e');
           }
         }
       }
     });
+
+    receivedHistoryLogs = tempReceivedHistoryLogs;
 
     print('sentHistory length ${receivedHistoryNew.length}');
     print('receivedHistoryLogs length: ${receivedHistoryLogs.length}');

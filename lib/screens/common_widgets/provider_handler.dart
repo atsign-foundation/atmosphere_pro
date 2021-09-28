@@ -40,13 +40,13 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
           print('IN SHOW ERROR');
           ErrorDialog()
               .show(_provider.error[functionName].toString(), context: context);
-          _provider.reset(functionName);
           return SizedBox();
         } else {
-          _provider.reset(functionName);
           return errorBuilder(_provider);
         }
       } else if (_provider?.status[functionName] == Status.Done) {
+        return successBuilder(_provider);
+      } else if (_provider?.status[functionName] == Status.Idle) {
         return successBuilder(_provider);
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) async {

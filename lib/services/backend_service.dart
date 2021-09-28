@@ -10,12 +10,14 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -31,6 +33,7 @@ import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:at_client/src/service/sync_service.dart';
+import 'package:at_client/src/service/sync_service_impl.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -157,7 +160,6 @@ class BackendService {
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
-    await syncWithSecondary();
     var notificationKey = response.key;
     var fromAtSign = response.from;
 
@@ -173,16 +175,25 @@ class BackendService {
       var atKey = notificationKey.split(':')[1];
       var value = response.value;
 
-      var decryptedMessage = await atClientInstance.encryptionService
-          .decrypt(value, fromAtSign)
-          // ignore: return_of_invalid_type_from_catch_error
-          .catchError((e) => print("error in decrypting: $e"));
+      var decryptedMessage =
+          await atClientInstance.encryptionService.decrypt(value, fromAtSign)
+              // ignore: return_of_invalid_type_from_catch_error
+              .catchError((e) {
+        print("error in decrypting: $e");
+        //TODO: only for closed testing purpose , we are showing error dialog
+        // should be removed before general release.
+        ErrorDialog()
+            .show(e.toString(), context: NavService.navKey.currentContext);
+      });
+
+      // TODO: now showing notification , even if some issue occured while decrypting data.
+      // If this is not required in general release, we can remove it.
+      await NotificationService().showNotification(fromAtSign);
 
       if (decryptedMessage != null) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
-        await NotificationService().showNotification(fromAtSign);
 
         BuildContext context = NavService.navKey.currentContext;
         bool trustedSender = false;
@@ -219,8 +230,26 @@ class BackendService {
     syncService.setOnDone(_onSuccessCallback);
   }
 
-  _onSuccessCallback() {
-    print('sync success');
+  _onSuccessCallback(SyncResult syncStatus) async {
+    var historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentState.context,
+        listen: false);
+
+    print(
+        'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
+    if (syncStatus.dataChange && !historyProvider.isSyncedDataFetched) {
+      if (historyProvider.status[historyProvider.SENT_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getSentHistory();
+      }
+
+      if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getReceivedHistory();
+      }
+
+      historyProvider.isSyncedDataFetched = true;
+    }
   }
 
   Future proceedToFileDownload(String fileName) async {
@@ -541,6 +570,8 @@ class BackendService {
     currentAtSign = onboardedAtsign;
     syncService = atClientManager.syncService;
     await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
+
+    syncWithSecondary();
 
     // start monitor and package initializations.
     await startMonitor();

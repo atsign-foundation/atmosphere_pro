@@ -78,7 +78,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
               listen: false)
           .getReceivedHistory();
-      await BackendService.getInstance().syncWithSecondary();
     });
     super.initState();
   }
