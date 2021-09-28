@@ -34,7 +34,7 @@ class HistoryProvider extends BaseModel {
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
-  bool isFirstDataFetched = false;
+  bool isSyncedDataFetched = false;
 
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
@@ -171,13 +171,16 @@ class HistoryProvider extends BaseModel {
         ..metadata = Metadata();
       var keyValue = await backendService.atClientInstance.get(key);
       if (keyValue != null && keyValue.value != null) {
-        Map historyFile = json.decode((keyValue.value) as String) as Map;
-
-        sendFileHistory['history'] = historyFile['history'];
-        historyFile['history'].forEach((value) {
-          FileHistory filesModel = FileHistory.fromJson((value));
-          sentHistory.add(filesModel);
-        });
+        try {
+          Map historyFile = json.decode((keyValue.value) as String) as Map;
+          sendFileHistory['history'] = historyFile['history'];
+          historyFile['history'].forEach((value) {
+            FileHistory filesModel = FileHistory.fromJson((value));
+            sentHistory.add(filesModel);
+          });
+        } catch (e) {
+          print('error in file model conversion in getSentHistory: $e');
+        }
       }
 
       setStatus(SENT_HISTORY, Status.Done);
@@ -187,9 +190,7 @@ class HistoryProvider extends BaseModel {
   }
 
   getReceivedHistory() async {
-    print('isFirstDataFetched : ${isFirstDataFetched}');
-    setStatus(
-        RECEIVED_HISTORY, isFirstDataFetched ? Status.Idle : Status.Loading);
+    setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
@@ -273,7 +274,7 @@ class HistoryProvider extends BaseModel {
               tempReceivedHistoryLogs.insert(0, filesModel);
             }
           } catch (e) {
-            print('error in getAllFileTransferData : $e');
+            print('error in getAllFileTransferData file model conversion: $e');
           }
         }
       }

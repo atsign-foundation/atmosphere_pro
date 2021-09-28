@@ -92,7 +92,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.SENT_HISTORY,
-                      showError: false,
+                      showError: true,
                       successBuilder: (provider) => (provider
                               .sentHistory.isEmpty)
                           ? Center(
@@ -129,7 +129,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         print('loading received');
                         // await provider.getReceivedHistory();
                       },
-                      showError: false,
+                      showError: true,
                       successBuilder: (provider) => (provider
                               .receivedHistoryLogs.isEmpty)
                           ? Center(
