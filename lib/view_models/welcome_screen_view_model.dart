@@ -15,10 +15,12 @@ class WelcomeScreenProvider extends BaseModel {
   String autoAcceptToggle = 'toogle_auto_accept';
   HiveService _hiveService = HiveService();
   bool isAutoAccept = false, isExpanded = false;
+  bool hasSelectedContactsChanged = false;
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts = updatedList;
+      hasSelectedContactsChanged = true;
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());
@@ -29,6 +31,7 @@ class WelcomeScreenProvider extends BaseModel {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts.add(contact);
+      hasSelectedContactsChanged = true;
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());
@@ -39,6 +42,7 @@ class WelcomeScreenProvider extends BaseModel {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts.remove(contact);
+      hasSelectedContactsChanged = true;
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());
@@ -90,5 +94,9 @@ class WelcomeScreenProvider extends BaseModel {
     } catch (e) {
       setError(autoAcceptToggle, e);
     }
+  }
+
+  void resetSelectedContactsStatus() {
+    hasSelectedContactsChanged = false;
   }
 }

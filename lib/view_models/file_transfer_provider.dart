@@ -48,6 +48,7 @@ class FileTransferProvider extends BaseModel {
   bool clearList = false;
   BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
+  bool hasSelectedFilesChanged = false;
 
   final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
   Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
@@ -63,6 +64,7 @@ class FileTransferProvider extends BaseModel {
           selectedFiles.add(element);
         });
         calculateSize();
+        hasSelectedFilesChanged = true;
       }
       appClosedSharedFiles = [];
       setStatus(PICK_FILES, Status.Done);
@@ -100,6 +102,7 @@ class FileTransferProvider extends BaseModel {
             selectedFiles.add(element);
           });
         }
+        hasSelectedFilesChanged = true;
       }
 
       calculateSize();
@@ -135,6 +138,7 @@ class FileTransferProvider extends BaseModel {
                 size: length.round(),
                 bytes: await file.readAsBytes()));
             await calculateSize();
+            hasSelectedFilesChanged = true;
           });
 
           print(
@@ -159,6 +163,7 @@ class FileTransferProvider extends BaseModel {
                 size: length.round(),
                 bytes: await test.readAsBytes()));
             await calculateSize();
+            hasSelectedFilesChanged = true;
           });
           print(
               "Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
@@ -518,6 +523,10 @@ class FileTransferProvider extends BaseModel {
     });
 
     return status;
+  }
+
+  void resetSelectedFilesStatus() {
+    hasSelectedFilesChanged = false;
   }
 }
 

@@ -17,7 +17,7 @@ class TextStrings {
   String buttonContinue = 'CONTINUE';
 
   // welcome screen texts
-  String welcomeUser(String userName) => 'Welcome\n $userName!';
+  String welcomeUser(String userName) => 'Welcome\n $userName';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file to';
   String welcomeContactPlaceholder = '@sign';

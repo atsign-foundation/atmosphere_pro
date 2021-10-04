@@ -358,26 +358,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        CommonButton('Reset', () {
+                                        CommonButton('Clear', () {
                                           setState(() {
                                             _welcomeScreenProvider
                                                 .selectedContacts
                                                 .clear();
+                                            _welcomeScreenProvider
+                                                .resetSelectedContactsStatus();
                                             filePickerModel.selectedFiles
                                                 .clear();
+                                            filePickerModel
+                                                .resetSelectedFilesStatus();
                                           });
                                         }),
-                                        CommonButton(
-                                          TextStrings().buttonSend,
-                                          () async {
-                                            await filePickerModel
-                                                .sendFileWithFileBin(
-                                                    filePickerModel
-                                                        .selectedFiles,
-                                                    _welcomeScreenProvider
-                                                        .selectedContacts);
-                                          },
-                                        ),
+                                        (_welcomeScreenProvider
+                                                    .hasSelectedContactsChanged ||
+                                                filePickerModel
+                                                    .hasSelectedFilesChanged)
+                                            ? CommonButton(
+                                                TextStrings().buttonSend,
+                                                () async {
+                                                  _welcomeScreenProvider
+                                                      .resetSelectedContactsStatus();
+                                                  filePickerModel
+                                                      .resetSelectedFilesStatus();
+                                                  await filePickerModel.sendFileWithFileBin(
+                                                      filePickerModel
+                                                          .selectedFiles,
+                                                      _welcomeScreenProvider
+                                                          .selectedContacts);
+                                                },
+                                              )
+                                            : SizedBox()
                                       ],
                                     ),
                                     SizedBox(
