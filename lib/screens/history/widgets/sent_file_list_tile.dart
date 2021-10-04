@@ -287,7 +287,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                'Show Details',
+                                TextStrings().showDetails,
                                 style: CustomTextStyles.primaryBold14,
                               ),
                               Container(
@@ -491,11 +491,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         });
                       },
                       child: Container(
-                        margin: EdgeInsets.only(left: 20.toWidth),
+                        margin: EdgeInsets.only(left: 85.toHeight),
                         child: Row(
                           children: [
                             Text(
-                              'Hide Details',
+                              TextStrings().hideDetails,
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(

@@ -66,8 +66,8 @@ class TextStrings {
   String sent = 'Sent';
   String received = 'Received';
 
-  String moreDetails = 'More Details';
-  String lesserDetails = 'Lesser Details';
+  String showDetails = 'Show Details';
+  String hideDetails = 'Hide Details';
 
   //receive files texts
   String blockUser = 'Block User';
