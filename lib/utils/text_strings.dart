@@ -17,7 +17,7 @@ class TextStrings {
   String buttonContinue = 'CONTINUE';
 
   // welcome screen texts
-  String welcomeUser(String userName) => 'Welcome\n $userName!';
+  String welcomeUser(String userName) => 'Welcome\n $userName';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file to';
   String welcomeContactPlaceholder = '@sign';
@@ -66,8 +66,8 @@ class TextStrings {
   String sent = 'Sent';
   String received = 'Received';
 
-  String moreDetails = 'More Details';
-  String lesserDetails = 'Lesser Details';
+  String showDetails = 'Show Details';
+  String hideDetails = 'Hide Details';
 
   //receive files texts
   String blockUser = 'Block User';

@@ -253,7 +253,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                'More Details',
+                                TextStrings().showDetails,
                                 style: CustomTextStyles.primaryBold14,
                               ),
                               Container(
@@ -417,7 +417,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Lesser Details',
+                              TextStrings().hideDetails,
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(

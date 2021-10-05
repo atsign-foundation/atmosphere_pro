@@ -222,9 +222,12 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                           setState(() {
                             provider.selectedFiles.removeAt(index);
                             provider.calculateSize();
+                            provider.hasSelectedFilesChanged = true;
                           });
                           if (provider.selectedFiles.isEmpty) {
                             widget.onUpdate(false);
+                          } else {
+                            widget.onUpdate(true);
                           }
                         },
                       ),
