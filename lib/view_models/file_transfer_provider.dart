@@ -327,7 +327,7 @@ class FileTransferProvider extends BaseModel {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     try {
-      var _atclient = BackendService.getInstance().atClientInstance;
+      var _atclient = BackendService.getInstance().atClientManager.atClient;
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
       var _files = <File>[];
       var _atSigns = <String>[];
@@ -369,7 +369,7 @@ class FileTransferProvider extends BaseModel {
       print('atkey : ${atKey}');
 
       // put data
-      var _result = await backendService.atClientInstance
+      var _result = await backendService.atClientManager.atClient
           .put(atKey, jsonEncode(_filesToTransfer.toJson()));
 
       return _result;
@@ -391,7 +391,7 @@ class FileTransferProvider extends BaseModel {
       filename: _filesList[_index].name,
     );
 
-    var _atclient = BackendService.getInstance().atClientInstance;
+    var _atclient = BackendService.getInstance().atClientManager.atClient;
     try {
       File file =
           File(MixedConstants.DESKTOP_SENT_DIR + _filesList[_index].name);
@@ -451,7 +451,7 @@ class FileTransferProvider extends BaseModel {
 
   reSendFileNotification(FileHistory fileHistory, String atsign) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
-    var _atclient = BackendService.getInstance().atClientInstance;
+    var _atclient = BackendService.getInstance().atClientManager.atClient;
 
     try {
       var sendResponse = await _atclient.shareFiles(

@@ -63,8 +63,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             children: [
               Text(
                 'Welcome !' +
-                    (BackendService.getInstance().atClientInstance != null
-                        ? '${BackendService.getInstance().atClientInstance.currentAtSign}'
+                    (BackendService.getInstance().atClientManager.atClient !=
+                            null
+                        ? '${BackendService.getInstance().atClientManager.atClient.getCurrentAtSign()}'
                         : ''),
                 style: CustomTextStyles.desktopBlackPlayfairDisplay26,
               ),

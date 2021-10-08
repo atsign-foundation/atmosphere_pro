@@ -90,7 +90,7 @@ class HistoryProvider extends BaseModel {
 
         // atKey.key = 'receivedFiles';
 
-        // await backendService.atClientInstance
+        // await backendService.atClientManager.atClient
         //     .put(atKey, json.encode(receivedFileHistory));
       } else {
         // the file is in kB in sender side
@@ -99,7 +99,7 @@ class HistoryProvider extends BaseModel {
         });
         sendFileHistory['history'].insert(0, filesModel.toJson());
         atKey.key = MixedConstants.SENT_FILE_HISTORY;
-        await backendService.atClientInstance
+        await backendService.atClientManager.atClient
             .put(atKey, json.encode(sendFileHistory));
       }
     } catch (e) {
@@ -138,7 +138,7 @@ class HistoryProvider extends BaseModel {
       sentHistory.insert(0, fileHistory);
     }
 
-    var result = await backendService.atClientInstance
+    var result = await backendService.atClientManager.atClient
         .put(atKey, json.encode(sendFileHistory));
     print('file history saved: ${result}');
     setStatus(SET_FILE_HISTORY, Status.Done);
@@ -156,7 +156,7 @@ class HistoryProvider extends BaseModel {
       sendFileHistory['history'][index] = fileHistory.toJson();
       sentHistory[index] = fileHistory;
     }
-    var result = await backendService.atClientInstance
+    var result = await backendService.atClientManager.atClient
         .put(atKey, json.encode(sendFileHistory));
 
     return result;
@@ -168,8 +168,9 @@ class HistoryProvider extends BaseModel {
       sentHistory = [];
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
+        ..sharedBy = backendService.currentAtsign
         ..metadata = Metadata();
-      var keyValue = await backendService.atClientInstance.get(key);
+      var keyValue = await backendService.atClientManager.atClient.get(key);
       if (keyValue != null && keyValue.value != null) {
         Map historyFile = json.decode((keyValue.value) as String) as Map;
 
@@ -247,14 +248,14 @@ class HistoryProvider extends BaseModel {
     receivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
-        await backendService.atClientInstance.getKeys(
+        await backendService.atClientManager.atClient.getKeys(
       regex: MixedConstants.FILE_TRANSFER_KEY,
     );
 
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
-        AtValue atvalue = await backendService.atClientInstance
+        AtValue atvalue = await backendService.atClientManager.atClient
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) => print("error in get $e"));
@@ -556,7 +557,7 @@ class HistoryProvider extends BaseModel {
       }
       notifyListeners();
 
-      var files = await backendService.atClientInstance
+      var files = await backendService.atClientManager.atClient
           .downloadFile(transferId, sharedBy);
 
       await sortFiles(receivedHistoryLogs);

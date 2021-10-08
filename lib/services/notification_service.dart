@@ -40,8 +40,15 @@ class NotificationService {
       },
     );
 
+    var initializationSettingsMacos = MacOSInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: false);
+
     initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsMacos);
   }
 
   _requestIOSPermission() {

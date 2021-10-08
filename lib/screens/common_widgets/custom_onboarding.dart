@@ -66,24 +66,16 @@ class CustomOnboarding {
   }
 
   static initServices() async {
-    // initializeContactsService(BackendService.getInstance().atClientInstance,
-    //     BackendService.getInstance().atClientInstance.currentAtSign,
+    // initializeContactsService(
     //     rootDomain: MixedConstants.ROOT_DOMAIN);
 
-    await ContactService().initContactsService(
-        BackendService.getInstance().atClientInstance,
-        BackendService.getInstance().atClientInstance.currentAtSign,
-        MixedConstants.ROOT_DOMAIN,
-        64);
+    await ContactService().initContactsService(MixedConstants.ROOT_DOMAIN, 64);
   }
 
   static initGroups() async {
     // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService().init(
-        BackendService.getInstance().atClientInstance,
-        BackendService.getInstance().currentAtSign,
-        MixedConstants.ROOT_DOMAIN,
-        MixedConstants.ROOT_PORT);
+    await GroupService()
+        .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
 
     print('group init done');

@@ -35,6 +35,8 @@ import 'package:at_client/src/manager/sync_manager.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:http/http.dart' as http;
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_client/src/service/sync_service.dart';
+import 'package:at_client/src/service/sync_service_impl.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -45,6 +47,8 @@ class BackendService {
   }
   AtClientService atClientServiceInstance;
   AtClientImpl atClientInstance;
+  AtClientManager atClientManager = AtClientManager.getInstance();
+  SyncService syncService;
   String currentAtSign;
   Function ask_user_acceptance;
   String app_lifecycle_state;
@@ -140,7 +144,7 @@ class BackendService {
     atClientPreference.cramSecret = cramSecret;
     var result =
         await atClientServiceInstance.authenticate(atsign, atClientPreference);
-    atClientInstance = await atClientServiceInstance.atClient;
+    // atClientInstance = await atClientServiceInstance.atClient;
     return result;
   }
 
@@ -150,7 +154,7 @@ class BackendService {
     var result = await atClientServiceInstance.authenticate(
         atsign, atClientPreference,
         jsonData: jsonData, decryptKey: decryptKey);
-    atClientInstance = atClientServiceInstance.atClient;
+    // atClientInstance = atClientServiceInstance.atClient;
     currentAtSign = atsign;
     return result;
   }
@@ -164,51 +168,58 @@ class BackendService {
 
     atClientServiceInstance = AtClientService();
 
-    return await atClientServiceInstance.getAtSign();
+    currentAtSign = await KeychainUtil.getAtSign();
+    return currentAtSign;
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    return await atClientServiceInstance.getPrivateKey(atsign);
+    return await KeychainUtil.getPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
   Future<String> getPublicKey(String atsign) async {
-    return await atClientServiceInstance.getPublicKey(atsign);
+    return await KeychainUtil.getPublicKey(atsign);
   }
 
   Future<String> getAESKey(String atsign) async {
-    return await atClientServiceInstance.getAESKey(atsign);
+    return await KeychainUtil.getAESKey(atsign);
   }
 
   Future<Map<String, String>> getEncryptedKeys(String atsign) async {
-    return await atClientServiceInstance.getEncryptedKeys(atsign);
+    return await KeychainUtil.getEncryptedKeys(atsign);
   }
 
   Map<String, AtClientService> atClientServiceMap = {};
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   Future<bool> startMonitor({value, atsign}) async {
-    if (value.containsKey(atsign)) {
-      currentAtSign = atsign;
-      atClientServiceMap = value;
-      atClientInstance = value[atsign].atClient;
-      atClientServiceInstance = value[atsign];
-    }
+    // if (value.containsKey(atsign)) {
+    //   currentAtSign = atsign;
+    //   atClientServiceMap = value;
+    //   atClientInstance = value[atsign].atClient;
+    //   atClientServiceInstance = value[atsign];
+    // }
 
-    await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
+    // await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
 
-    /// TODO:
-    // Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
-    //         listen: false)
-    //     .selectedFiles = [];
-    // await setDownloadPath(
-    //     atsign: atsign,
-    //     atClientPreference: atClientPreference,
-    //     atClientServiceInstance: atClientServiceInstance);
-    String privateKey = await getPrivateKey(atsign);
+    // /// TODO:
+    // // Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
+    // //         listen: false)
+    // //     .selectedFiles = [];
+    // // await setDownloadPath(
+    // //     atsign: atsign,
+    // //     atClientPreference: atClientPreference,
+    // //     atClientServiceInstance: atClientServiceInstance);
+    // String privateKey = await getPrivateKey(atsign);
 
-    await atClientInstance.startMonitor(privateKey, _notificationCallBack);
+    // await atClientInstance.startMonitor(privateKey, _notificationCallBack);
+    await AtClientManager.getInstance()
+        .notificationService
+        .subscribe()
+        .listen((AtNotification notification) {
+      _notificationCallBack(notification);
+    });
     print('monitor started');
     return true;
   }
@@ -216,14 +227,12 @@ class BackendService {
   var fileLength;
   var userResponse = false;
   Future<void> _notificationCallBack(var response) async {
-    print('response => $response');
-    await syncWithSecondary();
-    response = response.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(response);
-    var notificationKey = responseJson['key'];
-    var fromAtSign = responseJson['from'];
-    var toAtSing = responseJson['to'];
-    // var id = responseJson['id'];
+    // check for stats notification with id -1
+    if (response.id == '-1') {
+      return;
+    }
+    var notificationKey = response.key;
+    var fromAtSign = response.from;
     var atKey = notificationKey.split(':')[1];
     atKey = atKey.replaceFirst(fromAtSign, '');
     atKey = atKey.trim();
@@ -239,9 +248,9 @@ class BackendService {
 
     print(' FILE_TRANSFER_KEY : ${atKey}');
     if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
-      var value = responseJson['value'];
+      var value = response.value;
 
-      var decryptedMessage = await atClientInstance.encryptionService
+      var decryptedMessage = await atClientManager.atClient.encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print("error in decrypting: $e"));
@@ -256,18 +265,13 @@ class BackendService {
   }
 
   syncWithSecondary() async {
-    try {
-      SyncManager syncManager = atClientInstance.getSyncManager();
-      var isSynced = await syncManager.isInSync();
-      print('already synced: $isSynced');
-      if (isSynced is bool && isSynced) {
-      } else {
-        await syncManager.sync();
-      }
-      print('sync done');
-    } catch (e) {
-      print('error in sync: $e');
-    }
+    syncService = AtClientManager.getInstance().syncService;
+    syncService.sync(onDone: _onSuccessCallback);
+    syncService.setOnDone(_onSuccessCallback);
+  }
+
+  _onSuccessCallback(SyncResult syncStatus) async {
+    print('Sync done: $syncStatus');
   }
 
   Future proceedToFileDownload(String fileName) async {
@@ -440,15 +444,13 @@ class BackendService {
 
   deleteAtSignFromKeyChain(String atsign) async {
     List<String> atSignList = await getAtsignList();
-
-    await atClientServiceMap[atsign].deleteAtSignFromKeychain(atsign);
-
+    await KeychainUtil.deleteAtSignFromKeychain(atsign);
     if (atSignList != null) {
-      atSignList.removeWhere((element) => element == currentAtSign);
+      atSignList.removeWhere((element) => element == atsign);
     }
-
     var atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
+
     var tempAtsign;
     if (atSignList == null || atSignList.isEmpty) {
       tempAtsign = '';
@@ -469,12 +471,10 @@ class BackendService {
         onboard: (value, atsign) async {
           atClientServiceMap = value;
 
-          String atSign =
-              await atClientServiceMap[atsign].atClient.currentAtSign;
-
-          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
+          String atSign = await atClientManager.atClient.getCurrentAtSign();
+          currentAtSign = atSign;
           await startMonitor(atsign: atsign, value: value);
-          await initializeContactsService(atClientInstance, currentAtSign);
+          await initializeContactsService();
           // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );
           await Navigator.pushNamedAndRemoveUntil(
               NavService.navKey.currentContext,
@@ -521,14 +521,14 @@ class BackendService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientInstance
+      var result = await atClientManager.atClient
           .get(key)
           .catchError((e) => print("error in get ${e.toString()}"));
       var firstname = result.value;
 
       // lastname
       key.key = contactFields[1];
-      result = await atClientInstance.get(key);
+      result = await atClientManager.atClient.get(key);
       var lastname = result.value;
 
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
@@ -539,7 +539,7 @@ class BackendService {
       // image
       key.metadata.isBinary = true;
       key.key = contactFields[2];
-      result = await atClientInstance.get(key);
+      result = await atClientManager.atClient.get(key);
       var image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;
@@ -572,14 +572,12 @@ class BackendService {
           isAuthuneticatingSink.add(authenticating);
           atClientServiceMap = value;
 
-          String atSign =
-              await atClientServiceMap[atsign].atClient.currentAtSign;
+          String atSign = await atClientManager.atClient.getCurrentAtSign();
           currentAtSign = atSign;
 
-          await atClientServiceMap[atSign].makeAtSignPrimary(atSign);
           await startMonitor(atsign: atsign, value: value);
           initBackendService();
-          await initializeContactsService(atClientInstance, currentAtSign);
+          await initializeContactsService();
           authenticating = false;
           isAuthuneticatingSink.add(authenticating);
           // await onboard(atsign: atsign, atClientPreference: atClientPreference, atClientServiceInstance: );

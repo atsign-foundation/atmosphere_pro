@@ -57,7 +57,8 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     // cleanKeyChain();
-
+    print(
+        'getting atsign backend => ${BackendService.getInstance().currentAtsign}');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MixedConstants.APPBAR_HEIGHT),
@@ -86,11 +87,8 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                   InkWell(
                     onTap: () async {
                       if (atsignList == null) {
-                        atsignList = await BackendService.getInstance()
-                            .atClientServiceMap[BackendService.getInstance()
-                                .atClientInstance
-                                .currentAtSign]
-                            .getAtsignList();
+                        atsignList =
+                            await BackendService.getInstance().getAtsignList();
                       }
 
                       setState(() {
@@ -100,9 +98,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                     child: Row(
                       children: [
                         ContactInitial(
-                          initials: BackendService.getInstance()
-                              .atClientInstance
-                              .currentAtSign,
+                          initials: BackendService.getInstance().currentAtsign,
                           size: 30,
                           maxSize: (80.0 - 30.0),
                           minSize: 50,

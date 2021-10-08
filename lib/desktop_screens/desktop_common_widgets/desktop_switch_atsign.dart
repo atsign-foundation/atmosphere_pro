@@ -61,7 +61,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                       _name ?? widget.atSignList[index],
                       image: _image,
                       isCurrentAtsign: widget.atSignList[index] ==
-                          backendService.atClientInstance.currentAtSign);
+                          backendService.currentAtsign);
                 },
                 separatorBuilder: (context, index) {
                   return SizedBox(height: 10);

@@ -312,9 +312,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         String atSign =
                             await BackendService.getInstance().getAtSign();
 
-                        var atSignList = await BackendService.getInstance()
-                            .atClientServiceMap[atSign]
-                            .getAtsignList();
+                        var atSignList =
+                            await BackendService.getInstance().getAtsignList();
                         await showModalBottomSheet(
                           context: NavService.navKey.currentContext,
                           backgroundColor: Colors.transparent,

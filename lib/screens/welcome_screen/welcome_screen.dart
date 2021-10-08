@@ -71,10 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setAtSign();
     _welcomeScreenProvider = WelcomeScreenProvider();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await initializeContactsService(
-          BackendService.getInstance().atClientInstance,
-          BackendService.getInstance().currentAtSign,
-          rootDomain: MixedConstants.ROOT_DOMAIN);
+      await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     });
     super.initState();
 
@@ -123,11 +120,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   initGroups() async {
     // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService().init(
-        BackendService.getInstance().atClientInstance,
-        BackendService.getInstance().currentAtSign,
-        MixedConstants.ROOT_DOMAIN,
-        MixedConstants.ROOT_PORT);
+    await GroupService()
+        .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 
@@ -285,11 +279,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   Text(
                                     TextStrings().welcomeUser(
                                         BackendService.getInstance()
-                                                    .atClientInstance !=
+                                                    .atClientManager
+                                                    .atClient !=
                                                 null
                                             ? BackendService.getInstance()
-                                                .atClientInstance
-                                                .currentAtSign
+                                                .atClientManager
+                                                .atClient
+                                                .getCurrentAtSign()
                                             : ''),
                                     style: GoogleFonts.playfairDisplay(
                                       textStyle: TextStyle(

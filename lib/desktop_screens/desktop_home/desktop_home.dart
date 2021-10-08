@@ -52,7 +52,7 @@ class _DesktopHomeState extends State<DesktopHome> {
   void _checkToOnboard() async {
     currentatSign = await backendService.getAtSign();
 
-    if (currentatSign.isEmpty) {
+    if (currentatSign == '') {
       currentatSign = null;
     }
 

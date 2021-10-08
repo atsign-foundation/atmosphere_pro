@@ -72,7 +72,7 @@ class TrustedContactProvider extends BaseModel {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
-      await backendService.atClientInstance.put(
+      await backendService.atClientManager.atClient.put(
         trustedContactsKey,
         json.encode({"trustedContacts": trustedContacts}),
       );
@@ -95,7 +95,7 @@ class TrustedContactProvider extends BaseModel {
         ..metadata = Metadata();
 
       AtValue keyValue =
-          await backendService.atClientInstance.get(trustedContactsKey);
+          await backendService.atClientManager.atClient.get(trustedContactsKey);
 
       var jsonValue;
       if (keyValue.value != null) {

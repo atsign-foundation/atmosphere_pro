@@ -28,16 +28,14 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.8.1"
   at_backupkey_flutter:
     dependency: transitive
     description:
-      path: at_backupkey_flutter
-      ref: trunk
-      resolved-ref: "10b763cc812d60119305bdefcf1137007a5f5bec"
-      url: "https://github.com/atsign-foundation/at_widgets.git"
-    source: git
-    version: "2.0.1"
+      name: at_backupkey_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   at_base2e15:
     dependency: transitive
     description:
@@ -48,75 +46,85 @@ packages:
   at_client:
     dependency: "direct overridden"
     description:
-      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client"
-      relative: false
-    source: path
-    version: "2.0.4"
+      path: at_client
+      ref: desktop-compatible
+      resolved-ref: "4e6f0cfae1315b404cfa27f2fb82b0a11361655e"
+      url: "https://github.com/atsign-foundation/at_client_sdk.git"
+    source: git
+    version: "3.0.3"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile"
-      relative: false
-    source: path
-    version: "2.0.3"
+      path: at_client_mobile
+      ref: desktop-compatible
+      resolved-ref: "4e6f0cfae1315b404cfa27f2fb82b0a11361655e"
+      url: "https://github.com/atsign-foundation/at_client_sdk.git"
+    source: git
+    version: "3.0.3"
   at_common_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_common_flutter"
-      relative: false
-    source: path
-    version: "2.0.0"
+      path: at_common_flutter
+      ref: "desktop/development"
+      resolved-ref: "428203b7c745226ea5815338be543756606a76c2"
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
+    version: "2.0.2"
   at_commons:
     dependency: "direct main"
     description:
-      path: at_commons
-      ref: trunk
-      resolved-ref: "4fc075240037e200a66ec436dbbf9478c3557922"
-      url: "https://github.com/atsign-foundation/at_tools.git"
-    source: git
-    version: "2.0.5"
+      name: at_commons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   at_contact:
     dependency: "direct main"
     description:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "3.0.1"
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_contacts_flutter"
-      relative: false
-    source: path
-    version: "2.0.1"
+      path: at_contacts_flutter
+      ref: "desktop/development"
+      resolved-ref: "428203b7c745226ea5815338be543756606a76c2"
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
+    version: "3.0.0"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_contacts_group_flutter"
-      relative: false
-    source: path
-    version: "2.0.1"
+      path: at_contacts_group_flutter
+      ref: "desktop/development"
+      resolved-ref: "428203b7c745226ea5815338be543756606a76c2"
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
+    version: "3.0.1"
   at_lookup:
     dependency: "direct main"
     description:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "3.0.3"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/projects/at_widgets/at_onboarding_flutter"
-      relative: false
-    source: path
-    version: "1.0.0+4"
+      path: at_onboarding_flutter
+      ref: "desktop/development"
+      resolved-ref: "428203b7c745226ea5815338be543756606a76c2"
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
+    version: "3.0.2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "3.0.0"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -127,12 +135,10 @@ packages:
   at_server_status:
     dependency: transitive
     description:
-      path: at_server_status
-      ref: trunk
-      resolved-ref: a6ab1879f569e96b3127fadef802c8ebbfd1a733
-      url: "https://github.com/atsign-foundation/at_libraries.git"
-    source: git
-    version: "1.0.2"
+      name: at_server_status
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   at_utf7:
     dependency: transitive
     description:
@@ -141,14 +147,12 @@ packages:
     source: hosted
     version: "1.0.0"
   at_utils:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_utils
-      ref: dev_env
-      resolved-ref: "974661dd589ba7e06aa0c899ec7e5fa4c8e70c58"
-      url: "https://github.com/atsign-foundation/at_tools.git"
-    source: git
-    version: "0.0.0"
+      name: at_utils
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   biometric_storage:
     dependency: "direct overridden"
     description:
@@ -183,7 +187,7 @@ packages:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.1"
   clock:
     dependency: transitive
     description:
@@ -323,7 +327,7 @@ packages:
       name: filesystem_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.0"
   flushbar:
     dependency: "direct main"
     description:
@@ -465,6 +469,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   logging:
     dependency: "direct overridden"
     description:
@@ -485,7 +496,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.7.0"
   mime:
     dependency: transitive
     description:
@@ -570,6 +581,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.6.0"
+  pin_code_fields:
+    dependency: transitive
+    description:
+      name: pin_code_fields
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.3.0"
   platform:
     dependency: transitive
     description:
@@ -728,7 +746,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.2"
   timezone:
     dependency: transitive
     description:
@@ -833,7 +851,7 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "3.1.0"
 sdks:
   dart: ">=2.13.0 <3.0.0"
   flutter: ">=2.0.1"
