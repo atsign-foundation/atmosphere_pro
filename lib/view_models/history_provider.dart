@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
@@ -218,6 +219,8 @@ class HistoryProvider extends BaseModel {
     if (index > -1) {
       receivedHistoryLogs[index] = filesModel;
     } else {
+      // showing notification for new recieved file
+      await NotificationService().showNotification(sharedBy);
       await addToReceiveFileHistory(sharedBy, filesModel);
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
