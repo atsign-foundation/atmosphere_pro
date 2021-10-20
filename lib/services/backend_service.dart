@@ -186,10 +186,6 @@ class BackendService {
             .show(e.toString(), context: NavService.navKey.currentContext);
       });
 
-      // TODO: now showing notification , even if some issue occured while decrypting data.
-      // If this is not required in general release, we can remove it.
-      await NotificationService().showNotification(fromAtSign);
-
       if (decryptedMessage != null) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
                 listen: false)
