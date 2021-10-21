@@ -582,6 +582,9 @@ class BackendService {
     Provider.of<FileTransferProvider>(NavService.navKey.currentState.context,
             listen: false)
         .selectedFiles = [];
+    Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+            listen: false)
+        .resetData();
 
     await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
         Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
