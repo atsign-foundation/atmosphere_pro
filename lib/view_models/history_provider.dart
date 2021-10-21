@@ -64,6 +64,12 @@ class HistoryProvider extends BaseModel {
   String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
 
+  resetData() {
+    receivedHistory = [];
+    receivedAudioModel = [];
+    sendFileHistory = {'history': []};
+  }
+
   setFilesHistory(
       {HistoryType historyType,
       List<String> atSignName,
