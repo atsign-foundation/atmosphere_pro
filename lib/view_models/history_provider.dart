@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:archive/archive_io.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
@@ -18,6 +20,8 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
+import 'package:at_client/src/service/encryption_service.dart';
+import 'package:http/http.dart' as http;
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -626,6 +630,114 @@ class HistoryProvider extends BaseModel {
       receivedHistoryLogs[index].isDownloading = false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
+    }
+  }
+
+  downloadSingleFile(
+    String transferId,
+    String sharedBy,
+    bool isWidgetOpen,
+    String fileName,
+  ) async {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
+    try {
+      if (index > -1) {
+        receivedHistoryLogs[index].isDownloading = true;
+        receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
+      }
+      notifyListeners();
+
+      var files =
+          await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
+      receivedHistoryLogs[index].isDownloading = false;
+
+      if (files is List<File>) {
+        await sortFiles(receivedHistoryLogs);
+        populateTabs();
+        setStatus(DOWNLOAD_FILE, Status.Done);
+        return true;
+      } else {
+        setStatus(DOWNLOAD_FILE, Status.Done);
+        return false;
+      }
+    } catch (e) {
+      print('error in downloading file: $e');
+      receivedHistoryLogs[index].isDownloading = false;
+      setStatus(DOWNLOAD_FILE, Status.Error);
+      return false;
+    }
+  }
+
+  Future<List<File>> _downloadSingleFileFromWeb(
+      String transferId, String sharedByAtSign, String fileName,
+      {String downloadPath}) async {
+    downloadPath ??=
+        BackendService.getInstance().atClientPreference.downloadPath;
+    if (downloadPath == null) {
+      throw Exception('downloadPath not found');
+    }
+    var atKey = AtKey()
+      ..key = transferId
+      ..sharedBy = sharedByAtSign;
+    var result = await AtClientManager.getInstance().atClient.get(atKey);
+    FileTransferObject fileTransferObject;
+    try {
+      var _jsonData = jsonDecode(result.value);
+      _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/archive', '');
+      _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/zip', '');
+      _jsonData['fileUrl'] = _jsonData['fileUrl'] + '/$fileName';
+
+      fileTransferObject = FileTransferObject.fromJson(_jsonData);
+      print('fileTransferObject.fileUrl ${fileTransferObject.fileUrl}');
+    } on Exception catch (e) {
+      throw Exception('json decode exception in download file ${e.toString()}');
+    }
+    var downloadedFiles = <File>[];
+    var fileDownloadReponse = await _downloadSingleFromFileBin(
+        fileTransferObject, downloadPath, fileName);
+    if (fileDownloadReponse.isError) {
+      throw Exception('download fail');
+    }
+    var encryptedFileList = Directory(fileDownloadReponse.filePath).listSync();
+    try {
+      for (var encryptedFile in encryptedFileList) {
+        var decryptedFile = EncryptionService().decryptFile(
+            File(encryptedFile.path).readAsBytesSync(),
+            fileTransferObject.fileEncryptionKey);
+        var downloadedFile =
+            File(downloadPath + '/' + encryptedFile.path.split('/').last);
+        downloadedFile.writeAsBytesSync(decryptedFile);
+        downloadedFiles.add(downloadedFile);
+      }
+      // deleting temp directory
+      Directory(fileDownloadReponse.filePath).deleteSync(recursive: true);
+      return downloadedFiles;
+    } catch (e) {
+      print('error in downloadFile: $e');
+      return [];
+    }
+  }
+
+  Future<FileDownloadResponse> _downloadSingleFromFileBin(
+      FileTransferObject fileTransferObject,
+      String downloadPath,
+      String fileName) async {
+    try {
+      var response = await http.get(Uri.parse(fileTransferObject.fileUrl));
+      if (response.statusCode != 200) {
+        return FileDownloadResponse(
+            isError: true, errorMsg: 'error in fetching data');
+      }
+      var tempDirectory =
+          await Directory(downloadPath).createTemp('encrypted-files');
+      var encryptedFile = File(tempDirectory.path + '/' + fileName);
+      encryptedFile.writeAsBytesSync(response.bodyBytes);
+
+      return FileDownloadResponse(filePath: tempDirectory.path);
+    } catch (e) {
+      print('error in downloading file: $e');
+      return FileDownloadResponse(isError: true, errorMsg: e.toString());
     }
   }
 }

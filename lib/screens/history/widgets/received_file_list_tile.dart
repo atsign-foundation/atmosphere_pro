@@ -319,7 +319,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  _showNoFileDialog(deviceTextFactor);
+                                  await downloadFiles(widget.receivedHistory,
+                                      fileName: widget
+                                          .receivedHistory.files[index].name);
+                                  await OpenFile.open(path);
+                                  // _showNoFileDialog(deviceTextFactor);
                                   print('url: ${widget.receivedHistory.url}');
                                 }
                               },
@@ -555,13 +559,24 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     return fileExists;
   }
 
-  downloadFiles(FileTransfer receivedHistory) async {
-    var result = await Provider.of<HistoryProvider>(context, listen: false)
-        .downloadFiles(
-      widget.receivedHistory.key,
-      widget.receivedHistory.sender,
-      isOpen,
-    );
+  downloadFiles(FileTransfer receivedHistory, {String fileName}) async {
+    var result;
+    if (fileName != null) {
+      result = await Provider.of<HistoryProvider>(context, listen: false)
+          .downloadSingleFile(
+        widget.receivedHistory.key,
+        widget.receivedHistory.sender,
+        isOpen,
+        fileName,
+      );
+    } else {
+      result = await Provider.of<HistoryProvider>(context, listen: false)
+          .downloadFiles(
+        widget.receivedHistory.key,
+        widget.receivedHistory.sender,
+        isOpen,
+      );
+    }
 
     if (result is bool && result) {
       if (mounted) {
