@@ -319,7 +319,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  _showNoFileDialog(deviceTextFactor);
+                                  await downloadFiles(widget.receivedHistory,
+                                      fileName: widget
+                                          .receivedHistory.files[index].name);
+                                  await OpenFile.open(path);
+                                  // _showNoFileDialog(deviceTextFactor);
                                   print('url: ${widget.receivedHistory.url}');
                                 }
                               },
@@ -353,14 +357,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          widget
-                                              .receivedHistory.files[index].name
-                                              .toString(),
-                                          style:
-                                              CustomTextStyles.primaryRegular16,
+                                        child: RichText(
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
+                                          text: TextSpan(
+                                            text: widget.receivedHistory
+                                                .files[index].name
+                                                .toString(),
+                                            style: CustomTextStyles
+                                                .primaryRegular16,
+                                            children: [
+                                              TextSpan(
+                                                text: widget
+                                                            .receivedHistory
+                                                            .files[index]
+                                                            .isDownloading ??
+                                                        false
+                                                    ? '  Downloading...'
+                                                    : '',
+                                                style:
+                                                    CustomTextStyles.redSmall12,
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -555,13 +574,25 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     return fileExists;
   }
 
-  downloadFiles(FileTransfer receivedHistory) async {
-    var result = await Provider.of<HistoryProvider>(context, listen: false)
-        .downloadFiles(
-      widget.receivedHistory.key,
-      widget.receivedHistory.sender,
-      isOpen,
-    );
+  /// provide [fileName] to download that file
+  downloadFiles(FileTransfer receivedHistory, {String fileName}) async {
+    var result;
+    if (fileName != null) {
+      result = await Provider.of<HistoryProvider>(context, listen: false)
+          .downloadSingleFile(
+        widget.receivedHistory.key,
+        widget.receivedHistory.sender,
+        isOpen,
+        fileName,
+      );
+    } else {
+      result = await Provider.of<HistoryProvider>(context, listen: false)
+          .downloadFiles(
+        widget.receivedHistory.key,
+        widget.receivedHistory.sender,
+        isOpen,
+      );
+    }
 
     if (result is bool && result) {
       if (mounted) {

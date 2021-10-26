@@ -105,4 +105,11 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle redSmall12 = TextStyle(
+    color: ColorConstants.redText,
+    fontSize: 11.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
 }
