@@ -6,6 +6,8 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 
+import 'downloads_folders.dart';
+
 class APK extends StatefulWidget {
   @override
   _APKState createState() => _APKState();
@@ -25,7 +27,9 @@ class _APKState extends State<APK> {
             itemBuilder: (context, index) {
               DateTime date = DateTime.parse(provider.receivedApk[index].date);
               return InkWell(
-                onTap: () {},
+                onTap: () async {
+                  await openFilePath(provider.receivedApk[index].filePath);
+                },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
                   child: ListTile(

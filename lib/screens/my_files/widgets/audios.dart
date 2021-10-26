@@ -28,70 +28,8 @@ class _AudiosState extends State<Audios> {
               DateTime date =
                   DateTime.parse(provider.receivedAudio[index].date);
               return InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          margin: EdgeInsets.only(top: 20.toWidth),
-                          height: 190.toHeight,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 4,
-                                    color: ColorConstants.fontSecondary)
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30))),
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(top: 10.toHeight),
-                                  width: 50.toWidth,
-                                  height: 5.toHeight,
-                                  decoration: BoxDecoration(
-                                      color: ColorConstants.fontSecondary,
-                                      borderRadius: BorderRadius.circular(5)),
-                                )
-                              ],
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(
-                                    left: 20.toWidth,
-                                    top: 10.toHeight,
-                                    right: 20.toWidth),
-                                child: Column(children: <Widget>[
-                                  ListTile(
-                                      onTap: () async {
-                                        await openDownloadsFolder(context);
-                                      },
-                                      title: Text(
-                                        'Open file location',
-                                        style:
-                                            CustomTextStyles.primaryRegular16,
-                                      )),
-                                  Divider(
-                                    thickness: 1,
-                                    color: ColorConstants.greyText,
-                                  ),
-                                  ListTile(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      title: Text(
-                                        'Cancel',
-                                        style:
-                                            CustomTextStyles.primaryRegular16,
-                                      )),
-                                ]))
-                          ]),
-                        );
-                      });
+                onTap: () async {
+                  await openFilePath(provider.receivedAudio[index].filePath);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
