@@ -357,14 +357,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          widget
-                                              .receivedHistory.files[index].name
-                                              .toString(),
-                                          style:
-                                              CustomTextStyles.primaryRegular16,
+                                        child: RichText(
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
+                                          text: TextSpan(
+                                            text: widget.receivedHistory
+                                                .files[index].name
+                                                .toString(),
+                                            style: CustomTextStyles
+                                                .primaryRegular16,
+                                            children: [
+                                              TextSpan(
+                                                text: widget
+                                                            .receivedHistory
+                                                            .files[index]
+                                                            .isDownloading ??
+                                                        false
+                                                    ? '  Downloading...'
+                                                    : '',
+                                                style:
+                                                    CustomTextStyles.redSmall12,
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -559,6 +574,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     return fileExists;
   }
 
+  /// provide [fileName] to download that file
   downloadFiles(FileTransfer receivedHistory, {String fileName}) async {
     var result;
     if (fileName != null) {

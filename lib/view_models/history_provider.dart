@@ -642,15 +642,19 @@ class HistoryProvider extends BaseModel {
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
-      if (index > -1) {
-        receivedHistoryLogs[index].isDownloading = true;
+      var _fileIndex = receivedHistoryLogs[index]
+          .files
+          .indexWhere((_file) => _file.name == fileName);
+
+      if ((index > -1) && (_fileIndex > -1)) {
+        receivedHistoryLogs[index].files[_fileIndex].isDownloading = true;
         receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
       }
       notifyListeners();
 
       var files =
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
-      receivedHistoryLogs[index].isDownloading = false;
+      receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
 
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
