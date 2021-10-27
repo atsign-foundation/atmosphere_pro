@@ -41,6 +41,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         NavService.navKey.currentContext,
         listen: false);
     isFileSending = _filePickerProvider.isFileSending;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await BackendService.getInstance().syncWithSecondary();
+    });
     super.initState();
   }
 

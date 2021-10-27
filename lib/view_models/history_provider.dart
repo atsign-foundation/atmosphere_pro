@@ -36,6 +36,7 @@ class HistoryProvider extends BaseModel {
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
+  bool isSyncedDataFetched = false;
   // List<List<FilesDetail>> tempList = [];
   // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
   // static Map<int, Map<String, Set<FilesDetail>>> test = {};
@@ -172,13 +173,17 @@ class HistoryProvider extends BaseModel {
         ..metadata = Metadata();
       var keyValue = await backendService.atClientManager.atClient.get(key);
       if (keyValue != null && keyValue.value != null) {
-        Map historyFile = json.decode((keyValue.value) as String) as Map;
+        try {
+          Map historyFile = json.decode((keyValue.value) as String) as Map;
 
-        sendFileHistory['history'] = historyFile['history'];
-        historyFile['history'].forEach((value) {
-          FileHistory filesModel = FileHistory.fromJson((value));
-          sentHistory.add(filesModel);
-        });
+          sendFileHistory['history'] = historyFile['history'];
+          historyFile['history'].forEach((value) {
+            FileHistory filesModel = FileHistory.fromJson((value));
+            sentHistory.add(filesModel);
+          });
+        } catch (e) {
+          print('error in file model conversion in getSentHistory: $e');
+        }
       }
 
       setStatus(SENT_HISTORY, Status.Done);
@@ -261,14 +266,18 @@ class HistoryProvider extends BaseModel {
             .catchError((e) => print("error in get $e"));
 
         if (atvalue != null && atvalue.value != null) {
-          FileTransferObject fileTransferObject =
-              FileTransferObject.fromJson(jsonDecode(atvalue.value));
-          FileTransfer filesModel =
-              convertFiletransferObjectToFileTransfer(fileTransferObject);
-          filesModel.sender = '@' + key.split('@').last;
+          try {
+            FileTransferObject fileTransferObject =
+                FileTransferObject.fromJson(jsonDecode(atvalue.value));
+            FileTransfer filesModel =
+                convertFiletransferObjectToFileTransfer(fileTransferObject);
+            filesModel.sender = '@' + key.split('@').last;
 
-          if (filesModel.key != null) {
-            receivedHistoryLogs.insert(0, filesModel);
+            if (filesModel.key != null) {
+              receivedHistoryLogs.insert(0, filesModel);
+            }
+          } catch (e) {
+            print('error in getAllFileTransferData file model conversion: $e');
           }
         }
       }
