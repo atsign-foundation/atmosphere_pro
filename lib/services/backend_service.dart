@@ -19,6 +19,7 @@ import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -271,7 +272,29 @@ class BackendService {
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
-    print('Sync done: $syncStatus');
+    var historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentState.context,
+        listen: false);
+
+    print(
+        'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
+    if (syncStatus.syncStatus == SyncStatus.success &&
+        syncStatus.dataChange &&
+        !historyProvider.isSyncedDataFetched) {
+      if (historyProvider.status[historyProvider.SENT_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getSentHistory();
+      }
+
+      if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getReceivedHistory();
+      }
+
+      historyProvider.isSyncedDataFetched = true;
+      print(
+          'historyProvider.isSyncedDataFetched : ${historyProvider.isSyncedDataFetched}');
+    }
   }
 
   Future proceedToFileDownload(String fileName) async {
