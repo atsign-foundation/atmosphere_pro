@@ -47,7 +47,7 @@ android {
         applicationId "com.atsign.atsign_atmosphere_pro"
         multiDexEnabled true
         minSdkVersion 24
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
