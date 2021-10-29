@@ -142,6 +142,14 @@ class BackendService {
     return await KeychainUtil.getEncryptedKeys(atsign);
   }
 
+  ///Resets [atsigns] list from device storage.
+  Future<void> resetAtsigns(List atsigns) async {
+    for (String atsign in atsigns) {
+      await KeychainUtil.resetAtSignFromKeychain(atsign);
+      atClientServiceMap.remove(atsign);
+    }
+  }
+
   Map<String, AtClientService> atClientServiceMap = {};
 
   // startMonitor needs to be called at the beginning of session
