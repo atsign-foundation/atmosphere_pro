@@ -176,6 +176,20 @@ class _DesktopHomeState extends State<DesktopHome> {
                         removePadding: true,
                       ),
                     ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        child: Text('RESET',
+                            style:
+                                TextStyle(color: ColorConstants.orangeColor)),
+                        onPressed: () {
+                          backendService.resetAtsigns();
+                        },
+                      ),
+                    ),
                     Spacer(),
                     Text(
                       '@mosphere',

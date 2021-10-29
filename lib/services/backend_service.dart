@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
-// import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
@@ -80,9 +80,9 @@ class BackendService {
     // }
     downloadDirectory = Directory(MixedConstants.path);
     if (atClientServiceMap[atsign] == null) {
-      // final appSupportDirectory =
-      //     await path_provider.getApplicationSupportDirectory();
-      final appSupportDirectory = Directory(MixedConstants.path);
+      final appSupportDirectory =
+          await path_provider.getApplicationSupportDirectory();
+      // final appSupportDirectory = Directory(MixedConstants.path);
       print("paths => $downloadDirectory $appSupportDirectory");
     }
     await atClientServiceInstance.onboard(
@@ -98,8 +98,9 @@ class BackendService {
     //   downloadDirectory = await path_provider.getExternalStorageDirectory();
     // }
     downloadDirectory = Directory(MixedConstants.path);
-    final appDocumentDirectory = Directory(MixedConstants.path);
-    // await path_provider.getApplicationSupportDirectory();
+    // final appDocumentDirectory = Directory(MixedConstants.path);
+    final appDocumentDirectory =
+        await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     var _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
@@ -646,5 +647,9 @@ class BackendService {
       NavService.navKey.currentContext,
       MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
     );
+  }
+
+  resetAtsigns() {
+    _keyChainManager.clearKeychainEntries();
   }
 }

@@ -98,7 +98,10 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                     child: Row(
                       children: [
                         ContactInitial(
-                          initials: BackendService.getInstance().currentAtsign,
+                          initials: BackendService.getInstance()
+                              .atClientManager
+                              .atClient
+                              .getCurrentAtSign(),
                           size: 30,
                           maxSize: (80.0 - 30.0),
                           minSize: 50,

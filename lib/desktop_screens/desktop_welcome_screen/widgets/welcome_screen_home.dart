@@ -66,7 +66,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Welcome !' +
+                'Welcome ' +
                     (BackendService.getInstance().atClientManager.atClient !=
                             null
                         ? '${BackendService.getInstance().atClientManager.atClient.getCurrentAtSign()}'
