@@ -319,6 +319,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
+                                  if (!isDownloadAvailable) {
+                                    return;
+                                  }
                                   await downloadFiles(widget.receivedHistory,
                                       fileName: widget
                                           .receivedHistory.files[index].name);
@@ -366,19 +369,6 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                                 .toString(),
                                             style: CustomTextStyles
                                                 .primaryRegular16,
-                                            children: [
-                                              TextSpan(
-                                                text: widget
-                                                            .receivedHistory
-                                                            .files[index]
-                                                            .isDownloading ??
-                                                        false
-                                                    ? '  Downloading...'
-                                                    : '',
-                                                style:
-                                                    CustomTextStyles.redSmall12,
-                                              )
-                                            ],
                                           ),
                                         ),
                                       ),
@@ -415,6 +405,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               .toString(),
                                           style: CustomTextStyles
                                               .secondaryRegular12,
+                                        ),
+                                        SizedBox(width: 10.toHeight),
+                                        Text(
+                                          (widget.receivedHistory.files[index]
+                                                      .isDownloading ??
+                                                  false)
+                                              ? 'Downloading...'
+                                              : '',
+                                          style: CustomTextStyles.redSmall12,
                                         )
                                       ],
                                     ),

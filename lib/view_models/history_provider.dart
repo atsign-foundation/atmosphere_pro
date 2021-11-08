@@ -641,11 +641,10 @@ class HistoryProvider extends BaseModel {
   ) async {
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
+    var _fileIndex = receivedHistoryLogs[index]
+        .files
+        .indexWhere((_file) => _file.name == fileName);
     try {
-      var _fileIndex = receivedHistoryLogs[index]
-          .files
-          .indexWhere((_file) => _file.name == fileName);
-
       if ((index > -1) && (_fileIndex > -1)) {
         receivedHistoryLogs[index].files[_fileIndex].isDownloading = true;
         receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
@@ -668,6 +667,7 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       print('error in downloading file: $e');
       receivedHistoryLogs[index].isDownloading = false;
+      receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
     }
