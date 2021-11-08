@@ -124,7 +124,7 @@ class TextStrings {
 
   // File choice dialog texts
   String fileChoiceQuestion = 'What would you like to send?';
-  String choice1 = 'Photos';
+  String choice1 = 'Photos and Videos ';
   String choice2 = 'Other files';
 
   // history no file to open
