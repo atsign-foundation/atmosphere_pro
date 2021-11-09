@@ -363,12 +363,11 @@ class BackendService {
     print("from:$atsign file:$filename size:$receiver");
     if (receiver == currentAtSign && atsign != currentAtSign) {
       BuildContext context = NavService.navKey.currentContext;
-
       if (!autoAcceptFiles &&
           app_lifecycle_state != null &&
           app_lifecycle_state != AppLifecycleState.resumed.toString()) {
         print("app not active $app_lifecycle_state");
-        await NotificationService().showNotification(atsign);
+        await NotificationService().showNotification(atsign,'Download and view the file(s).');
       }
       NotificationPayload payload = NotificationPayload(
           file: filename, name: atsign, size: double.parse(filesize));

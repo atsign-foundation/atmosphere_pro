@@ -344,18 +344,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ]),
                       )),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-                  Padding(
-                    padding: EdgeInsets.only(left: 16.toWidth),
-                    child: isExpanded
-                        ? Text(
-                            TextStrings().sidebarEnablingMessage,
-                            style: TextStyle(
-                                color: ColorConstants.dullText,
-                                fontSize: 12.toFont,
-                                letterSpacing: 0.1),
-                          )
-                        : SizedBox(),
-                  ),
                 ],
               ),
             ),
