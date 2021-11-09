@@ -56,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     )
   ];
   List<String> transferMessages = [
-    'Sending files ...',
+    'Sending file(s) ...',
     'File sent',
     'Oops! something went wrong'
   ];
