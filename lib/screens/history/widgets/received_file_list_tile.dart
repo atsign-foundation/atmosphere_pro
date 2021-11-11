@@ -163,24 +163,51 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           : SizedBox(),
                     ),
                     InkWell(
-                      onTap: () async {
-                        await downloadFiles(widget.receivedHistory);
-                      },
-                      child: isDownloadAvailable
-                          ? widget.receivedHistory.isDownloading
-                              ? CircularProgressIndicator()
-                              : isDownloaded || isFilesAvailableOfline
-                                  ? Icon(
-                                      Icons.done,
-                                      color: Color(0xFF08CB21),
-                                      size: 25.toFont,
-                                    )
-                                  : Icon(
-                                      Icons.download_sharp,
-                                      size: 25.toFont,
-                                    )
-                          : SizedBox(),
-                    )
+                        onTap: () async {
+                          await downloadFiles(widget.receivedHistory);
+                        },
+                        child: isDownloadAvailable
+                            ? widget.receivedHistory.isDownloading
+                                ? CircularProgressIndicator()
+                                : isDownloaded || isFilesAvailableOfline
+                                    ? Icon(
+                                        Icons.done,
+                                        color: Color(0xFF08CB21),
+                                        size: 25.toFont,
+                                      )
+                                    : Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          Container(
+                                            width: 25.toHeight,
+                                            height: 25.toHeight,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.black,
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      45.toHeight * 2),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.download_sharp,
+                                                size: 20.toFont,
+                                              ),
+                                            ),
+                                          ),
+                                          CircleAvatar(
+                                            backgroundColor: Colors.orange,
+                                            radius: 5.toWidth,
+                                          ),
+                                        ],
+                                      )
+                            : Icon(
+                                Icons.done,
+                                color: Color(0xFF08CB21),
+                                size: 25.toFont,
+                              ))
                   ],
                 ),
                 SizedBox(height: 5.toHeight),
