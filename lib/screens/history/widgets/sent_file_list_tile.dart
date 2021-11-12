@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
@@ -129,71 +127,23 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             flashingCircleDarkColor: ColorConstants.fadedText,
                           )
                         : Stack(
-                            clipBehavior: Clip.none,
                             children: [
                               Container(
                                 width: 45.toHeight,
                                 height: 45.toHeight,
-                                child: GestureDetector(
-                                    onTap: ((contactList[0] != null) &&
-                                            (ContactService()
-                                                    .contactList
-                                                    .indexWhere((element) =>
-                                                        element.atSign ==
-                                                        contactList[0]) ==
-                                                -1))
-                                        ? () async {
-                                            print('tap');
-                                            await showDialog<void>(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (BuildContext context) {
-                                                return AddContact(
-                                                  atSignName: contactList[0],
-                                                  image: firstContactImage,
-                                                );
-                                              },
-                                            );
-                                            setState(() {});
-                                          }
-                                        : null,
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        firstContactImage != null
-                                            ? CustomCircleAvatar(
-                                                byteImage: firstContactImage,
-                                                nonAsset: true,
-                                                size: 50,
-                                              )
-                                            : ContactInitial(
-                                                initials: contactList[0],
-                                                size: 50,
-                                              ),
-                                        ((contactList[0] != null) &&
-                                                (ContactService()
-                                                        .contactList
-                                                        .indexWhere((element) =>
-                                                            element.atSign ==
-                                                            contactList[0]) ==
-                                                    -1))
-                                            ? Positioned(
-                                                right: -5,
-                                                top: -10,
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.white,
-                                                    ),
-                                                    child:
-                                                        Icon(Icons.person_add)))
-                                            : SizedBox()
-                                      ],
-                                    )),
+                                child: firstContactImage != null
+                                    ? CustomCircleAvatar(
+                                        byteImage: firstContactImage,
+                                        nonAsset: true,
+                                        size: 50,
+                                      )
+                                    : ContactInitial(
+                                        initials: contactList[0],
+                                        size: 50,
+                                      ),
                               ),
                               Positioned(
                                   right: 0,
-                                  bottom: -5,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: widget.sentHistory.sharedWith[0]
