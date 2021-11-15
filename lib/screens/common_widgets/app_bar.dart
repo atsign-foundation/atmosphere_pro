@@ -65,6 +65,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       isDownloaded = false,
       isDownloadAvailable = false,
       isFilesAvailableOfline = true;
+
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
@@ -72,8 +73,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
     }
     historyProvider.receivedHistoryLogs.forEach((value) {
       receivedHistory = value;
+      checkForDownloadAvailability();
+      isFilesAlreadyDownloaded();
     });
-    checkForDownloadAvailability();
     super.didChangeDependencies();
   }
 
@@ -109,6 +111,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -160,8 +163,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
       ),
       actions: [
         Container(
-          height: 52.toHeight,
-          width: 52.toWidth,
+          height: 22.toHeight,
+          width: 22.toWidth,
           margin: EdgeInsets.only(right: 30),
           child: (widget.showTitle)
               ? (widget.showTrailingButton)
@@ -236,27 +239,45 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   onTap: () {
                     Scaffold.of(context).openEndDrawer();
                   },
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 10.toHeight),
-                        height: 22.toHeight,
-                        width: 22.toWidth,
-                        child: Image.asset(
-                          ImageConstants.drawerIcon,
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 3.toHeight, right: 10.toWidth),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.orange,
-                          radius: 8.toWidth,
-                        ),
-                      ),
-                    ],
-                  )),
+                  child: isDownloadAvailable
+                      ? isDownloaded || isFilesAvailableOfline
+                              ? Container(
+                                  margin: EdgeInsets.only(top: 10.toHeight),
+                                  height: 22.toHeight,
+                                  width: 22.toWidth,
+                                  child: Image.asset(
+                                    ImageConstants.drawerIcon,
+                                  ),
+                                )
+                              : Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(top: 10.toHeight),
+                                      height: 22.toHeight,
+                                      width: 22.toWidth,
+                                      child: Image.asset(
+                                        ImageConstants.drawerIcon,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 3.toHeight, right: 10.toWidth),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.orange,
+                                        radius: 8.toWidth,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                      : Container(
+                                  margin: EdgeInsets.only(top: 10.toHeight),
+                                  height: 22.toHeight,
+                                  width: 22.toWidth,
+                                  child: Image.asset(
+                                    ImageConstants.drawerIcon,
+                                  ),
+                                )),
         )
       ],
       automaticallyImplyLeading: false,

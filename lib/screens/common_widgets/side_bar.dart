@@ -40,6 +40,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       isDownloaded = false,
       isDownloadAvailable = false,
       isFilesAvailableOfline = true;
+      
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
@@ -47,8 +48,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     }
     historyProvider.receivedHistoryLogs.forEach((value) {
       receivedHistory = value;
+      checkForDownloadAvailability();
+      isFilesAlreadyDownloaded();
     });
-    checkForDownloadAvailability();
     super.didChangeDependencies();
   }
 
@@ -57,13 +59,15 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
-   // If fileList is not hab=ving any file then download icon will not be shown
+
+// if fileList is not hab=ving any file then download icon will not be shown
     var isFileUploaded = false;
     receivedHistory.files.forEach((FileData fileData) {
       if (fileData.isUploaded) {
         isFileUploaded = true;
       }
     });
+
     if (!isFileUploaded) {
       isDownloadAvailable = false;
     }
@@ -279,17 +283,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         routeName: targetScreens[1],
                         showIconOnly: !isExpanded,
                       ),
-                      ClipPath(
-                        clipper: StarClipper(10),
-                        child: Container(
-                          height: 30.toHeight,
-                          color: Colors.orange,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 3.toWidth,vertical: 6.toWidth),
-                            child: Text("New",),
+                      Padding(
+                            padding: EdgeInsets.symmetric(vertical: 3.toWidth),
+                            child: Icon(Icons.fiber_new_rounded,size: 25.toFont,color: Colors.orange,),
                           ),
-                        ),
-                      ),
                     ],
                   ),
                   SizedBox(height: isTablet ? 20.toHeight :0),
