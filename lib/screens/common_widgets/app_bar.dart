@@ -30,6 +30,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showLeadingicon;
   final bool showTrailingButton;
+  final bool showMenu;
+  final bool showClosedBtnText;
   final IconData trailingIcon;
   final bool isHistory;
   final onActionpressed;
@@ -42,6 +44,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.showBackButton = false,
       this.showLeadingicon = false,
       this.showTrailingButton = false,
+      this.showClosedBtnText = true,
+      this.showMenu = false,
       this.trailingIcon = Icons.add,
       this.isHistory = false,
       this.elevation = 0,
@@ -65,7 +69,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 25.toFont,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.pop(context);
+                    }
                   })
               : null,
       title: Row(
@@ -73,7 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             height: 40.toHeight,
             margin: EdgeInsets.only(top: 5.toHeight),
-            child: (!showBackButton && !showLeadingicon)
+            child: (!showBackButton && !showLeadingicon && showClosedBtnText)
                 ? Center(
                     child: GestureDetector(
                       child: Text(
@@ -81,7 +87,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         style: CustomTextStyles.blueRegular18,
                       ),
                       onTap: () {
-                        Navigator.pop(context);
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.pop(context);
+                        }
                       },
                     ),
                   )
@@ -105,90 +113,100 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: 22.toWidth,
           margin: EdgeInsets.only(right: 30),
           child: (showTitle)
-              ? (showTrailingButton)
-                  ? IconButton(
-                      icon: Icon(
-                        trailingIcon,
-                        size: 25.toFont,
-                      ),
-                      onPressed: () async {
-                        if (isHistory) {
-                          // navigate to downloads folder
-                          if (Platform.isAndroid) {
-                            await FilesystemPicker.open(
-                              title: 'Atmosphere download folder',
-                              context: context,
-                              rootDirectory: BackendService.getInstance()
-                                  .downloadDirectory,
-                              fsType: FilesystemType.all,
-                              folderIconColor: Colors.teal,
-                              allowedExtensions: [],
-                              fileTileSelectMode: FileTileSelectMode.wholeTile,
-                              requestPermission: () async =>
-                                  await Permission.storage.request().isGranted,
-                            );
-                          } else {
-                            String url = 'shareddocuments://' +
-                                BackendService.getInstance()
-                                    .atClientPreference
-                                    .downloadPath;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
-                        } else if (isTrustedContactScreen) {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ContactsScreen(
-                                asSelectionScreen: true,
-                                context: NavService.navKey.currentContext,
-                                selectedList: (s) async {
-                                  s.forEach((element) async {
-                                    await Provider.of<TrustedContactProvider>(
-                                            context,
-                                            listen: false)
-                                        .addTrustedContacts(element);
-                                  });
-                                  await Provider.of<TrustedContactProvider>(
-                                          context,
-                                          listen: false)
-                                      .setTrustedContact();
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (context) => AddContactDialog(
-                                // onYesTap: (value) {
-                                //   onActionpressed(value);
-                                // },
+              ? ((showTrailingButton)
+                  ? showMenu
+                      ? menuBar(context)
+                      : IconButton(
+                          icon: Icon(
+                            trailingIcon,
+                            size: 25.toFont,
+                          ),
+                          onPressed: () async {
+                            if (isHistory) {
+                              // navigate to downloads folder
+                              if (Platform.isAndroid) {
+                                await FilesystemPicker.open(
+                                  title: 'Atmosphere download folder',
+                                  context: context,
+                                  rootDirectory: BackendService.getInstance()
+                                      .downloadDirectory,
+                                  fsType: FilesystemType.all,
+                                  folderIconColor: Colors.teal,
+                                  allowedExtensions: [],
+                                  fileTileSelectMode:
+                                      FileTileSelectMode.wholeTile,
+                                  requestPermission: () async =>
+                                      await Permission.storage
+                                          .request()
+                                          .isGranted,
+                                );
+                              } else {
+                                String url = 'shareddocuments://' +
+                                    BackendService.getInstance()
+                                        .atClientPreference
+                                        .downloadPath;
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              }
+                            } else if (isTrustedContactScreen) {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ContactsScreen(
+                                    asSelectionScreen: true,
+                                    context: NavService.navKey.currentContext,
+                                    selectedList: (s) async {
+                                      s.forEach((element) async {
+                                        await Provider.of<
+                                                    TrustedContactProvider>(
+                                                context,
+                                                listen: false)
+                                            .addTrustedContacts(element);
+                                      });
+                                      await Provider.of<TrustedContactProvider>(
+                                              context,
+                                              listen: false)
+                                          .setTrustedContact();
+                                    },
+                                  ),
                                 ),
-                          );
-                        }
-                      })
-                  : Container()
-              : GestureDetector(
-                  onTap: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                  child: Container(
-                    height: 22.toHeight,
-                    width: 22.toWidth,
-                    child: Image.asset(
-                      ImageConstants.drawerIcon,
-                    ),
-                  ),
-                ),
+                              );
+                            } else {
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => AddContactDialog(
+                                    // onYesTap: (value) {
+                                    //   onActionpressed(value);
+                                    // },
+                                    ),
+                              );
+                            }
+                          })
+                  : Container())
+              : menuBar(context),
         )
       ],
       automaticallyImplyLeading: false,
       backgroundColor: ColorConstants.appBarColor,
+    );
+  }
+
+  Widget menuBar(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Scaffold.of(context).openEndDrawer();
+      },
+      child: Container(
+        height: 22.toHeight,
+        width: 22.toWidth,
+        child: Image.asset(
+          ImageConstants.drawerIcon,
+        ),
+      ),
     );
   }
 }
