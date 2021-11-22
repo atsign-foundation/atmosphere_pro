@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -29,6 +32,55 @@ class SideBarWidget extends StatefulWidget {
 }
 
 class _SideBarWidgetState extends State<SideBarWidget> {
+  HistoryProvider historyProvider;
+  FileTransfer receivedHistory;
+  bool isDownloadAvailable = false, isFilesAvailableOffline = true;
+
+  @override
+  void didChangeDependencies() async {
+    if (historyProvider == null) {
+      historyProvider = Provider.of<HistoryProvider>(context);
+    }
+    historyProvider.receivedHistoryLogs.forEach((value) {
+      receivedHistory = value;
+      checkForDownloadAvailability();
+      isFilesAlreadyDownloaded();
+    });
+    super.didChangeDependencies();
+  }
+
+  checkForDownloadAvailability() {
+    var expiryDate = receivedHistory.date.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+
+    var isFileUploaded = false;
+    receivedHistory.files.forEach((FileData fileData) {
+      if (fileData.isUploaded) {
+        isFileUploaded = true;
+      }
+    });
+
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
+  }
+
+  isFilesAlreadyDownloaded() async {
+    receivedHistory.files.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory.path +
+          '/${element.name}';
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        setState(() {
+          isFilesAvailableOffline = false;
+        });
+      }
+    });
+  }
+
   final List<String> menuItemsTitle = [
     TextStrings().sidebarContact,
     TextStrings().sidebarTransferHistory,
@@ -221,6 +273,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     title: menuItemsTitle[1],
                     routeName: targetScreens[1],
                     showIconOnly: !isExpanded,
+                    displayColor:
+                        isDownloadAvailable && !isFilesAvailableOffline
+                            ? ColorConstants.orangeColor
+                            : ColorConstants.fadedText,
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
@@ -344,18 +400,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ]),
                       )),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-                  Padding(
-                    padding: EdgeInsets.only(left: 16.toWidth),
-                    child: isExpanded
-                        ? Text(
-                            TextStrings().sidebarEnablingMessage,
-                            style: TextStyle(
-                                color: ColorConstants.dullText,
-                                fontSize: 12.toFont,
-                                letterSpacing: 0.1),
-                          )
-                        : SizedBox(),
-                  ),
                 ],
               ),
             ),

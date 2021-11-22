@@ -210,24 +210,23 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           : SizedBox(),
                     ),
                     InkWell(
-                      onTap: () async {
-                        await downloadFiles(widget.receivedHistory);
-                      },
-                      child: isDownloadAvailable
-                          ? widget.receivedHistory.isDownloading
-                              ? CircularProgressIndicator()
-                              : isDownloaded || isFilesAvailableOfline
-                                  ? Icon(
-                                      Icons.done,
-                                      color: Color(0xFF08CB21),
-                                      size: 25.toFont,
-                                    )
-                                  : Icon(
-                                      Icons.download_sharp,
-                                      size: 25.toFont,
-                                    )
-                          : SizedBox(),
-                    )
+                        onTap: () async {
+                          await downloadFiles(widget.receivedHistory);
+                        },
+                        child: isDownloadAvailable
+                            ? widget.receivedHistory.isDownloading
+                                ? CircularProgressIndicator()
+                                : isDownloaded || isFilesAvailableOfline
+                                    ? Icon(
+                                        Icons.done,
+                                        color: Color(0xFF08CB21),
+                                        size: 25.toFont,
+                                      )
+                                    : Icon(
+                                        Icons.download_sharp,
+                                        size: 25.toFont,
+                                      )
+                            : SizedBox())
                   ],
                 ),
                 SizedBox(height: 5.toHeight),
