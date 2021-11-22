@@ -22,6 +22,7 @@ import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SideBarWidget extends StatefulWidget {
   final bool isExpanded;
@@ -123,6 +124,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   String name;
   WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   bool isTablet = false, isExpanded = true, isLoading = false;
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
 
   @override
   void initState() {
@@ -132,6 +139,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     isExpanded = widget.isExpanded;
     _welcomeScreenProvider.isExpanded = true;
     getAtsignDetails();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
   }
 
   @override
@@ -400,6 +415,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ]),
                       )),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                        'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
+                        style: CustomTextStyles.darkGrey13),
+                  ),
                 ],
               ),
             ),

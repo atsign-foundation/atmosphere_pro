@@ -112,4 +112,9 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle darkGrey13 = TextStyle(
+    color: ColorConstants.dullText,
+    fontSize: 13.toFont,
+  );
 }
