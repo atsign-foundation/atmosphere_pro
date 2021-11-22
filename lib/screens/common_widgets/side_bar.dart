@@ -8,7 +8,6 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -35,12 +34,8 @@ class SideBarWidget extends StatefulWidget {
 class _SideBarWidgetState extends State<SideBarWidget> {
   HistoryProvider historyProvider;
   FileTransfer receivedHistory;
-  bool isOpen = false,
-      isDownloading = false,
-      isDownloaded = false,
-      isDownloadAvailable = false,
-      isFilesAvailableOfline = true;
-      
+  bool isDownloadAvailable = false, isFilesAvailableOffline = true;
+
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
@@ -60,7 +55,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       isDownloadAvailable = true;
     }
 
-// if fileList is not hab=ving any file then download icon will not be shown
     var isFileUploaded = false;
     receivedHistory.files.forEach((FileData fileData) {
       if (fileData.isUploaded) {
@@ -81,7 +75,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       bool fileExists = await test.exists();
       if (fileExists == false) {
         setState(() {
-          isFilesAvailableOfline = false;
+          isFilesAvailableOffline = false;
         });
       }
     });
@@ -274,22 +268,17 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SideBarItem(
-                        image: menuItemsIcons[1],
-                        title: menuItemsTitle[1],
-                        routeName: targetScreens[1],
-                        showIconOnly: !isExpanded,
-                      ),
-                      Padding(
-                            padding: EdgeInsets.symmetric(vertical: 3.toWidth),
-                            child: Icon(Icons.fiber_new_rounded,size: 25.toFont,color: Colors.orange,),
-                          ),
-                    ],
+                  SideBarItem(
+                    image: menuItemsIcons[1],
+                    title: menuItemsTitle[1],
+                    routeName: targetScreens[1],
+                    showIconOnly: !isExpanded,
+                    displayColor:
+                        isDownloadAvailable && !isFilesAvailableOffline
+                            ? ColorConstants.orangeColor
+                            : ColorConstants.fadedText,
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight :0),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
                     image: menuItemsIcons[2],
                     title: menuItemsTitle[2],

@@ -60,11 +60,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   HistoryProvider historyProvider;
   FileTransfer receivedHistory;
-  bool isOpen = false,
-      isDownloading = false,
-      isDownloaded = false,
-      isDownloadAvailable = false,
-      isFilesAvailableOfline = true;
+  bool isDownloadAvailable = false, isFilesAvailableOfline = true;
 
   @override
   void didChangeDependencies() async {
@@ -85,7 +81,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
       isDownloadAvailable = true;
     }
 
-// if fileList is not hab=ving any file then download icon will not be shown
     var isFileUploaded = false;
     receivedHistory.files.forEach((FileData fileData) {
       if (fileData.isUploaded) {
@@ -239,45 +234,35 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   onTap: () {
                     Scaffold.of(context).openEndDrawer();
                   },
-                  child: isDownloadAvailable
-                      ? isDownloaded || isFilesAvailableOfline
-                              ? Container(
-                                  margin: EdgeInsets.only(top: 10.toHeight),
-                                  height: 22.toHeight,
-                                  width: 22.toWidth,
-                                  child: Image.asset(
-                                    ImageConstants.drawerIcon,
-                                  ),
-                                )
-                              : Stack(
-                                  alignment: Alignment.topRight,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(top: 10.toHeight),
-                                      height: 22.toHeight,
-                                      width: 22.toWidth,
-                                      child: Image.asset(
-                                        ImageConstants.drawerIcon,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 3.toHeight, right: 10.toWidth),
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.orange,
-                                        radius: 8.toWidth,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                  child: isDownloadAvailable && !isFilesAvailableOfline
+                      ? Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 10.toHeight),
+                              height: 22.toHeight,
+                              width: 22.toWidth,
+                              child: Image.asset(
+                                ImageConstants.drawerIcon,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.toHeight),
+                              child: CircleAvatar(
+                                backgroundColor: ColorConstants.orangeColor,
+                                radius: 5.toWidth,
+                              ),
+                            ),
+                          ],
+                        )
                       : Container(
-                                  margin: EdgeInsets.only(top: 10.toHeight),
-                                  height: 22.toHeight,
-                                  width: 22.toWidth,
-                                  child: Image.asset(
-                                    ImageConstants.drawerIcon,
-                                  ),
-                                )),
+                          margin: EdgeInsets.only(top: 10.toHeight),
+                          height: 22.toHeight,
+                          width: 22.toWidth,
+                          child: Image.asset(
+                            ImageConstants.drawerIcon,
+                          ),
+                        )),
         )
       ],
       automaticallyImplyLeading: false,
