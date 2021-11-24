@@ -37,11 +37,13 @@ packages:
     source: hosted
     version: "2.8.1"
   at_backupkey_flutter:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: at_backupkey_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_backupkey_flutter
+      ref: "feature/backup-key_3.0.1"
+      resolved-ref: "3d6d43edf81ffec4e26f8a6e3cf3815727c8b559"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
     version: "3.0.0"
   at_base2e15:
     dependency: transitive
