@@ -31,6 +31,7 @@ class TextStrings {
   String sidebarMyFiles = 'My Files';
   String sidebarTrustedSenders = 'Trusted Senders';
   String sidebarMyGroups = 'My Groups';
+  String sidebarBackupKey = 'Backup your keys';
   String sidebarTermsAndConditions = 'Terms and Conditions';
   String sidebarPrivacyPolicy = "Privacy policy";
   String sidebarFaqs = 'FAQ';
