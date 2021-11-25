@@ -39,12 +39,10 @@ packages:
   at_backupkey_flutter:
     dependency: "direct overridden"
     description:
-      path: at_backupkey_flutter
-      ref: "feature/backup-key_3.0.1"
-      resolved-ref: "3d6d43edf81ffec4e26f8a6e3cf3815727c8b559"
-      url: "https://github.com/atsign-foundation/at_widgets"
-    source: git
-    version: "3.0.0"
+      name: at_backupkey_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   at_base2e15:
     dependency: transitive
     description:
@@ -58,14 +56,14 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.6"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.1.1"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -79,7 +77,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   at_contact:
     dependency: "direct main"
     description:
@@ -107,7 +105,7 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
@@ -121,7 +119,7 @@ packages:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.7"
+    version: "3.0.8"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -149,7 +147,14 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
+  biometric_storage:
+    dependency: transitive
+    description:
+      name: biometric_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -212,7 +217,7 @@ packages:
       name: crypton
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   cupertino_icons:
     dependency: "direct main"
     description:

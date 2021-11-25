@@ -65,11 +65,7 @@ dev_dependencies:
 
 dependency_overrides:
   #Please remove this after at_backupkey_flutter have version newer thạn 3.0.0
-  at_backupkey_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets
-      ref: feature/backup-key_3.0.1
-      path: at_backupkey_flutter
+  at_backupkey_flutter: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
