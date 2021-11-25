@@ -21,6 +21,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client/src/service/encryption_service.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
 
@@ -38,6 +39,7 @@ class HistoryProvider extends BaseModel {
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
   Map<String, Map<String, bool>> downloadedFileAcknowledgement = {};
+  String state;
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
@@ -69,6 +71,7 @@ class HistoryProvider extends BaseModel {
   Map sendFileHistory = {'history': []};
   String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
+  String app_lifecycle_state;
 
   resetData() {
     receivedHistory = [];
@@ -280,12 +283,26 @@ class HistoryProvider extends BaseModel {
     //check id data with same key already present
     var index = receivedHistoryLogs
         .indexWhere((element) => element.key == fileTransferObject.transferId);
-
+    _initBackendService();
     if (index > -1) {
       receivedHistoryLogs[index] = filesModel;
     } else {
       // showing notification for new recieved file
-      await LocalNotificationService().showNotification(sharedBy);
+      switch (app_lifecycle_state) {
+        case 'AppLifecycleState.resumed':
+        case 'AppLifecycleState.inactive':
+        case 'AppLifecycleState.detached':
+          await LocalNotificationService()
+              .showNotification(sharedBy, 'Download and view the file(s).');
+          break;
+        case 'AppLifecycleState.paused':
+          await LocalNotificationService().showNotification(
+              sharedBy, 'Open the app to download and view the file(s).');
+          break;
+        default:
+          await LocalNotificationService()
+              .showNotification(sharedBy, 'Download and view the file(s).');
+      }
       await addToReceiveFileHistory(sharedBy, filesModel);
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
@@ -302,6 +319,17 @@ class HistoryProvider extends BaseModel {
       sentHistory[index].sharedWith[i].isFileDownloaded = true;
       await updateFileHistoryDetail(sentHistory[index]);
     }
+  }
+
+  void _initBackendService() async {
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+      print('set message handler');
+      state = msg;
+      debugPrint('SystemChannels=> $msg');
+      app_lifecycle_state = msg;
+
+      return null;
+    });
   }
 
   addToReceiveFileHistory(String sharedBy, FileTransfer filesModel,

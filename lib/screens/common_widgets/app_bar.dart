@@ -9,7 +9,7 @@
 import 'dart:io';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
-
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -17,6 +17,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final bool showTitle;
   final bool showBackButton;
@@ -37,9 +38,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final onActionpressed;
   final bool isTrustedContactScreen;
   final double elevation;
-
   const CustomAppBar(
-      {this.title,
+      {Key key,
+      this.title,
       this.showTitle = false,
       this.showBackButton = false,
       this.showLeadingicon = false,
@@ -50,18 +51,74 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.isHistory = false,
       this.elevation = 0,
       this.onActionpressed,
-      this.isTrustedContactScreen = false});
+      this.isTrustedContactScreen = false})
+      : super(key: key);
+
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
   @override
+  _CustomAppBarState createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  HistoryProvider historyProvider;
+  FileTransfer receivedHistory;
+  bool isDownloadAvailable = false, isFilesAvailableOfline = true;
+
+  @override
+  void didChangeDependencies() async {
+    if (historyProvider == null) {
+      historyProvider = Provider.of<HistoryProvider>(context);
+    }
+    historyProvider.receivedHistoryLogs.forEach((value) {
+      receivedHistory = value;
+      checkForDownloadAvailability();
+      isFilesAlreadyDownloaded();
+    });
+    super.didChangeDependencies();
+  }
+
+  checkForDownloadAvailability() {
+    var expiryDate = receivedHistory.date.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+
+    var isFileUploaded = false;
+    receivedHistory.files.forEach((FileData fileData) {
+      if (fileData.isUploaded) {
+        isFileUploaded = true;
+      }
+    });
+
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
+  }
+
+  isFilesAlreadyDownloaded() async {
+    receivedHistory.files.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory.path +
+          '/${element.name}';
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        setState(() {
+          isFilesAvailableOfline = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: elevation ?? 0,
+      elevation: widget.elevation ?? 0,
       centerTitle: true,
-      leading: (showLeadingicon)
+      leading: (widget.showLeadingicon)
           ? Image.asset(ImageConstants.logoIcon)
-          : (showBackButton)
+          : (widget.showBackButton)
               ? IconButton(
                   icon: Icon(
                     Icons.arrow_back,
@@ -79,7 +136,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             height: 40.toHeight,
             margin: EdgeInsets.only(top: 5.toHeight),
-            child: (!showBackButton && !showLeadingicon && showClosedBtnText)
+            child: (!widget.showBackButton &&
+                    !widget.showLeadingicon &&
+                    widget.showClosedBtnText)
                 ? Center(
                     child: GestureDetector(
                       child: Text(
@@ -96,10 +155,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 : Container(),
           ),
           Expanded(
-            child: (showTitle)
+            child: (widget.showTitle)
                 ? Center(
                     child: Text(
-                      title,
+                      widget.title,
                       style: CustomTextStyles.primaryBold18,
                     ),
                   )
@@ -112,17 +171,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 22.toHeight,
           width: 22.toWidth,
           margin: EdgeInsets.only(right: 30),
-          child: (showTitle)
-              ? ((showTrailingButton)
-                  ? showMenu
+          child: (widget.showTitle)
+              ? ((widget.showTrailingButton)
+                  ? widget.showMenu
                       ? menuBar(context)
                       : IconButton(
                           icon: Icon(
-                            trailingIcon,
+                            widget.trailingIcon,
                             size: 25.toFont,
                           ),
                           onPressed: () async {
-                            if (isHistory) {
+                            if (widget.isHistory) {
                               // navigate to downloads folder
                               if (Platform.isAndroid) {
                                 await FilesystemPicker.open(
@@ -151,7 +210,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   throw 'Could not launch $url';
                                 }
                               }
-                            } else if (isTrustedContactScreen) {
+                            } else if (widget.isTrustedContactScreen) {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -197,16 +256,37 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget menuBar(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Scaffold.of(context).openEndDrawer();
-      },
-      child: Container(
-        height: 22.toHeight,
-        width: 22.toWidth,
-        child: Image.asset(
-          ImageConstants.drawerIcon,
-        ),
-      ),
-    );
+        onTap: () {
+          Scaffold.of(context).openEndDrawer();
+        },
+        child: isDownloadAvailable && !isFilesAvailableOfline
+            ? Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 10.toHeight),
+                    height: 22.toHeight,
+                    width: 22.toWidth,
+                    child: Image.asset(
+                      ImageConstants.drawerIcon,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.toHeight),
+                    child: CircleAvatar(
+                      backgroundColor: ColorConstants.orangeColor,
+                      radius: 5.toWidth,
+                    ),
+                  ),
+                ],
+              )
+            : Container(
+                margin: EdgeInsets.only(top: 10.toHeight),
+                height: 22.toHeight,
+                width: 22.toWidth,
+                child: Image.asset(
+                  ImageConstants.drawerIcon,
+                ),
+              ));
   }
 }

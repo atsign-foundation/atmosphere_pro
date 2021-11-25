@@ -62,7 +62,7 @@ class LocalNotificationService {
     });
   }
 
-  Future<void> showNotification(String from) async {
+  Future<void> showNotification(String from, String message) async {
     var androidChannelSpecifics = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
@@ -81,9 +81,8 @@ class LocalNotificationService {
       // id: int.parse(id)
     );
     await _notificationsPlugin.show(
-        0,
-        '$from sent you a file',
-        'Open your app to see the file preview and take actions',
+        0, '$from sent you a file', 
+        message, 
         platformChannelSpecifics,
         payload: jsonEncode(payload));
   }

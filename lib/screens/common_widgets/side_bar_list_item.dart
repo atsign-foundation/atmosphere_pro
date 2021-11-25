@@ -10,14 +10,15 @@ class SideBarItem extends StatelessWidget {
   final Map<String, dynamic> arguments;
   final bool showIconOnly;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
-
+  final Color displayColor;
   SideBarItem(
       {Key key,
       this.image,
       this.title,
       this.routeName,
       this.arguments,
-      this.showIconOnly = false})
+      this.showIconOnly = false,
+      this.displayColor = ColorConstants.fadedText})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class SideBarItem extends StatelessWidget {
             Image.asset(
               image,
               height: 22.toHeight,
-              color: ColorConstants.fadedText,
+              color: displayColor,
             ),
             SizedBox(width: 10),
             !showIconOnly
@@ -43,7 +44,7 @@ class SideBarItem extends StatelessWidget {
                     title,
                     softWrap: true,
                     style: TextStyle(
-                      color: ColorConstants.fadedText,
+                      color: displayColor,
                       letterSpacing: 0.1,
                       fontSize: 14.toFont,
                     ),
