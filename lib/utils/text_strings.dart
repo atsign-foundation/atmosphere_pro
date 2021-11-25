@@ -71,6 +71,9 @@ class TextStrings {
   String showDetails = 'Show Details';
   String hideDetails = 'Hide Details';
 
+  String seeFiles = 'See Files';
+  String hideFiles = 'Hide Files';
+
   //receive files texts
   String blockUser = 'Block User';
   String receiverNotification = 'Receivers Notification';

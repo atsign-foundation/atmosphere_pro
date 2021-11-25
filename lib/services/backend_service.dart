@@ -7,6 +7,7 @@ import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
@@ -179,7 +180,27 @@ class BackendService {
       return;
     }
 
-    if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
+    if (notificationKey
+        .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
+      var value = response.value;
+
+      var decryptedMessage = await atClientInstance.encryptionService
+          .decrypt(value, fromAtSign)
+          .catchError((e) {
+        print("error in decrypting: $e");
+      });
+      DownloadAcknowledgement downloadAcknowledgement =
+          DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
+
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      return;
+    }
+
+    if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY) &&
+        !notificationKey
+            .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var atKey = notificationKey.split(':')[1];
       var value = response.value;
 
@@ -368,7 +389,7 @@ class BackendService {
           app_lifecycle_state != null &&
           app_lifecycle_state != AppLifecycleState.resumed.toString()) {
         print("app not active $app_lifecycle_state");
-        await NotificationService().showNotification(atsign);
+        await LocalNotificationService().showNotification(atsign);
       }
       NotificationPayload payload = NotificationPayload(
           file: filename, name: atsign, size: double.parse(filesize));
@@ -599,10 +620,10 @@ class BackendService {
   }
 
   String state;
-  NotificationService _notificationService;
+  LocalNotificationService _notificationService;
 
   void _initBackendService() async {
-    _notificationService = NotificationService();
+    _notificationService = LocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
 

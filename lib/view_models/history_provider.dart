@@ -22,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client/src/service/encryption_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:at_client/src/service/notification_service.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -36,6 +37,7 @@ class HistoryProvider extends BaseModel {
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
+  Map<String, Map<String, bool>> downloadedFileAcknowledgement = {};
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
@@ -72,6 +74,7 @@ class HistoryProvider extends BaseModel {
     receivedHistory = [];
     receivedAudioModel = [];
     sendFileHistory = {'history': []};
+    downloadedFileAcknowledgement = {};
   }
 
   setFilesHistory(
@@ -164,12 +167,15 @@ class HistoryProvider extends BaseModel {
     int index = sentHistory.indexWhere((element) =>
         element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
 
+    var result = false;
     if (index > -1) {
       sendFileHistory['history'][index] = fileHistory.toJson();
       sentHistory[index] = fileHistory;
+
+      result = await backendService.atClientInstance
+          .put(atKey, json.encode(sendFileHistory));
+      notifyListeners();
     }
-    var result = await backendService.atClientInstance
-        .put(atKey, json.encode(sendFileHistory));
     return result;
   }
 
@@ -187,6 +193,11 @@ class HistoryProvider extends BaseModel {
           sendFileHistory['history'] = historyFile['history'];
           historyFile['history'].forEach((value) {
             FileHistory filesModel = FileHistory.fromJson((value));
+            // checking for download acknowledged
+            filesModel.sharedWith = checkIfileDownloaded(
+              filesModel.sharedWith,
+              filesModel.fileTransferObject.transferId,
+            );
             sentHistory.add(filesModel);
           });
         } catch (e) {
@@ -198,6 +209,50 @@ class HistoryProvider extends BaseModel {
     } catch (error) {
       setError(SENT_HISTORY, error.toString());
     }
+  }
+
+  List<ShareStatus> checkIfileDownloaded(
+      List<ShareStatus> shareStatus, String transferId) {
+    if (downloadedFileAcknowledgement[transferId] != null) {
+      for (int i = 0; i < shareStatus.length; i++) {
+        if (downloadedFileAcknowledgement[transferId][shareStatus[i].atsign] !=
+            null) {
+          shareStatus[i].isFileDownloaded = true;
+        }
+      }
+    }
+    return shareStatus;
+  }
+
+  getFileDownloadedAcknowledgement() async {
+    var atKeys = await AtClientManager.getInstance()
+        .atClient
+        .getAtKeys(regex: MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT);
+    atKeys.retainWhere((element) => !compareAtSign(element.sharedBy,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()));
+
+    await Future.forEach(atKeys, (AtKey atKey) async {
+      try {
+        AtValue atValue =
+            await AtClientManager.getInstance().atClient.get(atKey);
+        if (atValue != null && atValue.value != null) {
+          var downloadAcknowledgement =
+              DownloadAcknowledgement.fromJson(jsonDecode(atValue.value));
+
+          if (downloadedFileAcknowledgement[
+                  downloadAcknowledgement.transferId] !=
+              null) {
+            downloadedFileAcknowledgement[downloadAcknowledgement.transferId]
+                [formatAtsign(atKey.sharedBy)] = true;
+          } else {
+            downloadedFileAcknowledgement[downloadAcknowledgement.transferId] =
+                {formatAtsign(atKey.sharedBy): true};
+          }
+        }
+      } catch (e) {
+        print('error in getFileDownloadedAcknowledgement : $e');
+      }
+    });
   }
 
   getReceivedHistory() async {
@@ -230,10 +285,23 @@ class HistoryProvider extends BaseModel {
       receivedHistoryLogs[index] = filesModel;
     } else {
       // showing notification for new recieved file
-      await NotificationService().showNotification(sharedBy);
+      await LocalNotificationService().showNotification(sharedBy);
       await addToReceiveFileHistory(sharedBy, filesModel);
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
+  }
+
+  updateDownloadAcknowledgement(
+      DownloadAcknowledgement downloadAcknowledgement, String sharedBy) async {
+    var index = sentHistory.indexWhere((element) =>
+        element.fileDetails.key == downloadAcknowledgement.transferId);
+    if (index > -1) {
+      var i = sentHistory[index]
+          .sharedWith
+          .indexWhere((element) => element.atsign == sharedBy);
+      sentHistory[index].sharedWith[i].isFileDownloaded = true;
+      await updateFileHistoryDetail(sentHistory[index]);
+    }
   }
 
   addToReceiveFileHistory(String sharedBy, FileTransfer filesModel,
@@ -743,5 +811,71 @@ class HistoryProvider extends BaseModel {
       print('error in downloading file: $e');
       return FileDownloadResponse(isError: true, errorMsg: e.toString());
     }
+  }
+
+  updateSendingNotificationStatus(
+      String transferId, String atsign, bool isSending) {
+    var index = sentHistory.indexWhere(
+        (element) => element.fileTransferObject.transferId == transferId);
+    if (index != -1) {
+      var atsignIndex = sentHistory[index]
+          .sharedWith
+          .indexWhere((element) => element.atsign == atsign);
+      if (atsignIndex != -1) {
+        sentHistory[index].sharedWith[atsignIndex].isSendingNotification =
+            isSending;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<bool> sendFileDownloadAcknowledgement(
+      FileTransfer fileTransfer) async {
+    var downloadAcknowledgement =
+        DownloadAcknowledgement(true, fileTransfer.key);
+
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key
+      ..metadata.ttl = 518400000
+      ..sharedWith = fileTransfer.sender;
+    try {
+      var notificationResult =
+          await AtClientManager.getInstance().notificationService.notify(
+                NotificationParams.forUpdate(
+                  atKey,
+                  value: jsonEncode(downloadAcknowledgement.toJson()),
+                ),
+              );
+
+      if (notificationResult.notificationStatusEnum ==
+          NotificationStatusEnum.delivered) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool compareAtSign(String atsign1, String atsign2) {
+    if (atsign1[0] != '@') {
+      atsign1 = '@' + atsign1;
+    }
+    if (atsign2[0] != '@') {
+      atsign2 = '@' + atsign2;
+    }
+
+    return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;
+  }
+
+  String formatAtsign(String atsign) {
+    if (atsign[0] != '@') {
+      atsign = '@' + atsign;
+    }
+    return atsign;
   }
 }

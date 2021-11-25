@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -83,6 +85,13 @@ class CustomTextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  static TextStyle primaryBlueBold14 = TextStyle(
+    color: ColorConstants.blueText,
+    fontSize: 14.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
+
   //MEDIUM FONTS
 
   static TextStyle primaryMedium14 = TextStyle(
@@ -112,4 +121,13 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle grey13 =
+      TextStyle(fontSize: 13.toFont, color: ColorConstants.greyText);
+
+  static TextStyle grey15 =
+      TextStyle(fontSize: 15.toFont, color: ColorConstants.greyText);
+
+  static TextStyle red15 =
+      TextStyle(color: ColorConstants.redAlert, fontSize: 15.toFont);
 }

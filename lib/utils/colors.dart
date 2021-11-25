@@ -20,6 +20,7 @@ class ColorConstants {
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
+  static const Color redAlert = Color(0xffF86060);
 }
 
 class ContactInitialsColors {

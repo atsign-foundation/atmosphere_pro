@@ -9,8 +9,14 @@ class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
   int index;
+  Color background;
 
-  ContactInitial({Key key, this.size = 40, @required this.initials, this.index})
+  ContactInitial(
+      {Key key,
+      this.size = 40,
+      @required this.initials,
+      this.index,
+      this.background})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class ContactInitial extends StatelessWidget {
       height: size.toFont,
       width: size.toFont,
       decoration: BoxDecoration(
-        color: ContactInitialsColors.getColor(initials),
+        color: background ?? ContactInitialsColors.getColor(initials),
         borderRadius: BorderRadius.circular(size.toWidth),
       ),
       child: Center(

@@ -61,12 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       WelcomeScreenProvider().isExpanded = false;
       await initPackages();
-      await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
-              listen: false)
-          .getSentHistory();
-      await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
-              listen: false)
-          .getReceivedHistory();
+      await getSentAndReceivedHistory();
     });
     super.initState();
   }
@@ -74,6 +69,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  getSentAndReceivedHistory() async {
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+            listen: false)
+        .getFileDownloadedAcknowledgement();
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+            listen: false)
+        .getSentHistory();
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+            listen: false)
+        .getReceivedHistory();
   }
 
   listenForFlushBarStatus() {
@@ -210,7 +217,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 icon: Container(
                   width: 20,
                   height: 20,
-                  child: Image.asset(ImageConstants.transferHistoryIcon),
+                  child: Icon(Icons.import_export),
                 ),
                 label: 'Received',
               ),

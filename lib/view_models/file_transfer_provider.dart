@@ -54,6 +54,14 @@ class FileTransferProvider extends BaseModel {
   Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
   StreamSink<FLUSHBAR_STATUS> get flushBarStatusSink => _flushBarStream.sink;
 
+  FileHistory _selectedFileHistory;
+
+  set selectedFileHistory(FileHistory fileHistory) {
+    _selectedFileHistory = fileHistory;
+  }
+
+  FileHistory get getSelectedFileHistory => _selectedFileHistory;
+
   setFiles() async {
     setStatus(PICK_FILES, Status.Loading);
     try {
@@ -466,6 +474,10 @@ class FileTransferProvider extends BaseModel {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
     var _atclient = BackendService.getInstance().atClientInstance;
 
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .updateSendingNotificationStatus(
+            fileHistory.fileTransferObject.transferId, atsign, true);
     try {
       var sendResponse = await _atclient.shareFiles(
           [atsign],
@@ -474,6 +486,7 @@ class FileTransferProvider extends BaseModel {
           fileHistory.fileTransferObject.fileEncryptionKey,
           fileHistory.fileTransferObject.fileStatus,
           date: fileHistory.fileTransferObject.date);
+      print(sendResponse);
 
       if (sendResponse[atsign].sharedStatus) {
         var indexToUpdate = fileHistory.sharedWith.indexWhere(
@@ -487,9 +500,18 @@ class FileTransferProvider extends BaseModel {
                 listen: false)
             .updateFileHistoryDetail(fileHistory);
 
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .updateSendingNotificationStatus(
+                fileHistory.fileTransferObject.transferId, atsign, false);
+
         setStatus(RETRY_NOTIFICATION, Status.Done);
       }
     } catch (e) {
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .updateSendingNotificationStatus(
+              fileHistory.fileTransferObject.transferId, atsign, false);
       setStatus(RETRY_NOTIFICATION, Status.Error);
     }
   }
