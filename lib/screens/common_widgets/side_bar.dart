@@ -8,6 +8,9 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_backup_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -331,6 +334,20 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     arguments: {
                       'title': menuItemsTitle[5],
                       'url': MixedConstants.TERMS_CONDITIONS
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarBackupItem(
+                    title: TextStrings().sidebarBackupKey,
+                    leadingIcon:
+                        Icon(Icons.file_copy, color: Color(0xFF757581)),
+                    onPressed: () {
+                      BackupKeyWidget(
+                        atClientService: AtClientManager.getInstance().atClient,
+                        atsign: AtClientManager.getInstance()
+                            .atClient
+                            .getCurrentAtSign(),
+                      ).showBackupDialog(context);
                     },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
