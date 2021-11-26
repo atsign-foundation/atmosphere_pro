@@ -34,11 +34,8 @@ class _FileRecipientsState extends State<FileRecipients> {
     filedInDeliveringList = [];
 
     widget.filesharedWith.forEach((element) {
-      print('filesharedWith : ${element.isSendingNotification}');
       if (element.isNotificationSend) {
         deliveredToList.add(element);
-        // testing
-        // filedInDeliveringList.add(element);
       } else {
         filedInDeliveringList.add(element);
       }
@@ -46,9 +43,7 @@ class _FileRecipientsState extends State<FileRecipients> {
       if (element.isFileDownloaded) {
         downloadedByList.add(element);
       }
-      // write condition for downloaded by atsigns
     });
-    print('downloadedByList : ${downloadedByList}');
   }
 
   @override
