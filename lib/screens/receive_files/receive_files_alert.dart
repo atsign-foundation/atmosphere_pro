@@ -64,7 +64,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
           GestureDetector(
             onTap: () {
               status = false;
-              NotificationService().cancelNotifications();
+              LocalNotificationService().cancelNotifications();
               widget.sharingStatus(status);
               Navigator.pop(context);
             },
@@ -178,7 +178,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
 
             status = true;
             widget.onAccept;
-            NotificationService().cancelNotifications();
+            LocalNotificationService().cancelNotifications();
             Navigator.pop(context);
             widget.sharingStatus(status);
             if (FileTransferProvider().sentStatus != null &&
@@ -206,7 +206,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
           buttonText: TextStrings().reject,
           onPressed: () {
             status = false;
-            NotificationService().cancelNotifications();
+            LocalNotificationService().cancelNotifications();
             Navigator.pop(context);
             widget.sharingStatus(status);
           },

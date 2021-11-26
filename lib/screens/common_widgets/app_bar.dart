@@ -31,6 +31,8 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showLeadingicon;
   final bool showTrailingButton;
+  final bool showMenu;
+  final bool showClosedBtnText;
   final IconData trailingIcon;
   final bool isHistory;
   final onActionpressed;
@@ -43,6 +45,8 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.showBackButton = false,
       this.showLeadingicon = false,
       this.showTrailingButton = false,
+      this.showClosedBtnText = true,
+      this.showMenu = false,
       this.trailingIcon = Icons.add,
       this.isHistory = false,
       this.elevation = 0,
@@ -122,7 +126,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     size: 25.toFont,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.pop(context);
+                    }
                   })
               : null,
       title: Row(
@@ -130,7 +136,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           Container(
             height: 40.toHeight,
             margin: EdgeInsets.only(top: 5.toHeight),
-            child: (!widget.showBackButton && !widget.showLeadingicon)
+            child: (!widget.showBackButton &&
+                    !widget.showLeadingicon &&
+                    widget.showClosedBtnText)
                 ? Center(
                     child: GestureDetector(
                       child: Text(
@@ -138,7 +146,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         style: CustomTextStyles.blueRegular18,
                       ),
                       onTap: () {
-                        Navigator.pop(context);
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.pop(context);
+                        }
                       },
                     ),
                   )
@@ -162,111 +172,121 @@ class _CustomAppBarState extends State<CustomAppBar> {
           width: 22.toWidth,
           margin: EdgeInsets.only(right: 30),
           child: (widget.showTitle)
-              ? (widget.showTrailingButton)
-                  ? IconButton(
-                      icon: Icon(
-                        widget.trailingIcon,
-                        size: 25.toFont,
-                      ),
-                      onPressed: () async {
-                        if (widget.isHistory) {
-                          // navigate to downloads folder
-                          if (Platform.isAndroid) {
-                            await FilesystemPicker.open(
-                              title: 'Atmosphere download folder',
-                              context: context,
-                              rootDirectory: BackendService.getInstance()
-                                  .downloadDirectory,
-                              fsType: FilesystemType.all,
-                              folderIconColor: Colors.teal,
-                              allowedExtensions: [],
-                              fileTileSelectMode: FileTileSelectMode.wholeTile,
-                              requestPermission: () async =>
-                                  await Permission.storage.request().isGranted,
-                            );
-                          } else {
-                            String url = 'shareddocuments://' +
-                                BackendService.getInstance()
-                                    .atClientPreference
-                                    .downloadPath;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
-                        } else if (widget.isTrustedContactScreen) {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ContactsScreen(
-                                asSelectionScreen: true,
-                                context: NavService.navKey.currentContext,
-                                selectedList: (s) async {
-                                  s.forEach((element) async {
-                                    await Provider.of<TrustedContactProvider>(
-                                            context,
-                                            listen: false)
-                                        .addTrustedContacts(element);
-                                  });
-                                  await Provider.of<TrustedContactProvider>(
-                                          context,
-                                          listen: false)
-                                      .setTrustedContact();
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (context) => AddContactDialog(
-                                // onYesTap: (value) {
-                                //   onActionpressed(value);
-                                // },
-                                ),
-                          );
-                        }
-                      })
-                  : Container()
-              : GestureDetector(
-                  onTap: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                  child: isDownloadAvailable && !isFilesAvailableOfline
-                      ? Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 10.toHeight),
-                              height: 22.toHeight,
-                              width: 22.toWidth,
-                              child: Image.asset(
-                                ImageConstants.drawerIcon,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5.toHeight),
-                              child: CircleAvatar(
-                                backgroundColor: ColorConstants.orangeColor,
-                                radius: 5.toWidth,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Container(
-                          margin: EdgeInsets.only(top: 10.toHeight),
-                          height: 22.toHeight,
-                          width: 22.toWidth,
-                          child: Image.asset(
-                            ImageConstants.drawerIcon,
+              ? ((widget.showTrailingButton)
+                  ? widget.showMenu
+                      ? menuBar(context)
+                      : IconButton(
+                          icon: Icon(
+                            widget.trailingIcon,
+                            size: 25.toFont,
                           ),
-                        )),
+                          onPressed: () async {
+                            if (widget.isHistory) {
+                              // navigate to downloads folder
+                              if (Platform.isAndroid) {
+                                await FilesystemPicker.open(
+                                  title: 'Atmosphere download folder',
+                                  context: context,
+                                  rootDirectory: BackendService.getInstance()
+                                      .downloadDirectory,
+                                  fsType: FilesystemType.all,
+                                  folderIconColor: Colors.teal,
+                                  allowedExtensions: [],
+                                  fileTileSelectMode:
+                                      FileTileSelectMode.wholeTile,
+                                  requestPermission: () async =>
+                                      await Permission.storage
+                                          .request()
+                                          .isGranted,
+                                );
+                              } else {
+                                String url = 'shareddocuments://' +
+                                    BackendService.getInstance()
+                                        .atClientPreference
+                                        .downloadPath;
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              }
+                            } else if (widget.isTrustedContactScreen) {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ContactsScreen(
+                                    asSelectionScreen: true,
+                                    context: NavService.navKey.currentContext,
+                                    selectedList: (s) async {
+                                      s.forEach((element) async {
+                                        await Provider.of<
+                                                    TrustedContactProvider>(
+                                                context,
+                                                listen: false)
+                                            .addTrustedContacts(element);
+                                      });
+                                      await Provider.of<TrustedContactProvider>(
+                                              context,
+                                              listen: false)
+                                          .setTrustedContact();
+                                    },
+                                  ),
+                                ),
+                              );
+                            } else {
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => AddContactDialog(
+                                    // onYesTap: (value) {
+                                    //   onActionpressed(value);
+                                    // },
+                                    ),
+                              );
+                            }
+                          })
+                  : Container())
+              : menuBar(context),
         )
       ],
       automaticallyImplyLeading: false,
       backgroundColor: ColorConstants.appBarColor,
     );
+  }
+
+  Widget menuBar(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          Scaffold.of(context).openEndDrawer();
+        },
+        child: isDownloadAvailable && !isFilesAvailableOfline
+            ? Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 10.toHeight),
+                    height: 22.toHeight,
+                    width: 22.toWidth,
+                    child: Image.asset(
+                      ImageConstants.drawerIcon,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.toHeight),
+                    child: CircleAvatar(
+                      backgroundColor: ColorConstants.orangeColor,
+                      radius: 5.toWidth,
+                    ),
+                  ),
+                ],
+              )
+            : Container(
+                margin: EdgeInsets.only(top: 10.toHeight),
+                height: 22.toHeight,
+                width: 22.toWidth,
+                child: Image.asset(
+                  ImageConstants.drawerIcon,
+                ),
+              ));
   }
 }

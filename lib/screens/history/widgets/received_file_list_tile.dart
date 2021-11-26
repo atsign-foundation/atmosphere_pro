@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -126,7 +127,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     sendTime = DateTime.now();
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-      color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
+      color: (isOpen) ? Color(0xffEFEFEF) : Colors.white,
       child: Column(
         children: [
           ListTile(
@@ -299,8 +300,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                TextStrings().showDetails,
-                                style: CustomTextStyles.primaryBold14,
+                                TextStrings().seeFiles,
+                                style: CustomTextStyles.primaryBlueBold14,
                               ),
                               Container(
                                 width: 22.toWidth,
@@ -481,8 +482,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              TextStrings().hideDetails,
-                              style: CustomTextStyles.primaryBold14,
+                              TextStrings().hideFiles,
+                              style: CustomTextStyles.primaryBlueBold14,
                             ),
                             Container(
                               width: 22.toWidth,
@@ -640,6 +641,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     }
 
     if (result is bool && result) {
+      // send download acknowledgement
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .sendFileDownloadAcknowledgement(receivedHistory);
       if (mounted) {
         setState(() {
           isDownloaded = true;

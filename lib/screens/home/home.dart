@@ -215,38 +215,43 @@ class _HomeState extends State<Home> {
                         children: [
                           Expanded(
                             flex: 6,
-                            child: Text(
-                              TextStrings().homeFileTransferItsSafe,
-                              style: GoogleFonts.playfairDisplay(
-                                textStyle: TextStyle(
-                                  fontSize: 38.toFont,
-                                  letterSpacing: 0.1,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text.rich(
-                              TextSpan(
-                                text: TextStrings().homeHassleFree,
-                                style: TextStyle(
-                                  fontSize: 15.toFont,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: TextStrings().homeWeWillSetupAccount,
-                                    style: TextStyle(
-                                      color: ColorConstants.fadedText,
-                                      fontWeight: FontWeight.normal,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  TextStrings().homeFileTransferItsSafe,
+                                  style: GoogleFonts.playfairDisplay(
+                                    textStyle: TextStyle(
+                                      fontSize: 38.toFont,
+                                      letterSpacing: 0.1,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(height: 30.toHeight),
+                                Text.rich(
+                                  TextSpan(
+                                    text: TextStrings().homeHassleFree,
+                                    style: TextStyle(
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: TextStrings()
+                                            .homeWeWillSetupAccount,
+                                        style: TextStyle(
+                                          color: ColorConstants.fadedText,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
+                          Expanded(flex: 2, child: SizedBox()),
                           Expanded(
                             flex: 4,
                             child: Align(
@@ -267,12 +272,32 @@ class _HomeState extends State<Home> {
                                     onTap: () {
                                       _showResetDialog();
                                     },
-                                    child: Text('Reset',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
+                                    child: Text(
+                                      TextStrings.resetButton,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ],
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              TextStrings().appName,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Center(
+                            child: Text(
+                              TextStrings().copyRight,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'HelveticaNeu',
+                                color: Colors.grey.withOpacity(0.8),
                               ),
                             ),
                           ),

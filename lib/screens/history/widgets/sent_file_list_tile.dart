@@ -2,13 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -16,6 +15,7 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -26,12 +26,10 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SentFilesListTile extends StatefulWidget {
   final FileHistory sentHistory;
-  final Map<String, Set<FilesDetail>> testList;
 
   const SentFilesListTile({
     Key key,
     this.sentHistory,
-    this.testList,
   }) : super(key: key);
   @override
   _SentFilesListTileState createState() => _SentFilesListTileState();
@@ -105,21 +103,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return Column(
       children: [
         Container(
-          color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
+          color: (isOpen) ? Color(0xffEFEFEF) : Colors.white,
           child: ListTile(
             leading: contactList.isNotEmpty
                 ? Container(
-                    width: 45.toHeight,
-                    height: 45.toHeight,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: widget
-                                  .sentHistory.sharedWith[0].isNotificationSend
-                              ? Color(0xFF08CB21)
-                              : Color(0xFFF86061),
-                          width: 2),
-                      borderRadius: BorderRadius.circular(45.toHeight * 2),
-                    ),
+                    width: 55.toHeight,
+                    height: 55.toHeight,
                     child: isResendingToFirstContact
                         ? TypingIndicator(
                             showIndicator: true,
@@ -142,57 +131,50 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                         size: 50,
                                       ),
                               ),
-                              Positioned(
-                                  right: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: widget.sentHistory.sharedWith[0]
-                                              .isNotificationSend
-                                          ? Color(0xFF08CB21)
-                                          : Color(0xFFF86061),
-                                      border: Border.all(
-                                          color: widget
-                                                  .sentHistory
-                                                  .sharedWith[0]
-                                                  .isNotificationSend
-                                              ? Color(0xFF08CB21)
-                                              : Color(0xFFF86061),
-                                          width: 5),
-                                      borderRadius:
-                                          BorderRadius.circular(35.toHeight),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        if (widget.sentHistory.sharedWith[0]
-                                            .isNotificationSend) {
-                                          return;
-                                        }
-
-                                        setState(() {
-                                          isResendingToFirstContact = true;
-                                        });
-                                        await Provider.of<FileTransferProvider>(
-                                                context,
-                                                listen: false)
-                                            .reSendFileNotification(
-                                                widget.sentHistory,
-                                                widget.sentHistory.sharedWith[0]
-                                                    .atsign);
-
-                                        setState(() {
-                                          isResendingToFirstContact = false;
-                                        });
-                                      },
-                                      child: Icon(
-                                        widget.sentHistory.sharedWith[0]
-                                                .isNotificationSend
-                                            ? Icons.done
-                                            : Icons.refresh,
-                                        color: Colors.white,
-                                        size: 10.toFont,
+                              contactList.length > 1
+                                  ? Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 35.toHeight,
+                                        width: 35.toHeight,
+                                        child: ContactInitial(
+                                          initials: '  ',
+                                          background: Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                  ))
+                                    )
+                                  : SizedBox(),
+                              contactList.length > 1
+                                  ? Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: InkWell(
+                                        onTap: () {
+                                          openFileReceiptBottomSheet();
+                                        },
+                                        child: Container(
+                                          height: 35.toHeight,
+                                          width: 35.toHeight,
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.6),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      50.toWidth),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 1.5)),
+                                          child: Center(
+                                            child: Text(
+                                                '+${contactList.length - 1}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12)),
+                                          ),
+                                        ),
+                                      ))
+                                  : SizedBox()
                             ],
                           ),
                   )
@@ -205,9 +187,34 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   children: [
                     Expanded(
                       child: contactList.isNotEmpty
-                          ? Text(
-                              contactList[0],
-                              style: CustomTextStyles.primaryRegular16,
+                          ? RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text: '${contactList[0]} ',
+                                    style: CustomTextStyles.primaryRegular16,
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        openFileReceiptBottomSheet();
+                                      },
+                                    children: [
+                                      contactList.length - 1 > 0
+                                          ? TextSpan(
+                                              text: 'and ',
+                                            )
+                                          : TextSpan(),
+                                      contactList.length - 1 > 0
+                                          ? TextSpan(
+                                              text:
+                                                  '${contactList.length - 1} others',
+                                              style: CustomTextStyles
+                                                  .blueRegular16,
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  openFileReceiptBottomSheet();
+                                                })
+                                          : TextSpan()
+                                    ]),
+                              ]),
                             )
                           : SizedBox(),
                     ),
@@ -287,8 +294,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                TextStrings().showDetails,
-                                style: CustomTextStyles.primaryBold14,
+                                TextStrings().seeFiles,
+                                style: CustomTextStyles.primaryBlueBold14,
                               ),
                               Container(
                                 width: 22.toWidth,
@@ -311,7 +318,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         ),
         (isOpen)
             ? Container(
-                color: Color(0xffF86060).withAlpha(50),
+                color: Color(0xffEFEFEF),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -392,7 +399,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : filesList[index].isUploading
+                                            : (filesList[index].isUploading !=
+                                                        null &&
+                                                    filesList[index]
+                                                        .isUploading)
                                                 ? TypingIndicator(
                                                     showIndicator: true,
                                                     flashingCircleBrightColor:
@@ -463,27 +473,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         : SizedBox(
                             height: 10.toHeight,
                           ),
-                    (contactList.length < 2)
-                        ? Container()
-                        : Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 20.toWidth),
-                                  child: Text(
-                                    'Delivered to',
-                                    style: CustomTextStyles.primaryRegular16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                    (contactList.length < 2)
-                        ? Container()
-                        : TranferOverlappingContacts(
-                            selectedList: widget.sentHistory.sharedWith.sublist(
-                                1, widget.sentHistory.sharedWith.length),
-                            fileHistory: widget.sentHistory),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -495,8 +484,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         child: Row(
                           children: [
                             Text(
-                              TextStrings().hideDetails,
-                              style: CustomTextStyles.primaryBold14,
+                              TextStrings().hideFiles,
+                              style: CustomTextStyles.primaryBlueBold14,
                             ),
                             Container(
                               width: 22.toWidth,
@@ -626,5 +615,28 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     File file = File(filePath);
     bool fileExists = await file.exists();
     return fileExists;
+  }
+
+  openFileReceiptBottomSheet() {
+    Provider.of<FileTransferProvider>(context, listen: false)
+        .selectedFileHistory = widget.sentHistory;
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: StadiumBorder(),
+        builder: (_context) {
+          return Container(
+            height: SizeConfig().screenHeight * 0.8,
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12.0),
+                topRight: const Radius.circular(12.0),
+              ),
+            ),
+            child: FileRecipients(widget.sentHistory.sharedWith),
+          );
+        });
   }
 }

@@ -33,7 +33,7 @@ class SetupRoutes {
           ),
       Routes.TERMS_CONDITIONS: (context) => TermsConditions(),
       Routes.MY_FILES: (context) => MyFiles(),
-      Routes.HISTORY: (context) => HistoryScreen(),
+      Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =

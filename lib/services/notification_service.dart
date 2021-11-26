@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
-class NotificationService {
-  NotificationService._() {
+class LocalNotificationService {
+  LocalNotificationService._() {
     init();
   }
-  static NotificationService _instace = NotificationService._();
-  factory NotificationService() => _instace;
+  static LocalNotificationService _instace = LocalNotificationService._();
+  factory LocalNotificationService() => _instace;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
   InitializationSettings initializationSettings;
   final BehaviorSubject<ReceivedNotification>
