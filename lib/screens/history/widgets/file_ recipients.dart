@@ -63,7 +63,16 @@ class _FileRecipientsState extends State<FileRecipients> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 downloadedByList.isNotEmpty
-                    ? Text('Downloaded by', style: CustomTextStyles.grey15)
+                    ? Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: ColorConstants.blueText,
+                          ),
+                          SizedBox(width: 5),
+                          Text('Downloaded by', style: CustomTextStyles.grey15),
+                        ],
+                      )
                     : SizedBox(),
                 downloadedByList.isNotEmpty
                     ? SizedBox(height: 15.toHeight)
@@ -88,7 +97,16 @@ class _FileRecipientsState extends State<FileRecipients> {
                 downloadedByList.isNotEmpty ? Divider() : SizedBox(),
                 SizedBox(height: 18.toHeight),
                 deliveredToList.isNotEmpty
-                    ? Text('Delivered to', style: CustomTextStyles.grey15)
+                    ? Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: Color(0xFF0ACB21),
+                          ),
+                          SizedBox(width: 5),
+                          Text('Delivered to', style: CustomTextStyles.grey15),
+                        ],
+                      )
                     : SizedBox(),
                 deliveredToList.isNotEmpty
                     ? SizedBox(height: 15.toHeight)
@@ -116,12 +134,21 @@ class _FileRecipientsState extends State<FileRecipients> {
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Failed to send to',
-                            style: CustomTextStyles.grey15,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.error,
+                                color: ColorConstants.redAlert,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'Failed to send to',
+                                style: CustomTextStyles.grey15,
+                              ),
+                            ],
                           ),
                           Text(
-                            'Retry(3)',
+                            'Retry(${filedInDeliveringList.length})',
                             style: CustomTextStyles.red15,
                           ),
                         ],

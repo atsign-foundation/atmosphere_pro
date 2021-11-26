@@ -400,7 +400,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 color: Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
-                                            : filesList[index].isUploading
+                                            : (filesList[index].isUploading !=
+                                                        null &&
+                                                    filesList[index]
+                                                        .isUploading)
                                                 ? TypingIndicator(
                                                     showIndicator: true,
                                                     flashingCircleBrightColor:
