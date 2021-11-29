@@ -24,6 +24,7 @@ import 'package:at_client/src/service/encryption_service.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -711,6 +712,14 @@ class HistoryProvider extends BaseModel {
       var files = await backendService.atClientInstance
           .downloadFile(transferId, sharedBy);
       receivedHistoryLogs[index].isDownloading = false;
+
+      for (var file in files) {
+        if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
+            FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
+          // saving image,video in gallery.
+          await ImageGallerySaver.saveFile(file.path);
+        }
+      }
 
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
