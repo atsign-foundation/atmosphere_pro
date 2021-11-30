@@ -58,14 +58,15 @@ dependencies:
   at_common_flutter: ^2.0.2
   at_contacts_flutter: ^3.0.2
   at_contacts_group_flutter: ^3.0.3
+  image_gallery_saver: ^1.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides:
+# dependency_overrides:
   #Please remove this after at_backupkey_flutter have version newer thạn 3.0.0
-  at_backupkey_flutter: ^3.0.1
+  # at_backupkey_flutter: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
