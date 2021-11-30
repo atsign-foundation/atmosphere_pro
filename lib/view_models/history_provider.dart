@@ -713,13 +713,7 @@ class HistoryProvider extends BaseModel {
           .downloadFile(transferId, sharedBy);
       receivedHistoryLogs[index].isDownloading = false;
 
-      for (var file in files) {
-        if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
-            FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
-          // saving image,video in gallery.
-          await ImageGallerySaver.saveFile(file.path);
-        }
-      }
+      await saveFilesInGallery(files);
 
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
@@ -760,13 +754,7 @@ class HistoryProvider extends BaseModel {
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
       receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
 
-      for (var file in files) {
-        if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
-            FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
-          // saving image,video in gallery.
-          await ImageGallerySaver.saveFile(file.path);
-        }
-      }
+      await saveFilesInGallery(files);
 
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
@@ -922,5 +910,15 @@ class HistoryProvider extends BaseModel {
       atsign = '@' + atsign;
     }
     return atsign;
+  }
+
+  saveFilesInGallery(List<File> files) async {
+    for (var file in files) {
+      if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
+          FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
+        // saving image,video in gallery.
+        await ImageGallerySaver.saveFile(file.path);
+      }
+    }
   }
 }
