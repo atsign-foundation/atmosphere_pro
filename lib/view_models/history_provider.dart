@@ -760,6 +760,14 @@ class HistoryProvider extends BaseModel {
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
       receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
 
+      for (var file in files) {
+        if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
+            FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
+          // saving image,video in gallery.
+          await ImageGallerySaver.saveFile(file.path);
+        }
+      }
+
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
