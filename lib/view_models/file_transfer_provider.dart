@@ -93,10 +93,11 @@ class FileTransferProvider extends BaseModel {
       totalSize = 0;
 
       result = await FilePicker.platform.pickFiles(
-          allowMultiple: true,
-          type: choice == MEDIA ? FileType.media : FileType.any,
-          allowCompression: true,
-          withReadStream: true);
+        allowMultiple: true,
+        type: choice == MEDIA ? FileType.media : FileType.any,
+        allowCompression: true,
+        // withReadStream: true,
+      );
 
       if (result?.files != null) {
         selectedFiles = tempList;
