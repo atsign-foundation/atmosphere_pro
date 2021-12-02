@@ -687,7 +687,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         context: NavService.navKey.currentContext,
         builder: (context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
             content: Container(
+              width: 300.toWidth,
+              padding: EdgeInsets.all(15.toFont),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -708,13 +713,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               Navigator.of(context).pop();
                               await downloadFiles(widget.receivedHistory);
                             },
-                            child: Text('Yes')),
-                        TextButton(onPressed: null, child: Text('')),
+                            child: Text('Yes',
+                                style: TextStyle(fontSize: 16.toFont))),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Cancel'))
+                            child: Text('Cancel',
+                                style: TextStyle(fontSize: 16.toFont)))
                       ],
                     )
                   ],
@@ -730,24 +736,35 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     if (existingFileNamesToOverwrite.length == 1) {
       textSpansMessage.add(
         TextSpan(
-          text:
-              'A file named ${existingFileNamesToOverwrite[0]} already exists. Do you want to overwrite it?',
-          style: TextStyle(color: Colors.black, fontSize: 16.toFont),
+          children: [
+            TextSpan(
+                text: 'A file named ',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+            TextSpan(
+                text: '${existingFileNamesToOverwrite[0]}',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: ' already exists. Do you want to overwrite it?',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+          ],
         ),
       );
     } else if (existingFileNamesToOverwrite.length > 1) {
       textSpansMessage.add(TextSpan(
         text: 'These files already exist: ',
-        style: TextStyle(color: Colors.black, fontSize: 16.toFont),
+        style: TextStyle(color: Colors.black, fontSize: 15.toFont),
       ));
 
       existingFileNamesToOverwrite.forEach((element) {
         textSpansMessage.add(
           TextSpan(
-            text: '$element\n',
+            text: '\n$element',
             style: TextStyle(
                 color: Colors.black,
-                fontSize: 14.toFont,
+                fontSize: 13.toFont,
                 fontWeight: FontWeight.bold,
                 height: 1.5),
           ),
@@ -756,9 +773,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
       textSpansMessage.add(
         TextSpan(
-            text: 'Do you want to overwrite them?',
+            text: '\nDo you want to overwrite them?',
             style:
-                TextStyle(color: Colors.black, fontSize: 16.toFont, height: 2)),
+                TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
       );
     }
     return textSpansMessage;

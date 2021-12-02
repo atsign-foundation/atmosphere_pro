@@ -48,7 +48,7 @@ class FileTransferProvider extends BaseModel {
   bool clearList = false;
   BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
-  bool hasSelectedFilesChanged = false;
+  bool hasSelectedFilesChanged = false, scrollToBottom = false;
 
   final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
   Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
@@ -117,6 +117,7 @@ class FileTransferProvider extends BaseModel {
       calculateSize();
 
       setStatus(PICK_FILES, Status.Done);
+      scrollToBottom = true;
     } catch (error) {
       setError(PICK_FILES, error.toString());
     }

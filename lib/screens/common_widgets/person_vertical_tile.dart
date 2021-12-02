@@ -119,22 +119,28 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           ),
           SizedBox(height: 2),
           contactName != null
-              ? Text(
-                  contactName,
-                  style: CustomTextStyles.grey15,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+              ? SizedBox(
+                  width: 100.toFont,
+                  child: Text(
+                    contactName,
+                    style: CustomTextStyles.grey15,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
                 )
               : SizedBox(),
           SizedBox(height: 2),
           widget.shareStatus.atsign != null
-              ? Text(
-                  widget.shareStatus.atsign,
-                  style: CustomTextStyles.grey13,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+              ? SizedBox(
+                  width: 100.toFont,
+                  child: Text(
+                    widget.shareStatus.atsign,
+                    style: CustomTextStyles.grey13,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
                 )
               : SizedBox(),
           SizedBox(height: 2),

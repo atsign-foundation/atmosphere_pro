@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
@@ -140,7 +140,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     // getEventCreator();
 
     isExpanded = widget.isExpanded;
-    _welcomeScreenProvider.isExpanded = true;
     getAtsignDetails();
     _initPackageInfo();
   }
@@ -338,9 +337,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarBackupItem(
-                    title: TextStrings().sidebarBackupKey,
-                    leadingIcon:
-                        Icon(Icons.file_copy, color: Color(0xFF757581)),
+                    title: isExpanded ? TextStrings().sidebarBackupKey : '',
+                    leadingIcon: Icon(Icons.file_copy,
+                        color: Color(0xFF757581), size: 15.toFont),
                     onPressed: () {
                       BackupKeyWidget(
                         atClientService: AtClientManager.getInstance().atClient,
@@ -432,12 +431,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ]),
                       )),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                        'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
-                        style: CustomTextStyles.darkGrey13),
-                  ),
+                  isExpanded
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                              'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
+                              style: CustomTextStyles.darkGrey13),
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),

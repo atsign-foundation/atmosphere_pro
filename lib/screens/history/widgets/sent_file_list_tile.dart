@@ -582,8 +582,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             child: Container(
-              height: 200.0,
-              width: 300.0,
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

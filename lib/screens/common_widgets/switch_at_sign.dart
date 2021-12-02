@@ -1,14 +1,11 @@
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AtSignBottomSheet extends StatefulWidget {
   final List<String> atSignList;

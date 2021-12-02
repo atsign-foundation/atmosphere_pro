@@ -124,6 +124,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   Widget build(BuildContext context) {
     return ClipRRect(
       child: Container(
+        padding: SizeConfig().isTablet(context)
+            ? EdgeInsets.all(10.toFont)
+            : EdgeInsets.all(0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.toFont),
           color: ColorConstants.inputFieldColor,
