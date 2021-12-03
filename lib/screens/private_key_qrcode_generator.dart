@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';

@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';

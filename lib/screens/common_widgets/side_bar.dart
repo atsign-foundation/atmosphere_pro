@@ -15,7 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -78,9 +78,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
-        setState(() {
-          isFilesAvailableOffline = false;
-        });
+        if (mounted) {
+          setState(() {
+            isFilesAvailableOffline = false;
+          });
+        }
       }
     });
   }
@@ -146,9 +148,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
 
   Future<void> _initPackageInfo() async {
     final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+    if (mounted) {
+      setState(() {
+        _packageInfo = info;
+      });
+    }
   }
 
   @override
@@ -167,21 +171,27 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
-        setState(() {
-          image = Uint8List.fromList(intList);
-        });
+        if (mounted) {
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+        }
       }
       if (contact.tags != null && contact.tags['name'] != null) {
         String newName = contact.tags['name'].toString();
-        setState(() {
-          name = newName;
-        });
+        if (mounted) {
+          setState(() {
+            name = newName;
+          });
+        }
       }
     }
     await Provider.of<WelcomeScreenProvider>(context, listen: false)
         .getToggleStatus();
     if (mounted) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -378,7 +388,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       onTap: () async {
                         _deleteAtSign(
                             await BackendService.getInstance().currentAtsign);
-                        setState(() {});
+                        if (mounted) {
+                          setState(() {});
+                        }
                       },
                       child: Container(
                         height: 50,

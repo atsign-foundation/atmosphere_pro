@@ -15,7 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/grou
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 

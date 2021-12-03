@@ -4,10 +4,10 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CustomPersonVerticalTile extends StatefulWidget {

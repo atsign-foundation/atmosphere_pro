@@ -17,7 +17,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -170,7 +170,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 '+${contactList.length - 1}',
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 12)),
+                                                    fontSize: 10.toFont)),
                                           ),
                                         ),
                                       ))

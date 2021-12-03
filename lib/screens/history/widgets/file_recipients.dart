@@ -1,6 +1,6 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/person_vertical_tile.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -62,6 +62,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                           Icon(
                             Icons.check_circle,
                             color: ColorConstants.blueText,
+                            size: 15.toFont,
                           ),
                           SizedBox(width: 5),
                           Text('Downloaded by', style: CustomTextStyles.grey15),
@@ -96,6 +97,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                           Icon(
                             Icons.check_circle,
                             color: Color(0xFF0ACB21),
+                            size: 15.toFont,
                           ),
                           SizedBox(width: 5),
                           Text('Delivered to', style: CustomTextStyles.grey15),
@@ -133,6 +135,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                               Icon(
                                 Icons.error,
                                 color: ColorConstants.redAlert,
+                                size: 15.toFont,
                               ),
                               SizedBox(width: 5),
                               Text(

@@ -1,6 +1,6 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -62,7 +62,7 @@ class _ExpansionTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpansionTile(
       tilePadding: SizeConfig().isTablet(context)
-          ? EdgeInsets.all(10.toFont)
+          ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
           : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
       backgroundColor: ColorConstants.inputFieldColor,
       title: Text(

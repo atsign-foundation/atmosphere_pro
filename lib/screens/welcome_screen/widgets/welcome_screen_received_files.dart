@@ -1,6 +1,6 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

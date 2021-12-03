@@ -19,7 +19,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -198,7 +198,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           shape: BoxShape.circle,
                                           color: Colors.white,
                                         ),
-                                        child: Icon(Icons.person_add)))
+                                        child: Icon(
+                                          Icons.person_add,
+                                          size: 15.toFont,
+                                        )))
                                 : SizedBox()
                           ],
                         ),

@@ -1,9 +1,8 @@
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -92,7 +91,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.SENT_HISTORY,
-                      showError: true,
+                      showError: false,
                       successBuilder: (provider) => (provider
                               .sentHistory.isEmpty)
                           ? Center(
@@ -119,17 +118,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                       errorBuilder: (provider) => Center(
                         child: Text('Some error occured'),
                       ),
-                      load: (provider) async {
-                        // provider.getSentHistory();
-                      },
+                      load: (provider) async {},
                     ),
                     ProviderHandler<HistoryProvider>(
                       functionName: historyProvider.RECEIVED_HISTORY,
-                      load: (provider) async {
-                        print('loading received');
-                        // await provider.getReceivedHistory();
-                      },
-                      showError: true,
+                      load: (provider) async {},
+                      showError: false,
                       successBuilder: (provider) => (provider
                               .receivedHistoryLogs.isEmpty)
                           ? Center(

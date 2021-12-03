@@ -7,7 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -17,7 +17,6 @@ import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/size_config.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class SideBarBackupItem extends StatelessWidget {
   final String title;
