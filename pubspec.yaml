@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+2
+version: 1.0.0+6
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -54,49 +54,49 @@ dependencies:
 
   carousel_slider: ^4.0.0
 
-  at_onboarding_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_onboarding_flutter
-      ref: desktop/development
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: desktop-compatible
+  at_onboarding_flutter: ^3.1.0
+    # git:
+    #   url: https://github.com/atsign-foundation/at_widgets.git
+    #   path: at_onboarding_flutter
+    #   ref: desktop/development
+  at_client_mobile: ^3.1.2
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: at_client_mobile
+    #   ref: desktop-compatible
   at_commons: ^3.0.0
   at_contact: ^3.0.1
   at_lookup: ^3.0.3
-  at_common_flutter: ^2.0.2
-  at_contacts_flutter: 
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_contacts_flutter
-      ref: desktop/development
-  at_contacts_group_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_contacts_group_flutter
-      ref: desktop/development
+  at_common_flutter: ^2.0.3
+  at_contacts_flutter: ^3.1.0
+    # git:
+    #   url: https://github.com/atsign-foundation/at_widgets.git
+    #   path: at_contacts_flutter
+    #   ref: desktop/development
+  at_contacts_group_flutter: ^3.1.0
+    # git:
+    #   url: https://github.com/atsign-foundation/at_widgets.git
+    #   path: at_contacts_group_flutter
+    #   ref: desktop/development
     
 dependency_overrides:
   permission_handler: ^6.1.3
   http: ^0.13.3
-  at_contacts_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_contacts_flutter
-      ref: desktop/development
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: desktop-compatible
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: desktop-compatible
+  # at_contacts_flutter:
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_widgets.git
+  #     path: at_contacts_flutter
+  #     ref: desktop/development
+  # at_client_mobile:
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_client_sdk.git
+  #     path: at_client_mobile
+  #     ref: desktop-compatible
+  # at_client:
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_client_sdk.git
+  #     path: at_client
+  #     ref: desktop-compatible
   crypto: ^2.1.5
   crypton: ^2.0.1
   convert: ^3.0.0
@@ -111,11 +111,11 @@ dependency_overrides:
   path_provider: ^2.0.1
   share: ^2.0.1
   plugin_platform_interface: ^2.0.0
-  at_common_flutter: 
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_common_flutter
-      ref: desktop/development
+  # at_common_flutter: 
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_widgets.git
+  #     path: at_common_flutter
+  #     ref: desktop/development
   biometric_storage: ^2.0.2
   logging: ^1.0.0
 
