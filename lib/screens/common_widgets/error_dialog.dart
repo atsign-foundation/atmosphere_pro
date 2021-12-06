@@ -4,7 +4,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class ErrorDialogWidget extends StatelessWidget {
   final String text;
@@ -46,6 +46,8 @@ class ErrorDialogWidget extends StatelessWidget {
               Text(
                 text,
                 textAlign: TextAlign.center,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: 10.toHeight),
               Row(

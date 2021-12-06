@@ -10,7 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/grou
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class OverlappingContacts extends StatefulWidget {

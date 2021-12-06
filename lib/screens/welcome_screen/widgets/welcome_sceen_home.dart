@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
@@ -6,7 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -28,6 +30,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
   bool isExpanded = true;
+  ScrollController scrollController = ScrollController();
+  var filePickerModel;
 
   @override
   void initState() {
@@ -39,7 +43,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   Widget build(BuildContext context) {
-    final filePickerModel = Provider.of<FileTransferProvider>(context);
+    filePickerModel = Provider.of<FileTransferProvider>(context);
 
     return Container(
         width: double.infinity,
@@ -73,6 +77,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               onTap: () {
                                 setState(() {
                                   isExpanded = !isExpanded;
+                                  WelcomeScreenProvider().isExpanded = true;
                                 });
 
                                 Scaffold.of(context).openEndDrawer();
@@ -92,6 +97,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   Expanded(
                     flex: 3,
                     child: SingleChildScrollView(
+                      controller: scrollController,
                       child: Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(
@@ -148,17 +154,24 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 10.toHeight,
                             ),
-                            // ProviderHandler<WelcomeScreenProvider>(),
+                            Consumer<FileTransferProvider>(
+                                builder: (context, provider, _) {
+                              if (filePickerModel.scrollToBottom) {
+                                scrolToBottom();
+                              }
+                              return SizedBox();
+                            }),
                             Consumer<WelcomeScreenProvider>(
-                              builder: (context, provider, _) => (provider
-                                      .selectedContacts.isEmpty)
-                                  ? Container()
-                                  : OverlappingContacts(
-                                      selectedList: provider.selectedContacts,
-                                      onChnage: (isUpdate) {
-                                        setState(() {});
-                                      },
-                                    ),
+                              builder: (context, provider, _) {
+                                return (provider.selectedContacts.isEmpty)
+                                    ? Container()
+                                    : OverlappingContacts(
+                                        selectedList: provider.selectedContacts,
+                                        onChnage: (isUpdate) {
+                                          setState(() {});
+                                        },
+                                      );
+                              },
                             ),
                             SizedBox(
                               height: 40.toHeight,
@@ -173,7 +186,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 60.toHeight,
                             ),
-
                             if (_welcomeScreenProvider.selectedContacts !=
                                     null &&
                                 _welcomeScreenProvider
@@ -239,5 +251,20 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             ],
           ),
         ));
+  }
+
+  scrolToBottom() {
+    Timer(
+      Duration(milliseconds: 200),
+      () {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: 1),
+          curve: Curves.fastOutSlowIn,
+        );
+
+        filePickerModel.scrollToBottom = false;
+      },
+    );
   }
 }

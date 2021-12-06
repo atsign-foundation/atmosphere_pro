@@ -60,6 +60,31 @@ dependencies:
   at_contacts_group_flutter: ^3.0.3
   image_gallery_saver: ^1.7.1
 
+dependency_overrides:
+  at_contacts_flutter: 
+   git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: feat/enhancement
+      path: at_contacts_flutter
+  at_contacts_group_flutter: 
+   git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: feat/enhancement
+      path: at_contacts_group_flutter
+  at_common_flutter:
+   git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: feat/enhancement
+      path: at_common_flutter
+  
+
+  # at_client_mobile:
+  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile  
+  # at_client:
+  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client  
+
+    
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

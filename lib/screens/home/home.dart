@@ -4,7 +4,7 @@ import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -204,7 +204,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Expanded(
-                    flex: 8,
+                    flex: 12,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 36.toWidth,
@@ -242,6 +242,7 @@ class _HomeState extends State<Home> {
                                             .homeWeWillSetupAccount,
                                         style: TextStyle(
                                           color: ColorConstants.fadedText,
+                                          fontSize: 15.toFont,
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
@@ -275,7 +276,7 @@ class _HomeState extends State<Home> {
                                     child: Text(
                                       TextStrings.resetButton,
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 15.toFont,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -287,7 +288,8 @@ class _HomeState extends State<Home> {
                             child: Text(
                               TextStrings().appName,
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                                  fontSize: 15.toFont,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                           SizedBox(height: 5),
@@ -295,7 +297,7 @@ class _HomeState extends State<Home> {
                             child: Text(
                               TextStrings().copyRight,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 14.toFont,
                                 fontFamily: 'HelveticaNeu',
                                 color: Colors.grey.withOpacity(0.8),
                               ),

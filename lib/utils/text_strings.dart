@@ -7,8 +7,8 @@ class TextStrings {
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
-  String appName = '@mosphere';
-  String copyRight = 'The @Company Copyrights';
+  String appName = '@mosphere pro';
+  String copyRight = '© 2021 The @ Company';
 
   // onboarding flow texts
   String saveKeyTitle = 'Save your Private Key';

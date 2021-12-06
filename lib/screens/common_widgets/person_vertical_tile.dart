@@ -4,10 +4,10 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CustomPersonVerticalTile extends StatefulWidget {
@@ -119,22 +119,28 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           ),
           SizedBox(height: 2),
           contactName != null
-              ? Text(
-                  contactName,
-                  style: CustomTextStyles.grey15,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+              ? SizedBox(
+                  width: 100.toFont,
+                  child: Text(
+                    contactName,
+                    style: CustomTextStyles.grey15,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
                 )
               : SizedBox(),
           SizedBox(height: 2),
           widget.shareStatus.atsign != null
-              ? Text(
-                  widget.shareStatus.atsign,
-                  style: CustomTextStyles.grey13,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+              ? SizedBox(
+                  width: 100.toFont,
+                  child: Text(
+                    widget.shareStatus.atsign,
+                    style: CustomTextStyles.grey13,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
                 )
               : SizedBox(),
           SizedBox(height: 2),

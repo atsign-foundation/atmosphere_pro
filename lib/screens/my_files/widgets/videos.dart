@@ -1,14 +1,12 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import 'downloads_folders.dart';
@@ -59,19 +57,17 @@ class _VideosState extends State<Videos> {
     );
   }
 
-  Widget listVideoWidget(HistoryProvider provider, List<Uint8List> videos){
+  Widget listVideoWidget(HistoryProvider provider, List<Uint8List> videos) {
     return ListView.builder(
         itemCount: provider.receivedVideos.length,
         itemBuilder: (context, index) {
-          DateTime date =
-          DateTime.parse(provider.receivedVideos[index].date);
+          DateTime date = DateTime.parse(provider.receivedVideos[index].date);
           return InkWell(
             onTap: () async {
               print(
                   'provider.receivedVideos[index].size====>${provider.receivedVideos[index].size}');
               //      await openDownloadsFolder(context);
-              await openFilePath(
-                  provider.receivedVideos[index].filePath);
+              await openFilePath(provider.receivedVideos[index].filePath);
             },
             child: Card(
               margin: EdgeInsets.only(top: 15.toHeight),
@@ -89,36 +85,32 @@ class _VideosState extends State<Videos> {
                     width: 50.toWidth,
                     child: (videos == null || videos.isEmpty)
                         ? Image.asset(
-                      ImageConstants.unknownLogo,
-                      fit: BoxFit.cover,
-                    )
+                            ImageConstants.unknownLogo,
+                            fit: BoxFit.cover,
+                          )
                         : Image.memory(
-                      videos[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, o, ot) =>
-                          CircularProgressIndicator(),
-                    ),
+                            videos[index],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, o, ot) =>
+                                CircularProgressIndicator(),
+                          ),
                   ),
                 ),
                 subtitle: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                          double.parse(provider
-                              .receivedVideos[index].size
-                              .toString()) <=
-                              1024
+                          double.parse(provider.receivedVideos[index].size
+                                      .toString()) <=
+                                  1024
                               ? '${(provider.receivedVideos[index].size).toStringAsFixed(2)} Kb'
                               : '${(provider.receivedVideos[index].size / 1024).toStringAsFixed(2)} Mb',
-                          style:
-                          CustomTextStyles.secondaryRegular12),
+                          style: CustomTextStyles.secondaryRegular12),
                       SizedBox(
                         width: 12.toWidth,
                       ),
-                      Text(
-                          '${date.day.toString()}/${date.month}/${date.year}',
-                          style:
-                          CustomTextStyles.secondaryRegular12),
+                      Text('${date.day.toString()}/${date.month}/${date.year}',
+                          style: CustomTextStyles.secondaryRegular12),
                     ]),
               ),
             ),
