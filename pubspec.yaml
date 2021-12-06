@@ -66,30 +66,17 @@ dependency_overrides:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: feat/enhancement
       path: at_contacts_flutter
-    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
   at_contacts_group_flutter: 
    git:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: feat/enhancement
       path: at_contacts_group_flutter
-    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
   at_common_flutter:
    git:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: feat/enhancement
       path: at_common_flutter
-    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
   
-  at_client_mobile:
-    git:
-      url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: large_file_encryption
-      path: at_client_mobile
-  at_client:
-    git:
-      url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: large_file_encryption
-      path: at_client    
 
   # at_client_mobile:
   #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile  
