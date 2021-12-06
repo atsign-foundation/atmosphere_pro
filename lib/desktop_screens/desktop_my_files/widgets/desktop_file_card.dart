@@ -28,7 +28,7 @@ class DesktopFileCard extends StatelessWidget {
                                 snapshot.data != null
                             ? CommonFunctions().thumbnail(
                                 filePath.split('/').last.split('.').last,
-                                MixedConstants.path +
+                                MixedConstants.RECEIVED_FILE_DIRECTORY +
                                     '/${filePath.split('/').last}',
                                 isFilePresent: snapshot.data)
                             : SizedBox();

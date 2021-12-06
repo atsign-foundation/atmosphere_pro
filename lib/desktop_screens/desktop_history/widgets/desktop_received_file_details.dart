@@ -127,7 +127,7 @@ class _DesktopReceivedFileDetailsState
                           ),
                           leading: FutureBuilder(
                               future: CommonFunctions().isFilePresent(
-                                  MixedConstants.path +
+                                  MixedConstants.RECEIVED_FILE_DIRECTORY +
                                       widget.fileTransfer.files[index].name),
                               builder: (context, snapshot) {
                                 return snapshot.connectionState ==
@@ -135,17 +135,18 @@ class _DesktopReceivedFileDetailsState
                                         snapshot.data != null
                                     ? InkWell(
                                         onTap: () async {
-                                          await OpenFile.open(
-                                              MixedConstants.path +
-                                                  widget.fileTransfer
-                                                      .files[index].name);
+                                          await OpenFile.open(MixedConstants
+                                                  .RECEIVED_FILE_DIRECTORY +
+                                              widget.fileTransfer.files[index]
+                                                  .name);
                                         },
                                         child: CommonFunctions().thumbnail(
                                             widget
                                                 .fileTransfer.files[index].name
                                                 ?.split('.')
                                                 ?.last,
-                                            MixedConstants.path +
+                                            MixedConstants
+                                                    .RECEIVED_FILE_DIRECTORY +
                                                 '/${widget.fileTransfer.files[index].name}',
                                             isFilePresent: snapshot.data),
                                       )

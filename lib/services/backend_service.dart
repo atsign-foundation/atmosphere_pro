@@ -72,13 +72,13 @@ class BackendService {
 
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
-    // if (Platform.isIOS) {
-    //   downloadDirectory =
-    //       await path_provider.getApplicationDocumentsDirectory();
-    // } else {
-    //   downloadDirectory = await path_provider.getExternalStorageDirectory();
-    // }
-    downloadDirectory = Directory(MixedConstants.path);
+    if (Platform.isIOS) {
+      downloadDirectory =
+          await path_provider.getApplicationDocumentsDirectory();
+    } else {
+      downloadDirectory = await path_provider.getExternalStorageDirectory();
+    }
+    downloadDirectory = Directory(MixedConstants.RECEIVED_FILE_DIRECTORY);
     if (atClientServiceMap[atsign] == null) {
       final appSupportDirectory =
           await path_provider.getApplicationSupportDirectory();
@@ -97,7 +97,7 @@ class BackendService {
     // } else {
     //   downloadDirectory = await path_provider.getExternalStorageDirectory();
     // }
-    downloadDirectory = Directory(MixedConstants.path);
+    downloadDirectory = Directory(MixedConstants.RECEIVED_FILE_DIRECTORY);
     // final appDocumentDirectory = Directory(MixedConstants.path);
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
@@ -209,10 +209,10 @@ class BackendService {
     // // Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
     // //         listen: false)
     // //     .selectedFiles = [];
-    // // await setDownloadPath(
-    // //     atsign: atsign,
-    // //     atClientPreference: atClientPreference,
-    // //     atClientServiceInstance: atClientServiceInstance);
+    // await setDownloadPath(
+    //     atsign: atsign,
+    //     atClientPreference: atClientPreference,
+    //     atClientServiceInstance: atClientServiceInstance);
     // String privateKey = await getPrivateKey(atsign);
 
     // await atClientInstance.startMonitor(privateKey, _notificationCallBack);
@@ -650,6 +650,6 @@ class BackendService {
   }
 
   resetAtsigns() {
-    _keyChainManager.clearKeychainEntries();
+    // _keyChainManager.clearKeychainEntries();
   }
 }
