@@ -24,7 +24,8 @@ class SideBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (_welcomeScreenProvider.isExpanded) {
+        if (SizeConfig().isMobile(context) ||
+            _welcomeScreenProvider.isExpanded) {
           Navigator.pop(context);
         }
         Navigator.pushNamed(context, routeName, arguments: arguments ?? {});
@@ -35,7 +36,7 @@ class SideBarItem extends StatelessWidget {
           children: [
             Image.asset(
               image,
-              height: 22.toHeight,
+              height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
               color: displayColor,
             ),
             SizedBox(width: 10),

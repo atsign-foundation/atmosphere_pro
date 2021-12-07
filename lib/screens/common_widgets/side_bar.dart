@@ -349,7 +349,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SideBarBackupItem(
                     title: isExpanded ? TextStrings().sidebarBackupKey : '',
                     leadingIcon: Icon(Icons.file_copy,
-                        color: Color(0xFF757581), size: 21.toFont),
+                        color: Color(0xFF757581),
+                        size: (isTablet ? 24 : 21.toFont)),
                     onPressed: () {
                       BackupKeyWidget(
                         atClientService: AtClientManager.getInstance().atClient,

@@ -20,7 +20,8 @@ class _WelcomeScreenReceivedFilesState
     historyProvider = Provider.of<HistoryProvider>(context);
     return ProviderHandler<HistoryProvider>(
       functionName: historyProvider.RECEIVED_HISTORY,
-      showError: true,
+      load: (provider) {},
+      showError: false,
       successBuilder: (provider) => (provider.receivedHistoryLogs.isEmpty)
           ? Center(
               child: Text(

@@ -219,7 +219,7 @@ class _HomeState extends State<Home> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  TextStrings().homeFileTransferItsSafe,
+                                  TextStrings().homeDescriptionMain,
                                   style: GoogleFonts.playfairDisplay(
                                     textStyle: TextStyle(
                                       fontSize: 38.toFont,
@@ -231,22 +231,11 @@ class _HomeState extends State<Home> {
                                 SizedBox(height: 30.toHeight),
                                 Text.rich(
                                   TextSpan(
-                                    text: TextStrings().homeHassleFree,
+                                    text: TextStrings().homeDescriptionSub,
                                     style: TextStyle(
                                       fontSize: 15.toFont,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    children: [
-                                      TextSpan(
-                                        text: TextStrings()
-                                            .homeWeWillSetupAccount,
-                                        style: TextStyle(
-                                          color: ColorConstants.fadedText,
-                                          fontSize: 15.toFont,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 )
                               ],

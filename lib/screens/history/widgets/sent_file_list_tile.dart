@@ -229,7 +229,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${fileLength} Files',
+                        '${fileLength} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),

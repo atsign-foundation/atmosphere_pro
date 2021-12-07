@@ -257,7 +257,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.receivedHistory.files.length} Files',
+                        '${widget.receivedHistory.files.length} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
