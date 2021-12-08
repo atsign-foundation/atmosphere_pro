@@ -38,13 +38,10 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
       color: ColorConstants.fadedBlue,
       child: ProviderHandler<TrustedContactProvider>(
           functionName: 'get_trusted_contacts',
-          load: (provider) async => await provider.getTrustedContact(),
-          showError: true,
+          load: (provider) {},
+          showError: false,
           errorBuilder: (provider) => Container(),
           successBuilder: (provider) {
-            if (provider.trustedContacts.length == 0) {
-              DesktopSetupRoutes.nested_pop();
-            }
             return Stack(
               children: [
                 Row(
@@ -97,17 +94,18 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                 ),
                               ),
                               SizedBox(width: 15),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _isFilterOption = !_isFilterOption;
-                                  });
-                                },
-                                child: Container(
-                                  child: Icon(Icons.filter_list_sharp),
-                                ),
-                              ),
-                              SizedBox(width: 10),
+                              //TODO: filter option is removed from ui for now.
+                              // InkWell(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       _isFilterOption = !_isFilterOption;
+                              //     });
+                              //   },
+                              //   child: Container(
+                              //     child: Icon(Icons.filter_list_sharp),
+                              //   ),
+                              // ),
+                              // SizedBox(width: 10),
                             ],
                           ),
                           SizedBox(height: 20),

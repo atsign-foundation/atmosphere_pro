@@ -171,7 +171,11 @@ class HistoryProvider extends BaseModel {
         ..key = MixedConstants.SENT_FILE_HISTORY
         ..sharedBy = backendService.currentAtsign
         ..metadata = Metadata();
-      var keyValue = await backendService.atClientManager.atClient.get(key);
+      var keyValue = await backendService.atClientManager.atClient
+          .get(key)
+          .catchError((e) {
+        print('error in decrypting value : $e');
+      });
       if (keyValue != null && keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;

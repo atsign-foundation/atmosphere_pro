@@ -43,7 +43,7 @@ class NotificationService {
     var initializationSettingsMacos = MacOSInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
-        requestSoundPermission: false);
+        requestSoundPermission: true);
 
     initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid,

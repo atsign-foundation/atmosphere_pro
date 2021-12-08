@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -31,6 +32,7 @@ class CustomOnboarding {
       onboard: (value, atsign) async {
         print('value $value');
         print('atsign $atsign');
+        await KeychainUtil.makeAtSignPrimary(atsign);
         if (!isInit) {
           Navigator.pop(NavService.navKey.currentContext);
           await DesktopSetupRoutes.nested_pop();
@@ -60,7 +62,7 @@ class CustomOnboarding {
         );
       },
       onError: (error) {
-        print('Onboarding throws $error error');
+        print('Onboarding throws error: $error ');
       },
     );
   }

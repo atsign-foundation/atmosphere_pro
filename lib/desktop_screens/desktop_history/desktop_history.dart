@@ -128,7 +128,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                     children: [
                       ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.SENT_HISTORY,
-                        showError: true,
+                        showError: false,
                         successBuilder: (provider) {
                           return (provider.sentHistory.isEmpty)
                               ? Center(
@@ -179,7 +179,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                         load: (provider) async {
                           await provider.getReceivedHistory();
                         },
-                        showError: true,
+                        showError: false,
                         successBuilder: (provider) {
                           return (provider.receivedHistoryLogs.isEmpty)
                               ? Center(

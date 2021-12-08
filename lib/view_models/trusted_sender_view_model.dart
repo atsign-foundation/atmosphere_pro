@@ -50,7 +50,7 @@ class TrustedContactProvider extends BaseModel {
       //   trustedContacts.remove(trustedContact);
       // }
       for (AtContact contact in trustedContacts) {
-        if (contact.toString() == trustedContact.toString()) {
+        if (contact.atSign == trustedContact.atSign) {
           int index = trustedContacts.indexOf(contact);
           trustedContacts.removeAt(index);
           // isAlreadyPresent = true;

@@ -82,17 +82,18 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                                 iconColor: ColorConstants.greyText,
                               ),
                               SizedBox(width: 15),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _isFilterOption = !_isFilterOption;
-                                  });
-                                },
-                                child: Container(
-                                  child: Icon(Icons.filter_list_sharp),
-                                ),
-                              ),
-                              SizedBox(width: 10),
+                              //TODO: filter option is removed from ui for now.
+                              // InkWell(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       _isFilterOption = !_isFilterOption;
+                              //     });
+                              //   },
+                              //   child: Container(
+                              //     child: Icon(Icons.filter_list_sharp),
+                              //   ),
+                              // ),
+                              // SizedBox(width: 10),
                             ]),
                         Container(
                           height: 40,

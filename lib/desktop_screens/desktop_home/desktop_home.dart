@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DesktopHome extends StatefulWidget {
   const DesktopHome({Key key}) : super(key: key);
@@ -45,8 +49,24 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   @override
   void initState() {
+    storeApplicationDocumentsDirectory();
     _checkToOnboard();
     super.initState();
+  }
+
+  storeApplicationDocumentsDirectory() async {
+    var _dir;
+    // TODO: have to implement for linux and windows
+    if (Platform.isMacOS) {
+      _dir = await getApplicationDocumentsDirectory();
+    }
+    final path = Directory(_dir.path + '/@mosphere-pro');
+
+    if (!(await path.exists())) {
+      await path.create();
+    }
+
+    MixedConstants.ApplicationDocumentsDirectory = path.path;
   }
 
   void _checkToOnboard() async {

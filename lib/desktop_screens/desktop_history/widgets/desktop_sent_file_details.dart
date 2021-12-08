@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
@@ -83,29 +85,60 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                 ? '${widget.selectedFileData.fileDetails.files[index].size} Kb' +
                                     ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}'
                                 : '${(widget.selectedFileData.fileDetails.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
-                                    ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}',
+                                    ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last} ',
                             style: TextStyle(
                               color: ColorConstants.fadedText,
                               fontSize: 14.toFont,
                             ),
                           ),
                           leading: InkWell(
-                            onTap: () async {
-                              await OpenFile.open(
-                                  MixedConstants.DESKTOP_SENT_DIR +
-                                      widget.selectedFileData.fileDetails
-                                          .files[index].name);
-                            },
-                            child: CommonFunctions().thumbnail(
-                                widget.selectedFileData.fileDetails.files[index]
-                                    .name
-                                    .split('.')
-                                    .last
-                                    .toString(),
-                                MixedConstants.DESKTOP_SENT_DIR +
-                                    widget.selectedFileData.fileDetails
-                                        .files[index].name),
-                          ),
+                              onTap: () async {
+                                String filePath =
+                                    MixedConstants.DESKTOP_SENT_DIR +
+                                        widget.selectedFileData.fileDetails
+                                            .files[index].name;
+
+                                await OpenFile.open(filePath);
+                              },
+                              child: FutureBuilder(
+                                  future: CommonFunctions().isFilePresent(
+                                      MixedConstants.DESKTOP_SENT_DIR +
+                                          widget.selectedFileData.fileDetails
+                                              .files[index].name),
+                                  builder: (context, snapshot) {
+                                    return snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.data != null
+                                        ? InkWell(
+                                            onTap: () async {
+                                              String filePath = MixedConstants
+                                                      .DESKTOP_SENT_DIR +
+                                                  widget
+                                                      .selectedFileData
+                                                      .fileDetails
+                                                      .files[index]
+                                                      .name;
+
+                                              if (await File(filePath)
+                                                  .exists()) {
+                                                await OpenFile.open(filePath);
+                                              }
+                                            },
+                                            child: CommonFunctions().thumbnail(
+                                                widget
+                                                    .selectedFileData
+                                                    .fileDetails
+                                                    .files[index]
+                                                    .name
+                                                    ?.split('.')
+                                                    ?.last,
+                                                MixedConstants
+                                                        .DESKTOP_SENT_DIR +
+                                                    '/${widget.selectedFileData.fileDetails.files[index].name} ',
+                                                isFilePresent: snapshot.data),
+                                          )
+                                        : SizedBox();
+                                  })),
                           trailing: IconButton(
                             icon: widget.selectedFileData.fileDetails
                                     .files[index].isUploaded
