@@ -38,23 +38,33 @@ class _DesktopAPKState extends State<DesktopAPK> {
                     spacing: 30.0,
                     children: List.generate(
                       provider.receivedApk.length,
-                      (index) => InkWell(
-                        onTap: () async {
-                          File test =
-                              File(provider.receivedApk[index].filePath);
-                          bool fileExists = await test.exists();
-                          if (fileExists) {
-                            await OpenFile.open(
-                                provider.receivedApk[index].filePath);
-                          }
-                        },
-                        child: DesktopFileCard(
-                          title: provider.receivedApk[index].filePath
-                              .split('/')
-                              .last,
-                          filePath: provider.receivedApk[index].filePath,
-                        ),
-                      ),
+                      (index) {
+                        if (provider.receivedApk[index].filePath
+                            .split('/')
+                            .last
+                            .toLowerCase()
+                            .contains(provider.fileSearchText)) {
+                          return InkWell(
+                            onTap: () async {
+                              File test =
+                                  File(provider.receivedApk[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    provider.receivedApk[index].filePath);
+                              }
+                            },
+                            child: DesktopFileCard(
+                              title: provider.receivedApk[index].filePath
+                                  .split('/')
+                                  .last,
+                              filePath: provider.receivedApk[index].filePath,
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ),

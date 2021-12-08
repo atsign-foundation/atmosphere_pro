@@ -37,23 +37,33 @@ class _DesktopVideosState extends State<DesktopVideos> {
                     spacing: 30.0,
                     children: List.generate(
                       provider.receivedVideos.length,
-                      (index) => InkWell(
-                        onTap: () async {
-                          File test =
-                              File(provider.receivedVideos[index].filePath);
-                          bool fileExists = await test.exists();
-                          if (fileExists) {
-                            await OpenFile.open(
-                                provider.receivedVideos[index].filePath);
-                          }
-                        },
-                        child: DesktopFileCard(
-                          title: provider.receivedVideos[index].filePath
-                              .split('/')
-                              .last,
-                          filePath: provider.receivedVideos[index].filePath,
-                        ),
-                      ),
+                      (index) {
+                        if (provider.receivedVideos[index].filePath
+                            .split('/')
+                            .last
+                            .toLowerCase()
+                            .contains(provider.fileSearchText)) {
+                          return InkWell(
+                            onTap: () async {
+                              File test =
+                                  File(provider.receivedVideos[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    provider.receivedVideos[index].filePath);
+                              }
+                            },
+                            child: DesktopFileCard(
+                              title: provider.receivedVideos[index].filePath
+                                  .split('/')
+                                  .last,
+                              filePath: provider.receivedVideos[index].filePath,
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ),

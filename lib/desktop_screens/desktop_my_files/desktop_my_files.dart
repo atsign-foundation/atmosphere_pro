@@ -34,7 +34,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
   var runtimeType;
   @override
   void initState() {
-    historyProvider = HistoryProvider();
+    historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     ini();
     setState(() {});
     super.initState();
@@ -75,12 +75,15 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                             },
                             actions: [
                               DesktopCustomInputField(
-                                backgroundColor: Colors.white,
-                                hintText: 'Search...',
-                                icon: Icons.search,
-                                height: 45,
-                                iconColor: ColorConstants.greyText,
-                              ),
+                                  backgroundColor: Colors.white,
+                                  hintText: 'Search...',
+                                  icon: Icons.search,
+                                  height: 45,
+                                  iconColor: ColorConstants.greyText,
+                                  value: (val) {
+                                    historyProvider
+                                        .setFileSearchText(val.toLowerCase());
+                                  }),
                               SizedBox(width: 15),
                               //TODO: filter option is removed from ui for now.
                               // InkWell(

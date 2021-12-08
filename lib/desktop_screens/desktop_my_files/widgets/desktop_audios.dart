@@ -38,23 +38,33 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                     spacing: 30.0,
                     children: List.generate(
                       provider.receivedAudio.length,
-                      (index) => InkWell(
-                        onTap: () async {
-                          File test =
-                              File(provider.receivedAudio[index].filePath);
-                          bool fileExists = await test.exists();
-                          if (fileExists) {
-                            await OpenFile.open(
-                                provider.receivedAudio[index].filePath);
-                          }
-                        },
-                        child: DesktopFileCard(
-                          title: provider.receivedAudio[index].filePath
-                              .split('/')
-                              .last,
-                          filePath: provider.receivedAudio[index].filePath,
-                        ),
-                      ),
+                      (index) {
+                        if (provider.receivedAudio[index].filePath
+                            .split('/')
+                            .last
+                            .toLowerCase()
+                            .contains(provider.fileSearchText)) {
+                          return InkWell(
+                            onTap: () async {
+                              File test =
+                                  File(provider.receivedAudio[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    provider.receivedAudio[index].filePath);
+                              }
+                            },
+                            child: DesktopFileCard(
+                              title: provider.receivedAudio[index].filePath
+                                  .split('/')
+                                  .last,
+                              filePath: provider.receivedAudio[index].filePath,
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ),

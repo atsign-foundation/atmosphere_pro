@@ -38,23 +38,34 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                     spacing: 30.0,
                     children: List.generate(
                       provider.receivedUnknown.length,
-                      (index) => InkWell(
-                        onTap: () async {
-                          File test =
-                              File(provider.receivedUnknown[index].filePath);
-                          bool fileExists = await test.exists();
-                          if (fileExists) {
-                            await OpenFile.open(
-                                provider.receivedUnknown[index].filePath);
-                          }
-                        },
-                        child: DesktopFileCard(
-                          title: provider.receivedUnknown[index].filePath
-                              .split('/')
-                              .last,
-                          filePath: provider.receivedUnknown[index].filePath,
-                        ),
-                      ),
+                      (index) {
+                        if (provider.receivedUnknown[index].filePath
+                            .split('/')
+                            .last
+                            .toLowerCase()
+                            .contains(provider.fileSearchText)) {
+                          return InkWell(
+                            onTap: () async {
+                              File test = File(
+                                  provider.receivedUnknown[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    provider.receivedUnknown[index].filePath);
+                              }
+                            },
+                            child: DesktopFileCard(
+                              title: provider.receivedUnknown[index].filePath
+                                  .split('/')
+                                  .last,
+                              filePath:
+                                  provider.receivedUnknown[index].filePath,
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ),

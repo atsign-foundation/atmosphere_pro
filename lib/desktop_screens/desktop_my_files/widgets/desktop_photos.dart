@@ -44,23 +44,33 @@ class _DesktopPhotosState extends State<DesktopPhotos> {
                     spacing: 30.0,
                     children: List.generate(
                       provider.receivedPhotos.length,
-                      (index) => InkWell(
-                        onTap: () async {
-                          File test =
-                              File(provider.receivedPhotos[index].filePath);
-                          bool fileExists = await test.exists();
-                          if (fileExists) {
-                            await OpenFile.open(
-                                provider.receivedPhotos[index].filePath);
-                          }
-                        },
-                        child: DesktopFileCard(
-                          title: provider.receivedPhotos[index].filePath
-                              .split('/')
-                              .last,
-                          filePath: provider.receivedPhotos[index].filePath,
-                        ),
-                      ),
+                      (index) {
+                        if (provider.receivedPhotos[index].filePath
+                            .split('/')
+                            .last
+                            .toLowerCase()
+                            .contains(provider.fileSearchText)) {
+                          return InkWell(
+                            onTap: () async {
+                              File test =
+                                  File(provider.receivedPhotos[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    provider.receivedPhotos[index].filePath);
+                              }
+                            },
+                            child: DesktopFileCard(
+                              title: provider.receivedPhotos[index].filePath
+                                  .split('/')
+                                  .last,
+                              filePath: provider.receivedPhotos[index].filePath,
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ),
