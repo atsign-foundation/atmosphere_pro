@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -45,7 +46,7 @@ class _DesktopReceivedFilesListTileState
   bool isOpen = false;
   bool isDeepOpen = false;
   Uint8List videoThumbnail, firstContactImage;
-
+  String contactName;
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
 
@@ -63,12 +64,14 @@ class _DesktopReceivedFilesListTileState
       fileSize += element.size;
     });
 
-    // getContactImage();
+    getContactImage();
   }
 
   getContactImage() {
     AtContact contact;
+
     if (contactList[0] != null) {
+      contactName = CommonFunctions().getContactName(contactList[0]);
       contact = checkForCachedContactDetail(contactList[0]);
     }
     if (contact != null) {
@@ -143,9 +146,9 @@ class _DesktopReceivedFilesListTileState
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        contactList.isNotEmpty
+                        contactName != null
                             ? Text(
-                                'atsign name',
+                                contactName ?? '',
                                 style: CustomTextStyles.primaryRegularBold18,
                               )
                             : SizedBox(),

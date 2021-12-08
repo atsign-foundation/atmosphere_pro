@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:archive/archive_io.dart';
-import 'package:at_commons/at_builders.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
@@ -20,7 +19,6 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flushbar/flushbar.dart';
@@ -32,9 +30,6 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
-import 'package:at_client/src/manager/sync_manager.dart';
-import 'package:at_client/src/stream/file_transfer_object.dart';
-import 'package:http/http.dart' as http;
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/src/service/sync_service_impl.dart';
@@ -643,10 +638,14 @@ class BackendService {
   }
 
   onNotificationClick(String payload) async {
-    await Navigator.push(
-      NavService.navKey.currentContext,
-      MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      await Navigator.push(
+        NavService.navKey.currentContext,
+        MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
+      );
+    } else if (Platform.isMacOS) {
+      DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+    }
   }
 
   resetAtsigns() {

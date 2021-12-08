@@ -128,6 +128,7 @@ class _DesktopReceivedFileDetailsState
                           leading: FutureBuilder(
                               future: CommonFunctions().isFilePresent(
                                   MixedConstants.RECEIVED_FILE_DIRECTORY +
+                                      '/' +
                                       widget.fileTransfer.files[index].name),
                               builder: (context, snapshot) {
                                 return snapshot.connectionState ==
@@ -137,6 +138,7 @@ class _DesktopReceivedFileDetailsState
                                         onTap: () async {
                                           await OpenFile.open(MixedConstants
                                                   .RECEIVED_FILE_DIRECTORY +
+                                              '/' +
                                               widget.fileTransfer.files[index]
                                                   .name);
                                         },
@@ -181,53 +183,6 @@ class _DesktopReceivedFileDetailsState
           SizedBox(height: 15.toHeight),
         ],
       ),
-    );
-  }
-
-  getImagePlaceholder({String filepath, String fileName}) {
-    return Row(
-      children: [
-        SizedBox(
-          height: 60,
-          width: 60,
-          child: Image.asset(ImageConstants.pdfLogo),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('File name',
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
-                  SizedBox(height: 5),
-                  Text('250 MB', style: CustomTextStyles.greyText16),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: ColorConstants.orangeColor,
-                      borderRadius: BorderRadius.circular(30)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Center(
-                      child: Text(
-                        '30%',
-                        style: TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
-      ],
     );
   }
 }

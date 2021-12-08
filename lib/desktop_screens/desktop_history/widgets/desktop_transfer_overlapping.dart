@@ -58,7 +58,7 @@ class _DesktopTranferOverlappingContactsState
           children: [
             Stack(
               children: List.generate(
-                widget.selectedList.length - 1,
+                widget.selectedList.length,
                 (index) {
                   Uint8List image = CommonFunctions().getCachedContactImage(
                       widget?.selectedList[index]?.atsign);
@@ -171,7 +171,7 @@ class _DesktopTranferOverlappingContactsState
                             childAspectRatio: 1 / 1.7,
                             physics: NeverScrollableScrollPhysics(),
                             children: List.generate(
-                              widget.selectedList.length - 1,
+                              widget.selectedList.length,
                               (index) {
                                 bool isNotified = widget
                                     .selectedList[index].isNotificationSend;
