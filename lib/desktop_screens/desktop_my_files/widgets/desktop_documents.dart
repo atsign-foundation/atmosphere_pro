@@ -38,23 +38,34 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                     spacing: 30.0,
                     children: List.generate(
                       provider.receivedDocument.length,
-                      (index) => InkWell(
-                        onTap: () async {
-                          File test =
-                              File(provider.receivedDocument[index].filePath);
-                          bool fileExists = await test.exists();
-                          if (fileExists) {
-                            await OpenFile.open(
-                                provider.receivedDocument[index].filePath);
-                          }
-                        },
-                        child: DesktopFileCard(
-                          title: provider.receivedDocument[index].filePath
-                              .split('/')
-                              .last,
-                          filePath: provider.receivedDocument[index].filePath,
-                        ),
-                      ),
+                      (index) {
+                        if (provider.receivedDocument[index].filePath
+                            .split('/')
+                            .last
+                            .toLowerCase()
+                            .contains(provider.fileSearchText)) {
+                          return InkWell(
+                            onTap: () async {
+                              File test = File(
+                                  provider.receivedDocument[index].filePath);
+                              bool fileExists = await test.exists();
+                              if (fileExists) {
+                                await OpenFile.open(
+                                    provider.receivedDocument[index].filePath);
+                              }
+                            },
+                            child: DesktopFileCard(
+                              title: provider.receivedDocument[index].filePath
+                                  .split('/')
+                                  .last,
+                              filePath:
+                                  provider.receivedDocument[index].filePath,
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ),

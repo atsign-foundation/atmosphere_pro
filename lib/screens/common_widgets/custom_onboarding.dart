@@ -48,7 +48,7 @@ class CustomOnboarding {
         _backendService.initBackendService();
         await ContactProvider().initContactImpl();
         await initServices();
-        await getTransferData();
+        getTransferData();
         await initGroups();
 
         if (showLoader != null) {

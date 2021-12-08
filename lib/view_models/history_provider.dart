@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/d
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_photos.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_unknowns.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_videos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
@@ -33,6 +34,8 @@ class HistoryProvider extends BaseModel {
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
   String DOWNLOAD_FILE = 'download_file';
+  String RECENT_HISTORY = 'recent_history';
+  String fileSearchText = '';
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
@@ -52,11 +55,12 @@ class HistoryProvider extends BaseModel {
       receivedApk,
       receivedDocument,
       finalReceivedHistory = [],
-      receivedUnknown = [];
+      receivedUnknown = [],
+      recentFile = [];
   List<String> tabNames = ['Recents'];
 
   List<FilesModel> receivedHistory, receivedAudioModel = [];
-  List<Widget> tabs = [Recents()];
+  List<Widget> tabs = [DesktopRecents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
   Map receivedFileHistory = {'history': []};
@@ -369,20 +373,56 @@ class HistoryProvider extends BaseModel {
           }
         });
       });
-
+      getrecentHistoryFiles();
       setStatus(SORT_FILES, Status.Done);
     } catch (e) {
       setError(SORT_FILES, e.toString());
     }
   }
 
+  getrecentHistoryFiles() async {
+    // finding last 15 received files data for recent tab
+    setStatus(RECENT_HISTORY, Status.Loading);
+    try {
+      var lastTenFilesData = receivedHistoryLogs.sublist(
+          0, receivedHistoryLogs.length > 15 ? 15 : receivedHistoryLogs.length);
+
+      await Future.forEach(lastTenFilesData, (fileData) async {
+        await Future.forEach(fileData.files, (FileData file) async {
+          FilesDetail fileDetail = FilesDetail(
+            fileName: file.name,
+            filePath: BackendService.getInstance().downloadDirectory.path +
+                '/${file.name}',
+            size: double.parse(file.size.toString()),
+            date: fileData.date.toLocal().toString(),
+            type: file.name.split('.').last,
+            contactName: fileData.sender,
+          );
+
+          File tempFile = File(fileDetail.filePath);
+          bool isFileDownloaded = await tempFile.exists();
+          int index = recentFile
+              .indexWhere((element) => element.fileName == fileDetail.fileName);
+
+          if (isFileDownloaded && index == -1) {
+            recentFile.add(fileDetail);
+          }
+        });
+      });
+      setStatus(RECENT_HISTORY, Status.Done);
+    } catch (e) {
+      setStatus(RECENT_HISTORY, Status.Error);
+    }
+  }
+
   populateTabs() {
-    tabs = [Recents()];
-    tabNames = ['Recents'];
     bool isDesktop = false;
+    tabNames = ['Recents'];
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       isDesktop = true;
     }
+    tabs = [isDesktop ? DesktopRecents() : Recents()];
+
     try {
       setStatus(POPULATE_TABS, Status.Loading);
 
@@ -588,5 +628,10 @@ class HistoryProvider extends BaseModel {
       print('error in downloading file: $e');
       return false;
     }
+  }
+
+  setFileSearchText(String str) {
+    fileSearchText = str;
+    notifyListeners();
   }
 }
