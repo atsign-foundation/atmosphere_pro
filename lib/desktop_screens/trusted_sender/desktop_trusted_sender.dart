@@ -168,17 +168,9 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                               element.contact);
                                         }
                                       });
-                                      var contacts =
-                                          await provider.setTrustedContact();
-                                      if (contacts != null &&
-                                          contacts.length > 0) {
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          DesktopSetupRoutes.nested_push(
-                                              DesktopRoutes
-                                                  .DESKTOP_TRUSTED_SENDER);
-                                        });
-                                      }
+
+                                      await provider.setTrustedContact();
+                                      isContactSelection = false;
                                     },
                                     taskName: (provider) =>
                                         provider.AddTrustedContacts,
