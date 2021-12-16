@@ -58,4 +58,7 @@ class MixedConstants {
 
   static String get SENT_FILE_DIRECTORY =>
       '$ApplicationDocumentsDirectory' + '/sent-files/';
+
+  // Onboarding API key - requires different key for production
+  static String ONBOARD_API_KEY = '477b-876u-bcez-c42z-6a3d';
 }

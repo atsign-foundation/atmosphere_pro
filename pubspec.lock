@@ -142,12 +142,12 @@ packages:
     source: hosted
     version: "3.0.2"
   biometric_storage:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: biometric_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "3.0.1"
   boolean_selector:
     dependency: transitive
     description:

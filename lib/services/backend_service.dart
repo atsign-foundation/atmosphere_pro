@@ -6,7 +6,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
@@ -487,6 +487,8 @@ class BackendService {
         atClientPreference: atClientPrefernce,
         domain: MixedConstants.ROOT_DOMAIN,
         appColor: Color.fromARGB(255, 240, 94, 62),
+        appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        rootEnvironment: RootEnvironment.Production,
         onboard: (value, atsign) async {
           atClientServiceMap = value;
 
@@ -586,6 +588,8 @@ class BackendService {
         atClientPreference: atClientPrefernce,
         domain: MixedConstants.ROOT_DOMAIN,
         appColor: Color.fromARGB(255, 240, 94, 62),
+        appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        rootEnvironment: RootEnvironment.Production,
         onboard: (value, atsign) async {
           authenticating = true;
           isAuthuneticatingSink.add(authenticating);
