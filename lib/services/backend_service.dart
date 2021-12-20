@@ -97,7 +97,6 @@ class BackendService {
       ..commitLogPath = path
       ..downloadPath = downloadDirectory.path
       ..namespace = MixedConstants.appNamespace
-      ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT

@@ -11,6 +11,7 @@ class SideBarItem extends StatelessWidget {
   final bool showIconOnly;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
+  bool isScale;
   SideBarItem(
       {Key key,
       this.image,
@@ -18,10 +19,15 @@ class SideBarItem extends StatelessWidget {
       this.routeName,
       this.arguments,
       this.showIconOnly = false,
+      this.isScale = false,
       this.displayColor = ColorConstants.fadedText})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    if (SizeConfig().isMobile(context)) {
+      isScale = false;
+    }
+
     return InkWell(
       onTap: () {
         if (SizeConfig().isMobile(context) ||
@@ -34,10 +40,13 @@ class SideBarItem extends StatelessWidget {
         height: 50,
         child: Row(
           children: [
-            Image.asset(
-              image,
-              height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
-              color: displayColor,
+            Transform.scale(
+              scale: isScale ? 1.2 : 1,
+              child: Image.asset(
+                image,
+                height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
+                color: displayColor,
+              ),
             ),
             SizedBox(width: 10),
             !showIconOnly

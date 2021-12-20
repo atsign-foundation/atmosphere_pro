@@ -125,8 +125,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
     return ClipRRect(
       child: Container(
         padding: SizeConfig().isTablet(context)
-            ? EdgeInsets.all(10.toFont)
-            : EdgeInsets.all(0),
+            ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
+            : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.toFont),
           color: ColorConstants.inputFieldColor,
@@ -134,6 +134,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
         child: Column(
           children: [
             ListTile(
+              contentPadding: EdgeInsets.all(0),
               title: Text(
                 filePickerProvider.selectedFiles.isEmpty
                     ? TextStrings().welcomeFilePlaceholder
