@@ -60,18 +60,10 @@ class _ExpansionTileWidget extends StatelessWidget {
   _ExpansionTileWidget(this.headerText, this.onSelected);
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      backgroundColor: ColorConstants.inputFieldColor,
-      title: Text(
-        headerText,
-        style: TextStyle(
-          color: ColorConstants.fadedText,
-          fontSize: 14.toFont,
-        ),
-      ),
-      trailing: InkWell(
-        onTap: () async {
-          await Navigator.push(
+    return InkWell(
+      onTap:() async
+      {
+        await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => GroupContactView(
@@ -94,8 +86,17 @@ class _ExpansionTileWidget extends StatelessWidget {
               ),
             ),
           );
-        },
-        child: Container(
+      },
+      child: ExpansionTile(
+        backgroundColor: ColorConstants.inputFieldColor,
+        title: Text(
+          headerText,
+          style: TextStyle(
+            color: ColorConstants.fadedText,
+            fontSize: 14.toFont,
+          ),
+        ),
+        trailing: Container(
           padding: EdgeInsets.symmetric(vertical: 15),
           child: Image.asset(
             ImageConstants.contactsIcon,

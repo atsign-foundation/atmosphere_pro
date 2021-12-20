@@ -130,33 +130,34 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
         ),
         child: Column(
           children: [
-            ListTile(
-              title: Text(
-                filePickerProvider.selectedFiles.isEmpty
-                    ? TextStrings().welcomeFilePlaceholder
-                    : TextStrings().welcomeAddFilePlaceholder,
-                style: TextStyle(
-                  color: ColorConstants.fadedText,
-                  fontSize: 14.toFont,
+            InkWell(
+              onTap: ()
+              {
+                _showFileChoice();
+              },
+              child: ListTile(
+                title: Text(
+                  filePickerProvider.selectedFiles.isEmpty
+                      ? TextStrings().welcomeFilePlaceholder
+                      : TextStrings().welcomeAddFilePlaceholder,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
+                  ),
                 ),
-              ),
-              subtitle: filePickerProvider.selectedFiles.isEmpty
-                  ? null
-                  : Text(
-                      double.parse(filePickerProvider.totalSize.toString()) <=
-                              1024
-                          ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
-                          : '${(filePickerProvider.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
-                      style: TextStyle(
-                        color: ColorConstants.fadedText,
-                        fontSize: 10.toFont,
+                subtitle: filePickerProvider.selectedFiles.isEmpty
+                    ? null
+                    : Text(
+                        double.parse(filePickerProvider.totalSize.toString()) <=
+                                1024
+                            ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
+                            : '${(filePickerProvider.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
+                        style: TextStyle(
+                          color: ColorConstants.fadedText,
+                          fontSize: 10.toFont,
+                        ),
                       ),
-                    ),
-              trailing: InkWell(
-                onTap: () {
-                  _showFileChoice();
-                },
-                child: Container(
+                trailing: Container(
                   padding: EdgeInsets.symmetric(vertical: 15.toHeight),
                   child: Icon(
                     Icons.add_circle,
