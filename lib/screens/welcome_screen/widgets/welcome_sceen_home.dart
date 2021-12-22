@@ -37,13 +37,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   void initState() {
     isContactSelected = false;
     isFileSelected = false;
-    _welcomeScreenProvider = WelcomeScreenProvider();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     filePickerModel = Provider.of<FileTransferProvider>(context);
+    _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(context);
 
     return Container(
         width: double.infinity,
@@ -157,20 +157,25 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             Consumer<FileTransferProvider>(
                                 builder: (context, provider, _) {
                               if (filePickerModel.scrollToBottom) {
-                                scrolToBottom();
+                                scrollToBottom();
                               }
                               return SizedBox();
                             }),
                             Consumer<WelcomeScreenProvider>(
                               builder: (context, provider, _) {
-                                return (provider.selectedContacts.isEmpty)
-                                    ? Container()
-                                    : OverlappingContacts(
-                                        selectedList: provider.selectedContacts,
-                                        onChnage: (isUpdate) {
-                                          setState(() {});
-                                        },
-                                      );
+                                if (provider.scrollToBottom) {
+                                  scrollToBottom();
+                                }
+                                if ((provider.selectedContacts.isEmpty)) {
+                                  return Container();
+                                } else {
+                                  return OverlappingContacts(
+                                    selectedList: provider.selectedContacts,
+                                    onChnage: (isUpdate) {
+                                      setState(() {});
+                                    },
+                                  );
+                                }
                               },
                             ),
                             SizedBox(
@@ -253,7 +258,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         ));
   }
 
-  scrolToBottom() {
+  scrollToBottom() {
     Timer(
       Duration(milliseconds: 200),
       () {
@@ -262,7 +267,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
           duration: Duration(seconds: 1),
           curve: Curves.fastOutSlowIn,
         );
-
+        _welcomeScreenProvider.scrollToBottom = false;
         filePickerModel.scrollToBottom = false;
       },
     );

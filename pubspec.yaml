@@ -58,24 +58,7 @@ dependencies:
   at_common_flutter: ^2.0.4
   at_contacts_flutter: ^3.1.1
   at_contacts_group_flutter: ^3.1.1
-  image_gallery_saver: ^1.7.1
 
-dependency_overrides:
-  at_onboarding_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_onboarding_flutter  
-      ref: feat/onboarding-with-trunk-changes
-  at_contacts_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_contacts_flutter  
-      ref: trunk
-  at_contacts_group_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_contacts_group_flutter  
-      ref: trunk
 dev_dependencies:
   flutter_test:
     sdk: flutter

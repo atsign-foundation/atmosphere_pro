@@ -179,6 +179,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           icon: Icon(
                             widget.trailingIcon,
                             size: 25.toFont,
+                            color: ColorConstants.blueText,
                           ),
                           onPressed: () async {
                             if (widget.isHistory) {
