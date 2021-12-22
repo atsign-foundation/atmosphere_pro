@@ -19,6 +19,7 @@ class _DocumentsState extends State<Documents> {
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
+      showError: false,
       load: (provider) => provider.sortFiles(provider.receivedHistoryLogs),
       successBuilder: (provider) => Container(
         margin:

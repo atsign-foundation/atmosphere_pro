@@ -97,7 +97,6 @@ class BackendService {
       ..commitLogPath = path
       ..downloadPath = downloadDirectory.path
       ..namespace = MixedConstants.appNamespace
-      ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
@@ -203,8 +202,8 @@ class BackendService {
         print("error in decrypting: $e");
         //TODO: only for closed testing purpose , we are showing error dialog
         // should be removed before general release.
-        ErrorDialog()
-            .show(e.toString(), context: NavService.navKey.currentContext);
+        // ErrorDialog()
+        // .show(e.toString(), context: NavService.navKey.currentContext);
       });
 
       if (decryptedMessage != null) {

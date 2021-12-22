@@ -52,7 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen>
         showTitle: true,
         title: 'History',
         showTrailingButton: true,
-        trailingIcon: Icons.library_books,
+        trailingIcon: Icons.save_alt_outlined,
         isHistory: true,
       ),
       body: SingleChildScrollView(

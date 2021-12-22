@@ -139,7 +139,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   void initState() {
     super.initState();
-    // getEventCreator();
 
     isExpanded = widget.isExpanded;
     getAtsignDetails();
@@ -314,6 +313,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
+                    isScale: true,
                     image: menuItemsIcons[3],
                     title: menuItemsTitle[3],
                     routeName: targetScreens[3],
@@ -325,6 +325,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
+                    isScale: true,
                     image: menuItemsIcons[4],
                     title: menuItemsTitle[4],
                     routeName: targetScreens[4],
@@ -350,7 +351,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     title: isExpanded ? TextStrings().sidebarBackupKey : '',
                     leadingIcon: Icon(Icons.file_copy,
                         color: Color(0xFF757581),
-                        size: (isTablet ? 24 : 21.toFont)),
+                        size: (isTablet ? 26 : 21.toFont)),
                     onPressed: () {
                       BackupKeyWidget(
                         atClientService: AtClientManager.getInstance().atClient,
@@ -379,6 +380,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
+                    isScale: true,
                     image: menuItemsIcons[8],
                     title: menuItemsTitle[8],
                     routeName: targetScreens[8],
@@ -398,7 +400,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         child: Row(children: [
                           Icon(Icons.delete,
                               color: ColorConstants.fadedText,
-                              size: 25.toHeight),
+                              size: isTablet ? 20.toHeight : 25.toHeight),
                           SizedBox(width: 10),
                           isExpanded
                               ? Text(
@@ -428,7 +430,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         child: Row(children: [
                           Image.asset(
                             ImageConstants.logoutIcon,
-                            height: 22.toHeight,
+                            height: isTablet ? 20.toHeight : 22.toHeight,
                             color: ColorConstants.fadedText,
                           ),
                           SizedBox(width: 10),

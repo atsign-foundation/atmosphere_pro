@@ -58,7 +58,6 @@ dependencies:
   at_common_flutter: ^2.0.4
   at_contacts_flutter: ^3.1.1
   at_contacts_group_flutter: ^3.1.1
-  image_gallery_saver: ^1.7.1
 
 dev_dependencies:
   flutter_test:

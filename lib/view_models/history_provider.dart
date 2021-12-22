@@ -24,7 +24,6 @@ import 'package:at_client/src/service/encryption_service.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -190,7 +189,10 @@ class HistoryProvider extends BaseModel {
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
         ..metadata = Metadata();
-      var keyValue = await backendService.atClientInstance.get(key);
+      var keyValue =
+          await backendService.atClientInstance.get(key).catchError((e) {
+        print('error in getSentHistory : $e');
+      });
       if (keyValue != null && keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
@@ -237,8 +239,12 @@ class HistoryProvider extends BaseModel {
 
     await Future.forEach(atKeys, (AtKey atKey) async {
       try {
-        AtValue atValue =
-            await AtClientManager.getInstance().atClient.get(atKey);
+        AtValue atValue = await AtClientManager.getInstance()
+            .atClient
+            .get(atKey)
+            .catchError((e) {
+          print('error in get in getFileDownloadedAcknowledgement : $e');
+        });
         if (atValue != null && atValue.value != null) {
           var downloadAcknowledgement =
               DownloadAcknowledgement.fromJson(jsonDecode(atValue.value));
@@ -370,7 +376,8 @@ class HistoryProvider extends BaseModel {
         AtValue atvalue = await backendService.atClientInstance
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) => print("error in get $e"));
+            .catchError((e) => print(
+                "error in getting atValue in getAllFileTransferData : $e"));
 
         if (atvalue != null && atvalue.value != null) {
           try {
@@ -392,8 +399,6 @@ class HistoryProvider extends BaseModel {
 
     receivedHistoryLogs = tempReceivedHistoryLogs;
 
-    print('sentHistory length ${receivedHistoryNew.length}');
-    print('receivedHistoryLogs length: ${receivedHistoryLogs.length}');
     setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 
@@ -713,8 +718,6 @@ class HistoryProvider extends BaseModel {
           .downloadFile(transferId, sharedBy);
       receivedHistoryLogs[index].isDownloading = false;
 
-      await saveFilesInGallery(files);
-
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
@@ -754,8 +757,6 @@ class HistoryProvider extends BaseModel {
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
       receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
 
-      await saveFilesInGallery(files);
-
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
@@ -785,7 +786,14 @@ class HistoryProvider extends BaseModel {
     var atKey = AtKey()
       ..key = transferId
       ..sharedBy = sharedByAtSign;
-    var result = await AtClientManager.getInstance().atClient.get(atKey);
+    var result =
+        await AtClientManager.getInstance().atClient.get(atKey).catchError((e) {
+      print('error in _downloadSingleFileFromWeb : $e');
+    });
+
+    if (result == null) {
+      return [];
+    }
     FileTransferObject fileTransferObject;
     try {
       var _jsonData = jsonDecode(result.value);
@@ -912,13 +920,14 @@ class HistoryProvider extends BaseModel {
     return atsign;
   }
 
-  saveFilesInGallery(List<File> files) async {
-    for (var file in files) {
-      if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
-          FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
-        // saving image,video in gallery.
-        await ImageGallerySaver.saveFile(file.path);
-      }
-    }
-  }
+  // save file in gallery function is not in use as of now.
+  // saveFilesInGallery(List<File> files) async {
+  //   for (var file in files) {
+  //     if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
+  //         FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
+  //       // saving image,video in gallery.
+  //       await ImageGallerySaver.saveFile(file.path);
+  //     }
+  //   }
+  // }
 }

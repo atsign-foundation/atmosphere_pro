@@ -38,6 +38,7 @@ class _VideosState extends State<Videos> {
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
+      showError: false,
       load: (provider) {
         return provider.sortFiles(provider.receivedHistoryLogs);
       },

@@ -22,6 +22,7 @@ class _RecentsState extends State<Recents> {
     return ProviderHandler<HistoryProvider>(
       load: (provider) => provider.getrecentHistoryFiles(),
       functionName: 'recent_history',
+      showError: false,
       successBuilder: (provider) => (provider.recentFile.isEmpty)
           ? Center(
               child: Text('No files received',

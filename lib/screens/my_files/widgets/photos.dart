@@ -28,6 +28,7 @@ class _PhotosState extends State<Photos> {
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
+      showError: false,
       load: (provider) {
         provider.getReceivedHistory();
       },
