@@ -202,8 +202,8 @@ class BackendService {
         print("error in decrypting: $e");
         //TODO: only for closed testing purpose , we are showing error dialog
         // should be removed before general release.
-        ErrorDialog()
-            .show(e.toString(), context: NavService.navKey.currentContext);
+        // ErrorDialog()
+        // .show(e.toString(), context: NavService.navKey.currentContext);
       });
 
       if (decryptedMessage != null) {

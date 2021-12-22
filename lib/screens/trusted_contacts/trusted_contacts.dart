@@ -33,7 +33,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
         child: ProviderHandler<TrustedContactProvider>(
             functionName: 'get_trusted_contacts',
             load: (provider) async => await provider.getTrustedContact(),
-            showError: true,
+            showError: false,
             errorBuilder: (provider) => Container(),
             successBuilder: (provider) {
               return Scaffold(
