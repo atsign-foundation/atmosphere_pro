@@ -210,7 +210,10 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                 SizeConfig().isTablet(context)
                                                     ? 5
                                                     : 3,
-                                            childAspectRatio: 1 / 1.1),
+                                            childAspectRatio: 1 /
+                                                (SizeConfig().isTablet(context)
+                                                    ? 1.2
+                                                    : 1.1)),
                                     shrinkWrap: true,
                                     itemCount:
                                         provider.fetchedTrustedContact.length,
