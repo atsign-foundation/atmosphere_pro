@@ -89,7 +89,6 @@ class _AddContactState extends State<AddContact> {
             onChanged: (value) {
               nickName = value;
             },
-            // validator: Validators.validateAdduser,
             decoration: InputDecoration(
               hintText: 'Enter Nick Name (Optional)',
             ),

@@ -31,7 +31,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   List<AtContact> selectedList = [];
   bool isExpanded = true;
   ScrollController scrollController = ScrollController();
-  var filePickerModel;
+  FileTransferProvider filePickerModel;
 
   @override
   void initState() {

@@ -61,6 +61,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             child: Container(
+              padding: EdgeInsets.only(left: 10.toWidth),
               height: 200.0.toHeight,
               width: 300.0.toWidth,
               child: Column(
@@ -72,7 +73,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     style: CustomTextStyles.primaryBold16,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15.0)),
-                  FlatButton(
+                  TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                         providerCallback<FileTransferProvider>(context,
@@ -84,7 +85,11 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                 .show(err.toString(), context: context));
                       },
                       child: Row(children: <Widget>[
-                        Icon(Icons.camera, size: 30),
+                        Icon(
+                          Icons.camera,
+                          size: 30.toFont,
+                          color: Colors.black,
+                        ),
                         Padding(
                             padding: EdgeInsets.only(left: 20),
                             child: Text(
@@ -93,7 +98,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                             ))
                       ])),
                   Padding(padding: EdgeInsets.only(top: 15.0)),
-                  FlatButton(
+                  TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                         providerCallback<FileTransferProvider>(context,
@@ -105,7 +110,11 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                 .show(err.toString(), context: context));
                       },
                       child: Row(children: <Widget>[
-                        Icon(Icons.file_copy, size: 30),
+                        Icon(
+                          Icons.file_copy,
+                          size: 30.toFont,
+                          color: Colors.black,
+                        ),
                         Padding(
                             padding: EdgeInsets.only(left: 20),
                             child: Text(

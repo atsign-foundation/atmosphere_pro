@@ -8,7 +8,6 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -17,10 +16,8 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
@@ -41,7 +38,6 @@ class BackendService {
   AtClientManager atClientManager;
   AtClient atClientInstance;
   String currentAtSign;
-  Function ask_user_acceptance;
   String app_lifecycle_state;
   AtClientPreference atClientPreference;
   SyncService syncService;
@@ -49,12 +45,8 @@ class BackendService {
   final String AUTH_SUCCESS = "Authentication successful";
 
   String get currentAtsign => currentAtSign;
-  OutboundConnection monitorConnection;
   Directory downloadDirectory;
-  double bytesReceived = 0.0;
   AnimationController controller;
-  Flushbar receivingFlushbar;
-  String onBoardError;
 
   final _isAuthuneticatingStreamController = StreamController<bool>.broadcast();
 
@@ -106,7 +98,6 @@ class BackendService {
 
   ///Fetches atsign from device keychain.
   Future<String> getAtSign() async {
-    // return await atClientServiceInstance.getAtSign();
     await getAtClientPreference().then((value) {
       return atClientPreference = value;
     });
@@ -154,9 +145,6 @@ class BackendService {
       _notificationCallBack(notification);
     });
   }
-
-  var fileLength;
-  var userResponse = false;
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
@@ -268,12 +256,9 @@ class BackendService {
     }
   }
 
-  void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
-
-  static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-
   Future<List<String>> getAtsignList() async {
-    var atSignsList = await _keyChainManager.getAtSignListFromKeychain();
+    var atSignsList =
+        await KeyChainManager.getInstance().getAtSignListFromKeychain();
     return atSignsList;
   }
 
@@ -356,9 +341,7 @@ class BackendService {
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);
           },
-          appAPIKey: MixedConstants.ONBOARD_API_KEY
-          // nextScreen: WelcomeScreen(),
-          );
+          appAPIKey: MixedConstants.ONBOARD_API_KEY);
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
     } catch (e) {
@@ -384,7 +367,7 @@ class BackendService {
 
     // start monitor and package initializations.
     await startMonitor();
-    _initBackendService();
+    _initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
@@ -406,7 +389,7 @@ class BackendService {
   String state;
   LocalNotificationService _notificationService;
 
-  void _initBackendService() async {
+  void _initLocalNotification() async {
     _notificationService = LocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);

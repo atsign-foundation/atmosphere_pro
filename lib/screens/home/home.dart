@@ -163,8 +163,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  onNotificationClick(String payload) async {}
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

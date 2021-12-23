@@ -21,9 +21,6 @@ class TrustedContactProvider extends BaseModel {
     setStatus(AddTrustedContacts, Status.Loading);
 
     try {
-      // trustedContacts = [];
-      // await getTrustedContact();
-
       bool isAlreadyPresent = false;
       for (AtContact contact in trustedContacts) {
         if (contact.toString() == trustedContact.toString()) {
@@ -45,14 +42,10 @@ class TrustedContactProvider extends BaseModel {
     trustedContactOperation = true;
 
     try {
-      // if (trustedContacts.contains(trustedContact)) {
-      //   trustedContacts.remove(trustedContact);
-      // }
       for (AtContact contact in trustedContacts) {
         if (contact.toString() == trustedContact.toString()) {
           int index = trustedContacts.indexOf(contact);
           trustedContacts.removeAt(index);
-          // isAlreadyPresent = true;
           break;
         }
       }
@@ -76,7 +69,6 @@ class TrustedContactProvider extends BaseModel {
         json.encode({"trustedContacts": trustedContacts}),
       );
 
-      // getTrustedContact();
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {

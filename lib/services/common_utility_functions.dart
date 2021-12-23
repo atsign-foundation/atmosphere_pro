@@ -2,11 +2,12 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 
-class CommonFunctions {
-  static final CommonFunctions _singleton = CommonFunctions._internal();
-  CommonFunctions._internal();
+class CommonUtilityFunctions {
+  static final CommonUtilityFunctions _singleton =
+      CommonUtilityFunctions._internal();
+  CommonUtilityFunctions._internal();
 
-  factory CommonFunctions() {
+  factory CommonUtilityFunctions() {
     return _singleton;
   }
 

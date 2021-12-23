@@ -185,8 +185,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         }
       }
     }
-    await Provider.of<WelcomeScreenProvider>(context, listen: false)
-        .getToggleStatus();
+
     if (mounted) {
       if (mounted) {
         setState(() {});

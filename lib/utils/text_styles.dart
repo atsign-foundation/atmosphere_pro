@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomTextStyles {
-  //colorWeightSize
-
 //REGULAR FONTS
-
   static TextStyle blueRegular18 = TextStyle(
       color: ColorConstants.appBarCloseColor,
       fontSize: 18.toFont,
@@ -50,6 +47,20 @@ class CustomTextStyles {
       fontSize: 12.toFont,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
+
+  static TextStyle grey13 =
+      TextStyle(fontSize: 13.toFont, color: ColorConstants.greyText);
+
+  static TextStyle grey15 =
+      TextStyle(fontSize: 15.toFont, color: ColorConstants.greyText);
+
+  static TextStyle red15 =
+      TextStyle(color: ColorConstants.redAlert, fontSize: 15.toFont);
+
+  static TextStyle darkGrey13 = TextStyle(
+    color: ColorConstants.dullText,
+    fontSize: 13.toFont,
+  );
 
 //BOLD FONTS
   static TextStyle whiteBold16 = TextStyle(
@@ -120,19 +131,5 @@ class CustomTextStyles {
     fontSize: 11.toFont,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle grey13 =
-      TextStyle(fontSize: 13.toFont, color: ColorConstants.greyText);
-
-  static TextStyle grey15 =
-      TextStyle(fontSize: 15.toFont, color: ColorConstants.greyText);
-
-  static TextStyle red15 =
-      TextStyle(color: ColorConstants.redAlert, fontSize: 15.toFont);
-
-  static TextStyle darkGrey13 = TextStyle(
-    color: ColorConstants.dullText,
-    fontSize: 13.toFont,
   );
 }
