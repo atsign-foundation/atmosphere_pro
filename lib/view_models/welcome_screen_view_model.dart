@@ -14,13 +14,14 @@ class WelcomeScreenProvider extends BaseModel {
   String selectGroupContacts = 'select_group_contacts';
   String autoAcceptToggle = 'toogle_auto_accept';
   HiveService _hiveService = HiveService();
-  bool isAutoAccept = false, isExpanded = false;
+  bool isAutoAccept = false, isExpanded = false, scrollToBottom = false;
   bool hasSelectedContactsChanged = false;
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts = updatedList;
       hasSelectedContactsChanged = true;
+      scrollToBottom = true; // to scroll welcome screen to the bottom
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());

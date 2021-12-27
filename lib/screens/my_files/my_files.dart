@@ -1,7 +1,6 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
@@ -9,7 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

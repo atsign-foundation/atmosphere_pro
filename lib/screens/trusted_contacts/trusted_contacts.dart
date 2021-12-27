@@ -15,7 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/grou
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +33,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
         child: ProviderHandler<TrustedContactProvider>(
             functionName: 'get_trusted_contacts',
             load: (provider) async => await provider.getTrustedContact(),
-            showError: true,
+            showError: false,
             errorBuilder: (provider) => Container(),
             successBuilder: (provider) {
               return Scaffold(
@@ -210,7 +210,10 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                 SizeConfig().isTablet(context)
                                                     ? 5
                                                     : 3,
-                                            childAspectRatio: 1 / 1.1),
+                                            childAspectRatio: 1 /
+                                                (SizeConfig().isTablet(context)
+                                                    ? 1.2
+                                                    : 1.1)),
                                     shrinkWrap: true,
                                     itemCount:
                                         provider.fetchedTrustedContact.length,

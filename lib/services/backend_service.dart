@@ -6,18 +6,12 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
-import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
-import 'package:atsign_atmosphere_pro/services/hive_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -30,9 +24,7 @@ import 'package:at_lookup/src/connection/outbound_connection.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
-import 'package:at_commons/at_commons.dart';
 import 'navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/src/service/sync_service_impl.dart';
 
@@ -105,7 +97,6 @@ class BackendService {
       ..commitLogPath = path
       ..downloadPath = downloadDirectory.path
       ..namespace = MixedConstants.appNamespace
-      ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
@@ -211,8 +202,8 @@ class BackendService {
         print("error in decrypting: $e");
         //TODO: only for closed testing purpose , we are showing error dialog
         // should be removed before general release.
-        ErrorDialog()
-            .show(e.toString(), context: NavService.navKey.currentContext);
+        // ErrorDialog()
+        // .show(e.toString(), context: NavService.navKey.currentContext);
       });
 
       if (decryptedMessage != null) {
@@ -277,167 +268,7 @@ class BackendService {
     }
   }
 
-  Future proceedToFileDownload(String fileName) async {
-    String path = downloadDirectory.path + '/$fileName';
-    File file = File(path);
-    bool isPresent, proceedToDownload = false;
-    isPresent = await file.exists();
-    if (isPresent) {
-      await showDialog(
-          context: NavService.navKey.currentContext,
-          builder: (context) {
-            return AlertDialog(
-              content: Container(
-                height: 150.toHeight,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'A file named, "$fileName" already exists. ',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text('Do you want to replace it ?'),
-                      SizedBox(
-                        height: 20.toHeight,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                              onPressed: () {
-                                proceedToDownload = true;
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Yes')),
-                          TextButton(onPressed: null, child: Text('')),
-                          TextButton(
-                              onPressed: () {
-                                proceedToDownload = false;
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Cancel'))
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          });
-    } else {
-      // when file with same name is not present , we can proceed to download
-      print('file not present');
-      return true;
-    }
-    print('proceedToDownload : ${proceedToDownload}');
-    return proceedToDownload;
-  }
-
-  void _streamCompletionCallBack(var streamId) async {
-    DateTime now = DateTime.now();
-    int historyFileCount = 0;
-    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-            listen: false)
-        .receivedFileHistory
-        .forEach((key, value) {
-      value.forEach((e) => historyFileCount++);
-    });
-
-    var value = {'timeStamp': now, 'length': historyFileCount};
-    HiveService().writeData(
-        MixedConstants.HISTORY_BOX, MixedConstants.HISTORY_KEY, value);
-    receivingFlushbar =
-        CustomFlushBar().getFlushbar(TextStrings().fileReceived, null);
-
-    await receivingFlushbar.show(NavService.navKey.currentContext);
-  }
-
-  void _streamReceiveCallBack(var bytesReceived) async {
-    receivingFlushbar =
-        CustomFlushBar().getFlushbar(TextStrings().fileSent, null);
-
-    await receivingFlushbar.show(NavService.navKey.currentContext);
-  }
-
-  // send a file
-  Future<bool> sendFile(String atSign, String filePath) async {
-    if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
-    }
-    print("Sending file => $atSign $filePath");
-    var result = await atClientInstance.stream(atSign, filePath);
-    print("sendfile result => $result");
-    if (result.status.toString() == 'AtStreamStatus.COMPLETE') {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   void downloadCompletionCallback({bool downloadCompleted, filePath}) {}
-
-  // acknowledge file transfer
-  acceptStream(String atsign, String filename, String filesize, String receiver,
-      {String id}) async {
-    print("from:$atsign file:$filename size:$receiver");
-    if (receiver == currentAtSign && atsign != currentAtSign) {
-      BuildContext context = NavService.navKey.currentContext;
-      if (!autoAcceptFiles &&
-          app_lifecycle_state != null &&
-          app_lifecycle_state != AppLifecycleState.resumed.toString()) {
-        print("app not active $app_lifecycle_state");
-        await LocalNotificationService()
-            .showNotification(atsign, 'Download and view the file(s).');
-      }
-      NotificationPayload payload = NotificationPayload(
-          file: filename, name: atsign, size: double.parse(filesize));
-
-      bool userAcceptance;
-
-      bool trustedSender = false;
-      TrustedContactProvider trustedContactProvider =
-          Provider.of<TrustedContactProvider>(context, listen: false);
-
-      trustedContactProvider.trustedContacts.forEach((element) {
-        if (element.atSign == atsign) {
-          trustedSender = true;
-        }
-      });
-
-      if (autoAcceptFiles && trustedSender) {
-        DateTime date = DateTime.now();
-        Provider.of<HistoryProvider>(context, listen: false).setFilesHistory(
-            atSignName: [payload.name.toString()],
-            historyType: HistoryType.received,
-            files: [
-              FilesDetail(
-                  filePath:
-                      atClientPreference.downloadPath + '/' + payload.file,
-                  size: payload.size,
-                  date: date.toString(),
-                  fileName: payload.file,
-                  type:
-                      payload.file.substring(payload.file.lastIndexOf('.') + 1))
-            ]);
-        userAcceptance = true;
-      } else {
-        await showDialog(
-          context: context,
-          builder: (context) => ReceiveFilesAlert(
-            payload: jsonEncode(payload),
-            sharingStatus: (s) {
-              userAcceptance = s;
-              print('STATUS====>$s');
-            },
-          ),
-        );
-      }
-
-      return userAcceptance;
-    }
-  }
 
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
 
@@ -493,53 +324,6 @@ class BackendService {
     var checkPresence = await AtLookupImpl.findSecondary(
         atSign, MixedConstants.ROOT_DOMAIN, AtClientPreference().rootPort);
     return checkPresence != null;
-  }
-
-  Future<Map<String, dynamic>> getContactDetails(String atSign) async {
-    Map<String, dynamic> contactDetails = {};
-    if (atSign == null) {
-      return contactDetails;
-    } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
-    }
-    var metadata = Metadata();
-    metadata.isPublic = true;
-    metadata.namespaceAware = false;
-    AtKey key = AtKey();
-    key.sharedBy = atSign;
-    key.metadata = metadata;
-    List contactFields = TextStrings().contactFields;
-
-    try {
-      // firstname
-      key.key = contactFields[0];
-      var result = await atClientInstance
-          .get(key)
-          .catchError((e) => print("error in get ${e.toString()}"));
-      var firstname = result.value;
-
-      // lastname
-      key.key = contactFields[1];
-      result = await atClientInstance.get(key);
-      var lastname = result.value;
-
-      var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.fileLength == 0) {
-        name = atSign.substring(1);
-      }
-
-      // image
-      key.metadata.isBinary = true;
-      key.key = contactFields[2];
-      result = await atClientInstance.get(key);
-      var image = result.value;
-      contactDetails['name'] = name;
-      contactDetails['image'] = image;
-    } catch (e) {
-      contactDetails['name'] = null;
-      contactDetails['image'] = null;
-    }
-    return contactDetails;
   }
 
   bool authenticating = false;

@@ -1,5 +1,5 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -19,6 +19,7 @@ class _DocumentsState extends State<Documents> {
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
+      showError: false,
       load: (provider) => provider.sortFiles(provider.receivedHistoryLogs),
       successBuilder: (provider) => Container(
         margin:

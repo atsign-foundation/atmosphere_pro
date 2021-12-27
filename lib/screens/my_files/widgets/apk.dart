@@ -1,5 +1,5 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -21,6 +21,7 @@ class _APKState extends State<APK> {
           EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
       child: ProviderHandler<HistoryProvider>(
         functionName: 'received_history',
+        showError: false,
         load: (provider) => provider.getReceivedHistory(),
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,

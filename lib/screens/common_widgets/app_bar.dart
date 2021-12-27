@@ -12,7 +12,7 @@ import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -179,6 +179,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           icon: Icon(
                             widget.trailingIcon,
                             size: 25.toFont,
+                            color: ColorConstants.blueText,
                           ),
                           onPressed: () async {
                             if (widget.isHistory) {

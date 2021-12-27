@@ -93,11 +93,14 @@ class TrustedContactProvider extends BaseModel {
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
 
-      AtValue keyValue =
-          await backendService.atClientInstance.get(trustedContactsKey);
+      AtValue keyValue = await backendService.atClientInstance
+          .get(trustedContactsKey)
+          .catchError((e) {
+        print('error in get in getTrustedContact : $e ');
+      });
 
       var jsonValue;
-      if (keyValue.value != null) {
+      if (keyValue != null && keyValue.value != null) {
         jsonValue = jsonDecode(keyValue.value);
         jsonValue['trustedContacts'].forEach((contact) {
           final c = AtContact.fromJson(contact);

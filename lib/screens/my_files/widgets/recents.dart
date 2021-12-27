@@ -4,13 +4,11 @@ import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Recents extends StatefulWidget {
@@ -24,6 +22,7 @@ class _RecentsState extends State<Recents> {
     return ProviderHandler<HistoryProvider>(
       load: (provider) => provider.getrecentHistoryFiles(),
       functionName: 'recent_history',
+      showError: false,
       successBuilder: (provider) => (provider.recentFile.isEmpty)
           ? Center(
               child: Text('No files received',

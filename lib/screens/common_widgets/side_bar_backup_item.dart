@@ -19,7 +19,7 @@ class SideBarBackupItem extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        height: 50,
+        height: 50.toHeight,
         child: Row(
           children: [
             if (leadingIcon != null) leadingIcon,

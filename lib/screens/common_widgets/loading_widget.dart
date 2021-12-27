@@ -3,7 +3,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class LoadingDialog {
   LoadingDialog._();

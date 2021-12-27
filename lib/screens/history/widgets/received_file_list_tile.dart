@@ -19,7 +19,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -43,10 +43,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloading = false,
       isDownloaded = false,
       isDownloadAvailable = false,
-      isFilesAvailableOfline = true;
+      isFilesAvailableOfline = true,
+      isOverwrite = false;
   DateTime sendTime;
   Uint8List videoThumbnail, image;
   int fileSize = 0;
+  List<String> existingFileNamesToOverwrite = [];
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -78,7 +80,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloadAvailable = true;
     }
 
-// if fileList is not hab=ving any file then download icon will not be shown
+    // if fileList is not having any file then download icon will not be shown
     var isFileUploaded = false;
     widget.receivedHistory.files.forEach((FileData fileData) {
       if (fileData.isUploaded) {
@@ -118,6 +120,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         setState(() {
           isFilesAvailableOfline = false;
         });
+      } else {
+        var fileLatsModified = await test.lastModified();
+        if (fileLatsModified.isBefore(widget.receivedHistory.date)) {
+          existingFileNamesToOverwrite.add(element.name);
+          setState(() {
+            isOverwrite = true;
+          });
+        }
       }
     });
   }
@@ -188,7 +198,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           shape: BoxShape.circle,
                                           color: Colors.white,
                                         ),
-                                        child: Icon(Icons.person_add)))
+                                        child: Icon(
+                                          Icons.person_add,
+                                          size: 15.toFont,
+                                        )))
                                 : SizedBox()
                           ],
                         ),
@@ -212,12 +225,17 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     ),
                     InkWell(
                         onTap: () async {
+                          if (isOverwrite) {
+                            overwriteDialog();
+                            return;
+                          }
                           await downloadFiles(widget.receivedHistory);
                         },
                         child: isDownloadAvailable
                             ? widget.receivedHistory.isDownloading
                                 ? CircularProgressIndicator()
-                                : isDownloaded || isFilesAvailableOfline
+                                : ((isDownloaded || isFilesAvailableOfline) &&
+                                        !isOverwrite)
                                     ? Icon(
                                         Icons.done,
                                         color: Color(0xFF08CB21),
@@ -239,7 +257,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.receivedHistory.files.length} Files',
+                        '${widget.receivedHistory.files.length} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -507,7 +525,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     );
   }
 
-  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+  Widget thumbnail(
+    String extension,
+    String path, {
+    bool isFilePresent = true,
+  }) {
+    // when file overwrite is true, we are not showing file preview.
+    if (isOverwrite) {
+      isFilePresent = false;
+    }
     if (FileTypes.IMAGE_TYPES.contains(extension)) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(10.toHeight),
@@ -657,5 +683,104 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
       }
     }
+  }
+
+  overwriteDialog() {
+    showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            content: Container(
+              width: 300.toWidth,
+              padding: EdgeInsets.all(15.toFont),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: getOverwriteMessage(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.toHeight,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              await downloadFiles(widget.receivedHistory);
+                            },
+                            child: Text('Yes',
+                                style: TextStyle(fontSize: 16.toFont))),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel',
+                                style: TextStyle(fontSize: 16.toFont)))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  List<TextSpan> getOverwriteMessage() {
+    List<TextSpan> textSpansMessage = [];
+    if (existingFileNamesToOverwrite.length == 1) {
+      textSpansMessage.add(
+        TextSpan(
+          children: [
+            TextSpan(
+                text: 'A file named ',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+            TextSpan(
+                text: '${existingFileNamesToOverwrite[0]}',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: ' already exists. Do you want to overwrite it?',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+          ],
+        ),
+      );
+    } else if (existingFileNamesToOverwrite.length > 1) {
+      textSpansMessage.add(TextSpan(
+        text: 'These files already exist: ',
+        style: TextStyle(color: Colors.black, fontSize: 15.toFont),
+      ));
+
+      existingFileNamesToOverwrite.forEach((element) {
+        textSpansMessage.add(
+          TextSpan(
+            text: '\n$element',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 13.toFont,
+                fontWeight: FontWeight.bold,
+                height: 1.5),
+          ),
+        );
+      });
+
+      textSpansMessage.add(
+        TextSpan(
+            text: '\nDo you want to overwrite them?',
+            style:
+                TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
+      );
+    }
+    return textSpansMessage;
   }
 }
