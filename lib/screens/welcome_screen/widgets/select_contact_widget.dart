@@ -65,38 +65,21 @@ class _ExpansionTileWidget extends StatelessWidget {
             ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
             : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
         backgroundColor: ColorConstants.inputFieldColor,
-        title: Text(
-          headerText,
-          style: TextStyle(
-            color: ColorConstants.fadedText,
-            fontSize: 14.toFont,
+        title: InkWell(
+          onTap: (){
+            selectContact(context);
+          },
+          child: Text(
+            headerText,
+            style: TextStyle(
+              color: ColorConstants.fadedText,
+              fontSize: 14.toFont,
+            ),
           ),
         ),
         trailing: InkWell(
-          onTap: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GroupContactView(
-                  asSelectionScreen: true,
-                  // singleSelection: true,
-                  showGroups: true,
-                  showContacts: true,
-                  selectedList: (s) {
-                    Provider.of<WelcomeScreenProvider>(
-                            NavService.navKey.currentContext,
-                            listen: false)
-                        .updateSelectedContacts(s);
-                    onSelected(s.length);
-                  },
-                  // singleSelection: true,
-                  contactSelectedHistory: Provider.of<WelcomeScreenProvider>(
-                          NavService.navKey.currentContext,
-                          listen: false)
-                      .selectedContacts,
-                ),
-              ),
-            );
+          onTap: (){
+            selectContact(context);
           },
           child: ExpansionTile(
             backgroundColor: ColorConstants.inputFieldColor,
@@ -116,5 +99,30 @@ class _ExpansionTileWidget extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  selectContact(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupContactView(
+          asSelectionScreen: true,
+          // singleSelection: true,
+          showGroups: true,
+          showContacts: true,
+          selectedList: (s) {
+            Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext,
+                    listen: false)
+                .updateSelectedContacts(s);
+            onSelected(s.length);
+          },
+          // singleSelection: true,
+          contactSelectedHistory: Provider.of<WelcomeScreenProvider>(
+                  NavService.navKey.currentContext,
+                  listen: false)
+              .selectedContacts,
+        ),
+      ),
+    );
   }
 }
