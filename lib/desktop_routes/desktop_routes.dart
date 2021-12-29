@@ -51,7 +51,8 @@ class DesktopSetupRoutes {
     return {
       DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL: (context) =>
           WelcomeScreenHome(),
-      DesktopRoutes.DESKTOP_HISTORY: (context) => DesktopHistoryScreen(),
+      DesktopRoutes.DESKTOP_HISTORY: (context) =>
+          DesktopHistoryScreen(tabIndex: 1),
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactsScreen(

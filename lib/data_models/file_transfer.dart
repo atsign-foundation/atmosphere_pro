@@ -164,17 +164,44 @@ class FileHistory {
 class ShareStatus {
   String atsign;
   bool isNotificationSend;
+  bool isFileDownloaded;
 
-  ShareStatus(this.atsign, this.isNotificationSend);
+  // for front end reference only
+  bool isSendingNotification;
+
+  ShareStatus(this.atsign, this.isNotificationSend,
+      {this.isSendingNotification = false, this.isFileDownloaded = false});
 
   ShareStatus.fromJson(Map<String, dynamic> json) {
     atsign = json['atsign'];
     isNotificationSend = json['isNotificationSend'] ?? false;
+    isFileDownloaded = json['isFileDownloaded'] ?? false;
+    isSendingNotification = json['isSendingNotification'] ?? false;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['atsign'] = this.atsign;
     data['isNotificationSend'] = this.isNotificationSend;
+    data['isFileDownloaded'] = this.isFileDownloaded;
+    return data;
+  }
+}
+
+class DownloadAcknowledgement {
+  bool isDownloaded;
+  String transferId;
+
+  DownloadAcknowledgement(this.isDownloaded, this.transferId);
+
+  DownloadAcknowledgement.fromJson(Map<String, dynamic> json) {
+    isDownloaded = json['isDownloaded'];
+    transferId = json['transferId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['isDownloaded'] = this.isDownloaded;
+    data['transferId'] = this.transferId;
     return data;
   }
 }

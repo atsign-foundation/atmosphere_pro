@@ -27,7 +27,7 @@ class ColorConstants {
   static const Color light_grey = Color(0xFFBFBFBF);
   static const Color light_border_color = Color(0xFFEEF1F4);
   static const Color textBoxBg = Color(0xFFF2F2F2);
-
+  static const Color redAlert = Color(0xffF86060);
   static const Color LIGHT_BLUE_BG = Color(0xFFF8FBFF);
 }
 

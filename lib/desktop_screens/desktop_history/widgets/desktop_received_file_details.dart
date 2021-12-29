@@ -1,8 +1,8 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -75,13 +75,22 @@ class _DesktopReceivedFileDetailsState
                               size: 30,
                             ),
                             onPressed: () async {
-                              await Provider.of<HistoryProvider>(context,
+                              var res = await Provider.of<HistoryProvider>(
+                                      context,
                                       listen: false)
                                   .downloadFiles(
                                 widget.fileTransfer.key,
                                 widget.fileTransfer.sender,
                                 false,
                               );
+
+                              if (res) {
+                                await Provider.of<HistoryProvider>(
+                                        NavService.navKey.currentContext,
+                                        listen: false)
+                                    .sendFileDownloadAcknowledgement(
+                                        widget.fileTransfer);
+                              }
                             },
                           ),
                         )
