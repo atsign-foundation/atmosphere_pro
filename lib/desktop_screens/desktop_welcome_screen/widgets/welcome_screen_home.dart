@@ -1,6 +1,7 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
@@ -180,9 +181,20 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                                     _filePickerProvider
                                                         .SEND_FILES] ==
                                                 Status.Done) {
+                                              CustomToast().show(
+                                                  'File(s) sent successfully.',
+                                                  context,
+                                                  bgColor: ColorConstants
+                                                      .orangeColor);
                                               _welcomeScreenProvider
                                                       .isSelectionItemChanged =
                                                   false;
+                                            } else {
+                                              CustomToast().show(
+                                                  'Something went wrong.',
+                                                  context,
+                                                  bgColor: ColorConstants
+                                                      .orangeColor);
                                             }
                                           });
                                         },
