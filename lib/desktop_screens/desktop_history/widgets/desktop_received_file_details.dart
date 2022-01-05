@@ -331,9 +331,12 @@ class _DesktopReceivedFileDetailsState
     );
 
     if (res) {
-      setState(() {
-        isDownloaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          isDownloaded = true;
+        });
+      }
+
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .sendFileDownloadAcknowledgement(widget.fileTransfer);
