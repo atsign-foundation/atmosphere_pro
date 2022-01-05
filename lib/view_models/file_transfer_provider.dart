@@ -342,6 +342,10 @@ class FileTransferProvider extends BaseModel {
   void resetSelectedFilesStatus() {
     hasSelectedFilesChanged = false;
   }
+
+  notify() {
+    notifyListeners();
+  }
 }
 
 enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED, DONE }

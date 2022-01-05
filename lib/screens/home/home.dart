@@ -51,7 +51,6 @@ class _HomeState extends State<Home> {
     _backendService = BackendService.getInstance();
     _checkToOnboard();
 
-    acceptFiles();
     _checkForPermissionStatus();
     BackendService.getInstance()
         .isAuthuneticatingStream
@@ -93,61 +92,6 @@ class _HomeState extends State<Home> {
       await Provider.of<WelcomeScreenProvider>(context, listen: false)
           .onboardingLoad(atSign: currentatSign);
     }
-  }
-
-  void acceptFiles() async {
-    await ReceiveSharingIntent.getMediaStream().listen(
-        (List<SharedMediaFile> value) async {
-      _sharedFiles = value;
-
-      if (value.isNotEmpty) {
-        value.forEach((element) async {
-          File file = File(element.path);
-          var length = await file.length();
-          await FileTransferProvider.appClosedSharedFiles.add(PlatformFile(
-              name: basename(file.path),
-              path: file.path,
-              size: length.round(),
-              bytes: await file.readAsBytes()));
-          await filePickerProvider.setFiles();
-        });
-
-        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-        // check to see if atsign is paired
-        var atsign = await _backendService.currentAtsign;
-        if (atsign != null) {
-          BuildContext c = NavService.navKey.currentContext;
-          await Navigator.pushNamedAndRemoveUntil(
-              c, Routes.WELCOME_SCREEN, (route) => false);
-        }
-      }
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
-
-    // For sharing images coming from outside the app while the app is closed
-    await ReceiveSharingIntent.getInitialMedia().then(
-        (List<SharedMediaFile> value) async {
-      _sharedFiles = value;
-      if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
-        _sharedFiles.forEach((element) async {
-          File file = File(element.path);
-          var length = await file.length();
-          PlatformFile fileToBeAdded = PlatformFile(
-              name: basename(file.path),
-              path: file.path,
-              size: length.round(),
-              bytes: await file.readAsBytes());
-          FileTransferProvider.appClosedSharedFiles.add(fileToBeAdded);
-          filePickerProvider.setFiles();
-        });
-
-        print("Shared second:" +
-            (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
-      }
-    }, onError: (error) {
-      print('ERROR IS HERE=========>$error');
-    });
   }
 
   bool isAuth = false;

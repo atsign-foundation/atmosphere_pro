@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
@@ -15,8 +16,10 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 
@@ -55,7 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     setAtSign();
-
+    acceptReceiveSharingIntentFiles();
     listenForFlushBarStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       WelcomeScreenProvider().isExpanded = false;
@@ -192,6 +195,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setState(() {
       _selectedBottomNavigationIndex = index;
     });
+  }
+
+  void acceptReceiveSharingIntentFiles() async {
+    await ReceiveSharingIntent.getMediaStream().listen(
+        (List<SharedMediaFile> sharedMediaFile) async {
+      if (sharedMediaFile.isNotEmpty) {
+        addSharedMediaToFileProvider(sharedMediaFile);
+      }
+    }, onError: (err) {
+      print("getIntentDataStream error: $err");
+    });
+
+    // For sharing images coming from outside the app while the app is closed
+    await ReceiveSharingIntent.getInitialMedia().then(
+        (List<SharedMediaFile> sharedMediaFile) async {
+      if (sharedMediaFile.isNotEmpty) {
+        addSharedMediaToFileProvider(sharedMediaFile);
+      }
+    }, onError: (error) {
+      print('ERROR IS HERE=========>$error');
+    });
+  }
+
+  addSharedMediaToFileProvider(List<SharedMediaFile> sharedMediaFile) async {
+    var fileTransferProvider =
+        Provider.of<FileTransferProvider>(context, listen: false);
+
+    sharedMediaFile.forEach((SharedMediaFile sharedMediaFile) async {
+      File file = File(sharedMediaFile.path);
+      fileTransferProvider.selectedFiles.add(PlatformFile(
+          name: file.path.split('/').last,
+          path: file.path,
+          size: await file.length()));
+    });
+
+    fileTransferProvider.hasSelectedFilesChanged = true;
+    fileTransferProvider.notify();
   }
 
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
