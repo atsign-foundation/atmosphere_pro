@@ -1,8 +1,10 @@
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_vertical_tile.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DesktopSelectedContacts extends StatefulWidget {
   ValueChanged<bool> onChange;
@@ -20,6 +22,9 @@ class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
 
   @override
   void initState() {
+    welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
     selectedContacts = welcomeScreenProvider.selectedContacts;
     super.initState();
   }
@@ -55,6 +60,7 @@ class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
               selectedContacts[index].contact.atSign,
               () {
                 welcomeScreenProvider.removeContacts(selectedContacts[index]);
+                welcomeScreenProvider.isSelectionItemChanged = true;
                 widget.onChange(true);
                 setState(() {});
               },

@@ -140,15 +140,21 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                         : SizedBox();
                                   })),
                           trailing: IconButton(
-                            icon: widget.selectedFileData.fileDetails
-                                    .files[index].isUploaded
+                            icon: (widget.selectedFileData.fileDetails
+                                            .files[index].isUploaded !=
+                                        null &&
+                                    widget.selectedFileData.fileDetails
+                                        .files[index].isUploaded)
                                 ? Icon(
                                     Icons.done,
                                     color: Color(0xFF08CB21),
                                     size: 25.toFont,
                                   )
-                                : widget.selectedFileData.fileDetails
-                                        .files[index].isUploading
+                                : (widget.selectedFileData.fileDetails
+                                                .files[index].isUploading !=
+                                            null &&
+                                        widget.selectedFileData.fileDetails
+                                            .files[index].isUploading)
                                     ? TypingIndicator(
                                         showIndicator: true,
                                         flashingCircleBrightColor:
@@ -195,8 +201,11 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
               '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData.fileDetails.date)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData.fileDetails.date)}',
               style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
-          Text('To', style: CustomTextStyles.greyText15),
-          SizedBox(height: 15.toHeight),
+          // Text('To', style: CustomTextStyles.greyText15),
+          // Container(
+          //   padding: EdgeInsets.symmetric(horizontal: 20.toHeight),
+          //   child: Divider(height: 5),
+          // ),
           widget.selectedFileData != null
               ? DesktopTranferOverlappingContacts(
                   selectedList: widget.selectedFileData.sharedWith,
@@ -204,30 +213,6 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
               : SizedBox()
         ],
       ),
-    );
-  }
-
-  getImagePlaceholder({String filepath, String fileName}) {
-    return Row(
-      children: [
-        SizedBox(
-          height: 60,
-          width: 60,
-          child: Image.asset(ImageConstants.pdfLogo),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('File name',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
-              SizedBox(height: 5),
-              Text('250 MB', style: CustomTextStyles.greyText16),
-            ],
-          ),
-        )
-      ],
     );
   }
 }

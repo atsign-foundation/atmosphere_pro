@@ -1,15 +1,11 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/demo_data/file_transfer_data.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_details.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_details.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_list_tile.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -32,7 +28,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   int sentSelectedIndex = 0, receivedSelectedIndex = 0;
   FileHistory selectedSentFileData;
   FileTransfer receivedFileData;
-  bool isSentTab = true;
+  bool isSentTab = false;
 
   @override
   void didChangeDependencies() async {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_contacts_flutter/services/contact_service.dart';
@@ -8,6 +7,7 @@ import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dar
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
@@ -102,7 +102,6 @@ class BackendService {
       ..commitLogPath = path
       ..downloadPath = downloadDirectory.path
       ..namespace = MixedConstants.appNamespace
-      ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
@@ -242,9 +241,30 @@ class BackendService {
         -1) {
       return;
     }
+    if (notificationKey
+        .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
+      var value = response.value;
+
+      var decryptedMessage = await AtClientManager.getInstance()
+          .atClient
+          .encryptionService
+          .decrypt(value, fromAtSign)
+          .catchError((e) {
+        print("error in decrypting: $e");
+      });
+      DownloadAcknowledgement downloadAcknowledgement =
+          DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
+
+      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      return;
+    }
 
     print(' FILE_TRANSFER_KEY : ${atKey}');
-    if (atKey.contains(MixedConstants.FILE_TRANSFER_KEY)) {
+    if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY) &&
+        !notificationKey
+            .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var value = response.value;
 
       var decryptedMessage = await atClientManager.atClient.encryptionService

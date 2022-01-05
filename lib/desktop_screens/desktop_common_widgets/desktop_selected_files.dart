@@ -1,8 +1,10 @@
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +19,12 @@ class DesktopSelectedFiles extends StatefulWidget {
 
 class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
   FileTransferProvider _filePickerProvider;
+  WelcomeScreenProvider welcomeScreenProvider;
   @override
   void initState() {
+    welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
     _filePickerProvider =
         Provider.of<FileTransferProvider>(context, listen: false);
     super.initState();
@@ -68,6 +74,8 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                                   onTap: () {
                                     provider.selectedFiles.removeAt(index);
                                     provider.calculateSize();
+                                    welcomeScreenProvider
+                                        .isSelectionItemChanged = true;
                                     widget.onChange(true);
                                   },
                                   child: Icon(Icons.cancel),

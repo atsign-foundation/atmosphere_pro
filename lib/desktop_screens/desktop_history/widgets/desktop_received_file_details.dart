@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +27,11 @@ class DesktopReceivedFileDetails extends StatefulWidget {
 class _DesktopReceivedFileDetailsState
     extends State<DesktopReceivedFileDetails> {
   int fileCount = 0, fileSize = 0;
-  bool isDownloadAvailable = false;
+  bool isDownloadAvailable = false,
+      isDownloaded = false,
+      isFilesAvailableOfline = true,
+      isOverwrite = false;
+  List<String> existingFileNamesToOverwrite = [];
 
   @override
   void initState() {
@@ -38,8 +45,30 @@ class _DesktopReceivedFileDetailsState
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
-
+    isFilesAlreadyDownloaded();
     super.initState();
+  }
+
+  isFilesAlreadyDownloaded() async {
+    widget.fileTransfer.files.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory.path +
+          '/${element.name}';
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        setState(() {
+          isFilesAvailableOfline = false;
+        });
+      } else {
+        var fileLatsModified = await test.lastModified();
+        if (fileLatsModified.isBefore(widget.fileTransfer.date)) {
+          existingFileNamesToOverwrite.add(element.name);
+          setState(() {
+            isOverwrite = true;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -69,19 +98,25 @@ class _DesktopReceivedFileDetailsState
                       ? Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: IconButton(
-                            icon: Icon(
-                              Icons.download,
-                              color: Color(0xFF08CB21),
-                              size: 30,
-                            ),
+                            icon: ((isDownloaded || isFilesAvailableOfline) &&
+                                    !isOverwrite)
+                                ? Icon(
+                                    Icons.done,
+                                    color: Color(0xFF08CB21),
+                                    size: 25.toFont,
+                                  )
+                                : Icon(
+                                    Icons.download,
+                                    color: Color(0xFF08CB21),
+                                    size: 30,
+                                  ),
                             onPressed: () async {
-                              await Provider.of<HistoryProvider>(context,
-                                      listen: false)
-                                  .downloadFiles(
-                                widget.fileTransfer.key,
-                                widget.fileTransfer.sender,
-                                false,
-                              );
+                              if (isOverwrite) {
+                                overwriteDialog();
+                                return;
+                              }
+
+                              downloadFiles();
                             },
                           ),
                         )
@@ -150,7 +185,9 @@ class _DesktopReceivedFileDetailsState
                                             MixedConstants
                                                     .RECEIVED_FILE_DIRECTORY +
                                                 '/${widget.fileTransfer.files[index].name}',
-                                            isFilePresent: snapshot.data),
+                                            isFilePresent: isOverwrite
+                                                ? false
+                                                : snapshot.data),
                                       )
                                     : SizedBox();
                               }),
@@ -184,5 +221,125 @@ class _DesktopReceivedFileDetailsState
         ],
       ),
     );
+  }
+
+  overwriteDialog() {
+    showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            content: Container(
+              width: 300.toWidth,
+              padding: EdgeInsets.all(15.toFont),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: getOverwriteMessage(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.toHeight,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              await downloadFiles();
+                            },
+                            child: Text('Yes',
+                                style: TextStyle(fontSize: 16.toFont))),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel',
+                                style: TextStyle(fontSize: 16.toFont)))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  List<TextSpan> getOverwriteMessage() {
+    List<TextSpan> textSpansMessage = [];
+    if (existingFileNamesToOverwrite.length == 1) {
+      textSpansMessage.add(
+        TextSpan(
+          children: [
+            TextSpan(
+                text: 'A file named ',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+            TextSpan(
+                text: '${existingFileNamesToOverwrite[0]}',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: ' already exists. Do you want to overwrite it?',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+          ],
+        ),
+      );
+    } else if (existingFileNamesToOverwrite.length > 1) {
+      textSpansMessage.add(TextSpan(
+        text: 'These files already exist: ',
+        style: TextStyle(color: Colors.black, fontSize: 15.toFont),
+      ));
+
+      existingFileNamesToOverwrite.forEach((element) {
+        textSpansMessage.add(
+          TextSpan(
+            text: '\n$element',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 13.toFont,
+                fontWeight: FontWeight.bold,
+                height: 1.5),
+          ),
+        );
+      });
+
+      textSpansMessage.add(
+        TextSpan(
+            text: '\nDo you want to overwrite them?',
+            style:
+                TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
+      );
+    }
+    return textSpansMessage;
+  }
+
+  downloadFiles() async {
+    var res = await Provider.of<HistoryProvider>(context, listen: false)
+        .downloadFiles(
+      widget.fileTransfer.key,
+      widget.fileTransfer.sender,
+      false,
+    );
+
+    if (res) {
+      if (mounted) {
+        setState(() {
+          isDownloaded = true;
+        });
+      }
+
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .sendFileDownloadAcknowledgement(widget.fileTransfer);
+    }
   }
 }

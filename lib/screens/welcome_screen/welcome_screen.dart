@@ -79,6 +79,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
+      await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+              listen: false)
+          .getFileDownloadedAcknowledgement();
       await Provider.of<HistoryProvider>(context, listen: false)
           .getSentHistory();
       await Provider.of<HistoryProvider>(context, listen: false)
