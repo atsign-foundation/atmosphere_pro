@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:video_compress/video_compress.dart';
 
 class CommonFunctions {
   static final CommonFunctions _singleton = CommonFunctions._internal();
@@ -43,10 +44,6 @@ class CommonFunctions {
 
   Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
     path = path.trim();
-    var videoThumbnail;
-    if (FileTypes.VIDEO_TYPES.contains(extension)) {
-      videoThumbnail = videoThumbnailBuilder(path);
-    }
 
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
@@ -80,7 +77,7 @@ class CommonFunctions {
                             fit: BoxFit.cover,
                           )
                         : Image.memory(
-                            videoThumbnail,
+                            snapshot.data,
                             fit: BoxFit.cover,
                             errorBuilder: (context, o, ot) =>
                                 CircularProgressIndicator(),
@@ -111,14 +108,24 @@ class CommonFunctions {
               );
   }
 
-  Future videoThumbnailBuilder(String path) async {
-    var videoThumbnail = await VideoThumbnail.thumbnailData(
-      video: path,
-      imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-      quality: 100,
-    );
+  Future<Uint8List> videoThumbnailBuilder(String path) async {
+    Uint8List videoThumbnail;
+    if (Platform.isMacOS) {
+      videoThumbnail = await VideoCompress.getByteThumbnail(
+        path,
+        quality: 50,
+      );
+      return videoThumbnail;
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      videoThumbnail = await VideoThumbnail.thumbnailData(
+        video: path,
+        imageFormat: ImageFormat.JPEG,
+        maxWidth:
+            50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+        quality: 100,
+      );
+    }
+
     return videoThumbnail;
   }
 

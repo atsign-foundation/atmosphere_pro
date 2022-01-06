@@ -54,6 +54,7 @@ dependencies:
   toast: ^0.1.5
   carousel_slider: ^4.0.0
   flutter_toastr: ^1.0.3
+  video_compress: ^3.1.0
 
 
   at_onboarding_flutter: ^3.1.0
