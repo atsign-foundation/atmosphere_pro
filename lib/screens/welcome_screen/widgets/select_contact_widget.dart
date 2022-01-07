@@ -66,7 +66,7 @@ class _ExpansionTileWidget extends StatelessWidget {
             : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
         backgroundColor: ColorConstants.inputFieldColor,
         title: InkWell(
-          onTap: (){
+          onTap: () {
             selectContact(context);
           },
           child: Text(
@@ -78,19 +78,11 @@ class _ExpansionTileWidget extends StatelessWidget {
           ),
         ),
         trailing: InkWell(
-          onTap: (){
+          onTap: () {
             selectContact(context);
           },
-          child: ExpansionTile(
-            backgroundColor: ColorConstants.inputFieldColor,
-            title: Text(
-              headerText,
-              style: TextStyle(
-                color: ColorConstants.fadedText,
-                fontSize: 14.toFont,
-              ),
-            ),
-            trailing: Container(
+           child:
+           Container(
               padding: EdgeInsets.symmetric(vertical: 15),
               child: Image.asset(
                 ImageConstants.contactsIcon,
@@ -98,7 +90,7 @@ class _ExpansionTileWidget extends StatelessWidget {
               ),
             ),
           ),
-        ));
+        );
   }
 
   selectContact(BuildContext context) async {
