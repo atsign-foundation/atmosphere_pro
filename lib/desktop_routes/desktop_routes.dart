@@ -55,6 +55,7 @@ class DesktopSetupRoutes {
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactsScreen(
+          Key('desktop_contact_screen'),
           () {
             DesktopSetupRoutes.nested_pop();
           },
@@ -64,6 +65,7 @@ class DesktopSetupRoutes {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
         return DesktopContactsScreen(
+          Key('desktop_block_contact_screen'),
           () {
             DesktopSetupRoutes.nested_pop();
           },

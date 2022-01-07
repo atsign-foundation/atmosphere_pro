@@ -94,47 +94,74 @@ class _DesktopReceivedFileDetailsState
       padding: EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Details',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              widget.fileTransfer.isDownloading
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator()),
-                    )
-                  : isDownloadAvailable
+              Text(
+                'Details',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Spacer(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await OpenFile.open(
+                          MixedConstants.ApplicationDocumentsDirectory);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.save_alt_outlined, color: Colors.black),
+                        SizedBox(width: 10),
+                        Text('Downloads folder',
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  widget.fileTransfer.isDownloading
                       ? Padding(
                           padding: const EdgeInsets.only(right: 10.0),
-                          child: IconButton(
-                            icon: ((isDownloaded || isFilesAvailableOfline) &&
-                                    !isOverwrite)
-                                ? Icon(
-                                    Icons.done,
-                                    color: Color(0xFF08CB21),
-                                    size: 25.toFont,
-                                  )
-                                : Icon(
-                                    Icons.download,
-                                    color: Color(0xFF08CB21),
-                                    size: 30,
-                                  ),
-                            onPressed: () async {
-                              if (isOverwrite) {
-                                overwriteDialog();
-                                return;
-                              }
-
-                              downloadFiles();
-                            },
-                          ),
+                          child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator()),
                         )
-                      : SizedBox(),
+                      : isDownloadAvailable
+                          ? Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: IconButton(
+                                icon:
+                                    ((isDownloaded || isFilesAvailableOfline) &&
+                                            !isOverwrite)
+                                        ? Icon(
+                                            Icons.done,
+                                            color: Color(0xFF08CB21),
+                                            size: 25.toFont,
+                                          )
+                                        : Icon(
+                                            Icons.download,
+                                            color: Color(0xFF08CB21),
+                                            size: 30,
+                                          ),
+                                onPressed: () async {
+                                  if (isOverwrite) {
+                                    overwriteDialog();
+                                    return;
+                                  }
+
+                                  downloadFiles();
+                                },
+                              ),
+                            )
+                          : SizedBox(),
+                ],
+              ),
             ],
           ),
           SizedBox(height: 15.toHeight),
@@ -345,6 +372,7 @@ class _DesktopReceivedFileDetailsState
 
     if (res) {
       if (mounted) {
+        getFutureBuilders();
         setState(() {
           isDownloaded = true;
         });
