@@ -55,7 +55,6 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
   @override
   void initState() {
     super.initState();
-    // isWidgetRebuilt = true;
     fileLength = widget.sentHistory.fileDetails.files.length;
     fileResending = List<bool>.generate(fileLength, (i) => false);
     if (widget.sentHistory.sharedWith != null) {
@@ -74,7 +73,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
           .getContactName(widget.sentHistory.sharedWith[0].atsign);
     }
 
-    // getContactImage();
+    getContactImage();
   }
 
   getContactImage() {
@@ -108,13 +107,6 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
   @override
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-
-    /// To set fileResending to false after file has been resent
-    // if (isWidgetRebuilt) {
-    //   fileLength = widget.sentHistory.fileDetails.files.length;
-    //   fileResending = List<bool>.generate(fileLength, (i) => false);
-    //   isWidgetRebuilt = false;
-    // }
 
     return Column(
       children: [
@@ -161,57 +153,56 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                           ),
                                   ),
                                   Positioned(
-                                      right: 0,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: widget
-                                                  .sentHistory
-                                                  .sharedWith[0]
-                                                  .isNotificationSend
-                                              ? Color(0xFF08CB21)
-                                              : Color(0xFFF86061),
-                                          border: Border.all(
-                                              color: widget
-                                                      .sentHistory
-                                                      .sharedWith[0]
-                                                      .isNotificationSend
-                                                  ? Color(0xFF08CB21)
-                                                  : Color(0xFFF86061),
-                                              width: 5),
-                                          borderRadius: BorderRadius.circular(
-                                              35.toHeight),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            if (widget.sentHistory.sharedWith[0]
-                                                .isNotificationSend) {
-                                              return;
-                                            }
-
-                                            setState(() {
-                                              isResendingToFirstContact = true;
-                                            });
-                                            await Provider.of<
-                                                        FileTransferProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .reSendFileNotification(
-                                                    widget.sentHistory,
-                                                    widget.sentHistory
-                                                        .sharedWith[0].atsign);
-
-                                            isResendingToFirstContact = false;
-                                          },
-                                          child: Icon(
-                                            widget.sentHistory.sharedWith[0]
+                                    right: 0,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: widget.sentHistory.sharedWith[0]
+                                                .isNotificationSend
+                                            ? Color(0xFF08CB21)
+                                            : Color(0xFFF86061),
+                                        border: Border.all(
+                                            color: widget
+                                                    .sentHistory
+                                                    .sharedWith[0]
                                                     .isNotificationSend
-                                                ? Icons.done
-                                                : Icons.refresh,
-                                            color: Colors.white,
-                                            size: 10.toFont,
-                                          ),
+                                                ? Color(0xFF08CB21)
+                                                : Color(0xFFF86061),
+                                            width: 5),
+                                        borderRadius:
+                                            BorderRadius.circular(35.toHeight),
+                                      ),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          if (widget.sentHistory.sharedWith[0]
+                                              .isNotificationSend) {
+                                            return;
+                                          }
+
+                                          setState(() {
+                                            isResendingToFirstContact = true;
+                                          });
+                                          await Provider.of<
+                                                      FileTransferProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .reSendFileNotification(
+                                                  widget.sentHistory,
+                                                  widget.sentHistory
+                                                      .sharedWith[0].atsign);
+
+                                          isResendingToFirstContact = false;
+                                        },
+                                        child: Icon(
+                                          widget.sentHistory.sharedWith[0]
+                                                  .isNotificationSend
+                                              ? Icons.done
+                                              : Icons.refresh,
+                                          color: Colors.white,
+                                          size: 10.toFont,
                                         ),
-                                      ))
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                       )

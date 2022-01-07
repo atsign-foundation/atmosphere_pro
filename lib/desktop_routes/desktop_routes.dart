@@ -30,9 +30,8 @@ class DesktopSetupRoutes {
       listen: false);
   static Map<String, WidgetBuilder> get routes {
     return {
-      DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(key: UniqueKey()),
-      DesktopRoutes.DESKTOP_WELCOME: (context) =>
-          DesktopWelcomeScreenStart(key: UniqueKey()),
+      DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(),
+      DesktopRoutes.DESKTOP_WELCOME: (context) => DesktopWelcomeScreenStart(),
     };
   }
 
@@ -56,7 +55,6 @@ class DesktopSetupRoutes {
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactsScreen(
-          UniqueKey(),
           () {
             DesktopSetupRoutes.nested_pop();
           },
@@ -66,7 +64,6 @@ class DesktopSetupRoutes {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
         return DesktopContactsScreen(
-          UniqueKey(),
           () {
             DesktopSetupRoutes.nested_pop();
           },

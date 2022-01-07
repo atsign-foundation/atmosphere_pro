@@ -6,7 +6,6 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory selectedFileData;
-  UniqueKey key;
+  Key key;
   DesktopSentFileDetails({this.key, this.selectedFileData});
 
   @override
@@ -25,18 +24,24 @@ class DesktopSentFileDetails extends StatefulWidget {
 }
 
 class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
-  int fileCount = 0;
-  int fileSize = 0;
+  int fileCount = 0, fileSize = 0;
+  Map<String, Future> _futureBuilder = {};
 
   @override
   void initState() {
+    super.initState();
     fileCount = widget.selectedFileData.fileDetails.files.length;
-
     widget.selectedFileData.fileDetails.files.forEach((element) {
       fileSize += element.size;
     });
+    getFutureBuilders();
+  }
 
-    super.initState();
+  getFutureBuilders() {
+    widget.selectedFileData.fileDetails.files.forEach((element) {
+      _futureBuilder[element.name] = CommonFunctions().isFilePresent(
+          MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + element.name);
+    });
   }
 
   @override
@@ -101,10 +106,10 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                 await OpenFile.open(filePath);
                               },
                               child: FutureBuilder(
-                                  future: CommonFunctions().isFilePresent(
-                                      MixedConstants.DESKTOP_SENT_DIR +
-                                          widget.selectedFileData.fileDetails
-                                              .files[index].name),
+                                  key: Key(widget.selectedFileData.fileDetails
+                                      .files[index].name),
+                                  future: _futureBuilder[widget.selectedFileData
+                                      .fileDetails.files[index].name],
                                   builder: (context, snapshot) {
                                     return snapshot.connectionState ==
                                                 ConnectionState.done &&
@@ -208,6 +213,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
           // ),
           widget.selectedFileData != null
               ? DesktopTranferOverlappingContacts(
+                  key: Key(
+                      widget.selectedFileData.fileTransferObject.transferId),
                   selectedList: widget.selectedFileData.sharedWith,
                   fileHistory: widget.selectedFileData)
               : SizedBox()

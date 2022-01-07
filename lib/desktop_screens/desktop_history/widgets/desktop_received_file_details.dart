@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class DesktopReceivedFileDetails extends StatefulWidget {
   final FileTransfer fileTransfer;
-  final UniqueKey key;
+  final Key key;
   DesktopReceivedFileDetails({this.fileTransfer, this.key});
 
   @override
@@ -32,11 +32,13 @@ class _DesktopReceivedFileDetailsState
       isFilesAvailableOfline = true,
       isOverwrite = false;
   List<String> existingFileNamesToOverwrite = [];
+  Map<String, Future> _futureBuilder = {};
 
   @override
   void initState() {
-    fileCount = widget.fileTransfer.files.length;
+    super.initState();
 
+    fileCount = widget.fileTransfer.files.length;
     widget.fileTransfer.files.forEach((element) {
       fileSize += element.size;
     });
@@ -45,8 +47,16 @@ class _DesktopReceivedFileDetailsState
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
+
+    getFutureBuilders();
     isFilesAlreadyDownloaded();
-    super.initState();
+  }
+
+  getFutureBuilders() {
+    widget.fileTransfer.files.forEach((element) {
+      _futureBuilder[element.name] = CommonFunctions().isFilePresent(
+          MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + element.name);
+    });
   }
 
   isFilesAlreadyDownloaded() async {
@@ -56,16 +66,20 @@ class _DesktopReceivedFileDetailsState
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
-        setState(() {
-          isFilesAvailableOfline = false;
-        });
+        if (mounted) {
+          setState(() {
+            isFilesAvailableOfline = false;
+          });
+        }
       } else {
         var fileLatsModified = await test.lastModified();
         if (fileLatsModified.isBefore(widget.fileTransfer.date)) {
           existingFileNamesToOverwrite.add(element.name);
-          setState(() {
-            isOverwrite = true;
-          });
+          if (mounted) {
+            setState(() {
+              isOverwrite = true;
+            });
+          }
         }
       }
     });
@@ -161,10 +175,9 @@ class _DesktopReceivedFileDetailsState
                             ),
                           ),
                           leading: FutureBuilder(
-                              future: CommonFunctions().isFilePresent(
-                                  MixedConstants.RECEIVED_FILE_DIRECTORY +
-                                      '/' +
-                                      widget.fileTransfer.files[index].name),
+                              key: Key(widget.fileTransfer.files[index].name),
+                              future: _futureBuilder[
+                                  widget.fileTransfer.files[index].name],
                               builder: (context, snapshot) {
                                 return snapshot.connectionState ==
                                             ConnectionState.done &&

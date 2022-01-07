@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -28,7 +29,7 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 }
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
-  bool showSwitchAtsign = false, authenticating = false;
+  bool authenticating = false;
   String currentatSign;
 
   List<String> atsignList;
@@ -91,9 +92,8 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                             await BackendService.getInstance().getAtsignList();
                       }
 
-                      setState(() {
-                        showSwitchAtsign = !showSwitchAtsign;
-                      });
+                      Provider.of<WelcomeScreenProvider>(context, listen: false)
+                          .updateSwitchAtsignMenu();
                     },
                     child: Row(
                       children: [
@@ -124,15 +124,17 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         ),
       ),
       body: Stack(clipBehavior: Clip.none, children: [
-        DesktopWelcomeScreen(key: UniqueKey()),
-        showSwitchAtsign
-            ? Positioned(
-                top: 0,
-                right: 50,
-                child: DesktopSwitchAtsign(
-                    atSignList: atsignList, showLoader: _showLoader),
-              )
-            : SizedBox(),
+        DesktopWelcomeScreen(),
+        Consumer<WelcomeScreenProvider>(builder: (context, provider, _) {
+          return provider.showSwitchAtsignMenu
+              ? Positioned(
+                  top: 0,
+                  right: 50,
+                  child: DesktopSwitchAtsign(
+                      atSignList: atsignList, showLoader: _showLoader),
+                )
+              : SizedBox();
+        }),
         authenticating
             ? LoadingDialog().showTextLoader('Initialising for $currentatSign')
             : SizedBox()
@@ -243,7 +245,6 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                 ),
               ),
               Expanded(
-                key: UniqueKey(),
                 child: Navigator(
                   key: NavService.nestedNavKey,
                   initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
