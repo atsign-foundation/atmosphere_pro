@@ -16,7 +16,8 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
-  DesktopHistoryScreen({this.tabIndex = 0});
+  Key key;
+  DesktopHistoryScreen({this.tabIndex = 0, this.key});
   @override
   _DesktopHistoryScreenState createState() => _DesktopHistoryScreenState();
 }
@@ -205,7 +206,8 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                         });
                                       },
                                       child: DesktopReceivedFilesListTile(
-                                        key: UniqueKey(),
+                                        key: Key(provider
+                                            .receivedHistoryLogs[index].key),
                                         receivedHistory:
                                             provider.receivedHistoryLogs[index],
                                         isSelected:
@@ -228,19 +230,19 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
             ),
           ),
           Container(
-            key: UniqueKey(),
             width: (SizeConfig().screenWidth * 0.5 -
                 (MixedConstants.SIDEBAR_WIDTH / 2)),
             child: isSentTab
                 ? selectedSentFileData == null
                     ? SizedBox()
                     : DesktopSentFileDetails(
-                        key: UniqueKey(),
+                        key: Key(
+                            selectedSentFileData.fileTransferObject.transferId),
                         selectedFileData: selectedSentFileData,
                       )
                 : receivedFileData != null
                     ? DesktopReceivedFileDetails(
-                        key: UniqueKey(),
+                        key: Key(receivedFileData.key),
                         fileTransfer: receivedFileData,
                       )
                     : SizedBox(),

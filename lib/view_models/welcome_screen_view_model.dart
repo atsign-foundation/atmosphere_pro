@@ -14,7 +14,18 @@ class WelcomeScreenProvider extends BaseModel {
   String selectGroupContacts = 'select_group_contacts';
   String autoAcceptToggle = 'toogle_auto_accept';
   HiveService _hiveService = HiveService();
-  bool isAutoAccept = false, isExpanded = false, isSelectionItemChanged = false;
+  bool isAutoAccept = false,
+      isExpanded = false,
+      isSelectionItemChanged = false,
+      _showSwitchAtsignMenu = false;
+
+  bool get showSwitchAtsignMenu => _showSwitchAtsignMenu;
+
+  updateSwitchAtsignMenu() {
+    _showSwitchAtsignMenu = !_showSwitchAtsignMenu;
+    notifyListeners();
+  }
+
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
