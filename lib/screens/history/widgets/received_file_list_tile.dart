@@ -102,9 +102,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
         if (mounted) {
-          setState(() {
-            image = Uint8List.fromList(intList);
-          });
+          if (mounted) {
+            setState(() {
+              image = Uint8List.fromList(intList);
+            });
+          }
         }
       }
     }
@@ -117,16 +119,20 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
-        setState(() {
-          isFilesAvailableOfline = false;
-        });
+        if (mounted) {
+          setState(() {
+            isFilesAvailableOfline = false;
+          });
+        }
       } else {
         var fileLatsModified = await test.lastModified();
         if (fileLatsModified.isBefore(widget.receivedHistory.date)) {
           existingFileNamesToOverwrite.add(element.name);
-          setState(() {
-            isOverwrite = true;
-          });
+          if (mounted) {
+            setState(() {
+              isOverwrite = true;
+            });
+          }
         }
       }
     });
@@ -162,7 +168,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     );
                                   },
                                 );
-                                setState(() {});
+                                if (mounted) {
+                                  setState(() {});
+                                }
                               }
                             : null,
                         child: Stack(
@@ -310,9 +318,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 (!isOpen)
                     ? GestureDetector(
                         onTap: () {
-                          setState(() {
-                            isOpen = !isOpen;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              isOpen = !isOpen;
+                            });
+                          }
                         },
                         child: Container(
                           child: Row(
@@ -490,9 +500,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        setState(() {
-                          isOpen = !isOpen;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        }
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 85.toHeight),
@@ -667,15 +679,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     }
 
     if (result is bool && result) {
-      // send download acknowledgement
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .sendFileDownloadAcknowledgement(receivedHistory);
       if (mounted) {
         setState(() {
           isDownloaded = true;
         });
       }
+      // send download acknowledgement
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .sendFileDownloadAcknowledgement(receivedHistory);
     } else if (result is bool && !result) {
       if (mounted) {
         setState(() {
