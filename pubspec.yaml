@@ -39,7 +39,7 @@ dependencies:
   permission_handler: ^8.2.5
   provider: ^4.3.2+2
   qr_flutter: ^3.2.0
-  receive_sharing_intent: ^1.4.1
+  receive_sharing_intent: 1.4.2
   rxdart: ^0.24.1
   share: ^2.0.4
   url_launcher: ^6.0.3
