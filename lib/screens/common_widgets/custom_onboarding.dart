@@ -18,11 +18,13 @@ import 'package:provider/provider.dart';
 class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
 
-  static onboard(
-      {String atSign,
-      atClientPrefernce,
-      Function showLoader,
-      bool isInit = false}) async {
+  static onboard({
+    String atSign,
+    atClientPrefernce,
+    Function showLoader,
+    bool isInit = false,
+    Function onDone,
+  }) async {
     await Onboarding(
       atsign: atSign,
       context: NavService.navKey.currentContext,
@@ -36,7 +38,6 @@ class CustomOnboarding {
         print('atsign $atsign');
         await KeychainUtil.makeAtSignPrimary(atsign);
         if (!isInit) {
-          Navigator.pop(NavService.navKey.currentContext);
           await DesktopSetupRoutes.nested_pop();
         }
 
@@ -58,10 +59,16 @@ class CustomOnboarding {
           LoadingDialog().hide();
         }
 
-        await Navigator.pushNamed(
-          NavService.navKey.currentContext,
-          DesktopRoutes.DESKTOP_WELCOME,
-        );
+        if (onDone != null) {
+          onDone();
+        }
+
+        if (isInit) {
+          await Navigator.pushReplacementNamed(
+            NavService.navKey.currentContext,
+            DesktopRoutes.DESKTOP_WELCOME,
+          );
+        }
       },
       onError: (error) {
         print('Onboarding throws error: $error ');

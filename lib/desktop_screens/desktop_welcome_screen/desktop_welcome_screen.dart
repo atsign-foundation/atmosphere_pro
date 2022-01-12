@@ -168,15 +168,23 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
 
     if (selectedAtsign == 'add_new_atsign') {
       await CustomOnboarding.onboard(
-          atSign: '',
-          atClientPrefernce: atClientPrefernce,
-          showLoader: _showLoader);
+        atSign: '',
+        atClientPrefernce: atClientPrefernce,
+        showLoader: _showLoader,
+        onDone: () {
+          setState(() {});
+        },
+      );
     } else if (selectedAtsign !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
       await CustomOnboarding.onboard(
-          atSign: selectedAtsign,
-          atClientPrefernce: atClientPrefernce,
-          showLoader: _showLoader);
+        atSign: selectedAtsign,
+        atClientPrefernce: atClientPrefernce,
+        showLoader: _showLoader,
+        onDone: () {
+          setState(() {});
+        },
+      );
     }
   }
 }
@@ -233,10 +241,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   ),
                 ),
                 child: ProviderHandler<NestedRouteProvider>(
-                  functionName: Provider.of<NestedRouteProvider>(
-                          NavService.navKey.currentContext,
-                          listen: false)
-                      .Routes,
+                  functionName: 'routes',
                   showError: true,
                   load: (provider) {
                     provider.init();
