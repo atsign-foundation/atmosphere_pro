@@ -157,4 +157,6 @@ class TextStrings {
   // desktop text constants
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
+  String contactSelectionConfirmation =
+      'Selected contacts will not be added , confirm?';
 }

@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -241,10 +242,20 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   .updateSelectedContacts(_list);
               _welcomeScreenProvider.isSelectionItemChanged = true;
             },
-            onBackArrowTap: () {
-              setState(() {
-                _currentScreen = CurrentScreen.PlaceolderImage;
-              });
+            onBackArrowTap: (selectedGroupContacts) {
+              if (selectedGroupContacts.length > 0) {
+                CommonFunctions().shownConfirmationDialog(
+                    TextStrings().contactSelectionConfirmation, () {
+                  Navigator.of(NavService.navKey.currentContext).pop();
+                  setState(() {
+                    _currentScreen = CurrentScreen.PlaceolderImage;
+                  });
+                });
+              } else {
+                setState(() {
+                  _currentScreen = CurrentScreen.PlaceolderImage;
+                });
+              }
             },
             onDoneTap: () {
               setState(() {
