@@ -1,3 +1,4 @@
+import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
@@ -10,6 +11,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -33,7 +35,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool authenticating = false;
   String currentatSign;
   AtClient atClient = AtClientManager.getInstance().atClient;
-  List<String> atsignList = [];
+  List<String> popupMenuList = [];
 
   void _showLoader(bool loaderState, String authenticatingForAtsign) {
     if (mounted) {
@@ -44,14 +46,15 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         authenticating = loaderState;
       });
     }
-    getAtsignList();
   }
 
-  getAtsignList() async {
-    atsignList = await BackendService.getInstance().getAtsignList();
-    atsignList.add(
-        'add_new_atsign'); //to show add option in switch atsign drop down menu.
-    return atsignList;
+  /// returns list of menu items which contains list of onboarded atsigns and [add_new_atsign], [save_backup_key]
+  getpopupMenuList() async {
+    popupMenuList = await BackendService.getInstance().getAtsignList();
+    popupMenuList.add(TextStrings()
+        .addNewAtsign); //to show add option in switch atsign drop down menu.
+    popupMenuList.add(TextStrings().saveBackupKey);
+    return popupMenuList;
   }
 
   cleanKeyChain() async {
@@ -66,9 +69,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    // cleanKeyChain();
-    print(
-        'getting atsign backend => ${BackendService.getInstance().currentAtsign}');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MixedConstants.APPBAR_HEIGHT),
@@ -95,7 +95,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                   // Icon(Icons.notifications, size: 30),
                   // SizedBox(width: 30),
                   FutureBuilder(
-                      future: getAtsignList(),
+                      future: getpopupMenuList(),
                       builder: (context, snapshot) {
                         if (snapshot.data != null) {
                           List<String> atsignList = snapshot.data;
@@ -122,7 +122,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                                     Icon(Icons.arrow_drop_down)
                                   ],
                                 ),
-                                elevation: 0,
+                                elevation: 10,
                                 itemBuilder: (BuildContext context) {
                                   return getPopupMenuItem(atsignList);
                                 },
@@ -159,22 +159,27 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
     return menuItems;
   }
 
-  onAtsignChange(String selectedAtsign) async {
+  onAtsignChange(String selectedOption) async {
     var atClientPrefernce;
     await BackendService.getInstance()
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
         .catchError((e) => print(e));
 
-    if (selectedAtsign == 'add_new_atsign') {
+    if (selectedOption == TextStrings().addNewAtsign) {
       await CustomOnboarding.onboard(
           atSign: '',
           atClientPrefernce: atClientPrefernce,
           showLoader: _showLoader);
-    } else if (selectedAtsign !=
+    } else if (selectedOption == TextStrings().saveBackupKey) {
+      BackupKeyWidget(
+        atClientService: AtClientManager.getInstance().atClient,
+        atsign: AtClientManager.getInstance().atClient.getCurrentAtSign(),
+      ).showBackupDialog(context);
+    } else if (selectedOption !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
       await CustomOnboarding.onboard(
-          atSign: selectedAtsign,
+          atSign: selectedOption,
           atClientPrefernce: atClientPrefernce,
           showLoader: _showLoader);
     }

@@ -63,6 +63,7 @@ dependencies:
   at_common_flutter: ^2.0.4
   at_contacts_flutter: ^3.1.2
   at_contacts_group_flutter: ^3.1.2
+  at_backupkey_flutter: ^3.1.2
    
     
 dependency_overrides:

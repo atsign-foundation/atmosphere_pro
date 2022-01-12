@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
@@ -498,9 +499,18 @@ class BackendService {
     }
 
     if (tempAtsign == '') {
-      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
-          Routes.HOME, (Route<dynamic> route) => false);
-    } else {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            Routes.HOME,
+            (Route<dynamic> route) => false);
+      } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            DesktopRoutes.DESKTOP_HOME,
+            (Route<dynamic> route) => false);
+      }
+    } else if (Platform.isAndroid || Platform.isIOS) {
       await Onboarding(
         atsign: tempAtsign,
         context: NavService.navKey.currentContext,
@@ -525,12 +535,11 @@ class BackendService {
         onError: (error) {
           print('Onboarding throws $error error');
         },
-        // nextScreen: WelcomeScreen(),
       );
+    } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      CustomOnboarding.onboard(
+          atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
     }
-    // if (atClientInstance != null) {
-    //   await startMonitor();
-    // }
   }
 
   Future<bool> checkAtsign(String atSign) async {
