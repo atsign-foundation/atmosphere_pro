@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,6 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   var atClientPrefernce;
   AtClient atClient = AtClientManager.getInstance().atClient;
   String atsignName = '';
-  Uint8List atsignImage;
 
   @override
   void initState() {
@@ -35,21 +35,26 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   }
 
   getAtsignDetails() {
-    atsignImage = CommonFunctions().getCachedContactImage(widget.atsign);
     atsignName = CommonFunctions().getCachedContactName(widget.atsign);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.atsign == 'add_new_atsign'
-        ? addNewContactRow()
-        : _contactRow(widget.atsign, atsignName ?? '',
-            isCurrentAtsign: isCurrentAtsign, image: atsignImage);
+    if (widget.atsign == TextStrings().addNewAtsign) {
+      return addNewContactRow();
+    } else if (widget.atsign == TextStrings().saveBackupKey) {
+      return saveBackupKeyRow();
+    } else {
+      return _contactRow(widget.atsign, atsignName ?? '',
+          isCurrentAtsign: isCurrentAtsign);
+    }
   }
 
   Widget _contactRow(String _atsign, String _name,
-      {bool isCurrentAtsign = false, Uint8List image}) {
+      {bool isCurrentAtsign = false}) {
+    Uint8List image = CommonFunctions().getCachedContactImage(widget.atsign);
+
     return Row(
       children: <Widget>[
         image != null
@@ -106,29 +111,60 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   }
 
   Widget addNewContactRow() {
-    return Row(
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.add,
+              color: ColorConstants.fadedText,
+              size: 35,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Add',
+            style: CustomTextStyles.desktopSecondaryRegular14,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget saveBackupKeyRow() {
+    return Column(
       children: [
+        Divider(height: 1),
         Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.add,
-            color: ColorConstants.fadedText,
-            size: 35,
+          height: 50,
+          child: Row(
+            children: [
+              Icon(Icons.file_copy),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Backup your keys',
+                  softWrap: true,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    letterSpacing: 0.1,
+                    fontSize: 14,
+                  ),
+                ),
+              )
+            ],
           ),
         ),
-        SizedBox(
-          width: 10,
-        ),
-        Text(
-          'Add',
-          style: CustomTextStyles.desktopSecondaryRegular14,
-        )
       ],
     );
   }
