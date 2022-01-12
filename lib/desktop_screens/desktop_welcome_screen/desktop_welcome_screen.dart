@@ -3,13 +3,14 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -31,8 +32,8 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool authenticating = false;
   String currentatSign;
-
-  List<String> atsignList;
+  AtClient atClient = AtClientManager.getInstance().atClient;
+  List<String> atsignList = [];
 
   void _showLoader(bool loaderState, String authenticatingForAtsign) {
     if (mounted) {
@@ -43,6 +44,14 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         authenticating = loaderState;
       });
     }
+    getAtsignList();
+  }
+
+  getAtsignList() async {
+    atsignList = await BackendService.getInstance().getAtsignList();
+    atsignList.add(
+        'add_new_atsign'); //to show add option in switch atsign drop down menu.
+    return atsignList;
   }
 
   cleanKeyChain() async {
@@ -83,63 +92,92 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                   width: 50.toHeight,
                 ),
                 actions: [
-                  Icon(Icons.notifications, size: 30),
-                  SizedBox(width: 30),
-                  InkWell(
-                    onTap: () async {
-                      if (atsignList == null) {
-                        atsignList =
-                            await BackendService.getInstance().getAtsignList();
-                      }
-
-                      Provider.of<WelcomeScreenProvider>(context, listen: false)
-                          .updateSwitchAtsignMenu();
-                    },
-                    child: Row(
-                      children: [
-                        ContactInitial(
-                          initials: BackendService.getInstance()
-                              .atClientManager
-                              .atClient
-                              .getCurrentAtSign(),
-                          size: 30,
-                          maxSize: (80.0 - 30.0),
-                          minSize: 50,
-                        ),
-                        Icon(Icons.arrow_drop_down)
-                      ],
-                    ),
-                  )
+                  // Icon(Icons.notifications, size: 30),
+                  // SizedBox(width: 30),
+                  FutureBuilder(
+                      future: getAtsignList(),
+                      builder: (context, snapshot) {
+                        if (snapshot.data != null) {
+                          List<String> atsignList = snapshot.data;
+                          var image = CommonFunctions().getCachedContactImage(
+                              atClient.getCurrentAtSign());
+                          return Container(
+                            width: 100,
+                            child: PopupMenuButton<String>(
+                                icon: Row(
+                                  children: [
+                                    image == null
+                                        ? ContactInitial(
+                                            initials:
+                                                atClient.getCurrentAtSign(),
+                                            size: 35,
+                                            maxSize: (80.0 - 30.0),
+                                            minSize: 35,
+                                          )
+                                        : CustomCircleAvatar(
+                                            byteImage: image,
+                                            nonAsset: true,
+                                            size: 35,
+                                          ),
+                                    Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
+                                elevation: 0,
+                                itemBuilder: (BuildContext context) {
+                                  return getPopupMenuItem(atsignList);
+                                },
+                                onSelected: onAtsignChange),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
                 ],
               ),
             ),
-            // showSwitchAtsign
-            //     ? Positioned(
-            //         top: 60,
-            //         right: 50,
-            //         child: DesktopSwitchAtsign(atSignList: atsignList),
-            //       )
-            //     : SizedBox()
           ],
         ),
       ),
       body: Stack(clipBehavior: Clip.none, children: [
         DesktopWelcomeScreen(),
-        Consumer<WelcomeScreenProvider>(builder: (context, provider, _) {
-          return provider.showSwitchAtsignMenu
-              ? Positioned(
-                  top: 0,
-                  right: 50,
-                  child: DesktopSwitchAtsign(
-                      atSignList: atsignList, showLoader: _showLoader),
-                )
-              : SizedBox();
-        }),
         authenticating
             ? LoadingDialog().showTextLoader('Initialising for $currentatSign')
             : SizedBox()
       ]),
     );
+  }
+
+  getPopupMenuItem(List<String> list) {
+    List<PopupMenuItem<String>> menuItems = [];
+    list.forEach((element) {
+      menuItems.add(PopupMenuItem(
+        value: element,
+        child: DesktopSwitchAtsign(key: Key(element), atsign: element),
+      ));
+    });
+
+    return menuItems;
+  }
+
+  onAtsignChange(String selectedAtsign) async {
+    var atClientPrefernce;
+    await BackendService.getInstance()
+        .getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+
+    if (selectedAtsign == 'add_new_atsign') {
+      await CustomOnboarding.onboard(
+          atSign: '',
+          atClientPrefernce: atClientPrefernce,
+          showLoader: _showLoader);
+    } else if (selectedAtsign !=
+        AtClientManager.getInstance().atClient.getCurrentAtSign()) {
+      await CustomOnboarding.onboard(
+          atSign: selectedAtsign,
+          atClientPrefernce: atClientPrefernce,
+          showLoader: _showLoader);
+    }
   }
 }
 
