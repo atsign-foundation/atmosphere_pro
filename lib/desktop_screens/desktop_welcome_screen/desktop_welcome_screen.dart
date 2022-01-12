@@ -122,7 +122,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                                     Icon(Icons.arrow_drop_down)
                                   ],
                                 ),
-                                elevation: 0,
+                                elevation: 10,
                                 itemBuilder: (BuildContext context) {
                                   return getPopupMenuItem(atsignList);
                                 },

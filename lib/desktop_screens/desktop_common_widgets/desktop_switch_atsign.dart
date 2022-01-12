@@ -79,16 +79,27 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                 overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: 5),
-              Text(
-                _name,
-                style: isCurrentAtsign
-                    ? CustomTextStyles.greyText16
-                    : CustomTextStyles.desktopSecondaryRegular14,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              (_name != null && _name != '')
+                  ? Text(
+                      _name,
+                      style: isCurrentAtsign
+                          ? CustomTextStyles.greyText16
+                          : CustomTextStyles.desktopSecondaryRegular14,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  : SizedBox(),
             ],
           ),
+        ),
+        Expanded(
+          child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                  onTap: () {
+                    CommonFunctions().deleteAtSign(widget.atsign);
+                  },
+                  child: Icon(Icons.delete))),
         )
       ],
     );
