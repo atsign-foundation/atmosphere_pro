@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,6 @@ class CustomOnboarding {
     atClientPrefernce,
     Function showLoader,
     bool isInit = false,
-    Function onDone,
   }) async {
     await Onboarding(
       atsign: atSign,
@@ -59,15 +59,18 @@ class CustomOnboarding {
           LoadingDialog().hide();
         }
 
-        if (onDone != null) {
-          onDone();
-        }
-
         if (isInit) {
           await Navigator.pushReplacementNamed(
             NavService.navKey.currentContext,
             DesktopRoutes.DESKTOP_WELCOME,
           );
+        }
+
+        if (!isInit) {
+          // if it is not init then we re-render the welcome screen
+          Provider.of<SwitchAtsignProvider>(NavService.navKey.currentContext,
+                  listen: false)
+              .update();
         }
       },
       onError: (error) {

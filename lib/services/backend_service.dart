@@ -498,6 +498,11 @@ class BackendService {
       tempAtsign = atSignList.first;
     }
 
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      /// in case of desktop, we close the dialog from here
+      Navigator.of(NavService.navKey.currentContext).pop();
+    }
+
     if (tempAtsign == '') {
       if (Platform.isAndroid || Platform.isIOS) {
         await Navigator.pushNamedAndRemoveUntil(
