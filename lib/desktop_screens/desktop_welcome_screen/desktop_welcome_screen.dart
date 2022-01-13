@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -69,82 +70,105 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MixedConstants.APPBAR_HEIGHT),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.black,
-                    width: 0.1,
+    return ProviderHandler<SwitchAtsignProvider>(
+        functionName: 'switchAtsign',
+        showError: true,
+        load: (provider) {
+          provider.update();
+        },
+        errorBuilder: (provider) {
+          return Text('Error');
+        },
+        successBuilder: (provider) {
+          getpopupMenuList();
+          atClient = AtClientManager.getInstance().atClient;
+
+          print(
+              'ProviderHandler SwitchAtsignProvider build called ${AtClientManager.getInstance().atClient.getCurrentAtSign()}');
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(MixedConstants.APPBAR_HEIGHT),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.black,
+                          width: 0.1,
+                        ),
+                      ),
+                    ),
+                    child: AppBar(
+                      leading: Image.asset(
+                        ImageConstants.logoIcon,
+                        height: 50.toHeight,
+                        width: 50.toHeight,
+                      ),
+                      actions: [
+                        // Icon(Icons.notifications, size: 30),
+                        // SizedBox(width: 30),
+                        FutureBuilder(
+                            key: Key(AtClientManager.getInstance()
+                                .atClient
+                                .getCurrentAtSign()),
+                            future: getpopupMenuList(),
+                            builder: (context, snapshot) {
+                              if (snapshot.data != null) {
+                                List<String> atsignList = snapshot.data;
+                                var image = CommonFunctions()
+                                    .getCachedContactImage(
+                                        atClient.getCurrentAtSign());
+                                return Container(
+                                  width: 100,
+                                  child: PopupMenuButton<String>(
+                                      icon: Row(
+                                        children: [
+                                          image == null
+                                              ? ContactInitial(
+                                                  initials: atClient
+                                                      .getCurrentAtSign(),
+                                                  size: 35,
+                                                  maxSize: (80.0 - 30.0),
+                                                  minSize: 35,
+                                                )
+                                              : CustomCircleAvatar(
+                                                  byteImage: image,
+                                                  nonAsset: true,
+                                                  size: 35,
+                                                ),
+                                          Icon(Icons.arrow_drop_down)
+                                        ],
+                                      ),
+                                      elevation: 10,
+                                      itemBuilder: (BuildContext context) {
+                                        return getPopupMenuItem(atsignList);
+                                      },
+                                      onSelected: onAtsignChange),
+                                );
+                              } else {
+                                return SizedBox();
+                              }
+                            }),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              child: AppBar(
-                leading: Image.asset(
-                  ImageConstants.logoIcon,
-                  height: 50.toHeight,
-                  width: 50.toHeight,
-                ),
-                actions: [
-                  // Icon(Icons.notifications, size: 30),
-                  // SizedBox(width: 30),
-                  FutureBuilder(
-                      future: getpopupMenuList(),
-                      builder: (context, snapshot) {
-                        if (snapshot.data != null) {
-                          List<String> atsignList = snapshot.data;
-                          var image = CommonFunctions().getCachedContactImage(
-                              atClient.getCurrentAtSign());
-                          return Container(
-                            width: 100,
-                            child: PopupMenuButton<String>(
-                                icon: Row(
-                                  children: [
-                                    image == null
-                                        ? ContactInitial(
-                                            initials:
-                                                atClient.getCurrentAtSign(),
-                                            size: 35,
-                                            maxSize: (80.0 - 30.0),
-                                            minSize: 35,
-                                          )
-                                        : CustomCircleAvatar(
-                                            byteImage: image,
-                                            nonAsset: true,
-                                            size: 35,
-                                          ),
-                                    Icon(Icons.arrow_drop_down)
-                                  ],
-                                ),
-                                elevation: 10,
-                                itemBuilder: (BuildContext context) {
-                                  return getPopupMenuItem(atsignList);
-                                },
-                                onSelected: onAtsignChange),
-                          );
-                        } else {
-                          return SizedBox();
-                        }
-                      }),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-      body: Stack(clipBehavior: Clip.none, children: [
-        DesktopWelcomeScreen(),
-        authenticating
-            ? LoadingDialog().showTextLoader('Initialising for $currentatSign')
-            : SizedBox()
-      ]),
-    );
+            body: Stack(clipBehavior: Clip.none, children: [
+              DesktopWelcomeScreen(),
+              authenticating
+                  ? LoadingDialog()
+                      .showTextLoader('Initialising for $currentatSign')
+                  : SizedBox()
+            ]),
+          );
+        });
+
+//////
   }
 
   getPopupMenuItem(List<String> list) {
@@ -168,9 +192,10 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
 
     if (selectedOption == TextStrings().addNewAtsign) {
       await CustomOnboarding.onboard(
-          atSign: '',
-          atClientPrefernce: atClientPrefernce,
-          showLoader: _showLoader);
+        atSign: '',
+        atClientPrefernce: atClientPrefernce,
+        showLoader: _showLoader,
+      );
     } else if (selectedOption == TextStrings().saveBackupKey) {
       BackupKeyWidget(
         atClientService: AtClientManager.getInstance().atClient,
@@ -179,9 +204,10 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
     } else if (selectedOption !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
       await CustomOnboarding.onboard(
-          atSign: selectedOption,
-          atClientPrefernce: atClientPrefernce,
-          showLoader: _showLoader);
+        atSign: selectedOption,
+        atClientPrefernce: atClientPrefernce,
+        showLoader: _showLoader,
+      );
     }
   }
 }
@@ -238,10 +264,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   ),
                 ),
                 child: ProviderHandler<NestedRouteProvider>(
-                  functionName: Provider.of<NestedRouteProvider>(
-                          NavService.navKey.currentContext,
-                          listen: false)
-                      .Routes,
+                  functionName: 'routes',
                   showError: true,
                   load: (provider) {
                     provider.init();

@@ -159,9 +159,12 @@ class DesktopSetupRoutes {
     });
   }
 
-  static Future nested_pop() {
+  static Future nested_pop() async {
     _provider.update(null);
-    Navigator.of(NavService.nestedNavKey.currentContext).pop();
+    if ((NavService.nestedNavKey.currentState != null) &&
+        (Navigator.canPop(NavService.nestedNavKey.currentContext))) {
+      await Navigator.of(NavService.nestedNavKey.currentContext).pop();
+    }
   }
 }
 
