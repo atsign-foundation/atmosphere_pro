@@ -173,7 +173,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         showLoader: _showLoader,
         onDone: () {
           setState(() {});
-        },
+        }, // While switching atsign, we will not navigate back to this screen, just re-render it.
       );
     } else if (selectedAtsign !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
