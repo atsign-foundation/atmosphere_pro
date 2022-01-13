@@ -81,6 +81,8 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
         },
         successBuilder: (provider) {
           getpopupMenuList();
+          atClient = AtClientManager.getInstance().atClient;
+
           print(
               'ProviderHandler SwitchAtsignProvider build called ${AtClientManager.getInstance().atClient.getCurrentAtSign()}');
           return Scaffold(
