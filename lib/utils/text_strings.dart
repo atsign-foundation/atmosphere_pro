@@ -153,4 +153,8 @@ class TextStrings {
   String sendingFile = 'Sending file';
   String fileReceived = 'File received';
   String fileSent = 'File sent';
+
+  // desktop text constants
+  String addNewAtsign = 'add_new_atsign';
+  String saveBackupKey = 'save_backup_key';
 }
