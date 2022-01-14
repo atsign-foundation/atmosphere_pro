@@ -20,6 +20,7 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flushbar/flushbar.dart';
@@ -278,6 +279,9 @@ class BackendService {
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
         await NotificationService().showNotification(fromAtSign);
+        Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+                listen: false)
+            .checkForUndownloadedFiles();
       }
     }
   }

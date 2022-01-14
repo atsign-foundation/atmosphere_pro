@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
@@ -424,11 +425,46 @@ class SideBarIcon extends StatelessWidget {
               _launchInBrowser(arguments['url']);
             }
           },
-          child: Image.asset(
-            image,
-            height: 22,
-            color: isCurrentRoute ? Colors.white : ColorConstants.fadedText,
-          ),
+          child: routeName == DesktopRoutes.DESKTOP_HISTORY
+              ? Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Image.asset(
+                      image,
+                      height: 22,
+                      color: isCurrentRoute
+                          ? Colors.white
+                          : ColorConstants.fadedText,
+                    ),
+                    Consumer<FileDownloadChecker>(
+                      builder: (context, _fileDownloadChecker, _) {
+                        return _fileDownloadChecker.undownloadedFilesExist
+                            ? Positioned(
+                                right: -8,
+                                top: -8,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: EdgeInsets.all(1.toHeight),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.red,
+                                    radius: 5.toWidth,
+                                  ),
+                                ),
+                              )
+                            : SizedBox();
+                      },
+                    ),
+                  ],
+                )
+              : Image.asset(
+                  image,
+                  height: 22,
+                  color:
+                      isCurrentRoute ? Colors.white : ColorConstants.fadedText,
+                ),
         ));
 
     //  MouseRegion(
