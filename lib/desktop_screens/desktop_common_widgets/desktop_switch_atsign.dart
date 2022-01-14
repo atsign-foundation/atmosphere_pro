@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -102,6 +103,8 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
               alignment: Alignment.centerRight,
               child: GestureDetector(
                   onTap: () {
+                    Navigator.of(NavService.navKey.currentContext)
+                        .pop(); // this is to close the popup menu button
                     CommonFunctions().deleteAtSign(widget.atsign);
                   },
                   child: Icon(Icons.delete))),

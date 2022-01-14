@@ -12,17 +12,19 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
 
-  static onboard(
-      {String atSign,
-      atClientPrefernce,
-      Function showLoader,
-      bool isInit = false}) async {
+  static onboard({
+    String atSign,
+    atClientPrefernce,
+    Function showLoader,
+    bool isInit = false,
+  }) async {
     await Onboarding(
       atsign: atSign,
       context: NavService.navKey.currentContext,
@@ -36,7 +38,6 @@ class CustomOnboarding {
         print('atsign $atsign');
         await KeychainUtil.makeAtSignPrimary(atsign);
         if (!isInit) {
-          Navigator.pop(NavService.navKey.currentContext);
           await DesktopSetupRoutes.nested_pop();
         }
 
@@ -58,10 +59,19 @@ class CustomOnboarding {
           LoadingDialog().hide();
         }
 
-        await Navigator.pushNamed(
-          NavService.navKey.currentContext,
-          DesktopRoutes.DESKTOP_WELCOME,
-        );
+        if (isInit) {
+          await Navigator.pushReplacementNamed(
+            NavService.navKey.currentContext,
+            DesktopRoutes.DESKTOP_WELCOME,
+          );
+        }
+
+        if (!isInit) {
+          // if it is not init then we re-render the welcome screen
+          Provider.of<SwitchAtsignProvider>(NavService.navKey.currentContext,
+                  listen: false)
+              .update();
+        }
       },
       onError: (error) {
         print('Onboarding throws error: $error ');
