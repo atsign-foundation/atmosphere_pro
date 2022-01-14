@@ -191,26 +191,6 @@ class BackendService {
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   Future<bool> startMonitor({value, atsign}) async {
-    // if (value.containsKey(atsign)) {
-    //   currentAtSign = atsign;
-    //   atClientServiceMap = value;
-    //   atClientInstance = value[atsign].atClient;
-    //   atClientServiceInstance = value[atsign];
-    // }
-
-    // await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
-
-    // /// TODO:
-    // // Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
-    // //         listen: false)
-    // //     .selectedFiles = [];
-    // await setDownloadPath(
-    //     atsign: atsign,
-    //     atClientPreference: atClientPreference,
-    //     atClientServiceInstance: atClientServiceInstance);
-    // String privateKey = await getPrivateKey(atsign);
-
-    // await atClientInstance.startMonitor(privateKey, _notificationCallBack);
     await AtClientManager.getInstance()
         .notificationService
         .subscribe()
