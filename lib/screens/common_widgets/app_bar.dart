@@ -17,6 +17,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
@@ -62,55 +63,6 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  HistoryProvider historyProvider;
-  FileTransfer receivedHistory;
-  bool isDownloadAvailable = false, isFilesAvailableOfline = true;
-
-  @override
-  void didChangeDependencies() async {
-    if (historyProvider == null) {
-      historyProvider = Provider.of<HistoryProvider>(context);
-    }
-    historyProvider.receivedHistoryLogs.forEach((value) {
-      receivedHistory = value;
-      checkForDownloadAvailability();
-      isFilesAlreadyDownloaded();
-    });
-    super.didChangeDependencies();
-  }
-
-  checkForDownloadAvailability() {
-    var expiryDate = receivedHistory.date.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
-      isDownloadAvailable = true;
-    }
-
-    var isFileUploaded = false;
-    receivedHistory.files.forEach((FileData fileData) {
-      if (fileData.isUploaded) {
-        isFileUploaded = true;
-      }
-    });
-
-    if (!isFileUploaded) {
-      isDownloadAvailable = false;
-    }
-  }
-
-  isFilesAlreadyDownloaded() async {
-    receivedHistory.files.forEach((element) async {
-      String path = BackendService.getInstance().downloadDirectory.path +
-          '/${element.name}';
-      File test = File(path);
-      bool fileExists = await test.exists();
-      if (fileExists == false) {
-        setState(() {
-          isFilesAvailableOfline = false;
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -257,37 +209,43 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   Widget menuBar(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          Scaffold.of(context).openEndDrawer();
-        },
-        child: isDownloadAvailable && !isFilesAvailableOfline
-            ? Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 10.toHeight),
-                    height: 22.toHeight,
-                    width: 22.toWidth,
-                    child: Image.asset(
-                      ImageConstants.drawerIcon,
+      onTap: () {
+        Scaffold.of(context).openEndDrawer();
+      },
+      child: Stack(
+        alignment: Alignment.topRight,
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 10.toHeight),
+            height: 22.toHeight,
+            width: 22.toWidth,
+            child: Image.asset(
+              ImageConstants.drawerIcon,
+            ),
+          ),
+          Consumer<FileDownloadChecker>(
+              builder: (context, _fileDownloadChecker, _) {
+            return _fileDownloadChecker.undownloadedFilesExist
+                ? Positioned(
+                    right: -4,
+                    top: 2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(1.toHeight),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.red,
+                        radius: 5.toWidth,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.toHeight),
-                    child: CircleAvatar(
-                      backgroundColor: ColorConstants.orangeColor,
-                      radius: 5.toWidth,
-                    ),
-                  ),
-                ],
-              )
-            : Container(
-                margin: EdgeInsets.only(top: 10.toHeight),
-                height: 22.toHeight,
-                width: 22.toWidth,
-                child: Image.asset(
-                  ImageConstants.drawerIcon,
-                ),
-              ));
+                  )
+                : SizedBox();
+          }),
+        ],
+      ),
+    );
   }
 }
