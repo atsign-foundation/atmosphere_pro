@@ -113,6 +113,9 @@ class HistoryProvider extends BaseModel {
   }
 
   resetData() {
+    isSyncedDataFetched = false;
+    sentHistory = [];
+    receivedHistoryLogs = [];
     receivedHistory = [];
     receivedAudioModel = [];
     sendFileHistory = {'history': []};
@@ -180,7 +183,7 @@ class HistoryProvider extends BaseModel {
       sentHistory = [];
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
-        ..sharedBy = backendService.currentAtsign
+        ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
       var keyValue = await backendService.atClientManager.atClient
           .get(key)

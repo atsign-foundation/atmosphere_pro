@@ -257,4 +257,46 @@ class CommonFunctions {
           );
         });
   }
+
+  shownConfirmationDialog(String title, Function onYesTap) {
+    showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            content: Container(
+              width: 400.toWidth,
+              padding: EdgeInsets.all(15.toFont),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title),
+                    SizedBox(
+                      height: 20.toHeight,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                            onPressed: onYesTap,
+                            child: Text('Yes',
+                                style: TextStyle(fontSize: 16.toFont))),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel',
+                                style: TextStyle(fontSize: 16.toFont)))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
 }
