@@ -1,11 +1,9 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -35,25 +33,21 @@ class CustomOnboarding {
       appAPIKey: MixedConstants.ONBOARD_API_KEY,
       rootEnvironment: RootEnvironment.Production,
       onboard: (value, atsign) async {
-        print('value $value');
-        print('atsign $atsign');
         await KeychainUtil.makeAtSignPrimary(atsign);
+        BackendService.getInstance().syncWithSecondary();
+
         if (!isInit) {
           await DesktopSetupRoutes.nested_pop();
         }
 
         if (showLoader != null) {
-          // showLoader(true, atsign);
           LoadingDialog().showTextLoader('Initialising for $atsign');
         }
 
         await _backendService.startMonitor(atsign: atsign, value: value);
-        print('monitor started from custom onboard');
         _backendService.initBackendService();
-        await ContactProvider().initContactImpl();
         await initServices();
         getTransferData();
-        await initGroups();
 
         if (showLoader != null) {
           showLoader(false, '');
@@ -81,25 +75,15 @@ class CustomOnboarding {
   }
 
   static initServices() async {
-    // initializeContactsService(
-    //     rootDomain: MixedConstants.ROOT_DOMAIN);
-
-    await ContactService().initContactsService(MixedConstants.ROOT_DOMAIN, 64);
-  }
-
-  static initGroups() async {
-    // await GroupService().init(await BackendService.getInstance().getAtSign());
-    await GroupService()
-        .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
-    await GroupService().fetchGroupsAndContacts();
-
-    print('group init done');
+    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   static getTransferData() async {
     HistoryProvider historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentContext,
         listen: false);
+    historyProvider.resetData();
     await historyProvider.getSentHistory();
     await historyProvider.getReceivedHistory();
 

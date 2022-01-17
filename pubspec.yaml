@@ -85,6 +85,19 @@ dependency_overrides:
   plugin_platform_interface: ^2.0.0
   logging: ^1.0.0
 
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_contacts_flutter
+      ref: feat/group-dependency-update
+
+  at_contacts_group_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_contacts_group_flutter
+      ref: feat/group-dependency-update
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -39,8 +39,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
 
   getFutureBuilders() {
     widget.selectedFileData.fileDetails.files.forEach((element) {
-      _futureBuilder[element.name] = CommonFunctions().isFilePresent(
-          MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + element.name);
+      _futureBuilder[element.name] = CommonFunctions()
+          .isFilePresent(MixedConstants.SENT_FILE_DIRECTORY + element.name);
     });
   }
 

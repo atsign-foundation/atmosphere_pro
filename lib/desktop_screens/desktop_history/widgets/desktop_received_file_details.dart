@@ -210,12 +210,9 @@ class _DesktopReceivedFileDetailsState
                                             ConnectionState.done &&
                                         snapshot.data != null
                                     ? InkWell(
-                                        onTap: () async {
-                                          await OpenFile.open(MixedConstants
-                                                  .RECEIVED_FILE_DIRECTORY +
-                                              '/' +
-                                              widget.fileTransfer.files[index]
-                                                  .name);
+                                        onTap: () {
+                                          handleFileCLick(widget
+                                              .fileTransfer.files[index].name);
                                         },
                                         child: CommonFunctions().thumbnail(
                                             widget
@@ -312,6 +309,15 @@ class _DesktopReceivedFileDetailsState
         });
   }
 
+  handleFileCLick(String fileName) async {
+    String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + fileName;
+    File test = File(filePath);
+    bool fileExists = await test.exists();
+    if (fileExists) {
+      await OpenFile.open(filePath);
+    }
+  }
+
   List<TextSpan> getOverwriteMessage() {
     List<TextSpan> textSpansMessage = [];
     if (existingFileNamesToOverwrite.length == 1) {
@@ -375,6 +381,7 @@ class _DesktopReceivedFileDetailsState
         getFutureBuilders();
         setState(() {
           isDownloaded = true;
+          isOverwrite = false;
         });
       }
 
