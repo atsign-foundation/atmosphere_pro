@@ -11,6 +11,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -80,6 +81,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
             listen: false)
         .getReceivedHistory();
+
+    await Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+            listen: false)
+        .checkForUndownloadedFiles();
   }
 
   listenForFlushBarStatus() {
