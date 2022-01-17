@@ -179,7 +179,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         err.toString(),
                                         context: context));
                               },
-                              onBackArrowTap: () {
+                              onBackArrowTap: (selectedGroupContacts) {
                                 if (mounted) {
                                   setState(() {
                                     isContactSelection = !isContactSelection;
