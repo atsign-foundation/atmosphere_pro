@@ -20,12 +20,16 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client/src/service/notification_service.dart';
+import 'package:provider/provider.dart';
+
+import 'file_download_checker.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -695,6 +699,9 @@ class HistoryProvider extends BaseModel {
       setStatus(DOWNLOAD_FILE, Status.Done);
 
       if (files is List<File>) {
+        Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+                listen: false)
+            .checkForUndownloadedFiles();
         return true;
       } else {
         return false;

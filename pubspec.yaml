@@ -61,8 +61,8 @@ dependencies:
   at_contact: ^3.0.3
   at_lookup: ^3.0.5
   at_common_flutter: ^2.0.4
-  at_contacts_flutter: ^3.1.2
-  at_contacts_group_flutter: ^3.1.2
+  at_contacts_flutter: ^4.0.0
+  at_contacts_group_flutter: ^4.0.0
   at_backupkey_flutter: ^3.1.2
    
     
@@ -84,6 +84,7 @@ dependency_overrides:
   share: ^2.0.1
   plugin_platform_interface: ^2.0.0
   logging: ^1.0.0
+
 
 dev_dependencies:
   flutter_test:
