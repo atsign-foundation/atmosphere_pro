@@ -67,6 +67,18 @@ dependencies:
    
     
 dependency_overrides:
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_contacts_flutter
+      ref: feat/group-dependency-update
+
+  at_contacts_group_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_contacts_group_flutter
+      ref: feat/group-dependency-update
+
   permission_handler: ^6.1.3
   http: ^0.13.3
   crypto: ^2.1.5

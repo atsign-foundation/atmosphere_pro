@@ -63,7 +63,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
           width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
           height: SizeConfig().screenHeight - 80,
           padding: EdgeInsets.symmetric(horizontal: 50),
-          color: ColorConstants.LIGHT_BLUE_BG,
+          color: ColorConstants.lightBlueBg,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -272,7 +272,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     return Container(
       width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
       height: SizeConfig().screenHeight - 80,
-      color: ColorConstants.LIGHT_BLUE_BG,
+      color: ColorConstants.lightBlueBg,
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
       child: SingleChildScrollView(
         child: Column(
