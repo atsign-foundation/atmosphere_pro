@@ -1,6 +1,5 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_functions.dart';
@@ -59,161 +58,164 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     return Scaffold(
         body: Row(
       children: [
-        Container(
-          width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
-          height: SizeConfig().screenHeight - 80,
-          padding: EdgeInsets.symmetric(horizontal: 50),
-          color: ColorConstants.lightBlueBg,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Welcome ' +
-                    (BackendService.getInstance().atClientManager.atClient !=
-                            null
-                        ? '${BackendService.getInstance().atClientManager.atClient.getCurrentAtSign()}'
-                        : ''),
-                style: CustomTextStyles.desktopBlackPlayfairDisplay26,
-              ),
-              SizedBox(
-                height: 20.toHeight,
-              ),
-              Text(
-                'Type a receipient and start sending them files.',
-                style: CustomTextStyles.desktopSecondaryRegular18,
-              ),
-              SizedBox(
-                height: 50.toHeight,
-              ),
-              Text(
-                TextStrings().welcomeSendFilesTo,
-                style: CustomTextStyles.desktopSecondaryRegular18,
-              ),
-              SizedBox(
-                height: 20.toHeight,
-              ),
-              sendFileTo(isSelectContacts: true),
-              SizedBox(
-                height: 30,
-              ),
-              Text(TextStrings().welcomeFilePlaceholder,
-                  style: CustomTextStyles.desktopSecondaryRegular18),
-              SizedBox(
-                height: 20.toHeight,
-              ),
-              sendFileTo(),
-              SizedBox(
-                height: 20.toHeight,
-              ),
-              (_filePickerProvider.selectedFiles.isNotEmpty &&
-                      _welcomeScreenProvider.selectedContacts.isNotEmpty)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: CommonButton(
-                              'Clear',
-                              () async {
-                                setState(() {
-                                  _filePickerProvider.selectedFiles = [];
-                                  _welcomeScreenProvider.selectedContacts = [];
-                                  _currentScreen =
-                                      CurrentScreen.PlaceolderImage;
-                                  _welcomeScreenProvider
-                                      .isSelectionItemChanged = false;
-                                });
-                              },
-                              color: ColorConstants.greyText,
-                              border: 3,
-                              height: 45,
-                              width: 110,
-                              fontSize: 20,
-                              removePadding: true,
-                            )),
-                        SizedBox(width: 10.toWidth),
-                        _welcomeScreenProvider.isSelectionItemChanged
-                            ? Align(
-                                alignment: Alignment.centerRight,
-                                child: isFileSending
-                                    ? Container(
-                                        height: 45,
-                                        width: 110,
-                                        color: ColorConstants.orangeColor,
-                                        child: TypingIndicator(
-                                          showIndicator: true,
-                                          flashingCircleBrightColor:
-                                              Colors.white,
-                                          flashingCircleDarkColor:
-                                              ColorConstants.orangeColor,
+        Expanded(
+          child: Container(
+            height: SizeConfig().screenHeight - 80,
+            padding: EdgeInsets.symmetric(horizontal: 50),
+            color: ColorConstants.lightBlueBg,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Welcome ' +
+                      (BackendService.getInstance().atClientManager.atClient !=
+                              null
+                          ? '${BackendService.getInstance().atClientManager.atClient.getCurrentAtSign()}'
+                          : ''),
+                  style: CustomTextStyles.desktopBlackPlayfairDisplay26,
+                ),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
+                Text(
+                  'Type a receipient and start sending them files.',
+                  style: CustomTextStyles.desktopSecondaryRegular18,
+                ),
+                SizedBox(
+                  height: 50.toHeight,
+                ),
+                Text(
+                  TextStrings().welcomeSendFilesTo,
+                  style: CustomTextStyles.desktopSecondaryRegular18,
+                ),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
+                sendFileTo(isSelectContacts: true),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(TextStrings().welcomeFilePlaceholder,
+                    style: CustomTextStyles.desktopSecondaryRegular18),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
+                sendFileTo(),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
+                (_filePickerProvider.selectedFiles.isNotEmpty &&
+                        _welcomeScreenProvider.selectedContacts.isNotEmpty)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: CommonButton(
+                                'Clear',
+                                () async {
+                                  setState(() {
+                                    _filePickerProvider.selectedFiles = [];
+                                    _welcomeScreenProvider.selectedContacts =
+                                        [];
+                                    _currentScreen =
+                                        CurrentScreen.PlaceolderImage;
+                                    _welcomeScreenProvider
+                                        .isSelectionItemChanged = false;
+                                  });
+                                },
+                                color: ColorConstants.greyText,
+                                border: 3,
+                                height: 45,
+                                width: 110,
+                                fontSize: 20,
+                                removePadding: true,
+                              )),
+                          SizedBox(width: 10.toWidth),
+                          _welcomeScreenProvider.isSelectionItemChanged
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: isFileSending
+                                      ? Container(
+                                          height: 45,
+                                          width: 110,
+                                          color: ColorConstants.orangeColor,
+                                          child: TypingIndicator(
+                                            showIndicator: true,
+                                            flashingCircleBrightColor:
+                                                Colors.white,
+                                            flashingCircleDarkColor:
+                                                ColorConstants.orangeColor,
+                                          ),
+                                        )
+                                      : CommonButton(
+                                          _filePickerProvider.status[
+                                                      _filePickerProvider
+                                                          .SEND_FILES] ==
+                                                  Status.Error
+                                              ? 'Resend'
+                                              : 'Send',
+                                          () async {
+                                            if (isFileSending) return;
+
+                                            print('sending file');
+
+                                            setState(() {
+                                              _filePickerProvider
+                                                  .updateFileSendingStatus(
+                                                      true);
+                                              isFileSending = true;
+                                            });
+
+                                            await _filePickerProvider.sendFileWithFileBin(
+                                                _filePickerProvider
+                                                    .selectedFiles,
+                                                _welcomeScreenProvider
+                                                    .selectedContacts);
+
+                                            setState(() {
+                                              _filePickerProvider
+                                                  .updateFileSendingStatus(
+                                                      false);
+                                              isFileSending = false;
+                                              if (_filePickerProvider.status[
+                                                      _filePickerProvider
+                                                          .SEND_FILES] ==
+                                                  Status.Done) {
+                                                CustomToast().show(
+                                                    'File(s) sent successfully.',
+                                                    context,
+                                                    bgColor: ColorConstants
+                                                        .orangeColor);
+                                                _welcomeScreenProvider
+                                                        .isSelectionItemChanged =
+                                                    false;
+                                              } else {
+                                                CustomToast().show(
+                                                    'Something went wrong.',
+                                                    context,
+                                                    bgColor: ColorConstants
+                                                        .orangeColor);
+                                              }
+                                            });
+                                          },
+                                          color: isFileSending
+                                              ? ColorConstants.greyText
+                                              : ColorConstants.orangeColor,
+                                          border: 3,
+                                          height: 45,
+                                          width: 110,
+                                          fontSize: 20,
+                                          removePadding: true,
                                         ),
-                                      )
-                                    : CommonButton(
-                                        _filePickerProvider.status[
-                                                    _filePickerProvider
-                                                        .SEND_FILES] ==
-                                                Status.Error
-                                            ? 'Resend'
-                                            : 'Send',
-                                        () async {
-                                          if (isFileSending) return;
-
-                                          print('sending file');
-
-                                          setState(() {
-                                            _filePickerProvider
-                                                .updateFileSendingStatus(true);
-                                            isFileSending = true;
-                                          });
-
-                                          await _filePickerProvider
-                                              .sendFileWithFileBin(
-                                                  _filePickerProvider
-                                                      .selectedFiles,
-                                                  _welcomeScreenProvider
-                                                      .selectedContacts);
-
-                                          setState(() {
-                                            _filePickerProvider
-                                                .updateFileSendingStatus(false);
-                                            isFileSending = false;
-                                            if (_filePickerProvider.status[
-                                                    _filePickerProvider
-                                                        .SEND_FILES] ==
-                                                Status.Done) {
-                                              CustomToast().show(
-                                                  'File(s) sent successfully.',
-                                                  context,
-                                                  bgColor: ColorConstants
-                                                      .orangeColor);
-                                              _welcomeScreenProvider
-                                                      .isSelectionItemChanged =
-                                                  false;
-                                            } else {
-                                              CustomToast().show(
-                                                  'Something went wrong.',
-                                                  context,
-                                                  bgColor: ColorConstants
-                                                      .orangeColor);
-                                            }
-                                          });
-                                        },
-                                        color: isFileSending
-                                            ? ColorConstants.greyText
-                                            : ColorConstants.orangeColor,
-                                        border: 3,
-                                        height: 45,
-                                        width: 110,
-                                        fontSize: 20,
-                                        removePadding: true,
-                                      ),
-                              )
-                            : SizedBox(),
-                      ],
-                    )
-                  : SizedBox()
-            ],
+                                )
+                              : SizedBox(),
+                        ],
+                      )
+                    : SizedBox()
+              ],
+            ),
           ),
         ),
         Expanded(child: currentScreen()),
@@ -262,7 +264,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 _currentScreen = CurrentScreen.SelectedItems;
               });
             });
-      // return _contactsScreen();
+
       case CurrentScreen.SelectedItems:
         return _selectedItems();
     }
@@ -270,7 +272,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   Widget _selectedItems() {
     return Container(
-      width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
       height: SizeConfig().screenHeight - 80,
       color: ColorConstants.lightBlueBg,
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
@@ -303,28 +304,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     );
   }
 
-  Widget _contactsScreen() {
-    return SizedBox(
-      width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
-      height: SizeConfig().screenHeight - 80,
-      child: DesktopSelectContactsScreen(
-        onArrowBackTap: () {
-          setState(() {
-            _currentScreen = CurrentScreen.PlaceolderImage;
-          });
-        },
-        onDoneTap: () {
-          setState(() {
-            _currentScreen = CurrentScreen.SelectedItems;
-          });
-        },
-      ),
-    );
-  }
-
   Widget _placeholderImage() {
     return Container(
-      width: (SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH) / 2,
       height: SizeConfig().screenHeight - 80,
       decoration: BoxDecoration(
         image: DecorationImage(

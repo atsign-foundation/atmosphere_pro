@@ -74,168 +74,171 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
       body: SingleChildScrollView(
           child: Row(
         children: <Widget>[
-          Container(
-            color: ColorConstants.fadedBlue,
-            height: SizeConfig().screenHeight,
-            width: (SizeConfig().screenWidth * 0.5 -
-                (MixedConstants.SIDEBAR_WIDTH / 2)),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 80,
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: TabBar(
-                        labelColor: ColorConstants.fontPrimary,
-                        indicatorWeight: 5,
-                        indicatorColor: Colors.black,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        labelStyle: CustomTextStyles.primaryBold14,
-                        unselectedLabelStyle:
-                            CustomTextStyles.secondaryRegular14,
-                        controller: _controller,
-                        tabs: [
-                          Text(
-                            TextStrings().sent,
-                            style: TextStyle(letterSpacing: 0.1, fontSize: 20),
-                          ),
-                          Text(
-                            TextStrings().received,
-                            style: TextStyle(letterSpacing: 0.1, fontSize: 20),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _controller,
+          Expanded(
+            child: Container(
+              color: ColorConstants.fadedBlue,
+              height: SizeConfig().screenHeight,
+              child: Column(
+                children: [
+                  Stack(
                     children: [
-                      ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.SENT_HISTORY,
-                        showError: false,
-                        successBuilder: (provider) {
-                          return (provider.sentHistory.isEmpty)
-                              ? Center(
-                                  child: Text('No files sent',
-                                      style: TextStyle(fontSize: 15.toFont)),
-                                )
-                              : ListView.separated(
-                                  padding:
-                                      EdgeInsets.only(bottom: 170.toHeight),
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  separatorBuilder: (context, index) {
-                                    return Divider(
-                                      indent: 16.toWidth,
-                                    );
-                                  },
-                                  itemCount: provider.sentHistory.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          sentSelectedIndex = index;
-                                          selectedSentFileData =
-                                              provider.sentHistory[index];
-                                        });
-                                      },
-                                      child: DesktopSentFilesListTile(
-                                        sentHistory:
-                                            provider.sentHistory[index],
-                                        key: Key(provider.sentHistory[index]
-                                            .fileDetails.key),
-                                        isSelected: index == sentSelectedIndex
-                                            ? true
-                                            : false,
-                                      ),
-                                    );
-                                  },
-                                );
-                        },
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
-                        ),
-                        load: (provider) async {
-                          provider.getSentHistory();
-                        },
-                      ),
-                      ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.RECEIVED_HISTORY,
-                        load: (provider) async {
-                          await provider.getReceivedHistory();
-                        },
-                        showError: false,
-                        successBuilder: (provider) {
-                          return (provider.receivedHistoryLogs.isEmpty)
-                              ? Center(
-                                  child: Text(
-                                    'No files received',
-                                    style: TextStyle(fontSize: 15.toFont),
-                                  ),
-                                )
-                              : ListView.separated(
-                                  padding:
-                                      EdgeInsets.only(bottom: 170.toHeight),
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  separatorBuilder: (context, index) => Divider(
-                                    indent: 16.toWidth,
-                                  ),
-                                  itemCount:
-                                      provider.receivedHistoryLogs.length,
-                                  itemBuilder: (context, index) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        receivedFileData =
-                                            provider.receivedHistoryLogs[index];
-
-                                        setState(() {
-                                          receivedSelectedIndex = index;
-                                        });
-                                      },
-                                      child: DesktopReceivedFilesListTile(
-                                        key: Key(provider
-                                            .receivedHistoryLogs[index].key),
-                                        receivedHistory:
-                                            provider.receivedHistoryLogs[index],
-                                        isSelected:
-                                            index == receivedSelectedIndex
-                                                ? true
-                                                : false,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                        },
-                        errorBuilder: (provider) => Center(
-                          child: Text('Some error occured'),
+                      Container(
+                        height: 80,
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: TabBar(
+                          labelColor: ColorConstants.fontPrimary,
+                          indicatorWeight: 5,
+                          indicatorColor: Colors.black,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelStyle: CustomTextStyles.primaryBold14,
+                          unselectedLabelStyle:
+                              CustomTextStyles.secondaryRegular14,
+                          controller: _controller,
+                          tabs: [
+                            Text(
+                              TextStrings().sent,
+                              style:
+                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
+                            ),
+                            Text(
+                              TextStrings().received,
+                              style:
+                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
+                            )
+                          ],
                         ),
                       ),
                     ],
                   ),
-                )
-              ],
+                  Expanded(
+                    child: TabBarView(
+                      controller: _controller,
+                      children: [
+                        ProviderHandler<HistoryProvider>(
+                          functionName: historyProvider.SENT_HISTORY,
+                          showError: false,
+                          successBuilder: (provider) {
+                            return (provider.sentHistory.isEmpty)
+                                ? Center(
+                                    child: Text('No files sent',
+                                        style: TextStyle(fontSize: 15.toFont)),
+                                  )
+                                : ListView.separated(
+                                    padding:
+                                        EdgeInsets.only(bottom: 170.toHeight),
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    separatorBuilder: (context, index) {
+                                      return Divider(
+                                        indent: 16.toWidth,
+                                      );
+                                    },
+                                    itemCount: provider.sentHistory.length,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            sentSelectedIndex = index;
+                                            selectedSentFileData =
+                                                provider.sentHistory[index];
+                                          });
+                                        },
+                                        child: DesktopSentFilesListTile(
+                                          sentHistory:
+                                              provider.sentHistory[index],
+                                          key: Key(provider.sentHistory[index]
+                                              .fileDetails.key),
+                                          isSelected: index == sentSelectedIndex
+                                              ? true
+                                              : false,
+                                        ),
+                                      );
+                                    },
+                                  );
+                          },
+                          errorBuilder: (provider) => Center(
+                            child: Text('Some error occured'),
+                          ),
+                          load: (provider) async {
+                            provider.getSentHistory();
+                          },
+                        ),
+                        ProviderHandler<HistoryProvider>(
+                          functionName: historyProvider.RECEIVED_HISTORY,
+                          load: (provider) async {
+                            await provider.getReceivedHistory();
+                          },
+                          showError: false,
+                          successBuilder: (provider) {
+                            return (provider.receivedHistoryLogs.isEmpty)
+                                ? Center(
+                                    child: Text(
+                                      'No files received',
+                                      style: TextStyle(fontSize: 15.toFont),
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    padding:
+                                        EdgeInsets.only(bottom: 170.toHeight),
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    separatorBuilder: (context, index) =>
+                                        Divider(
+                                      indent: 16.toWidth,
+                                    ),
+                                    itemCount:
+                                        provider.receivedHistoryLogs.length,
+                                    itemBuilder: (context, index) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          receivedFileData = provider
+                                              .receivedHistoryLogs[index];
+
+                                          setState(() {
+                                            receivedSelectedIndex = index;
+                                          });
+                                        },
+                                        child: DesktopReceivedFilesListTile(
+                                          key: Key(provider
+                                              .receivedHistoryLogs[index].key),
+                                          receivedHistory: provider
+                                              .receivedHistoryLogs[index],
+                                          isSelected:
+                                              index == receivedSelectedIndex
+                                                  ? true
+                                                  : false,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                          },
+                          errorBuilder: (provider) => Center(
+                            child: Text('Some error occured'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-          Container(
-            width: (SizeConfig().screenWidth * 0.5 -
-                (MixedConstants.SIDEBAR_WIDTH / 2)),
-            child: isSentTab
-                ? selectedSentFileData == null
-                    ? SizedBox()
-                    : DesktopSentFileDetails(
-                        key: Key(
-                            selectedSentFileData.fileTransferObject.transferId),
-                        selectedFileData: selectedSentFileData,
-                      )
-                : receivedFileData != null
-                    ? DesktopReceivedFileDetails(
-                        key: Key(receivedFileData.key),
-                        fileTransfer: receivedFileData,
-                      )
-                    : SizedBox(),
+          Expanded(
+            child: Container(
+              child: isSentTab
+                  ? selectedSentFileData == null
+                      ? SizedBox()
+                      : DesktopSentFileDetails(
+                          key: Key(selectedSentFileData
+                              .fileTransferObject.transferId),
+                          selectedFileData: selectedSentFileData,
+                        )
+                  : receivedFileData != null
+                      ? DesktopReceivedFileDetails(
+                          key: Key(receivedFileData.key),
+                          fileTransfer: receivedFileData,
+                        )
+                      : SizedBox(),
+            ),
           )
         ],
       )),
