@@ -77,38 +77,31 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           Expanded(
             child: Container(
               color: ColorConstants.fadedBlue,
-              height: SizeConfig().screenHeight,
+              height: SizeConfig().screenHeight - 80,
               child: Column(
                 children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: 80,
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: TabBar(
-                          labelColor: ColorConstants.fontPrimary,
-                          indicatorWeight: 5,
-                          indicatorColor: Colors.black,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          labelStyle: CustomTextStyles.primaryBold14,
-                          unselectedLabelStyle:
-                              CustomTextStyles.secondaryRegular14,
-                          controller: _controller,
-                          tabs: [
-                            Text(
-                              TextStrings().sent,
-                              style:
-                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
-                            ),
-                            Text(
-                              TextStrings().received,
-                              style:
-                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
-                            )
-                          ],
+                  Container(
+                    height: 80,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: TabBar(
+                      labelColor: ColorConstants.fontPrimary,
+                      indicatorWeight: 5,
+                      indicatorColor: Colors.black,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      labelStyle: CustomTextStyles.primaryBold14,
+                      unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
+                      controller: _controller,
+                      tabs: [
+                        Text(
+                          TextStrings().sent,
+                          style: TextStyle(letterSpacing: 0.1, fontSize: 20),
                         ),
-                      ),
-                    ],
+                        Text(
+                          TextStrings().received,
+                          style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                        )
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: TabBarView(
@@ -224,6 +217,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
           ),
           Expanded(
             child: Container(
+              height: SizeConfig().screenHeight - 80,
               child: isSentTab
                   ? selectedSentFileData == null
                       ? SizedBox()
