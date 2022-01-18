@@ -103,10 +103,15 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                       ),
                     ),
                     child: AppBar(
-                      leading: Image.asset(
-                        ImageConstants.logoIcon,
-                        height: 50.toHeight,
-                        width: 50.toHeight,
+                      leading: InkWell(
+                        onTap: () {
+                          DesktopSetupRoutes.nested_pop();
+                        },
+                        child: Image.asset(
+                          ImageConstants.logoIcon,
+                          height: 50.toHeight,
+                          width: 50.toHeight,
+                        ),
                       ),
                       actions: [
                         // Icon(Icons.notifications, size: 30),
@@ -168,8 +173,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
             ]),
           );
         });
-
-//////
   }
 
   getPopupMenuItem(List<String> list) {

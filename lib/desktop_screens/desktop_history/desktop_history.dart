@@ -107,16 +107,6 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                         ],
                       ),
                     ),
-                    Positioned(
-                        top: 30,
-                        left: 30,
-                        child: InkWell(
-                          onTap: () {
-                            DesktopSetupRoutes.nested_pop();
-                          },
-                          child: Icon(Icons.arrow_back,
-                              size: 20, color: Colors.black),
-                        )),
                   ],
                 ),
                 Expanded(

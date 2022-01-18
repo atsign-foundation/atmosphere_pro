@@ -1,15 +1,5 @@
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_photos.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_videos.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -67,6 +57,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                       children: [
                         SizedBox(height: 20),
                         DesktopHeader(
+                            showBackIcon: false,
                             title: "My Files",
                             onFilter: (val) {
                               setState(() {

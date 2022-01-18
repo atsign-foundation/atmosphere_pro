@@ -58,6 +58,7 @@ class DesktopSetupRoutes {
           () {
             DesktopSetupRoutes.nested_pop();
           },
+          showBackButton: false,
         );
       },
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
@@ -68,6 +69,7 @@ class DesktopSetupRoutes {
             DesktopSetupRoutes.nested_pop();
           },
           isBlockedScreen: args['isBlockedScreen'],
+          showBackButton: false,
         );
       },
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
@@ -79,7 +81,7 @@ class DesktopSetupRoutes {
         DesktopGroupSetupRoutes.setExitFunction(() {
           DesktopSetupRoutes.nested_pop();
         });
-        return DesktopGroupInitialScreen();
+        return DesktopGroupInitialScreen(showBackButton: false);
       },
       // =>  DesktopEmptyGroup(),
       DesktopRoutes.DESKTOP_GROUP_VIEW: (context) => DesktopGroupView(),
