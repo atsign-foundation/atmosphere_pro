@@ -8,7 +8,6 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
@@ -18,12 +17,12 @@ import 'package:provider/provider.dart';
 class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
 
-  static onboard({
-    String atSign,
-    atClientPrefernce,
-    Function showLoader,
-    bool isInit = false,
-  }) async {
+  static onboard(
+      {String atSign,
+      atClientPrefernce,
+      Function showLoader,
+      bool isInit = false,
+      Function onError}) async {
     await Onboarding(
       atsign: atSign,
       context: NavService.navKey.currentContext,
@@ -70,6 +69,9 @@ class CustomOnboarding {
       },
       onError: (error) {
         print('Onboarding throws error: $error ');
+        if (onError != null) {
+          onError();
+        }
       },
     );
   }

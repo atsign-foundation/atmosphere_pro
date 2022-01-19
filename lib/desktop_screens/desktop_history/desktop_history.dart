@@ -11,8 +11,6 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
@@ -26,7 +24,8 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
     with SingleTickerProviderStateMixin {
   TabController _controller;
   HistoryProvider historyProvider;
-  int sentSelectedIndex = 0, receivedSelectedIndex = 0;
+  int sentSelectedIndex = 0;
+  String receivedSelectedFileId;
   FileHistory selectedSentFileData;
   FileTransfer receivedFileData;
   bool isSentTab = false;
@@ -162,6 +161,14 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           },
                           showError: false,
                           successBuilder: (provider) {
+                            if (provider.receivedHistoryLogs.isNotEmpty &&
+                                receivedSelectedFileId == null) {
+                              receivedSelectedFileId =
+                                  provider.receivedHistoryLogs[0].key;
+                              receivedFileData =
+                                  provider.receivedHistoryLogs[0];
+                            }
+
                             return (provider.receivedHistoryLogs.isEmpty)
                                 ? Center(
                                     child: Text(
@@ -187,7 +194,8 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                               .receivedHistoryLogs[index];
 
                                           setState(() {
-                                            receivedSelectedIndex = index;
+                                            receivedSelectedFileId = provider
+                                                .receivedHistoryLogs[index].key;
                                           });
                                         },
                                         child: DesktopReceivedFilesListTile(
@@ -195,10 +203,13 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                               .receivedHistoryLogs[index].key),
                                           receivedHistory: provider
                                               .receivedHistoryLogs[index],
-                                          isSelected:
-                                              index == receivedSelectedIndex
-                                                  ? true
-                                                  : false,
+                                          isSelected: receivedSelectedFileId ==
+                                                  provider
+                                                      .receivedHistoryLogs[
+                                                          index]
+                                                      .key
+                                              ? true
+                                              : false,
                                         ),
                                       ),
                                     ),
