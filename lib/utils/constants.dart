@@ -41,7 +41,7 @@ class MixedConstants {
   static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
 
   /// Sibebar width
-  static const double SIDEBAR_WIDTH = 70;
+  static double SIDEBAR_WIDTH = 70;
 
   /// Appbar height
   static const double APPBAR_HEIGHT = 80;

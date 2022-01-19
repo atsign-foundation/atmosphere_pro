@@ -14,13 +14,13 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -103,10 +103,15 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                       ),
                     ),
                     child: AppBar(
-                      leading: Image.asset(
-                        ImageConstants.logoIcon,
-                        height: 50.toHeight,
-                        width: 50.toHeight,
+                      leading: InkWell(
+                        onTap: () {
+                          DesktopSetupRoutes.nested_pop();
+                        },
+                        child: Image.asset(
+                          ImageConstants.logoIcon,
+                          height: 50.toHeight,
+                          width: 50.toHeight,
+                        ),
                       ),
                       actions: [
                         // Icon(Icons.notifications, size: 30),
@@ -168,8 +173,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
             ]),
           );
         });
-
-//////
   }
 
   getPopupMenuItem(List<String> list) {
@@ -221,6 +224,7 @@ class DesktopWelcomeScreen extends StatefulWidget {
 
 class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
   final List<String> menuItemsIcons = [
+    ImageConstants.homeIcon,
     ImageConstants.contactsIcon,
     ImageConstants.transferHistoryIcon,
     ImageConstants.blockedIcon,
@@ -232,7 +236,20 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.trustedSendersIcon,
   ];
 
+  final List<String> menuItemsTitle = [
+    TextStrings().sidebarHome,
+    TextStrings().sidebarContact,
+    TextStrings().sidebarTransferHistory,
+    TextStrings().sidebarBlockedUser,
+    TextStrings().myFiles,
+    TextStrings().groups,
+    TextStrings().sidebarTrustedSenders,
+    TextStrings().sidebarTermsAndConditions,
+    TextStrings().sidebarFaqs,
+  ];
+
   final List<String> routes = [
+    DesktopRoutes.DESKTOP_HOME,
     DesktopRoutes.DEKSTOP_CONTACTS_SCREEN,
     DesktopRoutes.DESKTOP_HISTORY,
     DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN,
@@ -249,106 +266,170 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: DesktopSideBarWidget(),
         body: Stack(children: [
-          Row(
-            children: [
-              Container(
-                width: MixedConstants.SIDEBAR_WIDTH,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    right: BorderSide(
-                      color: Colors.black,
-                      width: 0.1,
+      Row(
+        children: [
+          Consumer<SideBarProvider>(
+            builder: (_context, _sideBarProvider, _) {
+              if (_sideBarProvider.isSidebarExpanded) {
+                MixedConstants.SIDEBAR_WIDTH = 180;
+              } else {
+                MixedConstants.SIDEBAR_WIDTH = 70;
+              }
+
+              return SingleChildScrollView(
+                child: Container(
+                  width: MixedConstants.SIDEBAR_WIDTH,
+                  padding: EdgeInsets.only(
+                      left: _sideBarProvider.isSidebarExpanded ? 10 : 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      right: BorderSide(
+                        color: Colors.black,
+                        width: 0.1,
+                      ),
+                    ),
+                  ),
+                  child: ProviderHandler<NestedRouteProvider>(
+                    functionName: 'routes',
+                    showError: true,
+                    load: (provider) {
+                      provider.init();
+                    },
+                    successBuilder: (provider) => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: _sideBarProvider.isSidebarExpanded
+                          ? CrossAxisAlignment.center
+                          : CrossAxisAlignment.center,
+                      children: [
+                        SideBarIcon(
+                          menuItemsIcons[0],
+                          routes[0],
+                          title: menuItemsTitle[0],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[1],
+                          routes[1],
+                          arguments: {
+                            'isBlockedScreen': false,
+                          },
+                          title: menuItemsTitle[1],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[2],
+                          routes[2],
+                          title: menuItemsTitle[2],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[3],
+                          routes[3],
+                          arguments: {
+                            'isBlockedScreen': true,
+                          },
+                          title: menuItemsTitle[3],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[4],
+                          routes[4],
+                          title: menuItemsTitle[4],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[5],
+                          routes[5],
+                          title: menuItemsTitle[5],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[6],
+                          routes[6],
+                          title: menuItemsTitle[6],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[7],
+                          routes[7],
+                          isUrlLauncher: true,
+                          arguments: {"url": MixedConstants.TERMS_CONDITIONS},
+                          title: menuItemsTitle[7],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[8],
+                          routes[8],
+                          isUrlLauncher: true,
+                          arguments: {"url": MixedConstants.PRIVACY_POLICY},
+                          title: menuItemsTitle[8],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                      ],
+                    ),
+                    errorBuilder: (provider) => Center(
+                      child: Text('Some error occured'),
                     ),
                   ),
                 ),
-                child: ProviderHandler<NestedRouteProvider>(
-                  functionName: 'routes',
-                  showError: true,
-                  load: (provider) {
-                    provider.init();
-                  },
-                  successBuilder: (provider) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // SizedBox(height: 100.toHeight),
-                      SideBarIcon(menuItemsIcons[0], routes[0], arguments: {
-                        'isBlockedScreen': false,
-                      }),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[1], routes[1]),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[2], routes[2], arguments: {
-                        'isBlockedScreen': true,
-                      }),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[3], routes[3]),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[4], routes[4]),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(menuItemsIcons[5], routes[5]),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(
-                        menuItemsIcons[6],
-                        routes[6],
-                        isUrlLauncher: true,
-                        arguments: {"url": MixedConstants.TERMS_CONDITIONS},
-                      ),
-                      SizedBox(height: 40.toHeight),
-                      SideBarIcon(
-                        menuItemsIcons[7],
-                        routes[7],
-                        isUrlLauncher: true,
-                        arguments: {"url": MixedConstants.PRIVACY_POLICY},
-                      ),
-                      // SizedBox(height: 100.toHeight),
-                    ],
-                  ),
-                  errorBuilder: (provider) => Center(
-                    child: Text('Some error occured'),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Navigator(
-                  key: NavService.nestedNavKey,
-                  initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
-                  onGenerateRoute: (routeSettings) {
-                    var routeBuilders = DesktopSetupRoutes.routeBuilders(
-                        context, routeSettings);
-                    return MaterialPageRoute(builder: (context) {
-                      return routeBuilders[routeSettings.name](context);
-                    });
-                  },
-                ),
-              ),
-            ],
+              );
+            },
           ),
-          Positioned(
-            top: 40,
-            left: 50,
-            child: Builder(
-              builder: (context) {
-                return InkWell(
-                  onTap: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30.toWidth),
-                        color: Colors.black),
-                    child: Icon(Icons.arrow_forward_ios_sharp,
-                        size: 20, color: Colors.white),
-                  ),
-                );
+          Expanded(
+            child: Navigator(
+              key: NavService.nestedNavKey,
+              initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
+              onGenerateRoute: (routeSettings) {
+                var routeBuilders =
+                    DesktopSetupRoutes.routeBuilders(context, routeSettings);
+                return MaterialPageRoute(builder: (context) {
+                  return routeBuilders[routeSettings.name](context);
+                });
               },
             ),
           ),
-        ]));
+        ],
+      ),
+      Consumer<SideBarProvider>(builder: (_context, _provider, _) {
+        return Positioned(
+          top: 40,
+          left: _provider.isSidebarExpanded ? 160 : 50,
+          child: Builder(
+            builder: (context) {
+              return InkWell(
+                onTap: () {
+                  Provider.of<SideBarProvider>(context, listen: false)
+                      .updateSidebarWidth();
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.toWidth),
+                      color: Colors.black),
+                  child: Icon(
+                      _provider.isSidebarExpanded
+                          ? Icons.arrow_back_ios
+                          : Icons.arrow_forward_ios_sharp,
+                      size: 20,
+                      color: Colors.white),
+                ),
+              );
+            },
+          ),
+        );
+      }),
+    ]));
   }
 
   Widget sendFileTo({bool isSelectContacts = false}) {
@@ -391,11 +472,14 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 
 // ignore: must_be_immutable
 class SideBarIcon extends StatelessWidget {
-  final String image, routeName;
+  final String image, routeName, title;
   final Map<String, dynamic> arguments;
-  final bool isUrlLauncher;
+  final bool isUrlLauncher, isSidebarExpanded;
   SideBarIcon(this.image, this.routeName,
-      {this.arguments, this.isUrlLauncher = false});
+      {this.arguments,
+      this.isUrlLauncher = false,
+      this.isSidebarExpanded = true,
+      this.title});
   bool isHovered = false;
   bool isCurrentRoute = false;
   var nestedProvider = Provider.of<NestedRouteProvider>(
@@ -405,18 +489,26 @@ class SideBarIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     isCurrentRoute = nestedProvider.current_route == routeName ? true : false;
+    if (!isCurrentRoute) {
+      isCurrentRoute = (nestedProvider.current_route == null &&
+              routeName == DesktopRoutes.DESKTOP_HOME)
+          ? true
+          : false;
+    }
     return Container(
-        width: 32,
+        width: isSidebarExpanded ? null : 32,
         height: 32,
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color:
-              isCurrentRoute ? ColorConstants.orangeColor : Colors.transparent,
           shape: BoxShape.circle,
         ),
         child: InkWell(
           onTap: () {
             if (routeName != null && routeName != '') {
+              if (routeName == DesktopRoutes.DESKTOP_HOME) {
+                DesktopSetupRoutes.nested_pop();
+                return;
+              }
               DesktopSetupRoutes.nested_push(routeName, arguments: arguments);
             }
             if ((isUrlLauncher) &&
@@ -429,18 +521,36 @@ class SideBarIcon extends StatelessWidget {
               ? Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Image.asset(
-                      image,
-                      height: 22,
-                      color: isCurrentRoute
-                          ? Colors.white
-                          : ColorConstants.fadedText,
+                    Row(
+                      children: [
+                        Image.asset(
+                          image,
+                          height: 22,
+                          color: isCurrentRoute
+                              ? ColorConstants.orangeColor
+                              : ColorConstants.fadedText,
+                        ),
+                        SizedBox(width: isSidebarExpanded ? 10 : 0),
+                        isSidebarExpanded
+                            ? Text(
+                                title,
+                                softWrap: true,
+                                style: TextStyle(
+                                  color: isCurrentRoute
+                                      ? ColorConstants.orangeColor
+                                      : ColorConstants.fadedText,
+                                  letterSpacing: 0.1,
+                                  fontSize: 12,
+                                ),
+                              )
+                            : SizedBox()
+                      ],
                     ),
                     Consumer<FileDownloadChecker>(
                       builder: (context, _fileDownloadChecker, _) {
                         return _fileDownloadChecker.undownloadedFilesExist
                             ? Positioned(
-                                right: -8,
+                                left: 10,
                                 top: -8,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -459,34 +569,32 @@ class SideBarIcon extends StatelessWidget {
                     ),
                   ],
                 )
-              : Image.asset(
-                  image,
-                  height: 22,
-                  color:
-                      isCurrentRoute ? Colors.white : ColorConstants.fadedText,
+              : Row(
+                  children: [
+                    Image.asset(
+                      image,
+                      height: 22,
+                      color: isCurrentRoute
+                          ? ColorConstants.orangeColor
+                          : ColorConstants.fadedText,
+                    ),
+                    SizedBox(width: isSidebarExpanded ? 10 : 0),
+                    isSidebarExpanded
+                        ? Text(
+                            title,
+                            softWrap: true,
+                            style: TextStyle(
+                              color: isCurrentRoute
+                                  ? ColorConstants.orangeColor
+                                  : ColorConstants.fadedText,
+                              letterSpacing: 0.1,
+                              fontSize: 12,
+                            ),
+                          )
+                        : SizedBox()
+                  ],
                 ),
         ));
-
-    //  MouseRegion(
-    //   cursor: isHovered ? SystemMouseCursors.click : SystemMouseCursors.text,
-    //   onEnter: (event) {
-    //     hoverActivation(true);
-    //   },
-    //   onExit: (event) {
-    //     hoverActivation(false);
-    //   },
-    //   child: Image.asset(
-    //     widget.image,
-    //     height: 22.toHeight,
-    //     color: ColorConstants.fadedText,
-    //   ),
-    // );
-
-    // hoverActivation(bool _newValue) {
-    //   setState(() {
-    //     isHovered = _newValue;
-    //   });
-    // }
   }
 
   Future<void> _launchInBrowser(String url) async {

@@ -24,7 +24,7 @@ class DesktopHome extends StatefulWidget {
 class _DesktopHomeState extends State<DesktopHome> {
   BackendService backendService = BackendService.getInstance();
   var atClientPrefernce;
-  bool authenticating = false;
+  bool authenticating = false, onboardError = false;
   String currentatSign;
   int _currentPageNumber = 0;
 
@@ -85,7 +85,9 @@ class _DesktopHomeState extends State<DesktopHome> {
     await backendService
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
+        .catchError((e) {
+      print(e);
+    });
 
     if (currentatSign != null) {
       await _onBoard(currentatSign);
@@ -96,19 +98,14 @@ class _DesktopHomeState extends State<DesktopHome> {
     await CustomOnboarding.onboard(
         atSign: _atsign,
         atClientPrefernce: atClientPrefernce,
-        showLoader: _showLoader,
-        isInit: true);
-
-    currentatSign = '';
+        isInit: true,
+        onError: onOnboardError);
   }
 
-  void _showLoader(bool loaderState, String authenticatingForAtsign) {
+  onOnboardError() {
     if (mounted) {
       setState(() {
-        if (loaderState) {
-          currentatSign = authenticatingForAtsign;
-        }
-        authenticating = loaderState;
+        onboardError = true;
       });
     }
   }
@@ -180,15 +177,15 @@ class _DesktopHomeState extends State<DesktopHome> {
                       child: CommonButton(
                         authenticating
                             ? 'Initialising for $currentatSign...'
-                            : (currentatSign != null
+                            : (currentatSign != null && !onboardError
                                 ? 'Authenticating...'
                                 : 'Start'),
-                        currentatSign != null
+                        (currentatSign != null && !onboardError)
                             ? null
                             : () {
                                 _onBoard('');
                               },
-                        color: currentatSign != null
+                        color: (currentatSign != null && !onboardError)
                             ? ColorConstants.dullText
                             : ColorConstants.orangeColor,
                         border: 7,

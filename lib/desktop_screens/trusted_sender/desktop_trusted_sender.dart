@@ -54,6 +54,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                           DesktopHeader(
                             title: 'Trusted Senders',
                             isTitleCentered: true,
+                            showBackIcon: false,
                             onFilter: (val) {},
                             actions: [
                               DesktopCustomInputField(

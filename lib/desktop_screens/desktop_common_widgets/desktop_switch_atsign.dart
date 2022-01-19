@@ -76,23 +76,29 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                _atsign,
-                style: isCurrentAtsign
-                    ? CustomTextStyles.blackBold()
-                    : CustomTextStyles.desktopSecondaryRegular14,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              SizedBox(
+                width: 180,
+                child: Text(
+                  _atsign,
+                  style: isCurrentAtsign
+                      ? CustomTextStyles.blackBold()
+                      : CustomTextStyles.desktopSecondaryRegular14,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               SizedBox(height: 5),
               (_name != null && _name != '')
-                  ? Text(
-                      _name,
-                      style: isCurrentAtsign
-                          ? CustomTextStyles.greyText16
-                          : CustomTextStyles.desktopSecondaryRegular14,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  ? SizedBox(
+                      width: 180,
+                      child: Text(
+                        _name,
+                        style: isCurrentAtsign
+                            ? CustomTextStyles.greyText16
+                            : CustomTextStyles.desktopSecondaryRegular14,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   : SizedBox(),
             ],

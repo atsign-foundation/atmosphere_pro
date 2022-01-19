@@ -1,6 +1,4 @@
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +23,6 @@ class DesktopHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig().screenWidth - MixedConstants.SIDEBAR_WIDTH,
       child: Row(
         children: <Widget>[
           SizedBox(width: 20),

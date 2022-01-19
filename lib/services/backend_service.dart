@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
@@ -233,6 +234,8 @@ class BackendService {
           .decrypt(value, fromAtSign)
           .catchError((e) {
         print("error in decrypting: $e");
+        ErrorDialog()
+            .show(e.toString(), context: NavService.navKey.currentContext);
       });
       DownloadAcknowledgement downloadAcknowledgement =
           DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
@@ -252,7 +255,11 @@ class BackendService {
       var decryptedMessage = await atClientManager.atClient.encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
-          .catchError((e) => print("error in decrypting: $e"));
+          .catchError((e) {
+        print("error in decrypting: $e");
+        ErrorDialog()
+            .show(e.toString(), context: NavService.navKey.currentContext);
+      });
 
       if (decryptedMessage != null) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
