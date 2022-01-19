@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
@@ -24,7 +25,7 @@ class _RecentsState extends State<Recents> {
       functionName: 'received_history',
       successBuilder: (provider) => (provider.finalReceivedHistory.isEmpty)
           ? Center(
-              child: Text('No files received',
+              child: Text(TextStrings().noFilesRecieved,
                   style: TextStyle(fontSize: 15.toFont)),
             )
           : Container(

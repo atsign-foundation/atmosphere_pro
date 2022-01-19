@@ -4,6 +4,7 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -121,8 +122,8 @@ class _TranferOverlappingContactsState
                                       widget.selectedList.length - 1 == 0
                                           ? ''
                                           : widget.selectedList.length - 1 == 1
-                                              ? ' and ${widget.selectedList.length - 1} other'
-                                              : ' and ${widget.selectedList.length - 1} others',
+                                              ?  TextStrings().and+ '${widget.selectedList.length - 1}' +TextStrings().other 
+                                              :  TextStrings().and+ '${widget.selectedList.length - 1}' +TextStrings().others ,
                                       style:
                                           CustomTextStyles.secondaryRegular14,
                                       overflow: TextOverflow.ellipsis,

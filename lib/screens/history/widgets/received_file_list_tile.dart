@@ -176,7 +176,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.receivedHistory.files.length} Files',
+                        '${widget.receivedHistory.files.length}'+ TextStrings().files,
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -187,8 +187,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       Text(
                         double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} Kb '
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                            ? '${fileSize}'+ TextStrings().kb
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)}'+ TextStrings().mb,
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],
@@ -237,7 +237,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                'More Details',
+                                TextStrings().moreDetails,
                                 style: CustomTextStyles.primaryBold14,
                               ),
                               Container(
@@ -289,7 +289,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               // videoThumbnailBuilder(
                               //     widget.receivedHistory.files[index].filePath);
 
-                              Text('Video');
+                              Text(TextStrings().video);
                             }
                             return ListTile(
                               onTap: () async {
@@ -401,7 +401,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Lesser Details',
+                              TextStrings().lesserDetails,
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(

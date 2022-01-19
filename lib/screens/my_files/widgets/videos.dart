@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.da
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -87,8 +88,8 @@ class _VideosState extends State<Videos> {
                               double.parse(provider.receivedVideos[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedVideos[index].size).toStringAsFixed(2)} Kb'
-                                  : '${(provider.receivedVideos[index].size / 1024).toStringAsFixed(2)} Mb',
+                                  ? '${(provider.receivedVideos[index].size).toStringAsFixed(2)}'+ TextStrings().kb
+                                  : '${(provider.receivedVideos[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

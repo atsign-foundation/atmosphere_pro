@@ -7,6 +7,7 @@ class TextStrings {
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
+  String loggingIn = 'Logging in';
 
   // onboarding flow texts
   String saveKeyTitle = 'Save your Private Key';
@@ -23,6 +24,10 @@ class TextStrings {
   String welcomeContactPlaceholder = '@sign';
   String welcomeFilePlaceholder = 'Select file to transfer';
   String welcomeAddFilePlaceholder = 'Add file to transfer';
+  String sendingFiles = 'Sending file ...';
+  String oopsSomethingWentWrong = 'Oops! something went wrong';
+  String hello = 'hello';
+  String reset = 'Reset';
 
   //sidebar menu texts
   String sidebarContact = 'Contacts';
@@ -39,7 +44,12 @@ class TextStrings {
       'Enabling this will auto accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign';
-
+  String atSign = '@sign';
+  String switchingAtSign = 'Switching atsign...';
+  String deleteDataMessage =
+      'Are you sure you want to delete all data associated with';
+  String typeAtsignAbove = 'Type the @sign above to proceed';
+  String actionCannotUndone = "Caution: this action can't be undone";
   //FAQs texts
   String faqs = 'FAQ';
 
@@ -61,6 +71,7 @@ class TextStrings {
   String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
   String buttonDismiss = 'DISMISS';
+  String ok = 'Ok';
 
   //history screen texts
   String sent = 'Sent';
@@ -69,9 +80,23 @@ class TextStrings {
   String moreDetails = 'More Details';
   String lesserDetails = 'Lesser Details';
 
+  String history = 'History';
+  String noFilesSent = 'No files sent';
+  String noFilesRecieved = 'No files received';
+
+  // sent file list tile texts
+  String files = 'Files';
+  String kb = 'Kb';
+  String mb = 'Mb';
+  String deliveredTo = 'Delivered to';
+
+  // recieve file list tile texts
+  String video = 'Video';
+
   //receive files texts
   String blockUser = 'Block User';
   String receiverNotification = 'Receivers Notification';
+  String wantToSendFile = ' wants to send you a file?';
 
   //add contact texts
   String addContactHeading =
@@ -88,6 +113,7 @@ class TextStrings {
   String audio = 'Audio';
   String apk = 'APK';
   String documents = 'Documents';
+  String openFileLocation = 'Open file location';
 
   // trusted sender screens
   String trustedSenders = 'Trusted Senders';
@@ -153,4 +179,18 @@ class TextStrings {
   String sendingFile = 'Sending file';
   String fileReceived = 'File received';
   String fileSent = 'File sent';
+
+  // file picker text
+  String selectFile = 'Select a File';
+
+  // downloads folder text
+  String atmosphereDownloadFolder = 'Atmosphere download folder';
+
+  // private key qrcode generator
+  String atsignRequired = 'An @sign is required.';
+
+  // transfer overlapping
+  String and = 'and';
+  String other = 'other';
+  String others = 'others';
 }

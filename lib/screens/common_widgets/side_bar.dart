@@ -177,7 +177,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     Text(
                                       BackendService.getInstance()
                                               .currentAtSign ??
-                                          '@sign',
+                                          TextStrings().atSign,
                                       maxLines: 1,
                                       style: TextStyle(
                                           letterSpacing: 0.1,
@@ -366,7 +366,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Switching atsign...',
+                      TextStrings().switchingAtSign,
                       style: CustomTextStyles.orangeMedium16,
                     ),
                     SizedBox(height: 10),
@@ -392,7 +392,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             scrollable: true,
             title: Center(
               child: Text(
-                'Delete @sign',
+                TextStrings().sidebarDeleteAtsign,
                 style: TextStyle(
                     color: Colors.black,
                     letterSpacing: 0.1,
@@ -404,7 +404,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Are you sure you want to delete all data associated with',
+                  TextStrings().deleteDataMessage,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     letterSpacing: 0.1,
@@ -421,7 +421,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 Text(
-                  'Type the @sign above to proceed',
+                  TextStrings().typeAtsignAbove,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey[700],
@@ -453,7 +453,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Caution: this action can't be undone",
+                  TextStrings().actionCannotUndone,
                   style: TextStyle(
                     fontSize: 13.toFont,
                     letterSpacing: 0.1,

@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,7 @@ class _AudiosState extends State<Audios> {
                                         await openDownloadsFolder(context);
                                       },
                                       title: Text(
-                                        'Open file location',
+                                        TextStrings().openFileLocation,
                                         style:
                                             CustomTextStyles.primaryRegular16,
                                       )),
@@ -84,7 +85,7 @@ class _AudiosState extends State<Audios> {
                                         Navigator.pop(context);
                                       },
                                       title: Text(
-                                        'Cancel',
+                                        TextStrings().buttonCancel,
                                         style:
                                             CustomTextStyles.primaryRegular16,
                                       )),
@@ -128,8 +129,8 @@ class _AudiosState extends State<Audios> {
                               double.parse(provider.receivedAudio[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)} Kb'
-                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)} Mb',
+                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)}'+ TextStrings().kb
+                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

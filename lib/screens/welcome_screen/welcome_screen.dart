@@ -59,9 +59,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     )
   ];
   List<String> transferMessages = [
-    'Sending file ...',
-    'File sent',
-    'Oops! something went wrong'
+    TextStrings().selectFile,
+    TextStrings().fileSent,
+    TextStrings().oopsSomethingWentWrong
   ];
   String currentAtSign;
   @override
@@ -134,7 +134,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       bool showLinearProgress = false}) {
     return Flushbar(
       title: transferMessages[status],
-      message: 'hello',
+      message: TextStrings().hello,
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
       // reverseAnimationCurve: Curves.decelerate,

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -131,7 +132,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                         ? CircularProgressIndicator()
                         : CustomButton(
                             isOrange: true,
-                            buttonText: 'Yes',
+                            buttonText: TextStrings().yes,
                             width: 200.toWidth,
                             onPressed: () async {
                               await Provider.of<TrustedContactProvider>(context,
@@ -150,7 +151,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                         .trustedContactOperation)
                     ? SizedBox()
                     : CustomButton(
-                        buttonText: 'No',
+                        buttonText: TextStrings().no,
                         isInverted: true,
                         onPressed: () {
                           Provider.of<TrustedContactProvider>(context,
