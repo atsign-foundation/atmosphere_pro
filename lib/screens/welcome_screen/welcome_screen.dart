@@ -59,7 +59,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     )
   ];
   List<String> transferMessages = [
-    TextStrings().selectFile,
+    TextStrings().sendingFiles,
     TextStrings().fileSent,
     TextStrings().oopsSomethingWentWrong
   ];
