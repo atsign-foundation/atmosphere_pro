@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +68,9 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (historyProvider == null) {
+      historyProvider = Provider.of<HistoryProvider>(context);
+    }
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,
@@ -79,28 +83,42 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
               height: SizeConfig().screenHeight - 80,
               child: Column(
                 children: [
-                  Container(
-                    height: 80,
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: TabBar(
-                      labelColor: ColorConstants.fontPrimary,
-                      indicatorWeight: 5,
-                      indicatorColor: Colors.black,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      labelStyle: CustomTextStyles.primaryBold14,
-                      unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
-                      controller: _controller,
-                      tabs: [
-                        Text(
-                          TextStrings().sent,
-                          style: TextStyle(letterSpacing: 0.1, fontSize: 20),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 80,
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: TabBar(
+                          labelColor: ColorConstants.fontPrimary,
+                          indicatorWeight: 5,
+                          indicatorColor: Colors.black,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelStyle: CustomTextStyles.primaryBold14,
+                          unselectedLabelStyle:
+                              CustomTextStyles.secondaryRegular14,
+                          controller: _controller,
+                          tabs: [
+                            Text(
+                              TextStrings().sent,
+                              style:
+                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
+                            ),
+                            Text(
+                              TextStrings().received,
+                              style:
+                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
+                            )
+                          ],
                         ),
-                        Text(
-                          TextStrings().received,
-                          style: TextStyle(letterSpacing: 0.1, fontSize: 20),
-                        )
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        right: 15,
+                        top: 25,
+                        child: InkWell(
+                            onTap: refreshHistoryScreen,
+                            child: Icon(Icons.refresh)),
+                      )
+                    ],
                   ),
                   Expanded(
                     child: TabBarView(
@@ -248,5 +266,17 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
         ],
       )),
     );
+  }
+
+  refreshHistoryScreen() async {
+    if (historyProvider.status[historyProvider.SENT_HISTORY] !=
+        Status.Loading) {
+      await historyProvider.getSentHistory();
+    }
+
+    if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+        Status.Loading) {
+      await historyProvider.getReceivedHistory();
+    }
   }
 }
