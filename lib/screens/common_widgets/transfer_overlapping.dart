@@ -122,8 +122,8 @@ class _TranferOverlappingContactsState
                                       widget.selectedList.length - 1 == 0
                                           ? ''
                                           : widget.selectedList.length - 1 == 1
-                                              ?  TextStrings().and+ '${widget.selectedList.length - 1}' +TextStrings().other 
-                                              :  TextStrings().and+ '${widget.selectedList.length - 1}' +TextStrings().others ,
+                                              ?  TextStrings().and+ ' ${widget.selectedList.length - 1} ' +TextStrings().other 
+                                              :  TextStrings().and+ ' ${widget.selectedList.length - 1} ' +TextStrings().others ,
                                       style:
                                           CustomTextStyles.secondaryRegular14,
                                       overflow: TextOverflow.ellipsis,

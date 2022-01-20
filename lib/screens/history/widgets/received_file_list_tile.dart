@@ -176,7 +176,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.receivedHistory.files.length}'+ TextStrings().files,
+                        '${widget.receivedHistory.files.length} '+ TextStrings().files,
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -187,8 +187,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       Text(
                         double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize}'+ TextStrings().kb
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)}'+ TextStrings().mb,
+                            ? '${fileSize} '+ TextStrings().kb
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} '+ TextStrings().mb,
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],

@@ -150,8 +150,8 @@ class _UnknownsState extends State<Unknowns> {
                               double.parse(provider.receivedUnknown[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedUnknown[index].size).toStringAsFixed(2)}'+ TextStrings().kb
-                                  : '${(provider.receivedUnknown[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
+                                  ? '${(provider.receivedUnknown[index].size).toStringAsFixed(2)} '+ TextStrings().kb
+                                  : '${(provider.receivedUnknown[index].size / 1024).toStringAsFixed(2)} '+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

@@ -54,8 +54,8 @@ class _APKState extends State<APK> {
                               double.parse(provider.receivedApk[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedApk[index].size).toStringAsFixed(2)}'+ TextStrings().kb
-                                  : '${(provider.receivedApk[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
+                                  ? '${(provider.receivedApk[index].size).toStringAsFixed(2)} '+ TextStrings().kb
+                                  : '${(provider.receivedApk[index].size / 1024).toStringAsFixed(2)} '+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

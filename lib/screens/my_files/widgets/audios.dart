@@ -129,8 +129,8 @@ class _AudiosState extends State<Audios> {
                               double.parse(provider.receivedAudio[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)}'+ TextStrings().kb
-                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
+                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)} '+ TextStrings().kb
+                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)} '+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

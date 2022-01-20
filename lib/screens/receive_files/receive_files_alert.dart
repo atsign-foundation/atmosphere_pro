@@ -138,8 +138,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
                           Text(
                             double.parse(payload.size.toString()) <=
                                     1048576 //1024 * 1024 bytes
-                                ? '${(payload.size / 1024).toStringAsFixed(2)}'+ TextStrings().kb
-                                : '${(payload.size / 1048576).toStringAsFixed(2)}'+ TextStrings().mb,
+                                ? '${(payload.size / 1024).toStringAsFixed(2)} '+ TextStrings().kb
+                                : '${(payload.size / 1048576).toStringAsFixed(2)} '+ TextStrings().mb,
                             style: CustomTextStyles.secondaryRegular14,
                           )
                         ],
