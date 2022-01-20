@@ -117,21 +117,27 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           )
                         : Stack(
                             children: [
-                              Container(
-                                width: 45.toHeight,
-                                height: 45.toHeight,
-                                child: firstContactImage != null
-                                    ? CustomCircleAvatar(
-                                        byteImage: firstContactImage,
-                                        nonAsset: true,
-                                        size: 50,
-                                      )
-                                    : ContactInitial(
-                                        initials: contactList[0],
-                                        size: 50,
-                                      ),
+                              InkWell(
+                                onTap: () {
+                                  openFileReceiptBottomSheet();
+                                },
+                                child: Container(
+                                  width: 45.toHeight,
+                                  height: 45.toHeight,
+                                  child: firstContactImage != null
+                                      ? CustomCircleAvatar(
+                                          byteImage: firstContactImage,
+                                          nonAsset: true,
+                                          size: 50,
+                                        )
+                                      : ContactInitial(
+                                          initials: contactList[0],
+                                          size: 50,
+                                        ),
+                                ),
                               ),
-                              contactList.length > 1
+                              (contactList.length > 1 ||
+                                      isFileDownloadedForSingleAtsign())
                                   ? Positioned(
                                       right: 0,
                                       bottom: 0,
@@ -145,7 +151,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                       ),
                                     )
                                   : SizedBox(),
-                              contactList.length > 1
+                              (contactList.length > 1 ||
+                                      isFileDownloadedForSingleAtsign())
                                   ? Positioned(
                                       right: 0,
                                       bottom: 0,
@@ -166,11 +173,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                   color: Colors.white,
                                                   width: 1.5)),
                                           child: Center(
-                                            child: Text(
-                                                '+${contactList.length - 1}',
-                                                style: TextStyle(
+                                            child: contactList.length > 1
+                                                ? Text(
+                                                    '+${contactList.length - 1}',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10.toFont))
+                                                : Icon(Icons.download_done,
                                                     color: Colors.white,
-                                                    fontSize: 10.toFont)),
+                                                    size: 15),
                                           ),
                                         ),
                                       ))
@@ -394,11 +405,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                         child: filesList[index].isUploaded !=
                                                     null &&
                                                 filesList[index].isUploaded
-                                            ? Icon(
-                                                Icons.done,
-                                                color: Color(0xFF08CB21),
-                                                size: 25.toFont,
-                                              )
+                                            ? SizedBox()
                                             : (filesList[index].isUploading !=
                                                         null &&
                                                     filesList[index]
@@ -432,7 +439,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(width: 10.toHeight),
+                                  SizedBox(width: 10.toHeight, height: 5),
                                   Container(
                                     child: Row(
                                       mainAxisAlignment:
@@ -455,11 +462,29 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                               .secondaryRegular12,
                                         ),
                                         SizedBox(width: 10.toHeight),
-                                        // Text(
-                                        //   filesList[index].type.toString(),
-                                        //   style: CustomTextStyles
-                                        //       .secondaryRegular12,
-                                        // )
+                                        Text(
+                                          filesList[index].name.split('.').last,
+                                          style: CustomTextStyles
+                                              .secondaryRegular12,
+                                        ),
+                                        (filesList[index].isUploaded != null &&
+                                                filesList[index].isUploaded)
+                                            ? Row(
+                                                children: [
+                                                  SizedBox(width: 10.toHeight),
+                                                  Container(
+                                                    color: ColorConstants
+                                                        .fontSecondary,
+                                                    height: 14.toHeight,
+                                                    width: 1.toWidth,
+                                                  ),
+                                                  SizedBox(width: 10.toHeight),
+                                                  Text(TextStrings.uploaded,
+                                                      style: CustomTextStyles
+                                                          .blueRegular12),
+                                                ],
+                                              )
+                                            : SizedBox()
                                       ],
                                     ),
                                   )
@@ -609,6 +634,17 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             ),
           );
         });
+  }
+
+  bool isFileDownloadedForSingleAtsign() {
+    bool _isDownloaded = false;
+
+    widget.sentHistory.sharedWith.forEach((element) {
+      if (element.isFileDownloaded) {
+        _isDownloaded = true;
+      }
+    });
+    return _isDownloaded;
   }
 
   Future<bool> isFilePresent(String filePath) async {
