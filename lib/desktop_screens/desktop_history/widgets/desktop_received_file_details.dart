@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class DesktopReceivedFileDetails extends StatefulWidget {
   final FileTransfer fileTransfer;
-  final UniqueKey key;
+  final Key key;
   DesktopReceivedFileDetails({this.fileTransfer, this.key});
 
   @override
@@ -32,11 +32,13 @@ class _DesktopReceivedFileDetailsState
       isFilesAvailableOfline = true,
       isOverwrite = false;
   List<String> existingFileNamesToOverwrite = [];
+  Map<String, Future> _futureBuilder = {};
 
   @override
   void initState() {
-    fileCount = widget.fileTransfer.files.length;
+    super.initState();
 
+    fileCount = widget.fileTransfer.files.length;
     widget.fileTransfer.files.forEach((element) {
       fileSize += element.size;
     });
@@ -45,8 +47,16 @@ class _DesktopReceivedFileDetailsState
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
+
+    getFutureBuilders();
     isFilesAlreadyDownloaded();
-    super.initState();
+  }
+
+  getFutureBuilders() {
+    widget.fileTransfer.files.forEach((element) {
+      _futureBuilder[element.name] = CommonFunctions().isFilePresent(
+          MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + element.name);
+    });
   }
 
   isFilesAlreadyDownloaded() async {
@@ -56,16 +66,20 @@ class _DesktopReceivedFileDetailsState
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
-        setState(() {
-          isFilesAvailableOfline = false;
-        });
+        if (mounted) {
+          setState(() {
+            isFilesAvailableOfline = false;
+          });
+        }
       } else {
         var fileLatsModified = await test.lastModified();
         if (fileLatsModified.isBefore(widget.fileTransfer.date)) {
           existingFileNamesToOverwrite.add(element.name);
-          setState(() {
-            isOverwrite = true;
-          });
+          if (mounted) {
+            setState(() {
+              isOverwrite = true;
+            });
+          }
         }
       }
     });
@@ -80,47 +94,74 @@ class _DesktopReceivedFileDetailsState
       padding: EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Details',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              widget.fileTransfer.isDownloading
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator()),
-                    )
-                  : isDownloadAvailable
+              Text(
+                'Details',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Spacer(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await OpenFile.open(
+                          MixedConstants.ApplicationDocumentsDirectory);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.save_alt_outlined, color: Colors.black),
+                        SizedBox(width: 10),
+                        Text('Downloads folder',
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  widget.fileTransfer.isDownloading
                       ? Padding(
                           padding: const EdgeInsets.only(right: 10.0),
-                          child: IconButton(
-                            icon: ((isDownloaded || isFilesAvailableOfline) &&
-                                    !isOverwrite)
-                                ? Icon(
-                                    Icons.done,
-                                    color: Color(0xFF08CB21),
-                                    size: 25.toFont,
-                                  )
-                                : Icon(
-                                    Icons.download,
-                                    color: Color(0xFF08CB21),
-                                    size: 30,
-                                  ),
-                            onPressed: () async {
-                              if (isOverwrite) {
-                                overwriteDialog();
-                                return;
-                              }
-
-                              downloadFiles();
-                            },
-                          ),
+                          child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator()),
                         )
-                      : SizedBox(),
+                      : isDownloadAvailable
+                          ? Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: IconButton(
+                                icon:
+                                    ((isDownloaded || isFilesAvailableOfline) &&
+                                            !isOverwrite)
+                                        ? Icon(
+                                            Icons.done,
+                                            color: Color(0xFF08CB21),
+                                            size: 25.toFont,
+                                          )
+                                        : Icon(
+                                            Icons.download,
+                                            color: Color(0xFF08CB21),
+                                            size: 30,
+                                          ),
+                                onPressed: () async {
+                                  if (isOverwrite) {
+                                    overwriteDialog();
+                                    return;
+                                  }
+
+                                  downloadFiles();
+                                },
+                              ),
+                            )
+                          : SizedBox(),
+                ],
+              ),
             ],
           ),
           SizedBox(height: 15.toHeight),
@@ -161,21 +202,17 @@ class _DesktopReceivedFileDetailsState
                             ),
                           ),
                           leading: FutureBuilder(
-                              future: CommonFunctions().isFilePresent(
-                                  MixedConstants.RECEIVED_FILE_DIRECTORY +
-                                      '/' +
-                                      widget.fileTransfer.files[index].name),
+                              key: Key(widget.fileTransfer.files[index].name),
+                              future: _futureBuilder[
+                                  widget.fileTransfer.files[index].name],
                               builder: (context, snapshot) {
                                 return snapshot.connectionState ==
                                             ConnectionState.done &&
                                         snapshot.data != null
                                     ? InkWell(
-                                        onTap: () async {
-                                          await OpenFile.open(MixedConstants
-                                                  .RECEIVED_FILE_DIRECTORY +
-                                              '/' +
-                                              widget.fileTransfer.files[index]
-                                                  .name);
+                                        onTap: () {
+                                          handleFileCLick(widget
+                                              .fileTransfer.files[index].name);
                                         },
                                         child: CommonFunctions().thumbnail(
                                             widget
@@ -272,6 +309,15 @@ class _DesktopReceivedFileDetailsState
         });
   }
 
+  handleFileCLick(String fileName) async {
+    String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + fileName;
+    File test = File(filePath);
+    bool fileExists = await test.exists();
+    if (fileExists) {
+      await OpenFile.open(filePath);
+    }
+  }
+
   List<TextSpan> getOverwriteMessage() {
     List<TextSpan> textSpansMessage = [];
     if (existingFileNamesToOverwrite.length == 1) {
@@ -332,8 +378,10 @@ class _DesktopReceivedFileDetailsState
 
     if (res) {
       if (mounted) {
+        getFutureBuilders();
         setState(() {
           isDownloaded = true;
+          isOverwrite = false;
         });
       }
 

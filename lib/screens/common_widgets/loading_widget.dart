@@ -65,7 +65,7 @@ class LoadingDialog {
             textScaleFactor: 1,
             style: style ??
                 TextStyle(
-                    color: ColorConstants.MILD_GREY,
+                    color: ColorConstants.mildGrey,
                     fontSize: 20.toFont,
                     fontWeight: FontWeight.w400,
                     decoration: TextDecoration.none),

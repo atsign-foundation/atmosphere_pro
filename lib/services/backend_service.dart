@@ -12,6 +12,8 @@ import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/receive_files/receive_files_alert.dart';
 import 'package:atsign_atmosphere_pro/services/hive_service.dart';
@@ -19,6 +21,7 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flushbar/flushbar.dart';
@@ -190,26 +193,6 @@ class BackendService {
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   Future<bool> startMonitor({value, atsign}) async {
-    // if (value.containsKey(atsign)) {
-    //   currentAtSign = atsign;
-    //   atClientServiceMap = value;
-    //   atClientInstance = value[atsign].atClient;
-    //   atClientServiceInstance = value[atsign];
-    // }
-
-    // await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
-
-    // /// TODO:
-    // // Provider.of<FileTransferProvider>(NavService.navKey.currentContext,
-    // //         listen: false)
-    // //     .selectedFiles = [];
-    // await setDownloadPath(
-    //     atsign: atsign,
-    //     atClientPreference: atClientPreference,
-    //     atClientServiceInstance: atClientServiceInstance);
-    // String privateKey = await getPrivateKey(atsign);
-
-    // await atClientInstance.startMonitor(privateKey, _notificationCallBack);
     await AtClientManager.getInstance()
         .notificationService
         .subscribe()
@@ -251,6 +234,8 @@ class BackendService {
           .decrypt(value, fromAtSign)
           .catchError((e) {
         print("error in decrypting: $e");
+        ErrorDialog()
+            .show(e.toString(), context: NavService.navKey.currentContext);
       });
       DownloadAcknowledgement downloadAcknowledgement =
           DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
@@ -270,13 +255,20 @@ class BackendService {
       var decryptedMessage = await atClientManager.atClient.encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
-          .catchError((e) => print("error in decrypting: $e"));
+          .catchError((e) {
+        print("error in decrypting: $e");
+        ErrorDialog()
+            .show(e.toString(), context: NavService.navKey.currentContext);
+      });
 
       if (decryptedMessage != null) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
         await NotificationService().showNotification(fromAtSign);
+        Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+                listen: false)
+            .checkForUndownloadedFiles();
       }
     }
   }
@@ -497,10 +489,24 @@ class BackendService {
       tempAtsign = atSignList.first;
     }
 
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      /// in case of desktop, we close the dialog from here
+      Navigator.of(NavService.navKey.currentContext).pop();
+    }
+
     if (tempAtsign == '') {
-      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
-          Routes.HOME, (Route<dynamic> route) => false);
-    } else {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            Routes.HOME,
+            (Route<dynamic> route) => false);
+      } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            DesktopRoutes.DESKTOP_HOME,
+            (Route<dynamic> route) => false);
+      }
+    } else if (Platform.isAndroid || Platform.isIOS) {
       await Onboarding(
         atsign: tempAtsign,
         context: NavService.navKey.currentContext,
@@ -525,12 +531,11 @@ class BackendService {
         onError: (error) {
           print('Onboarding throws $error error');
         },
-        // nextScreen: WelcomeScreen(),
       );
+    } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      CustomOnboarding.onboard(
+          atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
     }
-    // if (atClientInstance != null) {
-    //   await startMonitor();
-    // }
   }
 
   Future<bool> checkAtsign(String atSign) async {
@@ -672,7 +677,11 @@ class BackendService {
     }
   }
 
-  resetAtsigns() {
-    // _keyChainManager.clearKeychainEntries();
+  ///Resets [atsigns] list from device storage.
+  Future<void> resetAtsigns(List atsigns) async {
+    for (String atsign in atsigns) {
+      await KeychainUtil.resetAtSignFromKeychain(atsign);
+      atClientServiceMap.remove(atsign);
+    }
   }
 }

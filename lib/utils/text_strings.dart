@@ -30,6 +30,7 @@ class TextStrings {
   String reset = 'Reset';
 
   //sidebar menu texts
+  String sidebarHome = 'Home';
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked @Signs';
@@ -180,7 +181,6 @@ class TextStrings {
   String fileReceived = 'File received';
   String fileSent = 'File sent';
 
-  // file picker text
   String selectFile = 'Select a File';
 
   // downloads folder text
@@ -193,4 +193,17 @@ class TextStrings {
   String and = 'and';
   String other = 'other';
   String others = 'others';
+  // desktop text constants
+  String saveBackupKey = 'save_backup_key';
+  String contactSelectionConfirmation =
+      'Selected contacts will not be added , confirm?';
+
+  static final String resetButton = 'Reset';
+  static const String resetDescription =
+      'This will remove the selected @sign and its details from this app only.';
+  static const String noAtsignToReset = 'No @signs are paired to reset. ';
+  static const String resetErrorText =
+      'Please select atleast one @sign to reset';
+  static const String resetWarningText =
+      'Warning: This action cannot be undone';
 }

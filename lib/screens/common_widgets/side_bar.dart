@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -284,8 +285,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        _deleteAtSign(
-                            await BackendService.getInstance().currentAtsign);
+                        CommonFunctions().deleteAtSign(
+                            BackendService.getInstance().currentAtsign);
+
                         setState(() {});
                       },
                       child: Container(
@@ -381,110 +383,5 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               ),
       ],
     );
-  }
-
-  _deleteAtSign(String atsign) async {
-    final _formKey = GlobalKey<FormState>();
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            scrollable: true,
-            title: Center(
-              child: Text(
-                TextStrings().sidebarDeleteAtsign,
-                style: TextStyle(
-                    color: Colors.black,
-                    letterSpacing: 0.1,
-                    fontSize: 20.toFont,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  TextStrings().deleteDataMessage,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    letterSpacing: 0.1,
-                    color: Colors.grey[700],
-                    fontSize: 15.toFont,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text('$atsign',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20.toFont,
-                        letterSpacing: 0.1,
-                        fontWeight: FontWeight.bold)),
-                SizedBox(height: 20),
-                Text(
-                  TextStrings().typeAtsignAbove,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    letterSpacing: 0.1,
-                    fontSize: 12.toFont,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    validator: (value) {
-                      if (value != atsign) {
-                        return "The @sign doesn't match. Please retype.";
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: ColorConstants.fadedText)),
-                        filled: true,
-                        fillColor: Colors.white),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  TextStrings().actionCannotUndone,
-                  style: TextStyle(
-                    fontSize: 13.toFont,
-                    letterSpacing: 0.1,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FlatButton(
-                        child: Text(TextStrings().buttonDelete,
-                            style: CustomTextStyles.primaryBold14),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            await BackendService.getInstance()
-                                .deleteAtSignFromKeyChain(atsign);
-                          }
-                        }),
-                    Spacer(),
-                    FlatButton(
-                        child: Text(TextStrings().buttonCancel,
-                            style: CustomTextStyles.primaryBold14),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        })
-                  ],
-                )
-              ],
-            ),
-          );
-        });
   }
 }

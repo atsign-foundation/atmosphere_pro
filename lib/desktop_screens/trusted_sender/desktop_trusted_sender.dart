@@ -54,6 +54,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                           DesktopHeader(
                             title: 'Trusted Senders',
                             isTitleCentered: true,
+                            showBackIcon: false,
                             onFilter: (val) {},
                             actions: [
                               DesktopCustomInputField(
@@ -179,7 +180,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         err.toString(),
                                         context: context));
                               },
-                              onBackArrowTap: () {
+                              onBackArrowTap: (selectedGroupContacts) {
                                 if (mounted) {
                                   setState(() {
                                     isContactSelection = !isContactSelection;

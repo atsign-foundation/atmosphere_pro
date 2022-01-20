@@ -25,6 +25,7 @@ class ErrorDialogWidget extends StatelessWidget {
       child: Center(
         child: Container(
           height: 240.toHeight,
+          width: SizeConfig().isDesktop(context) ? 500 : null,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(

@@ -1,13 +1,7 @@
 import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
-import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_contacts_screen/desktop_select_contacts_screen/desktop_select_contacts_screen.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_detail.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_list.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_group_view.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_group/desktop_new_group.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
@@ -30,9 +24,8 @@ class DesktopSetupRoutes {
       listen: false);
   static Map<String, WidgetBuilder> get routes {
     return {
-      DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(key: UniqueKey()),
-      DesktopRoutes.DESKTOP_WELCOME: (context) =>
-          DesktopWelcomeScreenStart(key: UniqueKey()),
+      DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(),
+      DesktopRoutes.DESKTOP_WELCOME: (context) => DesktopWelcomeScreenStart(),
     };
   }
 
@@ -56,21 +49,21 @@ class DesktopSetupRoutes {
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactsScreen(
-          UniqueKey(),
           () {
             DesktopSetupRoutes.nested_pop();
           },
+          showBackButton: false,
         );
       },
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
         return DesktopContactsScreen(
-          UniqueKey(),
           () {
             DesktopSetupRoutes.nested_pop();
           },
           isBlockedScreen: args['isBlockedScreen'],
+          showBackButton: false,
         );
       },
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
@@ -82,53 +75,14 @@ class DesktopSetupRoutes {
         DesktopGroupSetupRoutes.setExitFunction(() {
           DesktopSetupRoutes.nested_pop();
         });
-        return DesktopGroupInitialScreen();
+        return DesktopGroupInitialScreen(showBackButton: false);
       },
       // =>  DesktopEmptyGroup(),
-      DesktopRoutes.DESKTOP_GROUP_VIEW: (context) => DesktopGroupView(),
+
       DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
           )
-    };
-  }
-
-  static Map<String, WidgetBuilder> groupLeftRouteBuilders(
-      BuildContext context, RouteSettings routeSettings) {
-    return {
-      // DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) =>
-      //     DesktopEmptyGroup(),
-      DesktopRoutes.DESKTOP_GROUP_LIST: (context) {
-        Map<String, dynamic> args =
-            routeSettings.arguments as Map<String, dynamic>;
-        return DesktopGroupList(args['onDone']);
-      },
-    };
-  }
-
-  static Map<String, WidgetBuilder> groupRightRouteBuilders(
-    BuildContext context,
-    RouteSettings routeSettings, {
-    @required Function initialRouteOnArrowBackTap,
-    @required Function initialRouteOnDoneTap,
-  }) {
-    return {
-      DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL: (context) {
-        return DesktopSelectContactsScreen(
-          onDoneTap: initialRouteOnDoneTap,
-          onArrowBackTap: initialRouteOnArrowBackTap,
-          showButtonOptions: false,
-        );
-      },
-      DesktopRoutes.DESKTOP_NEW_GROUP: (context) {
-        Map<String, dynamic> args =
-            routeSettings.arguments as Map<String, dynamic>;
-        return DesktopNewGroup(
-          onPop: args['onPop'],
-          onDone: args['onDone'],
-        );
-      },
-      DesktopRoutes.DESKTOP_GROUP_DETAIL: (context) => DesktopGroupDetail(),
     };
   }
 
@@ -160,9 +114,12 @@ class DesktopSetupRoutes {
     });
   }
 
-  static Future nested_pop() {
+  static Future nested_pop() async {
     _provider.update(null);
-    Navigator.of(NavService.nestedNavKey.currentContext).pop();
+    if ((NavService.nestedNavKey.currentState != null) &&
+        (Navigator.canPop(NavService.nestedNavKey.currentContext))) {
+      await Navigator.of(NavService.nestedNavKey.currentContext).pop();
+    }
   }
 }
 

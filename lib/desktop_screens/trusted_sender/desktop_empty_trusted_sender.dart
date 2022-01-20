@@ -139,7 +139,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                             onError: (err) => ErrorDialog()
                                 .show(err.toString(), context: context));
                       },
-                      onBackArrowTap: () {
+                      onBackArrowTap: (selectedGroupContacts) {
                         if (mounted) {
                           setState(() {
                             isContactSelecttion = !isContactSelecttion;
