@@ -282,7 +282,7 @@ class _HomeState extends State<Home> {
                             height: 20,
                           ),
                           Text(
-                            'Logging in',
+                            TextStrings().loggingIn,
                             style: CustomTextStyles.orangeMedium16,
                           )
                         ],

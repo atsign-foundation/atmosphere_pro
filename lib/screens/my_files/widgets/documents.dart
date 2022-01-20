@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _DocumentsState extends State<Documents> {
                                         await openDownloadsFolder(context);
                                       },
                                       title: Text(
-                                        'Open file location',
+                                        TextStrings().openFileLocation,
                                         style:
                                             CustomTextStyles.primaryRegular16,
                                       )),
@@ -85,7 +86,7 @@ class _DocumentsState extends State<Documents> {
                                         Navigator.pop(context);
                                       },
                                       title: Text(
-                                        'Cancel',
+                                        TextStrings().buttonCancel,
                                         style:
                                             CustomTextStyles.primaryRegular16,
                                       )),
@@ -150,8 +151,8 @@ class _DocumentsState extends State<Documents> {
                               double.parse(provider.receivedDocument[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedDocument[index].size).toStringAsFixed(2)} Kb'
-                                  : '${(provider.receivedDocument[index].size / 1024).toStringAsFixed(2)} Mb',
+                                  ? '${(provider.receivedDocument[index].size).toStringAsFixed(2)}'+ TextStrings().kb
+                                  : '${(provider.receivedDocument[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

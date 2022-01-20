@@ -80,7 +80,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
   @override
   Widget build(BuildContext context) {
     if (atsign == null) {
-      return Text('An @sign is required.');
+      return Text(TextStrings().atsignRequired);
     }
     if (aesKey == null) {
       _generateAESKey();

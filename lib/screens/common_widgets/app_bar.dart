@@ -116,7 +116,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           // navigate to downloads folder
                           if (Platform.isAndroid) {
                             await FilesystemPicker.open(
-                              title: 'Atmosphere download folder',
+                              title: TextStrings().atmosphereDownloadFolder,
                               context: context,
                               rootDirectory: BackendService.getInstance()
                                   .downloadDirectory,

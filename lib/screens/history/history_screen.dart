@@ -41,7 +41,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       appBar: CustomAppBar(
         showBackButton: true,
         showTitle: true,
-        title: 'History',
+        title: TextStrings().history,
         showTrailingButton: true,
         trailingIcon: Icons.library_books,
         isHistory: true,
@@ -86,7 +86,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       successBuilder: (provider) => (provider
                               .sentHistory.isEmpty)
                           ? Center(
-                              child: Text('No files sent',
+                              child: Text(TextStrings().noFilesSent,
                                   style: TextStyle(fontSize: 15.toFont)),
                             )
                           : ListView.separated(
@@ -124,7 +124,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                               .receivedHistoryLogs.isEmpty)
                           ? Center(
                               child: Text(
-                                'No files received',
+                                TextStrings().noFilesRecieved,
                                 style: TextStyle(fontSize: 15.toFont),
                               ),
                             )
@@ -147,7 +147,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                               ),
                             ),
                       errorBuilder: (provider) => Center(
-                        child: Text('Some error occured'),
+                        child: Text(TextStrings().errorOccured),
                       ),
                     ),
                   ],

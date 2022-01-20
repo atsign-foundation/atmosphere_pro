@@ -107,7 +107,7 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
                           style: CustomTextStyles.primaryBold14,
                           children: [
                             TextSpan(
-                              text: ' wants to send you a file?',
+                              text:TextStrings().wantToSendFile,
                               style: CustomTextStyles.primaryRegular16,
                             )
                           ],
@@ -138,8 +138,8 @@ class _ReceiveFilesAlertState extends State<ReceiveFilesAlert>
                           Text(
                             double.parse(payload.size.toString()) <=
                                     1048576 //1024 * 1024 bytes
-                                ? '${(payload.size / 1024).toStringAsFixed(2)} Kb'
-                                : '${(payload.size / 1048576).toStringAsFixed(2)} Mb',
+                                ? '${(payload.size / 1024).toStringAsFixed(2)} '+ TextStrings().kb
+                                : '${(payload.size / 1048576).toStringAsFixed(2)} '+ TextStrings().mb,
                             style: CustomTextStyles.secondaryRegular14,
                           )
                         ],
