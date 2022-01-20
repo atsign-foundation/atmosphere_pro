@@ -40,7 +40,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
             Expanded(
               child: Center(
                 child: Text(
-                  'Select a File',
+                  TextStrings().selectFile,
                   style: CustomTextStyles.primaryBold18,
                 ),
               ),
@@ -62,7 +62,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
                         horizontal: 10.toWidth, vertical: 5.toHeight),
                     child: Center(
                       child: Text(
-                        'Cancel',
+                        TextStrings().buttonCancel,
                         style: TextStyle(letterSpacing: 0.1),
                       ),
                     ),

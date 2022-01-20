@@ -29,7 +29,7 @@ class CustomFlushBar {
     SizeConfig().init(NavService.navKey.currentContext);
     f = Flushbar(
       title: displayMessage,
-      message: 'hello',
+      message: TextStrings().hello,
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
       reverseAnimationCurve: Curves.decelerate,

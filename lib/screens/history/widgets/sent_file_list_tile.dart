@@ -240,7 +240,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${fileLength} Files',
+                        '${fileLength} '+ TextStrings().files,
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -251,8 +251,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       Text(
                         double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} Kb '
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                            ? '${fileSize} '+ TextStrings().kb 
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} '+ TextStrings().mb,
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],
@@ -310,7 +310,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           child: Row(
                             children: [
                               Text(
-                                'More Details',
+                                TextStrings().moreDetails,
                                 style: CustomTextStyles.primaryBold14,
                               ),
                               Container(
@@ -484,8 +484,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                       .size
                                                       .toString()) <=
                                                   1024
-                                              ? '${filesList[index].size} Kb '
-                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                              ? '${filesList[index].size} '+ TextStrings().kb
+                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} '+ TextStrings().mb,
                                           style: CustomTextStyles
                                               .secondaryRegular12,
                                         ),
@@ -522,7 +522,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 child: Container(
                                   padding: EdgeInsets.only(left: 20.toWidth),
                                   child: Text(
-                                    'Delivered to',
+                                    TextStrings().deliveredTo,
                                     style: CustomTextStyles.primaryRegular16,
                                   ),
                                 ),
@@ -546,7 +546,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         child: Row(
                           children: [
                             Text(
-                              'Lesser Details',
+                             TextStrings().lesserDetails,
                               style: CustomTextStyles.primaryBold14,
                             ),
                             Container(

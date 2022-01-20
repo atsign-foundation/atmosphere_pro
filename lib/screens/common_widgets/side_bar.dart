@@ -178,7 +178,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     Text(
                                       BackendService.getInstance()
                                               .currentAtSign ??
-                                          '@sign',
+                                          TextStrings().atSign,
                                       maxLines: 1,
                                       style: TextStyle(
                                           letterSpacing: 0.1,
@@ -368,7 +368,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Switching atsign...',
+                      TextStrings().switchingAtSign,
                       style: CustomTextStyles.orangeMedium16,
                     ),
                     SizedBox(height: 10),
