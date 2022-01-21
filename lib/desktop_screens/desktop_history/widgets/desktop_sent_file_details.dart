@@ -150,11 +150,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                         null &&
                                     widget.selectedFileData.fileDetails
                                         .files[index].isUploaded)
-                                ? Icon(
-                                    Icons.done,
-                                    color: Color(0xFF08CB21),
-                                    size: 25.toFont,
-                                  )
+                                ? SizedBox()
                                 : (widget.selectedFileData.fileDetails
                                                 .files[index].isUploading !=
                                             null &&
