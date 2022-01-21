@@ -33,6 +33,9 @@ class CustomOnboarding {
       rootEnvironment: RootEnvironment.Production,
       onboard: (value, atsign) async {
         await KeychainUtil.makeAtSignPrimary(atsign);
+
+        await AtClientManager.getInstance().setCurrentAtSign(
+            atsign, MixedConstants.appNamespace, atClientPrefernce);
         BackendService.getInstance().syncWithSecondary();
 
         if (!isInit) {

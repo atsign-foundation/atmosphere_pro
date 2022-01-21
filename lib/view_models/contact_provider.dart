@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/material.dart';
@@ -264,10 +265,10 @@ class ContactProvider extends BaseModel {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
-      await backendService.atClientManager.atClient.put(
-        trustedContactsKey,
-        json.encode({"trustedContacts": trustedContacts}),
-      );
+      await AtClientManager.getInstance().atClient.put(
+            trustedContactsKey,
+            json.encode({"trustedContacts": trustedContacts}),
+          );
 
       // getTrustedContact();
       trustedContactOperation = false;
@@ -287,7 +288,7 @@ class ContactProvider extends BaseModel {
         ..metadata = Metadata();
 
       AtValue keyValue =
-          await backendService.atClientManager.atClient.get(trustedContactsKey);
+          await AtClientManager.getInstance().atClient.get(trustedContactsKey);
 
       var jsonValue;
       if (keyValue.value != null) {

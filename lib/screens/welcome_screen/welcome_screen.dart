@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -25,7 +26,6 @@ import '../../services/size_config.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 import 'widgets/select_contact_widget.dart';
-import 'package:path_provider/path_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -281,12 +281,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 children: [
                                   Text(
                                     TextStrings().welcomeUser(
-                                        BackendService.getInstance()
-                                                    .atClientManager
+                                        AtClientManager.getInstance()
                                                     .atClient !=
                                                 null
-                                            ? BackendService.getInstance()
-                                                .atClientManager
+                                            ? AtClientManager.getInstance()
                                                 .atClient
                                                 .getCurrentAtSign()
                                             : ''),

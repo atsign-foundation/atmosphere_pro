@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
@@ -17,7 +18,6 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 enum CurrentScreen { PlaceolderImage, ContactsScreen, SelectedItems }
@@ -69,9 +69,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               children: [
                 Text(
                   'Welcome ' +
-                      (BackendService.getInstance().atClientManager.atClient !=
-                              null
-                          ? '${BackendService.getInstance().atClientManager.atClient.getCurrentAtSign()}'
+                      (AtClientManager.getInstance().atClient != null
+                          ? '${AtClientManager.getInstance().atClient.getCurrentAtSign()}'
                           : ''),
                   style: CustomTextStyles.desktopBlackPlayfairDisplay26,
                 ),

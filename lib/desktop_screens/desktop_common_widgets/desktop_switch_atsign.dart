@@ -72,36 +72,39 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
               ),
         SizedBox(width: 10),
         Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 180,
-                child: Text(
-                  _atsign,
-                  style: isCurrentAtsign
-                      ? CustomTextStyles.blackBold()
-                      : CustomTextStyles.desktopSecondaryRegular14,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          child: Tooltip(
+            message: _atsign,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 180,
+                  child: Text(
+                    _atsign,
+                    style: isCurrentAtsign
+                        ? CustomTextStyles.blackBold()
+                        : CustomTextStyles.desktopSecondaryRegular14,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              (_name != null && _name != '')
-                  ? SizedBox(
-                      width: 180,
-                      child: Text(
-                        _name,
-                        style: isCurrentAtsign
-                            ? CustomTextStyles.greyText16
-                            : CustomTextStyles.desktopSecondaryRegular14,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  : SizedBox(),
-            ],
+                SizedBox(height: 5),
+                (_name != null && _name != '')
+                    ? SizedBox(
+                        width: 180,
+                        child: Text(
+                          _name,
+                          style: isCurrentAtsign
+                              ? CustomTextStyles.greyText16
+                              : CustomTextStyles.desktopSecondaryRegular14,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    : SizedBox(),
+              ],
+            ),
           ),
         ),
         Expanded(

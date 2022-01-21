@@ -45,8 +45,6 @@ class BackendService {
     return _singleton;
   }
   AtClientService atClientServiceInstance;
-  AtClientImpl atClientInstance;
-  AtClientManager atClientManager = AtClientManager.getInstance();
   SyncService syncService;
   String currentAtSign;
   Function ask_user_acceptance;
@@ -85,7 +83,6 @@ class BackendService {
     }
     await atClientServiceInstance.onboard(
         atClientPreference: atClientPreference, atsign: atsign);
-    atClientInstance = atClientServiceInstance.atClient;
   }
 
   Future<AtClientPreference> getAtClientPreference() async {
@@ -252,7 +249,9 @@ class BackendService {
             .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var value = response.value;
 
-      var decryptedMessage = await atClientManager.atClient.encryptionService
+      var decryptedMessage = await AtClientManager.getInstance()
+          .atClient
+          .encryptionService
           .decrypt(value, fromAtSign)
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) {
@@ -395,7 +394,8 @@ class BackendService {
       atSign = '@' + atSign;
     }
     print("Sending file => $atSign $filePath");
-    var result = await atClientInstance.stream(atSign, filePath);
+    var result =
+        await AtClientManager.getInstance().atClient.stream(atSign, filePath);
     print("sendfile result => $result");
     if (result.status.toString() == 'AtStreamStatus.COMPLETE') {
       return true;
@@ -518,7 +518,8 @@ class BackendService {
         onboard: (value, atsign) async {
           atClientServiceMap = value;
 
-          String atSign = await atClientManager.atClient.getCurrentAtSign();
+          String atSign =
+              await AtClientManager.getInstance().atClient.getCurrentAtSign();
           currentAtSign = atSign;
           await startMonitor(atsign: atsign, value: value);
           await initializeContactsService();
@@ -567,14 +568,15 @@ class BackendService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientManager.atClient
+      var result = await AtClientManager.getInstance()
+          .atClient
           .get(key)
           .catchError((e) => print("error in get ${e.toString()}"));
       var firstname = result.value;
 
       // lastname
       key.key = contactFields[1];
-      result = await atClientManager.atClient.get(key);
+      result = await AtClientManager.getInstance().atClient.get(key);
       var lastname = result.value;
 
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
@@ -585,7 +587,7 @@ class BackendService {
       // image
       key.metadata.isBinary = true;
       key.key = contactFields[2];
-      result = await atClientManager.atClient.get(key);
+      result = await AtClientManager.getInstance().atClient.get(key);
       var image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;
@@ -620,7 +622,8 @@ class BackendService {
           isAuthuneticatingSink.add(authenticating);
           atClientServiceMap = value;
 
-          String atSign = await atClientManager.atClient.getCurrentAtSign();
+          String atSign =
+              await AtClientManager.getInstance().atClient.getCurrentAtSign();
           currentAtSign = atSign;
 
           await startMonitor(atsign: atsign, value: value);

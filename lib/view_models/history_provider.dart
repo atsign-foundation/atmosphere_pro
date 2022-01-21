@@ -108,7 +108,8 @@ class HistoryProvider extends BaseModel {
         });
         sendFileHistory['history'].insert(0, filesModel.toJson());
         atKey.key = MixedConstants.SENT_FILE_HISTORY;
-        await backendService.atClientManager.atClient
+        await AtClientManager.getInstance()
+            .atClient
             .put(atKey, json.encode(sendFileHistory));
       }
     } catch (e) {
@@ -157,7 +158,8 @@ class HistoryProvider extends BaseModel {
       sentHistory.insert(0, fileHistory);
     }
 
-    var result = await backendService.atClientManager.atClient
+    var result = await AtClientManager.getInstance()
+        .atClient
         .put(atKey, json.encode(sendFileHistory));
     print('file history saved: ${result}');
     setStatus(SET_FILE_HISTORY, Status.Done);
@@ -175,7 +177,8 @@ class HistoryProvider extends BaseModel {
       sendFileHistory['history'][index] = fileHistory.toJson();
       sentHistory[index] = fileHistory;
     }
-    var result = await backendService.atClientManager.atClient
+    var result = await AtClientManager.getInstance()
+        .atClient
         .put(atKey, json.encode(sendFileHistory));
 
     return result;
@@ -189,9 +192,8 @@ class HistoryProvider extends BaseModel {
         ..key = MixedConstants.SENT_FILE_HISTORY
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
-      var keyValue = await backendService.atClientManager.atClient
-          .get(key)
-          .catchError((e) {
+      var keyValue =
+          await AtClientManager.getInstance().atClient.get(key).catchError((e) {
         print('error in decrypting value : $e');
       });
       if (keyValue != null && keyValue.value != null) {
@@ -340,14 +342,15 @@ class HistoryProvider extends BaseModel {
     receivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
-        await backendService.atClientManager.atClient.getKeys(
-      regex: MixedConstants.FILE_TRANSFER_KEY,
-    );
+        await AtClientManager.getInstance().atClient.getKeys(
+              regex: MixedConstants.FILE_TRANSFER_KEY,
+            );
 
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
-        AtValue atvalue = await backendService.atClientManager.atClient
+        AtValue atvalue = await AtClientManager.getInstance()
+            .atClient
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) => print("error in get $e"));
@@ -689,7 +692,8 @@ class HistoryProvider extends BaseModel {
       }
       notifyListeners();
 
-      var files = await backendService.atClientManager.atClient
+      var files = await AtClientManager.getInstance()
+          .atClient
           .downloadFile(transferId, sharedBy);
 
       await sortFiles(receivedHistoryLogs);
