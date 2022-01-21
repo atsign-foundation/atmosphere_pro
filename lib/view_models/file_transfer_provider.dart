@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
@@ -335,7 +336,7 @@ class FileTransferProvider extends BaseModel {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     try {
-      var _atclient = BackendService.getInstance().atClientManager.atClient;
+      var _atclient = AtClientManager.getInstance().atClient;
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
       var _files = <File>[];
       var _atSigns = <String>[];
@@ -377,7 +378,8 @@ class FileTransferProvider extends BaseModel {
       print('atkey : ${atKey}');
 
       // put data
-      var _result = await backendService.atClientManager.atClient
+      var _result = await AtClientManager.getInstance()
+          .atClient
           .put(atKey, jsonEncode(_filesToTransfer.toJson()));
 
       return _result;
@@ -399,7 +401,7 @@ class FileTransferProvider extends BaseModel {
       filename: _filesList[_index].name,
     );
 
-    var _atclient = BackendService.getInstance().atClientManager.atClient;
+    var _atclient = AtClientManager.getInstance().atClient;
     try {
       File file =
           File(MixedConstants.DESKTOP_SENT_DIR + _filesList[_index].name);
@@ -459,7 +461,7 @@ class FileTransferProvider extends BaseModel {
 
   reSendFileNotification(FileHistory fileHistory, String atsign) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
-    var _atclient = BackendService.getInstance().atClientManager.atClient;
+    var _atclient = AtClientManager.getInstance().atClient;
 
     Provider.of<HistoryProvider>(NavService.navKey.currentContext,
             listen: false)
