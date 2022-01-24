@@ -61,36 +61,35 @@ class _ExpansionTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-        tilePadding: SizeConfig().isTablet(context)
-            ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
-            : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
-        backgroundColor: ColorConstants.inputFieldColor,
-        title: InkWell(
-          onTap: () {
-            selectContact(context);
-          },
-          child: Text(
-            headerText,
-            style: TextStyle(
-              color: ColorConstants.fadedText,
-              fontSize: 14.toFont,
-            ),
+      tilePadding: SizeConfig().isTablet(context)
+          ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
+          : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
+      backgroundColor: ColorConstants.inputFieldColor,
+      title: InkWell(
+        onTap: () {
+          selectContact(context);
+        },
+        child: Text(
+          headerText,
+          style: TextStyle(
+            color: ColorConstants.fadedText,
+            fontSize: 14.toFont,
           ),
         ),
-        trailing: InkWell(
-          onTap: () {
-            selectContact(context);
-          },
-           child:
-           Container(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              child: Image.asset(
-                ImageConstants.contactsIcon,
-                color: Colors.black,
-              ),
-            ),
+      ),
+      trailing: InkWell(
+        onTap: () {
+          selectContact(context);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          child: Image.asset(
+            ImageConstants.contactsIcon,
+            color: Colors.black,
           ),
-        );
+        ),
+      ),
+    );
   }
 
   selectContact(BuildContext context) async {

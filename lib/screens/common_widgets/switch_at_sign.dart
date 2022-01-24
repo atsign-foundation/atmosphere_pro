@@ -4,7 +4,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:flutter/material.dart';
 
 class AtSignBottomSheet extends StatefulWidget {
@@ -45,7 +45,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.atSignList.length,
                       itemBuilder: (context, index) {
-                        Uint8List image = CommonFunctions()
+                        Uint8List image = CommonUtilityFunctions()
                             .getCachedContactImage(widget.atSignList[index]);
                         return GestureDetector(
                           onTap: isLoading

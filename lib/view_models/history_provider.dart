@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:archive/archive_io.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
@@ -47,10 +46,6 @@ class HistoryProvider extends BaseModel {
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
   bool isSyncedDataFetched = false;
-
-  // List<List<FilesDetail>> tempList = [];
-  // Map<int, Map<String, Set<FilesDetail>>> testSentHistory = {};
-  // static Map<int, Map<String, Set<FilesDetail>>> test = {};
   List<FilesDetail> sentPhotos,
       sentVideos,
       sentAudio,
@@ -81,50 +76,6 @@ class HistoryProvider extends BaseModel {
     receivedAudioModel = [];
     sendFileHistory = {'history': []};
     downloadedFileAcknowledgement = {};
-  }
-
-  setFilesHistory(
-      {HistoryType historyType,
-      List<String> atSignName,
-      List<FilesDetail> files,
-      @required int id}) async {
-    try {
-      DateTime now = DateTime.now();
-      FilesModel filesModel = FilesModel(
-          name: atSignName,
-          id: id,
-          historyType: historyType,
-          date: now.toString(),
-          files: files);
-      filesModel.totalSize = 0.0;
-
-      AtKey atKey = AtKey()..metadata = Metadata();
-
-      if (historyType == HistoryType.received) {
-        /// the file size come in bytes in receiver side
-        // filesModel.files.forEach((file) {
-        //   file.size = file.size;
-        //   filesModel.totalSize += file.size;
-        // });
-        // receivedFileHistory['history'].insert(0, (filesModel.toJson()));
-
-        // atKey.key = 'receivedFiles';
-
-        // await backendService.atClientInstance
-        //     .put(atKey, json.encode(receivedFileHistory));
-      } else {
-        // the file is in kB in sender side
-        filesModel.files.forEach((file) {
-          filesModel.totalSize += file.size;
-        });
-        sendFileHistory['history'].insert(0, filesModel.toJson());
-        atKey.key = MixedConstants.SENT_FILE_HISTORY;
-        await backendService.atClientInstance
-            .put(atKey, json.encode(sendFileHistory));
-      }
-    } catch (e) {
-      print("here error => $e");
-    }
   }
 
   setFileTransferHistory(
@@ -158,11 +109,15 @@ class HistoryProvider extends BaseModel {
       sentHistory.insert(0, fileHistory);
     }
 
-    var result = await backendService.atClientInstance
-        .put(atKey, json.encode(sendFileHistory));
-
-    setStatus(SET_FILE_HISTORY, Status.Done);
-    return result;
+    try {
+      var result = await backendService.atClientInstance
+          .put(atKey, json.encode(sendFileHistory));
+      setStatus(SET_FILE_HISTORY, Status.Done);
+      return result;
+    } catch (e) {
+      setError(SET_FILE_HISTORY, e.toString());
+      setStatus(SET_FILE_HISTORY, Status.Error);
+    }
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {

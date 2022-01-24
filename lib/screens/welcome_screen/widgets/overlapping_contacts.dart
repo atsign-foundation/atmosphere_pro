@@ -135,7 +135,6 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       SizedBox(
                         width: 10.toWidth,
                       ),
-                      // Expanded(child: Container()),
                     ],
                   )
                 ],
@@ -180,17 +179,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                 image = Uint8List.fromList(intList);
                               }
                               return ContactListTile(
-                                // onlyRemoveMethod: true,
-                                // onTileTap: () {
-                                //   provider.removeContacts(
-                                //       provider.selectedContacts[index]);
-                                // },
                                 isSelected: provider.selectedContacts
                                     .contains(provider.selectedContacts[index]),
-                                onAdd: () {
-                                  //   provider.addContacts(
-                                  //       provider.selectedContacts[index]);
-                                },
+                                onAdd: () {},
                                 onRemove: () {
                                   provider.removeContacts(
                                       provider.selectedContacts[index]);

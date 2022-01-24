@@ -1,4 +1,3 @@
-import 'package:atsign_atmosphere_pro/view_models/blocked_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -26,8 +25,6 @@ class _MyAppState extends State<MyApp> {
             create: (context) => HistoryProvider()),
         ChangeNotifierProvider<FileTransferProvider>(
             create: (context) => FileTransferProvider()),
-        ChangeNotifierProvider<BlockedContactProvider>(
-            create: (context) => BlockedContactProvider()),
         ChangeNotifierProvider<WelcomeScreenProvider>(
             create: (context) => WelcomeScreenProvider()),
         ChangeNotifierProvider(create: (context) => TrustedContactProvider()),
@@ -51,10 +48,10 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'HelveticaNeu',
             scaffoldBackgroundColor: Colors.white,
             appBarTheme: AppBarTheme(
-                color: Colors.white,
-                elevation: 0,
-                iconTheme: IconThemeData(color: Colors.black),
-                brightness: Brightness.light),
+              color: Colors.white,
+              elevation: 0,
+              iconTheme: IconThemeData(color: Colors.black),
+            ),
             buttonBarTheme: ButtonBarThemeData(
               alignment: MainAxisAlignment.center,
             )),
