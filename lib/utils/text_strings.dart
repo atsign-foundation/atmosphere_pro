@@ -168,4 +168,6 @@ class TextStrings {
       'Please select atleast one @sign to reset';
   static const String resetWarningText =
       'Warning: This action cannot be undone';
+
+  static const uploaded = 'Uploaded';
 }

@@ -8,6 +8,8 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -168,6 +170,7 @@ class BackendService {
           .decrypt(value, fromAtSign)
           .catchError((e) {
         print("error in decrypting: $e");
+        showToast(e.toString());
       });
       DownloadAcknowledgement downloadAcknowledgement =
           DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
@@ -191,8 +194,7 @@ class BackendService {
         print("error in decrypting: $e");
         //TODO: only for closed testing purpose , we are showing error dialog
         // should be removed before general release.
-        // ErrorDialog()
-        // .show(e.toString(), context: NavService.navKey.currentContext);
+        showToast(e.toString());
       });
 
       if (decryptedMessage != null) {
@@ -414,5 +416,14 @@ class BackendService {
       NavService.navKey.currentContext,
       MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
     );
+  }
+
+  showToast(String msg, {bool isError = false, bool isSuccess = true}) {
+    try {
+      CustomToast().show(msg, NavService.navKey.currentContext);
+    } catch (e) {
+      ErrorDialog()
+          .show(e.toString(), context: NavService.navKey.currentContext);
+    }
   }
 }

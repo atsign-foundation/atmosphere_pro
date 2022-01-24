@@ -61,6 +61,11 @@ class CustomTextStyles {
     color: ColorConstants.dullText,
     fontSize: 13.toFont,
   );
+  static TextStyle blueRegular12 = TextStyle(
+      color: ColorConstants.blueText,
+      fontSize: 12.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 
 //BOLD FONTS
   static TextStyle whiteBold16 = TextStyle(
