@@ -1,7 +1,7 @@
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -27,7 +27,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) => FileTransferProvider()),
         ChangeNotifierProvider<WelcomeScreenProvider>(
             create: (context) => WelcomeScreenProvider()),
-        ChangeNotifierProvider(create: (context) => TrustedContactProvider())
+        ChangeNotifierProvider(create: (context) => TrustedContactProvider()),
+        ChangeNotifierProvider(create: (context) => FileDownloadChecker()),
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget child) {
