@@ -19,31 +19,37 @@ class Recents extends StatefulWidget {
 class _RecentsState extends State<Recents> {
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
-      load: (provider) => provider.getrecentHistoryFiles(),
-      functionName: 'recent_history',
-      showError: false,
-      successBuilder: (provider) => (provider.recentFile.isEmpty)
-          ? Center(
-              child: Text('No files received',
-                  style: TextStyle(fontSize: 15.toFont)),
-            )
-          : Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: 10.toHeight, horizontal: 10.toWidth),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Wrap(
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    runSpacing: 10.0,
-                    spacing: 15.0,
-                    children: List.generate(
-                        provider.recentFile.length,
-                        (index) => fileCard(provider.recentFile[index].fileName,
-                            provider.recentFile[index].filePath))),
-              ),
-            ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 80.toHeight),
+        child: ProviderHandler<HistoryProvider>(
+          load: (provider) => provider.getrecentHistoryFiles(),
+          functionName: 'recent_history',
+          showError: false,
+          successBuilder: (provider) => (provider.recentFile.isEmpty)
+              ? Center(
+                  child: Text('No files received',
+                      style: TextStyle(fontSize: 15.toFont)),
+                )
+              : Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: 10.toHeight, horizontal: 10.toWidth),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Wrap(
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        runSpacing: 10.0,
+                        spacing: 15.0,
+                        children: List.generate(
+                            provider.recentFile.length,
+                            (index) => fileCard(
+                                provider.recentFile[index].fileName,
+                                provider.recentFile[index].filePath))),
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }

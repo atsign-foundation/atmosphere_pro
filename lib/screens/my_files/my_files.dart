@@ -169,7 +169,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                     Expanded(
                       child: TabBarView(
                         controller: _controller,
-                        physics: ClampingScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         children: tabs,
                       ),
                     )
