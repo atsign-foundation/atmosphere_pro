@@ -9,8 +9,6 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -123,68 +121,119 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       {int status = 0,
       bool shouldTimeout = true,
       bool showLinearProgress = false}) {
-    return Flushbar(
-      title: transferMessages[status],
-      message: 'hello',
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      backgroundColor: ColorConstants.scaffoldColor,
-      showProgressIndicator: showLinearProgress,
-      progressIndicatorController: null,
-      boxShadows: [
-        BoxShadow(
-            color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
-      ],
-      isDismissible: false,
-      duration: (shouldTimeout) ? Duration(seconds: 3) : null,
-      icon: Container(
-        height: 40.toWidth,
-        width: 40.toWidth,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(ImageConstants.imagePlaceholder),
-              fit: BoxFit.cover),
-          shape: BoxShape.circle,
-        ),
-      ),
-      mainButton: TextButton(
+    ScaffoldMessenger.of(NavService.navKey.currentContext)
+        .showSnackBar(SnackBar(
+      duration: Duration(days: 365),
+      action: SnackBarAction(
+        label: 'Dismiss',
+        textColor: Colors.black,
         onPressed: () {
-          if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
-            sendingFlushbar.dismiss();
-          }
+          ScaffoldMessenger.of(context)
+              .removeCurrentSnackBar(reason: SnackBarClosedReason.dismiss);
         },
-        child: Text(
-          TextStrings().buttonDismiss,
-          style:
-              TextStyle(color: ColorConstants.fontPrimary, fontSize: 15.toFont),
-        ),
       ),
-      progressIndicatorBackgroundColor: Colors.blueGrey,
-      titleText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: transferStatus[status],
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 5.toWidth,
-            ),
-            child: Container(
-              width: SizeConfig().screenWidth * 0.5,
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Text(
-                transferMessages[status],
-                style: TextStyle(
-                    color: ColorConstants.fadedText, fontSize: 15.toFont),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+      padding: EdgeInsets.all(0),
+      // margin: EdgeInsets.all(0),
+      content: Stack(children: [
+        Container(
+          decoration: BoxDecoration(boxShadow: [
+            // BoxShadow(
+            //     color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
+          ]),
+          child: Row(
+            children: <Widget>[
+              // CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: transferStatus[status],
               ),
-            ),
-          )
-        ],
-      ),
-    );
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 5.toWidth,
+                ),
+                child: Container(
+                  width: SizeConfig().screenWidth * 0.5,
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    transferMessages[status],
+                    style: TextStyle(
+                        color: ColorConstants.fadedText, fontSize: 15.toFont),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              // Positioned(top: 0, child: LinearProgressIndicator())
+            ],
+          ),
+        ),
+      ]),
+      backgroundColor: ColorConstants.inputFieldColor,
+      dismissDirection: DismissDirection.horizontal,
+    ));
+
+    // return Flushbar(
+    //   title: transferMessages[status],
+    //   message: 'hello',
+    //   flushbarPosition: FlushbarPosition.BOTTOM,
+    //   flushbarStyle: FlushbarStyle.FLOATING,
+    //   backgroundColor: ColorConstants.scaffoldColor,
+    //   showProgressIndicator: showLinearProgress,
+    //   progressIndicatorController: null,
+    //   boxShadows: [
+    //     BoxShadow(
+    //         color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
+    //   ],
+    //   isDismissible: false,
+    //   duration: (shouldTimeout) ? Duration(seconds: 3) : null,
+    //   icon: Container(
+    //     height: 40.toWidth,
+    //     width: 40.toWidth,
+    //     decoration: BoxDecoration(
+    //       image: DecorationImage(
+    //           image: AssetImage(ImageConstants.imagePlaceholder),
+    //           fit: BoxFit.cover),
+    //       shape: BoxShape.circle,
+    //     ),
+    //   ),
+    //   mainButton: TextButton(
+    //     onPressed: () {
+    //       if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
+    //         sendingFlushbar.dismiss();
+    //       }
+    //     },
+    //     child: Text(
+    //       TextStrings().buttonDismiss,
+    //       style:
+    //           TextStyle(color: ColorConstants.fontPrimary, fontSize: 15.toFont),
+    //     ),
+    //   ),
+    //   progressIndicatorBackgroundColor: Colors.blueGrey,
+    //   titleText: Row(
+    //     children: <Widget>[
+    //       Padding(
+    //         padding: const EdgeInsets.only(top: 15.0),
+    //         child: transferStatus[status],
+    //       ),
+    //       Padding(
+    //         padding: EdgeInsets.only(
+    //           left: 5.toWidth,
+    //         ),
+    //         child: Container(
+    //           width: SizeConfig().screenWidth * 0.5,
+    //           padding: const EdgeInsets.only(top: 15.0),
+    //           child: Text(
+    //             transferMessages[status],
+    //             style: TextStyle(
+    //                 color: ColorConstants.fadedText, fontSize: 15.toFont),
+    //             maxLines: 1,
+    //             overflow: TextOverflow.ellipsis,
+    //           ),
+    //         ),
+    //       )
+    //     ],
+    //   ),
+    // );
   }
 
   void _onBottomNavigationSelect(int index) {
