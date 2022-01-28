@@ -113,9 +113,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   initPackages() async {
-    // await GroupService().init(await BackendService.getInstance().getAtSign());
     await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
-
     await GroupService()
         .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
@@ -130,8 +128,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       message: 'hello',
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
-      // reverseAnimationCurve: Curves.decelerate,
-      // forwardAnimationCurve: Curves.elasticOut,
       backgroundColor: ColorConstants.scaffoldColor,
       showProgressIndicator: showLinearProgress,
       progressIndicatorController: null,
@@ -151,8 +147,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           shape: BoxShape.circle,
         ),
       ),
-
-      mainButton: FlatButton(
+      mainButton: TextButton(
         onPressed: () {
           if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
             sendingFlushbar.dismiss();
@@ -164,7 +159,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               TextStyle(color: ColorConstants.fontPrimary, fontSize: 15.toFont),
         ),
       ),
-      // showProgressIndicator: true,
       progressIndicatorBackgroundColor: Colors.blueGrey,
       titleText: Row(
         children: <Widget>[

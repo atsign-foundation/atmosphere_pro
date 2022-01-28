@@ -1,7 +1,5 @@
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/hive_service.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class WelcomeScreenProvider extends BaseModel {
@@ -13,9 +11,9 @@ class WelcomeScreenProvider extends BaseModel {
   String onboard = 'onboard';
   String selectGroupContacts = 'select_group_contacts';
   String autoAcceptToggle = 'toogle_auto_accept';
-  HiveService _hiveService = HiveService();
   bool isAutoAccept = false, isExpanded = false, scrollToBottom = false;
-  bool hasSelectedContactsChanged = false;
+  bool hasSelectedContactsChanged = false, authenticating = false;
+
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
@@ -50,7 +48,6 @@ class WelcomeScreenProvider extends BaseModel {
     }
   }
 
-  bool authenticating = false;
   onboardingLoad({String atSign}) {
     try {
       authenticating = true;
@@ -61,39 +58,6 @@ class WelcomeScreenProvider extends BaseModel {
     } catch (error) {
       authenticating = false;
       setError(onboard, error.toString());
-    }
-  }
-
-  toggleAutoAccept(bool toggle) async {
-    try {
-      setStatus(autoAcceptToggle, Status.Loading);
-      await _hiveService.writeData(MixedConstants.AUTO_ACCEPT_TOGGLE_BOX,
-          MixedConstants.AUTO_ACCEPT_TOGGLE_KEY, toggle);
-
-      setStatus(autoAcceptToggle, Status.Done);
-    } catch (e) {
-      setError(autoAcceptToggle, e);
-    }
-  }
-
-  getToggleStatus() async {
-    try {
-      setStatus(autoAcceptToggle, Status.Loading);
-      isAutoAccept = await _hiveService.readData(
-        MixedConstants.AUTO_ACCEPT_TOGGLE_BOX,
-        MixedConstants.AUTO_ACCEPT_TOGGLE_KEY,
-      );
-      if (isAutoAccept == null) {
-        toggleAutoAccept(false);
-      }
-      isAutoAccept = await _hiveService.readData(
-        MixedConstants.AUTO_ACCEPT_TOGGLE_BOX,
-        MixedConstants.AUTO_ACCEPT_TOGGLE_KEY,
-      );
-      BackendService.getInstance().autoAcceptFiles = isAutoAccept;
-      setStatus(autoAcceptToggle, Status.Done);
-    } catch (e) {
-      setError(autoAcceptToggle, e);
     }
   }
 
