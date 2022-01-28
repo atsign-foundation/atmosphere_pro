@@ -58,6 +58,18 @@ dependencies:
   at_contacts_flutter: ^3.1.2
   at_contacts_group_flutter: ^3.1.2
 
+dependency_overrides:
+  at_contacts_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_contacts_flutter
+  at_contacts_group_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_contacts_group_flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
