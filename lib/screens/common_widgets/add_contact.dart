@@ -111,7 +111,6 @@ class _AddContactState extends State<AddContact> {
                         isContactAdding = true;
                       });
                       await ContactService().addAtSign(
-                        context,
                         atSign: widget.atSignName,
                         nickName: nickName,
                       );
