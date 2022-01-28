@@ -202,6 +202,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     right: -5,
                                     top: -10,
                                     child: Container(
+                                        height: 25,
+                                        width: 25,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.white,
