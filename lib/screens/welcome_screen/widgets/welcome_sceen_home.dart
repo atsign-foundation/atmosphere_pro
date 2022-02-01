@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
@@ -53,45 +55,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
           height: SizeConfig().screenHeight,
           child: Stack(
             children: [
-              SizeConfig().isTablet(context)
-                  ? Container(
-                      height: 90.toHeight,
-                      width: 90.toHeight,
-                      child: Customheading(),
-                    )
-                  : SizedBox(),
-              SizeConfig().isTablet(context)
-                  ? Positioned(
-                      right: 80,
-                      top: 100,
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Colors.black,
-                        ),
-                        child: Builder(
-                          builder: (context) {
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isExpanded = !isExpanded;
-                                  WelcomeScreenProvider().isExpanded = true;
-                                });
-
-                                Scaffold.of(context).openEndDrawer();
-                              },
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.white,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
               Row(
                 children: [
                   Expanded(
@@ -253,6 +216,45 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       : SizedBox(),
                 ],
               ),
+              SizeConfig().isTablet(context)
+                  ? Container(
+                      height: 100,
+                      width: SizeConfig().screenWidth - 100,
+                      child: Customheading(),
+                    )
+                  : SizedBox(),
+              SizeConfig().isTablet(context)
+                  ? Positioned(
+                      right: 80,
+                      top: 100,
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: Colors.black,
+                        ),
+                        child: Builder(
+                          builder: (context) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                  WelcomeScreenProvider().isExpanded = true;
+                                });
+
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         ));

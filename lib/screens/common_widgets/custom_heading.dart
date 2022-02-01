@@ -7,6 +7,7 @@ class Customheading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50.toHeight,
+      color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

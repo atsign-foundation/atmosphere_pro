@@ -146,6 +146,7 @@ class HistoryProvider extends BaseModel {
       sentHistory = [];
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
+        ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
       var keyValue =
           await backendService.atClientInstance.get(key).catchError((e) {
@@ -326,6 +327,9 @@ class HistoryProvider extends BaseModel {
         await backendService.atClientInstance.getKeys(
       regex: MixedConstants.FILE_TRANSFER_KEY,
     );
+
+    fileTransferResponse.retainWhere((element) =>
+        !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
 
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
