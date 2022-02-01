@@ -50,13 +50,15 @@ class SideBarItem extends StatelessWidget {
             ),
             SizedBox(width: 10),
             !showIconOnly
-                ? Text(
-                    title,
-                    softWrap: true,
-                    style: TextStyle(
-                      color: displayColor,
-                      letterSpacing: 0.1,
-                      fontSize: 14.toFont,
+                ? Expanded(
+                    child: Text(
+                      title,
+                      softWrap: true,
+                      style: TextStyle(
+                        color: displayColor,
+                        letterSpacing: 0.1,
+                        fontSize: 14.toFont,
+                      ),
                     ),
                   )
                 : SizedBox(),
