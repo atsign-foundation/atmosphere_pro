@@ -150,7 +150,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     return Stack(
       children: [
         Container(
-          width: SizeConfig().screenWidth * 0.65,
+          width: SizeConfig().isTablet(context)
+              ? 385
+              : SizeConfig().screenWidth * 0.65,
           color: ColorConstants.inputFieldColor,
           child: Container(
             child: Container(
