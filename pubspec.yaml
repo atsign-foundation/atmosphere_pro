@@ -49,26 +49,24 @@ dependencies:
   package_info_plus: ^1.3.0
   fluttertoast: ^8.0.8
 
-  at_onboarding_flutter: ^3.1.3
+  
   at_client_mobile: ^3.1.4
-  at_commons: ^3.0.2
+  at_commons: ^3.0.3
   at_contact: ^3.0.3
-  at_lookup: ^3.0.5
+  at_lookup: ^3.0.6
+  at_onboarding_flutter: ^3.1.3
   at_common_flutter: ^2.0.4
-  at_contacts_flutter: ^3.1.2
-  at_contacts_group_flutter: ^3.1.2
+  at_contacts_flutter: ^4.0.0
+  at_contacts_group_flutter: ^4.0.0
 
 dependency_overrides:
-  at_contacts_flutter:
+  at_utils:  
     git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_flutter
-  at_contacts_group_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_group_flutter
+      url: git@github.com:atsign-foundation/at_tools.git
+      ref: git-386
+      path: at_utils
+    
+
 
 dev_dependencies:
   flutter_test:
