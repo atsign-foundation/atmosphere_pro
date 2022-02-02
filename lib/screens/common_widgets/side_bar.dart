@@ -345,7 +345,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        CommonUtilityFunctions().showResetDialog();
+                        CommonUtilityFunctions().showResetAtsignDialog();
                       },
                       child: Container(
                         height: 50,

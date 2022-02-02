@@ -77,3 +77,7 @@ class FileTransferStatus {
 }
 
 enum TransferStatus { DONE, PENDING, FAILED }
+
+enum FileOperation { REUPLOAD_FILE, RESEND_NOTIFICATION }
+
+enum FileRecipientSection { DELIVERED, DOWNLOADED, FAILED }

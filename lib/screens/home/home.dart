@@ -260,7 +260,7 @@ class _HomeState extends State<Home> {
                                   InkWell(
                                     onTap: () {
                                       CommonUtilityFunctions()
-                                          .showResetDialog();
+                                          .showResetAtsignDialog();
                                     },
                                     child: Text(
                                       TextStrings.resetButton,

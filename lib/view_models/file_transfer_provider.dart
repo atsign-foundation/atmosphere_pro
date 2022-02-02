@@ -183,7 +183,7 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  sendFileWithFileBin(List<PlatformFile> selectedFiles,
+  Future<bool> sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
@@ -211,16 +211,67 @@ class FileTransferProvider extends BaseModel {
       });
 
       var uploadResult = await _atclient.uploadFile(_files, _atSigns);
+
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .setFileTransferHistory(
               uploadResult[_atSigns[0]], _atSigns, uploadResult);
 
+      // checking if everyone received the notification or not.
+      for (var atsignStatus in uploadResult.entries) {
+        if (atsignStatus.value.sharedStatus != null &&
+            !atsignStatus.value.sharedStatus) {
+          setStatus(SEND_FILES, Status.Error);
+          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          return false;
+        }
+      }
+
       flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
       setStatus(SEND_FILES, Status.Done);
+      return true;
     } catch (e) {
       setStatus(SEND_FILES, Status.Error);
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      return false;
+    }
+  }
+
+// when file share fails and user taps on resend button.
+// we would iterate over every atsigns and attempt to share the file again.
+  Future<bool> reAttemptInSendingFiles() async {
+    var _historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
+    FileHistory _fileHistory;
+    if (_historyProvider.sentHistory.isNotEmpty) {
+      _fileHistory = _historyProvider.sentHistory[0];
+    } else {
+      return false;
+    }
+
+    try {
+      flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
+
+      for (var element in _fileHistory.sharedWith) {
+        if (element.isNotificationSend != null && !element.isNotificationSend) {
+          await reSendFileNotification(_fileHistory, element.atsign);
+        }
+      }
+
+      // checking if any notification didn't go through
+      _fileHistory = _historyProvider.sentHistory[0];
+      for (var element in _fileHistory.sharedWith) {
+        if (element.isNotificationSend != null && !element.isNotificationSend) {
+          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          return false;
+        }
+      }
+      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+      return true;
+    } catch (e) {
+      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      return false;
     }
   }
 

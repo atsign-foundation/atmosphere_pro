@@ -126,9 +126,13 @@ class FileHistory {
   List<ShareStatus> sharedWith;
   HistoryType type;
   FileTransferObject fileTransferObject;
+  // used to determine whether any opearation is running over this file or not
+  // only for front end used , this value is not saved.
+  bool isOperating;
 
   FileHistory(
-      this.fileDetails, this.sharedWith, this.type, this.fileTransferObject);
+      this.fileDetails, this.sharedWith, this.type, this.fileTransferObject,
+      {this.isOperating});
   FileHistory.fromJson(Map<String, dynamic> data) {
     if (data['fileDetails'] != null) {
       fileDetails = FileTransfer.fromJson(data['fileDetails']);

@@ -31,7 +31,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   WelcomeScreenProvider _welcomeScreenProvider;
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
-  bool isExpanded = true;
+  bool isExpanded = true, isFileShareFailed = false;
   ScrollController scrollController = ScrollController();
   FileTransferProvider filePickerModel;
 
@@ -165,6 +165,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 children: [
                                   CommonButton('Clear', () {
                                     setState(() {
+                                      isFileShareFailed = false;
                                       _welcomeScreenProvider.selectedContacts
                                           .clear();
                                       _welcomeScreenProvider
@@ -174,26 +175,50 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           .resetSelectedFilesStatus();
                                     });
                                   }),
+                                  Expanded(child: SizedBox()),
+                                  Visibility(
+                                      visible: ((!_welcomeScreenProvider
+                                                  .hasSelectedContactsChanged &&
+                                              !filePickerModel
+                                                  .hasSelectedFilesChanged) &&
+                                          isFileShareFailed),
+                                      child: CommonButton(
+                                        TextStrings().buttonResend,
+                                        reAttemptSendingFiles,
+                                        buttonColor: Color(0xFFe1ad01),
+                                      )),
                                   (_welcomeScreenProvider
                                               .hasSelectedContactsChanged ||
                                           filePickerModel
-                                              .hasSelectedFilesChanged)
+                                                  .hasSelectedFilesChanged &&
+                                              !isFileShareFailed)
                                       ? CommonButton(
                                           TextStrings().buttonSend,
                                           () async {
+                                            if (mounted) {
+                                              setState(() {
+                                                isFileShareFailed = false;
+                                              });
+                                            }
                                             _welcomeScreenProvider
                                                 .resetSelectedContactsStatus();
                                             filePickerModel
                                                 .resetSelectedFilesStatus();
-                                            await filePickerModel
+                                            var res = await filePickerModel
                                                 .sendFileWithFileBin(
                                                     filePickerModel
                                                         .selectedFiles,
                                                     _welcomeScreenProvider
                                                         .selectedContacts);
+
+                                            if (mounted) {
+                                              setState(() {
+                                                isFileShareFailed = !res;
+                                              });
+                                            }
                                           },
                                         )
-                                      : SizedBox()
+                                      : SizedBox(),
                                 ],
                               ),
                               SizedBox(
@@ -273,5 +298,23 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         filePickerModel.scrollToBottom = false;
       },
     );
+  }
+
+  reAttemptSendingFiles() async {
+    if (mounted) {
+      setState(() {
+        isFileShareFailed = false;
+      });
+    }
+
+    var res = await filePickerModel.reAttemptInSendingFiles();
+
+    if (!res) {
+      if (mounted) {
+        setState(() {
+          isFileShareFailed = true;
+        });
+      }
+    }
   }
 }

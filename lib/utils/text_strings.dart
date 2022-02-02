@@ -58,6 +58,7 @@ class TextStrings {
   String buttonStart = 'Start';
   String buttonSend = 'Send';
   String buttonClose = 'Close';
+  String buttonResend = 'Resend';
 
   String accept = 'Accept';
   String reject = 'Reject';
@@ -170,4 +171,5 @@ class TextStrings {
       'Warning: This action cannot be undone';
 
   static const uploaded = 'Uploaded';
+  static const reUploadFileMsg = 'Do you want to reupload file ?';
 }
