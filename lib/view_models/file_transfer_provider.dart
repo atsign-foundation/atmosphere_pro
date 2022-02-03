@@ -183,7 +183,10 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  Future<bool> sendFileWithFileBin(List<PlatformFile> selectedFiles,
+  /// returns [true] when file is siccessfully saved and all recipients have received notification.
+  /// returns [false] if file entry is saved in sent history but notification did not go to every recipient.
+  /// returns [null] if file is not saved in sent history.
+  Future<dynamic> sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
@@ -233,7 +236,6 @@ class FileTransferProvider extends BaseModel {
     } catch (e) {
       setStatus(SEND_FILES, Status.Error);
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
-      return false;
     }
   }
 
@@ -253,6 +255,14 @@ class FileTransferProvider extends BaseModel {
     try {
       flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
 
+      //  reuploading files
+      for (var fileData in _fileHistory.fileDetails.files) {
+        if (fileData.isUploaded != null && !fileData.isUploaded) {
+          await reuploadFiles([fileData], 0, _fileHistory);
+        }
+      }
+
+      //  resending notifications
       for (var element in _fileHistory.sharedWith) {
         if (element.isNotificationSend != null && !element.isNotificationSend) {
           await reSendFileNotification(_fileHistory, element.atsign);

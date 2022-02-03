@@ -31,7 +31,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   WelcomeScreenProvider _welcomeScreenProvider;
   HistoryProvider historyProvider;
   List<AtContact> selectedList = [];
-  bool isExpanded = true, isFileShareFailed = false;
+  bool isExpanded = true,
+      isFileShareFailed = false,
+      isSentFileEntrySaved = true;
   ScrollController scrollController = ScrollController();
   FileTransferProvider filePickerModel;
 
@@ -194,29 +196,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                               !isFileShareFailed)
                                       ? CommonButton(
                                           TextStrings().buttonSend,
-                                          () async {
-                                            if (mounted) {
-                                              setState(() {
-                                                isFileShareFailed = false;
-                                              });
-                                            }
-                                            _welcomeScreenProvider
-                                                .resetSelectedContactsStatus();
-                                            filePickerModel
-                                                .resetSelectedFilesStatus();
-                                            var res = await filePickerModel
-                                                .sendFileWithFileBin(
-                                                    filePickerModel
-                                                        .selectedFiles,
-                                                    _welcomeScreenProvider
-                                                        .selectedContacts);
-
-                                            if (mounted) {
-                                              setState(() {
-                                                isFileShareFailed = !res;
-                                              });
-                                            }
-                                          },
+                                          sendFileWithFileBin,
                                         )
                                       : SizedBox(),
                                 ],
@@ -307,12 +287,46 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       });
     }
 
+    // when entry is not added in sent history.
+    if (!isSentFileEntrySaved) {
+      sendFileWithFileBin();
+      return;
+    }
+
+    // when entry is added in sent history but notifications didn't go through.
     var res = await filePickerModel.reAttemptInSendingFiles();
 
     if (!res) {
       if (mounted) {
         setState(() {
           isFileShareFailed = true;
+        });
+      }
+    }
+  }
+
+  sendFileWithFileBin() async {
+    if (mounted) {
+      setState(() {
+        // assuming file share record will be saved in sent history.
+        isSentFileEntrySaved = true;
+        isFileShareFailed = false;
+      });
+    }
+    _welcomeScreenProvider.resetSelectedContactsStatus();
+    filePickerModel.resetSelectedFilesStatus();
+    var res = await filePickerModel.sendFileWithFileBin(
+        filePickerModel.selectedFiles, _welcomeScreenProvider.selectedContacts);
+
+    if (mounted && res is bool) {
+      setState(() {
+        isFileShareFailed = !res;
+      });
+    } else if (res == null) {
+      if (mounted) {
+        setState(() {
+          isFileShareFailed = true;
+          isSentFileEntrySaved = false;
         });
       }
     }
