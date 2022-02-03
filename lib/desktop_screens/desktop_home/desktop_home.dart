@@ -59,7 +59,7 @@ class _DesktopHomeState extends State<DesktopHome> {
   storeApplicationDocumentsDirectory() async {
     var _dir;
     // TODO: have to implement for linux and windows
-    if (Platform.isMacOS) {
+    if (Platform.isMacOS || Platform.isWindows) {
       _dir = await getApplicationDocumentsDirectory();
     }
     final path = Directory(_dir.path + '/@mosphere-pro');

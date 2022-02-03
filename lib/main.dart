@@ -7,8 +7,10 @@ import 'dart:io';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HiveService().initHive();
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (Platform.isLinux || Platform.isMacOS) {
     await DesktopWindow.setWindowSize(Size(1200, 700));
+    await DesktopWindow.setMinWindowSize(Size(1200, 700));
+  } else if (Platform.isWindows) {
     await DesktopWindow.setMinWindowSize(Size(1200, 700));
   }
   runApp(MyApp());

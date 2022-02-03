@@ -68,7 +68,7 @@ class BackendService {
 
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isWindows) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
     } else {
@@ -86,7 +86,7 @@ class BackendService {
   }
 
   Future<AtClientPreference> getAtClientPreference() async {
-    // if (Platform.isIOS) {
+    // if (Platform.isIOS || Platform.isWindows) {
     //   downloadDirectory =
     //       await path_provider.getApplicationDocumentsDirectory();
     // } else {
