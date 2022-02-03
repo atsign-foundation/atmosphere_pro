@@ -160,6 +160,7 @@ class TextStrings {
   String sendingFile = 'Sending file';
   String fileReceived = 'File received';
   String fileSent = 'File sent';
+  String expired = 'Expired';
 
   static final String resetButton = 'Reset';
   static const String resetDescription =

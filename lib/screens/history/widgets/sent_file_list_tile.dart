@@ -355,10 +355,35 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          filesList[index].name.toString(),
-                                          style:
-                                              CustomTextStyles.primaryRegular16,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                filesList[index]
+                                                    .name
+                                                    .toString(),
+                                                style: CustomTextStyles
+                                                    .primaryRegular16,
+                                              ),
+                                            ),
+                                            (filesList[index].isUploaded !=
+                                                        null &&
+                                                    !filesList[index]
+                                                        .isUploaded)
+                                                ? Tooltip(
+                                                    message: 'Upload failed',
+                                                    child: Icon(
+                                                        Icons
+                                                            .priority_high_outlined,
+                                                        color: ColorConstants
+                                                            .redAlert,
+                                                        size: 20),
+                                                  )
+                                                : SizedBox(),
+                                            Expanded(
+                                              child: SizedBox(),
+                                            )
+                                          ],
                                         ),
                                       ),
                                       Container(
@@ -412,6 +437,27 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                           style: CustomTextStyles
                                               .secondaryRegular12,
                                         ),
+                                        CommonUtilityFunctions()
+                                                .isFileDownloadAvailable(widget
+                                                    .sentHistory
+                                                    .fileDetails
+                                                    .date)
+                                            ? SizedBox()
+                                            : Row(
+                                                children: [
+                                                  SizedBox(width: 10),
+                                                  Container(
+                                                    color: ColorConstants
+                                                        .fontSecondary,
+                                                    height: 14.toHeight,
+                                                    width: 1.toWidth,
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text(TextStrings().expired,
+                                                      style: CustomTextStyles
+                                                          .secondaryRegular12),
+                                                ],
+                                              ),
                                       ],
                                     ),
                                   )
@@ -569,7 +615,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   Widget retryButton(FileData fileData, index, FileOperation fileOperation) {
     return InkWell(
       onTap: () async {
-        if (fileOperation == FileOperation.REUPLOAD_FILE) {
+        var isFileDownloadAvailable = CommonUtilityFunctions()
+            .isFileDownloadAvailable(widget.sentHistory.fileDetails.date);
+
+        if (fileOperation == FileOperation.REUPLOAD_FILE &&
+            isFileDownloadAvailable) {
           await showDialog(
               context: NavService.navKey.currentContext,
               builder: (context) {

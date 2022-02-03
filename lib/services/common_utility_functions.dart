@@ -270,4 +270,13 @@ class CommonUtilityFunctions {
     );
     return videoThumbnail;
   }
+
+  bool isFileDownloadAvailable(DateTime date) {
+    var expiryDate = date.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
