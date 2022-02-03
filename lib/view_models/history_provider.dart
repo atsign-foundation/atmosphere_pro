@@ -627,6 +627,10 @@ class HistoryProvider extends BaseModel {
           .files
           .indexWhere((element) => element.name == filename);
 
+      // as of now operating is only used to determine whether file is being uploaded or not
+      // As per requirement it can be used to determine whether notification is being sent or not.
+      sentHistory[index].isOperating = isUploading;
+
       if (fileIndex > -1) {
         sentHistory[index].fileDetails.files[fileIndex].isUploading =
             isUploading;

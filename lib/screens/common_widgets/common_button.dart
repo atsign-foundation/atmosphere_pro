@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class CommonButton extends StatelessWidget {
   final String title;
   final Function() onTap;
-  const CommonButton(this.title, this.onTap);
+  final Color buttonColor;
+  const CommonButton(this.title, this.onTap, {this.buttonColor = Colors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class CommonButton extends StatelessWidget {
           horizontal: 30.toWidth,
         ),
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: buttonColor,
           borderRadius: BorderRadius.circular(20.toFont),
         ),
         child: Center(

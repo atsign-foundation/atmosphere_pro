@@ -22,6 +22,7 @@ class ColorConstants {
   static const Color MILD_GREY = Color(0xFFE4E4E4);
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
+  static const Color successGreen = Color(0xFF0ACB21);
 }
 
 class ContactInitialsColors {

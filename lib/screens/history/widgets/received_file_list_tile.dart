@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -403,8 +404,6 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       fileName: widget
                                           .receivedHistory.files[index].name);
                                   await OpenFile.open(path);
-                                  // _showNoFileDialog(deviceTextFactor);
-                                  print('url: ${widget.receivedHistory.url}');
                                 }
                               },
                               leading: Container(
@@ -414,7 +413,6 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     future: isFilePresent(widget
                                         .receivedHistory.files[index].name),
                                     builder: (context, snapshot) {
-                                      print('snapshot builder: ${snapshot}');
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
@@ -491,7 +489,26 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               ? 'Downloading...'
                                               : '',
                                           style: CustomTextStyles.redSmall12,
-                                        )
+                                        ),
+                                        CommonUtilityFunctions()
+                                                .isFileDownloadAvailable(
+                                                    widget.receivedHistory.date)
+                                            ? SizedBox()
+                                            : Row(
+                                                children: [
+                                                  SizedBox(width: 10),
+                                                  Container(
+                                                    color: ColorConstants
+                                                        .fontSecondary,
+                                                    height: 14.toHeight,
+                                                    width: 1.toWidth,
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text(TextStrings().expired,
+                                                      style: CustomTextStyles
+                                                          .secondaryRegular12),
+                                                ],
+                                              )
                                       ],
                                     ),
                                   )

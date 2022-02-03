@@ -1,17 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/file_types.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -21,8 +21,6 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
-
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SentFilesListTile extends StatefulWidget {
   final FileHistory sentHistory;
@@ -36,14 +34,11 @@ class SentFilesListTile extends StatefulWidget {
 }
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
-  /// A boolean to reinitialize fileResending
-  // bool isWidgetRebuilt;
-  int fileLength, fileSize = 0;
+  int fileSize = 0;
   List<FileData> filesList = [];
   List<String> contactList;
   bool isOpen = false;
   bool isDeepOpen = false;
-  // DateTime sendTime;
   Uint8List videoThumbnail, firstContactImage;
 
   List<bool> fileResending = [];
@@ -52,9 +47,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   @override
   void initState() {
     super.initState();
-    // isWidgetRebuilt = true;
-    fileLength = widget.sentHistory.fileDetails.files.length;
-    fileResending = List<bool>.generate(fileLength, (i) => false);
     if (widget.sentHistory.sharedWith != null) {
       contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
     } else {
@@ -66,35 +58,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
       fileSize += element.size;
     });
 
-    getContactImage();
-  }
-
-  getContactImage() {
-    AtContact contact;
     if (contactList[0] != null) {
-      contact = checkForCachedContactDetail(contactList[0]);
+      firstContactImage =
+          CommonUtilityFunctions().getCachedContactImage(contactList[0]);
     }
-    if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        if (mounted) {
-          setState(() {
-            firstContactImage = Uint8List.fromList(intList);
-          });
-        }
-      }
-    }
-  }
-
-  Future videoThumbnailBuilder(String path) async {
-    videoThumbnail = await VideoThumbnail.thumbnailData(
-      video: path,
-      imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-      quality: 100,
-    );
-    return videoThumbnail;
   }
 
   @override
@@ -240,7 +207,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${fileLength} File(s)',
+                        '${filesList.length} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -342,16 +309,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
                               ),
-                          itemCount: fileLength,
+                          itemCount: filesList.length,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            if (FileTypes.VIDEO_TYPES.contains(
-                                filesList[index].name?.split('.')?.last)) {
-                              videoThumbnailBuilder(
-                                MixedConstants.SENT_FILE_DIRECTORY +
-                                    filesList[index].name,
-                              );
-                            }
                             return ListTile(
                               onTap: () async {
                                 String _path =
@@ -378,7 +338,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
                                                 snapshot.data != null
-                                            ? thumbnail(
+                                            ? CommonUtilityFunctions().thumbnail(
                                                 filesList[index]
                                                     .name
                                                     ?.split('.')
@@ -395,47 +355,57 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          filesList[index].name.toString(),
-                                          style:
-                                              CustomTextStyles.primaryRegular16,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                filesList[index]
+                                                    .name
+                                                    .toString(),
+                                                style: CustomTextStyles
+                                                    .primaryRegular16,
+                                              ),
+                                            ),
+                                            (filesList[index].isUploaded !=
+                                                        null &&
+                                                    !filesList[index]
+                                                        .isUploaded)
+                                                ? Tooltip(
+                                                    message: 'Upload failed',
+                                                    child: Icon(
+                                                        Icons
+                                                            .priority_high_outlined,
+                                                        color: ColorConstants
+                                                            .redAlert,
+                                                        size: 20),
+                                                  )
+                                                : SizedBox(),
+                                            Expanded(
+                                              child: SizedBox(),
+                                            )
+                                          ],
                                         ),
                                       ),
                                       Container(
-                                        child: filesList[index].isUploaded !=
+                                        child: (widget.sentHistory
+                                                        .isOperating !=
                                                     null &&
-                                                filesList[index].isUploaded
-                                            ? SizedBox()
-                                            : (filesList[index].isUploading !=
+                                                widget.sentHistory.isOperating)
+                                            ? typingIndicator()
+                                            : filesList[index].isUploaded !=
                                                         null &&
-                                                    filesList[index]
-                                                        .isUploading)
-                                                ? TypingIndicator(
-                                                    showIndicator: true,
-                                                    flashingCircleBrightColor:
-                                                        ColorConstants.dullText,
-                                                    flashingCircleDarkColor:
-                                                        ColorConstants
-                                                            .fadedText,
-                                                  )
-                                                : InkWell(
-                                                    onTap: () async {
-                                                      await Provider.of<
-                                                                  FileTransferProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .reuploadFiles(
-                                                              filesList,
-                                                              index,
-                                                              widget
-                                                                  .sentHistory);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.refresh,
-                                                      color: Color(0xFFF86061),
-                                                      size: 25.toFont,
-                                                    ),
-                                                  ),
+                                                    filesList[index].isUploaded
+                                                ? getFileShareStatus(
+                                                    filesList[index], index)
+                                                : (filesList[index]
+                                                                .isUploading !=
+                                                            null &&
+                                                        filesList[index]
+                                                            .isUploading)
+                                                    ? typingIndicator()
+                                                    : getFileShareStatus(
+                                                        filesList[index],
+                                                        index),
                                       )
                                     ],
                                   ),
@@ -467,24 +437,27 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                           style: CustomTextStyles
                                               .secondaryRegular12,
                                         ),
-                                        (filesList[index].isUploaded != null &&
-                                                filesList[index].isUploaded)
-                                            ? Row(
+                                        CommonUtilityFunctions()
+                                                .isFileDownloadAvailable(widget
+                                                    .sentHistory
+                                                    .fileDetails
+                                                    .date)
+                                            ? SizedBox()
+                                            : Row(
                                                 children: [
-                                                  SizedBox(width: 10.toHeight),
+                                                  SizedBox(width: 10),
                                                   Container(
                                                     color: ColorConstants
                                                         .fontSecondary,
                                                     height: 14.toHeight,
                                                     width: 1.toWidth,
                                                   ),
-                                                  SizedBox(width: 10.toHeight),
-                                                  Text(TextStrings.uploaded,
+                                                  SizedBox(width: 10),
+                                                  Text(TextStrings().expired,
                                                       style: CustomTextStyles
-                                                          .blueRegular12),
+                                                          .secondaryRegular12),
                                                 ],
-                                              )
-                                            : SizedBox()
+                                              ),
                                       ],
                                     ),
                                   )
@@ -532,71 +505,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             : Container()
       ],
     );
-  }
-
-  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
-    return FileTypes.IMAGE_TYPES.contains(extension)
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(10.toHeight),
-            child: Container(
-              height: 50.toHeight,
-              width: 50.toWidth,
-              child: isFilePresent
-                  ? Image.file(
-                      File(path),
-                      fit: BoxFit.cover,
-                    )
-                  : Icon(
-                      Icons.image,
-                      size: 30.toFont,
-                    ),
-            ),
-          )
-        : FileTypes.VIDEO_TYPES.contains(extension)
-            ? FutureBuilder(
-                future: videoThumbnailBuilder(path),
-                builder: (context, snapshot) => ClipRRect(
-                  borderRadius: BorderRadius.circular(10.toHeight),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10),
-                    height: 50.toHeight,
-                    width: 50.toWidth,
-                    child: (snapshot.data == null)
-                        ? Image.asset(
-                            ImageConstants.unknownLogo,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.memory(
-                            videoThumbnail,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, o, ot) =>
-                                CircularProgressIndicator(),
-                          ),
-                  ),
-                ),
-              )
-            : ClipRRect(
-                borderRadius: BorderRadius.circular(10.toHeight),
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  height: 50.toHeight,
-                  width: 50.toWidth,
-                  child: Image.asset(
-                    FileTypes.PDF_TYPES.contains(extension)
-                        ? ImageConstants.pdfLogo
-                        : FileTypes.AUDIO_TYPES.contains(extension)
-                            ? ImageConstants.musicLogo
-                            : FileTypes.WORD_TYPES.contains(extension)
-                                ? ImageConstants.wordLogo
-                                : FileTypes.EXEL_TYPES.contains(extension)
-                                    ? ImageConstants.exelLogo
-                                    : FileTypes.TEXT_TYPES.contains(extension)
-                                        ? ImageConstants.txtLogo
-                                        : ImageConstants.unknownLogo,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              );
   }
 
   void _showNoFileDialog(double deviceTextFactor) {
@@ -653,7 +561,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return fileExists;
   }
 
-  openFileReceiptBottomSheet() {
+  openFileReceiptBottomSheet({FileRecipientSection fileRecipientSection}) {
     Provider.of<FileTransferProvider>(context, listen: false)
         .selectedFileHistory = widget.sentHistory;
 
@@ -671,8 +579,125 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 topRight: const Radius.circular(12.0),
               ),
             ),
-            child: FileRecipients(widget.sentHistory.sharedWith),
+            child: FileRecipients(widget.sentHistory.sharedWith,
+                fileRecipientSection: fileRecipientSection),
           );
         });
+  }
+
+  Widget getFileShareStatus(FileData fileData, int index) {
+    // if file upload failed
+    if (fileData.isUploaded != null && !fileData.isUploaded) {
+      return retryButton(fileData, index, FileOperation.REUPLOAD_FILE);
+    }
+
+    //  file share failed for any receiver
+    var _sharedWith = widget.sentHistory.sharedWith ?? [];
+    for (ShareStatus sharedWithAtsign in _sharedWith) {
+      if (sharedWithAtsign.isNotificationSend != null &&
+          !sharedWithAtsign.isNotificationSend) {
+        return retryButton(fileData, index, FileOperation.RESEND_NOTIFICATION);
+      }
+    }
+
+    // file everyone received file
+    for (ShareStatus sharedWithAtsign in _sharedWith) {
+      if (sharedWithAtsign.isFileDownloaded != null &&
+          !sharedWithAtsign.isFileDownloaded) {
+        return sentConfirmation();
+      }
+    }
+
+    // if file is downloaded by everyone
+    return downloadedConfirmation();
+  }
+
+  Widget retryButton(FileData fileData, index, FileOperation fileOperation) {
+    return InkWell(
+      onTap: () async {
+        var isFileDownloadAvailable = CommonUtilityFunctions()
+            .isFileDownloadAvailable(widget.sentHistory.fileDetails.date);
+
+        if (fileOperation == FileOperation.REUPLOAD_FILE &&
+            isFileDownloadAvailable) {
+          await showDialog(
+              context: NavService.navKey.currentContext,
+              builder: (context) {
+                return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.toWidth),
+                    ),
+                    content: ConfirmationDialog(TextStrings.reUploadFileMsg,
+                        () async {
+                      await Provider.of<FileTransferProvider>(context,
+                              listen: false)
+                          .reuploadFiles(filesList, index, widget.sentHistory);
+                    }));
+              });
+        } else {
+          openFileReceiptBottomSheet(
+              fileRecipientSection: FileRecipientSection.FAILED);
+        }
+      },
+      child: Icon(
+        Icons.refresh,
+        color: Color(0xFFF86061),
+        size: 25.toFont,
+      ),
+    );
+  }
+
+  Widget sentConfirmation() {
+    return InkWell(
+      onTap: () async {
+        openFileReceiptBottomSheet(
+            fileRecipientSection: FileRecipientSection.DELIVERED);
+      },
+      child: Icon(
+        Icons.done,
+        color: ColorConstants.successGreen,
+        size: 25.toFont,
+      ),
+    );
+  }
+
+  Widget downloadedConfirmation() {
+    return InkWell(
+      onTap: () async {
+        openFileReceiptBottomSheet(
+            fileRecipientSection: FileRecipientSection.DOWNLOADED);
+      },
+      child: Icon(
+        Icons.done_all_outlined,
+        color: ColorConstants.blueText,
+        size: 25.toFont,
+      ),
+    );
+  }
+
+  resendFileNotifications() async {
+    var _sharedWith = widget.sentHistory.sharedWith ?? [];
+    for (ShareStatus sharedWithAtsign in _sharedWith) {
+      if (sharedWithAtsign.isNotificationSend != null &&
+          !sharedWithAtsign.isNotificationSend) {
+        await Provider.of<FileTransferProvider>(context, listen: false)
+            .reSendFileNotification(
+                widget.sentHistory, sharedWithAtsign.atsign);
+      }
+    }
+  }
+
+// TODO: to be implemented
+  Widget isFileDownloadExpired() {
+    var _widget = SizedBox();
+    return _widget;
+  }
+
+  Widget typingIndicator() {
+    return TypingIndicator(
+      showIndicator: true,
+      flashingCircleBrightColor: ColorConstants.dullText,
+      flashingCircleDarkColor: ColorConstants.fadedText,
+    );
   }
 }
