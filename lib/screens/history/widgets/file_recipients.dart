@@ -90,7 +90,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                     : SizedBox(),
                 AnimatedContainer(
                   width: double.infinity,
-                  duration: const Duration(seconds: 2),
+                  duration: const Duration(seconds: 1),
                   color: widget.fileRecipientSection ==
                           FileRecipientSection.DOWNLOADED
                       ? color
@@ -133,7 +133,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                     : SizedBox(),
                 AnimatedContainer(
                   width: double.infinity,
-                  duration: const Duration(seconds: 2),
+                  duration: const Duration(seconds: 1),
                   color: widget.fileRecipientSection ==
                           FileRecipientSection.DELIVERED
                       ? color
@@ -188,7 +188,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                     : SizedBox(),
                 AnimatedContainer(
                   width: double.infinity,
-                  duration: const Duration(seconds: 2),
+                  duration: const Duration(seconds: 1),
                   color:
                       widget.fileRecipientSection == FileRecipientSection.FAILED
                           ? color

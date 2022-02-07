@@ -366,23 +366,24 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     .primaryRegular16,
                                               ),
                                             ),
-                                            (filesList[index].isUploaded !=
-                                                        null &&
-                                                    !filesList[index]
-                                                        .isUploaded)
-                                                ? Tooltip(
-                                                    message: 'Upload failed',
-                                                    child: Icon(
-                                                        Icons
-                                                            .priority_high_outlined,
-                                                        color: ColorConstants
-                                                            .redAlert,
-                                                        size: 20),
-                                                  )
-                                                : SizedBox(),
-                                            Expanded(
-                                              child: SizedBox(),
-                                            )
+                                            // upload failed icon
+                                            // (filesList[index].isUploaded !=
+                                            //             null &&
+                                            //         !filesList[index]
+                                            //             .isUploaded)
+                                            //     ? Tooltip(
+                                            //         message: 'Upload failed',
+                                            //         child: Icon(
+                                            //             Icons
+                                            //                 .priority_high_outlined,
+                                            //             color: ColorConstants
+                                            //                 .redAlert,
+                                            //             size: 20),
+                                            //       )
+                                            //     : SizedBox(),
+                                            // Expanded(
+                                            //   child: SizedBox(),
+                                            // )
                                           ],
                                         ),
                                       ),
@@ -639,10 +640,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
               fileRecipientSection: FileRecipientSection.FAILED);
         }
       },
-      child: Icon(
-        Icons.refresh,
-        color: Color(0xFFF86061),
-        size: 25.toFont,
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: Icon(
+          Icons.refresh,
+          color: Color(0xFFF86061),
+          size: 25.toFont,
+        ),
       ),
     );
   }
@@ -653,10 +658,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         openFileReceiptBottomSheet(
             fileRecipientSection: FileRecipientSection.DELIVERED);
       },
-      child: Icon(
-        Icons.done,
-        color: ColorConstants.successGreen,
-        size: 25.toFont,
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: Icon(
+          Icons.done,
+          color: ColorConstants.successGreen,
+          size: 25.toFont,
+        ),
       ),
     );
   }
@@ -667,10 +676,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         openFileReceiptBottomSheet(
             fileRecipientSection: FileRecipientSection.DOWNLOADED);
       },
-      child: Icon(
-        Icons.done_all_outlined,
-        color: ColorConstants.blueText,
-        size: 25.toFont,
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: Icon(
+          Icons.done_all_outlined,
+          color: ColorConstants.blueText,
+          size: 25.toFont,
+        ),
       ),
     );
   }
