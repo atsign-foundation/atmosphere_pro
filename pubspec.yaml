@@ -58,16 +58,24 @@ dependencies:
   at_contacts_group_flutter: ^4.0.0
 
 dependency_overrides:
+  at_client:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+  at_client_mobile:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile  
+  at_onboarding_flutter:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
   at_contacts_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_flutter
+     path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
+    # git:
+    #   url: git@github.com:atsign-foundation/at_widgets.git
+    #   ref: trunk
+    #   path: at_contacts_flutter
   at_contacts_group_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_group_flutter
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
+    # git:
+    #   url: git@github.com:atsign-foundation/at_widgets.git
+    #   ref: trunk
+    #   path: at_contacts_group_flutter
 
 dev_dependencies:
   flutter_test:

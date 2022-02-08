@@ -51,7 +51,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                           onTap: isLoading
                               ? () {}
                               : () async {
-                                  await backendService.checkToOnboard(
+                                  return await backendService.checkToOnboard(
                                       atSign: widget.atSignList[index]);
 
                                   Navigator.pop(context);

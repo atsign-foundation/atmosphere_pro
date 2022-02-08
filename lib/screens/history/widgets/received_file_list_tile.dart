@@ -701,6 +701,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       if (mounted) {
         setState(() {
           isDownloaded = true;
+          isFilesAvailableOfline = true;
+          isOverwrite = false;
         });
       }
       // send download acknowledgement

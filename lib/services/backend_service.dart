@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
+import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
@@ -27,6 +29,8 @@ import 'package:provider/provider.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/src/service/sync_service_impl.dart';
+import 'package:at_client/src/service/notification_service_impl.dart';
+import 'package:at_client/src/service/notification_service.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -147,10 +151,16 @@ class BackendService {
         .listen((AtNotification notification) {
       _notificationCallBack(notification);
     });
+    var notificationService = AtClientManager.getInstance().notificationService
+        as NotificationServiceImpl;
+    notificationService.getMonitorStatus();
   }
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
+    var notificationService = AtClientManager.getInstance().notificationService
+        as NotificationServiceImpl;
+    notificationService.getMonitorStatus();
     var notificationKey = response.key;
     var fromAtSign = response.from;
 
@@ -187,6 +197,8 @@ class BackendService {
       var atKey = notificationKey.split(':')[1];
       var value = response.value;
 
+      await sendNotificationAck(notificationKey, fromAtSign);
+
       var decryptedMessage =
           await atClientInstance.encryptionService.decrypt(value, fromAtSign)
               // ignore: return_of_invalid_type_from_catch_error
@@ -221,6 +233,31 @@ class BackendService {
           await downloadFiles(context, atKey.split('.').first, fromAtSign);
         }
       }
+    }
+  }
+
+  sendNotificationAck(String key, String fromAtsign) async {
+    try {
+      String transferId = key.split(':')[1];
+      transferId = transferId.split('@')[0];
+      transferId = transferId.replaceAll('.mospherepro', '');
+      transferId = transferId.replaceAll('file_transfer_', '');
+      AtKey atKey = AtKey()
+        ..key = 'receive_ack_$transferId'
+        ..sharedWith = fromAtsign
+        ..metadata = Metadata()
+        ..metadata.ttr = -1
+        ..metadata.ttl = 518400000;
+
+      var notificationResult =
+          await AtClientManager.getInstance().notificationService.notify(
+                NotificationParams.forUpdate(
+                  atKey,
+                  value: 'receive_ack_$key',
+                ),
+              );
+    } catch (e) {
+      print('error in ack: $e');
     }
   }
 
@@ -329,11 +366,12 @@ class BackendService {
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
-      await Onboarding(
+      Onboarding(
           atsign: atSign,
           context: NavService.navKey.currentContext,
           atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
+          rootEnvironment: RootEnvironment.Production,
           appColor: Color.fromARGB(255, 240, 94, 62),
           onboard: (value, onboardedAtsign) async {
             authenticating = true;
@@ -419,11 +457,6 @@ class BackendService {
   }
 
   showToast(String msg, {bool isError = false, bool isSuccess = true}) {
-    try {
-      CustomToast().show(msg, NavService.navKey.currentContext);
-    } catch (e) {
-      ErrorDialog()
-          .show(e.toString(), context: NavService.navKey.currentContext);
-    }
+    ErrorDialog().show(msg, context: NavService.navKey.currentContext);
   }
 }
