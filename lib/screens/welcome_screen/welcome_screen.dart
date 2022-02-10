@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
-import 'dart:async';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -34,7 +33,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   HistoryProvider historyProvider;
   bool isExpanded = true;
   int _selectedBottomNavigationIndex = 0;
-  Timer flushbarDebouncer;
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -91,32 +89,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
-      if (flushbarDebouncer != null && flushbarDebouncer.isActive ?? false) {
-        flushbarDebouncer.cancel();
+      if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
+        await sendingFlushbar.dismiss();
       }
 
-      flushbarDebouncer = Timer(Duration(milliseconds: 500), () {
-        _assignFlushbar(flushbarStatus);
-      });
+      if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
+        sendingFlushbar = _showScaffold(
+            status: 0, shouldTimeout: false, showLinearProgress: true);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
+      } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
+        sendingFlushbar = _showScaffold(status: 2, shouldTimeout: false);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
+      } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
+        sendingFlushbar = _showScaffold(status: 1);
+        await sendingFlushbar.show(NavService.navKey.currentContext);
+      }
     });
-  }
-
-  _assignFlushbar(FLUSHBAR_STATUS flushbarStatus) async {
-    if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
-      await sendingFlushbar.dismiss();
-    }
-
-    if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
-      sendingFlushbar = _showScaffold(
-          status: 0, shouldTimeout: false, showLinearProgress: true);
-      await sendingFlushbar.show(NavService.navKey.currentContext);
-    } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
-      sendingFlushbar = _showScaffold(status: 2, shouldTimeout: false);
-      await sendingFlushbar.show(NavService.navKey.currentContext);
-    } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
-      sendingFlushbar = _showScaffold(status: 1);
-      await sendingFlushbar.show(NavService.navKey.currentContext);
-    }
   }
 
   setAtSign() async {

@@ -73,10 +73,20 @@ class HistoryProvider extends BaseModel {
   String app_lifecycle_state;
 
   resetData() {
+    isSyncedDataFetched = false;
+    sentHistory = [];
+    receivedHistoryLogs = [];
     receivedHistory = [];
     receivedAudioModel = [];
     sendFileHistory = {'history': []};
     downloadedFileAcknowledgement = {};
+    receivedPhotos = [];
+    receivedVideos = [];
+    receivedAudio = [];
+    receivedApk = [];
+    receivedDocument = [];
+    recentFile = [];
+    receivedUnknown = [];
   }
 
   setFileTransferHistory(
