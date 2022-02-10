@@ -37,6 +37,7 @@ class HistoryProvider extends BaseModel {
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
   String DOWNLOAD_FILE = 'download_file';
+  String DOWNLOAD_ACK = 'download_ack';
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
@@ -190,6 +191,7 @@ class HistoryProvider extends BaseModel {
   }
 
   getFileDownloadedAcknowledgement() async {
+    setStatus(DOWNLOAD_ACK, Status.Loading);
     var atKeys = await AtClientManager.getInstance()
         .atClient
         .getAtKeys(regex: MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT);
@@ -220,8 +222,10 @@ class HistoryProvider extends BaseModel {
         }
       } catch (e) {
         print('error in getFileDownloadedAcknowledgement : $e');
+        setStatus(DOWNLOAD_ACK, Status.Error);
       }
     });
+    setStatus(DOWNLOAD_ACK, Status.Done);
   }
 
   getReceivedHistory() async {

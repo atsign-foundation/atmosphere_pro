@@ -386,6 +386,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               Text('Video');
                             }
                             return ListTile(
+                              key:
+                                  Key(widget.receivedHistory.files[index].name),
                               onTap: () async {
                                 String path = MixedConstants
                                         .RECEIVED_FILE_DIRECTORY +

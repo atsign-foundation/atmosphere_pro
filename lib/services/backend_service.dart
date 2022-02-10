@@ -185,7 +185,7 @@ class BackendService {
       DownloadAcknowledgement downloadAcknowledgement =
           DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
-      Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
               listen: false)
           .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
       return;
@@ -197,6 +197,7 @@ class BackendService {
       var atKey = notificationKey.split(':')[1];
       var value = response.value;
 
+      //TODO: only for testing
       await sendNotificationAck(notificationKey, fromAtSign);
 
       var decryptedMessage =
@@ -214,7 +215,7 @@ class BackendService {
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
 
-        Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+        await Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
                 listen: false)
             .checkForUndownloadedFiles();
 
@@ -286,6 +287,11 @@ class BackendService {
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
     if (syncStatus.dataChange && !historyProvider.isSyncedDataFetched) {
+      if (historyProvider.status[historyProvider.DOWNLOAD_ACK] !=
+          Status.Loading) {
+        await historyProvider.getFileDownloadedAcknowledgement();
+      }
+
       if (historyProvider.status[historyProvider.SENT_HISTORY] !=
           Status.Loading) {
         await historyProvider.getSentHistory();

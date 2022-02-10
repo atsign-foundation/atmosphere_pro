@@ -49,7 +49,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                 borderRadius: BorderRadius.circular(12.0)),
             child: Container(
               padding: EdgeInsets.only(left: 10.toWidth),
-              height: 200.0.toHeight,
+              height: 200.0.toHeight < 170 ? 170 : 200.0.toHeight,
               width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

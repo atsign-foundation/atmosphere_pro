@@ -58,8 +58,35 @@ dependencies:
   at_contacts_group_flutter: ^4.0.0
 
 dependency_overrides:
+  # at_contact: 
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_libraries/at_contact
+  # at_client:
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+  # at_client_mobile:
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile  
+  # at_onboarding_flutter:
+    # path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_onboarding_flutter
+  # at_contacts_flutter:
+  #    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_flutter
+    # git:
+    #   url: git@github.com:atsign-foundation/at_widgets.git
+    #   ref: trunk
+    #   path: at_contacts_flutter
+  # at_contacts_group_flutter:
+  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_contacts_group_flutter
+    # git:
+    #   url: git@github.com:atsign-foundation/at_widgets.git
+    #   ref: trunk
+    #   path: at_contacts_group_flutter
+
+  at_contact:
+    git:
+      url: git@github.com:atsign-foundation/at_libraries.git
+      ref: fix_create_group
+      path: at_contact
+
   at_client:
-     git:
+    git:
       url: git@github.com:atsign-foundation/at_client_sdk.git
       ref: switch_atsign_bug
       path: at_client
@@ -78,6 +105,11 @@ dependency_overrides:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: trunk
       path: at_contacts_group_flutter
+  at_onboarding_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: fix/onboarding-tablet-ui
+      path: at_onboarding_flutter     
 
 dev_dependencies:
   flutter_test:
