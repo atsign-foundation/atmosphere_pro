@@ -120,10 +120,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
 
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
         if (mounted) {
           setState(() {
-            image = Uint8List.fromList(intList);
+            image = CommonUtilityFunctions().getContactImage(contact);
           });
         }
       }

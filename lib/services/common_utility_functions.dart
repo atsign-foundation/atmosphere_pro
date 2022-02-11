@@ -30,8 +30,12 @@ class CommonUtilityFunctions {
     if (contact != null &&
         contact.tags != null &&
         contact.tags['image'] != null) {
-      List<int> intList = contact.tags['image'].cast<int>();
-      image = Uint8List.fromList(intList);
+      try {
+        List<int> intList = contact.tags['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+      } catch (e) {
+        print('error in getting atsign image : $e');
+      }
     }
 
     return image;
@@ -278,5 +282,19 @@ class CommonUtilityFunctions {
     } else {
       return false;
     }
+  }
+
+  Uint8List getContactImage(AtContact contact) {
+    Uint8List image;
+    if (contact.tags != null && contact.tags['image'] != null) {
+      try {
+        List<int> intList = contact.tags['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+      } catch (e) {
+        print('error in getting atsign image : $e');
+      }
+    }
+
+    return image;
   }
 }

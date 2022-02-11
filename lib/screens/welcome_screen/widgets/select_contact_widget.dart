@@ -98,7 +98,6 @@ class _ExpansionTileWidget extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => GroupContactView(
           asSelectionScreen: true,
-          // singleSelection: true,
           showGroups: true,
           showContacts: true,
           selectedList: (s) {
