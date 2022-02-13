@@ -48,7 +48,14 @@ class MixedConstants {
 
   static String ApplicationDocumentsDirectory;
 
-  static String get RECEIVED_FILE_DIRECTORY => '$ApplicationDocumentsDirectory';
+  /// we change the directory after successful login
+  static setNewApplicationDocumentsDirectory(String _atsign) {
+    ApplicationDocumentsDirectory = '$ApplicationDocumentsDirectory/$_atsign';
+  }
+
+  static String get RECEIVED_FILE_DIRECTORY {
+    return '$ApplicationDocumentsDirectory';
+  }
 
   // temp
   // static String path = '/Users/apple/Desktop/';

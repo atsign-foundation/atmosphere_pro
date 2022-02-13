@@ -655,6 +655,9 @@ class BackendService {
   String state;
   NotificationService _notificationService;
   void initBackendService() async {
+    await setDownloadDirectory();
+    await doesDirectoryExist();
+
     _notificationService = NotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
@@ -667,6 +670,23 @@ class BackendService {
 
       return null;
     });
+  }
+
+  setDownloadDirectory() async {
+    var _preference = await getAtClientPreference();
+    MixedConstants.setNewApplicationDocumentsDirectory(
+        AtClientManager.getInstance().atClient.getCurrentAtSign());
+    _preference.downloadPath = MixedConstants.RECEIVED_FILE_DIRECTORY;
+    AtClientManager.getInstance().atClient.setPreferences(_preference);
+  }
+
+  /// to create directory if does not exist
+  doesDirectoryExist() async {
+    final dir = Directory(MixedConstants.ApplicationDocumentsDirectory);
+    if ((await dir.exists())) {
+    } else {
+      await dir.create();
+    }
   }
 
   onNotificationClick(String payload) async {
