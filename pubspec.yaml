@@ -39,7 +39,7 @@ dependencies:
   permission_handler: ^8.2.5
   provider: ^4.3.2+2
   qr_flutter: ^3.2.0
-  receive_sharing_intent: 1.4.2
+  receive_sharing_intent: ^1.4.5
   rxdart: ^0.24.1
   share: ^2.0.4
   url_launcher: ^6.0.3
@@ -58,6 +58,22 @@ dependencies:
   at_contacts_group_flutter: ^4.0.0
 
 dependency_overrides:
+  at_contact:
+    git:
+      url: git@github.com:atsign-foundation/at_libraries.git
+      ref: fix_create_group
+      path: at_contact
+
+  at_client:
+    git:
+      url: git@github.com:atsign-foundation/at_client_sdk.git
+      ref: switch_atsign_bug
+      path: at_client
+  at_client_mobile:
+    git:
+        url: git@github.com:atsign-foundation/at_client_sdk.git
+        ref: switch_atsign_bug
+        path: at_client_mobile
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
@@ -68,6 +84,11 @@ dependency_overrides:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: trunk
       path: at_contacts_group_flutter
+  at_onboarding_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: fix/onboarding-tablet-ui
+      path: at_onboarding_flutter     
 
 dev_dependencies:
   flutter_test:

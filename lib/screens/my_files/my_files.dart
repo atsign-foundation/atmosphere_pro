@@ -144,8 +144,8 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
         child: (isLoading)
             ? Center(child: CircularProgressIndicator())
             : Container(
-                // reducing size by 75 , so that last list item will be shown
-                height: SizeConfig().screenHeight - 75,
+                // reducing size by 120 , so that last list item will be shown
+                height: SizeConfig().screenHeight - 120.toHeight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

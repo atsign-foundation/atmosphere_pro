@@ -364,6 +364,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     .toString(),
                                                 style: CustomTextStyles
                                                     .primaryRegular16,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                             // upload failed icon
@@ -641,8 +643,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         }
       },
       child: SizedBox(
-        width: 40,
-        height: 40,
+        width: 60,
         child: Icon(
           Icons.refresh,
           color: Color(0xFFF86061),
@@ -659,8 +660,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             fileRecipientSection: FileRecipientSection.DELIVERED);
       },
       child: SizedBox(
-        width: 40,
-        height: 40,
+        width: 60,
         child: Icon(
           Icons.done,
           color: ColorConstants.successGreen,
@@ -677,8 +677,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             fileRecipientSection: FileRecipientSection.DOWNLOADED);
       },
       child: SizedBox(
-        width: 40,
-        height: 40,
+        width: 60,
         child: Icon(
           Icons.done_all_outlined,
           color: ColorConstants.blueText,
