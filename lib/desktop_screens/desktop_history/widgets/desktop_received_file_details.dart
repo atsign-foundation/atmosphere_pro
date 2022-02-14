@@ -52,16 +52,26 @@ class _DesktopReceivedFileDetailsState
     isFilesAlreadyDownloaded();
   }
 
+  String getDownloadDirectory(String name) {
+    return MixedConstants.RECEIVED_FILE_DIRECTORY +
+        '/' +
+        widget.fileTransfer.sender +
+        '/' +
+        name;
+  }
+
   getFutureBuilders() {
     widget.fileTransfer.files.forEach((element) {
       _futureBuilder[element.name] = CommonFunctions().isFilePresent(
-          MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + element.name);
+        getDownloadDirectory(element.name),
+      );
     });
   }
 
   isFilesAlreadyDownloaded() async {
     widget.fileTransfer.files.forEach((element) async {
-      String path = BackendService.getInstance().downloadDirectory.path +
+      String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
+          '/${widget.fileTransfer.sender}' +
           '/${element.name}';
       File test = File(path);
       bool fileExists = await test.exists();
@@ -110,8 +120,12 @@ class _DesktopReceivedFileDetailsState
                 children: [
                   InkWell(
                     onTap: () async {
-                      await OpenFile.open(
-                          MixedConstants.ApplicationDocumentsDirectory);
+                      var _downloadPath =
+                          '${MixedConstants.ApplicationDocumentsDirectory}/${widget.fileTransfer.sender}';
+                      BackendService.getInstance()
+                          .doesDirectoryExist(path: _downloadPath);
+
+                      await OpenFile.open(_downloadPath);
                     },
                     child: Row(
                       children: [
@@ -211,17 +225,20 @@ class _DesktopReceivedFileDetailsState
                                         snapshot.data != null
                                     ? InkWell(
                                         onTap: () {
-                                          handleFileCLick(widget
-                                              .fileTransfer.files[index].name);
+                                          handleFileCLick(
+                                            widget
+                                                .fileTransfer.files[index].name,
+                                          );
                                         },
                                         child: CommonFunctions().thumbnail(
                                             widget
                                                 .fileTransfer.files[index].name
                                                 ?.split('.')
                                                 ?.last,
-                                            MixedConstants
-                                                    .RECEIVED_FILE_DIRECTORY +
-                                                '/${widget.fileTransfer.files[index].name}',
+                                            getDownloadDirectory(widget
+                                                .fileTransfer
+                                                .files[index]
+                                                .name),
                                             isFilePresent: isOverwrite
                                                 ? false
                                                 : snapshot.data),
@@ -310,7 +327,7 @@ class _DesktopReceivedFileDetailsState
   }
 
   handleFileCLick(String fileName) async {
-    String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY + '/' + fileName;
+    String filePath = getDownloadDirectory(fileName);
     File test = File(filePath);
     bool fileExists = await test.exists();
     if (fileExists) {

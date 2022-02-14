@@ -681,8 +681,8 @@ class BackendService {
   }
 
   /// to create directory if does not exist
-  doesDirectoryExist() async {
-    final dir = Directory(MixedConstants.ApplicationDocumentsDirectory);
+  doesDirectoryExist({String path}) async {
+    final dir = Directory(path ?? MixedConstants.ApplicationDocumentsDirectory);
     if ((await dir.exists())) {
     } else {
       await dir.create();

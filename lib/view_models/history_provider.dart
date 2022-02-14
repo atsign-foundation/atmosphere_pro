@@ -387,13 +387,20 @@ class HistoryProvider extends BaseModel {
       receivedPhotos = [];
       receivedVideos = [];
       receivedUnknown = [];
-      await Future.forEach(filesList, (fileData) async {
+      await Future.forEach(filesList, (FileTransfer fileData) async {
         await Future.forEach(fileData.files, (file) async {
           String fileExtension = file.name.split('.').last;
+          String filePath =
+              BackendService.getInstance().downloadDirectory.path +
+                  '/${file.name}';
+
+          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+            filePath =
+                '${MixedConstants.RECEIVED_FILE_DIRECTORY}/${fileData.sender}/${file.name}';
+          }
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
-            filePath: BackendService.getInstance().downloadDirectory.path +
-                '/${file.name}',
+            filePath: filePath,
             size: double.parse(file.size.toString()),
             date: fileData.date.toLocal().toString(),
             type: file.name.split('.').last,
@@ -692,9 +699,20 @@ class HistoryProvider extends BaseModel {
       }
       notifyListeners();
 
-      var files = await AtClientManager.getInstance()
-          .atClient
-          .downloadFile(transferId, sharedBy);
+      var _downloadPath;
+
+      /// only do for desktop
+      if (Platform.isMacOS || Platform.isWindows || Platform.isWindows) {
+        _downloadPath =
+            '${MixedConstants.ApplicationDocumentsDirectory}/${sharedBy}';
+        BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
+      }
+
+      var files = await AtClientManager.getInstance().atClient.downloadFile(
+            transferId,
+            sharedBy,
+            downloadPath: _downloadPath,
+          );
 
       await sortFiles(receivedHistoryLogs);
       populateTabs();
