@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -33,8 +34,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
   void initState() {
     super.initState();
     if (widget.contact.tags != null && widget.contact.tags['image'] != null) {
-      List<int> intList = widget.contact.tags['image'].cast<int>();
-      image = Uint8List.fromList(intList);
+      image = CommonUtilityFunctions().getContactImage(widget.contact);
     }
   }
 

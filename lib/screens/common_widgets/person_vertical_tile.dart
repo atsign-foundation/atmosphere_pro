@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,8 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
     // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
         setState(() {
-          image = Uint8List.fromList(intList);
+          image = CommonUtilityFunctions().getContactImage(contact);
         });
       }
       if (contact.tags != null && contact.tags['name'] != null) {

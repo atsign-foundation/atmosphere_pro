@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
@@ -152,11 +153,9 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                       if (provider.trustedContacts[index]
                                               .tags['image'] !=
                                           null) {
-                                        List<int> intList = provider
-                                            .trustedContacts[index]
-                                            .tags['image']
-                                            .cast<int>();
-                                        byteImage = Uint8List.fromList(intList);
+                                        byteImage = CommonUtilityFunctions()
+                                            .getContactImage(provider
+                                                .trustedContacts[index]);
                                       }
 
                                       return ContactListTile(
