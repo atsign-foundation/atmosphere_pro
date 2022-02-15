@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmationDialog extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title),
+            Text(widget.title, style: CustomTextStyles.grey15),
             SizedBox(
               height: 10.toHeight,
             ),

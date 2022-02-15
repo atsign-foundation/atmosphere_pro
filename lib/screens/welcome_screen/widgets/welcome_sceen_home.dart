@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -69,18 +72,29 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              TextStrings().welcomeUser(
-                                  BackendService.getInstance()
-                                              .atClientInstance !=
-                                          null
-                                      ? BackendService.getInstance()
-                                          .currentAtSign
-                                      : ''),
+                              TextStrings().welcome,
                               style: GoogleFonts.playfairDisplay(
                                 textStyle: TextStyle(
                                   fontSize: 26.toFont,
                                   fontWeight: FontWeight.w800,
                                   height: 1.3,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: switchAtsign,
+                              child: Text(
+                                BackendService.getInstance().atClientInstance !=
+                                        null
+                                    ? BackendService.getInstance().currentAtSign
+                                    : '',
+                                style: GoogleFonts.playfairDisplay(
+                                  textStyle: TextStyle(
+                                    fontSize: 26.toFont,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.3,
+                                    color: ColorConstants.orangeColor,
+                                  ),
                                 ),
                               ),
                             ),
@@ -328,5 +342,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         });
       }
     }
+  }
+
+  switchAtsign() async {
+    var atSignList = await KeychainUtil.getAtsignList();
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AtSignBottomSheet(
+        atSignList: atSignList,
+      ),
+    );
   }
 }
