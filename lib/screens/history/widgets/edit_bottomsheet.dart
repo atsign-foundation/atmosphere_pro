@@ -39,7 +39,8 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
                   TextStrings.delete,
                   style: CustomTextStyles.red20,
                 ),
-                Icon(Icons.delete, color: ColorConstants.redAlert)
+                Icon(Icons.delete,
+                    color: ColorConstants.redAlert, size: 20.toFont)
               ],
             ),
           ),
