@@ -708,11 +708,16 @@ class HistoryProvider extends BaseModel {
         BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
       }
 
-      var files = await AtClientManager.getInstance().atClient.downloadFile(
-            transferId,
-            sharedBy,
-            downloadPath: _downloadPath,
-          );
+      var files;
+      try {
+        files = await AtClientManager.getInstance().atClient.downloadFile(
+              transferId,
+              sharedBy,
+              downloadPath: _downloadPath,
+            );
+      } catch (e) {
+        print('Error in downloading $e');
+      }
 
       await sortFiles(receivedHistoryLogs);
       populateTabs();

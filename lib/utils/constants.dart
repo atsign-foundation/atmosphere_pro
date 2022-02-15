@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
 class MixedConstants {
   // static const String WEBSITE_URL = 'https://staging.atsign.wtf/';
   static const String WEBSITE_URL = 'https://atsign.com/';
@@ -49,8 +52,19 @@ class MixedConstants {
   static String ApplicationDocumentsDirectory;
 
   /// we change the directory after successful login
-  static setNewApplicationDocumentsDirectory(String _atsign) {
-    ApplicationDocumentsDirectory = '$ApplicationDocumentsDirectory/$_atsign';
+  static setNewApplicationDocumentsDirectory(String _atsign) async {
+    var _dir;
+    if (Platform.isMacOS || Platform.isWindows) {
+      _dir = await getApplicationDocumentsDirectory();
+    }
+    final path = Directory(_dir.path + '/@mosphere-pro' + '/$_atsign');
+
+    /// we create directory if it does not exist
+    if (!(await path.exists())) {
+      await path.create();
+    }
+
+    ApplicationDocumentsDirectory = path.path;
   }
 
   static String get RECEIVED_FILE_DIRECTORY {
