@@ -103,10 +103,6 @@ class HistoryProvider extends BaseModel {
 
     setStatus(SET_FILE_HISTORY, Status.Loading);
     await getSentHistory();
-    AtKey atKey = AtKey()
-      ..metadata = Metadata()
-      ..key = MixedConstants.SENT_FILE_HISTORY;
-
     if (isEdit) {
       int index = sentHistory.indexWhere((element) =>
           element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
@@ -121,8 +117,7 @@ class HistoryProvider extends BaseModel {
     }
 
     try {
-      var result = await backendService.atClientInstance
-          .put(atKey, json.encode(sendFileHistory));
+      var result = await updateSentHistory();
       setStatus(SET_FILE_HISTORY, Status.Done);
       return result;
     } catch (e) {
@@ -132,10 +127,6 @@ class HistoryProvider extends BaseModel {
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
-    AtKey atKey = AtKey()
-      ..metadata = Metadata()
-      ..key = MixedConstants.SENT_FILE_HISTORY;
-
     int index = sentHistory.indexWhere((element) =>
         element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
 
@@ -144,8 +135,7 @@ class HistoryProvider extends BaseModel {
       sendFileHistory['history'][index] = fileHistory.toJson();
       sentHistory[index] = fileHistory;
 
-      result = await backendService.atClientInstance
-          .put(atKey, json.encode(sendFileHistory));
+      result = await updateSentHistory();
       notifyListeners();
     }
     return result;
@@ -168,7 +158,7 @@ class HistoryProvider extends BaseModel {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
           historyFile['history'].forEach((value) {
-            FileHistory filesModel = FileHistory.fromJson((value));
+            FileHistory filesModel = FileHistory.fromJson(value);
             // checking for download acknowledged
             filesModel.sharedWith = checkIfileDownloaded(
               filesModel.sharedWith,
@@ -198,6 +188,29 @@ class HistoryProvider extends BaseModel {
       }
     }
     return shareStatus;
+  }
+
+  deleteSentItem(String transferId) async {
+    int index = sentHistory.indexWhere((element) {
+      return element?.fileDetails?.key == transferId;
+    });
+
+    if (index != -1) {
+      sentHistory.removeWhere((element) {
+        return element?.fileDetails?.key == transferId;
+      });
+      notifyListeners();
+
+      sendFileHistory['history'].removeAt(index);
+      var res = await updateSentHistory();
+      if (res) {
+        notifyListeners();
+        return res;
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
 
   getFileDownloadedAcknowledgement() async {
@@ -906,6 +919,19 @@ class HistoryProvider extends BaseModel {
       atsign = '@' + atsign;
     }
     return atsign;
+  }
+
+  Future<bool> updateSentHistory() async {
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..key = MixedConstants.SENT_FILE_HISTORY;
+    AtClient atClient = AtClientManager.getInstance().atClient;
+    try {
+      return await atClient.put(atKey, json.encode(sendFileHistory));
+    } catch (e) {
+      print('error in update sent hisory  : $e');
+      return false;
+    }
   }
 
   // save file in gallery function is not in use as of now.

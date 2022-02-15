@@ -57,6 +57,9 @@ class CustomTextStyles {
   static TextStyle red15 =
       TextStyle(color: ColorConstants.redAlert, fontSize: 15.toFont);
 
+  static TextStyle red20 =
+      TextStyle(color: ColorConstants.redAlert, fontSize: 20.toFont);
+
   static TextStyle darkGrey13 = TextStyle(
     color: ColorConstants.dullText,
     fontSize: 13.toFont,

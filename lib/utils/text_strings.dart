@@ -22,6 +22,7 @@ class TextStrings {
 
   // welcome screen texts
   String welcomeUser(String userName) => 'Welcome\n $userName';
+  String welcome = 'Welcome';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file to';
   String welcomeContactPlaceholder = '@sign';
@@ -173,4 +174,6 @@ class TextStrings {
 
   static const uploaded = 'Uploaded';
   static const reUploadFileMsg = 'Do you want to reupload file ?';
+  static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
+  static const delete = 'Delete';
 }

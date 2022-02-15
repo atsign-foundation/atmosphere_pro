@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -70,8 +71,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return Column(
       children: [
         Container(
-          color: (isOpen) ? Color(0xffEFEFEF) : Colors.white,
+          color: (isOpen) ? Color(0xffEFEFEF) : null,
           child: ListTile(
+            enableFeedback: true,
+            onLongPress: deleteSentFile,
             leading: contactList.isNotEmpty
                 ? Container(
                     width: 55.toHeight,
@@ -699,10 +702,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     }
   }
 
-// TODO: to be implemented
-  Widget isFileDownloadExpired() {
-    var _widget = SizedBox();
-    return _widget;
+  deleteSentFile() async {
+    await showModalBottomSheet(
+        context: NavService.navKey.currentContext,
+        backgroundColor: Colors.white,
+        builder: (context) => EditBottomSheet(fileHistory: widget.sentHistory));
   }
 
   Widget typingIndicator() {

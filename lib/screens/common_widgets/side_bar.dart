@@ -309,7 +309,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         size: (isTablet ? 26 : 21.toFont)),
                     onPressed: () {
                       BackupKeyWidget(
-                        atClientService: AtClientManager.getInstance().atClient,
                         atsign: AtClientManager.getInstance()
                             .atClient
                             .getCurrentAtSign(),
