@@ -2,10 +2,9 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+// import 'package:atsign_atmosphere_pro/services/size_config.dart' ;
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +64,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: Column(
