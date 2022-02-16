@@ -56,6 +56,7 @@ class _DesktopHomeState extends State<DesktopHome> {
     super.initState();
   }
 
+  /// before login we keep atmospher-pro as the directory
   storeApplicationDocumentsDirectory() async {
     var _dir;
     // TODO: have to implement for linux and windows
