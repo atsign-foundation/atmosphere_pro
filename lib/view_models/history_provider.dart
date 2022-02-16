@@ -702,7 +702,7 @@ class HistoryProvider extends BaseModel {
       var _downloadPath;
 
       /// only do for desktop
-      if (Platform.isMacOS || Platform.isWindows || Platform.isWindows) {
+      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
         _downloadPath =
             '${MixedConstants.ApplicationDocumentsDirectory}/${sharedBy}';
         BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
