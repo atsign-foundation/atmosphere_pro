@@ -250,17 +250,33 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
               child: isSentTab
                   ? selectedSentFileData == null
                       ? SizedBox()
-                      : DesktopSentFileDetails(
-                          key: Key(selectedSentFileData
-                              .fileTransferObject.transferId),
-                          selectedFileData: selectedSentFileData,
+                      : Consumer<HistoryProvider>(
+                          builder: (context, provider, _) {
+                            if (provider.sentHistory.isEmpty) {
+                              return SizedBox();
+                            }
+
+                            return DesktopSentFileDetails(
+                              key: Key(selectedSentFileData
+                                  .fileTransferObject.transferId),
+                              selectedFileData: selectedSentFileData,
+                            );
+                          },
                         )
-                  : receivedFileData != null
-                      ? DesktopReceivedFileDetails(
-                          key: Key(receivedFileData.key),
-                          fileTransfer: receivedFileData,
-                        )
-                      : SizedBox(),
+                  : receivedFileData == null
+                      ? SizedBox()
+                      : Consumer<HistoryProvider>(
+                          builder: (context, provider, _) {
+                            if (provider.receivedHistoryLogs.isEmpty) {
+                              return SizedBox();
+                            }
+
+                            return DesktopReceivedFileDetails(
+                              key: Key(receivedFileData.key),
+                              fileTransfer: receivedFileData,
+                            );
+                          },
+                        ),
             ),
           )
         ],

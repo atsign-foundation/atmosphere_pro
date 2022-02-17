@@ -185,9 +185,9 @@ class HistoryProvider extends BaseModel {
   }
 
   getSentHistory() async {
+    sentHistory = [];
     setStatus(SENT_HISTORY, Status.Loading);
     try {
-      sentHistory = [];
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
@@ -269,8 +269,8 @@ class HistoryProvider extends BaseModel {
   }
 
   getReceivedHistory() async {
-    setStatus(RECEIVED_HISTORY, Status.Loading);
     receivedHistoryLogs = [];
+    setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
