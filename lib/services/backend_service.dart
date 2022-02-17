@@ -14,7 +14,9 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -31,6 +33,7 @@ import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/src/service/sync_service_impl.dart';
 import 'package:at_client/src/service/notification_service_impl.dart';
 import 'package:at_client/src/service/notification_service.dart';
+import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -274,9 +277,14 @@ class BackendService {
   }
 
   syncWithSecondary() async {
-    syncService = AtClientManager.getInstance().syncService;
-    syncService.sync(onDone: _onSuccessCallback);
-    syncService.setOnDone(_onSuccessCallback);
+    AtSyncUIService().init(
+      appNavigator: NavService.navKey,
+      onSuccessCallback: _onSuccessCallback,
+      onErrorCallback: _onSyncErrorCallback,
+      primaryColor: ColorConstants.orangeColor,
+    );
+
+    await AtSyncUIService().sync();
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
@@ -304,6 +312,31 @@ class BackendService {
 
       historyProvider.isSyncedDataFetched = true;
     }
+  }
+
+  _onSyncErrorCallback(SyncResult syncStatus) async {
+    ScaffoldMessenger.of(NavService.navKey.currentContext).showSnackBar(
+      SnackBar(
+        duration: Duration(days: 365),
+        content: Padding(
+          padding: EdgeInsets.symmetric(vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Sync Failed.', style: CustomTextStyles.grey15),
+              InkWell(
+                onTap: () async {
+                  ScaffoldMessenger.of(NavService.navKey.currentContext)
+                      .hideCurrentSnackBar();
+                  await AtSyncUIService().sync();
+                },
+                child: Text('Retry', style: CustomTextStyles.whiteBold16),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<List<String>> getAtsignList() async {

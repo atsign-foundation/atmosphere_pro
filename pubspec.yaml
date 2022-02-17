@@ -89,6 +89,12 @@ dependency_overrides:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: trunk
       path: at_onboarding_flutter     
+  
+  at_sync_ui_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: feature/at-sync-ui
+      path: at_sync_ui_flutter     
 
 dev_dependencies:
   flutter_test:
