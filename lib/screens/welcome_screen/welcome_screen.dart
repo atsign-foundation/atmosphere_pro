@@ -3,6 +3,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_screen_received_files.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
@@ -47,11 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: ColorConstants.redText,
     )
   ];
-  List<String> transferMessages = [
-    'Sending file(s) ...',
-    'File sent',
-    'Oops! something went wrong'
-  ];
+
   String currentAtSign;
   @override
   void initState() {
@@ -89,21 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
-      if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
-        await sendingFlushbar.dismiss();
-      }
-
-      if (flushbarStatus == FLUSHBAR_STATUS.SENDING) {
-        sendingFlushbar = _showScaffold(
-            status: 0, shouldTimeout: false, showLinearProgress: true);
-        await sendingFlushbar.show(NavService.navKey.currentContext);
-      } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
-        sendingFlushbar = _showScaffold(status: 2, shouldTimeout: false);
-        await sendingFlushbar.show(NavService.navKey.currentContext);
-      } else if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
-        sendingFlushbar = _showScaffold(status: 1);
-        await sendingFlushbar.show(NavService.navKey.currentContext);
-      }
+      OverlayService.instance.showOverlay(flushbarStatus);
     });
   }
 
@@ -117,74 +100,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await GroupService()
         .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
-  }
-
-  _showScaffold(
-      {int status = 0,
-      bool shouldTimeout = true,
-      bool showLinearProgress = false}) {
-    return Flushbar(
-      title: transferMessages[status],
-      message: 'hello',
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      backgroundColor: ColorConstants.scaffoldColor,
-      showProgressIndicator: showLinearProgress,
-      progressIndicatorController: null,
-      boxShadows: [
-        BoxShadow(
-            color: Colors.black, offset: Offset(0.0, 2.0), blurRadius: 3.0)
-      ],
-      isDismissible: false,
-      duration: (shouldTimeout) ? Duration(seconds: 3) : null,
-      icon: Container(
-        height: 40.toWidth,
-        width: 40.toWidth,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(ImageConstants.imagePlaceholder),
-              fit: BoxFit.cover),
-          shape: BoxShape.circle,
-        ),
-      ),
-      mainButton: TextButton(
-        onPressed: () {
-          if (sendingFlushbar != null && !sendingFlushbar.isDismissed()) {
-            sendingFlushbar.dismiss();
-          }
-        },
-        child: Text(
-          TextStrings().buttonDismiss,
-          style:
-              TextStyle(color: ColorConstants.fontPrimary, fontSize: 15.toFont),
-        ),
-      ),
-      progressIndicatorBackgroundColor: Colors.blueGrey,
-      titleText: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: transferStatus[status],
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 5.toWidth,
-            ),
-            child: Container(
-              width: SizeConfig().screenWidth * 0.5,
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Text(
-                transferMessages[status],
-                style: TextStyle(
-                    color: ColorConstants.fadedText, fontSize: 15.toFont),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 
   void _onBottomNavigationSelect(int index) {
