@@ -151,8 +151,8 @@ class BackendService {
     await AtClientManager.getInstance()
         .notificationService
         .subscribe(regex: MixedConstants.appNamespace)
-        .listen((AtNotification notification) {
-      _notificationCallBack(notification);
+        .listen((AtNotification notification) async {
+      await _notificationCallBack(notification);
     });
     var notificationService = AtClientManager.getInstance().notificationService
         as NotificationServiceImpl;

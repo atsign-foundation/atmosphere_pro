@@ -91,7 +91,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     RefreshIndicator(
                       onRefresh: () async {
-                        historyProvider.getSentHistory();
+                        await historyProvider.getSentHistory();
                       },
                       child: ProviderHandler<HistoryProvider>(
                         functionName: historyProvider.SENT_HISTORY,
@@ -159,7 +159,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     ),
                     RefreshIndicator(
                       onRefresh: () async {
-                        historyProvider.getReceivedHistory();
+                        await historyProvider.getReceivedHistory();
                       },
                       child: ProviderHandler<HistoryProvider>(
                           functionName: historyProvider.RECEIVED_HISTORY,

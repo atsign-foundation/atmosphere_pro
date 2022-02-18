@@ -247,6 +247,10 @@ class FileTransferProvider extends BaseModel {
     setStatus(SEND_FILES, Status.Loading);
     try {
       var _atclient = BackendService.getInstance().atClientInstance;
+      var _historyProvider = Provider.of<HistoryProvider>(
+          NavService.navKey.currentContext,
+          listen: false);
+
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
       var _files = <File>[];
       var _atSigns = <String>[];
@@ -270,10 +274,11 @@ class FileTransferProvider extends BaseModel {
 
       var uploadResult = await _atclient.uploadFile(_files, _atSigns);
 
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .setFileTransferHistory(
-              uploadResult[_atSigns[0]], _atSigns, uploadResult);
+      await _historyProvider.saveNewSentFileItem(
+        uploadResult[_atSigns[0]],
+        _atSigns,
+        uploadResult,
+      );
 
       // checking if everyone received the notification or not.
       for (var atsignStatus in uploadResult.entries) {
@@ -425,7 +430,6 @@ class FileTransferProvider extends BaseModel {
           fileHistory.fileTransferObject.fileEncryptionKey,
           fileHistory.fileTransferObject.fileStatus,
           date: fileHistory.fileTransferObject.date);
-      print(sendResponse);
 
       if (sendResponse[atsign].sharedStatus) {
         var indexToUpdate = fileHistory.sharedWith.indexWhere(

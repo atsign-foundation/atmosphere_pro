@@ -42,16 +42,12 @@ class HistoryProvider extends BaseModel {
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
   Map<String, Map<String, bool>> downloadedFileAcknowledgement = {};
+  Map<String, bool> individualSentFileId = {};
   String state;
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
   bool isSyncedDataFetched = false;
-  List<FilesDetail> sentPhotos,
-      sentVideos,
-      sentAudio,
-      sentApk,
-      sentDocument = [];
 
   List<FilesDetail> receivedPhotos,
       receivedVideos,
@@ -62,11 +58,9 @@ class HistoryProvider extends BaseModel {
       receivedUnknown = [];
   List<String> tabNames = ['Recents'];
 
-  List<FilesModel> receivedHistory, receivedAudioModel = [];
   List<Widget> tabs = [Recents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
-  Map receivedFileHistory = {'history': []};
   Map sendFileHistory = {'history': []};
   String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
@@ -76,8 +70,6 @@ class HistoryProvider extends BaseModel {
     isSyncedDataFetched = false;
     sentHistory = [];
     receivedHistoryLogs = [];
-    receivedHistory = [];
-    receivedAudioModel = [];
     sendFileHistory = {'history': []};
     downloadedFileAcknowledgement = {};
     receivedPhotos = [];
@@ -89,7 +81,66 @@ class HistoryProvider extends BaseModel {
     receivedUnknown = [];
   }
 
-  setFileTransferHistory(
+  // setFileTransferHistory(
+  //   FileTransferObject fileTransferObject,
+  //   List<String> sharedWithAtsigns,
+  //   Map<String, FileTransferObject> fileShareResult, {
+  //   bool isEdit = false,
+  // }) async {
+  //   FileHistory fileHistory = convertFileTransferObjectToFileHistory(
+  //     fileTransferObject,
+  //     sharedWithAtsigns,
+  //     fileShareResult,
+  //   );
+
+  //   setStatus(SET_FILE_HISTORY, Status.Loading);
+  //   await getSentHistory();
+  //   if (isEdit) {
+  //     int index = sentHistory.indexWhere((element) =>
+  //         element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+
+  //     if (index > -1) {
+  //       sendFileHistory['history'][index] = fileHistory.toJson();
+  //       sentHistory[index] = fileHistory;
+  //     }
+  //   } else {
+  //     sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+  //     sentHistory.insert(0, fileHistory);
+  //   }
+
+  //   try {
+  //     var result = await updateSentHistory();
+  //     setStatus(SET_FILE_HISTORY, Status.Done);
+  //     return result;
+  //   } catch (e) {
+  //     setError(SET_FILE_HISTORY, e.toString());
+  //     setStatus(SET_FILE_HISTORY, Status.Error);
+  //   }
+  // }
+
+  updateFileHistoryDetail(FileHistory fileHistory) async {
+    // checking whether sent file is stored in individual atKey or in sentHistory list.
+    if (individualSentFileId[fileHistory.fileDetails.key] != null) {
+      await saveIndividualSentItemInAtkey(fileHistory, isEdit: true);
+      return;
+    }
+
+    // if file is not saved individually, we will update file index in sent history list.
+    int index = sentHistory.indexWhere((element) =>
+        element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+
+    var result = false;
+    if (index > -1) {
+      sentHistory[index] = fileHistory;
+      updateSendFileHistoryArray(fileHistory);
+
+      result = await updateSentHistory();
+      notifyListeners();
+    }
+    return result;
+  }
+
+  saveNewSentFileItem(
     FileTransferObject fileTransferObject,
     List<String> sharedWithAtsigns,
     Map<String, FileTransferObject> fileShareResult, {
@@ -101,46 +152,47 @@ class HistoryProvider extends BaseModel {
       fileShareResult,
     );
 
-    setStatus(SET_FILE_HISTORY, Status.Loading);
-    await getSentHistory();
-    if (isEdit) {
-      int index = sentHistory.indexWhere((element) =>
-          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+    return await saveIndividualSentItemInAtkey(fileHistory);
+  }
 
-      if (index > -1) {
-        sendFileHistory['history'][index] = fileHistory.toJson();
-        sentHistory[index] = fileHistory;
-      }
-    } else {
-      sendFileHistory['history'].insert(0, (fileHistory.toJson()));
-      sentHistory.insert(0, fileHistory);
-    }
+  /// if [fileHistory.fileDetails.key] is unique, a new AtKey will be created
+  /// otherwise the same AtKey will be updated with the new [fileHistory] data.
+  Future<bool> saveIndividualSentItemInAtkey(FileHistory fileHistory,
+      {bool isEdit = false}) async {
+    AtKey atKey = AtKey()
+      ..key = fileHistory.fileDetails.key
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      // key will be deleted after 15 days.
+      ..metadata.ttl = 1296000000; // 1000 * 60 * 60 * 24 * 15
 
     try {
-      var result = await updateSentHistory();
-      setStatus(SET_FILE_HISTORY, Status.Done);
-      return result;
-    } catch (e) {
-      setError(SET_FILE_HISTORY, e.toString());
-      setStatus(SET_FILE_HISTORY, Status.Error);
-    }
-  }
-
-  updateFileHistoryDetail(FileHistory fileHistory) async {
-    int index = sentHistory.indexWhere((element) =>
-        element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
-
-    var result = false;
-    if (index > -1) {
-      sendFileHistory['history'][index] = fileHistory.toJson();
-      sentHistory[index] = fileHistory;
-
-      result = await updateSentHistory();
+      var res = await AtClientManager.getInstance().atClient.put(
+          atKey,
+          json.encode(
+            fileHistory.toJson(),
+          ));
+      if (res) {
+        isEdit
+            ? updateFileEntryInSentHistory(fileHistory)
+            : sentHistory.insert(0, fileHistory);
+      }
       notifyListeners();
+      return res;
+    } catch (e) {
+      print('exception in adding new sent history : $e');
+      return false;
     }
-    return result;
   }
 
+  // sent files are stored in two ways
+  // old approach---------
+  // 1 -- `sentHistory_v2` key stores list of all sent items.
+
+  // with new approach we are saving data in individual keys
+  // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
+  /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
   getSentHistory() async {
     setStatus(SENT_HISTORY, Status.Loading);
     try {
@@ -171,10 +223,63 @@ class HistoryProvider extends BaseModel {
         }
       }
 
+      // fetching individually saved sent items.
+      await getIndividuallySavedSentFileItems();
+      // deleting sent items records , older that 15 days.
+      await removePastSentFiles();
+
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
       setError(SENT_HISTORY, error.toString());
     }
+  }
+
+  getIndividuallySavedSentFileItems() async {
+    AtClient atClient = AtClientManager.getInstance().atClient;
+    List<String> sharedFileStrings = await atClient.getKeys(
+      regex: MixedConstants.FILE_TRANSFER_KEY,
+      sharedBy: atClient.getCurrentAtSign(),
+    );
+
+    sharedFileStrings.retainWhere((element) => !element.contains('cached'));
+
+    await Future.forEach(sharedFileStrings, (key) async {
+      AtKey atKey = AtKey.fromString(key);
+      AtValue atvalue =
+          await backendService.atClientInstance.get(atKey).catchError(
+        (e) {
+          print("Exception in getting atValue: $e");
+        },
+      );
+
+      if (atvalue != null && atvalue.value != null) {
+        try {
+          FileHistory fileHistory = FileHistory.fromJson(
+            jsonDecode(atvalue.value),
+          );
+          individualSentFileId[fileHistory.fileDetails.key] = true;
+          sentHistory.insert(0, fileHistory);
+        } catch (e) {
+          print('exeption in getSentFileItems : $e');
+        }
+      }
+    });
+  }
+
+// deletes sent items which are older that 15 days
+  removePastSentFiles() async {
+    for (int i = 0; i < sentHistory.length; i++) {
+      FileHistory fileHistory = sentHistory[i];
+      var sentFileDeletionDate =
+          fileHistory.fileDetails.date.add(Duration(days: 15));
+      if (sentFileDeletionDate.difference(DateTime.now()) <
+          Duration(seconds: 0)) {
+        sentHistory.removeAt(i);
+        updateSendFileHistoryArray(fileHistory, isDelete: true);
+      }
+    }
+
+    await updateSentHistory();
   }
 
   List<ShareStatus> checkIfileDownloaded(
@@ -194,14 +299,24 @@ class HistoryProvider extends BaseModel {
     int index = sentHistory.indexWhere((element) {
       return element?.fileDetails?.key == transferId;
     });
+    FileHistory fileHistory;
+    if (index != -1) {
+      fileHistory = sentHistory[index];
+    }
+
+    if (fileHistory != null &&
+        individualSentFileId[fileHistory.fileDetails.key] != null) {
+      await deleteIndividualSentItem(fileHistory);
+      return;
+    }
 
     if (index != -1) {
       sentHistory.removeWhere((element) {
         return element?.fileDetails?.key == transferId;
       });
       notifyListeners();
+      updateSendFileHistoryArray(fileHistory, isDelete: true);
 
-      sendFileHistory['history'].removeAt(index);
       var res = await updateSentHistory();
       if (res) {
         notifyListeners();
@@ -932,6 +1047,53 @@ class HistoryProvider extends BaseModel {
       print('error in update sent hisory  : $e');
       return false;
     }
+  }
+
+  updateFileEntryInSentHistory(FileHistory fileHistory,
+      {bool isDelete = false}) {
+    int index = sentHistory.indexWhere(
+      (element) =>
+          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key),
+    );
+    if (index != -1) {
+      if (isDelete) {
+        sentHistory.removeAt(index);
+      } else {
+        sentHistory[index] = fileHistory;
+      }
+    }
+  }
+
+  updateSendFileHistoryArray(FileHistory fileHistory, {bool isDelete = false}) {
+    for (int i = 0; i < sendFileHistory['history'].length; i++) {
+      FileHistory tempFileHistory = FileHistory.fromJson(
+        sendFileHistory['history'][i],
+      );
+      if (tempFileHistory.fileDetails.key == fileHistory.fileDetails.key) {
+        if (isDelete) {
+          sendFileHistory['history'].removeAt(i);
+        } else {
+          sendFileHistory['history'][i] = fileHistory.toJson();
+        }
+        break;
+      }
+    }
+  }
+
+  deleteIndividualSentItem(FileHistory fileHistory) async {
+    AtKey atKey = AtKey()
+      ..key = fileHistory.fileDetails.key
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      ..metadata.ttl = 1296000000;
+
+    var res = await AtClientManager.getInstance().atClient.delete(atKey);
+    if (res) {
+      updateFileEntryInSentHistory(fileHistory, isDelete: true);
+      notifyListeners();
+    }
+    return res;
   }
 
   // save file in gallery function is not in use as of now.
