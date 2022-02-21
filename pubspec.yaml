@@ -61,7 +61,7 @@ dependency_overrides:
   at_contact:
     git:
       url: git@github.com:atsign-foundation/at_libraries.git
-      ref: fix_create_group
+      ref: trunk
       path: at_contact
 
   at_client:

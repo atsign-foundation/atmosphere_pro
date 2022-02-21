@@ -128,58 +128,58 @@ class FileTransferProvider extends BaseModel {
       totalSize += element.size;
     });
 
-    if ((totalSize / 1048576) >= 50) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _showFileSizeLimit();
-      });
-    }
+    // if ((totalSize / 1048576) >= 50) {
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     _showFileSizeLimit();
+    //   });
+    // }
   }
 
-  _showFileSizeLimit() async {
-    await showDialog(
-        context: NavService.navKey.currentContext,
-        builder: (_context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.toWidth),
-            ),
-            content: Container(
-              color: Colors.white,
-              width: 300.toWidth,
-              padding: EdgeInsets.all(15.toFont),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(TextStrings.fileSizeLimit,
-                        style: CustomTextStyles.grey15),
-                    SizedBox(
-                      height: 10.toHeight,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(NavService.navKey.currentContext)
-                                  .pop();
-                            },
-                            child: Text('Ok',
-                                style: TextStyle(fontSize: 16.toFont)))
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
+  // _showFileSizeLimit() async {
+  //   await showDialog(
+  //       context: NavService.navKey.currentContext,
+  //       builder: (_context) {
+  //         return AlertDialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(10.toWidth),
+  //           ),
+  //           content: Container(
+  //             color: Colors.white,
+  //             width: 300.toWidth,
+  //             padding: EdgeInsets.all(15.toFont),
+  //             child: SingleChildScrollView(
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(TextStrings.fileSizeLimit,
+  //                       style: CustomTextStyles.grey15),
+  //                   SizedBox(
+  //                     height: 10.toHeight,
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.end,
+  //                     children: [
+  //                       TextButton(
+  //                           onPressed: () {
+  //                             Navigator.of(NavService.navKey.currentContext)
+  //                                 .pop();
+  //                           },
+  //                           child: Text('Ok',
+  //                               style: TextStyle(fontSize: 16.toFont)))
+  //                     ],
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       });
 
-    selectedFiles = [];
-    totalSize = 0;
-    hasSelectedFilesChanged = false;
-    notifyListeners();
-  }
+  //   selectedFiles = [];
+  //   totalSize = 0;
+  //   hasSelectedFilesChanged = false;
+  //   notifyListeners();
+  // }
 
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
