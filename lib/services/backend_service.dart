@@ -288,6 +288,10 @@ class BackendService {
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
+    // removes sync fail snackbar, if any.
+    ScaffoldMessenger.of(NavService.navKey.currentContext)
+        .hideCurrentSnackBar();
+
     var historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentState.context,
         listen: false);
@@ -315,6 +319,7 @@ class BackendService {
   }
 
   _onSyncErrorCallback(SyncResult syncStatus) async {
+    print('sync failed : ${syncStatus}');
     ScaffoldMessenger.of(NavService.navKey.currentContext).showSnackBar(
       SnackBar(
         duration: Duration(days: 365),
