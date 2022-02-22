@@ -176,4 +176,5 @@ class TextStrings {
   static const reUploadFileMsg = 'Do you want to reupload file ?';
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
   static const delete = 'Delete';
+  static const fileSizeLimit = 'File size can not exceed 50 Mb.';
 }

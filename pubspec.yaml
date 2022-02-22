@@ -50,7 +50,7 @@ dependencies:
   fluttertoast: ^8.0.8
   at_client_mobile: ^3.1.5
   at_commons: ^3.0.5
-  at_contact: ^3.0.3
+  at_contact: ^3.0.4
   at_lookup: ^3.0.7
   at_onboarding_flutter: ^3.1.4
   at_common_flutter: ^2.0.5
@@ -58,22 +58,8 @@ dependencies:
   at_contacts_group_flutter: ^4.0.0
 
 dependency_overrides:
-  at_contact:
-    git:
-      url: git@github.com:atsign-foundation/at_libraries.git
-      ref: fix_create_group
-      path: at_contact
-
-  at_client:
-    git:
-      url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: switch_atsign_bug
-      path: at_client
-  at_client_mobile:
-    git:
-        url: git@github.com:atsign-foundation/at_client_sdk.git
-        ref: switch_atsign_bug
-        path: at_client_mobile
+  at_contact: ^3.0.4
+  at_client_mobile: ^3.1.5
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
@@ -89,6 +75,12 @@ dependency_overrides:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: trunk
       path: at_onboarding_flutter     
+  
+  at_sync_ui_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: feature/at-sync-ui
+      path: at_sync_ui_flutter     
 
 dev_dependencies:
   flutter_test:

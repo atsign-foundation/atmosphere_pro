@@ -690,18 +690,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     );
   }
 
-  resendFileNotifications() async {
-    var _sharedWith = widget.sentHistory.sharedWith ?? [];
-    for (ShareStatus sharedWithAtsign in _sharedWith) {
-      if (sharedWithAtsign.isNotificationSend != null &&
-          !sharedWithAtsign.isNotificationSend) {
-        await Provider.of<FileTransferProvider>(context, listen: false)
-            .reSendFileNotification(
-                widget.sentHistory, sharedWithAtsign.atsign);
-      }
-    }
-  }
-
   deleteSentFile() async {
     await showModalBottomSheet(
         context: NavService.navKey.currentContext,

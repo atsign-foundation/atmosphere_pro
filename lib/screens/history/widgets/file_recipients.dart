@@ -106,7 +106,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                       children: List.generate(downloadedByList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
-                            key: Key(downloadedByList[index].atsign),
+                            key: UniqueKey(),
                             shareStatus: downloadedByList[index],
                           ),
                         );
@@ -150,7 +150,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                       children: List.generate(deliveredToList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
-                            key: Key(deliveredToList[index].atsign),
+                            key: UniqueKey(),
                             shareStatus: deliveredToList[index],
                           ),
                         );
@@ -207,7 +207,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                           List.generate(filedInDeliveringList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
-                              key: Key(filedInDeliveringList[index].atsign),
+                              key: UniqueKey(),
                               shareStatus: filedInDeliveringList[index],
                               isFailedAtsignList: true),
                         );

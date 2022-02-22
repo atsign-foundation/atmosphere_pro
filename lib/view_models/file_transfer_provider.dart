@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -9,6 +10,8 @@ import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -124,7 +127,59 @@ class FileTransferProvider extends BaseModel {
     selectedFiles?.forEach((element) {
       totalSize += element.size;
     });
+
+    // if ((totalSize / 1048576) >= 50) {
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     _showFileSizeLimit();
+    //   });
+    // }
   }
+
+  // _showFileSizeLimit() async {
+  //   await showDialog(
+  //       context: NavService.navKey.currentContext,
+  //       builder: (_context) {
+  //         return AlertDialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(10.toWidth),
+  //           ),
+  //           content: Container(
+  //             color: Colors.white,
+  //             width: 300.toWidth,
+  //             padding: EdgeInsets.all(15.toFont),
+  //             child: SingleChildScrollView(
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(TextStrings.fileSizeLimit,
+  //                       style: CustomTextStyles.grey15),
+  //                   SizedBox(
+  //                     height: 10.toHeight,
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.end,
+  //                     children: [
+  //                       TextButton(
+  //                           onPressed: () {
+  //                             Navigator.of(NavService.navKey.currentContext)
+  //                                 .pop();
+  //                           },
+  //                           child: Text('Ok',
+  //                               style: TextStyle(fontSize: 16.toFont)))
+  //                     ],
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       });
+
+  //   selectedFiles = [];
+  //   totalSize = 0;
+  //   hasSelectedFilesChanged = false;
+  //   notifyListeners();
+  // }
 
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
@@ -192,6 +247,10 @@ class FileTransferProvider extends BaseModel {
     setStatus(SEND_FILES, Status.Loading);
     try {
       var _atclient = BackendService.getInstance().atClientInstance;
+      var _historyProvider = Provider.of<HistoryProvider>(
+          NavService.navKey.currentContext,
+          listen: false);
+
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
       var _files = <File>[];
       var _atSigns = <String>[];
@@ -215,10 +274,11 @@ class FileTransferProvider extends BaseModel {
 
       var uploadResult = await _atclient.uploadFile(_files, _atSigns);
 
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .setFileTransferHistory(
-              uploadResult[_atSigns[0]], _atSigns, uploadResult);
+      await _historyProvider.saveNewSentFileItem(
+        uploadResult[_atSigns[0]],
+        _atSigns,
+        uploadResult,
+      );
 
       // checking if everyone received the notification or not.
       for (var atsignStatus in uploadResult.entries) {
@@ -370,7 +430,6 @@ class FileTransferProvider extends BaseModel {
           fileHistory.fileTransferObject.fileEncryptionKey,
           fileHistory.fileTransferObject.fileStatus,
           date: fileHistory.fileTransferObject.date);
-      print(sendResponse);
 
       if (sendResponse[atsign].sharedStatus) {
         var indexToUpdate = fileHistory.sharedWith.indexWhere(
