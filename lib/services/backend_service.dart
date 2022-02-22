@@ -288,7 +288,7 @@ class BackendService {
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
-    // removes sync fail snackbar, if any.
+    // removes failed snackbar message.
     ScaffoldMessenger.of(NavService.navKey.currentContext)
         .hideCurrentSnackBar();
 
