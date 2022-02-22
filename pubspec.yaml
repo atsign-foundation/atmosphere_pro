@@ -59,20 +59,7 @@ dependencies:
 
 dependency_overrides:
   at_contact: ^3.0.4
-
-  # at_contact:
-  #   git:
-  #     url: git@github.com:atsign-foundation/at_libraries.git
-  #     ref: trunk
-  #     path: at_contact
-
   at_client_mobile: ^3.1.5
-
-  # at_client_mobile:
-  #   git:
-  #       url: git@github.com:atsign-foundation/at_client_sdk.git
-  #       ref: trunk
-  #       path: at_client_mobile
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
