@@ -225,8 +225,9 @@ class HistoryProvider extends BaseModel {
 
       // fetching individually saved sent items.
       await getIndividuallySavedSentFileItems();
-      // deleting sent items records , older that 15 days.
+      // deleting sent items records, older than 15 days.
       await removePastSentFiles();
+      sortSentItems();
 
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
@@ -280,6 +281,11 @@ class HistoryProvider extends BaseModel {
     }
 
     await updateSentHistory();
+  }
+
+  sortSentItems() {
+    sentHistory
+        .sort((a, b) => b.fileDetails.date.compareTo(a.fileDetails.date));
   }
 
   List<ShareStatus> checkIfileDownloaded(
