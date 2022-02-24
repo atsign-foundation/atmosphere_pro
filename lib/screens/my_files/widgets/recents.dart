@@ -32,19 +32,18 @@ class _RecentsState extends State<Recents> {
             : Container(
                 margin: EdgeInsets.symmetric(
                     vertical: 10.toHeight, horizontal: 10.toWidth),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Wrap(
-                      alignment: WrapAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      runSpacing: 10.0,
-                      spacing: 15.0,
-                      children: List.generate(
-                          provider.recentFile.length,
-                          (index) => fileCard(
-                              provider.recentFile[index].fileName,
-                              provider.recentFile[index].filePath))),
-                ),
+                child: GridView.builder(
+                    itemCount: provider.receivedPhotos.length,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: SizeConfig().screenWidth / 4,
+                      mainAxisExtent: 110.toHeight,
+                      crossAxisSpacing: 20.toWidth,
+                      mainAxisSpacing: 20.toHeight,
+                    ),
+                    itemBuilder: (context, index) {
+                      return fileCard(provider.recentFile[index].fileName,
+                          provider.recentFile[index].filePath);
+                    }),
               );
       },
     );
