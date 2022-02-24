@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+15
+version: 1.0.1+16
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -55,36 +55,19 @@ dependencies:
   carousel_slider: ^4.0.0
   flutter_toastr: ^1.0.3
   video_compress: ^3.1.0
-  at_onboarding_flutter: ^3.1.4
-  at_client_mobile: ^3.1.5
-  at_commons: ^3.0.3
-  at_contact: ^3.0.3
-  at_lookup: ^3.0.7
+  
+  at_onboarding_flutter: ^4.0.0
+  at_client_mobile: ^3.1.7
+  at_commons: ^3.0.5
+  at_contact: ^3.0.4
+  at_lookup: ^3.0.10
   at_common_flutter: ^2.0.5
   at_contacts_flutter: ^4.0.0
   at_contacts_group_flutter: ^4.0.0
-  at_backupkey_flutter: ^3.1.3
+  at_backupkey_flutter: ^4.0.0
    
     
 dependency_overrides:
-  at_contact:
-    git:
-      url: git@github.com:atsign-foundation/at_libraries.git
-      ref: fix_create_group
-      path: at_contact
-  
-  at_client:
-    git:
-      url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: switch_atsign_bug
-      path: at_client
-
-  at_client_mobile:
-    git:
-        url: git@github.com:atsign-foundation/at_client_sdk.git
-        ref: switch_atsign_bug
-        path: at_client_mobile
-
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git

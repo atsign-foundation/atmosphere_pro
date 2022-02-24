@@ -202,7 +202,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
       );
     } else if (selectedOption == TextStrings().saveBackupKey) {
       BackupKeyWidget(
-        atClientService: AtClientManager.getInstance().atClient,
         atsign: AtClientManager.getInstance().atClient.getCurrentAtSign(),
       ).showBackupDialog(context);
     } else if (selectedOption !=
@@ -386,16 +385,18 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
             },
           ),
           Expanded(
-            child: Navigator(
-              key: NavService.nestedNavKey,
-              initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
-              onGenerateRoute: (routeSettings) {
-                var routeBuilders =
-                    DesktopSetupRoutes.routeBuilders(context, routeSettings);
-                return MaterialPageRoute(builder: (context) {
-                  return routeBuilders[routeSettings.name](context);
-                });
-              },
+            child: ClipRect(
+              child: Navigator(
+                key: NavService.nestedNavKey,
+                initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
+                onGenerateRoute: (routeSettings) {
+                  var routeBuilders =
+                      DesktopSetupRoutes.routeBuilders(context, routeSettings);
+                  return MaterialPageRoute(builder: (context) {
+                    return routeBuilders[routeSettings.name](context);
+                  });
+                },
+              ),
             ),
           ),
         ],
