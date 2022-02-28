@@ -142,7 +142,7 @@ class CommonUtilityFunctions {
                                   tempAtsignMap.addAll(atsignMap);
                                   tempAtsignMap.removeWhere(
                                       (key, value) => value == false);
-                                  int atsignsList =
+                                  int atsignsListLength =
                                       tempAtsignMap.keys.toList().length;
                                   if (tempAtsignMap.keys.toList().isEmpty) {
                                     isSelectAtsign = true;
@@ -153,7 +153,7 @@ class CommonUtilityFunctions {
                                       await _resetDevice(
                                           tempAtsignMap.keys.toList());
                                       await _onboardNextAtsign();
-                                    }, 'Remove ${atsignsList} @sign${atsignsList > 1 ? 's' : ''} from this device?');
+                                    }, 'Remove ${atsignsListLength} @sign${atsignsListLength > 1 ? 's' : ''} from this device?');
                                   }
                                 },
                                 child: Text('Remove',
