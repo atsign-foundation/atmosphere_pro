@@ -5,6 +5,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -52,7 +53,7 @@ class CommonUtilityFunctions {
     for (String atsign in atsignsList) {
       atsignMap[atsign] = false;
     }
-    showDialog(
+    await showDialog(
         barrierDismissible: true,
         context: NavService.navKey.currentContext,
         builder: (BuildContext context) {
@@ -141,14 +142,18 @@ class CommonUtilityFunctions {
                                   tempAtsignMap.addAll(atsignMap);
                                   tempAtsignMap.removeWhere(
                                       (key, value) => value == false);
+                                  int atsignsListLength =
+                                      tempAtsignMap.keys.toList().length;
                                   if (tempAtsignMap.keys.toList().isEmpty) {
                                     isSelectAtsign = true;
                                     stateSet(() {});
                                   } else {
-                                    isSelectAtsign = false;
-                                    await _resetDevice(
-                                        tempAtsignMap.keys.toList());
-                                    await _onboardNextAtsign();
+                                    showConfirmationDialog(() async {
+                                      isSelectAtsign = false;
+                                      await _resetDevice(
+                                          tempAtsignMap.keys.toList());
+                                      await _onboardNextAtsign();
+                                    }, 'Remove ${atsignsListLength} @sign${atsignsListLength > 1 ? 's' : ''} from this device?');
                                   }
                                 },
                                 child: Text('Remove',
@@ -296,5 +301,18 @@ class CommonUtilityFunctions {
     }
 
     return image;
+  }
+
+  showConfirmationDialog(Function onSuccess, String title) {
+    showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            content: ConfirmationDialog(title, onSuccess),
+          );
+        });
   }
 }
