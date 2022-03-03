@@ -135,14 +135,14 @@ class _DesktopHomeState extends State<DesktopHome> {
                       height: 28,
                     ),
                     Text(
-                      'File transfer.',
+                      '100% Encrypted',
                       style: CustomTextStyles.desktopBlackPlayfairDisplay26,
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "It's safe!",
+                      "File Transfer",
                       style: CustomTextStyles.desktopBlackPlayfairDisplay26,
                     ),
                     Spacer(),
@@ -212,11 +212,11 @@ class _DesktopHomeState extends State<DesktopHome> {
                     ),
                     Spacer(),
                     Text(
-                      '@mosphere',
+                      '@mosphere Pro',
                       style: CustomTextStyles.blackBold(size: 14),
                     ),
                     Text(
-                      'The @company Copyrights',
+                      '© 2022 | The @ Company',
                       style: CustomTextStyles.secondaryRegular14,
                     ),
                   ],
