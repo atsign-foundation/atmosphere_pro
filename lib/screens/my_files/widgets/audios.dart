@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.da
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +67,10 @@ class _AudiosState extends State<Audios> {
                               double.parse(provider.receivedAudio[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)} Kb'
-                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)} Mb',
+                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)} ' +
+                                      TextStrings().kb
+                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)} ' +
+                                      TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

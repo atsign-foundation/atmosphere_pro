@@ -11,6 +11,10 @@ class TextStrings {
   String homeDescriptionSub = 'From anywhere to everywhere!';
   String appName = '@mosphere pro';
   String copyRight = '© 2022 The @ Company';
+  String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
+  String homeHassleFree = 'Hassle free.\n';
+  String homeWeWillSetupAccount = 'We will set up your account right away.';
+  String loggingIn = 'Logging in';
 
   // onboarding flow texts
   String saveKeyTitle = 'Save your Private Key';
@@ -28,8 +32,13 @@ class TextStrings {
   String welcomeContactPlaceholder = '@sign';
   String welcomeFilePlaceholder = 'Select file to transfer';
   String welcomeAddFilePlaceholder = 'Add file to transfer';
+  String sendingFiles = 'Sending file ...';
+  String oopsSomethingWentWrong = 'Oops! something went wrong';
+  String hello = 'hello';
+  String reset = 'Reset';
 
   //sidebar menu texts
+  String sidebarHome = 'Home';
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked @Signs';
@@ -46,6 +55,12 @@ class TextStrings {
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign(s)';
 
+  String atSign = '@sign';
+  String switchingAtSign = 'Switching atsign...';
+  String deleteDataMessage =
+      'Are you sure you want to delete all data associated with';
+  String typeAtsignAbove = 'Type the @sign above to proceed';
+  String actionCannotUndone = "Caution: this action can't be undone";
   //FAQs texts
   String faqs = 'FAQ';
 
@@ -68,6 +83,7 @@ class TextStrings {
   String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
   String buttonDismiss = 'DISMISS';
+  String ok = 'Ok';
 
   //history screen texts
   String sent = 'Sent';
@@ -79,9 +95,23 @@ class TextStrings {
   String seeFiles = 'See Files';
   String hideFiles = 'Hide Files';
 
+  String history = 'History';
+  String noFilesSent = 'No files sent';
+  String noFilesRecieved = 'No files received';
+
+  // sent file list tile texts
+  String files = 'Files';
+  String kb = 'Kb';
+  String mb = 'Mb';
+  String deliveredTo = 'Delivered to';
+
+  // recieve file list tile texts
+  String video = 'Video';
+
   //receive files texts
   String blockUser = 'Block User';
   String receiverNotification = 'Receivers Notification';
+  String wantToSendFile = ' wants to send you a file?';
 
   //add contact texts
   String addContactHeading =
@@ -98,6 +128,7 @@ class TextStrings {
   String audio = 'Audio';
   String apk = 'APK';
   String documents = 'Documents';
+  String openFileLocation = 'Open file location';
 
   // trusted sender screens
   String trustedSenders = 'Trusted Senders';
@@ -105,7 +136,9 @@ class TextStrings {
   String noTrustedSenders = 'No Trusted Senders!';
   String addTrustedSender = 'Would you like to add people?';
   String removeTrustedSender =
-      "Are you sure you want to remove from Trusted senders' list?";
+      "Are you sure you want to remove from Trusted sender's list?";
+  String removeGroupMember = "Are you sure you want to remove from Group ?";
+
   // my groups
   String groups = 'Groups';
   String noGroups = 'No Groups';
@@ -162,6 +195,24 @@ class TextStrings {
   String fileReceived = 'File received';
   String fileSent = 'File sent';
   String expired = 'Expired';
+
+  String selectFile = 'Select a File';
+
+  // downloads folder text
+  String atmosphereDownloadFolder = 'Atmosphere download folder';
+
+  // private key qrcode generator
+  String atsignRequired = 'An @sign is required.';
+
+  // transfer overlapping
+  String and = 'and';
+  String other = 'other';
+  String others = 'others';
+  // desktop text constants
+  String addNewAtsign = 'add_new_atsign';
+  String saveBackupKey = 'save_backup_key';
+  String contactSelectionConfirmation =
+      'Selected contacts will not be added , confirm?';
 
   static final String resetButton = 'Reset';
   static const String resetDescription =

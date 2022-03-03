@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -14,14 +15,19 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class RemoveTrustedContact extends StatefulWidget {
-  final String image;
+  final String image, title;
   final String name;
   final String atSign;
   final AtContact contact;
 
   const RemoveTrustedContact(
-      {Key key, this.image, this.name, this.atSign, this.contact})
-      : super(key: key);
+    this.title, {
+    Key key,
+    this.image,
+    this.name,
+    this.atSign,
+    this.contact,
+  }) : super(key: key);
 
   @override
   _RemoveTrustedContactState createState() => _RemoveTrustedContactState();
@@ -49,15 +55,15 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         children: [
           Expanded(
             child: Text(
-              pro_text_strings.TextStrings().removeTrustedSender,
-              style: CustomTextStyles.secondaryRegular16,
+              widget.title,
+              style: CustomTextStyles.black16,
               textAlign: TextAlign.center,
             ),
           ),
         ],
       ),
       content: Container(
-        height: 300.toHeight,
+        height: 260.toHeight,
         child: Column(
           children: [
             Row(
@@ -73,6 +79,9 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                                 widget.contact.tags['name'] != null
                             ? widget.contact.tags['name']
                             : widget.contact.atSign,
+                        size: 30,
+                        maxSize: (80.0 - 30.0),
+                        minSize: 50,
                       )
               ],
             ),
@@ -123,7 +132,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                         ? CircularProgressIndicator()
                         : CustomButton(
                             isOrange: true,
-                            buttonText: 'Yes',
+                            buttonText: TextStrings().yes,
                             width: 200.toWidth,
                             onPressed: () async {
                               await Provider.of<TrustedContactProvider>(context,
@@ -142,7 +151,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                         .trustedContactOperation)
                     ? SizedBox()
                     : CustomButton(
-                        buttonText: 'No',
+                        buttonText: TextStrings().no,
                         isInverted: true,
                         onPressed: () {
                           Provider.of<TrustedContactProvider>(context,

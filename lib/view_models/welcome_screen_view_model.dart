@@ -13,6 +13,7 @@ class WelcomeScreenProvider extends BaseModel {
   String autoAcceptToggle = 'toogle_auto_accept';
   bool isAutoAccept = false, isExpanded = false, scrollToBottom = false;
   bool hasSelectedContactsChanged = false, authenticating = false;
+  bool isSelectionItemChanged = false;
 
   updateSelectedContacts(List<GroupContactsModel> updatedList) {
     try {

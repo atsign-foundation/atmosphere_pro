@@ -2,13 +2,14 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideBarItem extends StatelessWidget {
   final String image;
   final String title;
   final String routeName;
   final Map<String, dynamic> arguments;
-  final bool showIconOnly;
+  final bool showIconOnly, isDesktop;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
   bool isScale;
@@ -20,7 +21,8 @@ class SideBarItem extends StatelessWidget {
       this.arguments,
       this.showIconOnly = false,
       this.isScale = false,
-      this.displayColor = ColorConstants.fadedText})
+      this.displayColor = ColorConstants.fadedText,
+      this.isDesktop = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class SideBarItem extends StatelessWidget {
                 color: displayColor,
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: isDesktop ? 20 : 10),
             !showIconOnly
                 ? Expanded(
                     child: Text(
@@ -66,5 +68,17 @@ class SideBarItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

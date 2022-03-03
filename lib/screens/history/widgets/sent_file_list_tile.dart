@@ -221,8 +221,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       Text(
                         double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} Kb '
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                            ? '${fileSize} ' + TextStrings().kb
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                TextStrings().mb,
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],
@@ -426,8 +427,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                       .size
                                                       .toString()) <=
                                                   1024
-                                              ? '${filesList[index].size} Kb '
-                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                              ? '${filesList[index].size} ' +
+                                                  TextStrings().kb
+                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                                  TextStrings().mb,
                                           style: CustomTextStyles
                                               .secondaryRegular12,
                                         ),

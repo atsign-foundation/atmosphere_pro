@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -41,7 +43,7 @@ class FileTransferProvider extends BaseModel {
   List<PlatformFile> selectedFiles = [];
   List<FileTransferStatus> transferStatus = [];
   Map<String, List<Map<String, bool>>> transferStatusMap = {};
-  bool sentStatus = false;
+  bool sentStatus = false, isFileSending = false;
   Uint8List videoThumbnail;
   double totalSize = 0;
   bool clearList = false;
@@ -357,10 +359,11 @@ class FileTransferProvider extends BaseModel {
       filename: _filesList[_index].name,
     );
 
-    var _atclient = BackendService.getInstance().atClientInstance;
+    var _atclient = AtClientManager.getInstance().atClient;
     try {
       File file =
-          File(MixedConstants.SENT_FILE_DIRECTORY + _filesList[_index].name);
+          File(MixedConstants.DESKTOP_SENT_DIR + _filesList[_index].name);
+
       bool fileExists = await file.exists();
       if (!fileExists) {
         throw ('file not found');
@@ -416,7 +419,12 @@ class FileTransferProvider extends BaseModel {
 
   reSendFileNotification(FileHistory fileHistory, String atsign) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
-    var _atclient = BackendService.getInstance().atClientInstance;
+    var _atclient = AtClientManager.getInstance().atClient;
+
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .updateSendingNotificationStatus(
+            fileHistory.fileTransferObject.transferId, atsign, true);
 
     Provider.of<HistoryProvider>(NavService.navKey.currentContext,
             listen: false)
@@ -461,6 +469,11 @@ class FileTransferProvider extends BaseModel {
 
   void resetSelectedFilesStatus() {
     hasSelectedFilesChanged = false;
+  }
+
+  updateFileSendingStatus(bool val) {
+    isFileSending = val;
+    notifyListeners();
   }
 }
 

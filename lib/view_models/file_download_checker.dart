@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 import 'base_model.dart';
@@ -26,7 +26,8 @@ class FileDownloadChecker extends BaseModel {
       var _isDownloadAvailable = _checkForDownloadAvailability();
 
       if (_isDownloadAvailable) {
-        var _isFilesAvailableOffline = await _isFilesAlreadyDownloaded();
+        var _isFilesAvailableOffline =
+            await _isFilesAlreadyDownloaded(value.sender);
         if (!_isFilesAvailableOffline) {
           undownloadedFilesExist = true;
           notifyListeners();
@@ -60,9 +61,10 @@ class FileDownloadChecker extends BaseModel {
     return _isDownloadAvailable;
   }
 
-  Future<bool> _isFilesAlreadyDownloaded() async {
+  Future<bool> _isFilesAlreadyDownloaded(String sender) async {
     for (var element in receivedHistory.files) {
-      String path = BackendService.getInstance().downloadDirectory.path +
+      String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
+          '/${sender}' +
           '/${element.name}';
       File test = File(path);
       bool fileExists = await test.exists();

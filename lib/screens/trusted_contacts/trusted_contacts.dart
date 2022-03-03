@@ -168,6 +168,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                             barrierDismissible: false,
                                             builder: (context) =>
                                                 RemoveTrustedContact(
+                                              pro_text_strings.TextStrings()
+                                                  .removeTrustedSender,
                                               contact: provider
                                                   .fetchedTrustedContact[index],
                                             ),
@@ -224,6 +226,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                             barrierDismissible: false,
                                             builder: (context) =>
                                                 RemoveTrustedContact(
+                                              pro_text_strings.TextStrings()
+                                                  .removeTrustedSender,
                                               contact: provider
                                                   .fetchedTrustedContact[index],
                                             ),

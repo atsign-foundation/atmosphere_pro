@@ -46,4 +46,14 @@ class ImageConstants {
   static String colin = '$_basePath/colin.jpg';
   static String kevin = '$_basePath/kevin.jpg';
   static String filePreview = '$_basePath/filePreview.jpg';
+
+  // Desktop
+  static String welcomeDesktop = '$_basePath/welcome_screen.png';
+  static String groupPhotoDesktop = '$_basePath/group_photo.png';
+  static String homeBgDesktop = '$_basePath/home_bg.png';
+  static String homeIcon = '$_basePath/home_icon.png';
+
+  static String homeCaraousel1 = '$_basePath/home_caraousel_1.png';
+  static String homeCaraousel2 = '$_basePath/home_caraousel_2.png';
+  static String homeCaraousel3 = '$_basePath/home_caraousel_3.png';
 }

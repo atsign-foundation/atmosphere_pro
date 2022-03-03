@@ -39,6 +39,22 @@ class LoadingDialog {
     }
   }
 
+  showTextLoader(String text, {TextStyle style}) {
+    if (!_showing) {
+      _showing = true;
+      NavService.navKey.currentState
+          .push(CustomPopupRoutes(
+              pageBuilder: (_, __, ___) {
+                print("building loader");
+                return Center(
+                  child: onlyText(text, style: style),
+                );
+              },
+              barrierDismissible: false))
+          .then((_) {});
+    }
+  }
+
   onlyText(String text, {TextStyle style}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +65,7 @@ class LoadingDialog {
             textScaleFactor: 1,
             style: style ??
                 TextStyle(
-                    color: ColorConstants.MILD_GREY,
+                    color: ColorConstants.mildGrey,
                     fontSize: 20.toFont,
                     fontWeight: FontWeight.w400,
                     decoration: TextDecoration.none),

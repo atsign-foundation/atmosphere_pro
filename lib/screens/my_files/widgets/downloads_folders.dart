@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
@@ -10,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 Future<void> openDownloadsFolder(BuildContext context) async {
   if (Platform.isAndroid) {
     await FilesystemPicker.open(
-      title: 'Atmosphere download folder',
+      title: TextStrings().atmosphereDownloadFolder,
       context: context,
       rootDirectory: BackendService.getInstance().downloadDirectory,
       fsType: FilesystemType.all,

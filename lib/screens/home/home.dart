@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
 
   storeApplicationDocumentsDirectory() async {
     var _dir;
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isWindows) {
       _dir = await getApplicationDocumentsDirectory();
     } else {
       _dir = await getExternalStorageDirectory();
@@ -314,7 +314,7 @@ class _HomeState extends State<Home> {
                             height: 20,
                           ),
                           Text(
-                            'Logging in',
+                            TextStrings().loggingIn,
                             style: CustomTextStyles.orangeMedium16,
                           )
                         ],

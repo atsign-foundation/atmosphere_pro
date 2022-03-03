@@ -5,6 +5,13 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_photos.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_unknowns.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_videos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
@@ -26,6 +33,10 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
 import 'package:provider/provider.dart';
+import 'package:at_client/src/service/notification_service.dart';
+import 'package:provider/provider.dart';
+
+import 'file_download_checker.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -48,6 +59,12 @@ class HistoryProvider extends BaseModel {
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
   bool isSyncedDataFetched = false;
+  String fileSearchText = '';
+  List<FilesDetail> sentPhotos,
+      sentVideos,
+      sentAudio,
+      sentApk,
+      sentDocument = [];
 
   List<FilesDetail> receivedPhotos,
       receivedVideos,
@@ -59,6 +76,9 @@ class HistoryProvider extends BaseModel {
   List<String> tabNames = ['Recents'];
 
   List<Widget> tabs = [Recents()];
+
+  List<FilesModel> receivedHistory, receivedAudioModel = [];
+  List<Widget> desktopTabs = [DesktopRecents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
   Map sendFileHistory = {'history': []};
@@ -194,9 +214,9 @@ class HistoryProvider extends BaseModel {
   // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
   /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
   getSentHistory() async {
+    sentHistory = [];
     setStatus(SENT_HISTORY, Status.Loading);
     try {
-      sentHistory = [];
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
@@ -373,6 +393,7 @@ class HistoryProvider extends BaseModel {
   }
 
   getReceivedHistory() async {
+    receivedHistoryLogs = [];
     setStatus(RECEIVED_HISTORY, Status.Loading);
     try {
       await getAllFileTransferData();
@@ -422,19 +443,6 @@ class HistoryProvider extends BaseModel {
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
   }
 
-  updateDownloadAcknowledgement(
-      DownloadAcknowledgement downloadAcknowledgement, String sharedBy) async {
-    var index = sentHistory.indexWhere((element) =>
-        element.fileDetails.key == downloadAcknowledgement.transferId);
-    if (index > -1) {
-      var i = sentHistory[index]
-          .sharedWith
-          .indexWhere((element) => element.atsign == sharedBy);
-      sentHistory[index].sharedWith[i].isFileDownloaded = true;
-      await updateFileHistoryDetail(sentHistory[index]);
-    }
-  }
-
   void _initBackendService() async {
     SystemChannels.lifecycle.setMessageHandler((msg) {
       print('set message handler');
@@ -467,14 +475,27 @@ class HistoryProvider extends BaseModel {
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
 
+  updateDownloadAcknowledgement(
+      DownloadAcknowledgement downloadAcknowledgement, String sharedBy) async {
+    var index = sentHistory.indexWhere((element) =>
+        element.fileDetails.key == downloadAcknowledgement.transferId);
+    if (index > -1) {
+      var i = sentHistory[index]
+          .sharedWith
+          .indexWhere((element) => element.atsign == sharedBy);
+      sentHistory[index].sharedWith[i].isFileDownloaded = true;
+      await updateFileHistoryDetail(sentHistory[index]);
+    }
+  }
+
   getAllFileTransferData() async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
     List<FileTransfer> tempReceivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
-        await backendService.atClientInstance.getKeys(
-      regex: MixedConstants.FILE_TRANSFER_KEY,
-    );
+        await AtClientManager.getInstance().atClient.getKeys(
+              regex: MixedConstants.FILE_TRANSFER_KEY,
+            );
 
     fileTransferResponse.retainWhere((element) =>
         !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
@@ -525,10 +546,17 @@ class HistoryProvider extends BaseModel {
       await Future.forEach(filesList, (fileData) async {
         await Future.forEach(fileData.files, (file) async {
           String fileExtension = file.name.split('.').last;
+          String filePath =
+              BackendService.getInstance().downloadDirectory.path +
+                  '/${file.name}';
+
+          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+            filePath =
+                '${MixedConstants.RECEIVED_FILE_DIRECTORY}/${fileData.sender}/${file.name}';
+          }
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
-            filePath: BackendService.getInstance().downloadDirectory.path +
-                '/${file.name}',
+            filePath: filePath,
             size: double.parse(file.size.toString()),
             date: fileData.date.toLocal().toString(),
             type: file.name.split('.').last,
@@ -635,44 +663,49 @@ class HistoryProvider extends BaseModel {
   }
 
   populateTabs() {
-    tabs = [Recents()];
+    bool isDesktop = false;
     tabNames = ['Recents'];
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      isDesktop = true;
+    }
+    tabs = [isDesktop ? DesktopRecents() : Recents()];
+
     try {
       setStatus(POPULATE_TABS, Status.Loading);
 
       if (receivedApk.isNotEmpty) {
         if (!tabs.contains(APK) || !tabs.contains(APK())) {
-          tabs.add(APK());
+          tabs.add(isDesktop ? DesktopAPK() : APK());
           tabNames.add('APK');
         }
       }
       if (receivedAudio.isNotEmpty) {
         if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
-          tabs.add(Audios());
+          tabs.add(isDesktop ? DesktopAudios() : Audios());
           tabNames.add('Audios');
         }
       }
       if (receivedDocument.isNotEmpty) {
         if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
-          tabs.add(Documents());
+          tabs.add(isDesktop ? DesktopDocuments() : Documents());
           tabNames.add('Documents');
         }
       }
       if (receivedPhotos.isNotEmpty) {
         if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
-          tabs.add(Photos());
+          tabs.add(isDesktop ? DesktopPhotos() : Photos());
           tabNames.add('Photos');
         }
       }
       if (receivedVideos.isNotEmpty) {
         if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
-          tabs.add(Videos());
+          tabs.add(isDesktop ? DesktopVideos() : Videos());
           tabNames.add('Videos');
         }
       }
       if (receivedUnknown.isNotEmpty) {
         if (!tabs.contains(Unknowns()) || !tabs.contains(Unknowns())) {
-          tabs.add(Unknowns());
+          tabs.add(isDesktop ? DesktopUnknowns() : Unknowns());
           tabNames.add('Unknowns');
         }
       }
@@ -828,8 +861,29 @@ class HistoryProvider extends BaseModel {
       }
       notifyListeners();
 
-      var files = await backendService.atClientInstance
-          .downloadFile(transferId, sharedBy);
+      var _downloadPath;
+
+      /// only do for desktop
+      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        _downloadPath =
+            '${MixedConstants.ApplicationDocumentsDirectory}/${sharedBy}';
+        BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
+      }
+
+      var files;
+      try {
+        files = await AtClientManager.getInstance().atClient.downloadFile(
+              transferId,
+              sharedBy,
+              downloadPath: _downloadPath,
+            );
+      } catch (e) {
+        print('Error in downloading $e');
+      }
+
+      await sortFiles(receivedHistoryLogs);
+      populateTabs();
+      print('audios: ${receivedAudio.length}');
       receivedHistoryLogs[index].isDownloading = false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
@@ -976,22 +1030,6 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  updateSendingNotificationStatus(
-      String transferId, String atsign, bool isSending) {
-    var index = sentHistory.indexWhere(
-        (element) => element.fileTransferObject.transferId == transferId);
-    if (index != -1) {
-      var atsignIndex = sentHistory[index]
-          .sharedWith
-          .indexWhere((element) => element.atsign == atsign);
-      if (atsignIndex != -1) {
-        sentHistory[index].sharedWith[atsignIndex].isSendingNotification =
-            isSending;
-      }
-    }
-    notifyListeners();
-  }
-
   Future<bool> sendFileDownloadAcknowledgement(
       FileTransfer fileTransfer) async {
     var downloadAcknowledgement =
@@ -1022,6 +1060,27 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       return false;
     }
+  }
+
+  updateSendingNotificationStatus(
+      String transferId, String atsign, bool isSending) {
+    var index = sentHistory.indexWhere(
+        (element) => element.fileTransferObject.transferId == transferId);
+    if (index != -1) {
+      var atsignIndex = sentHistory[index]
+          .sharedWith
+          .indexWhere((element) => element.atsign == atsign);
+      if (atsignIndex != -1) {
+        sentHistory[index].sharedWith[atsignIndex].isSendingNotification =
+            isSending;
+      }
+    }
+    notifyListeners();
+  }
+
+  setFileSearchText(String str) {
+    fileSearchText = str;
+    notifyListeners();
   }
 
   bool compareAtSign(String atsign1, String atsign2) {
