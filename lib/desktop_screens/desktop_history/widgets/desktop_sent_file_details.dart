@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +39,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
 
   getFutureBuilders() {
     widget.selectedFileData.fileDetails.files.forEach((element) {
-      _futureBuilder[element.name] = CommonFunctions()
+      _futureBuilder[element.name] = CommonUtilityFunctions()
           .isFilePresent(MixedConstants.SENT_FILE_DIRECTORY + element.name);
     });
   }
@@ -129,18 +129,20 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                                 await OpenFile.open(filePath);
                                               }
                                             },
-                                            child: CommonFunctions().thumbnail(
-                                                widget
-                                                    .selectedFileData
-                                                    .fileDetails
-                                                    .files[index]
-                                                    .name
-                                                    ?.split('.')
-                                                    ?.last,
-                                                MixedConstants
-                                                        .DESKTOP_SENT_DIR +
-                                                    '/${widget.selectedFileData.fileDetails.files[index].name} ',
-                                                isFilePresent: snapshot.data),
+                                            child: CommonUtilityFunctions()
+                                                .thumbnail(
+                                                    widget
+                                                        .selectedFileData
+                                                        .fileDetails
+                                                        .files[index]
+                                                        .name
+                                                        ?.split('.')
+                                                        ?.last,
+                                                    MixedConstants
+                                                            .DESKTOP_SENT_DIR +
+                                                        '/${widget.selectedFileData.fileDetails.files[index].name} ',
+                                                    isFilePresent:
+                                                        snapshot.data),
                                           )
                                         : SizedBox();
                                   })),

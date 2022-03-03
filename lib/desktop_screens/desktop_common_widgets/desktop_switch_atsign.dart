@@ -4,7 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -36,7 +36,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   }
 
   getAtsignDetails() {
-    atsignName = CommonFunctions().getCachedContactName(widget.atsign);
+    atsignName = CommonUtilityFunctions().getCachedContactName(widget.atsign);
     setState(() {});
   }
 
@@ -54,7 +54,8 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
 
   Widget _contactRow(String _atsign, String _name,
       {bool isCurrentAtsign = false}) {
-    Uint8List image = CommonFunctions().getCachedContactImage(widget.atsign);
+    Uint8List image =
+        CommonUtilityFunctions().getCachedContactImage(widget.atsign);
 
     return Row(
       children: <Widget>[
@@ -114,7 +115,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   onTap: () {
                     Navigator.of(NavService.navKey.currentContext)
                         .pop(); // this is to close the popup menu button
-                    CommonFunctions().deleteAtSign(widget.atsign);
+                    CommonUtilityFunctions().deleteAtSign(widget.atsign);
                   },
                   child: Icon(Icons.delete))),
         )

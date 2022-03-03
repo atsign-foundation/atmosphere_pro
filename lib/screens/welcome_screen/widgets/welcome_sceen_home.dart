@@ -199,7 +199,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                       child: CommonButton(
                                         TextStrings().buttonResend,
                                         reAttemptSendingFiles,
-                                        buttonColor: Colors.amber[800],
+                                        color: Colors.amber[800],
                                       )),
                                   (_welcomeScreenProvider
                                               .hasSelectedContactsChanged ||

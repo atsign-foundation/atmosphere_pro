@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +62,7 @@ class _DesktopReceivedFileDetailsState
 
   getFutureBuilders() {
     widget.fileTransfer.files.forEach((element) {
-      _futureBuilder[element.name] = CommonFunctions().isFilePresent(
+      _futureBuilder[element.name] = CommonUtilityFunctions().isFilePresent(
         getDownloadDirectory(element.name),
       );
     });
@@ -230,18 +230,19 @@ class _DesktopReceivedFileDetailsState
                                                 .fileTransfer.files[index].name,
                                           );
                                         },
-                                        child: CommonFunctions().thumbnail(
-                                            widget
-                                                .fileTransfer.files[index].name
-                                                ?.split('.')
-                                                ?.last,
-                                            getDownloadDirectory(widget
-                                                .fileTransfer
-                                                .files[index]
-                                                .name),
-                                            isFilePresent: isOverwrite
-                                                ? false
-                                                : snapshot.data),
+                                        child: CommonUtilityFunctions()
+                                            .thumbnail(
+                                                widget.fileTransfer.files[index]
+                                                    .name
+                                                    ?.split('.')
+                                                    ?.last,
+                                                getDownloadDirectory(widget
+                                                    .fileTransfer
+                                                    .files[index]
+                                                    .name),
+                                                isFilePresent: isOverwrite
+                                                    ? false
+                                                    : snapshot.data),
                                       )
                                     : SizedBox();
                               }),

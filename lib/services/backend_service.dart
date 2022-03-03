@@ -188,81 +188,67 @@ class BackendService {
         -1) {
       return;
     }
+
     if (notificationKey
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var value = response.value;
 
-      if (notificationKey
-          .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
-        var value = response.value;
+      var decryptedMessage = await atClientInstance.encryptionService
+          .decrypt(value, fromAtSign)
+          .catchError((e) {
+        print("error in decrypting: $e");
+        showToast(e.toString());
+      });
+      DownloadAcknowledgement downloadAcknowledgement =
+          DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
-        if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY) &&
-            !notificationKey
-                .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
-          var value = response.value;
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      return;
+    }
 
-          var decryptedMessage = await AtClientManager.getInstance()
-              .atClient
-              .encryptionService
-              .decrypt(value, fromAtSign)
-              .catchError((e) {
-            print("error in decrypting: $e");
-            showToast(e.toString());
-          });
-          DownloadAcknowledgement downloadAcknowledgement =
-              DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
+    if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY) &&
+        !notificationKey
+            .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
+      var atKey = notificationKey.split(':')[1];
+      var value = response.value;
 
-          await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-                  listen: false)
-              .updateDownloadAcknowledgement(
-                  downloadAcknowledgement, fromAtSign);
-          return;
-        }
+      //TODO: only for testing
+      await sendNotificationAck(notificationKey, fromAtSign);
 
-        if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY) &&
-            !notificationKey
-                .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
-          var atKey = notificationKey.split(':')[1];
-          var value = response.value;
-
-          //TODO: only for testing
-          await sendNotificationAck(notificationKey, fromAtSign);
-
-          var decryptedMessage = await atClientInstance.encryptionService
-              .decrypt(value, fromAtSign)
+      var decryptedMessage =
+          await atClientInstance.encryptionService.decrypt(value, fromAtSign)
               // ignore: return_of_invalid_type_from_catch_error
               .catchError((e) {
-            print("error in decrypting: $e");
-            //TODO: only for closed testing purpose , we are showing error dialog
-            // should be removed before general release.
-            showToast(e.toString());
-          });
+        print("error in decrypting: $e");
+        //TODO: only for closed testing purpose , we are showing error dialog
+        // should be removed before general release.
+        showToast(e.toString());
+      });
 
-          if (decryptedMessage != null) {
-            await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-                    listen: false)
-                .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
+      if (decryptedMessage != null) {
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+                listen: false)
+            .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
 
-            await Provider.of<FileDownloadChecker>(
-                    NavService.navKey.currentContext,
-                    listen: false)
-                .checkForUndownloadedFiles();
+        await Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+                listen: false)
+            .checkForUndownloadedFiles();
 
-            BuildContext context = NavService.navKey.currentContext;
-            bool trustedSender = false;
-            TrustedContactProvider trustedContactProvider =
-                Provider.of<TrustedContactProvider>(context, listen: false);
+        BuildContext context = NavService.navKey.currentContext;
+        bool trustedSender = false;
+        TrustedContactProvider trustedContactProvider =
+            Provider.of<TrustedContactProvider>(context, listen: false);
 
-            trustedContactProvider.trustedContacts.forEach((element) {
-              if (element.atSign == fromAtSign) {
-                trustedSender = true;
-              }
-            });
-
-            if (trustedSender) {
-              await downloadFiles(context, atKey.split('.').first, fromAtSign);
-            }
+        trustedContactProvider.trustedContacts.forEach((element) {
+          if (element.atSign == fromAtSign) {
+            trustedSender = true;
           }
+        });
+
+        if (trustedSender) {
+          await downloadFiles(context, atKey.split('.').first, fromAtSign);
         }
       }
     }
@@ -498,7 +484,7 @@ class BackendService {
 
     // start monitor and package initializations.
     await startMonitor();
-    _initLocalNotification();
+    initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
@@ -520,7 +506,7 @@ class BackendService {
   String state;
   LocalNotificationService _notificationService;
 
-  void _initLocalNotification() async {
+  void initLocalNotification() async {
     _notificationService = LocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);

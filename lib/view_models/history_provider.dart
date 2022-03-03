@@ -194,6 +194,7 @@ class HistoryProvider extends BaseModel {
             fileHistory.toJson(),
           ));
       if (res) {
+        individualSentFileId[fileHistory.fileDetails.key] = true;
         isEdit
             ? updateFileEntryInSentHistory(fileHistory)
             : sentHistory.insert(0, fileHistory);
@@ -529,7 +530,6 @@ class HistoryProvider extends BaseModel {
     });
 
     receivedHistoryLogs = tempReceivedHistoryLogs;
-
     setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 
@@ -668,6 +668,7 @@ class HistoryProvider extends BaseModel {
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       isDesktop = true;
     }
+    tabs = [];
     tabs = [isDesktop ? DesktopRecents() : Recents()];
 
     try {

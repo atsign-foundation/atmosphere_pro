@@ -7,16 +7,15 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'dart:math' as math;
@@ -24,14 +23,10 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 class DesktopReceivedFilesListTile extends StatefulWidget {
   final FileTransfer receivedHistory;
-  final ContactProvider contactProvider;
   final bool isSelected;
 
   const DesktopReceivedFilesListTile(
-      {Key key,
-      this.receivedHistory,
-      this.contactProvider,
-      this.isSelected = false})
+      {Key key, this.receivedHistory, this.isSelected = false})
       : super(key: key);
   @override
   _DesktopReceivedFilesListTileState createState() =>
@@ -71,7 +66,7 @@ class _DesktopReceivedFilesListTileState
     AtContact contact;
 
     if (contactList[0] != null) {
-      contactName = CommonFunctions().getContactName(contactList[0]);
+      contactName = CommonUtilityFunctions().getContactName(contactList[0]);
       contact = checkForCachedContactDetail(contactList[0]);
     }
     if (contact != null) {

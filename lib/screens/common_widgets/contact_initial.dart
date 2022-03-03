@@ -29,12 +29,6 @@ class ContactInitial extends StatelessWidget {
     return Container(
       height: size.toFont,
       width: size.toFont,
-      constraints: BoxConstraints(
-        minHeight: minSize ?? double.infinity,
-        minWidth: minSize ?? double.infinity,
-        maxHeight: maxSize ?? double.infinity,
-        maxWidth: maxSize ?? double.infinity,
-      ),
       decoration: BoxDecoration(
         color: background ?? ContactInitialsColors.getColor(initials),
         // borderRadius: BorderRadius.circular(size.toWidth),

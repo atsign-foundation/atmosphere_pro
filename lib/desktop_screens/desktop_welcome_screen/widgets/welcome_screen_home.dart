@@ -3,14 +3,14 @@ import 'package:at_contacts_group_flutter/screens/group_contact_view/group_conta
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_contacts.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_selected_files.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -245,7 +245,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             },
             onBackArrowTap: (selectedGroupContacts) {
               if (selectedGroupContacts.length > 0) {
-                CommonFunctions().shownConfirmationDialog(
+                CommonUtilityFunctions().shownConfirmationDialog(
                     TextStrings().contactSelectionConfirmation, () {
                   Navigator.of(NavService.navKey.currentContext).pop();
                   setState(() {

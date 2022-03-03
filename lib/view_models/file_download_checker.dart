@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -63,9 +64,15 @@ class FileDownloadChecker extends BaseModel {
 
   Future<bool> _isFilesAlreadyDownloaded(String sender) async {
     for (var element in receivedHistory.files) {
-      String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
-          '/${sender}' +
-          '/${element.name}';
+      String path;
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        path = MixedConstants.RECEIVED_FILE_DIRECTORY +
+            '/${sender}' +
+            '/${element.name}';
+      } else {
+        path = BackendService.getInstance().downloadDirectory.path +
+            '/${element.name}';
+      }
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {

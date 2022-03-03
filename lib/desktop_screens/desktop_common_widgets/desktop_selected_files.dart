@@ -1,6 +1,6 @@
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -103,7 +103,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                                 fontSize: 14.toFont,
                               ),
                             ),
-                            leading: CommonFunctions().thumbnail(
+                            leading: CommonUtilityFunctions().thumbnail(
                                 provider.selectedFiles[index].extension
                                     .toString(),
                                 provider.selectedFiles[index].path.toString()),
