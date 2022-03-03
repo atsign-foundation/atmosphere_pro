@@ -127,21 +127,17 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
       return;
     }
 
-    setState(() {
-      isDownloading = true;
-      isDownloadComplete = false;
-    });
+    if (mounted) {
+      setState(() {
+        isDownloading = true;
+        isDownloadComplete = false;
+      });
+    }
 
     var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     List<FileTransfer> fileTransfer = getValidFileTransfers();
 
     for (int i = 0; i < fileTransfer.length; i++) {
-      if (mounted) {
-        setState(() {
-          downloadProgress = (i / (fileTransfer.length - 1));
-        });
-      }
-
       var atsignDownloadPath = downloadFolder + '/' + fileTransfer[i].sender;
 
       await checkIfFolderExists(atsignDownloadPath);
@@ -158,11 +154,22 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
           ),
         );
       }
+
+      // increasing progress indicator percentage.
+      if (mounted) {
+        setState(() {
+          downloadProgress = ((i + 1) / fileTransfer.length);
+        });
+      }
     }
-    setState(() {
-      isDownloading = false;
-      isDownloadComplete = true;
-    });
+
+    if (mounted) {
+      setState(() {
+        isDownloading = false;
+        isDownloadComplete = true;
+        downloadProgress = 0;
+      });
+    }
   }
 
   List<FileTransfer> getValidFileTransfers() {
