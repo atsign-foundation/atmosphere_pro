@@ -603,8 +603,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     //  file share failed for any receiver
     var _sharedWith = widget.sentHistory.sharedWith ?? [];
     for (ShareStatus sharedWithAtsign in _sharedWith) {
-      if (sharedWithAtsign.isNotificationSend != null &&
-          !sharedWithAtsign.isNotificationSend) {
+      if ((sharedWithAtsign.isNotificationSend != null &&
+              !sharedWithAtsign.isNotificationSend) &&
+          (sharedWithAtsign.isFileDownloaded != null &&
+              !sharedWithAtsign.isFileDownloaded)) {
         return retryButton(fileData, index, FileOperation.RESEND_NOTIFICATION);
       }
     }

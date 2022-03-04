@@ -190,7 +190,7 @@ class BackendService {
     }
 
     if (notificationKey
-        .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
+        .contains(MixedConstants.FILE_DOWNLOAD_ACKNOWLEDGEMENT)) {
       var value = response.value;
 
       var decryptedMessage = await atClientInstance.encryptionService
@@ -210,11 +210,11 @@ class BackendService {
 
     if (notificationKey.contains(MixedConstants.FILE_TRANSFER_KEY) &&
         !notificationKey
-            .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
+            .contains(MixedConstants.FILE_DOWNLOAD_ACKNOWLEDGEMENT)) {
       var atKey = notificationKey.split(':')[1];
       var value = response.value;
 
-      //TODO: only for testing
+      //sending notification receive acknowledgement.
       await sendNotificationAck(notificationKey, fromAtSign);
 
       var decryptedMessage =
@@ -252,6 +252,24 @@ class BackendService {
         }
       }
     }
+
+    if (notificationKey
+        .contains(MixedConstants.FILE_RECEIVED_ACKNOWLEDGEMENT)) {
+      var value = response.value;
+
+      var decryptedMessage =
+          await atClientInstance.encryptionService.decrypt(value, fromAtSign)
+              // ignore: return_of_invalid_type_from_catch_error
+              .catchError((e) {
+        print("error in decrypting: $e");
+        showToast(e.toString());
+      });
+
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .onFileReceiveAcknowledgement(decryptedMessage, fromAtSign);
+      return;
+    }
   }
 
   sendNotificationAck(String key, String fromAtsign) async {
@@ -259,21 +277,23 @@ class BackendService {
       String transferId = key.split(':')[1];
       transferId = transferId.split('@')[0];
       transferId = transferId.replaceAll('.mospherepro', '');
-      transferId = transferId.replaceAll('file_transfer_', '');
+      String fileTransferKey =
+          transferId; // e.g. file_transfer_a3e03c57-1d9b-4dd4-8b73-16bc7413bbef
+      transferId = transferId.replaceAll(
+          'file_transfer_', ''); // e.g. a3e03c57-1d9b-4dd4-8b73-16bc7413bbef
       AtKey atKey = AtKey()
-        ..key = 'receive_ack_$transferId'
+        ..key = MixedConstants.FILE_RECEIVED_ACKNOWLEDGEMENT + transferId
         ..sharedWith = fromAtsign
         ..metadata = Metadata()
         ..metadata.ttr = -1
         ..metadata.ttl = 518400000;
 
-      var notificationResult =
-          await AtClientManager.getInstance().notificationService.notify(
-                NotificationParams.forUpdate(
-                  atKey,
-                  value: 'receive_ack_$key',
-                ),
-              );
+      await AtClientManager.getInstance().notificationService.notify(
+            NotificationParams.forUpdate(
+              atKey,
+              value: fileTransferKey,
+            ),
+          );
     } catch (e) {
       print('error in ack: $e');
     }

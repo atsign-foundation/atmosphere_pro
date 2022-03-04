@@ -359,7 +359,7 @@ class HistoryProvider extends BaseModel {
     setStatus(DOWNLOAD_ACK, Status.Loading);
     var atKeys = await AtClientManager.getInstance()
         .atClient
-        .getAtKeys(regex: MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT);
+        .getAtKeys(regex: MixedConstants.FILE_DOWNLOAD_ACKNOWLEDGEMENT);
     atKeys.retainWhere((element) => !compareAtSign(element.sharedBy,
         AtClientManager.getInstance().atClient.getCurrentAtSign()));
 
@@ -499,7 +499,7 @@ class HistoryProvider extends BaseModel {
             );
 
     fileTransferResponse.retainWhere((element) =>
-        !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
+        !element.contains(MixedConstants.FILE_DOWNLOAD_ACKNOWLEDGEMENT));
 
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
@@ -1040,7 +1040,7 @@ class HistoryProvider extends BaseModel {
       ..metadata = Metadata()
       ..metadata.ttr = -1
       ..metadata.ccd = true
-      ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key
+      ..key = MixedConstants.FILE_DOWNLOAD_ACKNOWLEDGEMENT + fileTransfer.key
       ..metadata.ttl = 518400000
       ..sharedWith = fileTransfer.sender;
     try {
@@ -1160,6 +1160,27 @@ class HistoryProvider extends BaseModel {
       notifyListeners();
     }
     return res;
+  }
+
+  // updating sent item status.
+  // when notification on sender's side shows failed, but actually received.
+  onFileReceiveAcknowledgement(String transferId, String fromAtsign) async {
+    int index = sentHistory.indexWhere(
+      (element) => element?.fileDetails?.key?.contains(transferId),
+    );
+
+    if (index > -1) {
+      for (int i = 0; i < sentHistory[index].sharedWith.length; i++) {
+        String _sharedWithAtsign = sentHistory[index].sharedWith[i].atsign;
+        bool _isNotificationSend =
+            sentHistory[index].sharedWith[i].isNotificationSend;
+        if (compareAtSign(fromAtsign, _sharedWithAtsign) &&
+            !_isNotificationSend) {
+          sentHistory[index].sharedWith[i].isNotificationSend = true;
+          await updateFileHistoryDetail(sentHistory[index]);
+        }
+      }
+    }
   }
 
   // save file in gallery function is not in use as of now.

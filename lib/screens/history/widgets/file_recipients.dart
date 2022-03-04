@@ -49,9 +49,9 @@ class _FileRecipientsState extends State<FileRecipients> {
     filedInDeliveringList = [];
 
     widget.filesharedWith.forEach((element) {
-      if (element.isNotificationSend) {
+      if (element.isNotificationSend || element.isFileDownloaded) {
         deliveredToList.add(element);
-      } else {
+      } else if (!element.isFileDownloaded) {
         filedInDeliveringList.add(element);
       }
 

@@ -201,11 +201,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                         reAttemptSendingFiles,
                                         color: Colors.amber[800],
                                       )),
-                                  (_welcomeScreenProvider
+                                  ((_welcomeScreenProvider
                                               .hasSelectedContactsChanged ||
                                           filePickerModel
-                                                  .hasSelectedFilesChanged &&
-                                              !isFileShareFailed)
+                                              .hasSelectedFilesChanged))
                                       ? CommonButton(
                                           TextStrings().buttonSend,
                                           sendFileWithFileBin,
