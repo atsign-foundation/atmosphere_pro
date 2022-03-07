@@ -100,12 +100,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       contact = checkForCachedContactDetail(widget.receivedHistory.sender);
     }
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        if (mounted) {
-          setState(() {
-            image = CommonUtilityFunctions().getContactImage(contact);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          image = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
     }
   }

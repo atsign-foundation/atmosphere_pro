@@ -33,8 +33,7 @@ class CommonUtilityFunctions {
         contact.tags != null &&
         contact.tags['image'] != null) {
       try {
-        List<int> intList = contact.tags['image'].cast<int>();
-        image = Uint8List.fromList(intList);
+        return getContactImage(contact);
       } catch (e) {
         print('error in getting atsign image : $e');
       }

@@ -76,13 +76,10 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
       contact = checkForCachedContactDetail(contactList[0]);
     }
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        if (mounted) {
-          setState(() {
-            firstContactImage = Uint8List.fromList(intList);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          firstContactImage = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
     }
   }

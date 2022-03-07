@@ -41,11 +41,10 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
 
     // ignore: unnecessary_null_comparison
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        setState(() {
-          image = CommonUtilityFunctions().getContactImage(contact);
-        });
-      }
+      setState(() {
+        image = CommonUtilityFunctions().getContactImage(contact);
+      });
+
       if (contact.tags != null && contact.tags['name'] != null) {
         setState(() {
           contactName = contact.tags['name'];

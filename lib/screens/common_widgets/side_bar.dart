@@ -119,13 +119,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     }
 
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        if (mounted) {
-          setState(() {
-            image = CommonUtilityFunctions().getContactImage(contact);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          image = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
+
       if (contact.tags != null && contact.tags['name'] != null) {
         String newName = contact.tags['name'].toString();
         if (mounted) {
