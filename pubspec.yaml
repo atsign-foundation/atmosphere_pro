@@ -77,12 +77,12 @@ dependency_overrides:
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
+      ref: fix/contact-state
       path: at_contacts_flutter
   at_contacts_group_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
+      ref: fix/contact-state
       path: at_contacts_group_flutter
   at_onboarding_flutter:
     git:

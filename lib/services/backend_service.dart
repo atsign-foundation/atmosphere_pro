@@ -413,6 +413,9 @@ class BackendService {
             print('Onboarding throws $error error');
           },
           appAPIKey: MixedConstants.ONBOARD_API_KEY);
+    } else {
+      CustomOnboarding.onboard(
+          atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
     }
   }
 
