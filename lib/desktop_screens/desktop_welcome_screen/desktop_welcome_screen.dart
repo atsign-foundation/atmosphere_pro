@@ -381,7 +381,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                           menuItemsIcons[9],
                           routes[9],
                           isUrlLauncher: true,
-                          arguments: {"url": MixedConstants.PRIVACY_POLICY},
+                          arguments: {"url": MixedConstants.FAQ},
                           title: menuItemsTitle[9],
                           isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
                         ),
