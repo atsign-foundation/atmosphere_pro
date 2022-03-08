@@ -172,20 +172,18 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                                       _filePickerProvider
                                                           .SEND_FILES] ==
                                                   Status.Done) {
-                                                CustomToast().show(
-                                                    'File(s) sent successfully.',
-                                                    context,
-                                                    bgColor: ColorConstants
-                                                        .orangeColor);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            'File(s) sent successfully.')));
                                                 _welcomeScreenProvider
                                                         .isSelectionItemChanged =
                                                     false;
                                               } else {
-                                                CustomToast().show(
-                                                    'Something went wrong.',
-                                                    context,
-                                                    bgColor: ColorConstants
-                                                        .orangeColor);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            'Something went wrong.')));
                                               }
                                             });
                                           },
