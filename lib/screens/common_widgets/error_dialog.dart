@@ -25,6 +25,7 @@ class ErrorDialogWidget extends StatelessWidget {
       child: Center(
         child: Container(
           height: 240.toHeight,
+          width: SizeConfig().isDesktop(context) ? 500 : null,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(
@@ -55,7 +56,7 @@ class ErrorDialogWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     CustomButton(
-                      buttonText: 'OK',
+                      buttonText: TextStrings().ok,
                       onPressed: () {
                         Navigator.of(context).pop();
                         if (onButtonPress != null) onButtonPress();
@@ -92,7 +93,7 @@ class ErrorDialog {
           CustomPopupRoutes(
               pageBuilder: (_, __, ___) => ErrorDialogWidget(
                     text: text.toString(),
-                    buttonText: (buttonText == null) ? 'ok' : buttonText,
+                    buttonText: (buttonText == null) ? TextStrings().ok : buttonText,
                     onButtonPress: onButtonPressed,
                     includeCancel: includeCancel,
                   ),

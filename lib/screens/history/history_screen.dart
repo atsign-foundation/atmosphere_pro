@@ -50,7 +50,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       appBar: CustomAppBar(
         showBackButton: true,
         showTitle: true,
-        title: 'History',
+        title: TextStrings().history,
         showTrailingButton: true,
         trailingIcon: Icons.save_alt_outlined,
         isHistory: true,

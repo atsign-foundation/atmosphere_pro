@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -32,14 +33,43 @@ class CommonUtilityFunctions {
         contact.tags != null &&
         contact.tags['image'] != null) {
       try {
-        List<int> intList = contact.tags['image'].cast<int>();
-        image = Uint8List.fromList(intList);
+        return getContactImage(contact);
       } catch (e) {
         print('error in getting atsign image : $e');
       }
     }
 
     return image;
+  }
+
+  String getContactName(String atsign) {
+    String name;
+    AtContact contact = getCachedContactDetail(atsign);
+    if (contact != null &&
+        contact.tags != null &&
+        contact.tags['name'] != null) {
+      name = contact.tags['name'];
+    }
+    return name;
+  }
+
+  getCachedContactName(String atsign) {
+    String _name;
+    AtContact contact = checkForCachedContactDetail(atsign);
+
+    if (contact != null &&
+        contact.tags != null &&
+        contact.tags['name'] != null) {
+      _name = contact.tags['name'].toString();
+    }
+
+    return _name;
+  }
+
+  Future<bool> isFilePresent(String filePath) async {
+    File file = File(filePath);
+    bool fileExists = await file.exists();
+    return fileExists;
   }
 
   showResetAtsignDialog() async {
@@ -312,6 +342,153 @@ class CommonUtilityFunctions {
               borderRadius: BorderRadius.circular(10.toWidth),
             ),
             content: ConfirmationDialog(title, onSuccess),
+          );
+        });
+  }
+
+  deleteAtSign(String atsign) async {
+    final _formKey = GlobalKey<FormState>();
+    await showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Center(
+              child: Text(
+                'Delete @sign',
+                style: TextStyle(
+                    color: Colors.black,
+                    letterSpacing: 0.1,
+                    fontSize: 20.toFont,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Are you sure you want to delete all data associated with',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    letterSpacing: 0.1,
+                    color: Colors.grey[700],
+                    fontSize: 15.toFont,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text('$atsign',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20.toFont,
+                        letterSpacing: 0.1,
+                        fontWeight: FontWeight.bold)),
+                SizedBox(height: 20),
+                Text(
+                  'Type the @sign above to proceed',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    letterSpacing: 0.1,
+                    fontSize: 12.toFont,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    validator: (value) {
+                      if (value != atsign) {
+                        return "The @sign doesn't match. Please retype.";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorConstants.fadedText)),
+                        filled: true,
+                        fillColor: Colors.white),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Caution: this action can't be undone",
+                  style: TextStyle(
+                    fontSize: 13.toFont,
+                    letterSpacing: 0.1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FlatButton(
+                        child: Text(TextStrings().buttonDelete,
+                            style: CustomTextStyles.primaryBold14),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            await BackendService.getInstance()
+                                .deleteAtSignFromKeyChain(atsign);
+                          }
+                        }),
+                    Spacer(),
+                    FlatButton(
+                        child: Text(TextStrings().buttonCancel,
+                            style: CustomTextStyles.primaryBold14),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        })
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  shownConfirmationDialog(String title, Function onYesTap) {
+    showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            content: Container(
+              width: 400.toWidth,
+              padding: EdgeInsets.all(15.toFont),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title),
+                    SizedBox(
+                      height: 20.toHeight,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                            onPressed: onYesTap,
+                            child: Text('Yes',
+                                style: TextStyle(fontSize: 16.toFont))),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel',
+                                style: TextStyle(fontSize: 16.toFont)))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
           );
         });
   }

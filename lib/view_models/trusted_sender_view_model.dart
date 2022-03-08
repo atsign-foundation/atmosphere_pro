@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -34,6 +35,7 @@ class TrustedContactProvider extends BaseModel {
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
       setError(AddTrustedContacts, error.toString());
+      setStatus(AddTrustedContacts, Status.Error);
     }
   }
 
@@ -43,7 +45,7 @@ class TrustedContactProvider extends BaseModel {
 
     try {
       for (AtContact contact in trustedContacts) {
-        if (contact.toString() == trustedContact.toString()) {
+        if (contact.atSign == trustedContact.atSign) {
           int index = trustedContacts.indexOf(contact);
           trustedContacts.removeAt(index);
           break;
@@ -64,10 +66,10 @@ class TrustedContactProvider extends BaseModel {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
-      await backendService.atClientInstance.put(
-        trustedContactsKey,
-        json.encode({"trustedContacts": trustedContacts}),
-      );
+      await AtClientManager.getInstance().atClient.put(
+            trustedContactsKey,
+            json.encode({"trustedContacts": trustedContacts}),
+          );
 
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
@@ -79,7 +81,7 @@ class TrustedContactProvider extends BaseModel {
 
   getTrustedContact() async {
     setStatus(GetTrustedContacts, Status.Loading);
-
+    fetchedTrustedContact = [];
     try {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'

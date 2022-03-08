@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactInitial extends StatelessWidget {
-  final double size;
+  final double size, maxSize, minSize;
   final String initials;
   int index;
   Color background;
@@ -14,7 +14,9 @@ class ContactInitial extends StatelessWidget {
       this.size = 40,
       @required this.initials,
       this.index,
-      this.background})
+      this.background,
+      this.maxSize,
+      this.minSize})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,9 @@ class ContactInitial extends StatelessWidget {
       width: size.toFont,
       decoration: BoxDecoration(
         color: background ?? ContactInitialsColors.getColor(initials),
-        borderRadius: BorderRadius.circular(size.toWidth),
+        // borderRadius: BorderRadius.circular(size.toWidth),
+        // color: ContactInitialsColors.getColor(initials),
+        borderRadius: BorderRadius.circular((size.toFont)),
       ),
       child: Center(
         child: Text(

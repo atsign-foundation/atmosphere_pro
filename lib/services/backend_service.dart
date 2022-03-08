@@ -11,6 +11,18 @@ import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
+import 'package:at_lookup/at_lookup.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
@@ -20,6 +32,9 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -35,6 +50,8 @@ import 'package:at_client/src/service/sync/sync_result.dart';
 import 'package:at_client/src/service/notification_service_impl.dart';
 import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
+import 'package:at_client/src/service/sync_service.dart';
+import 'package:at_client/src/service/sync_service_impl.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -69,15 +86,17 @@ class BackendService {
 
   setDownloadPath(
       {String atsign, atClientPreference, atClientServiceInstance}) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isWindows) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
     } else {
       downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
+    downloadDirectory = Directory(MixedConstants.RECEIVED_FILE_DIRECTORY);
     if (atClientServiceMap[atsign] == null) {
       final appSupportDirectory =
           await path_provider.getApplicationSupportDirectory();
+      // final appSupportDirectory = Directory(MixedConstants.path);
       print("paths => $downloadDirectory $appSupportDirectory");
     }
     await atClientServiceInstance.onboard(
@@ -86,12 +105,14 @@ class BackendService {
   }
 
   Future<AtClientPreference> getAtClientPreference() async {
-    if (Platform.isIOS) {
-      downloadDirectory =
-          await path_provider.getApplicationDocumentsDirectory();
-    } else {
-      downloadDirectory = await path_provider.getExternalStorageDirectory();
-    }
+    // if (Platform.isIOS || Platform.isWindows) {
+    //   downloadDirectory =
+    //       await path_provider.getApplicationDocumentsDirectory();
+    // } else {
+    //   downloadDirectory = await path_provider.getExternalStorageDirectory();
+    // }
+    downloadDirectory = Directory(MixedConstants.RECEIVED_FILE_DIRECTORY);
+    // final appDocumentDirectory = Directory(MixedConstants.path);
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
@@ -134,14 +155,6 @@ class BackendService {
 
   Future<Map<String, String>> getEncryptedKeys(String atsign) async {
     return await KeychainUtil.getEncryptedKeys(atsign);
-  }
-
-  ///Resets [atsigns] list from device storage.
-  Future<void> resetAtsigns(List atsigns) async {
-    for (String atsign in atsigns) {
-      await KeychainUtil.resetAtSignFromKeychain(atsign);
-      atClientServiceMap.remove(atsign);
-    }
   }
 
   Map<String, AtClientService> atClientServiceMap = {};
@@ -357,11 +370,11 @@ class BackendService {
     await KeychainUtil.deleteAtSignFromKeychain(atsign);
 
     if (atSignList != null) {
-      atSignList.removeWhere((element) => element == currentAtSign);
+      atSignList.removeWhere((element) => element == atsign);
     }
-
     var atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
+
     var tempAtsign;
     if (atSignList == null || atSignList.isEmpty) {
       tempAtsign = '';
@@ -369,10 +382,24 @@ class BackendService {
       tempAtsign = atSignList.first;
     }
 
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      /// in case of desktop, we close the dialog from here
+      Navigator.of(NavService.navKey.currentContext).pop();
+    }
+
     if (tempAtsign == '') {
-      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
-          Routes.HOME, (Route<dynamic> route) => false);
-    } else {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            Routes.HOME,
+            (Route<dynamic> route) => false);
+      } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        await Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext,
+            DesktopRoutes.DESKTOP_HOME,
+            (Route<dynamic> route) => false);
+      }
+    } else if (Platform.isAndroid || Platform.isIOS) {
       await Onboarding(
           atsign: tempAtsign,
           context: NavService.navKey.currentContext,
@@ -386,6 +413,9 @@ class BackendService {
             print('Onboarding throws $error error');
           },
           appAPIKey: MixedConstants.ONBOARD_API_KEY);
+    } else {
+      CustomOnboarding.onboard(
+          atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
     }
   }
 
@@ -457,7 +487,7 @@ class BackendService {
 
     // start monitor and package initializations.
     await startMonitor();
-    _initLocalNotification();
+    initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
@@ -479,7 +509,7 @@ class BackendService {
   String state;
   LocalNotificationService _notificationService;
 
-  void _initLocalNotification() async {
+  void initLocalNotification() async {
     _notificationService = LocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
@@ -494,11 +524,40 @@ class BackendService {
     });
   }
 
+  setDownloadDirectory() async {
+    var _preference = await getAtClientPreference();
+    MixedConstants.setNewApplicationDocumentsDirectory(
+        AtClientManager.getInstance().atClient.getCurrentAtSign());
+    _preference.downloadPath = MixedConstants.RECEIVED_FILE_DIRECTORY;
+    AtClientManager.getInstance().atClient.setPreferences(_preference);
+  }
+
+  /// to create directory if does not exist
+  doesDirectoryExist({String path}) async {
+    final dir = Directory(path ?? MixedConstants.ApplicationDocumentsDirectory);
+    if ((await dir.exists())) {
+    } else {
+      await dir.create();
+    }
+  }
+
   onNotificationClick(String payload) async {
-    await Navigator.push(
-      NavService.navKey.currentContext,
-      MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      await Navigator.push(
+        NavService.navKey.currentContext,
+        MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
+      );
+    } else if (Platform.isMacOS) {
+      DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+    }
+  }
+
+  ///Resets [atsigns] list from device storage.
+  Future<void> resetAtsigns(List atsigns) async {
+    for (String atsign in atsigns) {
+      await KeychainUtil.resetAtSignFromKeychain(atsign);
+      atClientServiceMap.remove(atsign);
+    }
   }
 
   showToast(String msg, {bool isError = false, bool isSuccess = true}) {

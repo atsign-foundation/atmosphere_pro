@@ -3,6 +3,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -88,8 +89,10 @@ class _UnknownsState extends State<Unknowns> {
                               double.parse(provider.receivedUnknown[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedUnknown[index].size).toStringAsFixed(2)} Kb'
-                                  : '${(provider.receivedUnknown[index].size / 1024).toStringAsFixed(2)} Mb',
+                                  ? '${(provider.receivedUnknown[index].size).toStringAsFixed(2)} ' +
+                                      TextStrings().kb
+                                  : '${(provider.receivedUnknown[index].size / 1024).toStringAsFixed(2)} ' +
+                                      TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

@@ -170,7 +170,7 @@ class ShareStatus {
   bool isNotificationSend;
   bool isFileDownloaded;
 
-  // for fornt end reference only
+  // for front end reference only
   bool isSendingNotification;
 
   ShareStatus(this.atsign, this.isNotificationSend,

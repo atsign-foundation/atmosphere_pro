@@ -119,13 +119,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     }
 
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        if (mounted) {
-          setState(() {
-            image = CommonUtilityFunctions().getContactImage(contact);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          image = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
+
       if (contact.tags != null && contact.tags['name'] != null) {
         String newName = contact.tags['name'].toString();
         if (mounted) {
@@ -207,7 +206,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     Text(
                                       BackendService.getInstance()
                                               .currentAtSign ??
-                                          '@sign',
+                                          TextStrings().atSign,
                                       maxLines: 1,
                                       style: TextStyle(
                                           letterSpacing: 0.1,
@@ -415,7 +414,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Switching atsign...',
+                      TextStrings().switchingAtSign,
                       style: CustomTextStyles.orangeMedium16,
                     ),
                     SizedBox(height: 10),

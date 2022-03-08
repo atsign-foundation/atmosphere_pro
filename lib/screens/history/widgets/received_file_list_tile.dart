@@ -100,12 +100,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       contact = checkForCachedContactDetail(widget.receivedHistory.sender);
     }
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        if (mounted) {
-          setState(() {
-            image = CommonUtilityFunctions().getContactImage(contact);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          image = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
     }
   }
@@ -276,8 +274,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       Text(
                         double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} Kb '
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                            ? '${fileSize} ' + TextStrings().kb
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                TextStrings().mb,
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],
@@ -380,7 +379,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               // videoThumbnailBuilder(
                               //     widget.receivedHistory.files[index].filePath);
 
-                              Text('Video');
+                              Text(TextStrings().video);
                             }
                             return ListTile(
                               key:

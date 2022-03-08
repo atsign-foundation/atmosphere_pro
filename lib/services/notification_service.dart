@@ -40,8 +40,15 @@ class LocalNotificationService {
       },
     );
 
+    var initializationSettingsMacos = MacOSInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true);
+
     initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsMacos);
   }
 
   _requestIOSPermission() {
