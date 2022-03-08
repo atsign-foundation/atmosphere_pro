@@ -1,16 +1,27 @@
-# atsign_atmosphere_pro
+<img src="https://atsign.dev/assets/img/@dev.png?sanitize=true">
 
-A new Flutter project.
+### Now for a little internet optimism
 
-## Getting Started
+# @mosphere PRO
 
-This project is a starting point for a Flutter application.
+> Peer-to-peer encrypted file sharing has never been easier.
 
-A few resources to get you started if this is your first Flutter project:
+[@mosphere PRO](https://atsign.com/apps/atmosphere/) makes peer-to-peer
+encrypted file sharing possible. In real-time, you can send files across
+any device regardless of your location — with the added benefit of total
+privacy. You can fearlessly share contracts, tax information, or other
+confidential information without worrying about your data being stored on
+a server in the cloud.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+This repo holds the open source code for the @mosphere PRO app, to serve as
+an example of apps that can be build on the @ Platform.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Developer
+
+The purpose of this repo is primarily to be an example of what can be done
+with the @ Platform. So if you're a developer take a look at the code here.
+
+### Contributor
+
+If you've got suggestions for making @mosphere PRO better then we :heart:
+issues and pull requests.

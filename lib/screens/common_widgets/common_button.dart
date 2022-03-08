@@ -1,4 +1,4 @@
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CommonButton extends StatelessWidget {
@@ -13,7 +13,7 @@ class CommonButton extends StatelessWidget {
     this.title,
     this.onTap, {
     this.border,
-    this.color,
+    this.color = Colors.black,
     this.height,
     this.width,
     this.removePadding = false,

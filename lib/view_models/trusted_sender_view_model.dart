@@ -22,9 +22,6 @@ class TrustedContactProvider extends BaseModel {
     setStatus(AddTrustedContacts, Status.Loading);
 
     try {
-      // trustedContacts = [];
-      // await getTrustedContact();
-
       bool isAlreadyPresent = false;
       for (AtContact contact in trustedContacts) {
         if (contact.toString() == trustedContact.toString()) {
@@ -47,14 +44,10 @@ class TrustedContactProvider extends BaseModel {
     trustedContactOperation = true;
 
     try {
-      // if (trustedContacts.contains(trustedContact)) {
-      //   trustedContacts.remove(trustedContact);
-      // }
       for (AtContact contact in trustedContacts) {
         if (contact.atSign == trustedContact.atSign) {
           int index = trustedContacts.indexOf(contact);
           trustedContacts.removeAt(index);
-          // isAlreadyPresent = true;
           break;
         }
       }
@@ -78,7 +71,6 @@ class TrustedContactProvider extends BaseModel {
             json.encode({"trustedContacts": trustedContacts}),
           );
 
-      // getTrustedContact();
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
@@ -95,11 +87,14 @@ class TrustedContactProvider extends BaseModel {
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
 
-      AtValue keyValue =
-          await AtClientManager.getInstance().atClient.get(trustedContactsKey);
+      AtValue keyValue = await backendService.atClientInstance
+          .get(trustedContactsKey)
+          .catchError((e) {
+        print('error in get in getTrustedContact : $e ');
+      });
 
       var jsonValue;
-      if (keyValue.value != null) {
+      if (keyValue != null && keyValue.value != null) {
         jsonValue = jsonDecode(keyValue.value);
         jsonValue['trustedContacts'].forEach((contact) {
           final c = AtContact.fromJson(contact);

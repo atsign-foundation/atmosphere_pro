@@ -1,7 +1,5 @@
-import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
 
@@ -21,12 +19,12 @@ class DesktopFileCard extends StatelessWidget {
                     width: 180,
                     height: 120,
                     child: FutureBuilder(
-                      future: CommonFunctions().isFilePresent(filePath),
+                      future: CommonUtilityFunctions().isFilePresent(filePath),
                       builder: (BuildContext cotext, snapshot) {
                         return snapshot.connectionState ==
                                     ConnectionState.done &&
                                 snapshot.data != null
-                            ? CommonFunctions().thumbnail(
+                            ? CommonUtilityFunctions().thumbnail(
                                 filePath.split('/').last.split('.').last,
                                 filePath,
                                 isFilePresent: snapshot.data)

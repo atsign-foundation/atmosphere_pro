@@ -3,7 +3,7 @@
 
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
   final String image;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import '../../utils/images.dart';
 
 class Customheading extends StatelessWidget {
@@ -7,6 +7,7 @@ class Customheading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50.toHeight,
+      color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

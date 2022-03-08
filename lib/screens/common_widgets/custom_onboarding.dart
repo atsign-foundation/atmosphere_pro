@@ -36,6 +36,14 @@ class CustomOnboarding {
 
         await AtClientManager.getInstance().setCurrentAtSign(
             atsign, MixedConstants.appNamespace, atClientPrefernce);
+
+        _backendService.atClientInstance =
+            value[atsign].atClientManager.atClient;
+        _backendService.atClientServiceInstance = value[atsign];
+        _backendService.atClientManager = value[atsign].atClientManager;
+        _backendService.currentAtSign =
+            value[atsign].atClientManager.atClient.getCurrentAtSign();
+
         BackendService.getInstance().syncWithSecondary();
 
         if (!isInit) {
@@ -46,8 +54,8 @@ class CustomOnboarding {
           LoadingDialog().showTextLoader('Initialising for $atsign');
         }
 
-        await _backendService.startMonitor(atsign: atsign, value: value);
-        _backendService.initBackendService();
+        await _backendService.startMonitor();
+        _backendService.initLocalNotification();
         await initServices();
         getTransferData();
 

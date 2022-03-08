@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Recents extends StatefulWidget {
@@ -21,32 +21,73 @@ class _RecentsState extends State<Recents> {
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
-      load: (provider) => provider.getReceivedHistory(),
-      functionName: 'received_history',
-      successBuilder: (provider) => (provider.finalReceivedHistory.isEmpty)
-          ? Center(
-              child: Text(TextStrings().noFilesRecieved,
-                  style: TextStyle(fontSize: 15.toFont)),
-            )
-          : Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: 10.toHeight, horizontal: 10.toWidth),
-              child: GridView.count(
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                children: List.generate(provider.finalReceivedHistory.length,
-                    (index) {
-                  return thumbnail(
-                      provider.finalReceivedHistory[index].fileName
-                          ?.split('.')
-                          ?.last,
-                      provider.finalReceivedHistory[index].filePath);
-                }),
-              ),
-            ),
+      load: (provider) => provider.getrecentHistoryFiles(),
+      functionName: 'recent_history',
+      showError: false,
+      successBuilder: (provider) {
+        return (provider.recentFile.isEmpty)
+            ? Center(
+                child: Text('No files received',
+                    style: TextStyle(fontSize: 15.toFont)),
+              )
+            : Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: 10.toHeight, horizontal: 10.toWidth),
+                child: GridView.builder(
+                    itemCount: provider.receivedPhotos.length,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: SizeConfig().screenWidth / 4,
+                      mainAxisExtent: 110.toHeight,
+                      crossAxisSpacing: 20.toWidth,
+                      mainAxisSpacing: 20.toHeight,
+                    ),
+                    itemBuilder: (context, index) {
+                      return fileCard(provider.recentFile[index].fileName,
+                          provider.recentFile[index].filePath);
+                    }),
+              );
+      },
     );
   }
+}
+
+Widget fileCard(String title, String filePath) {
+  return Container(
+    child: Column(
+      children: <Widget>[
+        filePath != null
+            ? Container(
+                width: 80.toHeight,
+                height: 80.toHeight,
+                child: thumbnail(filePath.split('.').last, filePath))
+            : Container(
+                width: 80.toHeight,
+                height: 80.toHeight,
+                child: ClipRect(
+                  child: Image.asset(ImageConstants.emptyTrustedSenders,
+                      fit: BoxFit.fill),
+                ),
+              ),
+        title != null
+            ? Container(
+                width: 100.toHeight,
+                height: 30.toHeight,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                        color: Color(0xFF8A8E95), fontSize: 12.toFont),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )
+            : SizedBox()
+      ],
+    ),
+  );
 }
 
 Widget thumbnail(String extension, String path) {
@@ -55,12 +96,7 @@ Widget thumbnail(String extension, String path) {
           borderRadius: BorderRadius.circular(10.toHeight),
           child: GestureDetector(
             onTap: () async {
-              // preview file
-              File test = File(path);
-              bool fileExists = await test.exists();
-              if (fileExists) {
-                await OpenFile.open(path);
-              }
+              await openFilePath(path);
             },
             child: Container(
               height: 50.toHeight,
@@ -79,7 +115,8 @@ Widget thumbnail(String extension, String path) {
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: GestureDetector(
                   onTap: () async {
-                    await openDownloadsFolder(context);
+                    //   await openDownloadsFolder(context);
+                    await openFilePath(path);
                   },
                   child: Container(
                     padding: EdgeInsets.only(left: 10),
@@ -105,7 +142,8 @@ Widget thumbnail(String extension, String path) {
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: GestureDetector(
                   onTap: () async {
-                    await openDownloadsFolder(context);
+                    await openFilePath(path);
+                    //   await openDownloadsFolder(context);
                   },
                   child: Container(
                     padding: EdgeInsets.only(left: 10),
@@ -131,14 +169,23 @@ Widget thumbnail(String extension, String path) {
             );
 }
 
+Future<bool> isFilePresent(String fileName) async {
+  String filePath =
+      BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+
+  File file = File(filePath);
+  bool fileExists = await file.exists();
+  return fileExists;
+}
+
 Uint8List videoThumbnail;
 
 Future videoThumbnailBuilder(String path) async {
   videoThumbnail = await VideoThumbnail.thumbnailData(
     video: path,
     imageFormat: ImageFormat.JPEG,
-    maxWidth:
-        50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+    maxWidth: 50,
+    // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
     quality: 100,
   );
   return videoThumbnail;

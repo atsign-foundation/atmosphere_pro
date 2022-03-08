@@ -1,15 +1,23 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_backup_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -19,6 +27,7 @@ import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SideBarWidget extends StatefulWidget {
   final bool isExpanded;
@@ -71,15 +80,29 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   String name;
   WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   bool isTablet = false, isExpanded = true, isLoading = false;
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
 
   @override
   void initState() {
     super.initState();
-    // getEventCreator();
 
     isExpanded = widget.isExpanded;
-    _welcomeScreenProvider.isExpanded = true;
     getAtsignDetails();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _packageInfo = info;
+      });
+    }
   }
 
   @override
@@ -96,23 +119,26 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     }
 
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (mounted) {
         setState(() {
-          image = Uint8List.fromList(intList);
+          image = CommonUtilityFunctions().getContactImage(contact);
         });
       }
+
       if (contact.tags != null && contact.tags['name'] != null) {
         String newName = contact.tags['name'].toString();
-        setState(() {
-          name = newName;
-        });
+        if (mounted) {
+          setState(() {
+            name = newName;
+          });
+        }
       }
     }
-    await Provider.of<WelcomeScreenProvider>(context, listen: false)
-        .getToggleStatus();
+
     if (mounted) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -122,7 +148,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     return Stack(
       children: [
         Container(
-          width: SizeConfig().screenWidth * 0.65,
+          width: SizeConfig().isTablet(context)
+              ? 405
+              : SizeConfig().screenWidth * 0.65,
           color: ColorConstants.inputFieldColor,
           child: Container(
             child: Container(
@@ -208,15 +236,27 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                 NavService.navKey.currentContext,
                                 listen: false)
                             .updateSelectedContacts(s);
-                      }
+                      },
+                      'showSelectedData': Provider.of<WelcomeScreenProvider>(
+                              NavService.navKey.currentContext,
+                              listen: false)
+                          .selectedContacts
                     },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-                  SideBarItem(
-                    image: menuItemsIcons[1],
-                    title: menuItemsTitle[1],
-                    routeName: targetScreens[1],
-                    showIconOnly: !isExpanded,
+                  Consumer<FileDownloadChecker>(
+                    builder: (context, _fileDownloadChecker, _) {
+                      return SideBarItem(
+                        image: menuItemsIcons[1],
+                        title: menuItemsTitle[1],
+                        routeName: targetScreens[1],
+                        showIconOnly: !isExpanded,
+                        displayColor:
+                            _fileDownloadChecker.undownloadedFilesExist
+                                ? ColorConstants.orangeColor
+                                : ColorConstants.fadedText,
+                      );
+                    },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
@@ -227,6 +267,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
+                    isScale: true,
                     image: menuItemsIcons[3],
                     title: menuItemsTitle[3],
                     routeName: targetScreens[3],
@@ -238,6 +279,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
+                    isScale: true,
                     image: menuItemsIcons[4],
                     title: menuItemsTitle[4],
                     routeName: targetScreens[4],
@@ -259,6 +301,20 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarBackupItem(
+                    title: isExpanded ? TextStrings().sidebarBackupKey : '',
+                    leadingIcon: Icon(Icons.file_copy,
+                        color: Color(0xFF757581),
+                        size: (isTablet ? 26 : 21.toFont)),
+                    onPressed: () {
+                      BackupKeyWidget(
+                        atsign: AtClientManager.getInstance()
+                            .atClient
+                            .getCurrentAtSign(),
+                      ).showBackupDialog(context);
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
                       image: menuItemsIcons[6],
                       title: menuItemsTitle[6],
@@ -277,6 +333,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(
+                    isScale: true,
                     image: menuItemsIcons[8],
                     title: menuItemsTitle[8],
                     routeName: targetScreens[8],
@@ -285,17 +342,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        CommonFunctions().deleteAtSign(
-                            BackendService.getInstance().currentAtsign);
-
-                        setState(() {});
+                        CommonUtilityFunctions().showResetAtsignDialog();
                       },
                       child: Container(
                         height: 50,
                         child: Row(children: [
                           Icon(Icons.delete,
                               color: ColorConstants.fadedText,
-                              size: 25.toHeight),
+                              size: isTablet ? 20.toHeight : 25.toHeight),
                           SizedBox(width: 10),
                           isExpanded
                               ? Text(
@@ -311,11 +365,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        String atSign =
-                            await BackendService.getInstance().getAtSign();
-
-                        var atSignList =
-                            await BackendService.getInstance().getAtsignList();
+                        var atSignList = await KeychainUtil.getAtsignList();
                         await showModalBottomSheet(
                           context: NavService.navKey.currentContext,
                           backgroundColor: Colors.transparent,
@@ -329,7 +379,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         child: Row(children: [
                           Image.asset(
                             ImageConstants.logoutIcon,
-                            height: 22.toHeight,
+                            height: isTablet ? 20.toHeight : 22.toHeight,
                             color: ColorConstants.fadedText,
                           ),
                           SizedBox(width: 10),
@@ -345,18 +395,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ]),
                       )),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
-                  Padding(
-                    padding: EdgeInsets.only(left: 16.toWidth),
-                    child: isExpanded
-                        ? Text(
-                            TextStrings().sidebarEnablingMessage,
-                            style: TextStyle(
-                                color: ColorConstants.dullText,
-                                fontSize: 12.toFont,
-                                letterSpacing: 0.1),
-                          )
-                        : SizedBox(),
-                  ),
+                  isExpanded
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                              'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
+                              style: CustomTextStyles.darkGrey13),
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
-class NotificationService {
-  NotificationService._() {
+class LocalNotificationService {
+  LocalNotificationService._() {
     init();
   }
-  static NotificationService _instace = NotificationService._();
-  factory NotificationService() => _instace;
+  static LocalNotificationService _instace = LocalNotificationService._();
+  factory LocalNotificationService() => _instace;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
   InitializationSettings initializationSettings;
   final BehaviorSubject<ReceivedNotification>
@@ -69,7 +69,7 @@ class NotificationService {
     });
   }
 
-  Future<void> showNotification(String from) async {
+  Future<void> showNotification(String from, String message) async {
     var androidChannelSpecifics = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
@@ -88,9 +88,8 @@ class NotificationService {
       // id: int.parse(id)
     );
     await _notificationsPlugin.show(
-        0,
-        '$from sent you a file',
-        'Open your app to see the file preview and take actions',
+        0, '$from sent you a file', 
+        message, 
         platformChannelSpecifics,
         payload: jsonEncode(payload));
   }

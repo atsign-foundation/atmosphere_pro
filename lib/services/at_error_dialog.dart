@@ -16,7 +16,7 @@ class AtErrorDialog {
       ),
       content: Text('$errorMessage'),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },

@@ -1,11 +1,13 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+
+import 'downloads_folders.dart';
 
 class APK extends StatefulWidget {
   @override
@@ -20,13 +22,16 @@ class _APKState extends State<APK> {
           EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
       child: ProviderHandler<HistoryProvider>(
         functionName: 'received_history',
+        showError: false,
         load: (provider) => provider.getReceivedHistory(),
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,
             itemBuilder: (context, index) {
               DateTime date = DateTime.parse(provider.receivedApk[index].date);
               return InkWell(
-                onTap: () {},
+                onTap: () async {
+                  await openFilePath(provider.receivedApk[index].filePath);
+                },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
                   child: ListTile(

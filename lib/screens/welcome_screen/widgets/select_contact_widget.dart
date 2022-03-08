@@ -61,35 +61,25 @@ class _ExpansionTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+      tilePadding: SizeConfig().isTablet(context)
+          ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
+          : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
       backgroundColor: ColorConstants.inputFieldColor,
-      title: Text(
-        headerText,
-        style: TextStyle(
-          color: ColorConstants.fadedText,
-          fontSize: 14.toFont,
+      title: InkWell(
+        onTap: () {
+          selectContact(context);
+        },
+        child: Text(
+          headerText,
+          style: TextStyle(
+            color: ColorConstants.fadedText,
+            fontSize: 14.toFont,
+          ),
         ),
       ),
       trailing: InkWell(
-        onTap: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GroupContactView(
-                asSelectionScreen: true,
-                // singleSelection: true,
-                showGroups: true,
-                showContacts: true,
-                selectedList: (s) {
-                  Provider.of<WelcomeScreenProvider>(
-                          NavService.navKey.currentContext,
-                          listen: false)
-                      .updateSelectedContacts(s);
-                  onSelected(s.length);
-                },
-                // singleSelection: true,
-              ),
-            ),
-          );
+        onTap: () {
+          selectContact(context);
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -97,6 +87,30 @@ class _ExpansionTileWidget extends StatelessWidget {
             ImageConstants.contactsIcon,
             color: Colors.black,
           ),
+        ),
+      ),
+    );
+  }
+
+  selectContact(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupContactView(
+          asSelectionScreen: true,
+          showGroups: true,
+          showContacts: true,
+          selectedList: (s) {
+            Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext,
+                    listen: false)
+                .updateSelectedContacts(s);
+            onSelected(s.length);
+          },
+          // singleSelection: true,
+          contactSelectedHistory: Provider.of<WelcomeScreenProvider>(
+                  NavService.navKey.currentContext,
+                  listen: false)
+              .selectedContacts,
         ),
       ),
     );

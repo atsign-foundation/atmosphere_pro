@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -144,8 +144,8 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
         child: (isLoading)
             ? Center(child: CircularProgressIndicator())
             : Container(
-                // reducing size by 75 , so that last list item will be shown
-                height: SizeConfig().screenHeight - 75,
+                // reducing size by 120 , so that last list item will be shown
+                height: SizeConfig().screenHeight - 120.toHeight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -169,7 +169,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                     Expanded(
                       child: TabBarView(
                         controller: _controller,
-                        physics: ClampingScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         children: tabs,
                       ),
                     )

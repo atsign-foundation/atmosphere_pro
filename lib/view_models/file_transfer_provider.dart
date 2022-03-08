@@ -1,18 +1,19 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -20,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
-import 'package:http/http.dart' as http;
 import 'package:at_client/src/stream/file_transfer_object.dart';
 
 class FileTransferProvider extends BaseModel {
@@ -49,6 +49,7 @@ class FileTransferProvider extends BaseModel {
   bool clearList = false;
   BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
+  bool hasSelectedFilesChanged = false, scrollToBottom = false;
 
   final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
   Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
@@ -72,6 +73,7 @@ class FileTransferProvider extends BaseModel {
           selectedFiles.add(element);
         });
         calculateSize();
+        hasSelectedFilesChanged = true;
       }
       appClosedSharedFiles = [];
       setStatus(PICK_FILES, Status.Done);
@@ -92,10 +94,11 @@ class FileTransferProvider extends BaseModel {
       totalSize = 0;
 
       result = await FilePicker.platform.pickFiles(
-          allowMultiple: true,
-          type: choice == MEDIA ? FileType.media : FileType.any,
-          allowCompression: true,
-          withData: true);
+        allowMultiple: true,
+        type: choice == MEDIA ? FileType.media : FileType.any,
+        allowCompression: true,
+        // withReadStream: true,
+      );
 
       if (result?.files != null) {
         selectedFiles = tempList;
@@ -109,11 +112,13 @@ class FileTransferProvider extends BaseModel {
             selectedFiles.add(element);
           });
         }
+        hasSelectedFilesChanged = true;
       }
 
       calculateSize();
 
       setStatus(PICK_FILES, Status.Done);
+      scrollToBottom = true;
     } catch (error) {
       setError(PICK_FILES, error.toString());
     }
@@ -124,7 +129,59 @@ class FileTransferProvider extends BaseModel {
     selectedFiles?.forEach((element) {
       totalSize += element.size;
     });
+
+    // if ((totalSize / 1048576) >= 50) {
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     _showFileSizeLimit();
+    //   });
+    // }
   }
+
+  // _showFileSizeLimit() async {
+  //   await showDialog(
+  //       context: NavService.navKey.currentContext,
+  //       builder: (_context) {
+  //         return AlertDialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(10.toWidth),
+  //           ),
+  //           content: Container(
+  //             color: Colors.white,
+  //             width: 300.toWidth,
+  //             padding: EdgeInsets.all(15.toFont),
+  //             child: SingleChildScrollView(
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(TextStrings.fileSizeLimit,
+  //                       style: CustomTextStyles.grey15),
+  //                   SizedBox(
+  //                     height: 10.toHeight,
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.end,
+  //                     children: [
+  //                       TextButton(
+  //                           onPressed: () {
+  //                             Navigator.of(NavService.navKey.currentContext)
+  //                                 .pop();
+  //                           },
+  //                           child: Text('Ok',
+  //                               style: TextStyle(fontSize: 16.toFont)))
+  //                     ],
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       });
+
+  //   selectedFiles = [];
+  //   totalSize = 0;
+  //   hasSelectedFilesChanged = false;
+  //   notifyListeners();
+  // }
 
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
@@ -144,6 +201,7 @@ class FileTransferProvider extends BaseModel {
                 size: length.round(),
                 bytes: await file.readAsBytes()));
             await calculateSize();
+            hasSelectedFilesChanged = true;
           });
 
           print(
@@ -168,6 +226,7 @@ class FileTransferProvider extends BaseModel {
                 size: length.round(),
                 bytes: await test.readAsBytes()));
             await calculateSize();
+            hasSelectedFilesChanged = true;
           });
           print(
               "Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
@@ -181,162 +240,19 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  bool isSending = false;
-  sendFiles(List<PlatformFile> selectedFiles,
-      List<GroupContactsModel> contactList) async {
-    isSending = true;
-
-    setStatus(SEND_FILES, Status.Loading);
-    try {
-      temporaryContactList = [];
-      contactList.forEach((element) {
-        if (element.contactType == ContactsType.CONTACT) {
-          bool flag = false;
-          for (AtContact atContact in temporaryContactList) {
-            if (atContact.toString() == element.contact.toString()) {
-              flag = true;
-            }
-          }
-          if (!flag) {
-            temporaryContactList.add(element.contact);
-          }
-        } else if (element.contactType == ContactsType.GROUP) {
-          element.group.members.forEach((contact) {
-            bool flag = false;
-            for (AtContact atContact in temporaryContactList) {
-              if (atContact.toString() == contact.toString()) {
-                flag = true;
-              }
-            }
-            if (!flag) {
-              temporaryContactList.add(contact);
-            }
-          });
-        }
-      });
-
-      int id = DateTime.now().millisecondsSinceEpoch;
-      // showFlushbar = null;
-      flushbarStatus = FLUSHBAR_STATUS.IDLE;
-      await Future.forEach(temporaryContactList, (contact) async {
-        await updateStatus(contact, id);
-      });
-      // temporaryContactList.forEach((contact) {
-      //   updateStatus(contact, id);
-      // });
-      isSending = false;
-      setStatus(SEND_FILES, Status.Done);
-    } catch (error) {
-      isSending = false;
-      setError(SEND_FILES, error.toString());
-    }
-  }
-
-  bool checkAtContactList(AtContact element) {
-    return false;
-  }
-
-  static send(String contact, List selectedFiles, _backendService) async {
-    selectedFiles.forEach((file) async {
-      await _backendService.sendFile(contact, file.path);
-    });
-  }
-
-  // bool showFlushbar;
-  updateStatus(AtContact contact, int id) async {
-    try {
-      // setStatus(SEND_FILES, Status.Loading);
-      selectedFiles.forEach((element) {
-        transferStatus.add(FileTransferStatus(
-            contactName: contact.atSign,
-            fileName: element.name,
-            status: TransferStatus.PENDING,
-            id: id));
-        Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-                listen: false)
-            .setFilesHistory(
-                id: id,
-                atSignName: [contact.atSign],
-                historyType: HistoryType.send,
-                files: [
-                  FilesDetail(
-                    filePath: element.path,
-                    id: id,
-                    contactName: contact.atSign,
-                    size: double.parse(element.size.toString()),
-                    fileName: element.name.toString(),
-                    type: element.name.split('.').last,
-                  ),
-                ]);
-      });
-
-      if (contact == temporaryContactList.first) {
-        sentStatus = true;
-      }
-      await Future.forEach(selectedFiles, (PlatformFile queuedFile) async {
-        bool tempStatus =
-            await _backendService.sendFile(contact.atSign, queuedFile.path);
-        if (queuedFile.name == selectedFiles.first.name &&
-            contact.atSign == temporaryContactList.first.atSign) {
-          if (tempStatus) {
-            flushbarStatus = FLUSHBAR_STATUS.SENDING;
-          } else {
-            flushbarStatus = FLUSHBAR_STATUS.FAILED;
-          }
-          // showFlushbar = tempStatus;
-        }
-        int index = transferStatus.indexWhere((element) =>
-            element.fileName == queuedFile.name &&
-            contact.atSign == element.contactName);
-        if (index != 1) {
-          if (tempStatus) {
-            transferStatus[index].status = TransferStatus.DONE;
-          } else {
-            transferStatus[index].status = TransferStatus.FAILED;
-          }
-        }
-        // setStatus(SEND_FILES, Status.Done);
-      });
-    } catch (e) {
-      // setError(SEND_FILES, e.toString());
-    }
-    // for (var i = 0; i < selectedFiles.length; i++) {
-    //   bool tempStatus =
-    //       await _backendService.sendFile(contact.atSign, selectedFiles[i].path);
-    //   if (i == 0 && contact.atSign == temporaryContactList.first.atSign) {
-    //     if (tempStatus) {
-    //       flushbarStatus = FLUSHBAR_STATUS.SENDING;
-    //     } else {
-    //       flushbarStatus = FLUSHBAR_STATUS.FAILED;
-    //     }
-    //     // showFlushbar = tempStatus;
-    //   }
-    //   int index = transferStatus.indexWhere((element) =>
-    //       element.fileName == selectedFiles[i].name &&
-    //       contact.atSign == element.contactName);
-    //   if (index != 1) {
-    //     if (tempStatus) {
-    //       transferStatus[index].status = TransferStatus.DONE;
-    //     } else {
-    //       transferStatus[index].status = TransferStatus.FAILED;
-    //     }
-    //   }
-    //   // if (i == selectedFiles.length - 1 &&
-    //   //     contact == temporaryContactList.last) {}
-    // }
-
-    // WelcomeScreenProvider().selectedContacts.clear();
-    // selectedFiles.clear();
-    // notifyListeners();
-    // getStatus(id, contact.atSign);
-  }
-
-  sendFileWithFileBin(List<PlatformFile> selectedFiles,
+  /// returns [true] when file is siccessfully saved and all recipients have received notification.
+  /// returns [false] if file entry is saved in sent history but notification did not go to every recipient.
+  /// returns [null] if file is not saved in sent history.
+  Future<dynamic> sendFileWithFileBin(List<PlatformFile> selectedFiles,
       List<GroupContactsModel> contactList) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     try {
-      var _atclient = AtClientManager.getInstance().atClient;
+      var _atclient = BackendService.getInstance().atClientInstance;
+      var _historyProvider = Provider.of<HistoryProvider>(
+          NavService.navKey.currentContext,
+          listen: false);
+
       FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
       var _files = <File>[];
       var _atSigns = <String>[];
@@ -346,45 +262,87 @@ class FileTransferProvider extends BaseModel {
       });
 
       contactList.forEach((groupContact) {
-        _atSigns.add(groupContact.contact.atSign);
+        if (groupContact.contact != null) {
+          var index =
+              _atSigns.indexWhere((el) => el == groupContact.contact.atSign);
+          if (index == -1) _atSigns.add(groupContact.contact.atSign);
+        } else if (groupContact.group != null) {
+          groupContact.group.members.forEach((member) {
+            var index = _atSigns.indexWhere((el) => el == member.atSign);
+            if (index == -1) _atSigns.add(member.atSign);
+          });
+        }
       });
 
       var uploadResult = await _atclient.uploadFile(_files, _atSigns);
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .setFileTransferHistory(
-              uploadResult[_atSigns[0]], _atSigns, uploadResult);
+
+      await _historyProvider.saveNewSentFileItem(
+        uploadResult[_atSigns[0]],
+        _atSigns,
+        uploadResult,
+      );
+
+      // checking if everyone received the notification or not.
+      for (var atsignStatus in uploadResult.entries) {
+        if (atsignStatus.value.sharedStatus != null &&
+            !atsignStatus.value.sharedStatus) {
+          setStatus(SEND_FILES, Status.Error);
+          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          return false;
+        }
+      }
 
       flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
       setStatus(SEND_FILES, Status.Done);
+      return true;
     } catch (e) {
       setStatus(SEND_FILES, Status.Error);
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
     }
   }
 
-  sendFileNotificationKey(
-      String _atsign, String _key, FileTransfer _filesToTransfer) async {
+// when file share fails and user taps on resend button.
+// we would iterate over every atsigns and attempt to share the file again.
+  Future<bool> reAttemptInSendingFiles() async {
+    var _historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentContext,
+        listen: false);
+    FileHistory _fileHistory;
+    if (_historyProvider.sentHistory.isNotEmpty) {
+      _fileHistory = _historyProvider.sentHistory[0];
+    } else {
+      return false;
+    }
+
     try {
-      var backendService = BackendService.getInstance();
-      AtKey atKey = AtKey()
-        ..metadata = Metadata()
-        ..metadata.ttr = -1
-        ..metadata.ccd = true
-        ..key = _key
-        ..sharedWith = _atsign
-        ..metadata.ttl = MixedConstants.FILE_TRANSFER_TTL
-        ..sharedBy = backendService.currentAtSign;
-      print('atkey : ${atKey}');
+      flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
 
-      // put data
-      var _result = await AtClientManager.getInstance()
-          .atClient
-          .put(atKey, jsonEncode(_filesToTransfer.toJson()));
+      //  reuploading files
+      for (var fileData in _fileHistory.fileDetails.files) {
+        if (fileData.isUploaded != null && !fileData.isUploaded) {
+          await reuploadFiles([fileData], 0, _fileHistory);
+        }
+      }
 
-      return _result;
+      //  resending notifications
+      for (var element in _fileHistory.sharedWith) {
+        if (element.isNotificationSend != null && !element.isNotificationSend) {
+          await reSendFileNotification(_fileHistory, element.atsign);
+        }
+      }
+
+      // checking if any notification didn't go through
+      _fileHistory = _historyProvider.sentHistory[0];
+      for (var element in _fileHistory.sharedWith) {
+        if (element.isNotificationSend != null && !element.isNotificationSend) {
+          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          return false;
+        }
+      }
+      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+      return true;
     } catch (e) {
-      print('Error in sendFileNotificationKey for $_atsign');
+      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
       return false;
     }
   }
@@ -468,6 +426,10 @@ class FileTransferProvider extends BaseModel {
         .updateSendingNotificationStatus(
             fileHistory.fileTransferObject.transferId, atsign, true);
 
+    Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+            listen: false)
+        .updateSendingNotificationStatus(
+            fileHistory.fileTransferObject.transferId, atsign, true);
     try {
       var sendResponse = await _atclient.shareFiles(
           [atsign],
@@ -505,35 +467,8 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  Future uploadFileToFilebin(
-      String container, String fileName, List<int> dataBytes) async {
-    try {
-      var response = await http.post(Uri.parse(MixedConstants.FILEBIN_URL),
-          headers: <String, String>{"bin": container, "filename": fileName},
-          body: dataBytes);
-      return response;
-    } catch (e) {
-      print('error in uploading file: ${e}');
-    }
-  }
-
-  TransferStatus getStatus(int id, String atSign) {
-    TransferStatus status;
-    transferStatus.forEach((element) {
-      if (element.id == id &&
-          element.contactName == atSign &&
-          status != TransferStatus.PENDING) {
-        if (element.status == TransferStatus.PENDING) {
-          status = TransferStatus.PENDING;
-        } else if (element.status == TransferStatus.FAILED) {
-          status = TransferStatus.FAILED;
-        } else if (element.status != TransferStatus.FAILED) {
-          status = TransferStatus.DONE;
-        }
-      }
-    });
-
-    return status;
+  void resetSelectedFilesStatus() {
+    hasSelectedFilesChanged = false;
   }
 
   updateFileSendingStatus(bool val) {

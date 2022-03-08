@@ -2,12 +2,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -16,7 +20,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -40,10 +44,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloading = false,
       isDownloaded = false,
       isDownloadAvailable = false,
-      isFilesAvailableOfline = true;
+      isFilesAvailableOfline = true,
+      isOverwrite = false;
   DateTime sendTime;
   Uint8List videoThumbnail, image;
   int fileSize = 0;
+  List<String> existingFileNamesToOverwrite = [];
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -63,13 +69,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       fileSize += element.size;
     });
 
+    checkForDownloadAvailability();
+    getAtSignDetail();
+    isFilesAlreadyDownloaded();
+    super.initState();
+  }
+
+  checkForDownloadAvailability() {
     var expiryDate = widget.receivedHistory.date.add(Duration(days: 6));
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
-    getAtSignDetail();
-    isFilesAlreadyDownloaded();
-    super.initState();
+
+    // if fileList is not having any file then download icon will not be shown
+    var isFileUploaded = false;
+    widget.receivedHistory.files.forEach((FileData fileData) {
+      if (fileData.isUploaded) {
+        isFileUploaded = true;
+      }
+    });
+
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
   }
 
   getAtSignDetail() {
@@ -78,13 +100,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       contact = checkForCachedContactDetail(widget.receivedHistory.sender);
     }
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        if (mounted) {
-          setState(() {
-            image = Uint8List.fromList(intList);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          image = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
     }
   }
@@ -96,9 +115,21 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
-        setState(() {
-          isFilesAvailableOfline = false;
-        });
+        if (mounted) {
+          setState(() {
+            isFilesAvailableOfline = false;
+          });
+        }
+      } else {
+        var fileLatsModified = await test.lastModified();
+        if (fileLatsModified.isBefore(widget.receivedHistory.date)) {
+          existingFileNamesToOverwrite.add(element.name);
+          if (mounted) {
+            setState(() {
+              isOverwrite = true;
+            });
+          }
+        }
       }
     });
   }
@@ -108,27 +139,79 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     sendTime = DateTime.now();
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-      color: (isOpen) ? Color(0xffF86060).withAlpha(50) : Colors.white,
+      color: (isOpen) ? Color(0xffEFEFEF) : Colors.white,
       child: Column(
         children: [
           ListTile(
             leading:
                 // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
                 widget.receivedHistory.sender != null
-                    ? image != null
-                        ? CustomCircleAvatar(byteImage: image, nonAsset: true)
-                        : Container(
-                            height: 45.toHeight,
-                            width: 45.toHeight,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              shape: BoxShape.circle,
-                            ),
-                            child: ContactInitial(
-                              initials: widget.receivedHistory.sender,
-                              size: 45,
-                            ),
-                          )
+                    ? GestureDetector(
+                        onTap: ((widget.receivedHistory.sender != null) &&
+                                (ContactService().contactList.indexWhere(
+                                        (element) =>
+                                            element.atSign ==
+                                            widget.receivedHistory.sender) ==
+                                    -1))
+                            ? () async {
+                                await showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) {
+                                    return AddContact(
+                                      atSignName: widget.receivedHistory.sender,
+                                      image: image,
+                                    );
+                                  },
+                                );
+                                if (mounted) {
+                                  setState(() {});
+                                }
+                              }
+                            : null,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            image != null
+                                ? CustomCircleAvatar(
+                                    byteImage: image, nonAsset: true)
+                                : Container(
+                                    height: 45.toHeight,
+                                    width: 45.toHeight,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: ContactInitial(
+                                      initials: widget.receivedHistory.sender,
+                                      size: 45,
+                                    ),
+                                  ),
+                            ((widget.receivedHistory.sender != null) &&
+                                    (ContactService().contactList.indexWhere(
+                                            (element) =>
+                                                element.atSign ==
+                                                widget
+                                                    .receivedHistory.sender) ==
+                                        -1))
+                                ? Positioned(
+                                    right: -5,
+                                    top: -10,
+                                    child: Container(
+                                        height: 25,
+                                        width: 25,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                        ),
+                                        child: Icon(
+                                          Icons.person_add,
+                                          size: 15.toFont,
+                                        )))
+                                : SizedBox()
+                          ],
+                        ),
+                      )
                     : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,24 +230,28 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           : SizedBox(),
                     ),
                     InkWell(
-                      onTap: () async {
-                        await downloadFiles(widget.receivedHistory);
-                      },
-                      child: isDownloadAvailable
-                          ? widget.receivedHistory.isDownloading
-                              ? CircularProgressIndicator()
-                              : isDownloaded || isFilesAvailableOfline
-                                  ? Icon(
-                                      Icons.done,
-                                      color: Color(0xFF08CB21),
-                                      size: 25.toFont,
-                                    )
-                                  : Icon(
-                                      Icons.download_sharp,
-                                      size: 25.toFont,
-                                    )
-                          : SizedBox(),
-                    )
+                        onTap: () async {
+                          if (isOverwrite) {
+                            overwriteDialog();
+                            return;
+                          }
+                          await downloadFiles(widget.receivedHistory);
+                        },
+                        child: isDownloadAvailable
+                            ? widget.receivedHistory.isDownloading
+                                ? CircularProgressIndicator()
+                                : ((isDownloaded || isFilesAvailableOfline) &&
+                                        !isOverwrite)
+                                    ? Icon(
+                                        Icons.done,
+                                        color: Color(0xFF08CB21),
+                                        size: 25.toFont,
+                                      )
+                                    : Icon(
+                                        Icons.download_sharp,
+                                        size: 25.toFont,
+                                      )
+                            : SizedBox())
                   ],
                 ),
                 SizedBox(height: 5.toHeight),
@@ -176,7 +263,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.receivedHistory.files.length} '+ TextStrings().files,
+                        '${widget.receivedHistory.files.length} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -187,8 +274,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       Text(
                         double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} '+ TextStrings().kb
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} '+ TextStrings().mb,
+                            ? '${fileSize} ' + TextStrings().kb
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                TextStrings().mb,
                         style: CustomTextStyles.secondaryRegular12,
                       )
                     ],
@@ -229,16 +317,18 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 (!isOpen)
                     ? GestureDetector(
                         onTap: () {
-                          setState(() {
-                            isOpen = !isOpen;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              isOpen = !isOpen;
+                            });
+                          }
                         },
                         child: Container(
                           child: Row(
                             children: [
                               Text(
-                                TextStrings().moreDetails,
-                                style: CustomTextStyles.primaryBold14,
+                                TextStrings().seeFiles,
+                                style: CustomTextStyles.primaryBlueBold14,
                               ),
                               Container(
                                 width: 22.toWidth,
@@ -263,7 +353,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 66.0 *
+                      height: 70.0 *
                           (widget.receivedHistory.files.length -
                                   widget.receivedHistory.files
                                       .where((element) =>
@@ -292,6 +382,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               Text(TextStrings().video);
                             }
                             return ListTile(
+                              key:
+                                  Key(widget.receivedHistory.files[index].name),
                               onTap: () async {
                                 String path = MixedConstants
                                         .RECEIVED_FILE_DIRECTORY +
@@ -303,8 +395,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  _showNoFileDialog(deviceTextFactor);
-                                  print('url: ${widget.receivedHistory.url}');
+                                  if (!isDownloadAvailable) {
+                                    return;
+                                  }
+                                  await downloadFiles(widget.receivedHistory,
+                                      fileName: widget
+                                          .receivedHistory.files[index].name);
+                                  await OpenFile.open(path);
                                 }
                               },
                               leading: Container(
@@ -314,7 +411,6 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     future: isFilePresent(widget
                                         .receivedHistory.files[index].name),
                                     builder: (context, snapshot) {
-                                      print('snapshot builder: ${snapshot}');
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
@@ -337,14 +433,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          widget
-                                              .receivedHistory.files[index].name
-                                              .toString(),
-                                          style:
-                                              CustomTextStyles.primaryRegular16,
+                                        child: RichText(
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
+                                          text: TextSpan(
+                                            text: widget.receivedHistory
+                                                .files[index].name
+                                                .toString(),
+                                            style: CustomTextStyles
+                                                .primaryRegular16,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -380,7 +478,35 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               .toString(),
                                           style: CustomTextStyles
                                               .secondaryRegular12,
-                                        )
+                                        ),
+                                        SizedBox(width: 10.toHeight),
+                                        Text(
+                                          (widget.receivedHistory.files[index]
+                                                      .isDownloading ??
+                                                  false)
+                                              ? 'Downloading...'
+                                              : '',
+                                          style: CustomTextStyles.redSmall12,
+                                        ),
+                                        CommonUtilityFunctions()
+                                                .isFileDownloadAvailable(
+                                                    widget.receivedHistory.date)
+                                            ? SizedBox()
+                                            : Row(
+                                                children: [
+                                                  SizedBox(width: 10),
+                                                  Container(
+                                                    color: ColorConstants
+                                                        .fontSecondary,
+                                                    height: 14.toHeight,
+                                                    width: 1.toWidth,
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text(TextStrings().expired,
+                                                      style: CustomTextStyles
+                                                          .secondaryRegular12),
+                                                ],
+                                              )
                                       ],
                                     ),
                                   )
@@ -391,9 +517,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        setState(() {
-                          isOpen = !isOpen;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        }
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 85.toHeight),
@@ -401,8 +529,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              TextStrings().lesserDetails,
-                              style: CustomTextStyles.primaryBold14,
+                              TextStrings().hideFiles,
+                              style: CustomTextStyles.primaryBlueBold14,
                             ),
                             Container(
                               width: 22.toWidth,
@@ -426,7 +554,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     );
   }
 
-  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+  Widget thumbnail(
+    String extension,
+    String path, {
+    bool isFilePresent = true,
+  }) {
+    // when file overwrite is true, we are not showing file preview.
+    if (isOverwrite) {
+      isFilePresent = false;
+    }
     if (FileTypes.IMAGE_TYPES.contains(extension)) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(10.toHeight),
@@ -539,20 +675,38 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     return fileExists;
   }
 
-  downloadFiles(FileTransfer receivedHistory) async {
-    var result = await Provider.of<HistoryProvider>(context, listen: false)
-        .downloadFiles(
-      widget.receivedHistory.key,
-      widget.receivedHistory.sender,
-      isOpen,
-    );
+  /// provide [fileName] to download that file
+  downloadFiles(FileTransfer receivedHistory, {String fileName}) async {
+    var result;
+    if (fileName != null) {
+      result = await Provider.of<HistoryProvider>(context, listen: false)
+          .downloadSingleFile(
+        widget.receivedHistory.key,
+        widget.receivedHistory.sender,
+        isOpen,
+        fileName,
+      );
+    } else {
+      result = await Provider.of<HistoryProvider>(context, listen: false)
+          .downloadFiles(
+        widget.receivedHistory.key,
+        widget.receivedHistory.sender,
+        isOpen,
+      );
+    }
 
     if (result is bool && result) {
       if (mounted) {
         setState(() {
           isDownloaded = true;
+          isFilesAvailableOfline = true;
+          isOverwrite = false;
         });
       }
+      // send download acknowledgement
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+              listen: false)
+          .sendFileDownloadAcknowledgement(receivedHistory);
     } else if (result is bool && !result) {
       if (mounted) {
         setState(() {
@@ -560,5 +714,104 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
       }
     }
+  }
+
+  overwriteDialog() {
+    showDialog(
+        context: NavService.navKey.currentContext,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            content: Container(
+              width: 300.toWidth,
+              padding: EdgeInsets.all(15.toFont),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: getOverwriteMessage(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.toHeight,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              await downloadFiles(widget.receivedHistory);
+                            },
+                            child: Text('Yes',
+                                style: TextStyle(fontSize: 16.toFont))),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel',
+                                style: TextStyle(fontSize: 16.toFont)))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  List<TextSpan> getOverwriteMessage() {
+    List<TextSpan> textSpansMessage = [];
+    if (existingFileNamesToOverwrite.length == 1) {
+      textSpansMessage.add(
+        TextSpan(
+          children: [
+            TextSpan(
+                text: 'A file named ',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+            TextSpan(
+                text: '${existingFileNamesToOverwrite[0]}',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: ' already exists. Do you want to overwrite it?',
+                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+          ],
+        ),
+      );
+    } else if (existingFileNamesToOverwrite.length > 1) {
+      textSpansMessage.add(TextSpan(
+        text: 'These files already exist: ',
+        style: TextStyle(color: Colors.black, fontSize: 15.toFont),
+      ));
+
+      existingFileNamesToOverwrite.forEach((element) {
+        textSpansMessage.add(
+          TextSpan(
+            text: '\n$element',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 13.toFont,
+                fontWeight: FontWeight.bold,
+                height: 1.5),
+          ),
+        );
+      });
+
+      textSpansMessage.add(
+        TextSpan(
+            text: '\nDo you want to overwrite them?',
+            style:
+                TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
+      );
+    }
+    return textSpansMessage;
   }
 }

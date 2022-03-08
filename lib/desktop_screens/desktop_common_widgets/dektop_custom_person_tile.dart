@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopCustomPersonVerticalTile extends StatelessWidget {
   final String title, subTitle;

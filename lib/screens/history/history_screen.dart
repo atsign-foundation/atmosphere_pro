@@ -2,7 +2,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -35,6 +35,15 @@ class _HistoryScreenState extends State<HistoryScreen>
   }
 
   @override
+  dispose() {
+    // closing all open received files widgets widgets.
+    historyProvider.receivedHistoryLogs.forEach((element) {
+      element.isWidgetOpen = false;
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,
@@ -43,12 +52,12 @@ class _HistoryScreenState extends State<HistoryScreen>
         showTitle: true,
         title: TextStrings().history,
         showTrailingButton: true,
-        trailingIcon: Icons.library_books,
+        trailingIcon: Icons.save_alt_outlined,
         isHistory: true,
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: SizeConfig().screenHeight,
+          height: SizeConfig().screenHeight - 120.toHeight,
           child: Column(
             children: [
               Container(
@@ -80,75 +89,148 @@ class _HistoryScreenState extends State<HistoryScreen>
                 child: TabBarView(
                   controller: _controller,
                   children: [
-                    ProviderHandler<HistoryProvider>(
-                      functionName: historyProvider.SENT_HISTORY,
-                      showError: true,
-                      successBuilder: (provider) => (provider
-                              .sentHistory.isEmpty)
-                          ? Center(
-                              child: Text(TextStrings().noFilesSent,
-                                  style: TextStyle(fontSize: 15.toFont)),
-                            )
-                          : ListView.separated(
-                              padding: EdgeInsets.only(bottom: 170.toHeight),
-                              physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) {
-                                return Divider(
-                                  indent: 16.toWidth,
-                                );
-                              },
-                              itemCount: provider.sentHistory.length,
-                              itemBuilder: (context, index) {
-                                return SentFilesListTile(
-                                  sentHistory: provider.sentHistory[index],
-                                  key: Key(provider
-                                      .sentHistory[index].fileDetails.key),
-                                );
-                              },
-                            ),
-                      errorBuilder: (provider) => Center(
-                        child: Text('Some error occured'),
-                      ),
-                      load: (provider) async {
-                        // provider.getSentHistory();
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        await historyProvider.getSentHistory();
                       },
-                    ),
-                    ProviderHandler<HistoryProvider>(
-                      functionName: historyProvider.RECEIVED_HISTORY,
-                      load: (provider) async {
-                        print('loading received');
-                        // await provider.getReceivedHistory();
-                      },
-                      showError: true,
-                      successBuilder: (provider) => (provider
-                              .receivedHistoryLogs.isEmpty)
-                          ? Center(
-                              child: Text(
-                                TextStrings().noFilesRecieved,
-                                style: TextStyle(fontSize: 15.toFont),
+                      child: ProviderHandler<HistoryProvider>(
+                        functionName: historyProvider.SENT_HISTORY,
+                        showError: false,
+                        successBuilder: (provider) => (provider
+                                .sentHistory.isEmpty)
+                            ? ListView.separated(
+                                padding: EdgeInsets.only(bottom: 170.toHeight),
+                                physics: AlwaysScrollableScrollPhysics(),
+                                separatorBuilder: (context, index) =>
+                                    Divider(indent: 16.toWidth),
+                                itemCount: 1,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    height: SizeConfig().screenHeight -
+                                        120.toHeight,
+                                    child: Center(
+                                      child: Text(
+                                        'No files sent',
+                                        style: TextStyle(fontSize: 15.toFont),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ListView.separated(
+                                padding: EdgeInsets.only(bottom: 170.toHeight),
+                                physics: AlwaysScrollableScrollPhysics(),
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    indent: 16.toWidth,
+                                  );
+                                },
+                                itemCount: provider.sentHistory.length,
+                                itemBuilder: (context, index) {
+                                  return SentFilesListTile(
+                                    sentHistory: provider.sentHistory[index],
+                                    key: Key(provider
+                                        .sentHistory[index].fileDetails.key),
+                                  );
+                                },
                               ),
-                            )
-                          : ListView.separated(
-                              padding: EdgeInsets.only(bottom: 170.toHeight),
-                              physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) => Divider(
-                                indent: 16.toWidth,
-                              ),
-                              itemCount: provider.receivedHistoryLogs.length,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ReceivedFilesListTile(
-                                  key: UniqueKey(),
-                                  receivedHistory:
-                                      provider.receivedHistoryLogs[index],
-                                  isWidgetOpen: provider
-                                      .receivedHistoryLogs[index].isWidgetOpen,
+                        errorBuilder: (provider) => ListView.separated(
+                          padding: EdgeInsets.only(bottom: 170.toHeight),
+                          physics: AlwaysScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) =>
+                              Divider(indent: 16.toWidth),
+                          itemCount: 1,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              height: SizeConfig().screenHeight - 120.toHeight,
+                              child: Center(
+                                child: Text(
+                                  'Some error occured',
+                                  style: TextStyle(fontSize: 15.toFont),
                                 ),
                               ),
                             ),
-                      errorBuilder: (provider) => Center(
-                        child: Text(TextStrings().errorOccured),
+                          ),
+                        ),
+                        load: (provider) async {},
                       ),
+                    ),
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        await historyProvider.getReceivedHistory();
+                      },
+                      child: ProviderHandler<HistoryProvider>(
+                          functionName: historyProvider.RECEIVED_HISTORY,
+                          load: (provider) async {},
+                          showError: false,
+                          successBuilder: (provider) => (provider
+                                  .receivedHistoryLogs.isEmpty)
+                              ?
+                              // Used a listview for RefreshIndicator to be active.
+                              ListView.separated(
+                                  padding:
+                                      EdgeInsets.only(bottom: 170.toHeight),
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  separatorBuilder: (context, index) =>
+                                      Divider(indent: 16.toWidth),
+                                  itemCount: 1,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      height: SizeConfig().screenHeight -
+                                          120.toHeight,
+                                      child: Center(
+                                        child: Text(
+                                          'No files received',
+                                          style: TextStyle(fontSize: 15.toFont),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : ListView.separated(
+                                  padding:
+                                      EdgeInsets.only(bottom: 170.toHeight),
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  separatorBuilder: (context, index) =>
+                                      Divider(indent: 16.toWidth),
+                                  itemCount:
+                                      provider.receivedHistoryLogs.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ReceivedFilesListTile(
+                                      key: Key(provider
+                                          .receivedHistoryLogs[index].key),
+                                      receivedHistory:
+                                          provider.receivedHistoryLogs[index],
+                                      isWidgetOpen: provider
+                                          .receivedHistoryLogs[index]
+                                          .isWidgetOpen,
+                                    ),
+                                  ),
+                                ),
+                          errorBuilder: (provider) => ListView.separated(
+                                padding: EdgeInsets.only(bottom: 170.toHeight),
+                                physics: AlwaysScrollableScrollPhysics(),
+                                separatorBuilder: (context, index) =>
+                                    Divider(indent: 16.toWidth),
+                                itemCount: 1,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    height: SizeConfig().screenHeight -
+                                        120.toHeight,
+                                    child: Center(
+                                      child: Text(
+                                        'Some error occured',
+                                        style: TextStyle(fontSize: 15.toFont),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
                     ),
                   ],
                 ),

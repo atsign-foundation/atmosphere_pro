@@ -19,6 +19,10 @@ class ColorConstants {
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
+  static const Color MILD_GREY = Color(0xFFE4E4E4);
+  static const Color redAlert = Color(0xffF86060);
+  static const Color red = Color(0xFFe34040);
+  static const Color successGreen = Color(0xFF0ACB21);
   static const Color selago = Color(0xFFFFFAFA);
   static const Color mildGrey = Color(0xFFE4E4E4);
   static const Color selected_list = Color(0xFFFEF7F7);
@@ -27,12 +31,14 @@ class ColorConstants {
   static const Color light_grey = Color(0xFFBFBFBF);
   static const Color light_border_color = Color(0xFFEEF1F4);
   static const Color textBoxBg = Color(0xFFF2F2F2);
-  static const Color redAlert = Color(0xffF86060);
   static const Color lightBlueBg = Color(0xFFF8FBFF);
 }
 
 class ContactInitialsColors {
   static Color getColor(String atsign) {
+    if (atsign.length == 1) {
+      atsign = atsign + ' ';
+    }
     switch (atsign[1].toUpperCase()) {
       case 'A':
         return Color(0xFFAA0DFE);

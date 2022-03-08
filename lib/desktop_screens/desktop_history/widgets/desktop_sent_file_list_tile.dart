@@ -6,19 +6,17 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/transfer_overlapping.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -27,14 +25,10 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 class DesktopSentFilesListTile extends StatefulWidget {
   final FileHistory sentHistory;
-  final ContactProvider contactProvider;
   final bool isSelected;
 
   const DesktopSentFilesListTile(
-      {Key key,
-      this.sentHistory,
-      this.contactProvider,
-      this.isSelected = false})
+      {Key key, this.sentHistory, this.isSelected = false})
       : super(key: key);
   @override
   _DesktopSentFilesListTileState createState() =>
@@ -69,7 +63,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
     });
 
     if (widget.sentHistory.sharedWith.isNotEmpty) {
-      contactName = CommonFunctions()
+      contactName = CommonUtilityFunctions()
           .getContactName(widget.sentHistory.sharedWith[0].atsign);
     }
 
@@ -82,13 +76,10 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
       contact = checkForCachedContactDetail(contactList[0]);
     }
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        if (mounted) {
-          setState(() {
-            firstContactImage = Uint8List.fromList(intList);
-          });
-        }
+      if (mounted) {
+        setState(() {
+          firstContactImage = CommonUtilityFunctions().getContactImage(contact);
+        });
       }
     }
   }
@@ -484,12 +475,12 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                               ),
                             ],
                           ),
-                    (contactList.length < 2)
-                        ? Container()
-                        : TranferOverlappingContacts(
-                            selectedList: widget.sentHistory.sharedWith.sublist(
-                                1, widget.sentHistory.sharedWith.length),
-                            fileHistory: widget.sentHistory),
+                    // (contactList.length < 2)
+                    //     ? Container()
+                    //     : TranferOverlappingContacts(
+                    //         selectedList: widget.sentHistory.sharedWith.sublist(
+                    //             1, widget.sentHistory.sharedWith.length),
+                    //         fileHistory: widget.sentHistory),
                     GestureDetector(
                       onTap: () {
                         setState(() {

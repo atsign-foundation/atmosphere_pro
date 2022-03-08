@@ -9,14 +9,16 @@
 import 'dart:io';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
-
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
@@ -24,40 +26,51 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final bool showTitle;
   final bool showBackButton;
   final bool showLeadingicon;
   final bool showTrailingButton;
+  final bool showMenu;
+  final bool showClosedBtnText;
   final IconData trailingIcon;
   final bool isHistory;
   final onActionpressed;
   final bool isTrustedContactScreen;
   final double elevation;
-
   const CustomAppBar(
-      {this.title,
+      {Key key,
+      this.title,
       this.showTitle = false,
       this.showBackButton = false,
       this.showLeadingicon = false,
       this.showTrailingButton = false,
+      this.showClosedBtnText = true,
+      this.showMenu = false,
       this.trailingIcon = Icons.add,
       this.isHistory = false,
       this.elevation = 0,
       this.onActionpressed,
-      this.isTrustedContactScreen = false});
+      this.isTrustedContactScreen = false})
+      : super(key: key);
+
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
   @override
+  _CustomAppBarState createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: elevation ?? 0,
+      elevation: widget.elevation ?? 0,
       centerTitle: true,
-      leading: (showLeadingicon)
+      leading: (widget.showLeadingicon)
           ? Image.asset(ImageConstants.logoIcon)
-          : (showBackButton)
+          : (widget.showBackButton)
               ? IconButton(
                   icon: Icon(
                     Icons.arrow_back,
@@ -65,7 +78,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 25.toFont,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.pop(context);
+                    }
                   })
               : null,
       title: Row(
@@ -73,7 +88,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             height: 40.toHeight,
             margin: EdgeInsets.only(top: 5.toHeight),
-            child: (!showBackButton && !showLeadingicon)
+            child: (!widget.showBackButton &&
+                    !widget.showLeadingicon &&
+                    widget.showClosedBtnText)
                 ? Center(
                     child: GestureDetector(
                       child: Text(
@@ -81,17 +98,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         style: CustomTextStyles.blueRegular18,
                       ),
                       onTap: () {
-                        Navigator.pop(context);
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.pop(context);
+                        }
                       },
                     ),
                   )
                 : Container(),
           ),
           Expanded(
-            child: (showTitle)
+            child: (widget.showTitle)
                 ? Center(
                     child: Text(
-                      title,
+                      widget.title,
                       style: CustomTextStyles.primaryBold18,
                     ),
                   )
@@ -104,91 +123,129 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 22.toHeight,
           width: 22.toWidth,
           margin: EdgeInsets.only(right: 30),
-          child: (showTitle)
-              ? (showTrailingButton)
-                  ? IconButton(
-                      icon: Icon(
-                        trailingIcon,
-                        size: 25.toFont,
-                      ),
-                      onPressed: () async {
-                        if (isHistory) {
-                          // navigate to downloads folder
-                          if (Platform.isAndroid) {
-                            await FilesystemPicker.open(
-                              title: TextStrings().atmosphereDownloadFolder,
-                              context: context,
-                              rootDirectory: BackendService.getInstance()
-                                  .downloadDirectory,
-                              fsType: FilesystemType.all,
-                              folderIconColor: Colors.teal,
-                              allowedExtensions: [],
-                              fileTileSelectMode: FileTileSelectMode.wholeTile,
-                              requestPermission: () async =>
-                                  await Permission.storage.request().isGranted,
-                            );
-                          } else {
-                            String url = 'shareddocuments://' +
-                                BackendService.getInstance()
-                                    .atClientPreference
-                                    .downloadPath;
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          }
-                        } else if (isTrustedContactScreen) {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ContactsScreen(
-                                asSelectionScreen: true,
-                                context: NavService.navKey.currentContext,
-                                selectedList: (s) async {
-                                  s.forEach((element) async {
-                                    await Provider.of<TrustedContactProvider>(
-                                            context,
-                                            listen: false)
-                                        .addTrustedContacts(element);
-                                  });
-                                  await Provider.of<TrustedContactProvider>(
-                                          context,
-                                          listen: false)
-                                      .setTrustedContact();
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (context) => AddContactDialog(
-                                // onYesTap: (value) {
-                                //   onActionpressed(value);
-                                // },
+          child: (widget.showTitle)
+              ? ((widget.showTrailingButton)
+                  ? widget.showMenu
+                      ? menuBar(context)
+                      : IconButton(
+                          icon: Icon(
+                            widget.trailingIcon,
+                            size: 25.toFont,
+                            color: ColorConstants.blueText,
+                          ),
+                          onPressed: () async {
+                            if (widget.isHistory) {
+                              // navigate to downloads folder
+                              if (Platform.isAndroid) {
+                                await FilesystemPicker.open(
+                                  title: 'Atmosphere download folder',
+                                  context: context,
+                                  rootDirectory: BackendService.getInstance()
+                                      .downloadDirectory,
+                                  fsType: FilesystemType.all,
+                                  folderIconColor: Colors.teal,
+                                  allowedExtensions: [],
+                                  fileTileSelectMode:
+                                      FileTileSelectMode.wholeTile,
+                                  requestPermission: () async =>
+                                      await Permission.storage
+                                          .request()
+                                          .isGranted,
+                                );
+                              } else {
+                                String url = 'shareddocuments://' +
+                                    BackendService.getInstance()
+                                        .atClientPreference
+                                        .downloadPath;
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              }
+                            } else if (widget.isTrustedContactScreen) {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ContactsScreen(
+                                    asSelectionScreen: true,
+                                    context: NavService.navKey.currentContext,
+                                    selectedList: (s) async {
+                                      s.forEach((element) async {
+                                        await Provider.of<
+                                                    TrustedContactProvider>(
+                                                context,
+                                                listen: false)
+                                            .addTrustedContacts(element);
+                                      });
+                                      await Provider.of<TrustedContactProvider>(
+                                              context,
+                                              listen: false)
+                                          .setTrustedContact();
+                                    },
+                                  ),
                                 ),
-                          );
-                        }
-                      })
-                  : Container()
-              : GestureDetector(
-                  onTap: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                  child: Container(
-                    height: 22.toHeight,
-                    width: 22.toWidth,
-                    child: Image.asset(
-                      ImageConstants.drawerIcon,
-                    ),
-                  ),
-                ),
+                              );
+                            } else {
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => AddContactDialog(
+                                    // onYesTap: (value) {
+                                    //   onActionpressed(value);
+                                    // },
+                                    ),
+                              );
+                            }
+                          })
+                  : Container())
+              : menuBar(context),
         )
       ],
       automaticallyImplyLeading: false,
       backgroundColor: ColorConstants.appBarColor,
+    );
+  }
+
+  Widget menuBar(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Scaffold.of(context).openEndDrawer();
+      },
+      child: Stack(
+        alignment: Alignment.topRight,
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 10.toHeight),
+            height: 22.toHeight,
+            width: 22.toWidth,
+            child: Image.asset(
+              ImageConstants.drawerIcon,
+            ),
+          ),
+          Consumer<FileDownloadChecker>(
+              builder: (context, _fileDownloadChecker, _) {
+            return _fileDownloadChecker.undownloadedFilesExist
+                ? Positioned(
+                    right: -4,
+                    top: 2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(1.toHeight),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.red,
+                        radius: 5.toWidth,
+                      ),
+                    ),
+                  )
+                : SizedBox();
+          }),
+        ],
+      ),
     );
   }
 }

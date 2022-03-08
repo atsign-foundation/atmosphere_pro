@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_functions.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -17,7 +17,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -124,7 +124,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                             builder: (context, snapshot) {
                               if (snapshot.data != null) {
                                 List<String> atsignList = snapshot.data;
-                                var image = CommonFunctions()
+                                var image = CommonUtilityFunctions()
                                     .getCachedContactImage(
                                         atClient.getCurrentAtSign());
                                 return Container(

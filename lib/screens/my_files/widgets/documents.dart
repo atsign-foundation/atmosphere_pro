@@ -1,5 +1,5 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -20,6 +20,7 @@ class _DocumentsState extends State<Documents> {
   Widget build(BuildContext context) {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
+      showError: false,
       load: (provider) => provider.sortFiles(provider.receivedHistoryLogs),
       successBuilder: (provider) => Container(
         margin:
@@ -30,70 +31,8 @@ class _DocumentsState extends State<Documents> {
               DateTime date =
                   DateTime.parse(provider.receivedDocument[index].date);
               return InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          margin: EdgeInsets.only(top: 20.toWidth),
-                          height: 190.toHeight,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 4,
-                                    color: ColorConstants.fontSecondary)
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30))),
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(top: 10.toHeight),
-                                  width: 50.toWidth,
-                                  height: 5.toHeight,
-                                  decoration: BoxDecoration(
-                                      color: ColorConstants.fontSecondary,
-                                      borderRadius: BorderRadius.circular(5)),
-                                )
-                              ],
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(
-                                    left: 20.toWidth,
-                                    top: 10.toHeight,
-                                    right: 20.toWidth),
-                                child: Column(children: <Widget>[
-                                  ListTile(
-                                      onTap: () async {
-                                        await openDownloadsFolder(context);
-                                      },
-                                      title: Text(
-                                        TextStrings().openFileLocation,
-                                        style:
-                                            CustomTextStyles.primaryRegular16,
-                                      )),
-                                  Divider(
-                                    thickness: 1,
-                                    color: ColorConstants.greyText,
-                                  ),
-                                  ListTile(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      title: Text(
-                                        TextStrings().buttonCancel,
-                                        style:
-                                            CustomTextStyles.primaryRegular16,
-                                      )),
-                                ]))
-                          ]),
-                        );
-                      });
+                onTap: () async {
+                  await openFilePath(provider.receivedDocument[index].filePath);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -151,8 +90,10 @@ class _DocumentsState extends State<Documents> {
                               double.parse(provider.receivedDocument[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedDocument[index].size).toStringAsFixed(2)}'+ TextStrings().kb
-                                  : '${(provider.receivedDocument[index].size / 1024).toStringAsFixed(2)}'+ TextStrings().mb,
+                                  ? '${(provider.receivedDocument[index].size).toStringAsFixed(2)}' +
+                                      TextStrings().kb
+                                  : '${(provider.receivedDocument[index].size / 1024).toStringAsFixed(2)}' +
+                                      TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

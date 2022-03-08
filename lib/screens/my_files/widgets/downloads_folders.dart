@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,5 +29,13 @@ Future<void> openDownloadsFolder(BuildContext context) async {
     } else {
       throw 'Could not launch $url';
     }
+  }
+}
+
+Future<void> openFilePath(String path) async {
+  File test = File(path);
+  bool fileExists = await test.exists();
+  if (fileExists) {
+    await OpenFile.open(path);
   }
 }

@@ -21,11 +21,18 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
+import 'package:at_client/src/service/encryption_service.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:at_client/src/service/notification_service.dart';
+import 'package:provider/provider.dart';
 import 'package:at_client/src/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
@@ -34,19 +41,25 @@ import 'file_download_checker.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
+  String RECENT_HISTORY = 'recent_history';
   String ADD_RECEIVED_FILE = 'add_received_file';
   String UPDATE_RECEIVED_RECORD = 'update_received_record';
   String SET_FILE_HISTORY = 'set_flie_history';
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
   String DOWNLOAD_FILE = 'download_file';
-  String RECENT_HISTORY = 'recent_history';
-  String fileSearchText = '';
+  String DOWNLOAD_ACK = 'download_ack';
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
-  bool isSyncedDataFetched = false;
   Map<String, Map<String, bool>> downloadedFileAcknowledgement = {};
+  Map<String, bool> individualSentFileId = {};
+  String state;
+
+  // on first transfer history fetch, we show loader in history screen.
+  // on second attempt we keep the status as idle.
+  bool isSyncedDataFetched = false;
+  String fileSearchText = '';
   List<FilesDetail> sentPhotos,
       sentVideos,
       sentAudio,
@@ -58,76 +71,96 @@ class HistoryProvider extends BaseModel {
       receivedAudio,
       receivedApk,
       receivedDocument,
-      finalReceivedHistory = [],
-      receivedUnknown = [],
-      recentFile = [];
+      recentFile = [],
+      receivedUnknown = [];
   List<String> tabNames = ['Recents'];
 
+  List<Widget> tabs = [Recents()];
+
   List<FilesModel> receivedHistory, receivedAudioModel = [];
-  List<Widget> tabs = [DesktopRecents()];
+  List<Widget> desktopTabs = [DesktopRecents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
-  Map receivedFileHistory = {'history': []};
   Map sendFileHistory = {'history': []};
   String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
-
-  setFilesHistory(
-      {HistoryType historyType,
-      List<String> atSignName,
-      List<FilesDetail> files,
-      @required int id}) async {
-    try {
-      DateTime now = DateTime.now();
-      FilesModel filesModel = FilesModel(
-          name: atSignName,
-          id: id,
-          historyType: historyType,
-          date: now.toString(),
-          files: files);
-      filesModel.totalSize = 0.0;
-
-      AtKey atKey = AtKey()..metadata = Metadata();
-
-      if (historyType == HistoryType.received) {
-        /// the file size come in bytes in receiver side
-        // filesModel.files.forEach((file) {
-        //   file.size = file.size;
-        //   filesModel.totalSize += file.size;
-        // });
-        // receivedFileHistory['history'].insert(0, (filesModel.toJson()));
-
-        // atKey.key = 'receivedFiles';
-
-        // await backendService.atClientManager.atClient
-        //     .put(atKey, json.encode(receivedFileHistory));
-      } else {
-        // the file is in kB in sender side
-        filesModel.files.forEach((file) {
-          filesModel.totalSize += file.size;
-        });
-        sendFileHistory['history'].insert(0, filesModel.toJson());
-        atKey.key = MixedConstants.SENT_FILE_HISTORY;
-        await AtClientManager.getInstance()
-            .atClient
-            .put(atKey, json.encode(sendFileHistory));
-      }
-    } catch (e) {
-      print("here error => $e");
-    }
-  }
+  String app_lifecycle_state;
 
   resetData() {
     isSyncedDataFetched = false;
     sentHistory = [];
     receivedHistoryLogs = [];
-    receivedHistory = [];
-    receivedAudioModel = [];
     sendFileHistory = {'history': []};
     downloadedFileAcknowledgement = {};
+    receivedPhotos = [];
+    receivedVideos = [];
+    receivedAudio = [];
+    receivedApk = [];
+    receivedDocument = [];
+    recentFile = [];
+    receivedUnknown = [];
   }
 
-  setFileTransferHistory(
+  // setFileTransferHistory(
+  //   FileTransferObject fileTransferObject,
+  //   List<String> sharedWithAtsigns,
+  //   Map<String, FileTransferObject> fileShareResult, {
+  //   bool isEdit = false,
+  // }) async {
+  //   FileHistory fileHistory = convertFileTransferObjectToFileHistory(
+  //     fileTransferObject,
+  //     sharedWithAtsigns,
+  //     fileShareResult,
+  //   );
+
+  //   setStatus(SET_FILE_HISTORY, Status.Loading);
+  //   await getSentHistory();
+  //   if (isEdit) {
+  //     int index = sentHistory.indexWhere((element) =>
+  //         element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+
+  //     if (index > -1) {
+  //       sendFileHistory['history'][index] = fileHistory.toJson();
+  //       sentHistory[index] = fileHistory;
+  //     }
+  //   } else {
+  //     sendFileHistory['history'].insert(0, (fileHistory.toJson()));
+  //     sentHistory.insert(0, fileHistory);
+  //   }
+
+  //   try {
+  //     var result = await updateSentHistory();
+  //     setStatus(SET_FILE_HISTORY, Status.Done);
+  //     return result;
+  //   } catch (e) {
+  //     setError(SET_FILE_HISTORY, e.toString());
+  //     setStatus(SET_FILE_HISTORY, Status.Error);
+  //   }
+  // }
+
+  updateFileHistoryDetail(FileHistory fileHistory) async {
+    // checking whether sent file is stored in individual atKey or in sentHistory list.
+    if (individualSentFileId[fileHistory.fileDetails.key] != null) {
+      await saveIndividualSentItemInAtkey(fileHistory, isEdit: true);
+      return;
+    }
+
+    // if file is not saved individually, we will update file index in sent history list.
+    int index = sentHistory.indexWhere((element) =>
+        element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+
+    var result = false;
+    if (index > -1) {
+      sentHistory[index] = fileHistory;
+      updateSendFileHistoryArray(fileHistory);
+
+      result = await updateSentHistory();
+      notifyListeners();
+    }
+    return result;
+  }
+
+  saveNewSentFileItem(
     FileTransferObject fileTransferObject,
     List<String> sharedWithAtsigns,
     Map<String, FileTransferObject> fileShareResult, {
@@ -139,51 +172,48 @@ class HistoryProvider extends BaseModel {
       fileShareResult,
     );
 
-    setStatus(SET_FILE_HISTORY, Status.Loading);
-    await getSentHistory();
+    return await saveIndividualSentItemInAtkey(fileHistory);
+  }
+
+  /// if [fileHistory.fileDetails.key] is unique, a new AtKey will be created
+  /// otherwise the same AtKey will be updated with the new [fileHistory] data.
+  Future<bool> saveIndividualSentItemInAtkey(FileHistory fileHistory,
+      {bool isEdit = false}) async {
     AtKey atKey = AtKey()
+      ..key = fileHistory.fileDetails.key
       ..metadata = Metadata()
-      ..key = MixedConstants.SENT_FILE_HISTORY;
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      // key will be deleted after 15 days.
+      ..metadata.ttl = 1296000000; // 1000 * 60 * 60 * 24 * 15
 
-    if (isEdit) {
-      int index = sentHistory.indexWhere((element) =>
-          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
-
-      if (index > -1) {
-        sendFileHistory['history'][index] = fileHistory.toJson();
-        sentHistory[index] = fileHistory;
+    try {
+      var res = await AtClientManager.getInstance().atClient.put(
+          atKey,
+          json.encode(
+            fileHistory.toJson(),
+          ));
+      if (res) {
+        individualSentFileId[fileHistory.fileDetails.key] = true;
+        isEdit
+            ? updateFileEntryInSentHistory(fileHistory)
+            : sentHistory.insert(0, fileHistory);
       }
-    } else {
-      sendFileHistory['history'].insert(0, (fileHistory.toJson()));
-      sentHistory.insert(0, fileHistory);
+      notifyListeners();
+      return res;
+    } catch (e) {
+      print('exception in adding new sent history : $e');
+      return false;
     }
-
-    var result = await AtClientManager.getInstance()
-        .atClient
-        .put(atKey, json.encode(sendFileHistory));
-    print('file history saved: ${result}');
-    setStatus(SET_FILE_HISTORY, Status.Done);
   }
 
-  updateFileHistoryDetail(FileHistory fileHistory) async {
-    AtKey atKey = AtKey()
-      ..metadata = Metadata()
-      ..key = MixedConstants.SENT_FILE_HISTORY;
+  // sent files are stored in two ways
+  // old approach---------
+  // 1 -- `sentHistory_v2` key stores list of all sent items.
 
-    int index = sentHistory.indexWhere((element) =>
-        element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
-
-    if (index > -1) {
-      sendFileHistory['history'][index] = fileHistory.toJson();
-      sentHistory[index] = fileHistory;
-    }
-    var result = await AtClientManager.getInstance()
-        .atClient
-        .put(atKey, json.encode(sendFileHistory));
-
-    return result;
-  }
-
+  // with new approach we are saving data in individual keys
+  // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
+  /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
   getSentHistory() async {
     sentHistory = [];
     setStatus(SENT_HISTORY, Status.Loading);
@@ -193,16 +223,16 @@ class HistoryProvider extends BaseModel {
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
       var keyValue =
-          await AtClientManager.getInstance().atClient.get(key).catchError((e) {
-        print('error in decrypting value : $e');
+          await backendService.atClientInstance.get(key).catchError((e) {
+        print('error in getSentHistory : $e');
       });
       if (keyValue != null && keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
-
           sendFileHistory['history'] = historyFile['history'];
           historyFile['history'].forEach((value) {
-            FileHistory filesModel = FileHistory.fromJson((value));
+            FileHistory filesModel = FileHistory.fromJson(value);
+            // checking for download acknowledged
             filesModel.sharedWith = checkIfileDownloaded(
               filesModel.sharedWith,
               filesModel.fileTransferObject.transferId,
@@ -214,10 +244,69 @@ class HistoryProvider extends BaseModel {
         }
       }
 
+      // fetching individually saved sent items.
+      await getIndividuallySavedSentFileItems();
+      // deleting sent items records, older than 15 days.
+      await removePastSentFiles();
+      sortSentItems();
+
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
       setError(SENT_HISTORY, error.toString());
     }
+  }
+
+  getIndividuallySavedSentFileItems() async {
+    AtClient atClient = AtClientManager.getInstance().atClient;
+    List<String> sharedFileStrings = await atClient.getKeys(
+      regex: MixedConstants.FILE_TRANSFER_KEY,
+      sharedBy: atClient.getCurrentAtSign(),
+    );
+
+    sharedFileStrings.retainWhere((element) => !element.contains('cached'));
+
+    await Future.forEach(sharedFileStrings, (key) async {
+      AtKey atKey = AtKey.fromString(key);
+      AtValue atvalue =
+          await backendService.atClientInstance.get(atKey).catchError(
+        (e) {
+          print("Exception in getting atValue: $e");
+        },
+      );
+
+      if (atvalue != null && atvalue.value != null) {
+        try {
+          FileHistory fileHistory = FileHistory.fromJson(
+            jsonDecode(atvalue.value),
+          );
+          individualSentFileId[fileHistory.fileDetails.key] = true;
+          sentHistory.insert(0, fileHistory);
+        } catch (e) {
+          print('exeption in getSentFileItems : $e');
+        }
+      }
+    });
+  }
+
+// deletes sent items which are older that 15 days
+  removePastSentFiles() async {
+    for (int i = 0; i < sentHistory.length; i++) {
+      FileHistory fileHistory = sentHistory[i];
+      var sentFileDeletionDate =
+          fileHistory.fileDetails.date.add(Duration(days: 15));
+      if (sentFileDeletionDate.difference(DateTime.now()) <
+          Duration(seconds: 0)) {
+        sentHistory.removeAt(i);
+        updateSendFileHistoryArray(fileHistory, isDelete: true);
+      }
+    }
+
+    await updateSentHistory();
+  }
+
+  sortSentItems() {
+    sentHistory
+        .sort((a, b) => b.fileDetails.date.compareTo(a.fileDetails.date));
   }
 
   List<ShareStatus> checkIfileDownloaded(
@@ -233,7 +322,41 @@ class HistoryProvider extends BaseModel {
     return shareStatus;
   }
 
+  deleteSentItem(String transferId) async {
+    int index = sentHistory.indexWhere((element) {
+      return element?.fileDetails?.key == transferId;
+    });
+    FileHistory fileHistory;
+    if (index != -1) {
+      fileHistory = sentHistory[index];
+    }
+
+    if (fileHistory != null &&
+        individualSentFileId[fileHistory.fileDetails.key] != null) {
+      await deleteIndividualSentItem(fileHistory);
+      return;
+    }
+
+    if (index != -1) {
+      sentHistory.removeWhere((element) {
+        return element?.fileDetails?.key == transferId;
+      });
+      notifyListeners();
+      updateSendFileHistoryArray(fileHistory, isDelete: true);
+
+      var res = await updateSentHistory();
+      if (res) {
+        notifyListeners();
+        return res;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
   getFileDownloadedAcknowledgement() async {
+    setStatus(DOWNLOAD_ACK, Status.Loading);
     var atKeys = await AtClientManager.getInstance()
         .atClient
         .getAtKeys(regex: MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT);
@@ -264,8 +387,10 @@ class HistoryProvider extends BaseModel {
         }
       } catch (e) {
         print('error in getFileDownloadedAcknowledgement : $e');
+        setStatus(DOWNLOAD_ACK, Status.Error);
       }
     });
+    setStatus(DOWNLOAD_ACK, Status.Done);
   }
 
   getReceivedHistory() async {
@@ -294,13 +419,40 @@ class HistoryProvider extends BaseModel {
     //check id data with same key already present
     var index = receivedHistoryLogs
         .indexWhere((element) => element.key == fileTransferObject.transferId);
-
+    _initBackendService();
     if (index > -1) {
       receivedHistoryLogs[index] = filesModel;
     } else {
+      // showing notification for new recieved file
+      switch (app_lifecycle_state) {
+        case 'AppLifecycleState.resumed':
+        case 'AppLifecycleState.inactive':
+        case 'AppLifecycleState.detached':
+          await LocalNotificationService()
+              .showNotification(sharedBy, 'Download and view the file(s).');
+          break;
+        case 'AppLifecycleState.paused':
+          await LocalNotificationService().showNotification(
+              sharedBy, 'Open the app to download and view the file(s).');
+          break;
+        default:
+          await LocalNotificationService()
+              .showNotification(sharedBy, 'Download and view the file(s).');
+      }
       await addToReceiveFileHistory(sharedBy, filesModel);
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
+  }
+
+  void _initBackendService() async {
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+      print('set message handler');
+      state = msg;
+      debugPrint('SystemChannels=> $msg');
+      app_lifecycle_state = msg;
+
+      return null;
+    });
   }
 
   addToReceiveFileHistory(String sharedBy, FileTransfer filesModel,
@@ -339,21 +491,25 @@ class HistoryProvider extends BaseModel {
 
   getAllFileTransferData() async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
-    receivedHistoryLogs = [];
+    List<FileTransfer> tempReceivedHistoryLogs = [];
 
     List<String> fileTransferResponse =
         await AtClientManager.getInstance().atClient.getKeys(
               regex: MixedConstants.FILE_TRANSFER_KEY,
             );
 
+    fileTransferResponse.retainWhere((element) =>
+        !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
+
     await Future.forEach(fileTransferResponse, (key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
-        AtValue atvalue = await AtClientManager.getInstance()
-            .atClient
+
+        AtValue atvalue = await backendService.atClientInstance
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) => print("error in get $e"));
+            .catchError((e) => print(
+                "error in getting atValue in getAllFileTransferData : $e"));
 
         if (atvalue != null && atvalue.value != null) {
           try {
@@ -364,7 +520,7 @@ class HistoryProvider extends BaseModel {
             filesModel.sender = '@' + key.split('@').last;
 
             if (filesModel.key != null) {
-              receivedHistoryLogs.insert(0, filesModel);
+              tempReceivedHistoryLogs.insert(0, filesModel);
             }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
@@ -373,8 +529,7 @@ class HistoryProvider extends BaseModel {
       }
     });
 
-    print('sentHistory length ${receivedHistoryNew.length}');
-    print('receivedHistoryLogs length: ${receivedHistoryLogs.length}');
+    receivedHistoryLogs = tempReceivedHistoryLogs;
     setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 
@@ -387,7 +542,8 @@ class HistoryProvider extends BaseModel {
       receivedPhotos = [];
       receivedVideos = [];
       receivedUnknown = [];
-      await Future.forEach(filesList, (FileTransfer fileData) async {
+      recentFile = [];
+      await Future.forEach(filesList, (fileData) async {
         await Future.forEach(fileData.files, (file) async {
           String fileExtension = file.name.split('.').last;
           String filePath =
@@ -502,6 +658,8 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       setStatus(RECENT_HISTORY, Status.Error);
     }
+
+    print('recentFile data : ${recentFile.length}');
   }
 
   populateTabs() {
@@ -510,6 +668,7 @@ class HistoryProvider extends BaseModel {
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       isDesktop = true;
     }
+    tabs = [];
     tabs = [isDesktop ? DesktopRecents() : Recents()];
 
     try {
@@ -650,6 +809,10 @@ class HistoryProvider extends BaseModel {
           .files
           .indexWhere((element) => element.name == filename);
 
+      // as of now operating is only used to determine whether file is being uploaded or not
+      // As per requirement it can be used to determine whether notification is being sent or not.
+      sentHistory[index].isOperating = isUploading;
+
       if (fileIndex > -1) {
         sentHistory[index].fileDetails.files[fileIndex].isUploading =
             isUploading;
@@ -691,9 +854,9 @@ class HistoryProvider extends BaseModel {
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
       {String downloadPath}) async {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
-      var index = receivedHistoryLogs
-          .indexWhere((element) => element.key == transferId);
       if (index > -1) {
         receivedHistoryLogs[index].isDownloading = true;
         receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
@@ -724,19 +887,148 @@ class HistoryProvider extends BaseModel {
       populateTabs();
       print('audios: ${receivedAudio.length}');
       receivedHistoryLogs[index].isDownloading = false;
-      setStatus(DOWNLOAD_FILE, Status.Done);
+
+      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+              listen: false)
+          .checkForUndownloadedFiles();
 
       if (files is List<File>) {
-        Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
-                listen: false)
-            .checkForUndownloadedFiles();
+        await sortFiles(receivedHistoryLogs);
+        populateTabs();
+        setStatus(DOWNLOAD_FILE, Status.Done);
         return true;
       } else {
+        setStatus(DOWNLOAD_FILE, Status.Done);
         return false;
       }
     } catch (e) {
       print('error in downloading file: $e');
+      receivedHistoryLogs[index].isDownloading = false;
+      setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
+    }
+  }
+
+  downloadSingleFile(
+    String transferId,
+    String sharedBy,
+    bool isWidgetOpen,
+    String fileName,
+  ) async {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
+    var _fileIndex = receivedHistoryLogs[index]
+        .files
+        .indexWhere((_file) => _file.name == fileName);
+    try {
+      if ((index > -1) && (_fileIndex > -1)) {
+        receivedHistoryLogs[index].files[_fileIndex].isDownloading = true;
+        receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
+      }
+      notifyListeners();
+
+      var files =
+          await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
+      receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
+
+      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+              listen: false)
+          .checkForUndownloadedFiles();
+
+      if (files is List<File>) {
+        await sortFiles(receivedHistoryLogs);
+        populateTabs();
+        setStatus(DOWNLOAD_FILE, Status.Done);
+        return true;
+      } else {
+        setStatus(DOWNLOAD_FILE, Status.Done);
+        return false;
+      }
+    } catch (e) {
+      print('error in downloading file: $e');
+      receivedHistoryLogs[index].isDownloading = false;
+      receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
+      setStatus(DOWNLOAD_FILE, Status.Error);
+      return false;
+    }
+  }
+
+  Future<List<File>> _downloadSingleFileFromWeb(
+      String transferId, String sharedByAtSign, String fileName,
+      {String downloadPath}) async {
+    downloadPath ??=
+        BackendService.getInstance().atClientPreference.downloadPath;
+    if (downloadPath == null) {
+      throw Exception('downloadPath not found');
+    }
+    var atKey = AtKey()
+      ..key = transferId
+      ..sharedBy = sharedByAtSign;
+    var result =
+        await AtClientManager.getInstance().atClient.get(atKey).catchError((e) {
+      print('error in _downloadSingleFileFromWeb : $e');
+    });
+
+    if (result == null) {
+      return [];
+    }
+    FileTransferObject fileTransferObject;
+    try {
+      var _jsonData = jsonDecode(result.value);
+      _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/archive', '');
+      _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/zip', '');
+      _jsonData['fileUrl'] = _jsonData['fileUrl'] + '/$fileName';
+
+      fileTransferObject = FileTransferObject.fromJson(_jsonData);
+      print('fileTransferObject.fileUrl ${fileTransferObject.fileUrl}');
+    } on Exception catch (e) {
+      throw Exception('json decode exception in download file ${e.toString()}');
+    }
+    var downloadedFiles = <File>[];
+    var fileDownloadReponse = await _downloadSingleFromFileBin(
+        fileTransferObject, downloadPath, fileName);
+    if (fileDownloadReponse.isError) {
+      throw Exception('download fail');
+    }
+    var encryptedFileList = Directory(fileDownloadReponse.filePath).listSync();
+    try {
+      for (var encryptedFile in encryptedFileList) {
+        var decryptedFile = EncryptionService().decryptFile(
+            File(encryptedFile.path).readAsBytesSync(),
+            fileTransferObject.fileEncryptionKey);
+        var downloadedFile =
+            File(downloadPath + '/' + encryptedFile.path.split('/').last);
+        downloadedFile.writeAsBytesSync(decryptedFile);
+        downloadedFiles.add(downloadedFile);
+      }
+      // deleting temp directory
+      Directory(fileDownloadReponse.filePath).deleteSync(recursive: true);
+      return downloadedFiles;
+    } catch (e) {
+      print('error in downloadFile: $e');
+      return [];
+    }
+  }
+
+  Future<FileDownloadResponse> _downloadSingleFromFileBin(
+      FileTransferObject fileTransferObject,
+      String downloadPath,
+      String fileName) async {
+    try {
+      var response = await http.get(Uri.parse(fileTransferObject.fileUrl));
+      if (response.statusCode != 200) {
+        return FileDownloadResponse(
+            isError: true, errorMsg: 'error in fetching data');
+      }
+      var tempDirectory =
+          await Directory(downloadPath).createTemp('encrypted-files');
+      var encryptedFile = File(tempDirectory.path + '/' + fileName);
+      encryptedFile.writeAsBytesSync(response.bodyBytes);
+
+      return FileDownloadResponse(filePath: tempDirectory.path);
+    } catch (e) {
+      print('error in downloading file: $e');
+      return FileDownloadResponse(isError: true, errorMsg: e.toString());
     }
   }
 
@@ -810,4 +1102,75 @@ class HistoryProvider extends BaseModel {
     }
     return atsign;
   }
+
+  Future<bool> updateSentHistory() async {
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..key = MixedConstants.SENT_FILE_HISTORY;
+    AtClient atClient = AtClientManager.getInstance().atClient;
+    try {
+      return await atClient.put(atKey, json.encode(sendFileHistory));
+    } catch (e) {
+      print('error in update sent hisory  : $e');
+      return false;
+    }
+  }
+
+  updateFileEntryInSentHistory(FileHistory fileHistory,
+      {bool isDelete = false}) {
+    int index = sentHistory.indexWhere(
+      (element) =>
+          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key),
+    );
+    if (index != -1) {
+      if (isDelete) {
+        sentHistory.removeAt(index);
+      } else {
+        sentHistory[index] = fileHistory;
+      }
+    }
+  }
+
+  updateSendFileHistoryArray(FileHistory fileHistory, {bool isDelete = false}) {
+    for (int i = 0; i < sendFileHistory['history'].length; i++) {
+      FileHistory tempFileHistory = FileHistory.fromJson(
+        sendFileHistory['history'][i],
+      );
+      if (tempFileHistory.fileDetails.key == fileHistory.fileDetails.key) {
+        if (isDelete) {
+          sendFileHistory['history'].removeAt(i);
+        } else {
+          sendFileHistory['history'][i] = fileHistory.toJson();
+        }
+        break;
+      }
+    }
+  }
+
+  deleteIndividualSentItem(FileHistory fileHistory) async {
+    AtKey atKey = AtKey()
+      ..key = fileHistory.fileDetails.key
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      ..metadata.ttl = 1296000000;
+
+    var res = await AtClientManager.getInstance().atClient.delete(atKey);
+    if (res) {
+      updateFileEntryInSentHistory(fileHistory, isDelete: true);
+      notifyListeners();
+    }
+    return res;
+  }
+
+  // save file in gallery function is not in use as of now.
+  // saveFilesInGallery(List<File> files) async {
+  //   for (var file in files) {
+  //     if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
+  //         FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
+  //       // saving image,video in gallery.
+  //       await ImageGallerySaver.saveFile(file.path);
+  //     }
+  //   }
+  // }
 }

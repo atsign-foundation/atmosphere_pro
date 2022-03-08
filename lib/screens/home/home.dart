@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -162,8 +164,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  onNotificationClick(String payload) async {}
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -203,7 +203,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Expanded(
-                    flex: 8,
+                    flex: 12,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 36.toWidth,
@@ -214,50 +214,82 @@ class _HomeState extends State<Home> {
                         children: [
                           Expanded(
                             flex: 6,
-                            child: Text(
-                              TextStrings().homeFileTransferItsSafe,
-                              style: GoogleFonts.playfairDisplay(
-                                textStyle: TextStyle(
-                                  fontSize: 38.toFont,
-                                  letterSpacing: 0.1,
-                                  fontWeight: FontWeight.bold,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  TextStrings().homeDescriptionMain,
+                                  style: GoogleFonts.playfairDisplay(
+                                    textStyle: TextStyle(
+                                      fontSize: 38.toFont,
+                                      letterSpacing: 0.1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                SizedBox(height: 30.toHeight),
+                                Text.rich(
+                                  TextSpan(
+                                    text: TextStrings().homeDescriptionSub,
+                                    style: TextStyle(
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
+                          Expanded(flex: 2, child: SizedBox()),
                           Expanded(
-                            flex: 2,
-                            child: Text.rich(
-                              TextSpan(
-                                text: TextStrings().homeHassleFree,
-                                style: TextStyle(
-                                  fontSize: 15.toFont,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            flex: 4,
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Column(
                                 children: [
-                                  TextSpan(
-                                    text: TextStrings().homeWeWillSetupAccount,
-                                    style: TextStyle(
-                                      color: ColorConstants.fadedText,
-                                      fontWeight: FontWeight.normal,
+                                  CustomButton(
+                                      width: SizeConfig().screenWidth * 0.8,
+                                      buttonText: TextStrings().buttonStart,
+                                      onPressed: authenticating
+                                          ? () {}
+                                          : () async {
+                                              await _backendService
+                                                  .checkToOnboard();
+                                            }),
+                                  SizedBox(height: 15.toHeight),
+                                  InkWell(
+                                    onTap: () {
+                                      CommonUtilityFunctions()
+                                          .showResetAtsignDialog();
+                                    },
+                                    child: Text(
+                                      TextStrings.resetButton,
+                                      style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 4,
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: CustomButton(
-                                  buttonText: TextStrings().buttonStart,
-                                  onPressed: authenticating
-                                      ? () {}
-                                      : () async {
-                                          await _backendService
-                                              .checkToOnboard();
-                                        }),
+                          Center(
+                            child: Text(
+                              TextStrings().appName,
+                              style: TextStyle(
+                                  fontSize: 15.toFont,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Center(
+                            child: Text(
+                              TextStrings().copyRight,
+                              style: TextStyle(
+                                fontSize: 14.toFont,
+                                fontFamily: 'HelveticaNeu',
+                                color: Colors.grey.withOpacity(0.8),
+                              ),
                             ),
                           ),
                         ],

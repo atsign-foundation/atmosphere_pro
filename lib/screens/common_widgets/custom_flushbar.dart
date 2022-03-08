@@ -1,4 +1,3 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import '../../services/backend_service.dart';
@@ -6,6 +5,7 @@ import '../../services/navigation_service.dart';
 import '../../utils/colors.dart';
 import '../../utils/images.dart';
 import '../../utils/text_strings.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 class CustomFlushBar {
   CustomFlushBar._();

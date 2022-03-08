@@ -4,6 +4,13 @@ class TextStrings {
   factory TextStrings() => _instance;
 
   // home screen texts
+  // String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
+  // String homeHassleFree = 'Hassle free.\n';
+  // String homeWeWillSetupAccount = 'We will set up your account right away.';
+  String homeDescriptionMain = '100% encrypted file transfer';
+  String homeDescriptionSub = 'From anywhere to everywhere!';
+  String appName = '@mosphere pro';
+  String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
@@ -18,7 +25,8 @@ class TextStrings {
   String buttonContinue = 'CONTINUE';
 
   // welcome screen texts
-  String welcomeUser(String userName) => 'Welcome\n $userName!';
+  String welcomeUser(String userName) => 'Welcome\n $userName';
+  String welcome = 'Welcome';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file to';
   String welcomeContactPlaceholder = '@sign';
@@ -37,6 +45,7 @@ class TextStrings {
   String sidebarMyFiles = 'My Files';
   String sidebarTrustedSenders = 'Trusted Senders';
   String sidebarMyGroups = 'My Groups';
+  String sidebarBackupKey = 'Backup your keys';
   String sidebarTermsAndConditions = 'Terms and Conditions';
   String sidebarPrivacyPolicy = "Privacy policy";
   String sidebarFaqs = 'FAQ';
@@ -44,7 +53,8 @@ class TextStrings {
   String sidebarEnablingMessage =
       'Enabling this will auto accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
-  String sidebarDeleteAtsign = 'Delete @sign';
+  String sidebarDeleteAtsign = 'Delete @sign(s)';
+
   String atSign = '@sign';
   String switchingAtSign = 'Switching atsign...';
   String deleteDataMessage =
@@ -64,6 +74,7 @@ class TextStrings {
   String buttonStart = 'Start';
   String buttonSend = 'Send';
   String buttonClose = 'Close';
+  String buttonResend = 'Resend';
 
   String accept = 'Accept';
   String reject = 'Reject';
@@ -78,8 +89,11 @@ class TextStrings {
   String sent = 'Sent';
   String received = 'Received';
 
-  String moreDetails = 'More Details';
-  String lesserDetails = 'Lesser Details';
+  String showDetails = 'Show Details';
+  String hideDetails = 'Hide Details';
+
+  String seeFiles = 'See Files';
+  String hideFiles = 'Hide Files';
 
   String history = 'History';
   String noFilesSent = 'No files sent';
@@ -154,7 +168,7 @@ class TextStrings {
 
   // File choice dialog texts
   String fileChoiceQuestion = 'What would you like to send?';
-  String choice1 = 'Photos';
+  String choice1 = 'Photos and Videos ';
   String choice2 = 'Other files';
 
   // history no file to open
@@ -181,6 +195,7 @@ class TextStrings {
   String sendingFile = 'Sending file';
   String fileReceived = 'File received';
   String fileSent = 'File sent';
+  String expired = 'Expired';
 
   String selectFile = 'Select a File';
 
@@ -208,4 +223,10 @@ class TextStrings {
       'Please select atleast one @sign to reset';
   static const String resetWarningText =
       'Warning: This action cannot be undone';
+
+  static const uploaded = 'Uploaded';
+  static const reUploadFileMsg = 'Do you want to reupload file ?';
+  static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
+  static const delete = 'Delete';
+  static const fileSizeLimit = 'File size can not exceed 50 Mb.';
 }

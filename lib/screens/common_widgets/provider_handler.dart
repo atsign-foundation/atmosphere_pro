@@ -7,7 +7,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   final Widget Function(T) successBuilder;
@@ -40,13 +40,13 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
           print('IN SHOW ERROR');
           ErrorDialog()
               .show(_provider.error[functionName].toString(), context: context);
-          _provider.reset(functionName);
           return SizedBox();
         } else {
-          _provider.reset(functionName);
           return errorBuilder(_provider);
         }
       } else if (_provider?.status[functionName] == Status.Done) {
+        return successBuilder(_provider);
+      } else if (_provider?.status[functionName] == Status.Idle) {
         return successBuilder(_provider);
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) async {

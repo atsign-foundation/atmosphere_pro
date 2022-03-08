@@ -1,12 +1,11 @@
+import 'dart:ui';
+
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomTextStyles {
-  //colorWeightSize
-
 //REGULAR FONTS
-
   static TextStyle blueRegular18 = TextStyle(
       color: ColorConstants.appBarCloseColor,
       fontSize: 18.toFont,
@@ -76,10 +75,18 @@ class CustomTextStyles {
   static TextStyle red15 =
       TextStyle(color: ColorConstants.redAlert, fontSize: 15.toFont);
 
+  static TextStyle red20 =
+      TextStyle(color: ColorConstants.redAlert, fontSize: 20.toFont);
+
   static TextStyle darkGrey13 = TextStyle(
     color: ColorConstants.dullText,
     fontSize: 13.toFont,
   );
+  static TextStyle blueRegular12 = TextStyle(
+      color: ColorConstants.blueText,
+      fontSize: 12.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 
 //BOLD FONTS
   static TextStyle whiteBold16 = TextStyle(
@@ -123,6 +130,13 @@ class CustomTextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  static TextStyle primaryBlueBold14 = TextStyle(
+    color: ColorConstants.blueText,
+    fontSize: 14.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
+
   //MEDIUM FONTS
 
   static TextStyle primaryMedium14 = TextStyle(
@@ -142,6 +156,13 @@ class CustomTextStyles {
   static TextStyle orangeMedium16 = TextStyle(
     color: ColorConstants.orangeColor,
     fontSize: 16.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle redSmall12 = TextStyle(
+    color: ColorConstants.redText,
+    fontSize: 11.toFont,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );
