@@ -107,6 +107,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     if (mounted) {
       setState(() {
         downloadFolder = path;
+        isDownloadComplete = false;
       });
     }
     await checkIfFolderExists(downloadFolder);
