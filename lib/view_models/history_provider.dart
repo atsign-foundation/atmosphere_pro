@@ -852,7 +852,8 @@ class HistoryProvider extends BaseModel {
         fileTransfer, sthareStatus, HistoryType.send, fileTransferObject);
   }
 
-  downloadFiles(String transferId, String sharedBy, bool isWidgetOpen) async {
+  downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
+      {String downloadPath}) async {
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
@@ -876,7 +877,7 @@ class HistoryProvider extends BaseModel {
         files = await AtClientManager.getInstance().atClient.downloadFile(
               transferId,
               sharedBy,
-              downloadPath: _downloadPath,
+              downloadPath: downloadPath ?? _downloadPath,
             );
       } catch (e) {
         print('Error in downloading $e');

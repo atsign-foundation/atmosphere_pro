@@ -21,6 +21,7 @@ class MixedConstants {
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
+  static const String FAQ = "https://atsign.com/faqs/";
 
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;
