@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_selector/file_selector.dart';
