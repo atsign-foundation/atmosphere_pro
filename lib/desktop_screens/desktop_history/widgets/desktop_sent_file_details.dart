@@ -140,7 +140,11 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                                         ?.last,
                                                     MixedConstants
                                                             .DESKTOP_SENT_DIR +
-                                                        '/${widget.selectedFileData.fileDetails.files[index].name} ',
+                                                        widget
+                                                            .selectedFileData
+                                                            .fileDetails
+                                                            .files[index]
+                                                            .name,
                                                     isFilePresent:
                                                         snapshot.data),
                                           )
