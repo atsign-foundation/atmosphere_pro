@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class EditBottomSheet extends StatefulWidget {
-  final FileHistory fileHistory;
-  EditBottomSheet({@required this.fileHistory});
+  final FileHistory? fileHistory;
+  EditBottomSheet({required this.fileHistory});
   @override
   _EditBottomSheetState createState() => _EditBottomSheetState();
 }
@@ -51,7 +51,7 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
 
   deleteSentItem() async {
     await showDialog(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
               shape: RoundedRectangleBorder(
@@ -60,7 +60,7 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
               content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
                   () async {
                 await Provider.of<HistoryProvider>(context, listen: false)
-                    .deleteSentItem(widget.fileHistory.fileDetails.key);
+                    .deleteSentItem(widget.fileHistory!.fileDetails!.key);
               }));
         });
 

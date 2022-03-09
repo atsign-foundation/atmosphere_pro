@@ -20,7 +20,7 @@ class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
   // static String initialRoute = DesktopRoutes.DESKTOP_WELCOME;
   static var _provider = Provider.of<NestedRouteProvider>(
-      NavService.navKey.currentContext,
+      NavService.navKey.currentContext!,
       listen: false);
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -70,8 +70,8 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) {
-        Map<String, dynamic> args =
-            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+        Map<String, dynamic>? args =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
         DesktopGroupSetupRoutes.setExitFunction(() {
           DesktopSetupRoutes.nested_pop();
         });
@@ -86,15 +86,15 @@ class DesktopSetupRoutes {
     };
   }
 
-  static Future nested_push(String value,
-      {Object arguments, Function callbackAfterNavigation}) {
+  static Future nested_push(String? value,
+      {Object? arguments, Function? callbackAfterNavigation}) {
     if (_provider.current_route != null) {
-      var _res = nested_push_replacement(value, arguments: arguments);
+      var _res = nested_push_replacement(value!, arguments: arguments);
       return _res;
     }
     _provider.update(value);
-    return Navigator.of(NavService.nestedNavKey.currentContext)
-        .pushNamed(value, arguments: arguments)
+    return Navigator.of(NavService.nestedNavKey.currentContext!)
+        .pushNamed(value!, arguments: arguments)
         .then((response) {
       if (callbackAfterNavigation != null) {
         callbackAfterNavigation();
@@ -103,9 +103,9 @@ class DesktopSetupRoutes {
   }
 
   static Future nested_push_replacement(String value,
-      {Object arguments, Function callbackAfterNavigation}) {
+      {Object? arguments, Function? callbackAfterNavigation}) {
     _provider.update(value);
-    return Navigator.of(NavService.nestedNavKey.currentContext)
+    return Navigator.of(NavService.nestedNavKey.currentContext!)
         .pushReplacementNamed(value, arguments: arguments)
         .then((response) {
       if (callbackAfterNavigation != null) {
@@ -117,8 +117,8 @@ class DesktopSetupRoutes {
   static Future nested_pop() async {
     _provider.update(null);
     if ((NavService.nestedNavKey.currentState != null) &&
-        (Navigator.canPop(NavService.nestedNavKey.currentContext))) {
-      await Navigator.of(NavService.nestedNavKey.currentContext).pop();
+        (Navigator.canPop(NavService.nestedNavKey.currentContext!))) {
+      Navigator.of(NavService.nestedNavKey.currentContext!).pop();
     }
   }
 }
@@ -126,13 +126,13 @@ class DesktopSetupRoutes {
 class NestedRouteProvider extends BaseModel {
   String Routes = 'routes';
   NestedRouteProvider();
-  String current_route;
+  String? current_route;
 
   init() {
     setStatus(Routes, Status.Done);
   }
 
-  update(String value) {
+  update(String? value) {
     current_route = value;
     setStatus(Routes, Status.Done);
   }

@@ -20,8 +20,8 @@ class SelectFileWidget extends StatefulWidget {
 class _SelectFileWidgetState extends State<SelectFileWidget> {
   bool isLoading = false;
 
-  Uint8List videoThumbnail;
-  FileTransferProvider filePickerProvider;
+  Uint8List? videoThumbnail;
+  FileTransferProvider? filePickerProvider;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
     if (filePickerProvider == null) {
       filePickerProvider =
           Provider.of<FileTransferProvider>(context, listen: false);
-      await filePickerProvider.setFiles();
+      await filePickerProvider!.setFiles();
     }
     super.didChangeDependencies();
   }
@@ -136,20 +136,21 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               ListTile(
                 contentPadding: EdgeInsets.all(0),
                 title: Text(
-                    filePickerProvider.selectedFiles.isEmpty
+                    filePickerProvider!.selectedFiles.isEmpty
                         ? TextStrings().welcomeFilePlaceholder
                         : TextStrings().welcomeAddFilePlaceholder,
                     style: TextStyle(
                       color: ColorConstants.fadedText,
                       fontSize: 14.toFont,
                     )),
-                subtitle: filePickerProvider.selectedFiles.isEmpty
+                subtitle: filePickerProvider!.selectedFiles.isEmpty
                     ? null
                     : Text(
-                        double.parse(filePickerProvider.totalSize.toString()) <=
+                        double.parse(
+                                    filePickerProvider!.totalSize.toString()) <=
                                 1024
-                            ? '${filePickerProvider.totalSize} Kb . ${filePickerProvider.selectedFiles?.length} file(s)'
-                            : '${(filePickerProvider.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider.selectedFiles?.length} file(s)',
+                            ? '${filePickerProvider!.totalSize} Kb . ${filePickerProvider!.selectedFiles.length} file(s)'
+                            : '${(filePickerProvider!.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider!.selectedFiles.length} file(s)',
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 10.toFont,
@@ -168,13 +169,13 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                   ),
                 ),
               ),
-              filePickerProvider.selectedFiles.isNotEmpty
+              filePickerProvider!.selectedFiles.isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      itemCount: filePickerProvider.selectedFiles.isNotEmpty
-                          ? int.parse(filePickerProvider.selectedFiles?.length
-                              ?.toString())
+                      itemCount: filePickerProvider!.selectedFiles.isNotEmpty
+                          ? int.parse(filePickerProvider!.selectedFiles.length
+                              .toString())
                           : 0,
                       itemBuilder: (c, index) {
                         return Consumer<FileTransferProvider>(
@@ -194,7 +195,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                             ),
                             child: ListTile(
                               title: Text(
-                                provider.selectedFiles[index]?.name.toString(),
+                                provider.selectedFiles[index].name.toString(),
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14.toFont,

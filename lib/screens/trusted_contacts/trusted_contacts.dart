@@ -148,14 +148,14 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                 ? ListView.builder(
                                     itemCount: provider.trustedContacts.length,
                                     itemBuilder: (context, index) {
-                                      Uint8List byteImage;
+                                      Uint8List? byteImage;
 
-                                      if (provider.trustedContacts[index]
-                                              .tags['image'] !=
+                                      if (provider.trustedContacts[index]!
+                                              .tags!['image'] !=
                                           null) {
                                         byteImage = CommonUtilityFunctions()
                                             .getContactImage(provider
-                                                .trustedContacts[index]);
+                                                .trustedContacts[index]!);
                                       }
 
                                       return ContactListTile(
@@ -177,19 +177,19 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                         },
                                         onAdd: () {},
                                         onRemove: () {},
-                                        name: provider.trustedContacts[index]
+                                        name: provider.trustedContacts[index]!
                                                         .tags !=
                                                     null &&
-                                                provider.trustedContacts[index]
-                                                        .tags['name'] !=
+                                                provider.trustedContacts[index]!
+                                                        .tags!['name'] !=
                                                     null
-                                            ? provider.trustedContacts[index]
-                                                .tags['name']
+                                            ? provider.trustedContacts[index]!
+                                                .tags!['name']
                                             : provider
-                                                .trustedContacts[index].atSign
+                                                .trustedContacts[index]!.atSign!
                                                 .substring(1),
                                         atSign: provider
-                                            .trustedContacts[index].atSign,
+                                            .trustedContacts[index]!.atSign,
                                         image: byteImage != null
                                             ? CustomCircleAvatar(
                                                 byteImage: byteImage,
@@ -197,7 +197,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                               )
                                             : ContactInitial(
                                                 initials: provider
-                                                    .trustedContacts[index]
+                                                    .trustedContacts[index]!
                                                     .atSign,
                                               ),
                                       );

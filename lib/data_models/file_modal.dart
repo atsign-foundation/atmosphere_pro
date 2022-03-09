@@ -5,14 +5,14 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 enum HistoryType { send, received }
 
 class FilesModel {
-  List<String> name;
-  String handle;
-  String date;
-  int id;
-  double totalSize;
-  HistoryType historyType;
+  List<String>? name;
+  String? handle;
+  String? date;
+  int? id;
+  double? totalSize;
+  HistoryType? historyType;
 
-  List<FilesDetail> files;
+  List<FilesDetail>? files;
 
   FilesModel(
       {this.name,
@@ -34,9 +34,9 @@ class FilesModel {
       files = <FilesDetail>[];
       json['files'].forEach((v) {
         if (v.runtimeType == String) {
-          files.add(FilesDetail.fromJson(v));
+          files!.add(FilesDetail.fromJson(v));
         } else {
-          files.add(FilesDetail.fromMap(v));
+          files!.add(FilesDetail.fromMap(v));
         }
       });
     }
@@ -50,21 +50,21 @@ class FilesModel {
     data['total_size'] = this.totalSize;
     data['id'] = this.id;
     if (this.files != null) {
-      data['files'] = this.files.map((v) => v.toJson()).toList();
+      data['files'] = this.files!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class FilesDetail {
-  String fileName;
-  String filePath;
-  double size;
-  String type;
-  String contactName;
-  int id;
-  String date;
-  FileTransferStatus status;
+  String? fileName;
+  String? filePath;
+  double? size;
+  String? type;
+  String? contactName;
+  int? id;
+  String? date;
+  FileTransferStatus? status;
   FilesDetail({
     this.fileName,
     this.filePath,
@@ -77,14 +77,14 @@ class FilesDetail {
   });
 
   FilesDetail copyWith({
-    String fileName,
-    String filePath,
-    double size,
-    String type,
-    String date,
-    FileTransferStatus status,
-    String contactName,
-    int id,
+    String? fileName,
+    String? filePath,
+    double? size,
+    String? type,
+    String? date,
+    FileTransferStatus? status,
+    String? contactName,
+    int? id,
   }) {
     return FilesDetail(
         fileName: fileName ?? this.fileName,
@@ -110,8 +110,8 @@ class FilesDetail {
     };
   }
 
-  factory FilesDetail.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  factory FilesDetail.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return FilesDetail();
 
     return FilesDetail(
         fileName: map['file_name'],

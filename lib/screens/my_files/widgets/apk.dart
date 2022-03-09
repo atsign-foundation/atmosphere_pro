@@ -27,10 +27,10 @@ class _APKState extends State<APK> {
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,
             itemBuilder: (context, index) {
-              DateTime date = DateTime.parse(provider.receivedApk[index].date);
+              DateTime date = DateTime.parse(provider.receivedApk[index].date!);
               return InkWell(
                 onTap: () async {
-                  await openFilePath(provider.receivedApk[index].filePath);
+                  await openFilePath(provider.receivedApk[index].filePath!);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -38,7 +38,7 @@ class _APKState extends State<APK> {
                     tileColor: ColorConstants.listBackground,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3)),
-                    title: Text(provider.receivedApk[index].fileName,
+                    title: Text(provider.receivedApk[index].fileName!,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
                       width: 50.toWidth,
@@ -59,8 +59,8 @@ class _APKState extends State<APK> {
                               double.parse(provider.receivedApk[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedApk[index].size).toStringAsFixed(2)} '+ TextStrings().kb
-                                  : '${(provider.receivedApk[index].size / 1024).toStringAsFixed(2)} '+ TextStrings().mb,
+                                  ? '${provider.receivedApk[index].size!.toStringAsFixed(2)} '+ TextStrings().kb
+                                  : '${(provider.receivedApk[index].size! / 1024).toStringAsFixed(2)} '+ TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

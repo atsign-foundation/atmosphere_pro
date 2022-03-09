@@ -8,23 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactListTile extends StatefulWidget {
-  final String name;
-  final String atSign;
-  final Widget image;
+  final String? name;
+  final String? atSign;
+  final Widget? image;
   final Function onAdd;
   final Function onRemove;
   final bool isSelected;
   final bool onlyRemoveMethod;
-  final Function onTileTap;
+  final Function? onTileTap;
   final bool plainView;
 
   const ContactListTile(
-      {Key key,
+      {Key? key,
       this.name,
       this.atSign,
       this.image,
-      @required this.onAdd,
-      @required this.onRemove,
+      required this.onAdd,
+      required this.onRemove,
       this.isSelected = false,
       this.onlyRemoveMethod = false,
       this.plainView = false,
@@ -44,7 +44,7 @@ class _ContactListTileState extends State<ContactListTile> {
       child: ListTile(
         onTap: (widget.onlyRemoveMethod)
             ? () {
-                widget?.onTileTap();
+                widget?.onTileTap!();
               }
             : () {
                 setState(() {
@@ -53,12 +53,12 @@ class _ContactListTileState extends State<ContactListTile> {
                 });
               },
         title: Text(
-          widget.name,
+          widget.name!,
           style: TextStyle(
               color: Colors.black, fontSize: 14.toFont, letterSpacing: 0.1),
         ),
         subtitle: Text(
-          widget.atSign,
+          widget.atSign!,
           style: TextStyle(
               color: ColorConstants.fadedText,
               fontSize: 14.toFont,

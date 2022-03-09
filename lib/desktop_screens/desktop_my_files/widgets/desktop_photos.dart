@@ -45,7 +45,7 @@ class _DesktopPhotosState extends State<DesktopPhotos> {
                     children: List.generate(
                       provider.receivedPhotos.length,
                       (index) {
-                        if (provider.receivedPhotos[index].filePath
+                        if (provider.receivedPhotos[index].filePath!
                             .split('/')
                             .last
                             .toLowerCase()
@@ -53,7 +53,7 @@ class _DesktopPhotosState extends State<DesktopPhotos> {
                           return InkWell(
                             onTap: () async {
                               File test =
-                                  File(provider.receivedPhotos[index].filePath);
+                                  File(provider.receivedPhotos[index].filePath!);
                               bool fileExists = await test.exists();
                               if (fileExists) {
                                 await OpenFile.open(
@@ -61,7 +61,7 @@ class _DesktopPhotosState extends State<DesktopPhotos> {
                               }
                             },
                             child: DesktopFileCard(
-                              title: provider.receivedPhotos[index].filePath
+                              title: provider.receivedPhotos[index].filePath!
                                   .split('/')
                                   .last,
                               filePath: provider.receivedPhotos[index].filePath,

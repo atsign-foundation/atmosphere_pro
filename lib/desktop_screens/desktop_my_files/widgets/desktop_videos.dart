@@ -38,7 +38,7 @@ class _DesktopVideosState extends State<DesktopVideos> {
                     children: List.generate(
                       provider.receivedVideos.length,
                       (index) {
-                        if (provider.receivedVideos[index].filePath
+                        if (provider.receivedVideos[index].filePath!
                             .split('/')
                             .last
                             .toLowerCase()
@@ -46,7 +46,7 @@ class _DesktopVideosState extends State<DesktopVideos> {
                           return InkWell(
                             onTap: () async {
                               File test =
-                                  File(provider.receivedVideos[index].filePath);
+                                  File(provider.receivedVideos[index].filePath!);
                               bool fileExists = await test.exists();
                               if (fileExists) {
                                 await OpenFile.open(
@@ -54,7 +54,7 @@ class _DesktopVideosState extends State<DesktopVideos> {
                               }
                             },
                             child: DesktopFileCard(
-                              title: provider.receivedVideos[index].filePath
+                              title: provider.receivedVideos[index].filePath!
                                   .split('/')
                                   .last,
                               filePath: provider.receivedVideos[index].filePath,

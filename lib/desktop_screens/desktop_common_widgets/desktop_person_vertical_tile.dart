@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopCustomPersonVerticalTile extends StatefulWidget {
-  final String imageLocation, title, subTitle, atsign;
+  final String? imageLocation, title, subTitle, atsign;
   final bool isTopRight, isAssetImage;
-  final IconData icon;
-  final Function onCrossPressed;
-  final Uint8List imageIntList;
+  final IconData? icon;
+  final Function? onCrossPressed;
+  final Uint8List? imageIntList;
 
   DesktopCustomPersonVerticalTile(
       {this.imageLocation,
@@ -31,8 +31,8 @@ class DesktopCustomPersonVerticalTile extends StatefulWidget {
 
 class _DesktopCustomPersonVerticalTileState
     extends State<DesktopCustomPersonVerticalTile> {
-  Uint8List image;
-  String contactName;
+  Uint8List? image;
+  String? contactName;
   @override
   void initState() {
     super.initState();
@@ -60,7 +60,7 @@ class _DesktopCustomPersonVerticalTileState
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30.toFont)),
                             child: Image.memory(
-                              image,
+                              image!,
                               width: 50.toFont,
                               height: 50.toFont,
                               fit: BoxFit.fill,
@@ -76,7 +76,7 @@ class _DesktopCustomPersonVerticalTileState
                       bottom: !widget.isTopRight ? 0 : null,
                       right: 0,
                       child: GestureDetector(
-                        onTap: widget.onCrossPressed as void Function(),
+                        onTap: widget.onCrossPressed as void Function()?,
                         child: Container(
                           height: 20.toHeight,
                           width: 20.toHeight,
@@ -96,7 +96,7 @@ class _DesktopCustomPersonVerticalTileState
           SizedBox(height: 2),
           contactName != null
               ? Text(
-                  contactName,
+                  contactName!,
                   style: CustomTextStyles.greyText16,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -108,7 +108,7 @@ class _DesktopCustomPersonVerticalTileState
               ? SizedBox(
                   width: 120,
                   child: Text(
-                    widget.subTitle,
+                    widget.subTitle!,
                     style: CustomTextStyles.greyText15,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -6,7 +6,7 @@ class WelcomeScreenProvider extends BaseModel {
   WelcomeScreenProvider._();
   static WelcomeScreenProvider _instance = WelcomeScreenProvider._();
   factory WelcomeScreenProvider() => _instance;
-  List<GroupContactsModel> selectedContacts = [];
+  List<GroupContactsModel?> selectedContacts = [];
   String updateContacts = 'update_contacts';
   String onboard = 'onboard';
   String selectGroupContacts = 'select_group_contacts';
@@ -15,7 +15,7 @@ class WelcomeScreenProvider extends BaseModel {
   bool hasSelectedContactsChanged = false, authenticating = false;
   bool isSelectionItemChanged = false;
 
-  updateSelectedContacts(List<GroupContactsModel> updatedList) {
+  updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts = updatedList;
@@ -38,7 +38,7 @@ class WelcomeScreenProvider extends BaseModel {
     }
   }
 
-  removeContacts(GroupContactsModel contact) {
+  removeContacts(GroupContactsModel? contact) {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts.remove(contact);
@@ -49,7 +49,7 @@ class WelcomeScreenProvider extends BaseModel {
     }
   }
 
-  onboardingLoad({String atSign}) {
+  onboardingLoad({String? atSign}) {
     try {
       authenticating = true;
       setStatus(onboard, Status.Loading);

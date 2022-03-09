@@ -74,10 +74,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.FAQ_SCREEN,
     Routes.TRUSTED_CONTACTS
   ];
-  String activeAtSign;
-  Uint8List image;
-  AtContact contact;
-  String name;
+  String? activeAtSign;
+  Uint8List? image;
+  AtContact? contact;
+  String? name;
   WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   bool isTablet = false, isExpanded = true, isLoading = false;
   PackageInfo _packageInfo = PackageInfo(
@@ -112,21 +112,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   }
 
   getAtsignDetails() async {
-    AtContact contact;
+    AtContact? contact;
     if (BackendService.getInstance().currentAtSign != null) {
       contact =
-          await getAtSignDetails(BackendService.getInstance().currentAtSign);
+          await getAtSignDetails(BackendService.getInstance().currentAtSign!);
     }
 
     if (contact != null) {
       if (mounted) {
         setState(() {
-          image = CommonUtilityFunctions().getContactImage(contact);
+          image = CommonUtilityFunctions().getContactImage(contact!);
         });
       }
 
-      if (contact.tags != null && contact.tags['name'] != null) {
-        String newName = contact.tags['name'].toString();
+      if (contact.tags != null && contact.tags!['name'] != null) {
+        String newName = contact.tags!['name'].toString();
         if (mounted) {
           setState(() {
             name = newName;
@@ -173,7 +173,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(30.toFont)),
                                       child: Image.memory(
-                                        image,
+                                        image!,
                                         width: 50.toFont,
                                         height: 50.toFont,
                                         fit: BoxFit.fill,
@@ -233,12 +233,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       'showContacts': true,
                       'selectedList': (s) async {
                         await Provider.of<WelcomeScreenProvider>(
-                                NavService.navKey.currentContext,
+                                NavService.navKey.currentContext!,
                                 listen: false)
                             .updateSelectedContacts(s);
                       },
                       'showSelectedData': Provider.of<WelcomeScreenProvider>(
-                              NavService.navKey.currentContext,
+                              NavService.navKey.currentContext!,
                               listen: false)
                           .selectedContacts
                     },
@@ -310,7 +310,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       BackupKeyWidget(
                         atsign: AtClientManager.getInstance()
                             .atClient
-                            .getCurrentAtSign(),
+                            .getCurrentAtSign()!,
                       ).showBackupDialog(context);
                     },
                   ),
@@ -367,7 +367,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       onTap: () async {
                         var atSignList = await KeychainUtil.getAtsignList();
                         await showModalBottomSheet(
-                          context: NavService.navKey.currentContext,
+                          context: NavService.navKey.currentContext!,
                           backgroundColor: Colors.transparent,
                           builder: (context) => AtSignBottomSheet(
                             atSignList: atSignList,

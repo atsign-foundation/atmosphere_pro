@@ -30,8 +30,8 @@ class WelcomeScreenHome extends StatefulWidget {
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   // bool showContent = false, showSelectedItems = false;
   CurrentScreen _currentScreen = CurrentScreen.PlaceolderImage;
-  FileTransferProvider _filePickerProvider;
-  WelcomeScreenProvider _welcomeScreenProvider;
+  late FileTransferProvider _filePickerProvider;
+  late WelcomeScreenProvider _welcomeScreenProvider;
   List _selectedList = [];
   bool isFileSending = false;
 
@@ -40,7 +40,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     _filePickerProvider =
         Provider.of<FileTransferProvider>(context, listen: false);
     _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
-        NavService.navKey.currentContext,
+        NavService.navKey.currentContext!,
         listen: false);
     isFileSending = _filePickerProvider.isFileSending;
 
@@ -226,16 +226,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             isDesktop: true,
             selectedList: (_list) {
               Provider.of<WelcomeScreenProvider>(
-                      NavService.navKey.currentContext,
+                      NavService.navKey.currentContext!,
                       listen: false)
                   .updateSelectedContacts(_list);
               _welcomeScreenProvider.isSelectionItemChanged = true;
             },
             onBackArrowTap: (selectedGroupContacts) {
-              if (selectedGroupContacts.length > 0) {
+              if (selectedGroupContacts!.length > 0) {
                 CommonUtilityFunctions().shownConfirmationDialog(
                     TextStrings().contactSelectionConfirmation, () {
-                  Navigator.of(NavService.navKey.currentContext).pop();
+                  Navigator.of(NavService.navKey.currentContext!).pop();
                   setState(() {
                     _currentScreen = CurrentScreen.PlaceolderImage;
                   });

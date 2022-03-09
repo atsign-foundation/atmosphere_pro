@@ -43,7 +43,7 @@ class MixedConstants {
   /// Currently set to 60 days
   static const int FILE_TRANSFER_TTL = 60000 * 60 * 24 * 60;
 
-  static String ApplicationDocumentsDirectory = '';
+  static String? ApplicationDocumentsDirectory = '';
 
   /// Sibebar width
   static double SIDEBAR_WIDTH = 70;
@@ -52,8 +52,8 @@ class MixedConstants {
   static const double APPBAR_HEIGHT = 80;
 
   /// we change the directory after successful login
-  static setNewApplicationDocumentsDirectory(String _atsign) async {
-    var _dir;
+  static setNewApplicationDocumentsDirectory(String? _atsign) async {
+    late var _dir;
     if (Platform.isMacOS || Platform.isWindows) {
       _dir = await getApplicationDocumentsDirectory();
     }

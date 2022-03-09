@@ -27,16 +27,16 @@ class WelcomeScreenHome extends StatefulWidget {
 }
 
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
-  bool isContactSelected;
-  bool isFileSelected;
-  WelcomeScreenProvider _welcomeScreenProvider;
-  HistoryProvider historyProvider;
+  bool? isContactSelected;
+  bool? isFileSelected;
+  late WelcomeScreenProvider _welcomeScreenProvider;
+  HistoryProvider? historyProvider;
   List<AtContact> selectedList = [];
   bool isExpanded = true,
       isFileShareFailed = false,
       isSentFileEntrySaved = true;
   ScrollController scrollController = ScrollController();
-  FileTransferProvider filePickerModel;
+  late FileTransferProvider filePickerModel;
 
   @override
   void initState() {
@@ -86,7 +86,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               child: Text(
                                 BackendService.getInstance().atClientInstance !=
                                         null
-                                    ? BackendService.getInstance().currentAtSign
+                                    ? BackendService.getInstance().currentAtSign!
                                     : '',
                                 style: GoogleFonts.playfairDisplay(
                                   textStyle: TextStyle(
@@ -347,7 +347,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   switchAtsign() async {
     var atSignList = await KeychainUtil.getAtsignList();
     await showModalBottomSheet(
-      context: NavService.navKey.currentContext,
+      context: NavService.navKey.currentContext!,
       backgroundColor: Colors.transparent,
       builder: (context) => AtSignBottomSheet(
         atSignList: atSignList,

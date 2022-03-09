@@ -119,7 +119,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
-                                if (provider.trustedContacts[index].atSign
+                                if (provider.trustedContacts[index]!.atSign!
                                     .contains(searchText)) {
                                   return InkWell(
                                     onTap: () {
@@ -131,16 +131,16 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                           TextStrings().removeTrustedSender,
                                           contact: AtContact(
                                               atSign: provider
-                                                  .trustedContacts[index]
+                                                  .trustedContacts[index]!
                                                   .atSign),
                                         ),
                                       );
                                     },
                                     child: DesktopCustomPersonVerticalTile(
                                         title: provider
-                                            .trustedContacts[index].atSign,
+                                            .trustedContacts[index]!.atSign,
                                         subTitle: provider
-                                            .trustedContacts[index].atSign,
+                                            .trustedContacts[index]!.atSign,
                                         showCancelIcon: false),
                                   );
                                 } else
@@ -164,7 +164,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                     context,
                                     task: (provider) async {
                                       _list.forEach((element) async {
-                                        if (element.contact != null) {
+                                        if (element!.contact != null) {
                                           await provider.addTrustedContacts(
                                               element.contact);
                                         }

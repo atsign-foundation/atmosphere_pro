@@ -1,10 +1,10 @@
 class NotificationPayload {
-  String name;
+  String? name;
   // String handle;
-  String file;
+  String? file;
   // String userImage;
   // int numberOfFiles;
-  double size;
+  double? size;
   // int id;
   // String extension;
 

@@ -18,31 +18,31 @@ class CustomOnboarding {
   static BackendService _backendService = BackendService.getInstance();
 
   static onboard(
-      {String atSign,
-      atClientPrefernce,
-      Function showLoader,
+      {String? atSign,
+      required atClientPrefernce,
+      Function? showLoader,
       bool isInit = false,
-      Function onError}) async {
+      Function? onError}) async {
     await Onboarding(
       atsign: atSign,
-      context: NavService.navKey.currentContext,
+      context: NavService.navKey.currentContext!,
       atClientPreference: atClientPrefernce,
       domain: MixedConstants.ROOT_DOMAIN,
       appColor: Color.fromARGB(255, 240, 94, 62),
       appAPIKey: MixedConstants.ONBOARD_API_KEY,
       rootEnvironment: RootEnvironment.Production,
       onboard: (value, atsign) async {
-        await KeychainUtil.makeAtSignPrimary(atsign);
+        await KeychainUtil.makeAtSignPrimary(atsign!);
 
         await AtClientManager.getInstance().setCurrentAtSign(
             atsign, MixedConstants.appNamespace, atClientPrefernce);
 
         _backendService.atClientInstance =
-            value[atsign].atClientManager.atClient;
+            value[atsign]!.atClientManager.atClient;
         _backendService.atClientServiceInstance = value[atsign];
-        _backendService.atClientManager = value[atsign].atClientManager;
+        _backendService.atClientManager = value[atsign]!.atClientManager;
         _backendService.currentAtSign =
-            value[atsign].atClientManager.atClient.getCurrentAtSign();
+            value[atsign]!.atClientManager.atClient.getCurrentAtSign();
 
         BackendService.getInstance().syncWithSecondary();
 
@@ -66,14 +66,14 @@ class CustomOnboarding {
 
         if (isInit) {
           await Navigator.pushReplacementNamed(
-            NavService.navKey.currentContext,
+            NavService.navKey.currentContext!,
             DesktopRoutes.DESKTOP_WELCOME,
           );
         }
 
         if (!isInit) {
           // if it is not init then we re-render the welcome screen
-          Provider.of<SwitchAtsignProvider>(NavService.navKey.currentContext,
+          Provider.of<SwitchAtsignProvider>(NavService.navKey.currentContext!,
                   listen: false)
               .update();
         }
@@ -94,13 +94,13 @@ class CustomOnboarding {
 
   static getTransferData() async {
     HistoryProvider historyProvider = Provider.of<HistoryProvider>(
-        NavService.navKey.currentContext,
+        NavService.navKey.currentContext!,
         listen: false);
     historyProvider.resetData();
     await historyProvider.getSentHistory();
     await historyProvider.getReceivedHistory();
 
-    await Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+    Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
             listen: false)
         .checkForUndownloadedFiles();
   }

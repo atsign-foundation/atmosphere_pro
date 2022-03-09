@@ -3,7 +3,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DesktopContactsCustomListTile extends StatelessWidget {
-  const DesktopContactsCustomListTile({Key key}) : super(key: key);
+  const DesktopContactsCustomListTile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -29,10 +29,10 @@ class _UnknownsState extends State<Unknowns> {
             itemCount: provider.receivedUnknown.length,
             itemBuilder: (context, index) {
               DateTime date =
-                  DateTime.parse(provider.receivedUnknown[index].date);
+                  DateTime.parse(provider.receivedUnknown[index].date!);
               return InkWell(
                 onTap: () async {
-                  await openFilePath(provider.receivedUnknown[index].filePath);
+                  await openFilePath(provider.receivedUnknown[index].filePath!);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -40,7 +40,7 @@ class _UnknownsState extends State<Unknowns> {
                     tileColor: ColorConstants.listBackground,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3)),
-                    title: Text(provider.receivedUnknown[index].fileName,
+                    title: Text(provider.receivedUnknown[index].fileName!,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
                       width: SizeConfig().isTablet(context)
@@ -57,22 +57,22 @@ class _UnknownsState extends State<Unknowns> {
                           width: 50.toWidth,
                           child: Image.asset(
                             FileTypes.PDF_TYPES.contains(provider
-                                    .receivedUnknown[index].fileName
+                                    .receivedUnknown[index].fileName!
                                     .split('.')
                                     .last)
                                 ? ImageConstants.pdfLogo
                                 : FileTypes.WORD_TYPES.contains(provider
-                                        .receivedUnknown[index].fileName
+                                        .receivedUnknown[index].fileName!
                                         .split('.')
                                         .last)
                                     ? ImageConstants.wordLogo
                                     : FileTypes.EXEL_TYPES.contains(provider
-                                            .receivedUnknown[index].fileName
+                                            .receivedUnknown[index].fileName!
                                             .split('.')
                                             .last)
                                         ? ImageConstants.exelLogo
                                         : FileTypes.TEXT_TYPES.contains(provider
-                                                .receivedUnknown[index].fileName
+                                                .receivedUnknown[index].fileName!
                                                 .split('.')
                                                 .last)
                                             ? ImageConstants.txtLogo
@@ -89,9 +89,9 @@ class _UnknownsState extends State<Unknowns> {
                               double.parse(provider.receivedUnknown[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedUnknown[index].size).toStringAsFixed(2)} ' +
+                                  ? '${provider.receivedUnknown[index].size!.toStringAsFixed(2)} ' +
                                       TextStrings().kb
-                                  : '${(provider.receivedUnknown[index].size / 1024).toStringAsFixed(2)} ' +
+                                  : '${(provider.receivedUnknown[index].size! / 1024).toStringAsFixed(2)} ' +
                                       TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(

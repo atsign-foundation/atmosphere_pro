@@ -7,10 +7,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 Widget customPersonVerticalTile(
-    String title, String subTitle, Function onCancel) {
+    String title, String? subTitle, Function onCancel) {
   // if file is being uploaded.
   bool isCancelIcon = !Provider.of<FileTransferProvider>(
-          NavService.navKey.currentContext,
+          NavService.navKey.currentContext!,
           listen: false)
       .isFileSending;
 

@@ -17,12 +17,12 @@ class DesktopSelectedFiles extends StatefulWidget {
 }
 
 class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
-  FileTransferProvider _filePickerProvider;
-  WelcomeScreenProvider welcomeScreenProvider;
+  FileTransferProvider? _filePickerProvider;
+  late WelcomeScreenProvider welcomeScreenProvider;
   @override
   void initState() {
     welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
-        NavService.navKey.currentContext,
+        NavService.navKey.currentContext!,
         listen: false);
     _filePickerProvider =
         Provider.of<FileTransferProvider>(context, listen: false);
@@ -83,7 +83,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                           child: ListTile(
                             onTap: null,
                             title: Text(
-                              provider.selectedFiles[index]?.name.toString(),
+                              provider.selectedFiles[index].name,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14.toFont,

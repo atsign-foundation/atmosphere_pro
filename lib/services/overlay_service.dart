@@ -9,13 +9,13 @@ class OverlayService {
   OverlayService._();
   static final OverlayService _instance = OverlayService._();
   static OverlayService get instance => _instance;
-  OverlayEntry snackBarOverlayEntry;
+  OverlayEntry? snackBarOverlayEntry;
 
   showOverlay(FLUSHBAR_STATUS flushbarStatus) async {
     hideOverlay();
 
     snackBarOverlayEntry = _buildSnackBarOverlayEntry(flushbarStatus);
-    NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry);
+    NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry!);
 
     if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
       await Future.delayed(Duration(seconds: 3));

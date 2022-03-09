@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class SideBarBackupItem extends StatelessWidget {
-  final String title;
-  final Widget leadingIcon;
-  final VoidCallback onPressed;
+  final String? title;
+  final Widget? leadingIcon;
+  final VoidCallback? onPressed;
 
   SideBarBackupItem({
-    Key key,
+    Key? key,
     this.title,
     this.leadingIcon,
     this.onPressed,
@@ -22,11 +22,11 @@ class SideBarBackupItem extends StatelessWidget {
         height: 50.toHeight,
         child: Row(
           children: [
-            if (leadingIcon != null) leadingIcon,
+            if (leadingIcon != null) leadingIcon!,
             SizedBox(width: 10),
             Expanded(
               child: Text(
-                title,
+                title!,
                 softWrap: true,
                 style: TextStyle(
                   color: ColorConstants.fadedText,
