@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notify.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -109,7 +110,22 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               ),
                             ),
                             SizedBox(
-                              height: 67.toHeight,
+                              height: 37.toHeight,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                main();
+                              },
+                              child: Text(
+                                'Multiple Atsign',
+                                style: TextStyle(
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 12.toFont,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 37.toHeight,
                             ),
                             Text(
                               TextStrings().welcomeSendFilesTo,
