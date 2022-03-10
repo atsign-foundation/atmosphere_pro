@@ -182,13 +182,17 @@ class BackendService {
           .catchError((e) {
         print("error in decrypting: $e");
         showToast(e.toString());
+        return '';
       });
-      DownloadAcknowledgement downloadAcknowledgement =
-          DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-              listen: false)
-          .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      if (decryptedMessage != null && decryptedMessage != '') {
+        DownloadAcknowledgement downloadAcknowledgement =
+            DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
+
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      }
       return;
     }
 
@@ -209,9 +213,10 @@ class BackendService {
         //TODO: only for closed testing purpose , we are showing error dialog
         // should be removed before general release.
         showToast(e.toString());
+        return '';
       });
 
-      if (decryptedMessage != null) {
+      if (decryptedMessage != null && decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);

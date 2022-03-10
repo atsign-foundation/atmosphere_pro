@@ -40,7 +40,9 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
           functionName: 'get_trusted_contacts',
           load: (provider) {},
           showError: false,
-          errorBuilder: (provider) => Container(),
+          errorBuilder: (provider) => Center(
+                child: Text('Something went wrong.'),
+              ),
           successBuilder: (provider) {
             return Stack(
               children: [
@@ -143,8 +145,9 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                             .trustedContacts[index]!.atSign,
                                         showCancelIcon: false),
                                   );
-                                } else
+                                } else {
                                   return SizedBox();
+                                }
                               }),
                             ),
                           ),

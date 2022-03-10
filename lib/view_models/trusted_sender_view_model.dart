@@ -91,6 +91,7 @@ class TrustedContactProvider extends BaseModel {
           .get(trustedContactsKey)
           .catchError((e) {
         print('error in get in getTrustedContact : $e ');
+        return AtValue();
       });
 
       var jsonValue;
