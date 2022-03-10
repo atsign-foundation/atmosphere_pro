@@ -292,16 +292,25 @@ class HistoryProvider extends BaseModel {
 
 // deletes sent items which are older that 15 days
   removePastSentFiles() async {
+    List<String> idsToDelete = [];
     for (int i = 0; i < sentHistory.length; i++) {
       FileHistory fileHistory = sentHistory[i];
       var sentFileDeletionDate =
           fileHistory.fileDetails!.date!.add(Duration(days: 15));
       if (sentFileDeletionDate.difference(DateTime.now()) <
           Duration(seconds: 0)) {
-        sentHistory.removeAt(i);
-        updateSendFileHistoryArray(fileHistory, isDelete: true);
+        idsToDelete.add(sentHistory[i].fileDetails!.key!);
       }
     }
+
+    idsToDelete.forEach((String id) {
+      var index =
+          sentHistory.indexWhere((element) => element.fileDetails!.key == id);
+      if (index > -1) {
+        updateSendFileHistoryArray(sentHistory[index], isDelete: true);
+        sentHistory.removeAt(index);
+      }
+    });
 
     await updateSentHistory();
   }

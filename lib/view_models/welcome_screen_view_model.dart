@@ -6,7 +6,7 @@ class WelcomeScreenProvider extends BaseModel {
   WelcomeScreenProvider._();
   static WelcomeScreenProvider _instance = WelcomeScreenProvider._();
   factory WelcomeScreenProvider() => _instance;
-  List<GroupContactsModel?> selectedContacts = [];
+  List<GroupContactsModel> selectedContacts = [];
   String updateContacts = 'update_contacts';
   String onboard = 'onboard';
   String selectGroupContacts = 'select_group_contacts';
@@ -18,7 +18,9 @@ class WelcomeScreenProvider extends BaseModel {
   updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
       setStatus(updateContacts, Status.Loading);
-      selectedContacts = updatedList;
+      updatedList.forEach((element) {
+        selectedContacts.add(element!);
+      });
       hasSelectedContactsChanged = true;
       scrollToBottom = true; // to scroll welcome screen to the bottom
       setStatus(updateContacts, Status.Done);
