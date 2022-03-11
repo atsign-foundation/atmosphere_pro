@@ -152,16 +152,10 @@ class BackendService {
         .listen((AtNotification notification) async {
       await _notificationCallBack(notification);
     });
-    var notificationService = AtClientManager.getInstance().notificationService
-        as NotificationServiceImpl;
-    notificationService.getMonitorStatus();
   }
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
-    var notificationService = AtClientManager.getInstance().notificationService
-        as NotificationServiceImpl;
-    notificationService.getMonitorStatus();
     var notificationKey = response.key;
     var fromAtSign = response.from;
 
