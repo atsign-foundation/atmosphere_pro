@@ -15,9 +15,11 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:new_version/new_version.dart';
 import 'package:provider/provider.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
+import 'package:http/http.dart' as http;
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -55,7 +57,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await initPackages();
       await getSentAndReceivedHistory();
     });
+    checkForUpdate();
     super.initState();
+  }
+
+  checkForUpdate() async {
+    final newVersion = NewVersion();
+    final status = await newVersion.getVersionStatus();
+
+    //// for forced version update
+    // newVersion.showUpdateDialog(
+    //   context: context,
+    //   versionStatus: status,
+    //   allowDismissal: false,
+    // );
+
+    newVersion.showAlertIfNecessary(context: context);
   }
 
   @override
