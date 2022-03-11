@@ -40,7 +40,7 @@ class ReceivedFilesListTile extends StatefulWidget {
 }
 
 class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
-  bool? isOpen = false,
+  bool isOpen = false,
       isDownloading = false,
       isDownloaded = false,
       isDownloadAvailable = false,
@@ -64,7 +64,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   @override
   void initState() {
-    isOpen = widget.isWidgetOpen;
+    isOpen = widget.isWidgetOpen ?? false;
     widget.receivedHistory!.files!.forEach((element) {
       fileSize += element.size!;
     });
