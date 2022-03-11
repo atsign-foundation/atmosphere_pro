@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideBarItem extends StatelessWidget {
-  final String image;
-  final String title;
-  final String routeName;
-  final Map<String, dynamic> arguments;
+  final String? image;
+  final String? title;
+  final String? routeName;
+  final Map<String, dynamic>? arguments;
   final bool showIconOnly, isDesktop;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
   bool isScale;
   SideBarItem(
-      {Key key,
+      {Key? key,
       this.image,
       this.title,
       this.routeName,
@@ -36,7 +36,7 @@ class SideBarItem extends StatelessWidget {
             _welcomeScreenProvider.isExpanded) {
           Navigator.pop(context);
         }
-        Navigator.pushNamed(context, routeName, arguments: arguments ?? {});
+        Navigator.pushNamed(context, routeName!, arguments: arguments ?? {});
       },
       child: Container(
         height: 50,
@@ -45,7 +45,7 @@ class SideBarItem extends StatelessWidget {
             Transform.scale(
               scale: isScale ? 1.2 : 1,
               child: Image.asset(
-                image,
+                image!,
                 height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
                 color: displayColor,
               ),
@@ -54,7 +54,7 @@ class SideBarItem extends StatelessWidget {
             !showIconOnly
                 ? Expanded(
                     child: Text(
-                      title,
+                      title!,
                       softWrap: true,
                       style: TextStyle(
                         color: displayColor,

@@ -21,7 +21,7 @@ class DesktopEmptySender extends StatefulWidget {
 
 class _DesktopEmptySenderState extends State<DesktopEmptySender> {
   bool isContactSelecttion = false, isLoading = true;
-  List<AtContact> trustedContacts = [];
+  List<AtContact?> trustedContacts = [];
 
   @override
   void initState() {
@@ -126,7 +126,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                         providerCallback<TrustedContactProvider>(context,
                             task: (provider) async {
                               _list.forEach((element) async {
-                                if (element.contact != null) {
+                                if (element!.contact != null) {
                                   await provider
                                       .addTrustedContacts(element.contact);
                                 }

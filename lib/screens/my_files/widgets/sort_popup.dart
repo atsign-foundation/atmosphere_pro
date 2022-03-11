@@ -8,7 +8,7 @@ class SortPopup extends StatefulWidget {
 }
 
 class _SortPopupState extends State<SortPopup> {
-  String ratioItem = '';
+  String? ratioItem = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +17,7 @@ class _SortPopupState extends State<SortPopup> {
           RadioListTile(
               value: 'By Name',
               groupValue: ratioItem,
-              onChanged: (s) {
+              onChanged: (dynamic s) {
                 setState(() {
                   ratioItem = s;
                   providerCallback<HistoryProvider>(context,

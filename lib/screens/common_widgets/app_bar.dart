@@ -27,7 +27,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
   final bool showTitle;
   final bool showBackButton;
   final bool showLeadingicon;
@@ -40,7 +40,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isTrustedContactScreen;
   final double elevation;
   const CustomAppBar(
-      {Key key,
+      {Key? key,
       this.title,
       this.showTitle = false,
       this.showBackButton = false,
@@ -110,7 +110,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             child: (widget.showTitle)
                 ? Center(
                     child: Text(
-                      widget.title,
+                      widget.title!,
                       style: CustomTextStyles.primaryBold18,
                     ),
                   )
@@ -141,7 +141,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                   title: 'Atmosphere download folder',
                                   context: context,
                                   rootDirectory: BackendService.getInstance()
-                                      .downloadDirectory,
+                                      .downloadDirectory!,
                                   fsType: FilesystemType.all,
                                   folderIconColor: Colors.teal,
                                   allowedExtensions: [],
@@ -156,7 +156,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 String url = 'shareddocuments://' +
                                     BackendService.getInstance()
                                         .atClientPreference
-                                        .downloadPath;
+                                        .downloadPath!;
                                 if (await canLaunch(url)) {
                                   await launch(url);
                                 } else {

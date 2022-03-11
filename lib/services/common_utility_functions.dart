@@ -25,13 +25,13 @@ class CommonUtilityFunctions {
     return _singleton;
   }
 
-  Uint8List getCachedContactImage(String atsign) {
-    Uint8List image;
+  Uint8List? getCachedContactImage(String atsign) {
+    Uint8List? image;
     AtContact contact = checkForCachedContactDetail(atsign);
 
     if (contact != null &&
         contact.tags != null &&
-        contact.tags['image'] != null) {
+        contact.tags!['image'] != null) {
       try {
         return getContactImage(contact);
       } catch (e) {
@@ -42,25 +42,25 @@ class CommonUtilityFunctions {
     return image;
   }
 
-  String getContactName(String atsign) {
-    String name;
-    AtContact contact = getCachedContactDetail(atsign);
+  String? getContactName(String atsign) {
+    String? name;
+    AtContact? contact = getCachedContactDetail(atsign);
     if (contact != null &&
         contact.tags != null &&
-        contact.tags['name'] != null) {
-      name = contact.tags['name'];
+        contact.tags!['name'] != null) {
+      name = contact.tags!['name'];
     }
     return name;
   }
 
   getCachedContactName(String atsign) {
-    String _name;
+    String? _name;
     AtContact contact = checkForCachedContactDetail(atsign);
 
     if (contact != null &&
         contact.tags != null &&
-        contact.tags['name'] != null) {
-      _name = contact.tags['name'].toString();
+        contact.tags!['name'] != null) {
+      _name = contact.tags!['name'].toString();
     }
 
     return _name;
@@ -74,7 +74,7 @@ class CommonUtilityFunctions {
 
   showResetAtsignDialog() async {
     bool isSelectAtsign = false;
-    bool isSelectAll = false;
+    bool? isSelectAll = false;
     var atsignsList = await KeychainUtil.getAtsignList();
     if (atsignsList == null) {
       atsignsList = [];
@@ -85,7 +85,7 @@ class CommonUtilityFunctions {
     }
     await showDialog(
         barrierDismissible: true,
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, stateSet) {
             return AlertDialog(
@@ -103,7 +103,7 @@ class CommonUtilityFunctions {
                     )
                   ],
                 ),
-                content: atsignsList.isEmpty
+                content: atsignsList!.isEmpty
                     ? Column(mainAxisSize: MainAxisSize.min, children: [
                         Text(TextStrings.noAtsignToReset,
                             style: TextStyle(fontSize: 15)),
@@ -209,7 +209,7 @@ class CommonUtilityFunctions {
   }
 
   _resetDevice(List checkedAtsigns) async {
-    Navigator.of(NavService.navKey.currentContext).pop();
+    Navigator.of(NavService.navKey.currentContext!).pop();
     await BackendService.getInstance()
         .resetAtsigns(checkedAtsigns)
         .then((value) async {
@@ -226,24 +226,25 @@ class CommonUtilityFunctions {
         atSignList.isNotEmpty &&
         _backendService.currentAtSign != atSignList.first) {
       // _backendService.checkToOnboard(atSign: atSignList.first);
-      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
           Routes.HOME, (Route<dynamic> route) => false);
     } else if (atSignList == null || atSignList.isEmpty) {
-      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
           Routes.HOME, (Route<dynamic> route) => false);
     }
   }
 
-  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+  Widget thumbnail(String? extension, String? path,
+      {bool? isFilePresent = true}) {
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
             child: Container(
               height: 50.toHeight,
               width: 50.toWidth,
-              child: isFilePresent
+              child: isFilePresent!
                   ? Image.file(
-                      File(path),
+                      File(path!),
                       fit: BoxFit.cover,
                     )
                   : Icon(
@@ -254,7 +255,7 @@ class CommonUtilityFunctions {
           )
         : FileTypes.VIDEO_TYPES.contains(extension)
             ? FutureBuilder(
-                future: videoThumbnailBuilder(path),
+                future: videoThumbnailBuilder(path!),
                 builder: (context, snapshot) => ClipRRect(
                   borderRadius: BorderRadius.circular(10.toHeight),
                   child: Container(
@@ -267,7 +268,7 @@ class CommonUtilityFunctions {
                             fit: BoxFit.cover,
                           )
                         : Image.memory(
-                            snapshot.data,
+                            snapshot.data as Uint8List,
                             fit: BoxFit.cover,
                             errorBuilder: (context, o, ot) =>
                                 CircularProgressIndicator(),
@@ -319,11 +320,11 @@ class CommonUtilityFunctions {
     }
   }
 
-  Uint8List getContactImage(AtContact contact) {
-    Uint8List image;
-    if (contact.tags != null && contact.tags['image'] != null) {
+  Uint8List? getContactImage(AtContact contact) {
+    Uint8List? image;
+    if (contact.tags != null && contact.tags!['image'] != null) {
       try {
-        List<int> intList = contact.tags['image'].cast<int>();
+        List<int> intList = contact.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
       } catch (e) {
         print('error in getting atsign image : $e');
@@ -335,7 +336,7 @@ class CommonUtilityFunctions {
 
   showConfirmationDialog(Function onSuccess, String title) {
     showDialog(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
@@ -349,7 +350,7 @@ class CommonUtilityFunctions {
   deleteAtSign(String atsign) async {
     final _formKey = GlobalKey<FormState>();
     await showDialog(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (BuildContext context) {
           return AlertDialog(
             scrollable: true,
@@ -431,7 +432,7 @@ class CommonUtilityFunctions {
                         child: Text(TextStrings().buttonDelete,
                             style: CustomTextStyles.primaryBold14),
                         onPressed: () async {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             await BackendService.getInstance()
                                 .deleteAtSignFromKeyChain(atsign);
                           }
@@ -453,7 +454,7 @@ class CommonUtilityFunctions {
 
   shownConfirmationDialog(String title, Function onYesTap) {
     showDialog(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
@@ -474,7 +475,7 @@ class CommonUtilityFunctions {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                            onPressed: onYesTap,
+                            onPressed: onYesTap as void Function()?,
                             child: Text('Yes',
                                 style: TextStyle(fontSize: 16.toFont))),
                         TextButton(

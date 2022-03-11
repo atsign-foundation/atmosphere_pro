@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class FileTransferStatus {
-  int id;
-  String contactName;
-  String fileName;
-  TransferStatus status;
+  int? id;
+  String? contactName;
+  String? fileName;
+  TransferStatus? status;
   FileTransferStatus({
     this.id,
     this.contactName,
@@ -13,10 +13,10 @@ class FileTransferStatus {
   });
 
   FileTransferStatus copyWith({
-    int id,
-    String contactName,
-    String fileName,
-    TransferStatus status,
+    int? id,
+    String? contactName,
+    String? fileName,
+    TransferStatus? status,
   }) {
     return FileTransferStatus(
       id: id ?? this.id,
@@ -35,8 +35,8 @@ class FileTransferStatus {
     };
   }
 
-  factory FileTransferStatus.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  factory FileTransferStatus.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return FileTransferStatus();
 
     return FileTransferStatus(
       id: map['id'],

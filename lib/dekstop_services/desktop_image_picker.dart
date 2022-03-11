@@ -2,7 +2,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 
-Future<List<PlatformFile>> desktopImagePicker() async {
+Future<List<PlatformFile>?> desktopImagePicker() async {
   try {
     var selectedFiles = <PlatformFile>[];
     final XTypeGroup typeGroup = XTypeGroup();

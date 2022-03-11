@@ -19,9 +19,9 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
+  TabController? _controller;
   bool isOpen = false;
-  HistoryProvider historyProvider;
+  HistoryProvider? historyProvider;
 
   @override
   void didChangeDependencies() async {
@@ -37,7 +37,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   @override
   dispose() {
     // closing all open received files widgets widgets.
-    historyProvider.receivedHistoryLogs.forEach((element) {
+    historyProvider!.receivedHistoryLogs.forEach((element) {
       element.isWidgetOpen = false;
     });
     super.dispose();
@@ -91,10 +91,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     RefreshIndicator(
                       onRefresh: () async {
-                        await historyProvider.getSentHistory();
+                        await historyProvider!.getSentHistory();
                       },
                       child: ProviderHandler<HistoryProvider>(
-                        functionName: historyProvider.SENT_HISTORY,
+                        functionName: historyProvider!.SENT_HISTORY,
                         showError: false,
                         successBuilder: (provider) => (provider
                                 .sentHistory.isEmpty)
@@ -131,7 +131,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   return SentFilesListTile(
                                     sentHistory: provider.sentHistory[index],
                                     key: Key(provider
-                                        .sentHistory[index].fileDetails.key),
+                                        .sentHistory[index].fileDetails!.key!),
                                   );
                                 },
                               ),
@@ -159,10 +159,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                     ),
                     RefreshIndicator(
                       onRefresh: () async {
-                        await historyProvider.getReceivedHistory();
+                        await historyProvider!.getReceivedHistory();
                       },
                       child: ProviderHandler<HistoryProvider>(
-                          functionName: historyProvider.RECEIVED_HISTORY,
+                          functionName: historyProvider!.RECEIVED_HISTORY,
                           load: (provider) async {},
                           showError: false,
                           successBuilder: (provider) => (provider
@@ -202,7 +202,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                     padding: const EdgeInsets.all(8.0),
                                     child: ReceivedFilesListTile(
                                       key: Key(provider
-                                          .receivedHistoryLogs[index].key),
+                                          .receivedHistoryLogs[index].key!),
                                       receivedHistory:
                                           provider.receivedHistoryLogs[index],
                                       isWidgetOpen: provider

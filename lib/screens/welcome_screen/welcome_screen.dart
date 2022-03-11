@@ -14,7 +14,6 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../common_widgets/side_bar.dart';
@@ -27,9 +26,8 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Flushbar sendingFlushbar;
   BackendService backendService = BackendService.getInstance();
-  HistoryProvider historyProvider;
+  HistoryProvider? historyProvider;
   bool isExpanded = true;
   int _selectedBottomNavigationIndex = 0;
   // 0-Sending, 1-Success, 2-Error
@@ -46,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: ColorConstants.redText,
     )
   ];
-  String currentAtSign;
+  String? currentAtSign;
   @override
   void initState() {
     setAtSign();
@@ -66,17 +64,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   getSentAndReceivedHistory() async {
-    await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .getFileDownloadedAcknowledgement();
-    await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .getSentHistory();
-    await Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .getReceivedHistory();
 
-    await Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+    Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
             listen: false)
         .checkForUndownloadedFiles();
   }
@@ -93,9 +91,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   initPackages() async {
-    await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
-    await GroupService()
-        .init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
+    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    GroupService().init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 

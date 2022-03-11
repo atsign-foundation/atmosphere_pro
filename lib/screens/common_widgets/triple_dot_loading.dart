@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({
-    Key key,
+    Key? key,
     this.showIndicator = false,
     this.flashingCircleDarkColor = const Color(0xFF333333),
     this.flashingCircleBrightColor = const Color(0xFFaec1dd),
@@ -21,11 +21,11 @@ class TypingIndicator extends StatefulWidget {
 
 class _TypingIndicatorState extends State<TypingIndicator>
     with TickerProviderStateMixin {
-  AnimationController _appearanceController;
-  Animation<double> _indicatorSpaceAnimation;
-  Animation<double> _largeBubbleAnimation;
+  AnimationController? _appearanceController;
+  late Animation<double> _indicatorSpaceAnimation;
+  late Animation<double> _largeBubbleAnimation;
 
-  AnimationController _repeatingController;
+  late AnimationController _repeatingController;
   final List<Interval> _dotIntervals = const [
     Interval(0.25, 0.8),
     Interval(0.35, 0.9),
@@ -43,7 +43,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
       });
 
     _indicatorSpaceAnimation = CurvedAnimation(
-      parent: _appearanceController,
+      parent: _appearanceController!,
       curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
       reverseCurve: const Interval(0.0, 1.0, curve: Curves.easeOut),
     ).drive(Tween<double>(
@@ -52,7 +52,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     ));
 
     _largeBubbleAnimation = CurvedAnimation(
-      parent: _appearanceController,
+      parent: _appearanceController!,
       curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
       reverseCurve: const Interval(0.5, 1.0, curve: Curves.easeOut),
     );
@@ -82,22 +82,20 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
   @override
   void dispose() {
-    _appearanceController.dispose();
+    _appearanceController!.dispose();
     _repeatingController.dispose();
     super.dispose();
   }
 
   void _showIndicator() {
-    _appearanceController
-      ..duration = const Duration(milliseconds: 750)
-      ..forward();
+    _appearanceController?.duration = const Duration(milliseconds: 750);
+    _appearanceController?.forward();
     _repeatingController.repeat();
   }
 
   void _hideIndicator() {
-    _appearanceController
-      ..duration = const Duration(milliseconds: 150)
-      ..reverse();
+    _appearanceController?.duration = const Duration(milliseconds: 150);
+    _appearanceController?.reverse();
     _repeatingController.stop();
   }
 
@@ -121,10 +119,10 @@ class _TypingIndicatorState extends State<TypingIndicator>
   }
 
   Widget _buildAnimatedBubble({
-    @required Animation<double> animation,
-    @required double left,
-    @required double bottom,
-    @required Widget bubble,
+    required Animation<double> animation,
+    required double left,
+    required double bottom,
+    required Widget bubble,
   }) {
     return AnimatedBuilder(
       animation: animation,

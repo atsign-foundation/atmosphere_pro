@@ -39,7 +39,7 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                     children: List.generate(
                       provider.receivedUnknown.length,
                       (index) {
-                        if (provider.receivedUnknown[index].filePath
+                        if (provider.receivedUnknown[index].filePath!
                             .split('/')
                             .last
                             .toLowerCase()
@@ -47,7 +47,7 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                           return InkWell(
                             onTap: () async {
                               File test = File(
-                                  provider.receivedUnknown[index].filePath);
+                                  provider.receivedUnknown[index].filePath!);
                               bool fileExists = await test.exists();
                               if (fileExists) {
                                 await OpenFile.open(
@@ -55,7 +55,7 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                               }
                             },
                             child: DesktopFileCard(
-                              title: provider.receivedUnknown[index].filePath
+                              title: provider.receivedUnknown[index].filePath!
                                   .split('/')
                                   .last,
                               filePath:

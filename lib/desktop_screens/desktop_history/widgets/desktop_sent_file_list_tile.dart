@@ -24,11 +24,11 @@ import 'dart:math' as math;
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class DesktopSentFilesListTile extends StatefulWidget {
-  final FileHistory sentHistory;
+  final FileHistory? sentHistory;
   final bool isSelected;
 
   const DesktopSentFilesListTile(
-      {Key key, this.sentHistory, this.isSelected = false})
+      {Key? key, this.sentHistory, this.isSelected = false})
       : super(key: key);
   @override
   _DesktopSentFilesListTileState createState() =>
@@ -36,49 +36,51 @@ class DesktopSentFilesListTile extends StatefulWidget {
 }
 
 class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
-  int fileLength, fileSize = 0;
-  List<FileData> filesList = [];
-  List<String> contactList;
+  int fileLength = 0, fileSize = 0;
+  List<FileData>? filesList = [];
+  late List<String?> contactList;
   bool isOpen = false;
   bool isDeepOpen = false;
-  Uint8List videoThumbnail, firstContactImage;
+  Uint8List? videoThumbnail, firstContactImage;
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
-  String contactName;
+  String? contactName;
 
   @override
   void initState() {
     super.initState();
-    fileLength = widget.sentHistory.fileDetails.files.length;
+    fileLength = widget.sentHistory!.fileDetails!.files!.length;
     fileResending = List<bool>.generate(fileLength, (i) => false);
-    if (widget.sentHistory.sharedWith != null) {
-      contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
+    if (widget.sentHistory!.sharedWith != null) {
+      contactList =
+          widget.sentHistory!.sharedWith!.map((e) => e.atsign).toList();
     } else {
       contactList = [];
     }
-    filesList = widget.sentHistory.fileDetails.files;
+    filesList = widget.sentHistory!.fileDetails!.files;
 
-    widget.sentHistory.fileDetails.files.forEach((element) {
-      fileSize += element.size;
+    widget.sentHistory!.fileDetails!.files!.forEach((element) {
+      fileSize += element.size!;
     });
 
-    if (widget.sentHistory.sharedWith.isNotEmpty) {
+    if (widget.sentHistory!.sharedWith!.isNotEmpty) {
       contactName = CommonUtilityFunctions()
-          .getContactName(widget.sentHistory.sharedWith[0].atsign);
+          .getContactName(widget.sentHistory!.sharedWith![0].atsign!);
     }
 
     getContactImage();
   }
 
   getContactImage() {
-    AtContact contact;
+    AtContact? contact;
     if (contactList[0] != null) {
-      contact = checkForCachedContactDetail(contactList[0]);
+      contact = checkForCachedContactDetail(contactList[0]!);
     }
     if (contact != null) {
       if (mounted) {
         setState(() {
-          firstContactImage = CommonUtilityFunctions().getContactImage(contact);
+          firstContactImage =
+              CommonUtilityFunctions().getContactImage(contact!);
         });
       }
     }
@@ -113,8 +115,8 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                         height: 45.toHeight,
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: widget.sentHistory.sharedWith[0]
-                                      .isNotificationSend
+                              color: widget.sentHistory!.sharedWith![0]
+                                      .isNotificationSend!
                                   ? Color(0xFF08CB21)
                                   : Color(0xFFF86061),
                               width: 2),
@@ -147,15 +149,17 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                     right: 0,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: widget.sentHistory.sharedWith[0]
-                                                .isNotificationSend
+                                        color: widget
+                                                .sentHistory!
+                                                .sharedWith![0]
+                                                .isNotificationSend!
                                             ? Color(0xFF08CB21)
                                             : Color(0xFFF86061),
                                         border: Border.all(
                                             color: widget
-                                                    .sentHistory
-                                                    .sharedWith[0]
-                                                    .isNotificationSend
+                                                    .sentHistory!
+                                                    .sharedWith![0]
+                                                    .isNotificationSend!
                                                 ? Color(0xFF08CB21)
                                                 : Color(0xFFF86061),
                                             width: 5),
@@ -164,8 +168,8 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                       ),
                                       child: InkWell(
                                         onTap: () async {
-                                          if (widget.sentHistory.sharedWith[0]
-                                              .isNotificationSend) {
+                                          if (widget.sentHistory!.sharedWith![0]
+                                              .isNotificationSend!) {
                                             return;
                                           }
 
@@ -177,15 +181,15 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                   context,
                                                   listen: false)
                                               .reSendFileNotification(
-                                                  widget.sentHistory,
-                                                  widget.sentHistory
-                                                      .sharedWith[0].atsign);
+                                                  widget.sentHistory!,
+                                                  widget.sentHistory!
+                                                      .sharedWith![0].atsign!);
 
                                           isResendingToFirstContact = false;
                                         },
                                         child: Icon(
-                                          widget.sentHistory.sharedWith[0]
-                                                  .isNotificationSend
+                                          widget.sentHistory!.sharedWith![0]
+                                                  .isNotificationSend!
                                               ? Icons.done
                                               : Icons.refresh,
                                           color: Colors.white,
@@ -211,7 +215,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                         contactList.isNotEmpty
                             ? contactName != null
                                 ? Text(
-                                    contactName,
+                                    contactName!,
                                     style:
                                         CustomTextStyles.primaryRegularBold18,
                                   )
@@ -220,7 +224,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                         SizedBox(height: 10),
                         contactList.isNotEmpty
                             ? Text(
-                                contactList[0],
+                                contactList[0]!,
                                 style: CustomTextStyles.primaryRegular18,
                               )
                             : SizedBox(),
@@ -277,9 +281,9 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      widget.sentHistory.fileDetails.date != null
+                      widget.sentHistory!.fileDetails!.date != null
                           ? Text(
-                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
+                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory!.fileDetails!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -292,9 +296,9 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      widget.sentHistory.fileDetails.date != null
+                      widget.sentHistory!.fileDetails!.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
+                              '${DateFormat('kk: mm').format(widget.sentHistory!.fileDetails!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -316,7 +320,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                   children: [
                     Container(
                       height:
-                          70.0 * widget.sentHistory.fileDetails.files.length,
+                          70.0 * widget.sentHistory!.fileDetails!.files!.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
@@ -325,14 +329,14 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList[index].name?.split('.')?.last)) {
-                              videoThumbnailBuilder(filesList[index].path);
+                                filesList![index].name?.split('.')?.last)) {
+                              videoThumbnailBuilder(filesList![index].path!);
                             }
                             return ListTile(
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
-                                        '/${filesList[index].name}';
+                                        '/${filesList![index].name}';
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
@@ -349,20 +353,21 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                   child: FutureBuilder(
                                       future: isFilePresent(
                                           MixedConstants.SENT_FILE_DIRECTORY +
-                                              '/${filesList[index].name}'),
+                                              '/${filesList![index].name}'),
                                       builder: (context, snapshot) {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
                                                 snapshot.data != null
                                             ? thumbnail(
-                                                filesList[index]
+                                                filesList![index]
                                                     .name
                                                     ?.split('.')
                                                     ?.last,
                                                 MixedConstants
                                                         .SENT_FILE_DIRECTORY +
-                                                    '/${filesList[index].name}',
-                                                isFilePresent: snapshot.data)
+                                                    '/${filesList![index].name}',
+                                                isFilePresent:
+                                                    snapshot.data as bool)
                                             : SizedBox();
                                       })),
                               title: Column(
@@ -372,15 +377,15 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          filesList[index].name.toString(),
+                                          filesList![index].name.toString(),
                                           style:
                                               CustomTextStyles.primaryRegular16,
                                         ),
                                       ),
                                       Container(
-                                        child: filesList[index].isUploaded !=
+                                        child: filesList![index].isUploaded !=
                                                     null &&
-                                                filesList[index].isUploaded
+                                                filesList![index].isUploaded!
                                             ? Icon(
                                                 Icons.done,
                                                 color: Color(0xFF08CB21),
@@ -406,10 +411,10 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                               context,
                                                               listen: false)
                                                           .reuploadFiles(
-                                                              filesList,
+                                                              filesList!,
                                                               index,
                                                               widget
-                                                                  .sentHistory);
+                                                                  .sentHistory!);
 
                                                       // isWidgetRebuilt = true;
                                                       fileResending[index] =
@@ -431,12 +436,12 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                          double.parse(filesList[index]
+                                          double.parse(filesList![index]
                                                       .size
                                                       .toString()) <=
                                                   1024
-                                              ? '${filesList[index].size} Kb '
-                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                              ? '${filesList![index].size} Kb '
+                                              : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                           style: CustomTextStyles
                                               .secondaryRegular14,
                                         ),
@@ -517,14 +522,15 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
     );
   }
 
-  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+  Widget thumbnail(String? extension, String path,
+      {bool? isFilePresent = true}) {
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
             child: Container(
               height: 50.toHeight,
               width: 50.toWidth,
-              child: isFilePresent
+              child: isFilePresent!
                   ? Image.file(
                       File(path),
                       fit: BoxFit.cover,
@@ -550,7 +556,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                             fit: BoxFit.cover,
                           )
                         : Image.memory(
-                            videoThumbnail,
+                            videoThumbnail!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, o, ot) =>
                                 CircularProgressIndicator(),

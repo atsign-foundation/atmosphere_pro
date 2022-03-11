@@ -6,22 +6,11 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
-import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
-import 'package:at_lookup/at_lookup.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_flushbar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
@@ -32,9 +21,6 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -45,13 +31,9 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/service/sync_service.dart';
-import 'package:at_client/src/service/sync_service_impl.dart';
-import 'package:at_client/src/service/sync/sync_result.dart';
 import 'package:at_client/src/service/notification_service_impl.dart';
 import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
-import 'package:at_client/src/service/sync_service.dart';
-import 'package:at_client/src/service/sync_service_impl.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -62,19 +44,19 @@ class BackendService {
     return _singleton;
   }
 
-  AtClientService atClientServiceInstance;
-  AtClientManager atClientManager;
-  AtClient atClientInstance;
-  String currentAtSign;
-  String app_lifecycle_state;
-  AtClientPreference atClientPreference;
-  SyncService syncService;
+  AtClientService? atClientServiceInstance;
+  late AtClientManager atClientManager;
+  AtClient? atClientInstance;
+  String? currentAtSign;
+  String? app_lifecycle_state;
+  late AtClientPreference atClientPreference;
+  SyncService? syncService;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
 
-  String get currentAtsign => currentAtSign;
-  Directory downloadDirectory;
-  AnimationController controller;
+  String? get currentAtsign => currentAtSign;
+  Directory? downloadDirectory;
+  AnimationController? controller;
 
   final _isAuthuneticatingStreamController = StreamController<bool>.broadcast();
 
@@ -85,7 +67,9 @@ class BackendService {
       _isAuthuneticatingStreamController.sink;
 
   setDownloadPath(
-      {String atsign, atClientPreference, atClientServiceInstance}) async {
+      {String? atsign,
+      atClientPreference,
+      required atClientServiceInstance}) async {
     if (Platform.isIOS || Platform.isWindows) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
@@ -93,7 +77,7 @@ class BackendService {
       downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
     downloadDirectory = Directory(MixedConstants.RECEIVED_FILE_DIRECTORY);
-    if (atClientServiceMap[atsign] == null) {
+    if (atClientServiceMap[atsign!] == null) {
       final appSupportDirectory =
           await path_provider.getApplicationSupportDirectory();
       // final appSupportDirectory = Directory(MixedConstants.path);
@@ -119,7 +103,7 @@ class BackendService {
     var _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
       ..commitLogPath = path
-      ..downloadPath = downloadDirectory.path
+      ..downloadPath = downloadDirectory!.path
       ..namespace = MixedConstants.appNamespace
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
@@ -129,7 +113,7 @@ class BackendService {
   }
 
   ///Fetches atsign from device keychain.
-  Future<String> getAtSign() async {
+  Future<String?> getAtSign() async {
     await getAtClientPreference().then((value) {
       return atClientPreference = value;
     });
@@ -140,16 +124,16 @@ class BackendService {
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
+  Future<String?> getPrivateKey(String atsign) async {
     return await KeychainUtil.getPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
-  Future<String> getPublicKey(String atsign) async {
+  Future<String?> getPublicKey(String atsign) async {
     return await KeychainUtil.getPublicKey(atsign);
   }
 
-  Future<String> getAESKey(String atsign) async {
+  Future<String?> getAESKey(String atsign) async {
     return await KeychainUtil.getAESKey(atsign);
   }
 
@@ -168,16 +152,10 @@ class BackendService {
         .listen((AtNotification notification) async {
       await _notificationCallBack(notification);
     });
-    var notificationService = AtClientManager.getInstance().notificationService
-        as NotificationServiceImpl;
-    notificationService.getMonitorStatus();
   }
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
-    var notificationService = AtClientManager.getInstance().notificationService
-        as NotificationServiceImpl;
-    notificationService.getMonitorStatus();
     var notificationKey = response.key;
     var fromAtSign = response.from;
 
@@ -191,20 +169,24 @@ class BackendService {
 
     if (notificationKey
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
-      var value = response.value;
+      var value = response.value!;
 
-      var decryptedMessage = await atClientInstance.encryptionService
+      var decryptedMessage = await atClientInstance!.encryptionService!
           .decrypt(value, fromAtSign)
           .catchError((e) {
         print("error in decrypting: $e");
         showToast(e.toString());
+        return '';
       });
-      DownloadAcknowledgement downloadAcknowledgement =
-          DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
-              listen: false)
-          .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      if (decryptedMessage != null && decryptedMessage != '') {
+        DownloadAcknowledgement downloadAcknowledgement =
+            DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
+
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .updateDownloadAcknowledgement(downloadAcknowledgement, fromAtSign);
+      }
       return;
     }
 
@@ -212,37 +194,38 @@ class BackendService {
         !notificationKey
             .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var atKey = notificationKey.split(':')[1];
-      var value = response.value;
+      var value = response.value!;
 
       //TODO: only for testing
       await sendNotificationAck(notificationKey, fromAtSign);
 
       var decryptedMessage =
-          await atClientInstance.encryptionService.decrypt(value, fromAtSign)
+          await atClientInstance!.encryptionService!.decrypt(value, fromAtSign)
               // ignore: return_of_invalid_type_from_catch_error
               .catchError((e) {
         print("error in decrypting: $e");
         //TODO: only for closed testing purpose , we are showing error dialog
         // should be removed before general release.
         showToast(e.toString());
+        return '';
       });
 
-      if (decryptedMessage != null) {
-        await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+      if (decryptedMessage != null && decryptedMessage != '') {
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
 
-        await Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+        Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUndownloadedFiles();
 
-        BuildContext context = NavService.navKey.currentContext;
+        BuildContext context = NavService.navKey.currentContext!;
         bool trustedSender = false;
         TrustedContactProvider trustedContactProvider =
             Provider.of<TrustedContactProvider>(context, listen: false);
 
         trustedContactProvider.trustedContacts.forEach((element) {
-          if (element.atSign == fromAtSign) {
+          if (element!.atSign == fromAtSign) {
             trustedSender = true;
           }
         });
@@ -264,8 +247,8 @@ class BackendService {
         ..key = 'receive_ack_$transferId'
         ..sharedWith = fromAtsign
         ..metadata = Metadata()
-        ..metadata.ttr = -1
-        ..metadata.ttl = 518400000;
+        ..metadata!.ttr = -1
+        ..metadata!.ttl = 518400000;
 
       var notificationResult =
           await AtClientManager.getInstance().notificationService.notify(
@@ -303,11 +286,11 @@ class BackendService {
 
   _onSuccessCallback(SyncResult syncStatus) async {
     // removes failed snackbar message.
-    ScaffoldMessenger.of(NavService.navKey.currentContext)
+    ScaffoldMessenger.of(NavService.navKey.currentContext!)
         .hideCurrentSnackBar();
 
     var historyProvider = Provider.of<HistoryProvider>(
-        NavService.navKey.currentState.context,
+        NavService.navKey.currentState!.context,
         listen: false);
 
     print(
@@ -334,7 +317,7 @@ class BackendService {
 
   _onSyncErrorCallback(SyncResult syncStatus) async {
     print('sync failed : ${syncStatus}');
-    ScaffoldMessenger.of(NavService.navKey.currentContext).showSnackBar(
+    ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
       SnackBar(
         duration: Duration(days: 365),
         content: Padding(
@@ -345,7 +328,7 @@ class BackendService {
               Text('Sync Failed.', style: CustomTextStyles.grey15),
               InkWell(
                 onTap: () async {
-                  ScaffoldMessenger.of(NavService.navKey.currentContext)
+                  ScaffoldMessenger.of(NavService.navKey.currentContext!)
                       .hideCurrentSnackBar();
                   await AtSyncUIService().sync();
                 },
@@ -358,21 +341,21 @@ class BackendService {
     );
   }
 
-  Future<List<String>> getAtsignList() async {
+  Future<List<String>?> getAtsignList() async {
     var atSignsList =
         await KeyChainManager.getInstance().getAtSignListFromKeychain();
     return atSignsList;
   }
 
   deleteAtSignFromKeyChain(String atsign) async {
-    List<String> atSignList = await getAtsignList();
+    List<String>? atSignList = await getAtsignList();
 
     await KeychainUtil.deleteAtSignFromKeychain(atsign);
 
     if (atSignList != null) {
       atSignList.removeWhere((element) => element == atsign);
     }
-    var atClientPrefernce;
+    late var atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
 
     var tempAtsign;
@@ -384,30 +367,31 @@ class BackendService {
 
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       /// in case of desktop, we close the dialog from here
-      Navigator.of(NavService.navKey.currentContext).pop();
+      Navigator.of(NavService.navKey.currentContext!).pop();
     }
 
     if (tempAtsign == '') {
       if (Platform.isAndroid || Platform.isIOS) {
         await Navigator.pushNamedAndRemoveUntil(
-            NavService.navKey.currentContext,
+            NavService.navKey.currentContext!,
             Routes.HOME,
             (Route<dynamic> route) => false);
       } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
         await Navigator.pushNamedAndRemoveUntil(
-            NavService.navKey.currentContext,
+            NavService.navKey.currentContext!,
             DesktopRoutes.DESKTOP_HOME,
             (Route<dynamic> route) => false);
       }
     } else if (Platform.isAndroid || Platform.isIOS) {
       await Onboarding(
           atsign: tempAtsign,
-          context: NavService.navKey.currentContext,
+          context: NavService.navKey.currentContext!,
           atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
+          rootEnvironment: RootEnvironment.Production,
           appColor: Color.fromARGB(255, 240, 94, 62),
           onboard: (value, atsign) async {
-            await onboardSuccessCallback(value, atsign, atClientPrefernce);
+            await onboardSuccessCallback(value, atsign!, atClientPrefernce);
           },
           onError: (error) {
             print('Onboarding throws $error error');
@@ -432,18 +416,18 @@ class BackendService {
 
   bool authenticating = false;
 
-  checkToOnboard({String atSign}) async {
+  checkToOnboard({String? atSign}) async {
     try {
       authenticating = true;
       isAuthuneticatingSink.add(authenticating);
-      var atClientPrefernce;
+      late var atClientPrefernce;
       //  await getAtClientPreference();
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
       Onboarding(
           atsign: atSign,
-          context: NavService.navKey.currentContext,
+          context: NavService.navKey.currentContext!,
           atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
@@ -452,7 +436,7 @@ class BackendService {
             authenticating = true;
             isAuthuneticatingSink.add(authenticating);
             await onboardSuccessCallback(
-                value, onboardedAtsign, atClientPrefernce);
+                value, onboardedAtsign!, atClientPrefernce);
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);
           },
@@ -470,13 +454,13 @@ class BackendService {
     }
   }
 
-  onboardSuccessCallback(Map<String, AtClientService> atClientServiceMap,
+  onboardSuccessCallback(Map<String?, AtClientService> atClientServiceMap,
       String onboardedAtsign, AtClientPreference atClientPreference) async {
     // setting client service and manager
     await AtClientManager.getInstance().setCurrentAtSign(
         onboardedAtsign, MixedConstants.appNamespace, atClientPreference);
     atClientServiceInstance = atClientServiceMap[onboardedAtsign];
-    atClientManager = atClientServiceMap[onboardedAtsign].atClientManager;
+    atClientManager = atClientServiceMap[onboardedAtsign]!.atClientManager;
     atClientInstance = atClientManager.atClient;
     atClientServiceMap = atClientServiceMap;
     currentAtSign = onboardedAtsign;
@@ -492,36 +476,36 @@ class BackendService {
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
     // clearing file and contact informations.
-    Provider.of<WelcomeScreenProvider>(NavService.navKey.currentState.context,
+    Provider.of<WelcomeScreenProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .selectedContacts = [];
-    Provider.of<FileTransferProvider>(NavService.navKey.currentState.context,
+    Provider.of<FileTransferProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .selectedFiles = [];
-    Provider.of<HistoryProvider>(NavService.navKey.currentState.context,
+    Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
 
-    await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext,
+    await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
         Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
   }
 
-  String state;
-  LocalNotificationService _notificationService;
+  String? state;
+  late LocalNotificationService _notificationService;
 
   void initLocalNotification() async {
     _notificationService = LocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
 
-    SystemChannels.lifecycle.setMessageHandler((msg) {
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
       print('set message handler');
       state = msg;
       debugPrint('SystemChannels> $msg');
       app_lifecycle_state = msg;
 
       return null;
-    });
+    } as dynamic);
   }
 
   setDownloadDirectory() async {
@@ -533,8 +517,9 @@ class BackendService {
   }
 
   /// to create directory if does not exist
-  doesDirectoryExist({String path}) async {
-    final dir = Directory(path ?? MixedConstants.ApplicationDocumentsDirectory);
+  doesDirectoryExist({String? path}) async {
+    final dir =
+        Directory(path ?? MixedConstants.ApplicationDocumentsDirectory!);
     if ((await dir.exists())) {
     } else {
       await dir.create();
@@ -544,7 +529,7 @@ class BackendService {
   onNotificationClick(String payload) async {
     if (Platform.isAndroid || Platform.isIOS) {
       await Navigator.push(
-        NavService.navKey.currentContext,
+        NavService.navKey.currentContext!,
         MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
       );
     } else if (Platform.isMacOS) {

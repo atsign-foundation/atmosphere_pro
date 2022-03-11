@@ -27,11 +27,11 @@ import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReceivedFilesListTile extends StatefulWidget {
-  final FileTransfer receivedHistory;
-  final bool isWidgetOpen;
+  final FileTransfer? receivedHistory;
+  final bool? isWidgetOpen;
 
   const ReceivedFilesListTile({
-    Key key,
+    Key? key,
     this.receivedHistory,
     this.isWidgetOpen = false,
   }) : super(key: key);
@@ -46,10 +46,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloadAvailable = false,
       isFilesAvailableOfline = true,
       isOverwrite = false;
-  DateTime sendTime;
-  Uint8List videoThumbnail, image;
+  DateTime? sendTime;
+  Uint8List? videoThumbnail, image;
   int fileSize = 0;
-  List<String> existingFileNamesToOverwrite = [];
+  List<String?> existingFileNamesToOverwrite = [];
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -64,9 +64,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   @override
   void initState() {
-    isOpen = widget.isWidgetOpen;
-    widget.receivedHistory.files.forEach((element) {
-      fileSize += element.size;
+    isOpen = widget.isWidgetOpen ?? false;
+    widget.receivedHistory!.files!.forEach((element) {
+      fileSize += element.size!;
     });
 
     checkForDownloadAvailability();
@@ -76,15 +76,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   checkForDownloadAvailability() {
-    var expiryDate = widget.receivedHistory.date.add(Duration(days: 6));
+    var expiryDate = widget.receivedHistory!.date!.add(Duration(days: 6));
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
 
     // if fileList is not having any file then download icon will not be shown
     var isFileUploaded = false;
-    widget.receivedHistory.files.forEach((FileData fileData) {
-      if (fileData.isUploaded) {
+    widget.receivedHistory!.files!.forEach((FileData fileData) {
+      if (fileData.isUploaded!) {
         isFileUploaded = true;
       }
     });
@@ -95,22 +95,22 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   getAtSignDetail() {
-    AtContact contact;
-    if (widget.receivedHistory.sender != null) {
-      contact = checkForCachedContactDetail(widget.receivedHistory.sender);
+    AtContact? contact;
+    if (widget.receivedHistory!.sender != null) {
+      contact = checkForCachedContactDetail(widget.receivedHistory!.sender!);
     }
     if (contact != null) {
       if (mounted) {
         setState(() {
-          image = CommonUtilityFunctions().getContactImage(contact);
+          image = CommonUtilityFunctions().getContactImage(contact!);
         });
       }
     }
   }
 
   isFilesAlreadyDownloaded() async {
-    widget.receivedHistory.files.forEach((element) async {
-      String path = BackendService.getInstance().downloadDirectory.path +
+    widget.receivedHistory!.files!.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory!.path +
           '/${element.name}';
       File test = File(path);
       bool fileExists = await test.exists();
@@ -122,7 +122,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         }
       } else {
         var fileLatsModified = await test.lastModified();
-        if (fileLatsModified.isBefore(widget.receivedHistory.date)) {
+        if (fileLatsModified.isBefore(widget.receivedHistory!.date!)) {
           existingFileNamesToOverwrite.add(element.name);
           if (mounted) {
             setState(() {
@@ -139,19 +139,19 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     sendTime = DateTime.now();
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-      color: (isOpen) ? Color(0xffEFEFEF) : Colors.white,
+      color: isOpen! ? Color(0xffEFEFEF) : Colors.white,
       child: Column(
         children: [
           ListTile(
             leading:
                 // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
-                widget.receivedHistory.sender != null
+                widget.receivedHistory!.sender != null
                     ? GestureDetector(
-                        onTap: ((widget.receivedHistory.sender != null) &&
+                        onTap: ((widget.receivedHistory!.sender != null) &&
                                 (ContactService().contactList.indexWhere(
                                         (element) =>
                                             element.atSign ==
-                                            widget.receivedHistory.sender) ==
+                                            widget.receivedHistory!.sender) ==
                                     -1))
                             ? () async {
                                 await showDialog<void>(
@@ -159,7 +159,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   barrierDismissible: true,
                                   builder: (BuildContext context) {
                                     return AddContact(
-                                      atSignName: widget.receivedHistory.sender,
+                                      atSignName:
+                                          widget.receivedHistory!.sender,
                                       image: image,
                                     );
                                   },
@@ -183,16 +184,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       shape: BoxShape.circle,
                                     ),
                                     child: ContactInitial(
-                                      initials: widget.receivedHistory.sender,
+                                      initials: widget.receivedHistory!.sender,
                                       size: 45,
                                     ),
                                   ),
-                            ((widget.receivedHistory.sender != null) &&
+                            ((widget.receivedHistory!.sender != null) &&
                                     (ContactService().contactList.indexWhere(
                                             (element) =>
                                                 element.atSign ==
                                                 widget
-                                                    .receivedHistory.sender) ==
+                                                    .receivedHistory!.sender) ==
                                         -1))
                                 ? Positioned(
                                     right: -5,
@@ -220,9 +221,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: widget.receivedHistory.sender != null
+                      child: widget.receivedHistory!.sender != null
                           ? Text(
-                              widget.receivedHistory.sender,
+                              widget.receivedHistory!.sender!,
                               style: CustomTextStyles.primaryRegular16,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -231,17 +232,17 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     ),
                     InkWell(
                         onTap: () async {
-                          if (isOverwrite) {
+                          if (isOverwrite!) {
                             overwriteDialog();
                             return;
                           }
                           await downloadFiles(widget.receivedHistory);
                         },
-                        child: isDownloadAvailable
-                            ? widget.receivedHistory.isDownloading
+                        child: isDownloadAvailable!
+                            ? widget.receivedHistory!.isDownloading!
                                 ? CircularProgressIndicator()
-                                : ((isDownloaded || isFilesAvailableOfline) &&
-                                        !isOverwrite)
+                                : ((isDownloaded! || isFilesAvailableOfline!) &&
+                                        !isOverwrite!)
                                     ? Icon(
                                         Icons.done,
                                         color: Color(0xFF08CB21),
@@ -263,7 +264,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.receivedHistory.files.length} File(s)',
+                        '${widget.receivedHistory!.files!.length} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -289,9 +290,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      widget.receivedHistory.date != null
+                      widget.receivedHistory!.date != null
                           ? Text(
-                              '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory.date)}',
+                              '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory!.date!)}',
                               style: CustomTextStyles.secondaryRegular12,
                             )
                           : SizedBox(),
@@ -302,9 +303,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      widget.receivedHistory.date != null
+                      widget.receivedHistory!.date != null
                           ? Text(
-                              '${DateFormat('kk:mm').format(widget.receivedHistory.date)}',
+                              '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
                               style: CustomTextStyles.secondaryRegular12,
                             )
                           : SizedBox(),
@@ -314,12 +315,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 SizedBox(
                   height: 3.toHeight,
                 ),
-                (!isOpen)
+                (!isOpen!)
                     ? GestureDetector(
                         onTap: () {
                           if (mounted) {
                             setState(() {
-                              isOpen = !isOpen;
+                              isOpen = !isOpen!;
                             });
                           }
                         },
@@ -348,14 +349,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               ],
             ),
           ),
-          (isOpen)
+          isOpen!
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 70.0 *
-                          (widget.receivedHistory.files.length -
-                                  widget.receivedHistory.files
+                          (widget.receivedHistory!.files!.length -
+                                  widget.receivedHistory!.files!
                                       .where((element) =>
                                           element.isUploaded == false)
                                       .length)
@@ -365,15 +366,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 indent: 80.toWidth,
                               ),
                           itemCount: int.parse(
-                              widget.receivedHistory.files.length.toString()),
+                              widget.receivedHistory!.files!.length.toString()),
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (!widget
-                                .receivedHistory.files[index].isUploaded) {
+                                .receivedHistory!.files![index].isUploaded!) {
                               return SizedBox();
                             }
                             if (FileTypes.VIDEO_TYPES.contains(widget
-                                .receivedHistory.files[index].name
+                                .receivedHistory!.files![index].name
                                 ?.split('.')
                                 ?.last)) {
                               // videoThumbnailBuilder(
@@ -382,12 +383,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               Text(TextStrings().video);
                             }
                             return ListTile(
-                              key:
-                                  Key(widget.receivedHistory.files[index].name),
+                              key: Key(
+                                  widget.receivedHistory!.files![index].name!),
                               onTap: () async {
                                 String path = MixedConstants
                                         .RECEIVED_FILE_DIRECTORY +
-                                    '/${widget.receivedHistory.files[index].name}';
+                                    '/${widget.receivedHistory!.files![index].name}';
 
                                 File test = File(path);
                                 bool fileExists = await test.exists();
@@ -395,12 +396,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  if (!isDownloadAvailable) {
+                                  if (!isDownloadAvailable!) {
                                     return;
                                   }
                                   await downloadFiles(widget.receivedHistory,
                                       fileName: widget
-                                          .receivedHistory.files[index].name);
+                                          .receivedHistory!.files![index].name);
                                   await OpenFile.open(path);
                                 }
                               },
@@ -409,20 +410,21 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 width: 50.toHeight,
                                 child: FutureBuilder(
                                     future: isFilePresent(widget
-                                        .receivedHistory.files[index].name),
-                                    builder: (context, snapshot) {
+                                        .receivedHistory!.files![index].name),
+                                    builder: (context,
+                                        AsyncSnapshot<bool> snapshot) {
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
                                           ? thumbnail(
-                                              widget.receivedHistory
-                                                  .files[index].name
+                                              widget.receivedHistory!
+                                                  .files![index].name
                                                   ?.split('.')
                                                   ?.last,
                                               BackendService.getInstance()
-                                                      .downloadDirectory
+                                                      .downloadDirectory!
                                                       .path +
-                                                  '/${widget.receivedHistory.files[index].name}',
+                                                  '/${widget.receivedHistory!.files![index].name}',
                                               isFilePresent: snapshot.data)
                                           : SizedBox();
                                     }),
@@ -437,8 +439,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           text: TextSpan(
-                                            text: widget.receivedHistory
-                                                .files[index].name
+                                            text: widget.receivedHistory!
+                                                .files![index].name
                                                 .toString(),
                                             style: CustomTextStyles
                                                 .primaryRegular16,
@@ -454,12 +456,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                          double.parse(widget.receivedHistory
-                                                      .files[index].size
+                                          double.parse(widget.receivedHistory!
+                                                      .files![index].size
                                                       .toString()) <=
                                                   1024
-                                              ? '${widget.receivedHistory.files[index].size} Kb '
-                                              : '${(widget.receivedHistory.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                              ? '${widget.receivedHistory!.files![index].size} Kb '
+                                              : '${(widget.receivedHistory!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                           style: CustomTextStyles
                                               .secondaryRegular12,
                                         ),
@@ -471,8 +473,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                         ),
                                         SizedBox(width: 10.toHeight),
                                         Text(
-                                          widget
-                                              .receivedHistory.files[index].name
+                                          widget.receivedHistory!.files![index]
+                                              .name!
                                               .split('.')
                                               .last
                                               .toString(),
@@ -481,7 +483,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                         ),
                                         SizedBox(width: 10.toHeight),
                                         Text(
-                                          (widget.receivedHistory.files[index]
+                                          (widget.receivedHistory!.files![index]
                                                       .isDownloading ??
                                                   false)
                                               ? 'Downloading...'
@@ -489,8 +491,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           style: CustomTextStyles.redSmall12,
                                         ),
                                         CommonUtilityFunctions()
-                                                .isFileDownloadAvailable(
-                                                    widget.receivedHistory.date)
+                                                .isFileDownloadAvailable(widget
+                                                    .receivedHistory!.date!)
                                             ? SizedBox()
                                             : Row(
                                                 children: [
@@ -519,7 +521,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       onTap: () {
                         if (mounted) {
                           setState(() {
-                            isOpen = !isOpen;
+                            isOpen = !isOpen!;
                           });
                         }
                       },
@@ -555,12 +557,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   Widget thumbnail(
-    String extension,
+    String? extension,
     String path, {
-    bool isFilePresent = true,
+    bool? isFilePresent = true,
   }) {
     // when file overwrite is true, we are not showing file preview.
-    if (isOverwrite) {
+    if (isOverwrite!) {
       isFilePresent = false;
     }
     if (FileTypes.IMAGE_TYPES.contains(extension)) {
@@ -569,7 +571,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         child: Container(
           height: 50.toHeight,
           width: 50.toWidth,
-          child: isFilePresent
+          child: isFilePresent!
               ? Image.file(
                   File(path),
                   fit: BoxFit.cover,
@@ -596,7 +598,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           fit: BoxFit.cover,
                         )
                       : Image.memory(
-                          videoThumbnail,
+                          videoThumbnail!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, o, ot) =>
                               CircularProgressIndicator(),
@@ -666,9 +668,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
   }
 
-  Future<bool> isFilePresent(String fileName) async {
+  Future<bool> isFilePresent(String? fileName) async {
     String filePath =
-        BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+        BackendService.getInstance().downloadDirectory!.path + '/${fileName}';
 
     File file = File(filePath);
     bool fileExists = await file.exists();
@@ -676,21 +678,21 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   /// provide [fileName] to download that file
-  downloadFiles(FileTransfer receivedHistory, {String fileName}) async {
+  downloadFiles(FileTransfer? receivedHistory, {String? fileName}) async {
     var result;
     if (fileName != null) {
       result = await Provider.of<HistoryProvider>(context, listen: false)
           .downloadSingleFile(
-        widget.receivedHistory.key,
-        widget.receivedHistory.sender,
+        widget.receivedHistory!.key,
+        widget.receivedHistory!.sender,
         isOpen,
         fileName,
       );
     } else {
       result = await Provider.of<HistoryProvider>(context, listen: false)
           .downloadFiles(
-        widget.receivedHistory.key,
-        widget.receivedHistory.sender,
+        widget.receivedHistory!.key!,
+        widget.receivedHistory!.sender!,
         isOpen,
       );
     }
@@ -704,9 +706,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
       }
       // send download acknowledgement
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
-          .sendFileDownloadAcknowledgement(receivedHistory);
+          .sendFileDownloadAcknowledgement(receivedHistory!);
     } else if (result is bool && !result) {
       if (mounted) {
         setState(() {
@@ -718,7 +720,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   overwriteDialog() {
     showDialog(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
             shape: RoundedRectangleBorder(

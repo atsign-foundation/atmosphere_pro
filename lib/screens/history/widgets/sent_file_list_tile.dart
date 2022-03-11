@@ -24,10 +24,10 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class SentFilesListTile extends StatefulWidget {
-  final FileHistory sentHistory;
+  final FileHistory? sentHistory;
 
   const SentFilesListTile({
-    Key key,
+    Key? key,
     this.sentHistory,
   }) : super(key: key);
   @override
@@ -36,11 +36,11 @@ class SentFilesListTile extends StatefulWidget {
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
   int fileSize = 0;
-  List<FileData> filesList = [];
-  List<String> contactList;
+  List<FileData>? filesList = [];
+  late List<String?> contactList;
   bool isOpen = false;
   bool isDeepOpen = false;
-  Uint8List videoThumbnail, firstContactImage;
+  Uint8List? videoThumbnail, firstContactImage;
 
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
@@ -48,20 +48,21 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   @override
   void initState() {
     super.initState();
-    if (widget.sentHistory.sharedWith != null) {
-      contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
+    if (widget.sentHistory!.sharedWith != null) {
+      contactList =
+          widget.sentHistory!.sharedWith!.map((e) => e.atsign).toList();
     } else {
       contactList = [];
     }
-    filesList = widget.sentHistory.fileDetails.files;
+    filesList = widget.sentHistory!.fileDetails!.files;
 
-    widget.sentHistory.fileDetails.files.forEach((element) {
-      fileSize += element.size;
+    widget.sentHistory!.fileDetails!.files!.forEach((element) {
+      fileSize += element.size!;
     });
 
     if (contactList[0] != null) {
       firstContactImage =
-          CommonUtilityFunctions().getCachedContactImage(contactList[0]);
+          CommonUtilityFunctions().getCachedContactImage(contactList[0]!);
     }
   }
 
@@ -210,7 +211,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '${filesList.length} File(s)',
+                        '${filesList!.length} File(s)',
                         style: CustomTextStyles.secondaryRegular12,
                       ),
                       SizedBox(width: 10.toHeight),
@@ -236,9 +237,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      widget.sentHistory.fileDetails.date != null
+                      widget.sentHistory!.fileDetails!.date != null
                           ? Text(
-                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
+                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory!.fileDetails!.date!)}',
                               style: CustomTextStyles.secondaryRegular12,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -251,9 +252,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      widget.sentHistory.fileDetails.date != null
+                      widget.sentHistory!.fileDetails!.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
+                              '${DateFormat('kk: mm').format(widget.sentHistory!.fileDetails!.date!)}',
                               style: CustomTextStyles.secondaryRegular12,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -308,19 +309,19 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                       height: (SizeConfig().isTablet(context)
                               ? 80.0.toHeight
                               : 70.0.toHeight) *
-                          widget.sentHistory.fileDetails.files.length,
+                          widget.sentHistory!.fileDetails!.files!.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
                               ),
-                          itemCount: filesList.length,
+                          itemCount: filesList!.length,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return ListTile(
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
-                                        filesList[index].name;
+                                        filesList![index].name!;
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
 
@@ -336,20 +337,21 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   child: FutureBuilder(
                                       future: isFilePresent(
                                         MixedConstants.SENT_FILE_DIRECTORY +
-                                            filesList[index].name,
+                                            filesList![index].name!,
                                       ),
-                                      builder: (context, snapshot) {
+                                      builder: (context,
+                                          AsyncSnapshot<bool> snapshot) {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
                                                 snapshot.data != null
                                             ? CommonUtilityFunctions().thumbnail(
-                                                filesList[index]
+                                                filesList![index]
                                                     .name
                                                     ?.split('.')
                                                     ?.last,
                                                 MixedConstants
                                                         .SENT_FILE_DIRECTORY +
-                                                    filesList[index].name,
+                                                    filesList![index].name!,
                                                 isFilePresent: snapshot.data)
                                             : SizedBox();
                                       })),
@@ -363,7 +365,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                           children: [
                                             Expanded(
                                               child: Text(
-                                                filesList[index]
+                                                filesList![index]
                                                     .name
                                                     .toString(),
                                                 style: CustomTextStyles
@@ -394,24 +396,26 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                         ),
                                       ),
                                       Container(
-                                        child: (widget.sentHistory
+                                        child: (widget.sentHistory!
                                                         .isOperating !=
                                                     null &&
-                                                widget.sentHistory.isOperating)
+                                                widget
+                                                    .sentHistory!.isOperating!)
                                             ? typingIndicator()
-                                            : filesList[index].isUploaded !=
+                                            : filesList![index].isUploaded !=
                                                         null &&
-                                                    filesList[index].isUploaded
+                                                    filesList![index]
+                                                        .isUploaded!
                                                 ? getFileShareStatus(
-                                                    filesList[index], index)
-                                                : (filesList[index]
+                                                    filesList![index], index)
+                                                : (filesList![index]
                                                                 .isUploading !=
                                                             null &&
-                                                        filesList[index]
-                                                            .isUploading)
+                                                        filesList![index]
+                                                            .isUploading!)
                                                     ? typingIndicator()
                                                     : getFileShareStatus(
-                                                        filesList[index],
+                                                        filesList![index],
                                                         index),
                                       )
                                     ],
@@ -423,13 +427,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                          double.parse(filesList[index]
+                                          double.parse(filesList![index]
                                                       .size
                                                       .toString()) <=
                                                   1024
-                                              ? '${filesList[index].size} ' +
+                                              ? '${filesList![index].size} ' +
                                                   TextStrings().kb
-                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                              : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} ' +
                                                   TextStrings().mb,
                                           style: CustomTextStyles
                                               .secondaryRegular12,
@@ -442,15 +446,18 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                         ),
                                         SizedBox(width: 10.toHeight),
                                         Text(
-                                          filesList[index].name.split('.').last,
+                                          filesList![index]
+                                              .name!
+                                              .split('.')
+                                              .last,
                                           style: CustomTextStyles
                                               .secondaryRegular12,
                                         ),
                                         CommonUtilityFunctions()
                                                 .isFileDownloadAvailable(widget
-                                                    .sentHistory
-                                                    .fileDetails
-                                                    .date)
+                                                    .sentHistory!
+                                                    .fileDetails!
+                                                    .date!)
                                             ? SizedBox()
                                             : Row(
                                                 children: [
@@ -556,8 +563,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   bool isFileDownloadedForSingleAtsign() {
     bool _isDownloaded = false;
 
-    widget.sentHistory.sharedWith.forEach((element) {
-      if (element.isFileDownloaded) {
+    widget.sentHistory!.sharedWith!.forEach((element) {
+      if (element.isFileDownloaded!) {
         _isDownloaded = true;
       }
     });
@@ -570,7 +577,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return fileExists;
   }
 
-  openFileReceiptBottomSheet({FileRecipientSection fileRecipientSection}) {
+  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
     Provider.of<FileTransferProvider>(context, listen: false)
         .selectedFileHistory = widget.sentHistory;
 
@@ -588,7 +595,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 topRight: const Radius.circular(12.0),
               ),
             ),
-            child: FileRecipients(widget.sentHistory.sharedWith,
+            child: FileRecipients(widget.sentHistory!.sharedWith,
                 fileRecipientSection: fileRecipientSection),
           );
         });
@@ -596,15 +603,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   Widget getFileShareStatus(FileData fileData, int index) {
     // if file upload failed
-    if (fileData.isUploaded != null && !fileData.isUploaded) {
+    if (fileData.isUploaded != null && !fileData.isUploaded!) {
       return retryButton(fileData, index, FileOperation.REUPLOAD_FILE);
     }
 
     //  file share failed for any receiver
-    var _sharedWith = widget.sentHistory.sharedWith ?? [];
+    var _sharedWith = widget.sentHistory!.sharedWith ?? [];
     for (ShareStatus sharedWithAtsign in _sharedWith) {
       if (sharedWithAtsign.isNotificationSend != null &&
-          !sharedWithAtsign.isNotificationSend) {
+          !sharedWithAtsign.isNotificationSend!) {
         return retryButton(fileData, index, FileOperation.RESEND_NOTIFICATION);
       }
     }
@@ -612,7 +619,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     // file everyone received file
     for (ShareStatus sharedWithAtsign in _sharedWith) {
       if (sharedWithAtsign.isFileDownloaded != null &&
-          !sharedWithAtsign.isFileDownloaded) {
+          !sharedWithAtsign.isFileDownloaded!) {
         return sentConfirmation();
       }
     }
@@ -625,12 +632,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return InkWell(
       onTap: () async {
         var isFileDownloadAvailable = CommonUtilityFunctions()
-            .isFileDownloadAvailable(widget.sentHistory.fileDetails.date);
+            .isFileDownloadAvailable(widget.sentHistory!.fileDetails!.date!);
 
         if (fileOperation == FileOperation.REUPLOAD_FILE &&
             isFileDownloadAvailable) {
           await showDialog(
-              context: NavService.navKey.currentContext,
+              context: NavService.navKey.currentContext!,
               builder: (context) {
                 return AlertDialog(
                     shape: RoundedRectangleBorder(
@@ -640,7 +647,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         () async {
                       await Provider.of<FileTransferProvider>(context,
                               listen: false)
-                          .reuploadFiles(filesList, index, widget.sentHistory);
+                          .reuploadFiles(
+                              filesList!, index, widget.sentHistory!);
                     }));
               });
         } else {
@@ -695,7 +703,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   deleteSentFile() async {
     await showModalBottomSheet(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         backgroundColor: Colors.white,
         builder: (context) => EditBottomSheet(fileHistory: widget.sentHistory));
   }

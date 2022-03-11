@@ -29,10 +29,10 @@ class _DocumentsState extends State<Documents> {
             itemCount: provider.receivedDocument.length,
             itemBuilder: (context, index) {
               DateTime date =
-                  DateTime.parse(provider.receivedDocument[index].date);
+                  DateTime.parse(provider.receivedDocument[index].date!);
               return InkWell(
                 onTap: () async {
-                  await openFilePath(provider.receivedDocument[index].filePath);
+                  await openFilePath(provider.receivedDocument[index].filePath!);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -40,7 +40,7 @@ class _DocumentsState extends State<Documents> {
                     tileColor: ColorConstants.listBackground,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3)),
-                    title: Text(provider.receivedDocument[index].fileName,
+                    title: Text(provider.receivedDocument[index].fileName!,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
                       width: SizeConfig().isTablet(context)
@@ -57,23 +57,23 @@ class _DocumentsState extends State<Documents> {
                           width: 50.toWidth,
                           child: Image.asset(
                             FileTypes.PDF_TYPES.contains(provider
-                                    .receivedDocument[index].fileName
+                                    .receivedDocument[index].fileName!
                                     .split('.')
                                     .last)
                                 ? ImageConstants.pdfLogo
                                 : FileTypes.WORD_TYPES.contains(provider
-                                        .receivedDocument[index].fileName
+                                        .receivedDocument[index].fileName!
                                         .split('.')
                                         .last)
                                     ? ImageConstants.wordLogo
                                     : FileTypes.EXEL_TYPES.contains(provider
-                                            .receivedDocument[index].fileName
+                                            .receivedDocument[index].fileName!
                                             .split('.')
                                             .last)
                                         ? ImageConstants.exelLogo
                                         : FileTypes.TEXT_TYPES.contains(provider
                                                 .receivedDocument[index]
-                                                .fileName
+                                                .fileName!
                                                 .split('.')
                                                 .last)
                                             ? ImageConstants.txtLogo
@@ -90,9 +90,9 @@ class _DocumentsState extends State<Documents> {
                               double.parse(provider.receivedDocument[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedDocument[index].size).toStringAsFixed(2)}' +
+                                  ? '${provider.receivedDocument[index].size!.toStringAsFixed(2)}' +
                                       TextStrings().kb
-                                  : '${(provider.receivedDocument[index].size / 1024).toStringAsFixed(2)}' +
+                                  : '${(provider.receivedDocument[index].size! / 1024).toStringAsFixed(2)}' +
                                       TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(

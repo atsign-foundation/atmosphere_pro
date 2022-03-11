@@ -3,9 +3,9 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DesktopHeader extends StatelessWidget {
-  final String title;
-  final ValueChanged<bool> onFilter;
-  List<Widget> actions;
+  final String? title;
+  final ValueChanged<bool>? onFilter;
+  List<Widget>? actions;
   List<String> options = [
     'By type',
     'By name',
@@ -41,7 +41,7 @@ class DesktopHeader extends StatelessWidget {
                     padding: EdgeInsets.only(left: 20),
                     child: Center(
                       child: Text(
-                        title,
+                        title!,
                         style: CustomTextStyles.primaryRegular20,
                       ),
                     ),
@@ -52,7 +52,7 @@ class DesktopHeader extends StatelessWidget {
               ? Container(
                   child: Center(
                     child: Text(
-                      title,
+                      title!,
                       style: CustomTextStyles.primaryRegular20,
                     ),
                   ),
@@ -62,7 +62,7 @@ class DesktopHeader extends StatelessWidget {
           !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
           actions != null
               ? Row(
-                  children: actions,
+                  children: actions!,
                 )
               : SizedBox()
         ],

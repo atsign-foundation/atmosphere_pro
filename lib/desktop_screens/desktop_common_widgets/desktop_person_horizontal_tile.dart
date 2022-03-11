@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class DesktopCustomPersonHorizontalTile extends StatelessWidget {
-  final String title, subTitle;
+  final String? title, subTitle;
   final bool isTopRight;
-  final IconData icon;
-  List<dynamic> image;
+  final IconData? icon;
+  List<dynamic>? image;
 
   DesktopCustomPersonHorizontalTile({
     this.image,
@@ -20,7 +20,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
     this.icon,
   }) {
     if (image != null) {
-      var intList = image.cast<int>();
+      var intList = image!.cast<int>();
       image = Uint8List.fromList(intList);
     }
   }
@@ -68,7 +68,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                   width: 100,
                   child: title != null
                       ? Text(
-                          title,
+                          title!,
                           style: CustomTextStyles.blackBold(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -78,7 +78,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                 SizedBox(height: 5.toHeight),
                 subTitle != null
                     ? Text(
-                        subTitle,
+                        subTitle!,
                         style: CustomTextStyles.greyText16,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

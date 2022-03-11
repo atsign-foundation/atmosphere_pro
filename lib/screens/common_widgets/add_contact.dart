@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'contact_initial.dart';
 
 class AddContact extends StatefulWidget {
-  final String atSignName, name;
-  final Uint8List image;
-  const AddContact({Key key, this.atSignName, this.name, this.image})
+  final String? atSignName, name;
+  final Uint8List? image;
+  const AddContact({Key? key, this.atSignName, this.name, this.image})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class AddContact extends StatefulWidget {
 
 class _AddContactState extends State<AddContact> {
   bool isContactAdding = false;
-  String nickName;
+  String? nickName;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class _AddContactState extends State<AddContact> {
               ),
               (widget.name != null)
                   ? Text(
-                      widget.name,
+                      widget.name!,
                       style: CustomTextStyles.primaryBold16,
                     )
                   : SizedBox(),
