@@ -2,6 +2,7 @@ import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
@@ -54,6 +55,9 @@ class DesktopSetupRoutes {
           },
           showBackButton: false,
         );
+      },
+      DesktopRoutes.DESKTOP_DOWNLOAD_ALL: (context) {
+        return DesktopDownloadAllFiles();
       },
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
         Map<String, dynamic> args =

@@ -141,6 +141,7 @@ class TextStrings {
 
   // my groups
   String groups = 'Groups';
+  String downloadAllFiles = 'Download all files';
   String noGroups = 'No Groups';
   String newGroup = 'New Group';
   String addGroups = 'Would you like to create a group';
