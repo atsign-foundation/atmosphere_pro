@@ -124,7 +124,7 @@ class OverlayService {
 
   List<String> transferMessages = [
     'Sending file(s) ...',
-    'File sent',
+    'File(s) sent',
     'Oops! something went wrong'
   ];
 }
