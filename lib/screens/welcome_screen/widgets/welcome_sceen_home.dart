@@ -86,7 +86,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               child: Text(
                                 BackendService.getInstance().atClientInstance !=
                                         null
-                                    ? BackendService.getInstance().currentAtSign!
+                                    ? BackendService.getInstance()
+                                        .currentAtSign!
                                     : '',
                                 style: GoogleFonts.playfairDisplay(
                                   textStyle: TextStyle(
