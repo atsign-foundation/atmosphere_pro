@@ -196,6 +196,7 @@ class TextStrings {
   String fileReceived = 'File received';
   String fileSent = 'File sent';
   String expired = 'Expired';
+  String fileSentSuccessfully = 'File(s) sent successfully';
 
   String selectFile = 'Select a File';
 
