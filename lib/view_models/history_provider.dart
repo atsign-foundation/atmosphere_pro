@@ -22,6 +22,8 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
@@ -895,12 +897,17 @@ class HistoryProvider extends BaseModel {
               downloadPath: downloadPath ?? _downloadPath,
             );
       } catch (e) {
-        print('Error in downloading $e');
+        SnackbarService().showSnackbar(
+          NavService.navKey.currentContext!,
+          e.toString(),
+          bgColor: ColorConstants.redAlert,
+        );
+        receivedHistoryLogs[index].isDownloading = false;
+        return false;
       }
 
       await sortFiles(receivedHistoryLogs);
       populateTabs();
-      print('audios: ${receivedAudio.length}');
       receivedHistoryLogs[index].isDownloading = false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,

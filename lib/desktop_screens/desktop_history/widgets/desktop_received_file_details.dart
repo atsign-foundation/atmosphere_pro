@@ -4,8 +4,10 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -410,6 +412,12 @@ class _DesktopReceivedFileDetailsState
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
           .sendFileDownloadAcknowledgement(widget.fileTransfer!);
+    } else {
+      SnackbarService().showSnackbar(
+        context,
+        TextStrings().downloadFailed,
+        bgColor: ColorConstants.redAlert,
+      );
     }
   }
 }
