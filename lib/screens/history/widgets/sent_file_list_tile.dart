@@ -37,7 +37,7 @@ class SentFilesListTile extends StatefulWidget {
 class _SentFilesListTileState extends State<SentFilesListTile> {
   int fileSize = 0;
   List<FileData> filesList = [];
-  List<String> contactList;
+  List<String> contactList,displayName;
   bool isOpen = false;
   bool isDeepOpen = false;
   Uint8List videoThumbnail, firstContactImage;
@@ -49,6 +49,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   void initState() {
     super.initState();
     if (widget.sentHistory.sharedWith != null) {
+      displayName = widget.sentHistory.sharedWith.map((e) => e.atsign.substring(1)).toList();
       contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
     } else {
       contactList = [];
@@ -160,141 +161,165 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                           ),
                   )
                 : SizedBox(),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: contactList.isNotEmpty
-                          ? RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                    text: '${contactList[0]} ',
-                                    style: CustomTextStyles.primaryRegular16,
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        openFileReceiptBottomSheet();
-                                      },
-                                    children: [
-                                      contactList.length - 1 > 0
-                                          ? TextSpan(
-                                              text: 'and ',
-                                            )
-                                          : TextSpan(),
-                                      contactList.length - 1 > 0
-                                          ? TextSpan(
-                                              text:
-                                                  '${contactList.length - 1} others',
-                                              style: CustomTextStyles
-                                                  .blueRegular16,
-                                              recognizer: TapGestureRecognizer()
-                                                ..onTap = () {
-                                                  openFileReceiptBottomSheet();
-                                                })
-                                          : TextSpan()
-                                    ]),
-                              ]),
-                            )
-                          : SizedBox(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5.toHeight),
-                SizedBox(
-                  height: 8.toHeight,
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+            title: Padding(
+              padding: EdgeInsets.only(top: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                      Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${filesList.length} File(s)',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
-                      SizedBox(width: 10.toHeight),
-                      Text(
-                        '.',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
-                      SizedBox(width: 10.toHeight),
-                      Text(
-                        double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} ' + TextStrings().kb
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                TextStrings().mb,
-                        style: CustomTextStyles.secondaryRegular12,
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20.toHeight,
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      widget.sentHistory.fileDetails.date != null
-                          ? Text(
-                              '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
-                              style: CustomTextStyles.secondaryRegular12,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : SizedBox(),
-                      SizedBox(width: 10.toHeight),
-                      Container(
-                        color: ColorConstants.fontSecondary,
-                        height: 14.toHeight,
-                        width: 1.toWidth,
-                      ),
-                      SizedBox(width: 10.toHeight),
-                      widget.sentHistory.fileDetails.date != null
-                          ? Text(
-                              '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
-                              style: CustomTextStyles.secondaryRegular12,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : SizedBox(),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 3.toHeight,
-                ),
-                (!isOpen)
-                    ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isOpen = !isOpen;
-                          });
-                        },
-                        child: Container(
-                          child: Row(
-                            children: [
-                              Text(
-                                TextStrings().seeFiles,
-                                style: CustomTextStyles.primaryBlueBold14,
-                              ),
-                              Container(
-                                width: 22.toWidth,
-                                height: 22.toWidth,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                      Expanded(
+                        child: displayName.isNotEmpty
+                            ? RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                      text: '${displayName[0]} ',
+                                      style: CustomTextStyles.primaryRegular16,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          openFileReceiptBottomSheet();
+                                        },
+                                      ),
+                                ]),
                               )
-                            ],
-                          ),
+                            : SizedBox(),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: contactList.isNotEmpty
+                            ? RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                      text: '${contactList[0]} ',
+                                      style: CustomTextStyles.primaryMedium14,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          openFileReceiptBottomSheet();
+                                        },
+                                      children: [
+                                        contactList.length - 1 > 0
+                                            ? TextSpan(
+                                                text: 'and ',
+                                              )
+                                            : TextSpan(),
+                                        contactList.length - 1 > 0
+                                            ? TextSpan(
+                                                text:
+                                                    '${contactList.length - 1} others',
+                                                style: CustomTextStyles
+                                                    .blueRegular16,
+                                                recognizer: TapGestureRecognizer()
+                                                  ..onTap = () {
+                                                    openFileReceiptBottomSheet();
+                                                  })
+                                            : TextSpan()
+                                      ]),
+                                ]),
+                              )
+                            : SizedBox(),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.toHeight),
+                  SizedBox(
+                    height: 8.toHeight,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${filesList.length} File(s)',
+                          style: CustomTextStyles.secondaryRegular12,
                         ),
-                      )
-                    : Container(),
-              ],
+                        SizedBox(width: 10.toHeight),
+                        Text(
+                          '.',
+                          style: CustomTextStyles.secondaryRegular12,
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        Text(
+                          double.parse(fileSize.toString()) <= 1024
+                              ? '${fileSize} ' + TextStrings().kb
+                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                  TextStrings().mb,
+                          style: CustomTextStyles.secondaryRegular12,
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.toHeight,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        widget.sentHistory.fileDetails.date != null
+                            ? Text(
+                                '${DateFormat("MM-dd-yyyy").format(widget.sentHistory.fileDetails.date)}',
+                                style: CustomTextStyles.secondaryRegular12,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : SizedBox(),
+                        SizedBox(width: 10.toHeight),
+                        Container(
+                          color: ColorConstants.fontSecondary,
+                          height: 14.toHeight,
+                          width: 1.toWidth,
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        widget.sentHistory.fileDetails.date != null
+                            ? Text(
+                                '${DateFormat('kk: mm').format(widget.sentHistory.fileDetails.date)}',
+                                style: CustomTextStyles.secondaryRegular12,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.toHeight,
+                  ),
+                  (!isOpen)
+                      ? GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isOpen = !isOpen;
+                            });
+                          },
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Text(
+                                  TextStrings().seeFiles,
+                                  style: CustomTextStyles.primaryBlueBold14,
+                                ),
+                                Container(
+                                  width: 22.toWidth,
+                                  height: 22.toWidth,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
             ),
           ),
         ),
