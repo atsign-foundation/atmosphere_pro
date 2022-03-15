@@ -258,7 +258,8 @@ class _DesktopReceivedFilesListTileState
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
-                                        '/${filesList[index].name}';
+                                        Platform.pathSeparator +
+                                        filesList[index].name;
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
@@ -275,7 +276,8 @@ class _DesktopReceivedFilesListTileState
                                 child: FutureBuilder(
                                     future: isFilePresent(
                                         MixedConstants.SENT_FILE_DIRECTORY +
-                                            '/${filesList[index].name}'),
+                                            Platform.pathSeparator +
+                                            filesList[index].name),
                                     builder: (context, snapshot) {
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
@@ -287,7 +289,8 @@ class _DesktopReceivedFilesListTileState
                                                   ?.last,
                                               MixedConstants
                                                       .SENT_FILE_DIRECTORY +
-                                                  '/${filesList[index].name}',
+                                                  Platform.pathSeparator +
+                                                  filesList[index].name,
                                               isFilePresent: snapshot.data)
                                           : SizedBox();
                                     }),

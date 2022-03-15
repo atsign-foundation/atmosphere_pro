@@ -36,7 +36,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                     provider.recentFile.length,
                     (index) {
                       if (provider.recentFile[index].filePath
-                          .split('/')
+                          .split(Platform.pathSeparator)
                           .last
                           .toLowerCase()
                           .contains(provider.fileSearchText)) {
@@ -52,7 +52,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                           },
                           child: DesktopFileCard(
                             title: provider.recentFile[index].filePath
-                                .split('/')
+                                .split(Platform.pathSeparator)
                                 .last,
                             filePath: provider.recentFile[index].filePath,
                           ),

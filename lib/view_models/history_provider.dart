@@ -548,7 +548,8 @@ class HistoryProvider extends BaseModel {
           String fileExtension = file.name.split('.').last;
           String filePath =
               BackendService.getInstance().downloadDirectory.path +
-                  '/${file.name}';
+                  Platform.pathSeparator +
+                  file.name;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath =
@@ -637,7 +638,8 @@ class HistoryProvider extends BaseModel {
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
             filePath: BackendService.getInstance().downloadDirectory.path +
-                '/${file.name}',
+                Platform.pathSeparator +
+                file.name,
             size: double.parse(file.size.toString()),
             date: fileData.date.toLocal().toString(),
             type: file.name.split('.').last,
@@ -996,8 +998,9 @@ class HistoryProvider extends BaseModel {
         var decryptedFile = EncryptionService().decryptFile(
             File(encryptedFile.path).readAsBytesSync(),
             fileTransferObject.fileEncryptionKey);
-        var downloadedFile =
-            File(downloadPath + '/' + encryptedFile.path.split('/').last);
+        var downloadedFile = File(downloadPath +
+            Platform.pathSeparator +
+            encryptedFile.path.split(Platform.pathSeparator).last);
         downloadedFile.writeAsBytesSync(decryptedFile);
         downloadedFiles.add(downloadedFile);
       }
@@ -1022,7 +1025,8 @@ class HistoryProvider extends BaseModel {
       }
       var tempDirectory =
           await Directory(downloadPath).createTemp('encrypted-files');
-      var encryptedFile = File(tempDirectory.path + '/' + fileName);
+      var encryptedFile =
+          File(tempDirectory.path + Platform.pathSeparator + fileName);
       encryptedFile.writeAsBytesSync(response.bodyBytes);
 
       return FileDownloadResponse(filePath: tempDirectory.path);

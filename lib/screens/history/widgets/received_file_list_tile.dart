@@ -111,7 +111,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   isFilesAlreadyDownloaded() async {
     widget.receivedHistory.files.forEach((element) async {
       String path = BackendService.getInstance().downloadDirectory.path +
-          '/${element.name}';
+          Platform.pathSeparator +
+          element.name;
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
@@ -387,7 +388,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               onTap: () async {
                                 String path = MixedConstants
                                         .RECEIVED_FILE_DIRECTORY +
-                                    '/${widget.receivedHistory.files[index].name}';
+                                    Platform.pathSeparator +
+                                    widget.receivedHistory.files[index].name;
 
                                 File test = File(path);
                                 bool fileExists = await test.exists();
@@ -422,7 +424,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               BackendService.getInstance()
                                                       .downloadDirectory
                                                       .path +
-                                                  '/${widget.receivedHistory.files[index].name}',
+                                                  Platform.pathSeparator +
+                                                  widget.receivedHistory
+                                                      .files[index].name,
                                               isFilePresent: snapshot.data)
                                           : SizedBox();
                                     }),
@@ -667,8 +671,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   Future<bool> isFilePresent(String fileName) async {
-    String filePath =
-        BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+    String filePath = BackendService.getInstance().downloadDirectory.path +
+        Platform.pathSeparator +
+        fileName;
 
     File file = File(filePath);
     bool fileExists = await file.exists();

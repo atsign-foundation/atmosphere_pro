@@ -39,7 +39,7 @@ class _DesktopVideosState extends State<DesktopVideos> {
                       provider.receivedVideos.length,
                       (index) {
                         if (provider.receivedVideos[index].filePath
-                            .split('/')
+                            .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
                             .contains(provider.fileSearchText)) {
@@ -55,7 +55,7 @@ class _DesktopVideosState extends State<DesktopVideos> {
                             },
                             child: DesktopFileCard(
                               title: provider.receivedVideos[index].filePath
-                                  .split('/')
+                                  .split(Platform.pathSeparator)
                                   .last,
                               filePath: provider.receivedVideos[index].filePath,
                             ),

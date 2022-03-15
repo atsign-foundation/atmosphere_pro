@@ -139,7 +139,8 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     List<FileTransfer> fileTransfer = getValidFileTransfers();
 
     for (int i = 0; i < fileTransfer.length; i++) {
-      var atsignDownloadPath = downloadFolder + '/' + fileTransfer[i].sender;
+      var atsignDownloadPath =
+          downloadFolder + Platform.pathSeparator + fileTransfer[i].sender;
 
       await checkIfFolderExists(atsignDownloadPath);
 
