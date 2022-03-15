@@ -47,7 +47,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         listen: false);
     isFileSending = _filePickerProvider.isFileSending;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
     });
     super.initState();

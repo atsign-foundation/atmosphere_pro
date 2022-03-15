@@ -131,7 +131,7 @@ class FileTransferProvider extends BaseModel {
     });
 
     // if ((totalSize / 1048576) >= 50) {
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
     //     _showFileSizeLimit();
     //   });
     // }

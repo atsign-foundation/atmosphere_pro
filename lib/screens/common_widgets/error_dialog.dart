@@ -87,13 +87,14 @@ class ErrorDialog {
       bool includeCancel = false}) {
     if (!_showing) {
       _showing = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         NavService.navKey.currentState!
             .push(
           CustomPopupRoutes(
               pageBuilder: (_, __, ___) => ErrorDialogWidget(
                     text: text.toString(),
-                    buttonText: (buttonText == null) ? TextStrings().ok : buttonText,
+                    buttonText:
+                        (buttonText == null) ? TextStrings().ok : buttonText,
                     onButtonPress: onButtonPressed,
                     includeCancel: includeCancel,
                   ),

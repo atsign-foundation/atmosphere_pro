@@ -50,7 +50,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setAtSign();
 
     listenForFlushBarStatus();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       WelcomeScreenProvider().isExpanded = false;
       await initPackages();
       await getSentAndReceivedHistory();
