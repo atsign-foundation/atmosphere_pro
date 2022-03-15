@@ -9,7 +9,7 @@ class TextStrings {
   // String homeWeWillSetupAccount = 'We will set up your account right away.';
   String homeDescriptionMain = '100% encrypted file transfer';
   String homeDescriptionSub = 'From anywhere to everywhere!';
-  String appName = '@mosphere pro';
+  String appName = '@mospherepro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
