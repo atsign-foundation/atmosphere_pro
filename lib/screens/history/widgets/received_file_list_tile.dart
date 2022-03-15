@@ -397,7 +397,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  if (!isDownloadAvailable!) {
+                                  if (!isDownloadAvailable) {
                                     return;
                                   }
                                   await downloadFiles(widget.receivedHistory,

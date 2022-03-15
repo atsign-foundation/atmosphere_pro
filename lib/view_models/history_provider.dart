@@ -1016,13 +1016,15 @@ class HistoryProvider extends BaseModel {
     var encryptedFileList = Directory(fileDownloadReponse.filePath!).listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
-        var decryptedFile = EncryptionService().decryptFile(
-            File(encryptedFile.path).readAsBytesSync(),
-            fileTransferObject.fileEncryptionKey);
-        var downloadedFile =
-            File(downloadPath + '/' + encryptedFile.path.split('/').last);
-        downloadedFile.writeAsBytesSync(decryptedFile);
-        downloadedFiles.add(downloadedFile);
+        var decryptedFile = await EncryptionService().decryptFileInChunks(
+            File(encryptedFile.path),
+            fileTransferObject.fileEncryptionKey,
+            4096);
+        decryptedFile
+            .copySync(downloadPath + '/' + encryptedFile.path.split('/').last);
+        downloadedFiles
+            .add(File(downloadPath + '/' + encryptedFile.path.split('/').last));
+        decryptedFile.deleteSync();
       }
       // deleting temp directory
       Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);
