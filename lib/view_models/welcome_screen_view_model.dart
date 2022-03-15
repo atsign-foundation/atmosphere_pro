@@ -17,6 +17,7 @@ class WelcomeScreenProvider extends BaseModel {
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
+      selectedContacts = [];
       setStatus(updateContacts, Status.Loading);
       updatedList.forEach((element) {
         selectedContacts.add(element!);

@@ -232,7 +232,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               _welcomeScreenProvider.isSelectionItemChanged = true;
             },
             onBackArrowTap: (selectedGroupContacts) {
-              if (selectedGroupContacts!.length > 0) {
+              if (selectedGroupContacts!.isNotEmpty) {
                 CommonUtilityFunctions().shownConfirmationDialog(
                     TextStrings().contactSelectionConfirmation, () {
                   Navigator.of(NavService.navKey.currentContext!).pop();
