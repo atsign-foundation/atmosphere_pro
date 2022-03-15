@@ -650,10 +650,19 @@ class HistoryProvider extends BaseModel {
 
       await Future.forEach(lastTenFilesData, (dynamic fileData) async {
         await Future.forEach(fileData.files, (FileData file) async {
+          String filePath;
+
+          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+            filePath =
+                '${MixedConstants.RECEIVED_FILE_DIRECTORY}/${fileData.sender}/${file.name}';
+          } else {
+            filePath = BackendService.getInstance().downloadDirectory!.path +
+                '/${file.name}';
+          }
+
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
-            filePath: BackendService.getInstance().downloadDirectory!.path +
-                '/${file.name}',
+            filePath: filePath,
             size: double.parse(file.size.toString()),
             date: fileData.date.toLocal().toString(),
             type: file.name!.split('.').last,
@@ -674,8 +683,6 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       setStatus(RECENT_HISTORY, Status.Error);
     }
-
-    print('recentFile data : ${recentFile.length}');
   }
 
   populateTabs() {
@@ -726,9 +733,6 @@ class HistoryProvider extends BaseModel {
           tabNames.add('Unknowns');
         }
       }
-
-      print('tabs populated: ${tabs}');
-
       setStatus(POPULATE_TABS, Status.Done);
     } catch (e) {
       setError(POPULATE_TABS, e.toString());

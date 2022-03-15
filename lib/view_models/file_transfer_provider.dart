@@ -368,7 +368,7 @@ class FileTransferProvider extends BaseModel {
 
       bool fileExists = await file.exists();
       if (!fileExists) {
-        throw ('file not found');
+        throw Exception('file not found');
       }
 
       var uploadStatus = await _atclient
