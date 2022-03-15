@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:args/args.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:crypton/crypton.dart';
 import 'package:encrypt/encrypt.dart';
 
@@ -14,9 +15,11 @@ import 'package:encrypt/encrypt.dart';
 /// Defaulted to work for the production atSign. To enable for other environments
 /// set root domain in getPreference method.
 Future<void> main() async {
-  var directoryPath = '/Users/gayathridevisrinivasan/Documents/at_key';
-  var sharedWithAtSign = '@batblack77naval';
+  var directoryPath = '';
+  var sharedWithAtSign = '@atsign';
   var keysList = Directory(directoryPath).listSync();
+  keysList.removeWhere((element) =>
+      element.path.contains('.DS') || element.path.contains('hive'));
   for (var keys in keysList) {
     var keysMap = await dumpKeys(keys.path);
     var atSign = keys.path
@@ -26,14 +29,28 @@ Future<void> main() async {
         getPreference(keysMap["pkamPrivateKey"].toString(), directoryPath);
     await setKeys(atSign, preferences, keysMap);
     var atClientManager = await AtClientManager.getInstance()
-        .setCurrentAtSign(atSign, 'wavi', preferences);
+        .setCurrentAtSign(atSign, MixedConstants.appNamespace, preferences);
     final atClient = atClientManager.atClient;
-    var notificationId =
-        await atClient.notifyChange(NotificationParams.forUpdate(AtKey()
-          ..key = 'phone'
-          ..sharedWith = sharedWithAtSign
-          ..sharedBy = atSign));
-    print('$atSign : $notificationId');
+
+    var fileTransferObject = getFileTransferObject(atSign);
+
+    var atKey = AtKey()
+      ..key = fileTransferObject.transferId
+      ..sharedWith = sharedWithAtSign
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      // file transfer key will be deleted after 30 minutes
+      ..metadata.ttl = 900000
+      ..sharedBy = atSign;
+
+    var notificationStatus = await atClientManager.notificationService.notify(
+      NotificationParams.forUpdate(
+        atKey,
+        value: jsonEncode(fileTransferObject.toJson()),
+      ),
+    );
+    print(
+        'sent notification to: $sharedWithAtSign , from" $atSign,  ID: ${notificationStatus.notificationID}, status: ${notificationStatus.notificationStatusEnum}, exception: ${notificationStatus.atClientException}');
   }
 }
 
@@ -74,12 +91,13 @@ Future<void> setKeys(
     String atSign, AtClientPreference atClientPreference, Map keyMap) async {
   try {
     final atClientManager = await AtClientManager.getInstance()
-        .setCurrentAtSign(atSign, 'me', atClientPreference);
+        .setCurrentAtSign(
+            atSign, MixedConstants.appNamespace, atClientPreference);
     var atClient = atClientManager.atClient;
     var metadata = Metadata();
     metadata.namespaceAware = false;
     // Set encryption private key
-    await atClient.getLocalSecondary().putValue(
+    await atClient.getLocalSecondary()?.putValue(
         AT_ENCRYPTION_PRIVATE_KEY, keyMap["encryptionPrivateKey"].toString());
     // Set encryption public key. should be synced
     metadata.isPublic = true;
@@ -88,7 +106,7 @@ Future<void> setKeys(
       ..metadata = metadata;
     await atClient.put(atKey, keyMap["encryptionPublicKey"].toString());
     // Set self encryption keys.
-    await atClient.getLocalSecondary().putValue(
+    await atClient.getLocalSecondary()?.putValue(
         AT_ENCRYPTION_SELF_KEY, keyMap["selfEncryptionKey"].toString());
   } on Exception catch (e, trace) {
     print(e.toString());
@@ -108,4 +126,16 @@ AtClientPreference getPreference(String privateKey, String directoryPath) {
   preference.privateKey = privateKey;
   preference.rootDomain = 'root.atsign.org';
   return preference;
+}
+
+FileTransferObject getFileTransferObject(String sharedWith) {
+  return FileTransferObject(
+    MixedConstants.FILE_TRANSFER_KEY +
+        '${DateTime.now().microsecondsSinceEpoch}',
+    'dem_encryption_key',
+    'demo_fileUrl',
+    sharedWith,
+    [FileStatus(fileName: 'file_name', size: 11)],
+    date: DateTime.now(),
+  );
 }
