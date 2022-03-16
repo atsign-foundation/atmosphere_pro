@@ -35,7 +35,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                   children: List.generate(
                     provider.recentFile.length,
                     (index) {
-                      if (provider.recentFile[index].filePath
+                      if (provider.recentFile[index].filePath!
                           .split('/')
                           .last
                           .toLowerCase()
@@ -43,7 +43,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                         return InkWell(
                           onTap: () async {
                             File test =
-                                File(provider.recentFile[index].filePath);
+                                File(provider.recentFile[index].filePath!);
                             bool fileExists = await test.exists();
                             if (fileExists) {
                               await OpenFile.open(
@@ -51,7 +51,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                             }
                           },
                           child: DesktopFileCard(
-                            title: provider.recentFile[index].filePath
+                            title: provider.recentFile[index].filePath!
                                 .split('/')
                                 .last,
                             filePath: provider.recentFile[index].filePath,

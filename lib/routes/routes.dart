@@ -19,7 +19,7 @@ class SetupRoutes {
       Routes.HOME: (context) => Home(),
       Routes.WEBSITE_SCREEN: (context) {
         Map<String, dynamic> args =
-            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
         return WebsiteScreen(title: args["title"], url: args["url"]);
       },
       Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
@@ -32,7 +32,7 @@ class SetupRoutes {
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =
-            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
         return GroupContactView(
           asSelectionScreen: args['asSelectionScreen'],
           singleSelection: args['singleSelection'],
@@ -43,8 +43,8 @@ class SetupRoutes {
         );
       },
       Routes.GROUPS: (context) {
-        Map<String, dynamic> args =
-            ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+        Map<String, dynamic>? args =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
         return GroupList();
       },
       Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),

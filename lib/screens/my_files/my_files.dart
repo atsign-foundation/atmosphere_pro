@@ -19,14 +19,14 @@ class MyFiles extends StatefulWidget {
 }
 
 class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
-  TabController _controller;
-  HistoryProvider historyProvider;
+  TabController? _controller;
+  HistoryProvider? historyProvider;
   bool isOpen = false;
   List<Widget> tabs = [];
   List<String> tabNames = [];
 
   bool isLoading = false;
-  var runtimeType;
+  Type runtimeType = Videos;
   @override
   void initState() {
     historyProvider = HistoryProvider();
@@ -62,7 +62,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                     runtimeType == Audios))
             ? PopupMenuButton(
                 icon: Icon(Icons.more_vert),
-                onSelected: (s) {
+                onSelected: (dynamic s) {
                   switch (s) {
                     case TextStrings.SORT_NAME:
                       providerCallback<HistoryProvider>(context,

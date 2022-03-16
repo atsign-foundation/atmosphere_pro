@@ -13,10 +13,10 @@ class LoadingDialog {
   factory LoadingDialog() => _instance;
   bool _showing = false;
 
-  show({String text}) {
+  show({String? text}) {
     if (!_showing) {
       _showing = true;
-      NavService.navKey.currentState
+      NavService.navKey.currentState!
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
                 print("building loader");
@@ -34,15 +34,15 @@ class LoadingDialog {
   hide() {
     print("hide called");
     if (_showing) {
-      NavService.navKey.currentState.pop();
+      NavService.navKey.currentState!.pop();
       _showing = false;
     }
   }
 
-  showTextLoader(String text, {TextStyle style}) {
+  showTextLoader(String text, {TextStyle? style}) {
     if (!_showing) {
       _showing = true;
-      NavService.navKey.currentState
+      NavService.navKey.currentState!
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
                 print("building loader");
@@ -55,7 +55,7 @@ class LoadingDialog {
     }
   }
 
-  onlyText(String text, {TextStyle style}) {
+  onlyText(String text, {TextStyle? style}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

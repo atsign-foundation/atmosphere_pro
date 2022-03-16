@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
-  Key key;
+  Key? key;
   DesktopHistoryScreen({this.tabIndex = 0, this.key});
   @override
   _DesktopHistoryScreenState createState() => _DesktopHistoryScreenState();
@@ -23,12 +23,12 @@ class DesktopHistoryScreen extends StatefulWidget {
 
 class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
-  HistoryProvider historyProvider;
+  TabController? _controller;
+  HistoryProvider? historyProvider;
   int sentSelectedIndex = 0;
-  String receivedSelectedFileId;
-  FileHistory selectedSentFileData;
-  FileTransfer receivedFileData;
+  String? receivedSelectedFileId;
+  FileHistory? selectedSentFileData;
+  FileTransfer? receivedFileData;
   bool isSentTab = false;
 
   @override
@@ -36,13 +36,13 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
     if (historyProvider == null) {
       _controller =
           TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
-      _controller.addListener(onTabChanged);
+      _controller!.addListener(onTabChanged);
       historyProvider = Provider.of<HistoryProvider>(context);
-      if (historyProvider.sentHistory.isNotEmpty) {
-        selectedSentFileData = historyProvider.sentHistory[0];
+      if (historyProvider!.sentHistory.isNotEmpty) {
+        selectedSentFileData = historyProvider!.sentHistory[0];
       }
-      if (historyProvider.receivedHistoryLogs.isNotEmpty) {
-        receivedFileData = historyProvider.receivedHistoryLogs[0];
+      if (historyProvider!.receivedHistoryLogs.isNotEmpty) {
+        receivedFileData = historyProvider!.receivedHistoryLogs[0];
       }
     }
     super.didChangeDependencies();
@@ -50,13 +50,13 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
 
   @override
   void dispose() {
-    _controller.removeListener(onTabChanged);
+    _controller!.removeListener(onTabChanged);
     super.dispose();
   }
 
-  onTabChanged({int index}) {
+  onTabChanged({int? index}) {
     if (index == null) {
-      index = _controller.index;
+      index = _controller!.index;
     }
     if (index == 0) {
       isSentTab = true;
@@ -125,7 +125,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                       controller: _controller,
                       children: [
                         ProviderHandler<HistoryProvider>(
-                          functionName: historyProvider.SENT_HISTORY,
+                          functionName: historyProvider!.SENT_HISTORY,
                           showError: false,
                           successBuilder: (provider) {
                             return (provider.sentHistory.isEmpty)
@@ -156,7 +156,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                           sentHistory:
                                               provider.sentHistory[index],
                                           key: Key(provider.sentHistory[index]
-                                              .fileDetails.key),
+                                              .fileDetails!.key!),
                                           isSelected: index == sentSelectedIndex
                                               ? true
                                               : false,
@@ -173,7 +173,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           },
                         ),
                         ProviderHandler<HistoryProvider>(
-                          functionName: historyProvider.RECEIVED_HISTORY,
+                          functionName: historyProvider!.RECEIVED_HISTORY,
                           load: (provider) async {
                             await provider.getReceivedHistory();
                           },
@@ -218,7 +218,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                         },
                                         child: DesktopReceivedFilesListTile(
                                           key: Key(provider
-                                              .receivedHistoryLogs[index].key),
+                                              .receivedHistoryLogs[index].key!),
                                           receivedHistory: provider
                                               .receivedHistoryLogs[index],
                                           isSelected: receivedSelectedFileId ==
@@ -257,8 +257,8 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             }
 
                             return DesktopSentFileDetails(
-                              key: Key(selectedSentFileData
-                                  .fileTransferObject.transferId),
+                              key: Key(selectedSentFileData!
+                                  .fileTransferObject!.transferId),
                               selectedFileData: selectedSentFileData,
                             );
                           },
@@ -272,7 +272,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             }
 
                             return DesktopReceivedFileDetails(
-                              key: Key(receivedFileData.key),
+                              key: Key(receivedFileData!.key!),
                               fileTransfer: receivedFileData,
                             );
                           },
@@ -285,14 +285,14 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   }
 
   refreshHistoryScreen() async {
-    if (historyProvider.status[historyProvider.SENT_HISTORY] !=
+    if (historyProvider!.status[historyProvider!.SENT_HISTORY] !=
         Status.Loading) {
-      await historyProvider.getSentHistory();
+      await historyProvider!.getSentHistory();
     }
 
-    if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+    if (historyProvider!.status[historyProvider!.RECEIVED_HISTORY] !=
         Status.Loading) {
-      await historyProvider.getReceivedHistory();
+      await historyProvider!.getReceivedHistory();
     }
   }
 }

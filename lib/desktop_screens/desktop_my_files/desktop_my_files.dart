@@ -14,14 +14,13 @@ class DesktopMyFiles extends StatefulWidget {
 
 class _DesktopMyFilesState extends State<DesktopMyFiles>
     with TickerProviderStateMixin {
-  TabController _controller;
-  HistoryProvider historyProvider;
+  TabController? _controller;
+  late HistoryProvider historyProvider;
   bool _isFilterOption = false;
   List<Widget> tabs = [];
   List<String> tabNames = [];
 
   bool isLoading = false;
-  var runtimeType;
   @override
   void initState() {
     historyProvider = Provider.of<HistoryProvider>(context, listen: false);

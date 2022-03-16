@@ -15,10 +15,13 @@ class WelcomeScreenProvider extends BaseModel {
   bool hasSelectedContactsChanged = false, authenticating = false;
   bool isSelectionItemChanged = false;
 
-  updateSelectedContacts(List<GroupContactsModel> updatedList) {
+  updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
+      selectedContacts = [];
       setStatus(updateContacts, Status.Loading);
-      selectedContacts = updatedList;
+      updatedList.forEach((element) {
+        selectedContacts.add(element!);
+      });
       hasSelectedContactsChanged = true;
       scrollToBottom = true; // to scroll welcome screen to the bottom
       setStatus(updateContacts, Status.Done);
@@ -38,7 +41,7 @@ class WelcomeScreenProvider extends BaseModel {
     }
   }
 
-  removeContacts(GroupContactsModel contact) {
+  removeContacts(GroupContactsModel? contact) {
     try {
       setStatus(updateContacts, Status.Loading);
       selectedContacts.remove(contact);
@@ -49,7 +52,7 @@ class WelcomeScreenProvider extends BaseModel {
     }
   }
 
-  onboardingLoad({String atSign}) {
+  onboardingLoad({String? atSign}) {
     try {
       authenticating = true;
       setStatus(onboard, Status.Loading);

@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopCustomPersonVerticalTile extends StatelessWidget {
-  final String title, subTitle;
+  final String? title, subTitle;
   final bool showCancelIcon, showImage;
-  final Uint8List image;
+  final Uint8List? image;
   final double size;
 
   DesktopCustomPersonVerticalTile(
-      {this.title,
-      this.subTitle,
+      {required this.title,
+      required this.subTitle,
       this.showCancelIcon = true,
       this.showImage = false,
       this.image,
@@ -30,7 +30,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                 ? CircleAvatar(
                     radius: (size / 2).toFont,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: Image.memory(image).image)
+                    backgroundImage: Image.memory(image!).image)
                 : ContactInitial(
                     initials: title ?? ' ',
                     size: 30,
@@ -54,7 +54,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                title,
+                title!,
                 style: CustomTextStyles.desktopPrimaryRegular14,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -62,7 +62,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
               SizedBox(height: 5.toHeight),
               subTitle != null
                   ? Text(
-                      subTitle,
+                      subTitle!,
                       style: CustomTextStyles.secondaryRegular12,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

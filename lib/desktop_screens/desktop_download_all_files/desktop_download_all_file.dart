@@ -139,19 +139,19 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     List<FileTransfer> fileTransfer = getValidFileTransfers();
 
     for (int i = 0; i < fileTransfer.length; i++) {
-      var atsignDownloadPath = downloadFolder + '/' + fileTransfer[i].sender;
+      var atsignDownloadPath = downloadFolder + '/' + fileTransfer[i].sender!;
 
       await checkIfFolderExists(atsignDownloadPath);
 
       var res = await historyProvider.downloadFiles(
-          fileTransfer[i].key, fileTransfer[i].sender, false,
+          fileTransfer[i].key!, fileTransfer[i].sender!, false,
           downloadPath: atsignDownloadPath);
 
       if (res is bool && !res) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'failed to download ${fileTransfer[i].files.length} file(s) from ${fileTransfer[i].sender}'),
+                'failed to download ${fileTransfer[i].files!.length} file(s) from ${fileTransfer[i].sender}'),
           ),
         );
       }
@@ -177,7 +177,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     List<FileTransfer> fileTransfer = [];
     for (int i = 0; i < historyProvider.receivedHistoryLogs.length; i++) {
-      var expiryDate = historyProvider.receivedHistoryLogs[i].date.add(
+      var expiryDate = historyProvider.receivedHistoryLogs[i].date!.add(
         Duration(days: 6),
       );
 

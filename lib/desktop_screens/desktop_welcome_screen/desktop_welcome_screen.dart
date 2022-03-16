@@ -27,7 +27,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
-  const DesktopWelcomeScreenStart({Key key}) : super(key: key);
+  const DesktopWelcomeScreenStart({Key? key}) : super(key: key);
   @override
   _DesktopWelcomeScreenStartState createState() =>
       _DesktopWelcomeScreenStartState();
@@ -35,9 +35,8 @@ class DesktopWelcomeScreenStart extends StatefulWidget {
 
 class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool authenticating = false;
-  String currentatSign;
+  String? currentatSign;
   AtClient atClient = AtClientManager.getInstance().atClient;
-  List<String> popupMenuList = [];
 
   void _showLoader(bool loaderState, String authenticatingForAtsign) {
     if (mounted) {
@@ -51,8 +50,13 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   }
 
   /// returns list of menu items which contains list of onboarded atsigns and [add_new_atsign], [save_backup_key]
-  getpopupMenuList() async {
-    popupMenuList = await BackendService.getInstance().getAtsignList();
+  Future<List<String>> getpopupMenuList() async {
+    var popupMenuList = <String>[];
+    var atsignList = await BackendService.getInstance().getAtsignList();
+    atsignList?.forEach((element) {
+      popupMenuList.add(element);
+    });
+
     popupMenuList.add(TextStrings()
         .addNewAtsign); //to show add option in switch atsign drop down menu.
     popupMenuList.add(TextStrings().saveBackupKey);
@@ -81,7 +85,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
           return Text('Error');
         },
         successBuilder: (provider) {
-          getpopupMenuList();
           atClient = AtClientManager.getInstance().atClient;
 
           print(
@@ -119,14 +122,15 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                         FutureBuilder(
                             key: Key(AtClientManager.getInstance()
                                 .atClient
-                                .getCurrentAtSign()),
+                                .getCurrentAtSign()!),
                             future: getpopupMenuList(),
-                            builder: (context, snapshot) {
+                            builder: (context,
+                                AsyncSnapshot<List<String>> snapshot) {
                               if (snapshot.data != null) {
-                                List<String> atsignList = snapshot.data;
+                                List<String>? atsignList = snapshot.data;
                                 var image = CommonUtilityFunctions()
                                     .getCachedContactImage(
-                                        atClient.getCurrentAtSign());
+                                        atClient.getCurrentAtSign()!);
                                 return Container(
                                   width: 100,
                                   child: PopupMenuButton<String>(
@@ -150,7 +154,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                                       ),
                                       elevation: 10,
                                       itemBuilder: (BuildContext context) {
-                                        return getPopupMenuItem(atsignList);
+                                        return getPopupMenuItem(atsignList!);
                                       },
                                       onSelected: onAtsignChange),
                                 );
@@ -188,7 +192,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   }
 
   onAtsignChange(String selectedOption) async {
-    var atClientPrefernce;
+    late var atClientPrefernce;
     await BackendService.getInstance()
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
@@ -202,7 +206,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
       );
     } else if (selectedOption == TextStrings().saveBackupKey) {
       BackupKeyWidget(
-        atsign: AtClientManager.getInstance().atClient.getCurrentAtSign(),
+        atsign: AtClientManager.getInstance().atClient.getCurrentAtSign()!,
       ).showBackupDialog(context);
     } else if (selectedOption !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
@@ -216,7 +220,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
 }
 
 class DesktopWelcomeScreen extends StatefulWidget {
-  const DesktopWelcomeScreen({Key key}) : super(key: key);
+  const DesktopWelcomeScreen({Key? key}) : super(key: key);
   @override
   _DesktopWelcomeScreenState createState() => _DesktopWelcomeScreenState();
 }
@@ -404,7 +408,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   var routeBuilders =
                       DesktopSetupRoutes.routeBuilders(context, routeSettings);
                   return MaterialPageRoute(builder: (context) {
-                    return routeBuilders[routeSettings.name](context);
+                    return routeBuilders[routeSettings.name!]!(context);
                   });
                 },
               ),
@@ -484,8 +488,8 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 
 // ignore: must_be_immutable
 class SideBarIcon extends StatelessWidget {
-  final String image, routeName, title;
-  final Map<String, dynamic> arguments;
+  final String? image, routeName, title;
+  final Map<String, dynamic>? arguments;
   final bool isUrlLauncher, isSidebarExpanded;
   SideBarIcon(this.image, this.routeName,
       {this.arguments,
@@ -495,7 +499,7 @@ class SideBarIcon extends StatelessWidget {
   bool isHovered = false;
   bool isCurrentRoute = false;
   var nestedProvider = Provider.of<NestedRouteProvider>(
-      NavService.navKey.currentContext,
+      NavService.navKey.currentContext!,
       listen: false);
 
   @override
@@ -525,8 +529,8 @@ class SideBarIcon extends StatelessWidget {
             }
             if ((isUrlLauncher) &&
                 (arguments != null) &&
-                (arguments['url'] != null)) {
-              _launchInBrowser(arguments['url']);
+                (arguments!['url'] != null)) {
+              _launchInBrowser(arguments!['url']);
             }
           },
           child: routeName == DesktopRoutes.DESKTOP_HISTORY
@@ -536,7 +540,7 @@ class SideBarIcon extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(
-                          image,
+                          image!,
                           height: 22,
                           color: isCurrentRoute
                               ? ColorConstants.orangeColor
@@ -545,7 +549,7 @@ class SideBarIcon extends StatelessWidget {
                         SizedBox(width: isSidebarExpanded ? 10 : 0),
                         isSidebarExpanded
                             ? Text(
-                                title,
+                                title!,
                                 softWrap: true,
                                 style: TextStyle(
                                   color: isCurrentRoute
@@ -584,7 +588,7 @@ class SideBarIcon extends StatelessWidget {
               : Row(
                   children: [
                     Image.asset(
-                      image,
+                      image!,
                       height: 22,
                       color: isCurrentRoute
                           ? ColorConstants.orangeColor
@@ -593,7 +597,7 @@ class SideBarIcon extends StatelessWidget {
                     SizedBox(width: isSidebarExpanded ? 10 : 0),
                     isSidebarExpanded
                         ? Text(
-                            title,
+                            title!,
                             softWrap: true,
                             style: TextStyle(
                               color: isCurrentRoute

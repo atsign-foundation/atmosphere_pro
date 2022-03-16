@@ -15,14 +15,14 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class RemoveTrustedContact extends StatefulWidget {
-  final String image, title;
-  final String name;
-  final String atSign;
-  final AtContact contact;
+  final String? image, title;
+  final String? name;
+  final String? atSign;
+  final AtContact? contact;
 
   const RemoveTrustedContact(
     this.title, {
-    Key key,
+    Key? key,
     this.image,
     this.name,
     this.atSign,
@@ -34,13 +34,14 @@ class RemoveTrustedContact extends StatefulWidget {
 }
 
 class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
-  Uint8List image;
+  Uint8List? image;
 
   @override
   void initState() {
     super.initState();
-    if (widget.contact.tags != null && widget.contact.tags['image'] != null) {
-      image = CommonUtilityFunctions().getContactImage(widget.contact);
+    if (widget.contact!.tags != null &&
+        widget.contact!.tags!['image'] != null) {
+      image = CommonUtilityFunctions().getContactImage(widget.contact!);
     }
   }
 
@@ -55,7 +56,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         children: [
           Expanded(
             child: Text(
-              widget.title,
+              widget.title!,
               style: CustomTextStyles.black16,
               textAlign: TextAlign.center,
             ),
@@ -75,10 +76,10 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                         nonAsset: true,
                       )
                     : ContactInitial(
-                        initials: widget.contact.tags != null &&
-                                widget.contact.tags['name'] != null
-                            ? widget.contact.tags['name']
-                            : widget.contact.atSign,
+                        initials: widget.contact!.tags != null &&
+                                widget.contact!.tags!['name'] != null
+                            ? widget.contact!.tags!['name']
+                            : widget.contact!.atSign,
                         size: 30,
                         maxSize: (80.0 - 30.0),
                         minSize: 50,
@@ -94,10 +95,10 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                 Expanded(
                   child: Center(
                       child: Text(
-                    widget.contact.tags != null &&
-                            widget.contact.tags['name'] != null
-                        ? widget.contact.tags['name']
-                        : widget.contact.atSign.substring(1),
+                    widget.contact!.tags != null &&
+                            widget.contact!.tags!['name'] != null
+                        ? widget.contact!.tags!['name']
+                        : widget.contact!.atSign!.substring(1),
                     style: CustomTextStyles.primaryBold16,
                   )),
                 ),
@@ -112,7 +113,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      widget.contact.atSign,
+                      widget.contact!.atSign!,
                       style: CustomTextStyles.secondaryRegular14,
                     ),
                   ),
@@ -141,7 +142,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                               await Provider.of<TrustedContactProvider>(context,
                                       listen: false)
                                   .setTrustedContact();
-                              await Navigator.pop(context);
+                              Navigator.pop(context);
                             },
                           ),
                   ],

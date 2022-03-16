@@ -51,7 +51,7 @@ class _RecentsState extends State<Recents> {
   }
 }
 
-Widget fileCard(String title, String filePath) {
+Widget fileCard(String? title, String? filePath) {
   return Container(
     child: Column(
       children: <Widget>[
@@ -128,7 +128,7 @@ Widget thumbnail(String extension, String path) {
                             fit: BoxFit.cover,
                           )
                         : Image.memory(
-                            videoThumbnail,
+                            videoThumbnail!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, o, ot) =>
                                 CircularProgressIndicator(),
@@ -171,14 +171,14 @@ Widget thumbnail(String extension, String path) {
 
 Future<bool> isFilePresent(String fileName) async {
   String filePath =
-      BackendService.getInstance().downloadDirectory.path + '/${fileName}';
+      BackendService.getInstance().downloadDirectory!.path + '/${fileName}';
 
   File file = File(filePath);
   bool fileExists = await file.exists();
   return fileExists;
 }
 
-Uint8List videoThumbnail;
+Uint8List? videoThumbnail;
 
 Future videoThumbnailBuilder(String path) async {
   videoThumbnail = await VideoThumbnail.thumbnailData(

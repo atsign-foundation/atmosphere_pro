@@ -39,7 +39,7 @@ class _DesktopAPKState extends State<DesktopAPK> {
                     children: List.generate(
                       provider.receivedApk.length,
                       (index) {
-                        if (provider.receivedApk[index].filePath
+                        if (provider.receivedApk[index].filePath!
                             .split('/')
                             .last
                             .toLowerCase()
@@ -47,7 +47,7 @@ class _DesktopAPKState extends State<DesktopAPK> {
                           return InkWell(
                             onTap: () async {
                               File test =
-                                  File(provider.receivedApk[index].filePath);
+                                  File(provider.receivedApk[index].filePath!);
                               bool fileExists = await test.exists();
                               if (fileExists) {
                                 await OpenFile.open(
@@ -55,7 +55,7 @@ class _DesktopAPKState extends State<DesktopAPK> {
                               }
                             },
                             child: DesktopFileCard(
-                              title: provider.receivedApk[index].filePath
+                              title: provider.receivedApk[index].filePath!
                                   .split('/')
                                   .last,
                               filePath: provider.receivedApk[index].filePath,

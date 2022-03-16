@@ -57,7 +57,7 @@ class _PhotosState extends State<Photos> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () async {
-              await openFilePath(provider.receivedPhotos[index].filePath);
+              await openFilePath(provider.receivedPhotos[index].filePath!);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.toHeight),
@@ -65,7 +65,7 @@ class _PhotosState extends State<Photos> {
                 height: 100.toHeight,
                 width: 100.toHeight,
                 child: Image.file(
-                  File(provider.receivedPhotos[index].filePath),
+                  File(provider.receivedPhotos[index].filePath!),
                   fit: BoxFit.cover,
                 ),
               ),

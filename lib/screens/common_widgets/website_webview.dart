@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebsiteScreen extends StatefulWidget {
-  final String title;
-  final String url;
+  final String? title;
+  final String? url;
 
-  const WebsiteScreen({Key key, this.title, this.url}) : super(key: key);
+  const WebsiteScreen({Key? key, this.title, this.url}) : super(key: key);
   @override
   _WebsiteScreenState createState() => _WebsiteScreenState();
 }
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
-  bool loading;
+  late bool loading;
   @override
   void initState() {
     super.initState();
@@ -40,7 +40,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
           ),
         ),
         title: Text(
-          widget.title,
+          widget.title!,
           style: CustomTextStyles.primaryBold18,
         ),
       ),

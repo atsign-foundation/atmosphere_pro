@@ -4,13 +4,13 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FileTransfer {
-  String key, url, sender;
-  List<FileData> files;
-  DateTime date, expiry;
-  List<PlatformFile> platformFiles;
-  bool isUpdate;
-  bool isDownloading;
-  bool isWidgetOpen;
+  String? key, url, sender;
+  List<FileData>? files;
+  DateTime? date, expiry;
+  List<PlatformFile>? platformFiles;
+  bool? isUpdate;
+  bool? isDownloading;
+  bool? isWidgetOpen;
   FileTransfer({
     this.url,
     this.files,
@@ -44,7 +44,7 @@ class FileTransfer {
     files = [];
     json['files'].forEach((element) {
       FileData file = FileData.fromJson(jsonDecode(element));
-      files.add(file);
+      files!.add(file);
     });
   }
 
@@ -57,15 +57,15 @@ class FileTransfer {
     data['sender'] = this.sender;
     data['key'] = this.key;
     data['files'] = [];
-    this.files.forEach((element) {
+    this.files!.forEach((element) {
       data['files'].add(jsonEncode(element.toJson()));
     });
-    data['expiry'] = this.expiry.toUtc().toString();
-    data['date'] = this.date.toUtc().toString();
+    data['expiry'] = this.expiry!.toUtc().toString();
+    data['date'] = this.date!.toUtc().toString();
     return data;
   }
 
-  List<FileData> platformFileToFileData(List<PlatformFile> platformFiles) {
+  List<FileData> platformFileToFileData(List<PlatformFile>? platformFiles) {
     var fileData = <FileData>[];
     if (platformFiles == null) {
       return fileData;
@@ -80,13 +80,13 @@ class FileTransfer {
 }
 
 class FileData {
-  String name;
-  int size;
-  String url;
-  String path;
-  bool isUploaded;
-  bool isUploading;
-  bool isDownloading;
+  String? name;
+  int? size;
+  String? url;
+  String? path;
+  bool? isUploaded;
+  bool? isUploading;
+  bool? isDownloading;
 
   FileData({
     this.name,
@@ -122,13 +122,13 @@ class FileData {
 }
 
 class FileHistory {
-  FileTransfer fileDetails;
-  List<ShareStatus> sharedWith;
-  HistoryType type;
-  FileTransferObject fileTransferObject;
+  FileTransfer? fileDetails;
+  List<ShareStatus>? sharedWith;
+  HistoryType? type;
+  FileTransferObject? fileTransferObject;
   // used to determine whether any opearation is running over this file or not
   // only for front end used , this value is not saved.
-  bool isOperating;
+  bool? isOperating;
 
   FileHistory(
       this.fileDetails, this.sharedWith, this.type, this.fileTransferObject,
@@ -142,7 +142,7 @@ class FileHistory {
     if (data['sharedWith'] != null) {
       data['sharedWith'].forEach((element) {
         ShareStatus shareStatus = ShareStatus.fromJson(element);
-        sharedWith.add(shareStatus);
+        sharedWith!.add(shareStatus);
       });
     }
     type = data['type'] == HistoryType.send.toString()
@@ -160,18 +160,18 @@ class FileHistory {
     data['fileDetails'] = this.fileDetails;
     data['sharedWith'] = this.sharedWith;
     data['type'] = this.type.toString();
-    data['fileTransferObject'] = jsonEncode(this.fileTransferObject.toJson());
+    data['fileTransferObject'] = jsonEncode(this.fileTransferObject!.toJson());
     return data;
   }
 }
 
 class ShareStatus {
-  String atsign;
-  bool isNotificationSend;
-  bool isFileDownloaded;
+  String? atsign;
+  bool? isNotificationSend;
+  bool? isFileDownloaded;
 
   // for front end reference only
-  bool isSendingNotification;
+  bool? isSendingNotification;
 
   ShareStatus(this.atsign, this.isNotificationSend,
       {this.isSendingNotification = false, this.isFileDownloaded = false});
@@ -192,8 +192,8 @@ class ShareStatus {
 }
 
 class DownloadAcknowledgement {
-  bool isDownloaded;
-  String transferId;
+  bool? isDownloaded;
+  String? transferId;
 
   DownloadAcknowledgement(this.isDownloaded, this.transferId);
 

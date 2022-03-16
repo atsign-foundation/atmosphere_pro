@@ -15,8 +15,8 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
-  final FileHistory selectedFileData;
-  Key key;
+  final FileHistory? selectedFileData;
+  Key? key;
   DesktopSentFileDetails({this.key, this.selectedFileData});
 
   @override
@@ -25,22 +25,22 @@ class DesktopSentFileDetails extends StatefulWidget {
 
 class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
   int fileCount = 0, fileSize = 0;
-  Map<String, Future> _futureBuilder = {};
+  Map<String?, Future> _futureBuilder = {};
 
   @override
   void initState() {
     super.initState();
-    fileCount = widget.selectedFileData.fileDetails.files.length;
-    widget.selectedFileData.fileDetails.files.forEach((element) {
-      fileSize += element.size;
+    fileCount = widget.selectedFileData!.fileDetails!.files!.length;
+    widget.selectedFileData!.fileDetails!.files!.forEach((element) {
+      fileSize += element.size!;
     });
     getFutureBuilders();
   }
 
   getFutureBuilders() {
-    widget.selectedFileData.fileDetails.files.forEach((element) {
+    widget.selectedFileData!.fileDetails!.files!.forEach((element) {
       _futureBuilder[element.name] = CommonUtilityFunctions()
-          .isFilePresent(MixedConstants.SENT_FILE_DIRECTORY + element.name);
+          .isFilePresent(MixedConstants.SENT_FILE_DIRECTORY + element.name!);
     });
   }
 
@@ -67,15 +67,15 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                   runSpacing: 10.0,
                   spacing: 20.0,
                   children: List.generate(
-                      widget.selectedFileData.fileDetails.files.length,
+                      widget.selectedFileData!.fileDetails!.files!.length,
                       (index) {
                     return Container(
                       child: Container(
                         width: 250,
                         child: ListTile(
                           title: Text(
-                            widget
-                                .selectedFileData.fileDetails.files[index]?.name
+                            widget.selectedFileData!.fileDetails!.files![index]
+                                .name
                                 .toString(),
                             style: TextStyle(
                               color: Colors.black,
@@ -83,14 +83,14 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                             ),
                           ),
                           subtitle: Text(
-                            double.parse(widget.selectedFileData.fileDetails
-                                        .files[index].size
+                            double.parse(widget.selectedFileData!.fileDetails!
+                                        .files![index].size
                                         .toString()) <=
                                     1024
-                                ? '${widget.selectedFileData.fileDetails.files[index].size} Kb' +
-                                    ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last}'
-                                : '${(widget.selectedFileData.fileDetails.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
-                                    ' . ${widget.selectedFileData.fileDetails.files[index].name.split('.').last} ',
+                                ? '${widget.selectedFileData!.fileDetails!.files![index].size} Kb' +
+                                    ' . ${widget.selectedFileData!.fileDetails!.files![index].name!.split('.').last}'
+                                : '${(widget.selectedFileData!.fileDetails!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                    ' . ${widget.selectedFileData!.fileDetails!.files![index].name!.split('.').last} ',
                             style: TextStyle(
                               color: ColorConstants.fadedText,
                               fontSize: 14.toFont,
@@ -100,16 +100,19 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                               onTap: () async {
                                 String filePath =
                                     MixedConstants.DESKTOP_SENT_DIR +
-                                        widget.selectedFileData.fileDetails
-                                            .files[index].name;
+                                        widget.selectedFileData!.fileDetails!
+                                            .files![index].name!;
 
                                 await OpenFile.open(filePath);
                               },
                               child: FutureBuilder(
-                                  key: Key(widget.selectedFileData.fileDetails
-                                      .files[index].name),
-                                  future: _futureBuilder[widget.selectedFileData
-                                      .fileDetails.files[index].name],
+                                  key: Key(widget.selectedFileData!.fileDetails!
+                                      .files![index].name!),
+                                  future: _futureBuilder[widget
+                                      .selectedFileData!
+                                      .fileDetails!
+                                      .files![index]
+                                      .name],
                                   builder: (context, snapshot) {
                                     return snapshot.connectionState ==
                                                 ConnectionState.done &&
@@ -119,10 +122,10 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                               String filePath = MixedConstants
                                                       .DESKTOP_SENT_DIR +
                                                   widget
-                                                      .selectedFileData
-                                                      .fileDetails
-                                                      .files[index]
-                                                      .name;
+                                                      .selectedFileData!
+                                                      .fileDetails!
+                                                      .files![index]
+                                                      .name!;
 
                                               if (await File(filePath)
                                                   .exists()) {
@@ -132,36 +135,36 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                             child: CommonUtilityFunctions()
                                                 .thumbnail(
                                                     widget
-                                                        .selectedFileData
-                                                        .fileDetails
-                                                        .files[index]
+                                                        .selectedFileData!
+                                                        .fileDetails!
+                                                        .files![index]
                                                         .name
                                                         ?.split('.')
                                                         ?.last,
                                                     MixedConstants
                                                             .DESKTOP_SENT_DIR +
                                                         widget
-                                                            .selectedFileData
-                                                            .fileDetails
-                                                            .files[index]
-                                                            .name,
+                                                            .selectedFileData!
+                                                            .fileDetails!
+                                                            .files![index]
+                                                            .name!,
                                                     isFilePresent:
-                                                        snapshot.data),
+                                                        snapshot.data as bool),
                                           )
                                         : SizedBox();
                                   })),
                           trailing: IconButton(
-                            icon: (widget.selectedFileData.fileDetails
-                                            .files[index].isUploaded !=
+                            icon: (widget.selectedFileData!.fileDetails!
+                                            .files![index].isUploaded !=
                                         null &&
-                                    widget.selectedFileData.fileDetails
-                                        .files[index].isUploaded)
+                                    widget.selectedFileData!.fileDetails!
+                                        .files![index].isUploaded!)
                                 ? SizedBox()
-                                : (widget.selectedFileData.fileDetails
-                                                .files[index].isUploading !=
+                                : (widget.selectedFileData!.fileDetails!
+                                                .files![index].isUploading !=
                                             null &&
-                                        widget.selectedFileData.fileDetails
-                                            .files[index].isUploading)
+                                        widget.selectedFileData!.fileDetails!
+                                            .files![index].isUploading!)
                                     ? TypingIndicator(
                                         showIndicator: true,
                                         flashingCircleBrightColor:
@@ -174,9 +177,10 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                               await Provider.of<FileTransferProvider>(context,
                                       listen: false)
                                   .reuploadFiles(
-                                      widget.selectedFileData.fileDetails.files,
+                                      widget.selectedFileData!.fileDetails!
+                                          .files!,
                                       index,
-                                      widget.selectedFileData);
+                                      widget.selectedFileData!);
                             },
                           ),
                         ),
@@ -205,7 +209,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
           Text('Successfully transfered', style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           Text(
-              '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData.fileDetails.date)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData.fileDetails.date)}',
+              '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData!.fileDetails!.date!)}',
               style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           // Text('To', style: CustomTextStyles.greyText15),
@@ -216,8 +220,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
           widget.selectedFileData != null
               ? DesktopTranferOverlappingContacts(
                   key: Key(
-                      widget.selectedFileData.fileTransferObject.transferId),
-                  selectedList: widget.selectedFileData.sharedWith,
+                      widget.selectedFileData!.fileTransferObject!.transferId),
+                  selectedList: widget.selectedFileData!.sharedWith,
                   fileHistory: widget.selectedFileData)
               : SizedBox()
         ],

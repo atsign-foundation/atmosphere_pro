@@ -13,7 +13,7 @@ Future<void> openDownloadsFolder(BuildContext context) async {
     await FilesystemPicker.open(
       title: TextStrings().atmosphereDownloadFolder,
       context: context,
-      rootDirectory: BackendService.getInstance().downloadDirectory,
+      rootDirectory: BackendService.getInstance().downloadDirectory!,
       fsType: FilesystemType.all,
       folderIconColor: Colors.teal,
       allowedExtensions: [],
@@ -23,7 +23,7 @@ Future<void> openDownloadsFolder(BuildContext context) async {
     );
   } else {
     String url = 'shareddocuments://' +
-        BackendService.getInstance().atClientPreference.downloadPath;
+        BackendService.getInstance().atClientPreference.downloadPath!;
     if (await canLaunch(url)) {
       await launch(url);
     } else {
