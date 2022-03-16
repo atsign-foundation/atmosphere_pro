@@ -214,23 +214,150 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         ),
                       )
                     : SizedBox(),
+            title: Padding(
+              padding: EdgeInsets.only(top: 10.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Row(
+                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: widget.receivedHistory.sender != null
+                        child: widget.receivedHistory!.sender != null
                             ? Text(
-                                widget.receivedHistory.sender.substring(1),
+                                widget.receivedHistory!.sender!.substring(1),
                                 style: CustomTextStyles.primaryRegular16,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               )
                             : SizedBox(),
                       ),
+                       InkWell(
+                          onTap: () async {
+                            if (isOverwrite) {
+                              overwriteDialog();
+                              return;
+                            }
+                            await downloadFiles(widget.receivedHistory);
+                          },
+                          child:Padding(padding: EdgeInsets.only(top: 5.0),
+                          child: isDownloadAvailable
+                              ? widget.receivedHistory!.isDownloading!
+                                  ? CircularProgressIndicator()
+                                  : ((isDownloaded || isFilesAvailableOfline) &&
+                                          !isOverwrite)
+                                      ? Icon(
+                                          Icons.done,
+                                          color: Color(0xFF08CB21),
+                                          size: 25.toFont,
+                                        )
+                                      : Icon(
+                                          Icons.download_sharp,
+                                          size: 25.toFont,
+                                        )
+                       : SizedBox())
+                        ) ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: widget.receivedHistory!.sender != null
+                            ? Text(
+                                widget.receivedHistory!.sender!,
+                                style: CustomTextStyles.primaryMedium14,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : SizedBox(),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.toHeight),
+                  SizedBox(
+                    height: 8.toHeight,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${widget.receivedHistory!.files!.length} File(s)',
+                          style: CustomTextStyles.secondaryRegular12,
+                        ),
                         SizedBox(width: 10.toHeight),
-                              Text(
+                        Text(
+                          '.',
+                          style: CustomTextStyles.secondaryRegular12,
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        Text(
+                          double.parse(fileSize.toString()) <= 1024
+                              ? '${fileSize} ' + TextStrings().kb
+                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                  TextStrings().mb,
+                          style: CustomTextStyles.secondaryRegular12,
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.toHeight,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        widget.receivedHistory!.date != null
+                            ? Text(
+                                '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory!.date!)}',
+                                style: CustomTextStyles.secondaryRegular12,
+                              )
+                            : SizedBox(),
+                        SizedBox(width: 10.toHeight),
+                        Container(
+                          color: ColorConstants.fontSecondary,
+                          height: 14.toHeight,
+                          width: 1.toWidth,
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        widget.receivedHistory!.date != null
+                            ? Text(
+                                '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
+                                style: CustomTextStyles.secondaryRegular12,
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.toHeight,
+                  ),
+                  (!isOpen!)
+                      ? GestureDetector(
+                          onTap: () {
+                            if (mounted) {
+                              setState(() {
+                                isOpen = !isOpen!;
+                              });
+                            }
+                          },
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Text(
+                                  TextStrings().seeFiles,
+                                  style: CustomTextStyles.primaryBlueBold14,
+                                ),
+                                Container(
+                                  width: 22.toWidth,
+                                  height: 22.toWidth,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
