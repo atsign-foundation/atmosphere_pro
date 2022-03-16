@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -32,16 +32,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool onboardSuccess = false;
   bool sharingStatus = false;
-  BackendService _backendService;
+  late BackendService _backendService;
 
   final Permission _cameraPermission = Permission.camera;
   final Permission _storagePermission = Permission.storage;
 
   bool authenticating = false;
 
-  List<SharedMediaFile> _sharedFiles;
-  FileTransferProvider filePickerProvider;
-  String activeAtSign;
+  List<SharedMediaFile>? _sharedFiles;
+  late FileTransferProvider filePickerProvider;
+  String? activeAtSign;
 
   @override
   void initState() {
@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
     setState(() {
       authenticating = true;
     });
-    String currentatSign = await _backendService.getAtSign();
+    String? currentatSign = await _backendService.getAtSign();
     await _backendService
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
@@ -105,11 +105,13 @@ class _HomeState extends State<Home> {
         value.forEach((element) async {
           File file = File(element.path);
           var length = await file.length();
-          await FileTransferProvider.appClosedSharedFiles.add(PlatformFile(
-              name: basename(file.path),
-              path: file.path,
-              size: length.round(),
-              bytes: await file.readAsBytes()));
+          FileTransferProvider.appClosedSharedFiles.add(
+            PlatformFile(
+                name: basename(file.path),
+                path: file.path,
+                size: length.round(),
+                bytes: await file.readAsBytes()),
+          );
           await filePickerProvider.setFiles();
         });
 
@@ -117,7 +119,7 @@ class _HomeState extends State<Home> {
         // check to see if atsign is paired
         var atsign = await _backendService.currentAtsign;
         if (atsign != null) {
-          BuildContext c = NavService.navKey.currentContext;
+          BuildContext c = NavService.navKey.currentContext!;
           await Navigator.pushNamedAndRemoveUntil(
               c, Routes.WELCOME_SCREEN, (route) => false);
         }
@@ -130,8 +132,8 @@ class _HomeState extends State<Home> {
     await ReceiveSharingIntent.getInitialMedia().then(
         (List<SharedMediaFile> value) async {
       _sharedFiles = value;
-      if (_sharedFiles != null && _sharedFiles.isNotEmpty) {
-        _sharedFiles.forEach((element) async {
+      if (_sharedFiles != null && _sharedFiles!.isNotEmpty) {
+        _sharedFiles!.forEach((element) async {
           File file = File(element.path);
           var length = await file.length();
           PlatformFile fileToBeAdded = PlatformFile(

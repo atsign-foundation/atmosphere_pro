@@ -13,7 +13,7 @@ import 'dart:io';
 import 'routes/routes.dart';
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -52,13 +52,13 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => FileDownloadChecker()),
       ],
       child: MaterialApp(
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
           return MediaQuery(
             data: data.copyWith(
                 textScaleFactor:
                     data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor),
-            child: child,
+            child: child!,
           );
         },
         title: 'AtSign Atmosphere Pro',

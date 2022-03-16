@@ -39,7 +39,7 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                     children: List.generate(
                       provider.receivedDocument.length,
                       (index) {
-                        if (provider.receivedDocument[index].filePath
+                        if (provider.receivedDocument[index].filePath!
                             .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
@@ -47,7 +47,7 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                           return InkWell(
                             onTap: () async {
                               File test = File(
-                                  provider.receivedDocument[index].filePath);
+                                  provider.receivedDocument[index].filePath!);
                               bool fileExists = await test.exists();
                               if (fileExists) {
                                 await OpenFile.open(
@@ -55,7 +55,7 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                               }
                             },
                             child: DesktopFileCard(
-                              title: provider.receivedDocument[index].filePath
+                              title: provider.receivedDocument[index].filePath!
                                   .split(Platform.pathSeparator)
                                   .last,
                               filePath:

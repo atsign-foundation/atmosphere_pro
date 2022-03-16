@@ -1,3 +1,4 @@
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -16,7 +17,7 @@ class SelectContactWidget extends StatefulWidget {
 }
 
 class _SelectContactWidgetState extends State<SelectContactWidget> {
-  String headerText;
+  String? headerText;
 
   @override
   void initState() {
@@ -54,7 +55,7 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
 }
 
 class _ExpansionTileWidget extends StatelessWidget {
-  final String headerText;
+  final String? headerText;
   final Function(int) onSelected;
 
   _ExpansionTileWidget(this.headerText, this.onSelected);
@@ -70,7 +71,7 @@ class _ExpansionTileWidget extends StatelessWidget {
           selectContact(context);
         },
         child: Text(
-          headerText,
+          headerText!,
           style: TextStyle(
             color: ColorConstants.fadedText,
             fontSize: 14.toFont,
@@ -93,6 +94,14 @@ class _ExpansionTileWidget extends StatelessWidget {
   }
 
   selectContact(BuildContext context) async {
+    List<GroupContactsModel>? contactSelectedHistory = [];
+    Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext!,
+            listen: false)
+        .selectedContacts
+        .forEach((GroupContactsModel? element) {
+      contactSelectedHistory.add(element ?? GroupContactsModel());
+    });
+
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -101,16 +110,14 @@ class _ExpansionTileWidget extends StatelessWidget {
           showGroups: true,
           showContacts: true,
           selectedList: (s) {
-            Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext,
+            Provider.of<WelcomeScreenProvider>(
+                    NavService.navKey.currentContext!,
                     listen: false)
                 .updateSelectedContacts(s);
             onSelected(s.length);
           },
           // singleSelection: true,
-          contactSelectedHistory: Provider.of<WelcomeScreenProvider>(
-                  NavService.navKey.currentContext,
-                  listen: false)
-              .selectedContacts,
+          contactSelectedHistory: contactSelectedHistory,
         ),
       ),
     );

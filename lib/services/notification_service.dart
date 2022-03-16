@@ -11,8 +11,8 @@ class LocalNotificationService {
   }
   static LocalNotificationService _instace = LocalNotificationService._();
   factory LocalNotificationService() => _instace;
-  FlutterLocalNotificationsPlugin _notificationsPlugin;
-  InitializationSettings initializationSettings;
+  late FlutterLocalNotificationsPlugin _notificationsPlugin;
+  late InitializationSettings initializationSettings;
   final BehaviorSubject<ReceivedNotification>
       didReceivedLocalNotificationSubject =
       BehaviorSubject<ReceivedNotification>();
@@ -54,7 +54,7 @@ class LocalNotificationService {
   _requestIOSPermission() {
     _notificationsPlugin
         .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()!
         .requestPermissions(
           alert: false,
           badge: true,
@@ -64,7 +64,7 @@ class LocalNotificationService {
 
   setOnNotificationClick(Function onNotificationClick) async {
     await _notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
+        onSelectNotification: (String? payload) async {
       onNotificationClick(payload);
     });
   }
@@ -73,7 +73,7 @@ class LocalNotificationService {
     var androidChannelSpecifics = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
-      "CHANNEL_DESCRIPTION",
+      channelDescription: "CHANNEL_DESCRIPTION",
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
@@ -88,9 +88,7 @@ class LocalNotificationService {
       // id: int.parse(id)
     );
     await _notificationsPlugin.show(
-        0, '$from sent you a file', 
-        message, 
-        platformChannelSpecifics,
+        0, '$from sent you a file', message, platformChannelSpecifics,
         payload: jsonEncode(payload));
   }
 
@@ -101,14 +99,14 @@ class LocalNotificationService {
 
 class ReceivedNotification {
   final int id;
-  final String title;
-  final String body;
-  final String payload;
+  final String? title;
+  final String? body;
+  final String? payload;
 
   ReceivedNotification({
-    @required this.id,
-    @required this.title,
-    @required this.body,
-    @required this.payload,
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.payload,
   });
 }

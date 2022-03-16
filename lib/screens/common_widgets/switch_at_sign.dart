@@ -10,8 +10,8 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 
 class AtSignBottomSheet extends StatefulWidget {
-  final List<String> atSignList;
-  AtSignBottomSheet({Key key, this.atSignList}) : super(key: key);
+  final List<String>? atSignList;
+  AtSignBottomSheet({Key? key, this.atSignList}) : super(key: key);
 
   @override
   _AtSignBottomSheetState createState() => _AtSignBottomSheetState();
@@ -58,11 +58,11 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                           Expanded(
                               child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: widget.atSignList.length,
+                            itemCount: widget.atSignList!.length,
                             itemBuilder: (context, index) {
-                              Uint8List image = CommonUtilityFunctions()
+                              Uint8List? image = CommonUtilityFunctions()
                                   .getCachedContactImage(
-                                      widget.atSignList[index]);
+                                      widget.atSignList![index]);
                               return GestureDetector(
                                 onTap: isLoading
                                     ? () {}
@@ -70,7 +70,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                         return await backendService
                                             .checkToOnboard(
                                                 atSign:
-                                                    widget.atSignList[index]);
+                                                    widget.atSignList![index]);
 
                                         Navigator.pop(context);
                                         // Navigator.pop(context);
@@ -100,10 +100,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                                 )
                                               : ContactInitial(
                                                   initials:
-                                                      widget.atSignList[index]),
+                                                      widget.atSignList![index]),
                                         ),
                                       ),
-                                      Text(widget.atSignList[index],
+                                      Text(widget.atSignList![index],
                                           style: TextStyle(fontSize: 15.toFont))
                                     ],
                                   ),

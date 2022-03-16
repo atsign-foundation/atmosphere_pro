@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
   final bool isInverted;
-  final Function() onPressed;
-  final String buttonText;
-  final double height;
-  final double width;
+  final Function()? onPressed;
+  final String? buttonText;
+  final double? height;
+  final double? width;
   final bool isOrange;
 
   const CustomButton(
-      {Key key,
+      {Key? key,
       this.isInverted = false,
       this.onPressed,
       this.buttonText,
@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
                     : Colors.black),
         child: Center(
           child: Text(
-            buttonText,
+            buttonText!,
             textAlign: TextAlign.center,
             style: (isInverted)
                 ? CustomTextStyles.primaryBold16

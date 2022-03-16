@@ -18,19 +18,20 @@ class Videos extends StatefulWidget {
 }
 
 class _VideosState extends State<Videos> {
-  List<Uint8List> videoThumbnails;
+  List<Uint8List?>? videoThumbnails;
 
-  Future<List<Uint8List>> videoThumbnailBuilder(List<FilesDetail> files) async {
+  Future<List<Uint8List?>?> videoThumbnailBuilder(
+      List<FilesDetail> files) async {
     videoThumbnails = [];
     for (var file in files) {
       var thumbnail = await VideoThumbnail.thumbnailData(
-        video: file.filePath,
+        video: file.filePath!,
         imageFormat: ImageFormat.JPEG,
         maxWidth: 50,
         // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
         quality: 100,
       );
-      videoThumbnails.add(thumbnail);
+      videoThumbnails!.add(thumbnail);
     }
     return videoThumbnails;
   }
@@ -48,7 +49,8 @@ class _VideosState extends State<Videos> {
             EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
         child: FutureBuilder(
             future: videoThumbnailBuilder(provider.receivedVideos),
-            builder: (context, snapshot) {
+            builder: (context, AsyncSnapshot<List<Uint8List?>?> snapshot) {
+              // List<Uint8List> videoBytes = Uint8List.fromList(snapshot.data as List<int>) ;
               if (snapshot.data == null) {
                 return listVideoWidget(provider, null);
               } else {
@@ -59,17 +61,17 @@ class _VideosState extends State<Videos> {
     );
   }
 
-  Widget listVideoWidget(HistoryProvider provider, List<Uint8List> videos) {
+  Widget listVideoWidget(HistoryProvider provider, dynamic videos) {
     return ListView.builder(
         itemCount: provider.receivedVideos.length,
         itemBuilder: (context, index) {
-          DateTime date = DateTime.parse(provider.receivedVideos[index].date);
+          DateTime date = DateTime.parse(provider.receivedVideos[index].date!);
           return InkWell(
             onTap: () async {
               print(
                   'provider.receivedVideos[index].size====>${provider.receivedVideos[index].size}');
               //      await openDownloadsFolder(context);
-              await openFilePath(provider.receivedVideos[index].filePath);
+              await openFilePath(provider.receivedVideos[index].filePath!);
             },
             child: Card(
               margin: EdgeInsets.only(top: 15.toHeight),
@@ -77,7 +79,7 @@ class _VideosState extends State<Videos> {
                 tileColor: ColorConstants.listBackground,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(3)),
-                title: Text(provider.receivedVideos[index].fileName,
+                title: Text(provider.receivedVideos[index].fileName!,
                     style: CustomTextStyles.primaryBold14),
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(10.toHeight),
@@ -105,8 +107,8 @@ class _VideosState extends State<Videos> {
                           double.parse(provider.receivedVideos[index].size
                                       .toString()) <=
                                   1024
-                              ? '${(provider.receivedVideos[index].size).toStringAsFixed(2)} Kb'
-                              : '${(provider.receivedVideos[index].size / 1024).toStringAsFixed(2)} Mb',
+                              ? '${provider.receivedVideos[index].size!.toStringAsFixed(2)} Kb'
+                              : '${(provider.receivedVideos[index].size! / 1024).toStringAsFixed(2)} Mb',
                           style: CustomTextStyles.secondaryRegular12),
                       SizedBox(
                         width: 12.toWidth,

@@ -52,39 +52,39 @@ class HistoryProvider extends BaseModel {
   List<FileHistory> sentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
-  Map<String, Map<String, bool>> downloadedFileAcknowledgement = {};
-  Map<String, bool> individualSentFileId = {};
-  String state;
+  Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
+  Map<String?, bool> individualSentFileId = {};
+  String? state;
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
   bool isSyncedDataFetched = false;
   String fileSearchText = '';
-  List<FilesDetail> sentPhotos,
+  List<FilesDetail>? sentPhotos,
       sentVideos,
       sentAudio,
       sentApk,
       sentDocument = [];
 
-  List<FilesDetail> receivedPhotos,
-      receivedVideos,
-      receivedAudio,
-      receivedApk,
-      receivedDocument,
+  List<FilesDetail> receivedPhotos = [],
+      receivedVideos = [],
+      receivedAudio = [],
+      receivedApk = [],
+      receivedDocument = [],
       recentFile = [],
       receivedUnknown = [];
   List<String> tabNames = ['Recents'];
 
   List<Widget> tabs = [Recents()];
 
-  List<FilesModel> receivedHistory, receivedAudioModel = [];
+  List<FilesModel>? receivedHistory, receivedAudioModel = [];
   List<Widget> desktopTabs = [DesktopRecents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
   Map sendFileHistory = {'history': []};
   String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
-  String app_lifecycle_state;
+  String? app_lifecycle_state;
 
   resetData() {
     isSyncedDataFetched = false;
@@ -140,14 +140,14 @@ class HistoryProvider extends BaseModel {
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
     // checking whether sent file is stored in individual atKey or in sentHistory list.
-    if (individualSentFileId[fileHistory.fileDetails.key] != null) {
+    if (individualSentFileId[fileHistory.fileDetails!.key] != null) {
       await saveIndividualSentItemInAtkey(fileHistory, isEdit: true);
       return;
     }
 
     // if file is not saved individually, we will update file index in sent history list.
     int index = sentHistory.indexWhere((element) =>
-        element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
+        element.fileDetails!.key!.contains(fileHistory.fileDetails!.key!));
 
     var result = false;
     if (index > -1) {
@@ -180,12 +180,12 @@ class HistoryProvider extends BaseModel {
   Future<bool> saveIndividualSentItemInAtkey(FileHistory fileHistory,
       {bool isEdit = false}) async {
     AtKey atKey = AtKey()
-      ..key = fileHistory.fileDetails.key
+      ..key = fileHistory.fileDetails!.key
       ..metadata = Metadata()
-      ..metadata.ttr = -1
-      ..metadata.ccd = true
+      ..metadata!.ttr = -1
+      ..metadata!.ccd = true
       // key will be deleted after 15 days.
-      ..metadata.ttl = 1296000000; // 1000 * 60 * 60 * 24 * 15
+      ..metadata!.ttl = 1296000000; // 1000 * 60 * 60 * 24 * 15
 
     try {
       var res = await AtClientManager.getInstance().atClient.put(
@@ -194,7 +194,7 @@ class HistoryProvider extends BaseModel {
             fileHistory.toJson(),
           ));
       if (res) {
-        individualSentFileId[fileHistory.fileDetails.key] = true;
+        individualSentFileId[fileHistory.fileDetails!.key] = true;
         isEdit
             ? updateFileEntryInSentHistory(fileHistory)
             : sentHistory.insert(0, fileHistory);
@@ -223,8 +223,9 @@ class HistoryProvider extends BaseModel {
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
       var keyValue =
-          await backendService.atClientInstance.get(key).catchError((e) {
+          await backendService.atClientInstance!.get(key).catchError((e) {
         print('error in getSentHistory : $e');
+        return AtValue();
       });
       if (keyValue != null && keyValue.value != null) {
         try {
@@ -235,7 +236,7 @@ class HistoryProvider extends BaseModel {
             // checking for download acknowledged
             filesModel.sharedWith = checkIfileDownloaded(
               filesModel.sharedWith,
-              filesModel.fileTransferObject.transferId,
+              filesModel.fileTransferObject!.transferId,
             );
             sentHistory.add(filesModel);
           });
@@ -265,12 +266,13 @@ class HistoryProvider extends BaseModel {
 
     sharedFileStrings.retainWhere((element) => !element.contains('cached'));
 
-    await Future.forEach(sharedFileStrings, (key) async {
+    await Future.forEach(sharedFileStrings, (dynamic key) async {
       AtKey atKey = AtKey.fromString(key);
       AtValue atvalue =
-          await backendService.atClientInstance.get(atKey).catchError(
+          await backendService.atClientInstance!.get(atKey).catchError(
         (e) {
           print("Exception in getting atValue: $e");
+          return AtValue();
         },
       );
 
@@ -279,7 +281,7 @@ class HistoryProvider extends BaseModel {
           FileHistory fileHistory = FileHistory.fromJson(
             jsonDecode(atvalue.value),
           );
-          individualSentFileId[fileHistory.fileDetails.key] = true;
+          individualSentFileId[fileHistory.fileDetails!.key] = true;
           sentHistory.insert(0, fileHistory);
         } catch (e) {
           print('exeption in getSentFileItems : $e');
@@ -290,30 +292,40 @@ class HistoryProvider extends BaseModel {
 
 // deletes sent items which are older that 15 days
   removePastSentFiles() async {
+    List<String> idsToDelete = [];
     for (int i = 0; i < sentHistory.length; i++) {
       FileHistory fileHistory = sentHistory[i];
       var sentFileDeletionDate =
-          fileHistory.fileDetails.date.add(Duration(days: 15));
+          fileHistory.fileDetails!.date!.add(Duration(days: 15));
       if (sentFileDeletionDate.difference(DateTime.now()) <
           Duration(seconds: 0)) {
-        sentHistory.removeAt(i);
-        updateSendFileHistoryArray(fileHistory, isDelete: true);
+        idsToDelete.add(sentHistory[i].fileDetails!.key!);
       }
     }
+
+    idsToDelete.forEach((String id) {
+      var index =
+          sentHistory.indexWhere((element) => element.fileDetails!.key == id);
+      if (index > -1) {
+        updateSendFileHistoryArray(sentHistory[index], isDelete: true);
+        sentHistory.removeAt(index);
+      }
+    });
 
     await updateSentHistory();
   }
 
   sortSentItems() {
     sentHistory
-        .sort((a, b) => b.fileDetails.date.compareTo(a.fileDetails.date));
+        .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
   }
 
-  List<ShareStatus> checkIfileDownloaded(
-      List<ShareStatus> shareStatus, String transferId) {
+  List<ShareStatus>? checkIfileDownloaded(
+      List<ShareStatus>? shareStatus, String transferId) {
     if (downloadedFileAcknowledgement[transferId] != null) {
-      for (int i = 0; i < shareStatus.length; i++) {
-        if (downloadedFileAcknowledgement[transferId][shareStatus[i].atsign] !=
+      for (int i = 0; i < shareStatus!.length; i++) {
+        if (downloadedFileAcknowledgement[transferId]![
+                shareStatus[i].atsign!] !=
             null) {
           shareStatus[i].isFileDownloaded = true;
         }
@@ -322,24 +334,24 @@ class HistoryProvider extends BaseModel {
     return shareStatus;
   }
 
-  deleteSentItem(String transferId) async {
+  deleteSentItem(String? transferId) async {
     int index = sentHistory.indexWhere((element) {
-      return element?.fileDetails?.key == transferId;
+      return element.fileDetails?.key == transferId;
     });
-    FileHistory fileHistory;
+    FileHistory? fileHistory;
     if (index != -1) {
       fileHistory = sentHistory[index];
     }
 
     if (fileHistory != null &&
-        individualSentFileId[fileHistory.fileDetails.key] != null) {
+        individualSentFileId[fileHistory.fileDetails!.key] != null) {
       await deleteIndividualSentItem(fileHistory);
       return;
     }
 
     if (index != -1) {
       sentHistory.removeWhere((element) {
-        return element?.fileDetails?.key == transferId;
+        return element.fileDetails?.key == transferId;
       });
       notifyListeners();
       updateSendFileHistoryArray(fileHistory, isDelete: true);
@@ -360,8 +372,8 @@ class HistoryProvider extends BaseModel {
     var atKeys = await AtClientManager.getInstance()
         .atClient
         .getAtKeys(regex: MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT);
-    atKeys.retainWhere((element) => !compareAtSign(element.sharedBy,
-        AtClientManager.getInstance().atClient.getCurrentAtSign()));
+    atKeys.retainWhere((element) => !compareAtSign(element.sharedBy!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!));
 
     await Future.forEach(atKeys, (AtKey atKey) async {
       try {
@@ -370,6 +382,7 @@ class HistoryProvider extends BaseModel {
             .get(atKey)
             .catchError((e) {
           print('error in get in getFileDownloadedAcknowledgement : $e');
+          return AtValue();
         });
         if (atValue != null && atValue.value != null) {
           var downloadAcknowledgement =
@@ -378,11 +391,11 @@ class HistoryProvider extends BaseModel {
           if (downloadedFileAcknowledgement[
                   downloadAcknowledgement.transferId] !=
               null) {
-            downloadedFileAcknowledgement[downloadAcknowledgement.transferId]
-                [formatAtsign(atKey.sharedBy)] = true;
+            downloadedFileAcknowledgement[downloadAcknowledgement.transferId]![
+                formatAtsign(atKey.sharedBy!)] = true;
           } else {
             downloadedFileAcknowledgement[downloadAcknowledgement.transferId] =
-                {formatAtsign(atKey.sharedBy): true};
+                {formatAtsign(atKey.sharedBy!): true};
           }
         }
       } catch (e) {
@@ -411,7 +424,7 @@ class HistoryProvider extends BaseModel {
   checkForUpdatedOrNewNotification(String sharedBy, String decodedMsg) async {
     setStatus(UPDATE_RECEIVED_RECORD, Status.Loading);
     FileTransferObject fileTransferObject =
-        FileTransferObject.fromJson((jsonDecode(decodedMsg)));
+        FileTransferObject.fromJson((jsonDecode(decodedMsg)))!;
     FileTransfer filesModel =
         convertFiletransferObjectToFileTransfer(fileTransferObject);
     filesModel.sender = sharedBy;
@@ -445,13 +458,13 @@ class HistoryProvider extends BaseModel {
   }
 
   void _initBackendService() async {
-    SystemChannels.lifecycle.setMessageHandler((msg) {
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
       print('set message handler');
       state = msg;
       debugPrint('SystemChannels=> $msg');
       app_lifecycle_state = msg;
 
-      return null;
+      return msg;
     });
   }
 
@@ -460,9 +473,9 @@ class HistoryProvider extends BaseModel {
     setStatus(ADD_RECEIVED_FILE, Status.Loading);
     filesModel.sender = sharedBy;
 
-    if (filesModel.isUpdate) {
+    if (filesModel.isUpdate!) {
       int index = receivedHistoryLogs
-          .indexWhere((element) => element?.key?.contains(filesModel.key));
+          .indexWhere((element) => element.key!.contains(filesModel.key!));
       if (index > -1) {
         receivedHistoryLogs[index] = filesModel;
       }
@@ -479,12 +492,12 @@ class HistoryProvider extends BaseModel {
   updateDownloadAcknowledgement(
       DownloadAcknowledgement downloadAcknowledgement, String sharedBy) async {
     var index = sentHistory.indexWhere((element) =>
-        element.fileDetails.key == downloadAcknowledgement.transferId);
+        element.fileDetails!.key == downloadAcknowledgement.transferId);
     if (index > -1) {
       var i = sentHistory[index]
-          .sharedWith
+          .sharedWith!
           .indexWhere((element) => element.atsign == sharedBy);
-      sentHistory[index].sharedWith[i].isFileDownloaded = true;
+      sentHistory[index].sharedWith![i].isFileDownloaded = true;
       await updateFileHistoryDetail(sentHistory[index]);
     }
   }
@@ -501,20 +514,21 @@ class HistoryProvider extends BaseModel {
     fileTransferResponse.retainWhere((element) =>
         !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
 
-    await Future.forEach(fileTransferResponse, (key) async {
+    await Future.forEach(fileTransferResponse, (dynamic key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
         AtKey atKey = AtKey.fromString(key);
 
-        AtValue atvalue = await backendService.atClientInstance
-            .get(atKey)
+        AtValue atvalue = await backendService.atClientInstance!.get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) => print(
-                "error in getting atValue in getAllFileTransferData : $e"));
+            .catchError((e) {
+          print("error in getting atValue in getAllFileTransferData : $e");
+          return AtValue();
+        });
 
         if (atvalue != null && atvalue.value != null) {
           try {
             FileTransferObject fileTransferObject =
-                FileTransferObject.fromJson(jsonDecode(atvalue.value));
+                FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = '@' + key.split('@').last;
@@ -543,11 +557,11 @@ class HistoryProvider extends BaseModel {
       receivedVideos = [];
       receivedUnknown = [];
       recentFile = [];
-      await Future.forEach(filesList, (fileData) async {
-        await Future.forEach(fileData.files, (file) async {
-          String fileExtension = file.name.split('.').last;
+      await Future.forEach(filesList, (dynamic fileData) async {
+        await Future.forEach(fileData.files, (dynamic file) async {
+          String? fileExtension = file.name.split('.').last;
           String filePath =
-              BackendService.getInstance().downloadDirectory.path +
+              BackendService.getInstance().downloadDirectory!.path +
                   Platform.pathSeparator +
                   file.name;
 
@@ -565,7 +579,7 @@ class HistoryProvider extends BaseModel {
           );
 
           // check if file exists
-          File tempFile = File(fileDetail.filePath);
+          File tempFile = File(fileDetail.filePath!);
           bool isFileDownloaded = await tempFile.exists();
 
           if (isFileDownloaded) {
@@ -587,7 +601,7 @@ class HistoryProvider extends BaseModel {
               if (index == -1) {
                 // checking is photo is downloaded or not
                 //if photo is downloaded then only it's shown in my files screen
-                File file = File(fileDetail.filePath);
+                File file = File(fileDetail.filePath!);
                 bool isFileDownloaded = await file.exists();
 
                 if (isFileDownloaded) {
@@ -633,20 +647,20 @@ class HistoryProvider extends BaseModel {
       var lastTenFilesData = receivedHistoryLogs.sublist(
           0, receivedHistoryLogs.length > 15 ? 15 : receivedHistoryLogs.length);
 
-      await Future.forEach(lastTenFilesData, (fileData) async {
+      await Future.forEach(lastTenFilesData, (dynamic fileData) async {
         await Future.forEach(fileData.files, (FileData file) async {
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
-            filePath: BackendService.getInstance().downloadDirectory.path +
+            filePath: BackendService.getInstance().downloadDirectory!.path +
                 Platform.pathSeparator +
-                file.name,
+                (file.name ?? ''),
             size: double.parse(file.size.toString()),
             date: fileData.date.toLocal().toString(),
-            type: file.name.split('.').last,
+            type: file.name!.split('.').last,
             contactName: fileData.sender,
           );
 
-          File tempFile = File(fileDetail.filePath);
+          File tempFile = File(fileDetail.filePath!);
           bool isFileDownloaded = await tempFile.exists();
           int index = recentFile
               .indexWhere((element) => element.fileName == fileDetail.fileName);
@@ -722,13 +736,13 @@ class HistoryProvider extends BaseModel {
   }
 
   sortReceivedNotifications() {
-    receivedHistoryLogs.sort((a, b) => b.date.compareTo(a.date));
+    receivedHistoryLogs.sort((a, b) => b.date!.compareTo(a.date!));
   }
 
   sortByName(List<FilesDetail> list) {
     try {
       setStatus(SORT_LIST, Status.Loading);
-      list.sort((a, b) => a.fileName.compareTo(b.fileName));
+      list.sort((a, b) => a.fileName!.compareTo(b.fileName!));
 
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
@@ -739,7 +753,7 @@ class HistoryProvider extends BaseModel {
   sortBySize(List<FilesDetail> list) {
     try {
       setStatus(SORT_LIST, Status.Loading);
-      list.sort((a, b) => a.size.compareTo(b.size));
+      list.sort((a, b) => a.size!.compareTo(b.size!));
 
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
@@ -751,7 +765,7 @@ class HistoryProvider extends BaseModel {
     try {
       setStatus(SORT_LIST, Status.Loading);
       list.sort((a, b) =>
-          a.fileName.split('.').last.compareTo(b.fileName.split('.').last));
+          a.fileName!.split('.').last.compareTo(b.fileName!.split('.').last));
 
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
@@ -764,7 +778,7 @@ class HistoryProvider extends BaseModel {
       setStatus(SORT_LIST, Status.Loading);
 
       list.sort(
-          (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+          (a, b) => DateTime.parse(a.date!).compareTo(DateTime.parse(b.date!)));
       setStatus(SORT_LIST, Status.Done);
     } catch (e) {
       setError(SORT_LIST, e.toString());
@@ -802,13 +816,13 @@ class HistoryProvider extends BaseModel {
   }
 
   updateFileSendingStatus(
-      {bool isUploading, bool isUploaded, String id, String filename}) {
+      {bool? isUploading, bool? isUploaded, String? id, String? filename}) {
     var index =
-        sentHistory.indexWhere((element) => element.fileDetails.key == id);
+        sentHistory.indexWhere((element) => element.fileDetails!.key == id);
     if (index > -1) {
       var fileIndex = sentHistory[index]
-          .fileDetails
-          .files
+          .fileDetails!
+          .files!
           .indexWhere((element) => element.name == filename);
 
       // as of now operating is only used to determine whether file is being uploaded or not
@@ -816,9 +830,10 @@ class HistoryProvider extends BaseModel {
       sentHistory[index].isOperating = isUploading;
 
       if (fileIndex > -1) {
-        sentHistory[index].fileDetails.files[fileIndex].isUploading =
+        sentHistory[index].fileDetails!.files![fileIndex].isUploading =
             isUploading;
-        sentHistory[index].fileDetails.files[fileIndex].isUploaded = isUploaded;
+        sentHistory[index].fileDetails!.files![fileIndex].isUploaded =
+            isUploaded;
       }
     }
     notifyListeners();
@@ -847,7 +862,7 @@ class HistoryProvider extends BaseModel {
 
     sharedWithAtsigns.forEach((atsign) {
       sthareStatus
-          .add(ShareStatus(atsign, fileShareResult[atsign].sharedStatus));
+          .add(ShareStatus(atsign, fileShareResult[atsign]!.sharedStatus));
     });
 
     return FileHistory(
@@ -855,7 +870,7 @@ class HistoryProvider extends BaseModel {
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
-      {String downloadPath}) async {
+      {String? downloadPath}) async {
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
@@ -890,7 +905,7 @@ class HistoryProvider extends BaseModel {
       print('audios: ${receivedAudio.length}');
       receivedHistoryLogs[index].isDownloading = false;
 
-      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
           .checkForUndownloadedFiles();
 
@@ -912,28 +927,28 @@ class HistoryProvider extends BaseModel {
   }
 
   downloadSingleFile(
-    String transferId,
-    String sharedBy,
-    bool isWidgetOpen,
+    String? transferId,
+    String? sharedBy,
+    bool? isWidgetOpen,
     String fileName,
   ) async {
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     var _fileIndex = receivedHistoryLogs[index]
-        .files
+        .files!
         .indexWhere((_file) => _file.name == fileName);
     try {
       if ((index > -1) && (_fileIndex > -1)) {
-        receivedHistoryLogs[index].files[_fileIndex].isDownloading = true;
+        receivedHistoryLogs[index].files![_fileIndex].isDownloading = true;
         receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
       }
       notifyListeners();
 
       var files =
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
-      receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
+      receivedHistoryLogs[index].files![_fileIndex].isDownloading = false;
 
-      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext,
+      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
           .checkForUndownloadedFiles();
 
@@ -949,15 +964,15 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       print('error in downloading file: $e');
       receivedHistoryLogs[index].isDownloading = false;
-      receivedHistoryLogs[index].files[_fileIndex].isDownloading = false;
+      receivedHistoryLogs[index].files![_fileIndex].isDownloading = false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
     }
   }
 
   Future<List<File>> _downloadSingleFileFromWeb(
-      String transferId, String sharedByAtSign, String fileName,
-      {String downloadPath}) async {
+      String? transferId, String? sharedByAtSign, String fileName,
+      {String? downloadPath}) async {
     downloadPath ??=
         BackendService.getInstance().atClientPreference.downloadPath;
     if (downloadPath == null) {
@@ -969,12 +984,13 @@ class HistoryProvider extends BaseModel {
     var result =
         await AtClientManager.getInstance().atClient.get(atKey).catchError((e) {
       print('error in _downloadSingleFileFromWeb : $e');
+      return AtValue();
     });
 
     if (result == null) {
       return [];
     }
-    FileTransferObject fileTransferObject;
+    FileTransferObject? fileTransferObject;
     try {
       var _jsonData = jsonDecode(result.value);
       _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/archive', '');
@@ -982,7 +998,7 @@ class HistoryProvider extends BaseModel {
       _jsonData['fileUrl'] = _jsonData['fileUrl'] + '/$fileName';
 
       fileTransferObject = FileTransferObject.fromJson(_jsonData);
-      print('fileTransferObject.fileUrl ${fileTransferObject.fileUrl}');
+      print('fileTransferObject.fileUrl ${fileTransferObject!.fileUrl}');
     } on Exception catch (e) {
       throw Exception('json decode exception in download file ${e.toString()}');
     }
@@ -992,7 +1008,7 @@ class HistoryProvider extends BaseModel {
     if (fileDownloadReponse.isError) {
       throw Exception('download fail');
     }
-    var encryptedFileList = Directory(fileDownloadReponse.filePath).listSync();
+    var encryptedFileList = Directory(fileDownloadReponse.filePath!).listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
         var decryptedFile = EncryptionService().decryptFile(
@@ -1005,7 +1021,7 @@ class HistoryProvider extends BaseModel {
         downloadedFiles.add(downloadedFile);
       }
       // deleting temp directory
-      Directory(fileDownloadReponse.filePath).deleteSync(recursive: true);
+      Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);
       return downloadedFiles;
     } catch (e) {
       print('error in downloadFile: $e');
@@ -1043,10 +1059,10 @@ class HistoryProvider extends BaseModel {
 
     AtKey atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = -1
-      ..metadata.ccd = true
-      ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key
-      ..metadata.ttl = 518400000
+      ..metadata!.ttr = -1
+      ..metadata!.ccd = true
+      ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key!
+      ..metadata!.ttl = 518400000
       ..sharedWith = fileTransfer.sender;
     try {
       var notificationResult =
@@ -1071,13 +1087,13 @@ class HistoryProvider extends BaseModel {
   updateSendingNotificationStatus(
       String transferId, String atsign, bool isSending) {
     var index = sentHistory.indexWhere(
-        (element) => element.fileTransferObject.transferId == transferId);
+        (element) => element.fileTransferObject!.transferId == transferId);
     if (index != -1) {
       var atsignIndex = sentHistory[index]
-          .sharedWith
+          .sharedWith!
           .indexWhere((element) => element.atsign == atsign);
       if (atsignIndex != -1) {
-        sentHistory[index].sharedWith[atsignIndex].isSendingNotification =
+        sentHistory[index].sharedWith![atsignIndex].isSendingNotification =
             isSending;
       }
     }
@@ -1124,7 +1140,7 @@ class HistoryProvider extends BaseModel {
       {bool isDelete = false}) {
     int index = sentHistory.indexWhere(
       (element) =>
-          element?.fileDetails?.key?.contains(fileHistory.fileDetails.key),
+          element.fileDetails!.key!.contains(fileHistory.fileDetails!.key!),
     );
     if (index != -1) {
       if (isDelete) {
@@ -1135,12 +1151,13 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  updateSendFileHistoryArray(FileHistory fileHistory, {bool isDelete = false}) {
+  updateSendFileHistoryArray(FileHistory? fileHistory,
+      {bool isDelete = false}) {
     for (int i = 0; i < sendFileHistory['history'].length; i++) {
       FileHistory tempFileHistory = FileHistory.fromJson(
         sendFileHistory['history'][i],
       );
-      if (tempFileHistory.fileDetails.key == fileHistory.fileDetails.key) {
+      if (tempFileHistory.fileDetails!.key == fileHistory!.fileDetails!.key) {
         if (isDelete) {
           sendFileHistory['history'].removeAt(i);
         } else {
@@ -1153,11 +1170,11 @@ class HistoryProvider extends BaseModel {
 
   deleteIndividualSentItem(FileHistory fileHistory) async {
     AtKey atKey = AtKey()
-      ..key = fileHistory.fileDetails.key
+      ..key = fileHistory.fileDetails!.key
       ..metadata = Metadata()
-      ..metadata.ttr = -1
-      ..metadata.ccd = true
-      ..metadata.ttl = 1296000000;
+      ..metadata!.ttr = -1
+      ..metadata!.ccd = true
+      ..metadata!.ttl = 1296000000;
 
     var res = await AtClientManager.getInstance().atClient.delete(atKey);
     if (res) {

@@ -27,10 +27,10 @@ class _AudiosState extends State<Audios> {
             itemCount: provider.receivedAudio.length,
             itemBuilder: (context, index) {
               DateTime date =
-                  DateTime.parse(provider.receivedAudio[index].date);
+                  DateTime.parse(provider.receivedAudio[index].date!);
               return InkWell(
                 onTap: () async {
-                  await openFilePath(provider.receivedAudio[index].filePath);
+                  await openFilePath(provider.receivedAudio[index].filePath!);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -38,7 +38,7 @@ class _AudiosState extends State<Audios> {
                     tileColor: ColorConstants.listBackground,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3)),
-                    title: Text(provider.receivedAudio[index].fileName,
+                    title: Text(provider.receivedAudio[index].fileName!,
                         style: CustomTextStyles.primaryBold14),
                     leading: Container(
                       width: SizeConfig().isTablet(context)
@@ -67,9 +67,9 @@ class _AudiosState extends State<Audios> {
                               double.parse(provider.receivedAudio[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${(provider.receivedAudio[index].size).toStringAsFixed(2)} ' +
+                                  ? '${provider.receivedAudio[index].size!.toStringAsFixed(2)} ' +
                                       TextStrings().kb
-                                  : '${(provider.receivedAudio[index].size / 1024).toStringAsFixed(2)} ' +
+                                  : '${(provider.receivedAudio[index].size! / 1024).toStringAsFixed(2)} ' +
                                       TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(

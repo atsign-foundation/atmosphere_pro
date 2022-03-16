@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class CommonButton extends StatelessWidget {
   final String title;
-  final Function() onTap;
-  final double border, height, width, fontSize;
-  final Color color;
+  final Function()? onTap;
+  final double? border, height, width, fontSize;
+  final Color? color;
   final bool removePadding;
-  final Color textColor;
-  final Widget leading;
+  final Color? textColor;
+  final Widget? leading;
   const CommonButton(
     this.title,
     this.onTap, {

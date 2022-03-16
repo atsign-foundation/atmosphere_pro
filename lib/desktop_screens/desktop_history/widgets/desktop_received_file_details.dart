@@ -15,8 +15,8 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class DesktopReceivedFileDetails extends StatefulWidget {
-  final FileTransfer fileTransfer;
-  final Key key;
+  final FileTransfer? fileTransfer;
+  final Key? key;
   DesktopReceivedFileDetails({this.fileTransfer, this.key});
 
   @override
@@ -31,19 +31,19 @@ class _DesktopReceivedFileDetailsState
       isDownloaded = false,
       isFilesAvailableOfline = true,
       isOverwrite = false;
-  List<String> existingFileNamesToOverwrite = [];
-  Map<String, Future> _futureBuilder = {};
+  List<String?> existingFileNamesToOverwrite = [];
+  Map<String?, Future> _futureBuilder = {};
 
   @override
   void initState() {
     super.initState();
 
-    fileCount = widget.fileTransfer.files.length;
-    widget.fileTransfer.files.forEach((element) {
-      fileSize += element.size;
+    fileCount = widget.fileTransfer!.files!.length;
+    widget.fileTransfer!.files!.forEach((element) {
+      fileSize += element.size!;
     });
 
-    var expiryDate = widget.fileTransfer.date.add(Duration(days: 6));
+    var expiryDate = widget.fileTransfer!.date!.add(Duration(days: 6));
     if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
@@ -55,26 +55,26 @@ class _DesktopReceivedFileDetailsState
   String getDownloadDirectory(String name) {
     return MixedConstants.RECEIVED_FILE_DIRECTORY +
         Platform.pathSeparator +
-        widget.fileTransfer.sender +
+        (widget.fileTransfer!.sender ?? '') +
         Platform.pathSeparator +
         name;
   }
 
   getFutureBuilders() {
-    widget.fileTransfer.files.forEach((element) {
+    widget.fileTransfer!.files!.forEach((element) {
       _futureBuilder[element.name] = CommonUtilityFunctions().isFilePresent(
-        getDownloadDirectory(element.name),
+        getDownloadDirectory(element.name!),
       );
     });
   }
 
   isFilesAlreadyDownloaded() async {
-    widget.fileTransfer.files.forEach((element) async {
+    widget.fileTransfer!.files!.forEach((element) async {
       String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
           Platform.pathSeparator +
-          widget.fileTransfer.sender +
+          (widget.fileTransfer!.sender ?? '') +
           Platform.pathSeparator +
-          element.name;
+          (element.name ?? '');
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
@@ -85,7 +85,7 @@ class _DesktopReceivedFileDetailsState
         }
       } else {
         var fileLatsModified = await test.lastModified();
-        if (fileLatsModified.isBefore(widget.fileTransfer.date)) {
+        if (fileLatsModified.isBefore(widget.fileTransfer!.date!)) {
           existingFileNamesToOverwrite.add(element.name);
           if (mounted) {
             setState(() {
@@ -123,7 +123,7 @@ class _DesktopReceivedFileDetailsState
                   InkWell(
                     onTap: () async {
                       var _downloadPath =
-                          '${MixedConstants.ApplicationDocumentsDirectory}/${widget.fileTransfer.sender}';
+                          '${MixedConstants.ApplicationDocumentsDirectory}/${widget.fileTransfer!.sender}';
                       BackendService.getInstance()
                           .doesDirectoryExist(path: _downloadPath);
 
@@ -140,7 +140,7 @@ class _DesktopReceivedFileDetailsState
                     ),
                   ),
                   SizedBox(height: 5),
-                  widget.fileTransfer.isDownloading
+                  widget.fileTransfer!.isDownloading!
                       ? Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: SizedBox(
@@ -190,13 +190,13 @@ class _DesktopReceivedFileDetailsState
                   runAlignment: WrapAlignment.start,
                   runSpacing: 10.0,
                   spacing: 20.0,
-                  children:
-                      List.generate(widget.fileTransfer.files.length, (index) {
+                  children: List.generate(widget.fileTransfer!.files!.length,
+                      (index) {
                     return Container(
                       width: 250,
                       child: ListTile(
                           title: Text(
-                            widget.fileTransfer.files[index]?.name,
+                            widget.fileTransfer!.files![index].name!,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -205,22 +205,23 @@ class _DesktopReceivedFileDetailsState
                             ),
                           ),
                           subtitle: Text(
-                            double.parse(widget.fileTransfer.files[index].size
+                            double.parse(widget.fileTransfer!.files![index].size
                                         .toString()) <=
                                     1024
-                                ? '${widget.fileTransfer.files[index].size} Kb' +
-                                    ' . ${widget.fileTransfer.files[index].name.split('.').last}'
-                                : '${(widget.fileTransfer.files[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
-                                    ' . ${widget.fileTransfer.files[index].name.split('.').last}',
+                                ? '${widget.fileTransfer!.files![index].size} Kb' +
+                                    ' . ${widget.fileTransfer!.files![index].name!.split('.').last}'
+                                : '${(widget.fileTransfer!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                    ' . ${widget.fileTransfer!.files![index].name!.split('.').last}',
                             style: TextStyle(
                               color: ColorConstants.fadedText,
                               fontSize: 14.toFont,
                             ),
                           ),
                           leading: FutureBuilder(
-                              key: Key(widget.fileTransfer.files[index].name),
+                              key:
+                                  Key(widget.fileTransfer!.files![index].name!),
                               future: _futureBuilder[
-                                  widget.fileTransfer.files[index].name],
+                                  widget.fileTransfer!.files![index].name],
                               builder: (context, snapshot) {
                                 return snapshot.connectionState ==
                                             ConnectionState.done &&
@@ -228,23 +229,23 @@ class _DesktopReceivedFileDetailsState
                                     ? InkWell(
                                         onTap: () {
                                           handleFileCLick(
-                                            widget
-                                                .fileTransfer.files[index].name,
+                                            widget.fileTransfer!.files![index]
+                                                .name!,
                                           );
                                         },
                                         child: CommonUtilityFunctions()
                                             .thumbnail(
-                                                widget.fileTransfer.files[index]
-                                                    .name
+                                                widget.fileTransfer!
+                                                    .files![index].name
                                                     ?.split('.')
                                                     ?.last,
                                                 getDownloadDirectory(widget
-                                                    .fileTransfer
-                                                    .files[index]
-                                                    .name),
+                                                    .fileTransfer!
+                                                    .files![index]
+                                                    .name!),
                                                 isFilePresent: isOverwrite
                                                     ? false
-                                                    : snapshot.data),
+                                                    : snapshot.data as bool),
                                       )
                                     : SizedBox();
                               }),
@@ -271,7 +272,7 @@ class _DesktopReceivedFileDetailsState
           ),
           SizedBox(height: 15.toHeight),
           Text(
-              '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer.date)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer.date)}',
+              '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}',
               style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           SizedBox(height: 15.toHeight),
@@ -282,7 +283,7 @@ class _DesktopReceivedFileDetailsState
 
   overwriteDialog() {
     showDialog(
-        context: NavService.navKey.currentContext,
+        context: NavService.navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
@@ -391,8 +392,8 @@ class _DesktopReceivedFileDetailsState
   downloadFiles() async {
     var res = await Provider.of<HistoryProvider>(context, listen: false)
         .downloadFiles(
-      widget.fileTransfer.key,
-      widget.fileTransfer.sender,
+      widget.fileTransfer!.key!,
+      widget.fileTransfer!.sender!,
       false,
     );
 
@@ -405,9 +406,9 @@ class _DesktopReceivedFileDetailsState
         });
       }
 
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext,
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
-          .sendFileDownloadAcknowledgement(widget.fileTransfer);
+          .sendFileDownloadAcknowledgement(widget.fileTransfer!);
     }
   }
 }

@@ -15,10 +15,10 @@ class CustomPersonVerticalTile extends StatefulWidget {
   final ShareStatus shareStatus;
   final bool isFailedAtsignList;
   @override
-  final Key key;
+  final Key? key;
 
   CustomPersonVerticalTile(
-      {this.key, @required this.shareStatus, this.isFailedAtsignList = false});
+      {this.key, required this.shareStatus, this.isFailedAtsignList = false});
 
   @override
   _CustomPersonVerticalTileState createState() =>
@@ -26,8 +26,8 @@ class CustomPersonVerticalTile extends StatefulWidget {
 }
 
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
-  Uint8List image;
-  String contactName;
+  Uint8List? image;
+  String? contactName;
   @override
   void initState() {
     super.initState();
@@ -37,7 +37,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   // ignore: always_declare_return_types
   getAtsignImage() async {
     if (widget.shareStatus.atsign == null) return;
-    var contact = await getAtSignDetails(widget.shareStatus.atsign);
+    var contact = await getAtSignDetails(widget.shareStatus.atsign!);
 
     // ignore: unnecessary_null_comparison
     if (contact != null) {
@@ -45,9 +45,9 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
         image = CommonUtilityFunctions().getContactImage(contact);
       });
 
-      if (contact.tags != null && contact.tags['name'] != null) {
+      if (contact.tags != null && contact.tags!['name'] != null) {
         setState(() {
-          contactName = contact.tags['name'];
+          contactName = contact.tags!['name'];
         });
       }
     }
@@ -71,7 +71,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30.toFont)),
                             child: Image.memory(
-                              image,
+                              image!,
                               width: 50.toFont,
                               height: 50.toFont,
                               fit: BoxFit.fill,
@@ -95,17 +95,17 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                               FileHistory selectedFileHistory =
                                   Provider.of<FileTransferProvider>(context,
                                           listen: false)
-                                      .getSelectedFileHistory;
+                                      .getSelectedFileHistory!;
 
                               print(
-                                  'selectedFileHistory : ${selectedFileHistory.fileTransferObject.transferId}, atsign: ${widget.shareStatus.atsign}');
+                                  'selectedFileHistory : ${selectedFileHistory.fileTransferObject!.transferId}, atsign: ${widget.shareStatus.atsign}');
 
                               await Provider.of<FileTransferProvider>(context,
                                       listen: false)
                                   .reSendFileNotification(selectedFileHistory,
-                                      widget.shareStatus.atsign);
+                                      widget.shareStatus.atsign!);
                             },
-                            child: widget.shareStatus.isSendingNotification
+                            child: widget.shareStatus.isSendingNotification!
                                 ? TypingIndicator(showIndicator: true)
                                 : Icon(Icons.refresh,
                                     color: Colors.white, size: 30.toHeight),
@@ -121,7 +121,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
               ? SizedBox(
                   width: 100.toFont,
                   child: Text(
-                    contactName,
+                    contactName!,
                     style: CustomTextStyles.grey15,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -134,7 +134,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
               ? SizedBox(
                   width: 100.toFont,
                   child: Text(
-                    widget.shareStatus.atsign,
+                    widget.shareStatus.atsign!,
                     style: CustomTextStyles.grey13,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

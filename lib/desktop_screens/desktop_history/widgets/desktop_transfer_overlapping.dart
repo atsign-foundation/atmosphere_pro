@@ -8,11 +8,11 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
 class DesktopTranferOverlappingContacts extends StatefulWidget {
-  final List<ShareStatus> selectedList;
-  final FileHistory fileHistory;
+  final List<ShareStatus>? selectedList;
+  final FileHistory? fileHistory;
 
   const DesktopTranferOverlappingContacts(
-      {Key key, this.selectedList, this.fileHistory})
+      {Key? key, this.selectedList, this.fileHistory})
       : super(key: key);
 
   @override
@@ -32,8 +32,8 @@ class _DesktopTranferOverlappingContactsState
   @override
   void initState() {
     atsignResharing =
-        List<bool>.generate(widget.selectedList.length, (i) => false);
-    noOfContactsRow = (widget.selectedList.length / 5).ceil();
+        List<bool>.generate(widget.selectedList!.length, (i) => false);
+    noOfContactsRow = (widget.selectedList!.length / 5).ceil();
     sortAtsigns();
     super.initState();
   }
@@ -43,14 +43,14 @@ class _DesktopTranferOverlappingContactsState
     downloadedByList = [];
     filedInDeliveringList = [];
 
-    widget.selectedList.forEach((element) {
-      if (element.isNotificationSend) {
+    widget.selectedList!.forEach((element) {
+      if (element.isNotificationSend!) {
         deliveredToList.add(element);
       } else {
         filedInDeliveringList.add(element);
       }
 
-      if (element.isFileDownloaded) {
+      if (element.isFileDownloaded!) {
         downloadedByList.add(element);
       }
     });

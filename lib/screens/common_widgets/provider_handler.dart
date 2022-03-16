@@ -10,14 +10,14 @@ import 'package:provider/provider.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ProviderHandler<T extends BaseModel> extends StatelessWidget {
-  final Widget Function(T) successBuilder;
-  final Widget Function(T) errorBuilder;
-  final String functionName;
+  final Widget Function(T)? successBuilder;
+  final Widget Function(T)? errorBuilder;
+  final String? functionName;
   final bool showError;
-  final Function(T) load;
+  final Function(T)? load;
 
   const ProviderHandler(
-      {Key key,
+      {Key? key,
       this.successBuilder,
       this.errorBuilder,
       this.functionName,
@@ -27,7 +27,7 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
-      if (_provider?.status[functionName] == Status.Loading) {
+      if (_provider.status[functionName!] == Status.Loading) {
         return Center(
           child: Container(
             height: 50.toHeight,
@@ -35,22 +35,22 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
             child: CircularProgressIndicator(),
           ),
         );
-      } else if (_provider?.status[functionName] == Status.Error) {
+      } else if (_provider.status[functionName!] == Status.Error) {
         if (showError) {
           print('IN SHOW ERROR');
-          ErrorDialog()
-              .show(_provider.error[functionName].toString(), context: context);
+          ErrorDialog().show(_provider.error[functionName!].toString(),
+              context: context);
           return SizedBox();
         } else {
-          return errorBuilder(_provider);
+          return errorBuilder!(_provider);
         }
-      } else if (_provider?.status[functionName] == Status.Done) {
-        return successBuilder(_provider);
-      } else if (_provider?.status[functionName] == Status.Idle) {
-        return successBuilder(_provider);
+      } else if (_provider.status[functionName!] == Status.Done) {
+        return successBuilder!(_provider);
+      } else if (_provider.status[functionName!] == Status.Idle) {
+        return successBuilder!(_provider);
       } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await load(_provider);
+        WidgetsBinding.instance?.addPostFrameCallback((_) async {
+          await load!(_provider);
         });
         return Center(
           child: Container(

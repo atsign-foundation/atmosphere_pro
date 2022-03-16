@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DesktopHome extends StatefulWidget {
-  const DesktopHome({Key key}) : super(key: key);
+  const DesktopHome({Key? key}) : super(key: key);
 
   @override
   _DesktopHomeState createState() => _DesktopHomeState();
@@ -23,9 +23,9 @@ class DesktopHome extends StatefulWidget {
 
 class _DesktopHomeState extends State<DesktopHome> {
   BackendService backendService = BackendService.getInstance();
-  var atClientPrefernce;
+  late var atClientPrefernce;
   bool authenticating = false, onboardError = false;
-  String currentatSign;
+  String? currentatSign;
   int _currentPageNumber = 0;
 
   var _constants = [
@@ -58,7 +58,7 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   /// before login we keep atmospher-pro as the directory
   storeApplicationDocumentsDirectory() async {
-    var _dir;
+    late var _dir;
     // TODO: have to implement for linux and windows
     if (Platform.isMacOS || Platform.isWindows) {
       _dir = await getApplicationDocumentsDirectory();
@@ -96,7 +96,7 @@ class _DesktopHomeState extends State<DesktopHome> {
     }
   }
 
-  Future<void> _onBoard(String _atsign) async {
+  Future<void> _onBoard(String? _atsign) async {
     await CustomOnboarding.onboard(
         atSign: _atsign,
         atClientPrefernce: atClientPrefernce,
@@ -333,7 +333,7 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   _showResetDialog() async {
     bool isSelectAtsign = false;
-    bool isSelectAll = false;
+    bool? isSelectAll = false;
     var atsignsList = await KeychainUtil.getAtsignList();
     if (atsignsList == null) {
       atsignsList = [];
@@ -362,7 +362,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                     )
                   ],
                 ),
-                content: atsignsList.isEmpty
+                content: atsignsList!.isEmpty
                     ? Column(mainAxisSize: MainAxisSize.min, children: [
                         Text(TextStrings.noAtsignToReset,
                             style: TextStyle(fontSize: 15)),

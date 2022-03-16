@@ -39,7 +39,7 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                     children: List.generate(
                       provider.receivedAudio.length,
                       (index) {
-                        if (provider.receivedAudio[index].filePath
+                        if (provider.receivedAudio[index].filePath!
                             .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
@@ -47,7 +47,7 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                           return InkWell(
                             onTap: () async {
                               File test =
-                                  File(provider.receivedAudio[index].filePath);
+                                  File(provider.receivedAudio[index].filePath!);
                               bool fileExists = await test.exists();
                               if (fileExists) {
                                 await OpenFile.open(
@@ -55,7 +55,7 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                               }
                             },
                             child: DesktopFileCard(
-                              title: provider.receivedAudio[index].filePath
+                              title: provider.receivedAudio[index].filePath!
                                   .split(Platform.pathSeparator)
                                   .last,
                               filePath: provider.receivedAudio[index].filePath,

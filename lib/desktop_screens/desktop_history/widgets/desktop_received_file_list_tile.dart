@@ -22,11 +22,11 @@ import 'dart:math' as math;
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class DesktopReceivedFilesListTile extends StatefulWidget {
-  final FileTransfer receivedHistory;
+  final FileTransfer? receivedHistory;
   final bool isSelected;
 
   const DesktopReceivedFilesListTile(
-      {Key key, this.receivedHistory, this.isSelected = false})
+      {Key? key, this.receivedHistory, this.isSelected = false})
       : super(key: key);
   @override
   _DesktopReceivedFilesListTileState createState() =>
@@ -35,13 +35,13 @@ class DesktopReceivedFilesListTile extends StatefulWidget {
 
 class _DesktopReceivedFilesListTileState
     extends State<DesktopReceivedFilesListTile> {
-  int fileLength, fileSize = 0;
-  List<FileData> filesList = [];
-  List<String> contactList;
+  int fileLength = 0, fileSize = 0;
+  List<FileData>? filesList = [];
+  late List<String?> contactList;
   bool isOpen = false;
   bool isDeepOpen = false;
-  Uint8List videoThumbnail, firstContactImage;
-  String contactName;
+  Uint8List? videoThumbnail, firstContactImage;
+  String? contactName;
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
 
@@ -49,30 +49,31 @@ class _DesktopReceivedFilesListTileState
   void initState() {
     super.initState();
     // isWidgetRebuilt = true;
-    fileLength = widget.receivedHistory.files.length;
+    fileLength = widget.receivedHistory!.files!.length;
     fileResending = List<bool>.generate(fileLength, (i) => false);
-    contactList = [widget.receivedHistory.sender];
+    contactList = [widget.receivedHistory!.sender];
 
-    filesList = widget.receivedHistory.files;
+    filesList = widget.receivedHistory!.files;
 
-    widget.receivedHistory.files.forEach((element) {
-      fileSize += element.size;
+    widget.receivedHistory!.files!.forEach((element) {
+      fileSize += element.size!;
     });
 
     getContactImage();
   }
 
   getContactImage() {
-    AtContact contact;
+    AtContact? contact;
 
     if (contactList[0] != null) {
-      contactName = CommonUtilityFunctions().getContactName(contactList[0]);
-      contact = checkForCachedContactDetail(contactList[0]);
+      contactName = CommonUtilityFunctions().getContactName(contactList[0]!);
+      contact = checkForCachedContactDetail(contactList[0]!);
     }
     if (contact != null) {
       if (mounted) {
         setState(() {
-          firstContactImage = CommonUtilityFunctions().getContactImage(contact);
+          firstContactImage =
+              CommonUtilityFunctions().getContactImage(contact!);
         });
       }
     }
@@ -147,7 +148,7 @@ class _DesktopReceivedFilesListTileState
                         SizedBox(height: 10),
                         contactList.isNotEmpty
                             ? Text(
-                                contactList[0],
+                                contactList[0]!,
                                 style: CustomTextStyles.primaryRegular18,
                               )
                             : SizedBox(),
@@ -204,9 +205,9 @@ class _DesktopReceivedFilesListTileState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      widget.receivedHistory.date != null
+                      widget.receivedHistory!.date != null
                           ? Text(
-                              '${DateFormat("MM-dd-yyyy").format(widget.receivedHistory.date)}',
+                              '${DateFormat("MM-dd-yyyy").format(widget.receivedHistory!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -219,9 +220,9 @@ class _DesktopReceivedFilesListTileState
                         width: 1.toWidth,
                       ),
                       SizedBox(width: 10.toHeight),
-                      widget.receivedHistory.date != null
+                      widget.receivedHistory!.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.receivedHistory.date)}',
+                              '${DateFormat('kk: mm').format(widget.receivedHistory!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -242,7 +243,7 @@ class _DesktopReceivedFilesListTileState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 70.0 * widget.receivedHistory.files.length,
+                      height: 70.0 * widget.receivedHistory!.files!.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
@@ -251,15 +252,15 @@ class _DesktopReceivedFilesListTileState
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList[index].name?.split('.')?.last)) {
-                              videoThumbnailBuilder(filesList[index].path);
+                                filesList![index].name?.split('.')?.last)) {
+                              videoThumbnailBuilder(filesList![index].path!);
                             }
                             return ListTile(
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
                                         Platform.pathSeparator +
-                                        filesList[index].name;
+                                        (filesList![index].name ?? '');
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
@@ -277,21 +278,23 @@ class _DesktopReceivedFilesListTileState
                                     future: isFilePresent(
                                         MixedConstants.SENT_FILE_DIRECTORY +
                                             Platform.pathSeparator +
-                                            filesList[index].name),
+                                            (filesList![index].name ?? '')),
                                     builder: (context, snapshot) {
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
                                           ? thumbnail(
-                                              filesList[index]
+                                              filesList![index]
                                                   .name
                                                   ?.split('.')
                                                   ?.last,
                                               MixedConstants
                                                       .SENT_FILE_DIRECTORY +
                                                   Platform.pathSeparator +
-                                                  filesList[index].name,
-                                              isFilePresent: snapshot.data)
+                                                  (filesList![index].name ??
+                                                      ''),
+                                              isFilePresent:
+                                                  snapshot.data as bool)
                                           : SizedBox();
                                     }),
                               ),
@@ -302,15 +305,15 @@ class _DesktopReceivedFilesListTileState
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          filesList[index].name.toString(),
+                                          filesList![index].name.toString(),
                                           style:
                                               CustomTextStyles.primaryRegular16,
                                         ),
                                       ),
                                       Container(
-                                        child: filesList[index].isUploaded !=
+                                        child: filesList![index].isUploaded !=
                                                     null &&
-                                                filesList[index].isUploaded
+                                                filesList![index].isUploaded!
                                             ? Icon(
                                                 Icons.done,
                                                 color: Color(0xFF08CB21),
@@ -351,12 +354,12 @@ class _DesktopReceivedFilesListTileState
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                          double.parse(filesList[index]
+                                          double.parse(filesList![index]
                                                       .size
                                                       .toString()) <=
                                                   1024
-                                              ? '${filesList[index].size} Kb '
-                                              : '${(filesList[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                              ? '${filesList![index].size} Kb '
+                                              : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                           style: CustomTextStyles
                                               .secondaryRegular14,
                                         ),
@@ -431,14 +434,15 @@ class _DesktopReceivedFilesListTileState
     );
   }
 
-  Widget thumbnail(String extension, String path, {bool isFilePresent = true}) {
+  Widget thumbnail(String? extension, String path,
+      {bool? isFilePresent = true}) {
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
             child: Container(
               height: 50.toHeight,
               width: 50.toWidth,
-              child: isFilePresent
+              child: isFilePresent!
                   ? Image.file(
                       File(path),
                       fit: BoxFit.cover,
@@ -464,7 +468,7 @@ class _DesktopReceivedFilesListTileState
                             fit: BoxFit.cover,
                           )
                         : Image.memory(
-                            videoThumbnail,
+                            videoThumbnail!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, o, ot) =>
                                 CircularProgressIndicator(),

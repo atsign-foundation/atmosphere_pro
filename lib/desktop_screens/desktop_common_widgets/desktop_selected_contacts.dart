@@ -18,12 +18,12 @@ class DesktopSelectedContacts extends StatefulWidget {
 
 class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
   WelcomeScreenProvider welcomeScreenProvider = WelcomeScreenProvider();
-  List<GroupContactsModel> selectedContacts;
+  late List<GroupContactsModel?> selectedContacts;
 
   @override
   void initState() {
     welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
-        NavService.navKey.currentContext,
+        NavService.navKey.currentContext!,
         listen: false);
     selectedContacts = welcomeScreenProvider.selectedContacts;
     super.initState();
@@ -56,8 +56,8 @@ class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
           spacing: 30.0,
           children: List.generate(selectedContacts.length, (index) {
             return customPersonVerticalTile(
-              selectedContacts[index].contact.atSign,
-              selectedContacts[index].contact.atSign,
+              selectedContacts[index]!.contact!.atSign!,
+              selectedContacts[index]!.contact!.atSign,
               () {
                 welcomeScreenProvider.removeContacts(selectedContacts[index]);
                 welcomeScreenProvider.isSelectionItemChanged = true;

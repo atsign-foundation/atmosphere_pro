@@ -11,19 +11,19 @@ class TrustedContactProvider extends BaseModel {
   static TrustedContactProvider _instance = TrustedContactProvider._();
   factory TrustedContactProvider() => _instance;
   String AddTrustedContacts = 'add_trusted_contacts';
-  List<AtContact> trustedContacts = [];
+  List<AtContact?> trustedContacts = [];
   bool trustedContactOperation = false;
-  List<String> trustedNames = [];
+  List<String?> trustedNames = [];
   String GetTrustedContacts = 'get_trusted_contacts';
-  List<AtContact> fetchedTrustedContact = [];
+  List<AtContact?> fetchedTrustedContact = [];
   BackendService backendService = BackendService.getInstance();
 
-  addTrustedContacts(AtContact trustedContact) async {
+  addTrustedContacts(AtContact? trustedContact) async {
     setStatus(AddTrustedContacts, Status.Loading);
 
     try {
       bool isAlreadyPresent = false;
-      for (AtContact contact in trustedContacts) {
+      for (AtContact? contact in trustedContacts) {
         if (contact.toString() == trustedContact.toString()) {
           isAlreadyPresent = true;
           break;
@@ -39,13 +39,13 @@ class TrustedContactProvider extends BaseModel {
     }
   }
 
-  removeTrustedContacts(AtContact trustedContact) async {
+  removeTrustedContacts(AtContact? trustedContact) async {
     setStatus(AddTrustedContacts, Status.Loading);
     trustedContactOperation = true;
 
     try {
-      for (AtContact contact in trustedContacts) {
-        if (contact.atSign == trustedContact.atSign) {
+      for (AtContact? contact in trustedContacts) {
+        if (contact!.atSign == trustedContact!.atSign) {
           int index = trustedContacts.indexOf(contact);
           trustedContacts.removeAt(index);
           break;
@@ -87,10 +87,11 @@ class TrustedContactProvider extends BaseModel {
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
 
-      AtValue keyValue = await backendService.atClientInstance
+      AtValue keyValue = await backendService.atClientInstance!
           .get(trustedContactsKey)
           .catchError((e) {
         print('error in get in getTrustedContact : $e ');
+        return AtValue();
       });
 
       var jsonValue;

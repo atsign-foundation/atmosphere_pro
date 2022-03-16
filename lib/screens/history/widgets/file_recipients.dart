@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FileRecipients extends StatefulWidget {
-  final List<ShareStatus> filesharedWith;
-  FileRecipientSection fileRecipientSection;
+  final List<ShareStatus>? filesharedWith;
+  FileRecipientSection? fileRecipientSection;
   FileRecipients(this.filesharedWith, {this.fileRecipientSection});
 
   @override
@@ -35,7 +35,7 @@ class _FileRecipientsState extends State<FileRecipients> {
       color = ColorConstants.redAlert.withOpacity(0.5);
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       setState(() {
         color = Colors.white;
       });
@@ -48,14 +48,14 @@ class _FileRecipientsState extends State<FileRecipients> {
     downloadedByList = [];
     filedInDeliveringList = [];
 
-    widget.filesharedWith.forEach((element) {
-      if (element.isNotificationSend) {
+    widget.filesharedWith!.forEach((element) {
+      if (element.isNotificationSend!) {
         deliveredToList.add(element);
       } else {
         filedInDeliveringList.add(element);
       }
 
-      if (element.isFileDownloaded) {
+      if (element.isFileDownloaded!) {
         downloadedByList.add(element);
       }
     });

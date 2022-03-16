@@ -8,12 +8,12 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class ErrorDialogWidget extends StatelessWidget {
   final String text;
-  final String buttonText;
-  final Function onButtonPress;
-  final bool includeCancel;
+  final String? buttonText;
+  final Function? onButtonPress;
+  final bool? includeCancel;
 
   ErrorDialogWidget({
-    @required this.text,
+    required this.text,
     this.buttonText,
     this.onButtonPress,
     this.includeCancel,
@@ -59,7 +59,7 @@ class ErrorDialogWidget extends StatelessWidget {
                       buttonText: TextStrings().ok,
                       onPressed: () {
                         Navigator.of(context).pop();
-                        if (onButtonPress != null) onButtonPress();
+                        if (onButtonPress != null) onButtonPress!();
                       },
                     ),
                   ]),
@@ -81,19 +81,20 @@ class ErrorDialog {
   var appLocal;
 
   show(String text,
-      {String buttonText,
-      Function onButtonPressed,
-      @required BuildContext context,
+      {String? buttonText,
+      Function? onButtonPressed,
+      required BuildContext? context,
       bool includeCancel = false}) {
     if (!_showing) {
       _showing = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        NavService.navKey.currentState
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        NavService.navKey.currentState!
             .push(
           CustomPopupRoutes(
               pageBuilder: (_, __, ___) => ErrorDialogWidget(
                     text: text.toString(),
-                    buttonText: (buttonText == null) ? TextStrings().ok : buttonText,
+                    buttonText:
+                        (buttonText == null) ? TextStrings().ok : buttonText,
                     onButtonPress: onButtonPressed,
                     includeCancel: includeCancel,
                   ),
@@ -108,6 +109,6 @@ class ErrorDialog {
   }
 
   hide() {
-    if (_showing) NavService.navKey.currentState.pop();
+    if (_showing) NavService.navKey.currentState!.pop();
   }
 }

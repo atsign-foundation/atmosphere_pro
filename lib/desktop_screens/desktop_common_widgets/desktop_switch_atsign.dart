@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 
 class DesktopSwitchAtsign extends StatefulWidget {
   String atsign;
-  DesktopSwitchAtsign({Key key, @required this.atsign}) : super(key: key);
+  DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
 
   @override
   State<DesktopSwitchAtsign> createState() => _DesktopSwitchAtsignState();
@@ -24,7 +24,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   bool isCurrentAtsign = false;
   var atClientPrefernce;
   AtClient atClient = AtClientManager.getInstance().atClient;
-  String atsignName = '';
+  String? atsignName = '';
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
 
   Widget _contactRow(String _atsign, String _name,
       {bool isCurrentAtsign = false}) {
-    Uint8List image =
+    Uint8List? image =
         CommonUtilityFunctions().getCachedContactImage(widget.atsign);
 
     return Row(
@@ -113,7 +113,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
               alignment: Alignment.centerRight,
               child: GestureDetector(
                   onTap: () {
-                    Navigator.of(NavService.navKey.currentContext)
+                    Navigator.of(NavService.navKey.currentContext!)
                         .pop(); // this is to close the popup menu button
                     CommonUtilityFunctions().deleteAtSign(widget.atsign);
                   },

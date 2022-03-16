@@ -10,10 +10,10 @@ class CustomToast {
   factory CustomToast() => _instance;
 
   show(String text, BuildContext context,
-      {Color bgColor, Color textColor, int duration = 3, int gravity = 0}) {
+      {Color? bgColor, Color? textColor, int duration = 3, int gravity = 0}) {
     // ignore: always_declare_return_types
     show(String text, BuildContext context,
-        {Color bgColor, Color textColor, int duration = 3, int gravity = 0}) {
+        {Color? bgColor, Color? textColor, int duration = 3, int gravity = 0}) {
       if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
         FlutterToastr.show(text, context,
             duration: FlutterToastr.lengthLong,

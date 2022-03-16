@@ -6,8 +6,8 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
 
 class DesktopFileCard extends StatelessWidget {
-  final String title;
-  final String filePath;
+  final String? title;
+  final String? filePath;
   DesktopFileCard({this.title, this.filePath});
 
   @override
@@ -21,19 +21,19 @@ class DesktopFileCard extends StatelessWidget {
                     width: 180,
                     height: 120,
                     child: FutureBuilder(
-                      future: CommonUtilityFunctions().isFilePresent(filePath),
+                      future: CommonUtilityFunctions().isFilePresent(filePath!),
                       builder: (BuildContext cotext, snapshot) {
                         return snapshot.connectionState ==
                                     ConnectionState.done &&
                                 snapshot.data != null
                             ? CommonUtilityFunctions().thumbnail(
-                                filePath
+                                filePath!
                                     .split(Platform.pathSeparator)
                                     .last
                                     .split('.')
                                     .last,
                                 filePath,
-                                isFilePresent: snapshot.data)
+                                isFilePresent: snapshot.data as bool)
                             : SizedBox();
                       },
                     ),
@@ -57,7 +57,7 @@ class DesktopFileCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Text(
-                        title,
+                        title!,
                         style: TextStyle(color: Color(0xFF8A8E95)),
                         textAlign: TextAlign.center,
                         maxLines: 1,
