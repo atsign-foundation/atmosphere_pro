@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
@@ -37,7 +38,7 @@ class SentFilesListTile extends StatefulWidget {
 class _SentFilesListTileState extends State<SentFilesListTile> {
   int fileSize = 0;
   List<FileData> filesList = [];
-  List<String> contactList,displayName;
+  List<String> contactList, displayName, nickName;
   bool isOpen = false;
   bool isDeepOpen = false;
   Uint8List videoThumbnail, firstContactImage;
@@ -49,8 +50,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   void initState() {
     super.initState();
     if (widget.sentHistory.sharedWith != null) {
-      displayName = widget.sentHistory.sharedWith.map((e) => e.atsign.substring(1)).toList();
+      getDisplayDetails();
       contactList = widget.sentHistory.sharedWith.map((e) => e.atsign).toList();
+       displayName = nickName == null? widget.sentHistory.sharedWith
+          .map((e) => e.atsign.substring(1))
+          .toList():nickName;
     } else {
       contactList = [];
     }
@@ -64,6 +68,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
       firstContactImage =
           CommonUtilityFunctions().getCachedContactImage(contactList[0]);
     }
+  }
+
+  getDisplayDetails() async {
+    var displayDetails = await getAtSignDetails(contactList[0]);
+    nickName = displayDetails.tags['nickname'];
   }
 
   @override
@@ -166,7 +175,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                      Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
@@ -174,13 +183,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             ? RichText(
                                 text: TextSpan(children: [
                                   TextSpan(
-                                      text: '${displayName[0]} ',
-                                      style: CustomTextStyles.primaryRegular16,
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          openFileReceiptBottomSheet();
-                                        },
-                                      ),
+                                    text: '${displayName[0]} ',
+                                    style: CustomTextStyles.primaryRegular16,
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        openFileReceiptBottomSheet();
+                                      },
+                                  ),
                                 ]),
                               )
                             : SizedBox(),
@@ -213,10 +222,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     '${contactList.length - 1} others',
                                                 style: CustomTextStyles
                                                     .blueRegular16,
-                                                recognizer: TapGestureRecognizer()
-                                                  ..onTap = () {
-                                                    openFileReceiptBottomSheet();
-                                                  })
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        openFileReceiptBottomSheet();
+                                                      })
                                             : TextSpan()
                                       ]),
                                 ]),
