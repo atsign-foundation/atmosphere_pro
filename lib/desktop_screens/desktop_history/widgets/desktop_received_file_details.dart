@@ -406,6 +406,7 @@ class _DesktopReceivedFileDetailsState
         setState(() {
           isDownloaded = true;
           isOverwrite = false;
+          isFilesAvailableOfline = true;
         });
       }
 
