@@ -37,7 +37,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   bool authenticating = false;
   String? currentatSign;
   AtClient atClient = AtClientManager.getInstance().atClient;
-  List<String> popupMenuList = [];
 
   void _showLoader(bool loaderState, String authenticatingForAtsign) {
     if (mounted) {
@@ -52,7 +51,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
 
   /// returns list of menu items which contains list of onboarded atsigns and [add_new_atsign], [save_backup_key]
   Future<List<String>> getpopupMenuList() async {
-    popupMenuList = [];
+    var popupMenuList = <String>[];
     var atsignList = await BackendService.getInstance().getAtsignList();
     atsignList?.forEach((element) {
       popupMenuList.add(element);

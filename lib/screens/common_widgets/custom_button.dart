@@ -44,7 +44,12 @@ class CustomButton extends StatelessWidget {
             textAlign: TextAlign.center,
             style: (isInverted)
                 ? CustomTextStyles.primaryBold16
-                : CustomTextStyles.whiteBold16,
+                : TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.toFont,
+                    letterSpacing: 0.1,
+                    fontWeight: FontWeight.w700,
+                  ),
           ),
         ),
       ),
