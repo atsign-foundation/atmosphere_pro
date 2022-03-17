@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -38,7 +37,7 @@ class SentFilesListTile extends StatefulWidget {
 class _SentFilesListTileState extends State<SentFilesListTile> {
   int fileSize = 0;
   List<FileData>? filesList = [];
-  late List<String?> contactList, displayName, nickName;
+  List<String?> contactList = [], nickName = [];
   bool isOpen = false;
   bool isDeepOpen = false;
   Uint8List? videoThumbnail, firstContactImage;
@@ -50,10 +49,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   void initState() {
     super.initState();
     if (widget.sentHistory!.sharedWith != null) {
-      contactList =
-          widget.sentHistory!.sharedWith!.map((e) => e.atsign).toList();
-      getDisplayDetails();
-      displayName = nickName;
+      contactList = widget.sentHistory!.sharedWith!.map((e) =>e.atsign).toList();
+      nickName = widget.sentHistory!.sharedWith!.map((e) => e.atsign!.substring(1)).toList();
     } else {
       contactList = [];
     }
@@ -67,13 +64,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
       firstContactImage =
           CommonUtilityFunctions().getCachedContactImage(contactList[0]!);
     }
-  }
-
-  getDisplayDetails() async {
-    var displayDetails = await getAtSignDetails(contactList[0]??'');
-    nickName = displayDetails.tags!['nickname'] ?? widget.sentHistory!.sharedWith!
-              .map((e) => e.atsign!.substring(1))
-              .toList();
   }
 
   @override
@@ -180,21 +170,20 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: displayName.isNotEmpty
-                            ? RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text: '${displayName[0]} ',
-                                    style: CustomTextStyles.primaryRegular16,
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        openFileReceiptBottomSheet();
-                                      },
-                                  ),
-                                ]),
-                              )
-                            : SizedBox(),
-                      ),
+                          child: nickName.isNotEmpty
+                              ? RichText(
+                                  text: TextSpan(children: [
+                                    TextSpan(
+                                      text: '${nickName[0]}',
+                                      style: CustomTextStyles.primaryRegular16,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          openFileReceiptBottomSheet();
+                                        },
+                                    ),
+                                  ]),
+                                )
+                              : SizedBox()),
                     ],
                   ),
                   Row(
@@ -206,7 +195,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 text: TextSpan(children: [
                                   TextSpan(
                                       text: '${contactList[0]} ',
-                                      style: CustomTextStyles.primaryRegular16,
+                                      style: CustomTextStyles.primaryMedium14,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           openFileReceiptBottomSheet();
