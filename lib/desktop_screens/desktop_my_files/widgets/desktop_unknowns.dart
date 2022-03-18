@@ -40,7 +40,7 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                       provider.receivedUnknown.length,
                       (index) {
                         if (provider.receivedUnknown[index].filePath!
-                            .split('/')
+                            .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
                             .contains(provider.fileSearchText)) {
@@ -56,7 +56,7 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                             },
                             child: DesktopFileCard(
                               title: provider.receivedUnknown[index].filePath!
-                                  .split('/')
+                                  .split(Platform.pathSeparator)
                                   .last,
                               filePath:
                                   provider.receivedUnknown[index].filePath,

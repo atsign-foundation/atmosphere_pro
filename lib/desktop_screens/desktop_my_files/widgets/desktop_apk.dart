@@ -40,7 +40,7 @@ class _DesktopAPKState extends State<DesktopAPK> {
                       provider.receivedApk.length,
                       (index) {
                         if (provider.receivedApk[index].filePath!
-                            .split('/')
+                            .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
                             .contains(provider.fileSearchText)) {
@@ -56,7 +56,7 @@ class _DesktopAPKState extends State<DesktopAPK> {
                             },
                             child: DesktopFileCard(
                               title: provider.receivedApk[index].filePath!
-                                  .split('/')
+                                  .split(Platform.pathSeparator)
                                   .last,
                               filePath: provider.receivedApk[index].filePath,
                             ),

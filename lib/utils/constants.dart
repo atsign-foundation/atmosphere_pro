@@ -58,7 +58,11 @@ class MixedConstants {
     if (Platform.isMacOS || Platform.isWindows) {
       _dir = await getApplicationDocumentsDirectory();
     }
-    final path = Directory(_dir.path + '/@mosphere-pro' + '/$_atsign');
+    final path = Directory(_dir.path +
+        Platform.pathSeparator +
+        '@mosphere-pro' +
+        Platform.pathSeparator +
+        (_atsign ?? ''));
 
     /// we create directory if it does not exist
     if (!(await path.exists())) {
@@ -76,11 +80,16 @@ class MixedConstants {
   // static String path = '/Users/apple/Desktop/';
   // static String path = '/Users/apple/temp_atmosphere/';
 
-  static String DESKTOP_SENT_DIR =
-      '$ApplicationDocumentsDirectory' + '/sent-files/';
+  static String DESKTOP_SENT_DIR = '$ApplicationDocumentsDirectory' +
+      Platform.pathSeparator +
+      'sent-files' +
+      Platform.pathSeparator;
 
   static String get SENT_FILE_DIRECTORY =>
-      '$ApplicationDocumentsDirectory' + '/sent-files/';
+      '$ApplicationDocumentsDirectory' +
+      Platform.pathSeparator +
+      'sent-files' +
+      Platform.pathSeparator;
 
   // Onboarding API key - requires different key for production
   static String ONBOARD_API_KEY = '477b-876u-bcez-c42z-6a3d';

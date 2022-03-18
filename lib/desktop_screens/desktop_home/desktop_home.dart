@@ -63,7 +63,8 @@ class _DesktopHomeState extends State<DesktopHome> {
     if (Platform.isMacOS || Platform.isWindows) {
       _dir = await getApplicationDocumentsDirectory();
     }
-    final path = Directory(_dir.path + '/@mosphere-pro');
+    final path =
+        Directory(_dir.path + Platform.pathSeparator + '@mosphere-pro');
 
     if (!(await path.exists())) {
       await path.create();

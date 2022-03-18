@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -111,7 +112,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   isFilesAlreadyDownloaded() async {
     widget.receivedHistory!.files!.forEach((element) async {
       String path = BackendService.getInstance().downloadDirectory!.path +
-          '/${element.name}';
+          Platform.pathSeparator +
+          (element.name ?? '');
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
@@ -386,9 +388,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               key: Key(
                                   widget.receivedHistory!.files![index].name!),
                               onTap: () async {
-                                String path = MixedConstants
-                                        .RECEIVED_FILE_DIRECTORY +
-                                    '/${widget.receivedHistory!.files![index].name}';
+                                String path =
+                                    MixedConstants.RECEIVED_FILE_DIRECTORY +
+                                        Platform.pathSeparator +
+                                        (widget.receivedHistory!.files![index]
+                                                .name ??
+                                            '');
 
                                 File test = File(path);
                                 bool fileExists = await test.exists();
@@ -396,7 +401,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  if (!isDownloadAvailable!) {
+                                  if (!isDownloadAvailable) {
                                     return;
                                   }
                                   await downloadFiles(widget.receivedHistory,
@@ -424,7 +429,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               BackendService.getInstance()
                                                       .downloadDirectory!
                                                       .path +
-                                                  '/${widget.receivedHistory!.files![index].name}',
+                                                  Platform.pathSeparator +
+                                                  (widget.receivedHistory!
+                                                          .files![index].name ??
+                                                      ''),
                                               isFilePresent: snapshot.data)
                                           : SizedBox();
                                     }),
@@ -669,8 +677,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   Future<bool> isFilePresent(String? fileName) async {
-    String filePath =
-        BackendService.getInstance().downloadDirectory!.path + '/${fileName}';
+    String filePath = BackendService.getInstance().downloadDirectory!.path +
+        Platform.pathSeparator +
+        (fileName ?? '');
 
     File file = File(filePath);
     bool fileExists = await file.exists();
@@ -710,6 +719,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               listen: false)
           .sendFileDownloadAcknowledgement(receivedHistory!);
     } else if (result is bool && !result) {
+      SnackbarService().showSnackbar(
+        context,
+        TextStrings().downloadFailed,
+        bgColor: ColorConstants.redAlert,
+      );
       if (mounted) {
         setState(() {
           isDownloaded = false;

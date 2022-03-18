@@ -170,8 +170,9 @@ Widget thumbnail(String extension, String path) {
 }
 
 Future<bool> isFilePresent(String fileName) async {
-  String filePath =
-      BackendService.getInstance().downloadDirectory!.path + '/${fileName}';
+  String filePath = BackendService.getInstance().downloadDirectory!.path +
+      Platform.pathSeparator +
+      fileName;
 
   File file = File(filePath);
   bool fileExists = await file.exists();

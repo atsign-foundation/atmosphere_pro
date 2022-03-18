@@ -113,15 +113,6 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                     : Container(
                         width: 45.toHeight,
                         height: 45.toHeight,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: widget.sentHistory!.sharedWith![0]
-                                      .isNotificationSend!
-                                  ? Color(0xFF08CB21)
-                                  : Color(0xFFF86061),
-                              width: 2),
-                          borderRadius: BorderRadius.circular(45.toHeight * 2),
-                        ),
                         child: isResendingToFirstContact
                             ? TypingIndicator(
                                 showIndicator: true,
@@ -144,59 +135,6 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                             initials: contactList[0],
                                             size: 45,
                                           ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: widget
-                                                .sentHistory!
-                                                .sharedWith![0]
-                                                .isNotificationSend!
-                                            ? Color(0xFF08CB21)
-                                            : Color(0xFFF86061),
-                                        border: Border.all(
-                                            color: widget
-                                                    .sentHistory!
-                                                    .sharedWith![0]
-                                                    .isNotificationSend!
-                                                ? Color(0xFF08CB21)
-                                                : Color(0xFFF86061),
-                                            width: 5),
-                                        borderRadius:
-                                            BorderRadius.circular(35.toHeight),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          if (widget.sentHistory!.sharedWith![0]
-                                              .isNotificationSend!) {
-                                            return;
-                                          }
-
-                                          setState(() {
-                                            isResendingToFirstContact = true;
-                                          });
-                                          await Provider.of<
-                                                      FileTransferProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .reSendFileNotification(
-                                                  widget.sentHistory!,
-                                                  widget.sentHistory!
-                                                      .sharedWith![0].atsign!);
-
-                                          isResendingToFirstContact = false;
-                                        },
-                                        child: Icon(
-                                          widget.sentHistory!.sharedWith![0]
-                                                  .isNotificationSend!
-                                              ? Icons.done
-                                              : Icons.refresh,
-                                          color: Colors.white,
-                                          size: 10.toFont,
-                                        ),
-                                      ),
-                                    ),
                                   ),
                                 ],
                               ),
@@ -329,14 +267,15 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList![index].name?.split('.')?.last)) {
+                                filesList![index].name?.split('.').last)) {
                               videoThumbnailBuilder(filesList![index].path!);
                             }
                             return ListTile(
                               onTap: () async {
                                 String _path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
-                                        '/${filesList![index].name}';
+                                        Platform.pathSeparator +
+                                        (filesList![index].name ?? '');
                                 File test = File(_path);
                                 bool fileExists = await test.exists();
                                 print(
@@ -353,7 +292,8 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                   child: FutureBuilder(
                                       future: isFilePresent(
                                           MixedConstants.SENT_FILE_DIRECTORY +
-                                              '/${filesList![index].name}'),
+                                              Platform.pathSeparator +
+                                              (filesList![index].name ?? '')),
                                       builder: (context, snapshot) {
                                         return snapshot.connectionState ==
                                                     ConnectionState.done &&
@@ -362,10 +302,12 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                 filesList![index]
                                                     .name
                                                     ?.split('.')
-                                                    ?.last,
+                                                    .last,
                                                 MixedConstants
                                                         .SENT_FILE_DIRECTORY +
-                                                    '/${filesList![index].name}',
+                                                    Platform.pathSeparator +
+                                                    (filesList![index].name ??
+                                                        ''),
                                                 isFilePresent:
                                                     snapshot.data as bool)
                                             : SizedBox();
