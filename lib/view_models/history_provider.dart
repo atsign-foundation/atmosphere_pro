@@ -22,6 +22,8 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
@@ -566,8 +568,11 @@ class HistoryProvider extends BaseModel {
                   file.name;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-            filePath =
-                '${MixedConstants.RECEIVED_FILE_DIRECTORY}/${fileData.sender}/${file.name}';
+            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                Platform.pathSeparator +
+                fileData.sender +
+                Platform.pathSeparator +
+                file.name;
           }
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
@@ -649,11 +654,23 @@ class HistoryProvider extends BaseModel {
 
       await Future.forEach(lastTenFilesData, (dynamic fileData) async {
         await Future.forEach(fileData.files, (FileData file) async {
+          String filePath;
+
+          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                Platform.pathSeparator +
+                fileData.sender +
+                Platform.pathSeparator +
+                (file.name ?? '');
+          } else {
+            filePath = BackendService.getInstance().downloadDirectory!.path +
+                Platform.pathSeparator +
+                (file.name ?? '');
+          }
+
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
-            filePath: BackendService.getInstance().downloadDirectory!.path +
-                Platform.pathSeparator +
-                (file.name ?? ''),
+            filePath: filePath,
             size: double.parse(file.size.toString()),
             date: fileData.date.toLocal().toString(),
             type: file.name!.split('.').last,
@@ -674,8 +691,6 @@ class HistoryProvider extends BaseModel {
     } catch (e) {
       setStatus(RECENT_HISTORY, Status.Error);
     }
-
-    print('recentFile data : ${recentFile.length}');
   }
 
   populateTabs() {
@@ -726,9 +741,6 @@ class HistoryProvider extends BaseModel {
           tabNames.add('Unknowns');
         }
       }
-
-      print('tabs populated: ${tabs}');
-
       setStatus(POPULATE_TABS, Status.Done);
     } catch (e) {
       setError(POPULATE_TABS, e.toString());
@@ -884,8 +896,9 @@ class HistoryProvider extends BaseModel {
 
       /// only do for desktop
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        _downloadPath =
-            '${MixedConstants.ApplicationDocumentsDirectory}/${sharedBy}';
+        _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+            Platform.pathSeparator +
+            sharedBy;
         BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
       }
 
@@ -897,12 +910,17 @@ class HistoryProvider extends BaseModel {
               downloadPath: downloadPath ?? _downloadPath,
             );
       } catch (e) {
-        print('Error in downloading $e');
+        SnackbarService().showSnackbar(
+          NavService.navKey.currentContext!,
+          e.toString(),
+          bgColor: ColorConstants.redAlert,
+        );
+        receivedHistoryLogs[index].isDownloading = false;
+        return false;
       }
 
       await sortFiles(receivedHistoryLogs);
       populateTabs();
-      print('audios: ${receivedAudio.length}');
       receivedHistoryLogs[index].isDownloading = false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
@@ -1011,14 +1029,17 @@ class HistoryProvider extends BaseModel {
     var encryptedFileList = Directory(fileDownloadReponse.filePath!).listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
-        var decryptedFile = EncryptionService().decryptFile(
-            File(encryptedFile.path).readAsBytesSync(),
-            fileTransferObject.fileEncryptionKey);
-        var downloadedFile = File(downloadPath +
+        var decryptedFile = await EncryptionService().decryptFileInChunks(
+            File(encryptedFile.path),
+            fileTransferObject.fileEncryptionKey,
+            4096);
+        decryptedFile.copySync(downloadPath +
             Platform.pathSeparator +
             encryptedFile.path.split(Platform.pathSeparator).last);
-        downloadedFile.writeAsBytesSync(decryptedFile);
-        downloadedFiles.add(downloadedFile);
+        downloadedFiles.add(File(downloadPath +
+            Platform.pathSeparator +
+            encryptedFile.path.split(Platform.pathSeparator).last));
+        decryptedFile.deleteSync();
       }
       // deleting temp directory
       Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);

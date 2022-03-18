@@ -62,7 +62,7 @@ class MixedConstants {
         Platform.pathSeparator +
         '@mosphere-pro' +
         Platform.pathSeparator +
-        _atsign);
+        (_atsign ?? ''));
 
     /// we create directory if it does not exist
     if (!(await path.exists())) {

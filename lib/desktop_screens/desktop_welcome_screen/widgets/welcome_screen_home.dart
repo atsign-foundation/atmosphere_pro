@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -33,7 +34,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   late FileTransferProvider _filePickerProvider;
   late WelcomeScreenProvider _welcomeScreenProvider;
   List _selectedList = [];
-  bool isFileSending = false;
+  bool isFileSending = false,
+      isSentFileEntrySaved = true,
+      isFileShareFailed = false;
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         listen: false);
     isFileSending = _filePickerProvider.isFileSending;
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
     });
     super.initState();
@@ -139,53 +142,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           ),
                                         )
                                       : CommonButton(
-                                          _filePickerProvider.status[
-                                                      _filePickerProvider
-                                                          .SEND_FILES] ==
-                                                  Status.Error
-                                              ? 'Resend'
-                                              : 'Send',
+                                          isFileShareFailed ? 'Resend' : 'Send',
                                           () async {
                                             if (isFileSending) return;
 
-                                            print('sending file');
+                                            if (isFileShareFailed) {
+                                              reAttemptSendingFiles();
+                                              return;
+                                            }
 
-                                            setState(() {
-                                              _filePickerProvider
-                                                  .updateFileSendingStatus(
-                                                      true);
-                                              isFileSending = true;
-                                            });
-
-                                            await _filePickerProvider.sendFileWithFileBin(
-                                                _filePickerProvider
-                                                    .selectedFiles,
-                                                _welcomeScreenProvider
-                                                    .selectedContacts);
-
-                                            setState(() {
-                                              _filePickerProvider
-                                                  .updateFileSendingStatus(
-                                                      false);
-                                              isFileSending = false;
-                                              if (_filePickerProvider.status[
-                                                      _filePickerProvider
-                                                          .SEND_FILES] ==
-                                                  Status.Done) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            'File(s) sent successfully.')));
-                                                _welcomeScreenProvider
-                                                        .isSelectionItemChanged =
-                                                    false;
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            'Something went wrong.')));
-                                              }
-                                            });
+                                            sendFileWithFileBin();
                                           },
                                           color: isFileSending
                                               ? ColorConstants.greyText
@@ -357,6 +323,104 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         _welcomeScreenProvider.selectedContacts = [];
         _currentScreen = CurrentScreen.PlaceolderImage;
         _welcomeScreenProvider.isSelectionItemChanged = false;
+      });
+    }
+  }
+
+  reAttemptSendingFiles() async {
+    if (mounted) {
+      setState(() {
+        isFileShareFailed = false;
+        isFileSending = true;
+        _filePickerProvider.updateFileSendingStatus(true);
+      });
+    }
+
+    // when entry is not added in sent history.
+    if (!isSentFileEntrySaved) {
+      sendFileWithFileBin();
+      return;
+    }
+
+    // when entry is added in sent history but notifications didn't go through.
+    var res = await _filePickerProvider.reAttemptInSendingFiles();
+
+    if (!res) {
+      SnackbarService().showSnackbar(
+        context,
+        TextStrings().oopsSomethingWentWrong,
+        bgColor: ColorConstants.redAlert,
+      );
+      if (mounted) {
+        setState(() {
+          isFileShareFailed = true;
+        });
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        isFileSending = false;
+        _filePickerProvider.updateFileSendingStatus(false);
+      });
+    }
+  }
+
+  sendFileWithFileBin() async {
+    _filePickerProvider.updateFileSendingStatus(true);
+    if (mounted) {
+      setState(() {
+        // assuming file share record will be saved in sent history.
+        isSentFileEntrySaved = true;
+        isFileShareFailed = false;
+        isFileSending = true;
+      });
+    }
+    _welcomeScreenProvider.resetSelectedContactsStatus();
+    _filePickerProvider.resetSelectedFilesStatus();
+
+    var res = await _filePickerProvider.sendFileWithFileBin(
+        _filePickerProvider.selectedFiles,
+        _welcomeScreenProvider.selectedContacts);
+
+    if (mounted && res is bool) {
+      setState(() {
+        isFileShareFailed = !res;
+      });
+
+      if (!isFileShareFailed) {
+        SnackbarService().showSnackbar(
+          context,
+          TextStrings().fileSentSuccessfully,
+          bgColor: Color(0xFF5FAA45),
+        );
+        _welcomeScreenProvider.isSelectionItemChanged = false;
+      } else {
+        SnackbarService().showSnackbar(
+          context,
+          TextStrings().oopsSomethingWentWrong,
+          bgColor: ColorConstants.redAlert,
+        );
+      }
+    } else if (res == null) {
+      SnackbarService().showSnackbar(
+        context,
+        TextStrings().oopsSomethingWentWrong,
+        bgColor: ColorConstants.redAlert,
+      );
+
+      if (mounted) {
+        setState(() {
+          isFileShareFailed = true;
+          isSentFileEntrySaved = false;
+        });
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _filePickerProvider.updateFileSendingStatus(false);
+        isFileSending = false;
       });
     }
   }

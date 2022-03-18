@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -400,7 +401,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
-                                  if (!isDownloadAvailable!) {
+                                  if (!isDownloadAvailable) {
                                     return;
                                   }
                                   await downloadFiles(widget.receivedHistory,
@@ -678,10 +679,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
   }
 
-  Future<bool> isFilePresent(String fileName) async {
+  Future<bool> isFilePresent(String? fileName) async {
     String filePath = BackendService.getInstance().downloadDirectory!.path +
         Platform.pathSeparator +
-        fileName;
+        (fileName ?? '');
 
     File file = File(filePath);
     bool fileExists = await file.exists();
@@ -721,6 +722,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               listen: false)
           .sendFileDownloadAcknowledgement(receivedHistory!);
     } else if (result is bool && !result) {
+      SnackbarService().showSnackbar(
+        context,
+        TextStrings().downloadFailed,
+        bgColor: ColorConstants.redAlert,
+      );
       if (mounted) {
         setState(() {
           isDownloaded = false;

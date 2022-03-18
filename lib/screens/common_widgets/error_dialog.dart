@@ -87,7 +87,7 @@ class ErrorDialog {
       bool includeCancel = false}) {
     if (!_showing) {
       _showing = true;
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         NavService.navKey.currentState!
             .push(
           CustomPopupRoutes(

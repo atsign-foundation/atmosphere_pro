@@ -35,7 +35,7 @@ class _FileRecipientsState extends State<FileRecipients> {
       color = ColorConstants.redAlert.withOpacity(0.5);
     }
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {
         color = Colors.white;
       });

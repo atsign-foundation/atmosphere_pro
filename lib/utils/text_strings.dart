@@ -9,7 +9,7 @@ class TextStrings {
   // String homeWeWillSetupAccount = 'We will set up your account right away.';
   String homeDescriptionMain = '100% encrypted file transfer';
   String homeDescriptionSub = 'From anywhere to everywhere!';
-  String appName = '@mosphere pro';
+  String appName = '@mospherepro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
@@ -142,6 +142,7 @@ class TextStrings {
   // my groups
   String groups = 'Groups';
   String downloadAllFiles = 'Download all files';
+  String downloadFailed = 'Download failed, please try again.';
   String noGroups = 'No Groups';
   String newGroup = 'New Group';
   String addGroups = 'Would you like to create a group';
@@ -196,6 +197,7 @@ class TextStrings {
   String fileReceived = 'File received';
   String fileSent = 'File sent';
   String expired = 'Expired';
+  String fileSentSuccessfully = 'File(s) sent successfully';
 
   String selectFile = 'Select a File';
 

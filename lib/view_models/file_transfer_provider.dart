@@ -131,7 +131,7 @@ class FileTransferProvider extends BaseModel {
     });
 
     // if ((totalSize / 1048576) >= 50) {
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
     //     _showFileSizeLimit();
     //   });
     // }
@@ -326,7 +326,8 @@ class FileTransferProvider extends BaseModel {
 
       //  resending notifications
       for (var element in _fileHistory.sharedWith!) {
-        if (element.isNotificationSend != null && !element.isNotificationSend!) {
+        if (element.isNotificationSend != null &&
+            !element.isNotificationSend!) {
           await reSendFileNotification(_fileHistory, element.atsign!);
         }
       }
@@ -334,7 +335,8 @@ class FileTransferProvider extends BaseModel {
       // checking if any notification didn't go through
       _fileHistory = _historyProvider.sentHistory[0];
       for (var element in _fileHistory.sharedWith!) {
-        if (element.isNotificationSend != null && !element.isNotificationSend!) {
+        if (element.isNotificationSend != null &&
+            !element.isNotificationSend!) {
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
           return false;
         }
@@ -366,7 +368,7 @@ class FileTransferProvider extends BaseModel {
 
       bool fileExists = await file.exists();
       if (!fileExists) {
-        throw ('file not found');
+        throw Exception('file not found');
       }
 
       var uploadStatus = await _atclient
