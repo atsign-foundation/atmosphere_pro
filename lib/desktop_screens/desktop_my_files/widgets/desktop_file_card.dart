@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -25,7 +27,11 @@ class DesktopFileCard extends StatelessWidget {
                                     ConnectionState.done &&
                                 snapshot.data != null
                             ? CommonUtilityFunctions().thumbnail(
-                                filePath!.split('/').last.split('.').last,
+                                filePath!
+                                    .split(Platform.pathSeparator)
+                                    .last
+                                    .split('.')
+                                    .last,
                                 filePath,
                                 isFilePresent: snapshot.data as bool)
                             : SizedBox();

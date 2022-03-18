@@ -16,7 +16,7 @@ class DesktopDownloadAllFiles extends StatefulWidget {
 }
 
 class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
-  String downloadFolder = '/';
+  String downloadFolder = Platform.pathSeparator;
   bool isDownloading = false, isDownloadComplete = false;
   double downloadProgress = 0;
 
@@ -103,7 +103,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
   }
 
   _setDownloadFolder() async {
-    String path = (await getSavePath()) ?? '/';
+    String path = (await getSavePath()) ?? Platform.pathSeparator;
     if (mounted) {
       setState(() {
         downloadFolder = path;
@@ -114,7 +114,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
   }
 
   _fetchFiles() async {
-    if (downloadFolder == '/') {
+    if (downloadFolder == Platform.pathSeparator) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Select folder to download')),
       );
@@ -139,7 +139,8 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     List<FileTransfer> fileTransfer = getValidFileTransfers();
 
     for (int i = 0; i < fileTransfer.length; i++) {
-      var atsignDownloadPath = downloadFolder + '/' + fileTransfer[i].sender!;
+      var atsignDownloadPath =
+          downloadFolder + Platform.pathSeparator + fileTransfer[i].sender!;
 
       await checkIfFolderExists(atsignDownloadPath);
 

@@ -40,7 +40,7 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                       provider.receivedDocument.length,
                       (index) {
                         if (provider.receivedDocument[index].filePath!
-                            .split('/')
+                            .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
                             .contains(provider.fileSearchText)) {
@@ -56,7 +56,7 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                             },
                             child: DesktopFileCard(
                               title: provider.receivedDocument[index].filePath!
-                                  .split('/')
+                                  .split(Platform.pathSeparator)
                                   .last,
                               filePath:
                                   provider.receivedDocument[index].filePath,

@@ -56,9 +56,9 @@ class _DesktopReceivedFileDetailsState
 
   String getDownloadDirectory(String name) {
     return MixedConstants.RECEIVED_FILE_DIRECTORY +
-        '/' +
+        Platform.pathSeparator +
         widget.fileTransfer!.sender! +
-        '/' +
+        Platform.pathSeparator +
         name;
   }
 
@@ -73,8 +73,10 @@ class _DesktopReceivedFileDetailsState
   isFilesAlreadyDownloaded() async {
     widget.fileTransfer!.files!.forEach((element) async {
       String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
-          '/${widget.fileTransfer!.sender}' +
-          '/${element.name}';
+          Platform.pathSeparator +
+          (widget.fileTransfer!.sender ?? '') +
+          Platform.pathSeparator +
+          (element.name ?? '');
       File test = File(path);
       bool fileExists = await test.exists();
       if (fileExists == false) {
@@ -124,7 +126,10 @@ class _DesktopReceivedFileDetailsState
                     InkWell(
                       onTap: () async {
                         var _downloadPath =
-                            '${MixedConstants.ApplicationDocumentsDirectory}/${widget.fileTransfer!.sender}';
+                            (MixedConstants.ApplicationDocumentsDirectory ??
+                                    '') +
+                                Platform.pathSeparator +
+                                (widget.fileTransfer!.sender ?? '');
                         BackendService.getInstance()
                             .doesDirectoryExist(path: _downloadPath);
 

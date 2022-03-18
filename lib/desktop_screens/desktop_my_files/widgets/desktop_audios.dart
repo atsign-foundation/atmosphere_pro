@@ -40,7 +40,7 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                       provider.receivedAudio.length,
                       (index) {
                         if (provider.receivedAudio[index].filePath!
-                            .split('/')
+                            .split(Platform.pathSeparator)
                             .last
                             .toLowerCase()
                             .contains(provider.fileSearchText)) {
@@ -56,7 +56,7 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                             },
                             child: DesktopFileCard(
                               title: provider.receivedAudio[index].filePath!
-                                  .split('/')
+                                  .split(Platform.pathSeparator)
                                   .last,
                               filePath: provider.receivedAudio[index].filePath,
                             ),

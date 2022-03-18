@@ -564,11 +564,15 @@ class HistoryProvider extends BaseModel {
           String? fileExtension = file.name.split('.').last;
           String filePath =
               BackendService.getInstance().downloadDirectory!.path +
-                  '/${file.name}';
+                  Platform.pathSeparator +
+                  file.name;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-            filePath =
-                '${MixedConstants.RECEIVED_FILE_DIRECTORY}/${fileData.sender}/${file.name}';
+            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                Platform.pathSeparator +
+                fileData.sender +
+                Platform.pathSeparator +
+                file.name;
           }
           FilesDetail fileDetail = FilesDetail(
             fileName: file.name,
@@ -653,11 +657,15 @@ class HistoryProvider extends BaseModel {
           String filePath;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-            filePath =
-                '${MixedConstants.RECEIVED_FILE_DIRECTORY}/${fileData.sender}/${file.name}';
+            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                Platform.pathSeparator +
+                fileData.sender +
+                Platform.pathSeparator +
+                (file.name ?? '');
           } else {
             filePath = BackendService.getInstance().downloadDirectory!.path +
-                '/${file.name}';
+                Platform.pathSeparator +
+                (file.name ?? '');
           }
 
           FilesDetail fileDetail = FilesDetail(
@@ -888,8 +896,9 @@ class HistoryProvider extends BaseModel {
 
       /// only do for desktop
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        _downloadPath =
-            '${MixedConstants.ApplicationDocumentsDirectory}/${sharedBy}';
+        _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+            Platform.pathSeparator +
+            sharedBy;
         BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
       }
 
@@ -1024,10 +1033,12 @@ class HistoryProvider extends BaseModel {
             File(encryptedFile.path),
             fileTransferObject.fileEncryptionKey,
             4096);
-        decryptedFile
-            .copySync(downloadPath + '/' + encryptedFile.path.split('/').last);
-        downloadedFiles
-            .add(File(downloadPath + '/' + encryptedFile.path.split('/').last));
+        decryptedFile.copySync(downloadPath +
+            Platform.pathSeparator +
+            encryptedFile.path.split(Platform.pathSeparator).last);
+        downloadedFiles.add(File(downloadPath +
+            Platform.pathSeparator +
+            encryptedFile.path.split(Platform.pathSeparator).last));
         decryptedFile.deleteSync();
       }
       // deleting temp directory
@@ -1051,7 +1062,8 @@ class HistoryProvider extends BaseModel {
       }
       var tempDirectory =
           await Directory(downloadPath).createTemp('encrypted-files');
-      var encryptedFile = File(tempDirectory.path + '/' + fileName);
+      var encryptedFile =
+          File(tempDirectory.path + Platform.pathSeparator + fileName);
       encryptedFile.writeAsBytesSync(response.bodyBytes);
 
       return FileDownloadResponse(filePath: tempDirectory.path);

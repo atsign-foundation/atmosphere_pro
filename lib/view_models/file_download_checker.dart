@@ -67,11 +67,14 @@ class FileDownloadChecker extends BaseModel {
       String path;
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         path = MixedConstants.RECEIVED_FILE_DIRECTORY +
-            '/${sender}' +
-            '/${element.name}';
+            Platform.pathSeparator +
+            (sender ?? '') +
+            Platform.pathSeparator +
+            (element.name ?? '');
       } else {
         path = BackendService.getInstance().downloadDirectory!.path +
-            '/${element.name}';
+            Platform.pathSeparator +
+            (element.name ?? '');
       }
       File test = File(path);
       bool fileExists = await test.exists();
