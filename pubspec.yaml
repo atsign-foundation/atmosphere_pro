@@ -19,8 +19,11 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # Mobile version
 version: 1.0.3+26
 
-# Desktop version
+# Desktop version macos
 # version: 1.0.1+17
+
+# Desktop version windows
+# version: 1.0.1+1
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -159,3 +162,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+msix_config:
+  display_name: "@mospherePro"
+  publisher_display_name: "The @ Company"
+  identity_name: TheCompany.mospherePro
+  publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
+  msix_version: 1.0.1.0
+  logo_path: app-icon.png
+  capabilities: internetClient
+  store: true
