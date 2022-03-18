@@ -17,10 +17,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.3+25
+version: 1.0.3+26
 
 # Desktop version
-# version: 1.0.1+16
+# version: 1.0.1+17
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -84,35 +84,30 @@ dependency_overrides:
       ref: trunk
       path: at_client
   at_onboarding_flutter:
-    path: /Users/sarikagautam/Sites/packages/at_widgets/at_onboarding_flutter
-    # git:
-    #   url: git@github.com:atsign-foundation/at_widgets.git
-    #   ref: trunk
-    #   path: at_onboarding_flutter
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_onboarding_flutter
   at_backupkey_flutter:
-    path: /Users/sarikagautam/Sites/packages/at_widgets/at_backupkey_flutter
-    # git:
-    #   url: git@github.com:atsign-foundation/at_widgets.git
-    #   ref: trunk
-    #   path: at_backupkey_flutter
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_backupkey_flutter
   at_contacts_flutter:
-    # path: /Users/sarikagautam/Sites/packages/at_widgets
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: welcome_message
       path: at_contacts_flutter
   at_contacts_group_flutter:
-    path: /Users/sarikagautam/Sites/packages/at_widgets/at_contacts_group_flutter
-    # git:
-    #   url: git@github.com:atsign-foundation/at_widgets.git
-    #   ref: trunk
-    #   path: at_contacts_group_flutter
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_contacts_group_flutter
   at_sync_ui_flutter:
-    path: /Users/sarikagautam/Sites/packages/at_widgets/at_sync_ui_flutter
-    # git:
-    #   url: git@github.com:atsign-foundation/at_widgets.git
-    #   ref: trunk
-    #   path: at_sync_ui_flutter
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_sync_ui_flutter
 
 dev_dependencies:
   flutter_test:
