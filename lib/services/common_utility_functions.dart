@@ -246,6 +246,14 @@ class CommonUtilityFunctions {
                   ? Image.file(
                       File(path!),
                       fit: BoxFit.cover,
+                      errorBuilder: (BuildContext _context, _, __) {
+                        return Container(
+                          child: Icon(
+                            Icons.image,
+                            size: 30.toFont,
+                          ),
+                        );
+                      },
                     )
                   : Icon(
                       Icons.image,
@@ -270,8 +278,14 @@ class CommonUtilityFunctions {
                         : Image.memory(
                             snapshot.data as Uint8List,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, o, ot) =>
-                                CircularProgressIndicator(),
+                            errorBuilder: (BuildContext _context, _, __) {
+                              return Container(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 30.toFont,
+                                ),
+                              );
+                            },
                           ),
                   ),
                 ),

@@ -476,6 +476,14 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                   ? Image.file(
                       File(path),
                       fit: BoxFit.cover,
+                      errorBuilder: (BuildContext _context, _, __) {
+                        return Container(
+                          child: Icon(
+                            Icons.image,
+                            size: 30.toFont,
+                          ),
+                        );
+                      },
                     )
                   : Icon(
                       Icons.image,
@@ -500,8 +508,14 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                         : Image.memory(
                             videoThumbnail!,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, o, ot) =>
-                                CircularProgressIndicator(),
+                            errorBuilder: (BuildContext _context, _, __) {
+                              return Container(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 30.toFont,
+                                ),
+                              );
+                            },
                           ),
                   ),
                 ),

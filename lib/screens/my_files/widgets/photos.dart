@@ -26,22 +26,15 @@ class _PhotosState extends State<Photos> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 100.toHeight),
-      child: ProviderHandler<HistoryProvider>(
-        functionName: 'sort_files',
-        showError: false,
-        load: (provider) {
-          provider.getReceivedHistory();
-        },
-        successBuilder: (provider) {
-          return Container(
-            margin: EdgeInsets.symmetric(
-                vertical: 10.toHeight, horizontal: 10.toWidth),
-            child: renderItems(provider),
-          );
-        },
-      ),
+    return ProviderHandler<HistoryProvider>(
+      functionName: 'sort_files',
+      showError: false,
+      load: (provider) {
+        provider.getReceivedHistory();
+      },
+      successBuilder: (provider) {
+        return renderItems(provider);
+      },
     );
   }
 
@@ -67,6 +60,14 @@ class _PhotosState extends State<Photos> {
                 child: Image.file(
                   File(provider.receivedPhotos[index].filePath!),
                   fit: BoxFit.cover,
+                  errorBuilder: (BuildContext _context, _, __) {
+                    return Container(
+                      child: Icon(
+                        Icons.image,
+                        size: 30.toFont,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

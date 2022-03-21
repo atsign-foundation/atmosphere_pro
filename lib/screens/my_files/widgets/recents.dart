@@ -104,6 +104,14 @@ Widget thumbnail(String extension, String path) {
               child: Image.file(
                 File(path),
                 fit: BoxFit.cover,
+                errorBuilder: (BuildContext _context, _, __) {
+                  return Container(
+                    child: Icon(
+                      Icons.image,
+                      size: 30.toFont,
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -122,17 +130,25 @@ Widget thumbnail(String extension, String path) {
                     padding: EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
-                    child: (snapshot.data == null)
+                    child: (snapshot.data == null || videoThumbnail == null)
                         ? Image.asset(
                             ImageConstants.unknownLogo,
                             fit: BoxFit.cover,
                           )
-                        : Image.memory(
-                            videoThumbnail!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, o, ot) =>
-                                CircularProgressIndicator(),
-                          ),
+                        : (videoThumbnail != null)
+                            ? Image.memory(
+                                videoThumbnail!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext _context, _, __) {
+                                  return Container(
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 30.toFont,
+                                    ),
+                                  );
+                                },
+                              )
+                            : SizedBox(),
                   ),
                 ),
               ),

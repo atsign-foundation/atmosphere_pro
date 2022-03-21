@@ -30,7 +30,18 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                 ? CircleAvatar(
                     radius: (size / 2).toFont,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: Image.memory(image!).image)
+                    backgroundImage: Image.memory(
+                      image!,
+                      errorBuilder: (BuildContext _context, _, __) {
+                        return Container(
+                          child: Icon(
+                            Icons.image,
+                            size: 30.toFont,
+                          ),
+                        );
+                      },
+                    ).image,
+                  )
                 : ContactInitial(
                     initials: title ?? ' ',
                     size: 30,

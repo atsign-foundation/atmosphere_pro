@@ -41,6 +41,14 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                         width: 50.toWidth,
                         height: 50.toWidth,
                         fit: BoxFit.fill,
+                        errorBuilder: (BuildContext _context, _, __) {
+                          return Container(
+                            child: Icon(
+                              Icons.image,
+                              size: 30.toFont,
+                            ),
+                          );
+                        },
                       ),
                     )
                   : ContactInitial(
