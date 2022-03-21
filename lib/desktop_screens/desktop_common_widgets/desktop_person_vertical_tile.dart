@@ -64,6 +64,14 @@ class _DesktopCustomPersonVerticalTileState
                               width: 50.toFont,
                               height: 50.toFont,
                               fit: BoxFit.fill,
+                              errorBuilder: (BuildContext _context, _, __) {
+                                return Container(
+                                  child: Icon(
+                                    Icons.image,
+                                    size: 30.toFont,
+                                  ),
+                                );
+                              },
                             ),
                           )
                         : ContactInitial(

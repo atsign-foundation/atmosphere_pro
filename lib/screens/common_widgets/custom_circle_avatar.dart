@@ -29,8 +29,19 @@ class CustomCircleAvatar extends StatelessWidget {
       child: CircleAvatar(
         radius: (size - 5).toFont,
         backgroundColor: Colors.transparent,
-        backgroundImage:
-            nonAsset ? Image.memory(byteImage!).image : AssetImage(image!),
+        backgroundImage: nonAsset
+            ? Image.memory(
+                byteImage!,
+                errorBuilder: (BuildContext _context, _, __) {
+                  return Container(
+                    child: Icon(
+                      Icons.image,
+                      size: 30.toFont,
+                    ),
+                  );
+                },
+              ).image
+            : AssetImage(image!),
       ),
     );
   }
