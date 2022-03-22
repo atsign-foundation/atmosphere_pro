@@ -104,7 +104,7 @@ dependency_overrides:
   at_contacts_group_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
+      ref: fix/group-selection-bug
       path: at_contacts_group_flutter
   at_sync_ui_flutter:
     git:
