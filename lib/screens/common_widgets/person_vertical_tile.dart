@@ -28,8 +28,18 @@ class CustomPersonVerticalTile extends StatefulWidget {
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   Uint8List? image;
   String? contactName;
+  late FileHistory selectedFileHistory;
+  bool isAnyFileUploaded = false;
+
   @override
   void initState() {
+    selectedFileHistory =
+        Provider.of<FileTransferProvider>(context, listen: false)
+            .getSelectedFileHistory!;
+
+    isAnyFileUploaded = selectedFileHistory.fileTransferObject!.fileStatus
+        .any((element) => element.isUploaded == true);
+
     super.initState();
     getAtsignImage();
   }
@@ -89,7 +99,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             initials: widget.shareStatus.atsign ?? ' ',
                           ),
                   ),
-                  widget.isFailedAtsignList
+                  (widget.isFailedAtsignList && isAnyFileUploaded)
                       ? Positioned(
                           child: Container(
                           height: 50.toHeight,
@@ -100,14 +110,6 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                           ),
                           child: InkWell(
                             onTap: () async {
-                              FileHistory selectedFileHistory =
-                                  Provider.of<FileTransferProvider>(context,
-                                          listen: false)
-                                      .getSelectedFileHistory!;
-
-                              print(
-                                  'selectedFileHistory : ${selectedFileHistory.fileTransferObject!.transferId}, atsign: ${widget.shareStatus.atsign}');
-
                               await Provider.of<FileTransferProvider>(context,
                                       listen: false)
                                   .reSendFileNotification(selectedFileHistory,

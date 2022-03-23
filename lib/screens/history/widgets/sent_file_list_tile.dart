@@ -402,10 +402,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 widget
                                                     .sentHistory!.isOperating!)
                                             ? typingIndicator()
-                                            : filesList![index].isUploaded !=
+                                            : (filesList![index].isUploaded !=
                                                         null &&
                                                     filesList![index]
-                                                        .isUploaded!
+                                                        .isUploaded!)
                                                 ? getFileShareStatus(
                                                     filesList![index], index)
                                                 : (filesList![index]
@@ -709,10 +709,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   }
 
   Widget typingIndicator() {
-    return TypingIndicator(
-      showIndicator: true,
-      flashingCircleBrightColor: ColorConstants.dullText,
-      flashingCircleDarkColor: ColorConstants.fadedText,
+    return SizedBox(
+      height: 10,
+      child: TypingIndicator(
+        showIndicator: true,
+        flashingCircleBrightColor: ColorConstants.dullText,
+        flashingCircleDarkColor: ColorConstants.fadedText,
+      ),
     );
   }
 }
