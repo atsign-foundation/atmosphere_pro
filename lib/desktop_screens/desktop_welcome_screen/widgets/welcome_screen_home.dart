@@ -187,7 +187,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         return GroupContactView(
             asSelectionScreen: true,
             singleSelection: false,
-            showGroups: false,
+            showGroups: true,
             showContacts: true,
             isDesktop: true,
             contactSelectedHistory: _welcomeScreenProvider.selectedContacts,
