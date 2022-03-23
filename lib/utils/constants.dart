@@ -17,7 +17,7 @@ class MixedConstants {
 
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
 
-  static const String FILEBIN_URL = 'https://filebin2.aws.atsign.cloud/';
+  static const String FILEBIN_URL = 'https://ck6agzxiog6kmb.atsign.com/';
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";

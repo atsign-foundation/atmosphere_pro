@@ -20,6 +20,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -904,11 +905,11 @@ class HistoryProvider extends BaseModel {
 
       var files;
       try {
-        files = await AtClientManager.getInstance().atClient.downloadFile(
-              transferId,
-              sharedBy,
-              downloadPath: downloadPath ?? _downloadPath,
-            );
+        files = await FileTransferService.getInstance().downloadFile(
+          transferId,
+          sharedBy,
+          downloadPath: downloadPath ?? _downloadPath,
+        );
       } catch (e) {
         SnackbarService().showSnackbar(
           NavService.navKey.currentContext!,

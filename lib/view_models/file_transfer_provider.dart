@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -22,6 +23,7 @@ import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
 import 'package:at_client/src/stream/file_transfer_object.dart';
+import 'package:uuid/uuid.dart';
 
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
@@ -274,7 +276,10 @@ class FileTransferProvider extends BaseModel {
         }
       });
 
-      var uploadResult = await _atclient.uploadFile(_files, _atSigns);
+      var uploadResult = await FileTransferService.getInstance().uploadFile(
+        _files,
+        _atSigns,
+      );
 
       await _historyProvider.saveNewSentFileItem(
         uploadResult[_atSigns[0]]!,
@@ -371,7 +376,7 @@ class FileTransferProvider extends BaseModel {
         throw Exception('file not found');
       }
 
-      var uploadStatus = await _atclient
+      var uploadStatus = await FileTransferService.getInstance()
           .reuploadFiles([file], _sentHistory.fileTransferObject!);
 
       if (uploadStatus is List<FileStatus> && uploadStatus.isNotEmpty) {
@@ -433,7 +438,7 @@ class FileTransferProvider extends BaseModel {
         .updateSendingNotificationStatus(
             fileHistory.fileTransferObject!.transferId, atsign, true);
     try {
-      var sendResponse = await _atclient.shareFiles(
+      var sendResponse = await FileTransferService.getInstance().shareFiles(
           [atsign],
           fileHistory.fileTransferObject!.transferId,
           fileHistory.fileTransferObject!.fileUrl,
