@@ -87,7 +87,9 @@ class _VideosState extends State<Videos> {
                     padding: EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
-                    child: (videos == null || videos.isEmpty)
+                    child: (videos == null ||
+                            videos.isEmpty ||
+                            videos[index] == null)
                         ? Image.asset(
                             ImageConstants.unknownLogo,
                             fit: BoxFit.cover,
@@ -95,8 +97,14 @@ class _VideosState extends State<Videos> {
                         : Image.memory(
                             videos[index],
                             fit: BoxFit.cover,
-                            errorBuilder: (context, o, ot) =>
-                                CircularProgressIndicator(),
+                            errorBuilder: (BuildContext _context, _, __) {
+                              return Container(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 30.toFont,
+                                ),
+                              );
+                            },
                           ),
                   ),
                 ),
