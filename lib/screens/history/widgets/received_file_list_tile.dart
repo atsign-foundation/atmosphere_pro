@@ -570,7 +570,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     bool? isFilePresent = true,
   }) {
     // when file overwrite is true, we are not showing file preview.
-    if (isOverwrite!) {
+    if (isOverwrite) {
       isFilePresent = false;
     }
     if (FileTypes.IMAGE_TYPES.contains(extension)) {
@@ -704,7 +704,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   downloadFiles(FileTransfer? receivedHistory, {String? fileName}) async {
     var result;
     if (fileName != null) {
-      result = await Provider.of<HistoryProvider>(context, listen: false)
+      result = await Provider.of<HistoryProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
           .downloadSingleFile(
         widget.receivedHistory!.key,
         widget.receivedHistory!.sender,
@@ -712,7 +714,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         fileName,
       );
     } else {
-      result = await Provider.of<HistoryProvider>(context, listen: false)
+      result = await Provider.of<HistoryProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
           .downloadFiles(
         widget.receivedHistory!.key!,
         widget.receivedHistory!.sender!,
@@ -728,13 +732,18 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           isOverwrite = false;
         });
       }
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().fileDownloadd,
+        bgColor: ColorConstants.successGreen,
+      );
       // send download acknowledgement
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
           .sendFileDownloadAcknowledgement(receivedHistory!);
     } else if (result is bool && !result) {
       SnackbarService().showSnackbar(
-        context,
+        NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,
       );

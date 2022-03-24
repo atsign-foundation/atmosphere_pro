@@ -251,112 +251,114 @@ class FileTransferService {
       throw Exception('Error in saving file');
     }
   }
-}
 
-Future<File> decryptFile(
-    File file, String encryptionKey, int fileEncryptionChunkSize) async {
-  final Completer<File> completer = Completer<File>();
-  var receiverPort = ReceivePort();
-  var _preference = BackendService.getInstance().atClientPreference;
+  Future<File> decryptFile(
+      File file, String encryptionKey, int fileEncryptionChunkSize) async {
+    final Completer<File> completer = Completer<File>();
+    var receiverPort = ReceivePort();
+    var _preference = BackendService.getInstance().atClientPreference;
 
-  Isolate.spawn(decryptFileInIsolate, {
-    'sendPort': receiverPort.sendPort,
-    'file': file,
-    'encryptionKey': encryptionKey,
-    'fileEncryptionChunkSize': _preference.fileEncryptionChunkSize,
-  });
-
-  receiverPort.listen((encryptedFile) {
-    completer.complete(encryptedFile);
-  });
-  return completer.future;
-}
-
-Future downloadAllFiles(
-    FileTransferObject fileTransferObject, String downloadPath) async {
-  final Completer<FileDownloadResponse> completer =
-      Completer<FileDownloadResponse>();
-  var tempDirectory =
-      await Directory(downloadPath).createTemp('encrypted-files');
-  var fileDownloadResponse =
-      FileDownloadResponse(isError: false, filePath: tempDirectory.path);
-
-  try {
-    String filebinContainer = fileTransferObject.fileUrl;
-    filebinContainer = filebinContainer.replaceFirst('/archive', '');
-    filebinContainer = filebinContainer.replaceFirst('/zip', '');
-
-    for (int i = 0; i < fileTransferObject.fileStatus.length; i++) {
-      String fileName = fileTransferObject.fileStatus[i].fileName!;
-      String fileUrl = filebinContainer + Platform.pathSeparator + fileName;
-      var downloadResponse =
-          await downloadIndividualFile(fileUrl, tempDirectory.path, fileName);
-      if (downloadResponse.isError) {
-        fileDownloadResponse = FileDownloadResponse(
-            isError: true,
-            filePath: tempDirectory.path,
-            errorMsg: 'Failed to download file.');
-      }
-    }
-
-    completer.complete(fileDownloadResponse);
-    return completer.future;
-  } catch (e) {
-    completer.complete(
-      FileDownloadResponse(isError: true, errorMsg: 'Failed to download file.'),
-    );
-  }
-  return completer.future;
-}
-
-Future downloadIndividualFile(
-    String fileUrl, String tempPath, String fileName) async {
-  final Completer<FileDownloadResponse> completer =
-      Completer<FileDownloadResponse>();
-  var httpClient = http.Client();
-  http.Request request;
-  late Future<http.StreamedResponse> response;
-
-  try {
-    request = http.Request('GET', Uri.parse(fileUrl));
-    response = httpClient.send(request);
-  } catch (e) {
-    throw ('Failed to fetch file details.');
-  }
-
-  late StreamSubscription downloadSubscription;
-  File file = File(tempPath + Platform.pathSeparator + fileName);
-  int downloaded = 0;
-
-  try {
-    downloadSubscription =
-        response.asStream().listen((http.StreamedResponse r) {
-      r.stream.listen(
-        (List<int> chunk) {
-          file.writeAsBytesSync(chunk, mode: FileMode.append);
-          downloaded += chunk.length;
-          // if (r.contentLength != null) {
-          // print('percentage: ${(downloaded / r.contentLength!)}');
-          // }
-        },
-        onDone: () async {
-          await downloadSubscription.cancel();
-          completer.complete(
-            FileDownloadResponse(filePath: file.path),
-          );
-        },
-      );
+    Isolate.spawn(decryptFileInIsolate, {
+      'sendPort': receiverPort.sendPort,
+      'file': file,
+      'encryptionKey': encryptionKey,
+      'fileEncryptionChunkSize': _preference.fileEncryptionChunkSize,
     });
 
+    receiverPort.listen((encryptedFile) {
+      completer.complete(encryptedFile);
+    });
     return completer.future;
-  } catch (e) {
-    await downloadSubscription.cancel();
-    completer.complete(
-      FileDownloadResponse(isError: true, errorMsg: 'Failed to download file.'),
-    );
   }
 
-  return completer.future;
+  Future downloadAllFiles(
+      FileTransferObject fileTransferObject, String downloadPath) async {
+    final Completer<FileDownloadResponse> completer =
+        Completer<FileDownloadResponse>();
+    var tempDirectory =
+        await Directory(downloadPath).createTemp('encrypted-files');
+    var fileDownloadResponse =
+        FileDownloadResponse(isError: false, filePath: tempDirectory.path);
+
+    try {
+      String filebinContainer = fileTransferObject.fileUrl;
+      filebinContainer = filebinContainer.replaceFirst('/archive', '');
+      filebinContainer = filebinContainer.replaceFirst('/zip', '');
+
+      for (int i = 0; i < fileTransferObject.fileStatus.length; i++) {
+        String fileName = fileTransferObject.fileStatus[i].fileName!;
+        String fileUrl = filebinContainer + Platform.pathSeparator + fileName;
+        var downloadResponse =
+            await downloadIndividualFile(fileUrl, tempDirectory.path, fileName);
+        if (downloadResponse.isError) {
+          fileDownloadResponse = FileDownloadResponse(
+              isError: true,
+              filePath: tempDirectory.path,
+              errorMsg: 'Failed to download file.');
+        }
+      }
+
+      completer.complete(fileDownloadResponse);
+      return completer.future;
+    } catch (e) {
+      completer.complete(
+        FileDownloadResponse(
+            isError: true, errorMsg: 'Failed to download file.'),
+      );
+    }
+    return completer.future;
+  }
+
+  Future downloadIndividualFile(
+      String fileUrl, String tempPath, String fileName) async {
+    final Completer<FileDownloadResponse> completer =
+        Completer<FileDownloadResponse>();
+    var httpClient = http.Client();
+    http.Request request;
+    late Future<http.StreamedResponse> response;
+
+    try {
+      request = http.Request('GET', Uri.parse(fileUrl));
+      response = httpClient.send(request);
+    } catch (e) {
+      throw ('Failed to fetch file details.');
+    }
+
+    late StreamSubscription downloadSubscription;
+    File file = File(tempPath + Platform.pathSeparator + fileName);
+    int downloaded = 0;
+
+    try {
+      downloadSubscription =
+          response.asStream().listen((http.StreamedResponse r) {
+        r.stream.listen(
+          (List<int> chunk) {
+            file.writeAsBytesSync(chunk, mode: FileMode.append);
+            downloaded += chunk.length;
+            // if (r.contentLength != null) {
+            // print('percentage: ${(downloaded / r.contentLength!)}');
+            // }
+          },
+          onDone: () async {
+            await downloadSubscription.cancel();
+            completer.complete(
+              FileDownloadResponse(filePath: file.path),
+            );
+          },
+        );
+      });
+
+      return completer.future;
+    } catch (e) {
+      await downloadSubscription.cancel();
+      completer.complete(
+        FileDownloadResponse(
+            isError: true, errorMsg: 'Failed to download file.'),
+      );
+    }
+
+    return completer.future;
+  }
 }
 
 void encryptFileInIsolate(Map params) async {

@@ -143,6 +143,7 @@ class TextStrings {
   String groups = 'Groups';
   String downloadAllFiles = 'Download all files';
   String downloadFailed = 'Download failed, please try again.';
+  String fileDownloadd = 'File(s) downloaded';
   String noGroups = 'No Groups';
   String newGroup = 'New Group';
   String addGroups = 'Would you like to create a group';

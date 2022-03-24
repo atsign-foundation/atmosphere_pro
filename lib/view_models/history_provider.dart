@@ -1022,18 +1022,29 @@ class HistoryProvider extends BaseModel {
       throw Exception('json decode exception in download file ${e.toString()}');
     }
     var downloadedFiles = <File>[];
-    var fileDownloadReponse = await _downloadSingleFromFileBin(
-        fileTransferObject, downloadPath, fileName);
+
+    var tempDirectory =
+        await Directory(downloadPath).createTemp('encrypted-files');
+    var fileDownloadReponse =
+        await FileTransferService.getInstance().downloadIndividualFile(
+      fileTransferObject.fileUrl,
+      tempDirectory.path,
+      fileName,
+    );
+
     if (fileDownloadReponse.isError) {
       throw Exception('download fail');
     }
-    var encryptedFileList = Directory(fileDownloadReponse.filePath!).listSync();
+    var encryptedFileList = tempDirectory.listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
         var decryptedFile = await EncryptionService().decryptFileInChunks(
-            File(encryptedFile.path),
-            fileTransferObject.fileEncryptionKey,
-            4096);
+          File(encryptedFile.path),
+          fileTransferObject.fileEncryptionKey,
+          BackendService.getInstance()
+              .atClientPreference
+              .fileEncryptionChunkSize,
+        );
         decryptedFile.copySync(downloadPath +
             Platform.pathSeparator +
             encryptedFile.path.split(Platform.pathSeparator).last);
