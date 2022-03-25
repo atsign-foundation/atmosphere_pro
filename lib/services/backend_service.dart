@@ -15,6 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.d
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -296,6 +297,8 @@ class BackendService {
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
     if (syncStatus.dataChange && !historyProvider.isSyncedDataFetched) {
+      await VersionService.getInstance().init();
+
       if (historyProvider.status[historyProvider.DOWNLOAD_ACK] !=
           Status.Loading) {
         await historyProvider.getFileDownloadedAcknowledgement();

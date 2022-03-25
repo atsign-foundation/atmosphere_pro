@@ -23,6 +23,11 @@ class MixedConstants {
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
   static const String FAQ = "https://atsign.com/faqs/";
 
+  static const MACOS_STORE_LINK = 'https://apps.apple.com/app/id1550936444';
+
+  static const WINDOWS_STORE_LINK =
+      'https://www.microsoft.com/en-in/p/mospherepro/9nk4dhfxdnm1?cid=msft_web_chart&activetab=pivot:overviewtab';
+  static const LINUX_STORE_LINK = '';
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;
 
