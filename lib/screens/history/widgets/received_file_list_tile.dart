@@ -415,7 +415,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 width: 50.toHeight,
                                 child: FutureBuilder(
                                     future: isFilePresent(widget
-                                        .receivedHistory!.files![index].name),
+                                            .receivedHistory!
+                                            .files![index]
+                                            .name ??
+                                        ''),
                                     builder: (context,
                                         AsyncSnapshot<bool> snapshot) {
                                       return snapshot.connectionState ==
