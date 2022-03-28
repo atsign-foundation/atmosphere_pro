@@ -57,22 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await initPackages();
       await getSentAndReceivedHistory();
     });
-    checkForUpdate();
     super.initState();
-  }
-
-  checkForUpdate() async {
-    final newVersion = NewVersion();
-    final status = await newVersion.getVersionStatus();
-
-    //// for forced version update
-    // newVersion.showUpdateDialog(
-    //   context: context,
-    //   versionStatus: status,
-    //   allowDismissal: false,
-    // );
-
-    newVersion.showAlertIfNecessary(context: context);
   }
 
   @override
