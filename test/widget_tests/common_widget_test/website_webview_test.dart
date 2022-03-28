@@ -16,7 +16,7 @@ void main() {
   /// Functional test cases for Website Screen widget
   group('Website Screen Widget Tests:', () {
     final websiteScreen = WebsiteScreen(
-      title: 'Reirect',
+      title: 'Redirect',
       url: 'url',
     );
     // Test Case to Check Website Screen is displayed

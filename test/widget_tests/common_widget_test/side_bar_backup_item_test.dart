@@ -9,7 +9,7 @@ void main() {
   Widget _wrapWidgetWithMaterialApp({required Widget sideBarBackupItem}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
-      return sideBarBackupItem;
+      return Scaffold(drawer: sideBarBackupItem);
     }));
   }
 
@@ -22,25 +22,12 @@ void main() {
         print('Sidebar displayed');
       },
     );
-    // Test Case to Check Side bar backup item is displayed
-    testWidgets("Side bar backup item is displayed", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(sideBarBackupItem: sideBarBackupItem));
-      expect(find.byType(SideBarBackupItem), findsOneWidget);
-    });
-
     // Test case to check text is given
-    testWidgets("Side bar backup item text is given", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(sideBarBackupItem: sideBarBackupItem));
+    testWidgets("Side bar backup item text is given",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(sideBarBackupItem: sideBarBackupItem));
       expect(sideBarBackupItem.title, 'SideBar');
-    });
-
-    // Test case to leading icon is given
-    testWidgets("Side bar backup item text is given", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(sideBarBackupItem: sideBarBackupItem));
-      expect(sideBarBackupItem.leadingIcon,Icons.menu);
     });
   });
 }
