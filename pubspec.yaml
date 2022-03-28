@@ -96,16 +96,17 @@ dependency_overrides:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: trunk
       path: at_backupkey_flutter
+  at_contacts_group_flutter:
+    path: /Users/apple/Desktop/client_projects/at_company_github/at_widgets/at_contacts_group_flutter
+    # git:
+    #   url: git@github.com:atsign-foundation/at_widgets.git
+    #   ref: trunk
+    #   path: at_contacts_group_flutter
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
       ref: welcome_message
       path: at_contacts_flutter
-  at_contacts_group_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: fix/group-selection-bug
-      path: at_contacts_group_flutter
   at_sync_ui_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git

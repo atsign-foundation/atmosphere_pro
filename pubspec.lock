@@ -96,11 +96,9 @@ packages:
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      path: at_contacts_group_flutter
-      ref: "fix/group-selection-bug"
-      resolved-ref: "47e5673707c01e85e631ec573d3c61f706c75f33"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
-    source: git
+      path: "/Users/apple/Desktop/client_projects/at_company_github/at_widgets/at_contacts_group_flutter"
+      relative: false
+    source: path
     version: "4.0.1"
   at_lookup:
     dependency: "direct main"
