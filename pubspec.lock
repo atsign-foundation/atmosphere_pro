@@ -32,9 +32,11 @@ packages:
   at_backupkey_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/packages/at_widgets/at_backupkey_flutter"
-      relative: false
-    source: path
+      path: at_backupkey_flutter
+      ref: trunk
+      resolved-ref: "12eea91fb6517e4a3ab89188ac92f10710f8e15d"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.0"
   at_base2e15:
     dependency: transitive
@@ -46,20 +48,16 @@ packages:
   at_client:
     dependency: "direct overridden"
     description:
-      path: at_client
-      ref: trunk
-      resolved-ref: da5cf932687f85391f569ef5bf5d1be826b5b1b7
-      url: "git@github.com:atsign-foundation/at_client_sdk.git"
-    source: git
+      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client"
+      relative: false
+    source: path
     version: "3.0.13"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: at_client_mobile
-      ref: trunk
-      resolved-ref: da5cf932687f85391f569ef5bf5d1be826b5b1b7
-      url: "git@github.com:atsign-foundation/at_client_sdk.git"
-    source: git
+      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile"
+      relative: false
+    source: path
     version: "3.1.9"
   at_common_flutter:
     dependency: "direct main"
@@ -74,7 +72,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.8"
+    version: "3.0.9"
   at_contact:
     dependency: "direct main"
     description:
@@ -94,9 +92,11 @@ packages:
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/packages/at_widgets/at_contacts_group_flutter"
-      relative: false
-    source: path
+      path: at_contacts_group_flutter
+      ref: trunk
+      resolved-ref: "12eea91fb6517e4a3ab89188ac92f10710f8e15d"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.1"
   at_lookup:
     dependency: "direct main"
@@ -104,13 +104,15 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.13"
+    version: "3.0.14"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/packages/at_widgets/at_onboarding_flutter"
-      relative: false
-    source: path
+      path: at_onboarding_flutter
+      ref: trunk
+      resolved-ref: "12eea91fb6517e4a3ab89188ac92f10710f8e15d"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.0"
   at_persistence_secondary_server:
     dependency: transitive
@@ -136,9 +138,11 @@ packages:
   at_sync_ui_flutter:
     dependency: "direct overridden"
     description:
-      path: "/Users/sarikagautam/Sites/packages/at_widgets/at_sync_ui_flutter"
-      relative: false
-    source: path
+      path: at_sync_ui_flutter
+      ref: trunk
+      resolved-ref: "12eea91fb6517e4a3ab89188ac92f10710f8e15d"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "1.0.1"
   at_utf7:
     dependency: transitive

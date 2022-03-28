@@ -93,4 +93,11 @@ class MixedConstants {
 
   // Onboarding API key - requires different key for production
   static String ONBOARD_API_KEY = '477b-876u-bcez-c42z-6a3d';
+
+  // Desktop store links
+  static String MACOS_STORE_LINK =
+      'https://apps.apple.com/app/mospherepro-file-sharing/id1550936444';
+  static String WINDOWS_STORE_LINK =
+      'https://www.microsoft.com/en-in/p/mospherepro/9nk4dhfxdnm1?cid=msft_web_chart&activetab=pivot:overviewtab';
+  static String LINUX_STORE_LINK = 'https://atsign.com/apps/';
 }

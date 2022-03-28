@@ -297,6 +297,8 @@ class BackendService {
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
     if (syncStatus.dataChange && !historyProvider.isSyncedDataFetched) {
+      historyProvider.isSyncedDataFetched = true;
+
       await VersionService.getInstance().init();
 
       if (historyProvider.status[historyProvider.DOWNLOAD_ACK] !=
@@ -313,8 +315,6 @@ class BackendService {
           Status.Loading) {
         await historyProvider.getReceivedHistory();
       }
-
-      historyProvider.isSyncedDataFetched = true;
     }
   }
 

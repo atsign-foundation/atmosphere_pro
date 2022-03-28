@@ -17,10 +17,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.3+26
+# version: 1.0.3+28
 
 # Desktop version macos
-# version: 1.0.1+17
+version: 1.0.1+18
 
 # Desktop version windows
 # version: 1.0.1+1
@@ -68,7 +68,7 @@ dependencies:
   at_lookup: ^3.0.11
   at_common_flutter: ^2.0.5
   
-  at_client_mobile: ^3.1.9
+  at_client_mobile: 3.1.9
   at_onboarding_flutter: ^4.0.0
   at_backupkey_flutter: ^4.0.0
   at_contacts_flutter: ^4.0.1
@@ -77,15 +77,17 @@ dependencies:
     
 dependency_overrides:
   at_client_mobile:
-    git:
-      url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: trunk
-      path: at_client_mobile
+    path: /Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile
+    # git:
+    #   url: git@github.com:atsign-foundation/at_client_sdk.git
+    #   ref: trunk
+    #   path: at_client_mobile
   at_client:
-    git:
-      url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: trunk
-      path: at_client
+    path: /Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client
+    # git:
+    #   url: git@github.com:atsign-foundation/at_client_sdk.git
+    #   ref: trunk
+    #   path: at_client
   at_onboarding_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
