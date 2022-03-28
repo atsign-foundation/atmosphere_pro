@@ -25,26 +25,59 @@ class VersionService {
   bool isBackwardCompatible = true, isNewVersionAvailable = false;
 
   init() async {
+    isBackwardCompatible = true;
+    isNewVersionAvailable = false;
+    appVersion = AppVersion();
     await getVersion();
     compareVersions();
     showVersionUpgradeDialog();
   }
 
-// setting versions in atKey
+  /// [setVersion] is used to update version data in key
+  /// should only be updated by [@significantredpanda]
   setVersion() async {
-    var version = Version(
-      latestVersion: '2.1.0',
-      minVersion: '1.0.1',
-      buildNumber: '20',
-      minBuildNumber: '18',
+    var androidVersion = Version(
+      latestVersion: '1.0.5',
+      minVersion: '5.5.5',
+      buildNumber: '30',
+      minBuildNumber: '10',
       isBackwardCompatible: false,
     );
+    var iosVersion = Version(
+      latestVersion: '1.0.5',
+      minVersion: '5.5.5',
+      buildNumber: '30',
+      minBuildNumber: '10',
+      isBackwardCompatible: false,
+    );
+    var macosVersion = Version(
+      latestVersion: '1.0.5',
+      minVersion: '5.5.5',
+      buildNumber: '30',
+      minBuildNumber: '10',
+      isBackwardCompatible: false,
+    );
+    var windowsVersion = Version(
+      latestVersion: '1.0.5',
+      minVersion: '5.5.5',
+      buildNumber: '30',
+      minBuildNumber: '10',
+      isBackwardCompatible: false,
+    );
+    var linuxVersion = Version(
+      latestVersion: '1.0.5',
+      minVersion: '5.5.5',
+      buildNumber: '30',
+      minBuildNumber: '10',
+      isBackwardCompatible: false,
+    );
+
     var appVersion = AppVersion(
-      android: version,
-      ios: version,
-      macOs: version,
-      windows: version,
-      linux: version,
+      android: androidVersion,
+      ios: iosVersion,
+      macOs: macosVersion,
+      windows: windowsVersion,
+      linux: linuxVersion,
     );
 
     AtKey atKey = getAtKey();
@@ -94,25 +127,16 @@ class VersionService {
 
   AtKey getAtKey() {
     return AtKey()
-      ..key = 'app_version'
+      ..key = 'app_versions'
       ..metadata = Metadata()
-      ..metadata!.ccd = true
       ..metadata!.isPublic = true
-      ..metadata!.ttl = 172800000 // two days
-      // ..sharedBy = BackendService.getInstance().currentAtSign;
       ..sharedBy = '@significantredpanda';
   }
 
   showVersionUpgradeDialog() async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       mobileUpgradedDialog();
-    } else if (Platform.isAndroid) {
-      mobileUpgradedDialog();
-    } else if (Platform.isMacOS) {
-      desktopUpgradeDialog();
-    } else if (Platform.isWindows) {
-      desktopUpgradeDialog();
-    } else if (Platform.isLinux) {
+    } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       desktopUpgradeDialog();
     }
   }
@@ -169,10 +193,9 @@ class VersionService {
     try {
       List<String> currentPackageNumbers = packageInfo.version.split('.');
       List<String> latestPackageNumbers = version!.latestVersion.split('.');
+      List<String> minPackageNumbers = version!.minVersion.split('.');
 
-      print('currentPackageNumbers : ${currentPackageNumbers}');
-      print('latestPackageNumbers : ${latestPackageNumbers}');
-
+      // checking for new version
       if (int.parse(latestPackageNumbers[0]) >
           int.parse(currentPackageNumbers[0])) {
         isNewVersionAvailable = true;
@@ -187,7 +210,21 @@ class VersionService {
         isNewVersionAvailable = true;
       }
 
-      isBackwardCompatible = version!.isBackwardCompatible;
+      // checking for backward compatibility
+      if (int.parse(minPackageNumbers[0]) >
+          int.parse(currentPackageNumbers[0])) {
+        isBackwardCompatible = false;
+      } else if (int.parse(minPackageNumbers[1]) >
+          int.parse(currentPackageNumbers[1])) {
+        isBackwardCompatible = false;
+      } else if (int.parse(minPackageNumbers[2]) >
+          int.parse(currentPackageNumbers[2])) {
+        isBackwardCompatible = false;
+      } else if (int.parse(version!.minBuildNumber) >
+          int.parse(packageInfo.buildNumber)) {
+        isBackwardCompatible = false;
+      }
+
       print(
         'isNewVersionAvailable : ${isNewVersionAvailable}, isback: ${isBackwardCompatible}',
       );
