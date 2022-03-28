@@ -50,6 +50,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   Uint8List? videoThumbnail, image;
   int fileSize = 0;
   List<String?> existingFileNamesToOverwrite = [];
+  String nickName = '';
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -71,6 +72,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
     checkForDownloadAvailability();
     getAtSignDetail();
+    getDisplayDetails();
     isFilesAlreadyDownloaded();
     super.initState();
   }
@@ -106,6 +108,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
       }
     }
+  }
+
+  getDisplayDetails() async {
+    var displayDetails =
+        await getAtSignDetails(widget.receivedHistory!.sender! ?? '');
+    nickName =
+        displayDetails.tags!['nickname'] ?? displayDetails.tags!['name'] ?? '';
+    setState(() {});
+    print('NickName');
+    print(nickName);
   }
 
   isFilesAlreadyDownloaded() async {
@@ -219,20 +231,25 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: widget.receivedHistory!.sender != null
+                        child: nickName.isNotEmpty
                             ? Text(
-                                widget.receivedHistory!.sender!.substring(1),
+                                nickName,
                                 style: CustomTextStyles.primaryRegular16,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               )
-                            : SizedBox(),
+                            : Text(
+                                widget.receivedHistory!.sender!.substring(1),
+                                style: CustomTextStyles.primaryRegular16,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                       ),
-                       InkWell(
+                      InkWell(
                           onTap: () async {
                             if (isOverwrite) {
                               overwriteDialog();
@@ -240,23 +257,25 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             }
                             await downloadFiles(widget.receivedHistory);
                           },
-                          child:Padding(padding: EdgeInsets.only(top: 5.0),
-                          child: isDownloadAvailable
-                              ? widget.receivedHistory!.isDownloading!
-                                  ? CircularProgressIndicator()
-                                  : ((isDownloaded || isFilesAvailableOfline) &&
-                                          !isOverwrite)
-                                      ? Icon(
-                                          Icons.done,
-                                          color: Color(0xFF08CB21),
-                                          size: 25.toFont,
-                                        )
-                                      : Icon(
-                                          Icons.download_sharp,
-                                          size: 25.toFont,
-                                        )
-                       : SizedBox())
-                        ) ],
+                          child: Padding(
+                              padding: EdgeInsets.only(top: 5.0),
+                              child: isDownloadAvailable
+                                  ? widget.receivedHistory!.isDownloading!
+                                      ? CircularProgressIndicator()
+                                      : ((isDownloaded ||
+                                                  isFilesAvailableOfline) &&
+                                              !isOverwrite)
+                                          ? Icon(
+                                              Icons.done,
+                                              color: Color(0xFF08CB21),
+                                              size: 25.toFont,
+                                            )
+                                          : Icon(
+                                              Icons.download_sharp,
+                                              size: 25.toFont,
+                                            )
+                                  : SizedBox()))
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
