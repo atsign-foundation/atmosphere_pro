@@ -884,6 +884,8 @@ class HistoryProvider extends BaseModel {
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
       {String? downloadPath}) async {
+    updateFileTransferState(
+        transferId, null); //setting filetransfer progress as null
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
@@ -1215,6 +1217,16 @@ class HistoryProvider extends BaseModel {
       notifyListeners();
     }
     return res;
+  }
+
+  updateFileTransferState(
+      String transferId, FileTransferProgress? fileTransferProgress) {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
+    if (index != -1) {
+      receivedHistoryLogs[index].fileTransferProgress = fileTransferProgress;
+      notifyListeners();
+    }
   }
 
   // save file in gallery function is not in use as of now.

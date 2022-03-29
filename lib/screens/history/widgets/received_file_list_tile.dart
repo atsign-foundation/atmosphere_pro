@@ -311,6 +311,23 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               style: CustomTextStyles.secondaryRegular12,
                             )
                           : SizedBox(),
+                      SizedBox(width: 10.toHeight),
+                      widget.receivedHistory!.isDownloading!
+                          ? Container(
+                              color: ColorConstants.fontSecondary,
+                              height: 14.toHeight,
+                              width: 1.toWidth,
+                            )
+                          : SizedBox(),
+                      SizedBox(width: 10.toHeight),
+                      widget.receivedHistory!.isDownloading!
+                          ? Expanded(
+                              child: Text(getFileStateMessage(),
+                                  style: TextStyle(
+                                      fontSize: 11.toFont,
+                                      color: ColorConstants.blueText)),
+                            )
+                          : SizedBox()
                     ],
                   ),
                 ),
@@ -325,6 +342,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               isOpen = !isOpen!;
                             });
                           }
+                          updateIsWidgetOpen();
                         },
                         child: Container(
                           child: Row(
@@ -532,6 +550,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             isOpen = !isOpen!;
                           });
                         }
+                        updateIsWidgetOpen();
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 85.toHeight),
@@ -562,6 +581,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         ],
       ),
     );
+  }
+
+  String getFileStateMessage() {
+    FileTransferProgress? fileTransferProgress =
+        widget.receivedHistory!.fileTransferProgress;
+    if (fileTransferProgress == null) {
+      return '';
+    }
+
+    var index = widget.receivedHistory!.files!
+        .indexWhere((element) => element.name == fileTransferProgress.fileName);
+    String fileState = '';
+    if (fileTransferProgress.fileState == FileState.download) {
+      fileState = 'Downloading';
+    } else {
+      fileState = 'Decrypting';
+    }
+
+    if (index != -1) {
+      fileState =
+          '${fileState} ${index + 1} of ${widget.receivedHistory!.files!.length} File(s)';
+    }
+    return fileState;
   }
 
   Widget thumbnail(
@@ -852,5 +894,17 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       );
     }
     return textSpansMessage;
+  }
+
+  updateIsWidgetOpen() {
+    var receivedHistoryLogs = Provider.of<HistoryProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .receivedHistoryLogs;
+    var index = receivedHistoryLogs
+        .indexWhere((element) => element.key == widget.receivedHistory!.key);
+    if (index != -1) {
+      receivedHistoryLogs[index].isWidgetOpen = isOpen;
+    }
   }
 }

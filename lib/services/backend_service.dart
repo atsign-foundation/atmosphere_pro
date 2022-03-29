@@ -296,7 +296,8 @@ class BackendService {
 
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
-    if (syncStatus.dataChange && !historyProvider.isSyncedDataFetched) {
+    if (!historyProvider.isSyncedDataFetched) {
+      historyProvider.isSyncedDataFetched = true;
       await VersionService.getInstance().init();
 
       if (historyProvider.status[historyProvider.DOWNLOAD_ACK] !=
@@ -314,7 +315,9 @@ class BackendService {
         await historyProvider.getReceivedHistory();
       }
 
-      historyProvider.isSyncedDataFetched = true;
+      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
+              listen: false)
+          .checkForUndownloadedFiles();
     }
   }
 
