@@ -1043,8 +1043,9 @@ class HistoryProvider extends BaseModel {
         var decryptedFile = EncryptionService().decryptFile(
             File(encryptedFile.path).readAsBytesSync(),
             fileTransferObject.fileEncryptionKey);
-        var downloadedFile =
-            File(downloadPath + '/' + encryptedFile.path.split('/').last);
+        var downloadedFile = File(downloadPath +
+            Platform.pathSeparator +
+            encryptedFile.path.split(Platform.pathSeparator).last);
         downloadedFile.writeAsBytesSync(decryptedFile);
         downloadedFiles.add(downloadedFile);
       }

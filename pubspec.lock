@@ -51,14 +51,14 @@ packages:
       path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client"
       relative: false
     source: path
-    version: "3.0.13"
+    version: "3.0.14"
   at_client_mobile:
     dependency: "direct main"
     description:
       path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile"
       relative: false
     source: path
-    version: "3.1.9"
+    version: "3.1.10"
   at_common_flutter:
     dependency: "direct main"
     description:
