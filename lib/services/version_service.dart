@@ -37,39 +37,39 @@ class VersionService {
   /// should only be updated by [@significantredpanda]
   setVersion() async {
     var androidVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
+      latestVersion: '1.0.3',
+      minVersion: '1.0.3',
+      buildNumber: '27',
+      minBuildNumber: '27',
+      isBackwardCompatible: true,
     );
     var iosVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
+      latestVersion: '1.0.2',
+      minVersion: '1.0.2',
+      buildNumber: '26',
+      minBuildNumber: '26',
+      isBackwardCompatible: true,
     );
     var macosVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
+      latestVersion: '1.0.0',
+      minVersion: '1.0.0',
+      buildNumber: '13',
+      minBuildNumber: '13',
+      isBackwardCompatible: true,
     );
     var windowsVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
+      latestVersion: '1.0.1',
+      minVersion: '1.0.1',
+      buildNumber: '0',
+      minBuildNumber: '0',
+      isBackwardCompatible: true,
     );
     var linuxVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
+      latestVersion: '1.0.0',
+      minVersion: '1.0.0',
+      buildNumber: '0',
+      minBuildNumber: '0',
+      isBackwardCompatible: true,
     );
 
     var appVersion = AppVersion(
