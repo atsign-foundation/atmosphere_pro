@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client/at_client.dart';
@@ -6,7 +7,7 @@ import 'package:at_commons/at_commons.dart';
 class AtErrorDialog {
   static getAlertDialog(var error, BuildContext context) {
     String errorMessage = _getErrorMessage(error);
-    var title = 'Error';
+    var title = TextStrings().error;
     return AlertDialog(
       title: Row(
         children: [
@@ -20,7 +21,7 @@ class AtErrorDialog {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Close'),
+          child: Text(TextStrings().buttonClose),
         )
       ],
     );
@@ -30,37 +31,37 @@ class AtErrorDialog {
   static String _getErrorMessage(var error) {
     switch (error.runtimeType) {
       case AtClientException:
-        return 'Unable to perform this action. Please try again.';
+        return TextStrings().unableToPerform;
         break;
       case UnAuthenticatedException:
-        return 'Unable to authenticate. Please try again.';
+        return TextStrings().unableToAuthenticate;
         break;
       case NoSuchMethodError:
-        return 'Failed in processing. Please try again.';
+        return TextStrings().failedInProcessing;
         break;
       case AtConnectException:
-        return 'Unable to connect server. Please try again later.';
+        return TextStrings().unableToConnectServer;
         break;
       case AtIOException:
-        return 'Unable to perform read/write operation. Please try again.';
+        return TextStrings().unableToPerformRead_Write;
         break;
       case AtServerException:
-        return 'Unable to activate server. Please contact admin.';
+        return TextStrings().unableToActivateServer;
         break;
       case SecondaryNotFoundException:
-        return 'Server is unavailable. Please try again later.';
+        return TextStrings().serverIsUnavailable;
         break;
       case SecondaryConnectException:
-        return 'Unable to connect. Please check with network connection and try again.';
+        return TextStrings().unableToConnect;
         break;
       case InvalidAtSignException:
-        return 'Invalid atsign is provided. Please contact admin.';
+        return TextStrings().invalidAtSign;
         break;
       case String:
         return error;
         break;
       default:
-        return 'Unknown error.';
+        return TextStrings().unknownError;
         break;
     }
   }

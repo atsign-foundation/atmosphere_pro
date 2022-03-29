@@ -115,7 +115,7 @@ class _DesktopReceivedFileDetailsState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Details',
+                  TextStrings().details,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Spacer(),
@@ -139,7 +139,7 @@ class _DesktopReceivedFileDetailsState
                         children: [
                           Icon(Icons.save_alt_outlined, color: Colors.black),
                           SizedBox(width: 10),
-                          Text('Downloads folder',
+                          Text(TextStrings().downloadsFolder,
                               style:
                                   TextStyle(color: Colors.black, fontSize: 12)),
                         ],
@@ -215,9 +215,9 @@ class _DesktopReceivedFileDetailsState
                                           .fileTransfer!.files![index].size
                                           .toString()) <=
                                       1024
-                                  ? '${widget.fileTransfer!.files![index].size} Kb' +
+                                  ? '${widget.fileTransfer!.files![index].size} ${TextStrings().kb}' +
                                       ' . ${widget.fileTransfer!.files![index].name!.split('.').last}'
-                                  : '${(widget.fileTransfer!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                  : '${(widget.fileTransfer!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}' +
                                       ' . ${widget.fileTransfer!.files![index].name!.split('.').last}',
                               style: TextStyle(
                                 color: ColorConstants.fadedText,
@@ -271,9 +271,10 @@ class _DesktopReceivedFileDetailsState
                 ),
                 fileSize > 1024
                     ? Text(
-                        '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB',
+                        '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
                         style: CustomTextStyles.greyText15)
-                    : Text('${(fileSize).toStringAsFixed(2)} MB',
+                    : Text(
+                        '${(fileSize).toStringAsFixed(2)} ${TextStrings().mb}',
                         style: CustomTextStyles.greyText15),
               ],
             ),
@@ -320,13 +321,13 @@ class _DesktopReceivedFileDetailsState
                               Navigator.of(context).pop();
                               await downloadFiles();
                             },
-                            child: Text('Yes',
+                            child: Text(TextStrings().yes,
                                 style: TextStyle(fontSize: 16.toFont))),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Cancel',
+                            child: Text(TextStrings().buttonCancel,
                                 style: TextStyle(fontSize: 16.toFont)))
                       ],
                     )
@@ -354,7 +355,7 @@ class _DesktopReceivedFileDetailsState
         TextSpan(
           children: [
             TextSpan(
-                text: 'A file named ',
+                text: TextStrings().fileNamed,
                 style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
             TextSpan(
                 text: '${existingFileNamesToOverwrite[0]}',
@@ -363,14 +364,14 @@ class _DesktopReceivedFileDetailsState
                     fontSize: 15.toFont,
                     fontWeight: FontWeight.bold)),
             TextSpan(
-                text: ' already exists. Do you want to overwrite it?',
+                text: TextStrings().alreadyExistsMsg,
                 style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
           ],
         ),
       );
     } else if (existingFileNamesToOverwrite.length > 1) {
       textSpansMessage.add(TextSpan(
-        text: 'These files already exist: ',
+        text: TextStrings().fileExists,
         style: TextStyle(color: Colors.black, fontSize: 15.toFont),
       ));
 
@@ -389,7 +390,7 @@ class _DesktopReceivedFileDetailsState
 
       textSpansMessage.add(
         TextSpan(
-            text: '\nDo you want to overwrite them?',
+            text: TextStrings().overWriteMsg,
             style:
                 TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
       );

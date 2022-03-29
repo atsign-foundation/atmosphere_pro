@@ -303,7 +303,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          '${widget.receivedHistory!.files!.length} File(s)',
+                          '${widget.receivedHistory!.files!.length} ${TextStrings().file_s}',
                           style: CustomTextStyles.secondaryRegular12,
                         ),
                         SizedBox(width: 10.toHeight),
@@ -535,7 +535,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           (widget.receivedHistory!.files![index]
                                                       .isDownloading ??
                                                   false)
-                                              ? 'Downloading...'
+                                              ? TextStrings().downloading
                                               : '',
                                           style: CustomTextStyles.redSmall12,
                                         ),
@@ -818,13 +818,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               Navigator.of(context).pop();
                               await downloadFiles(widget.receivedHistory);
                             },
-                            child: Text('Yes',
+                            child: Text(TextStrings().yes,
                                 style: TextStyle(fontSize: 16.toFont))),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Cancel',
+                            child: Text(TextStrings().buttonCancel,
                                 style: TextStyle(fontSize: 16.toFont)))
                       ],
                     )
@@ -843,7 +843,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         TextSpan(
           children: [
             TextSpan(
-                text: 'A file named ',
+                text: TextStrings().fileNamed,
                 style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
             TextSpan(
                 text: '${existingFileNamesToOverwrite[0]}',
@@ -852,14 +852,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     fontSize: 15.toFont,
                     fontWeight: FontWeight.bold)),
             TextSpan(
-                text: ' already exists. Do you want to overwrite it?',
+                text: TextStrings().alreadyExistsMsg,
                 style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
           ],
         ),
       );
     } else if (existingFileNamesToOverwrite.length > 1) {
       textSpansMessage.add(TextSpan(
-        text: 'These files already exist: ',
+        text: TextStrings().fileExists,
         style: TextStyle(color: Colors.black, fontSize: 15.toFont),
       ));
 
@@ -878,7 +878,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
       textSpansMessage.add(
         TextSpan(
-            text: '\nDo you want to overwrite them?',
+            text: TextStrings().overWriteMsg,
             style:
                 TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
       );
