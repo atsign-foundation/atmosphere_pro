@@ -71,7 +71,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   getDisplayDetails() async {
     var displayDetails = await getAtSignDetails(contactList[0] ?? '');
-    nickName = displayDetails.tags!['nickname'] ?? displayDetails.tags!['name'] ?? '';
+    if (displayDetails.tags != null) {
+      nickName = displayDetails.tags!['nickname'] ??
+          displayDetails.tags!['name'] ??
+          '';
+    }
     setState(() {});
   }
 
@@ -221,7 +225,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     '${contactList.length - 1} others',
                                                 style: CustomTextStyles
                                                     .blueRegular16,
-                                                recognizer: TapGestureRecognizer()
+                                                recognizer:
+                                                    TapGestureRecognizer()
                                                       ..onTap = () {
                                                         openFileReceiptBottomSheet();
                                                       })
