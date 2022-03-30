@@ -115,8 +115,8 @@ class _VideosState extends State<Videos> {
                           double.parse(provider.receivedVideos[index].size
                                       .toString()) <=
                                   1024
-                              ? '${provider.receivedVideos[index].size!.toStringAsFixed(2)} Kb'
-                              : '${(provider.receivedVideos[index].size! / 1024).toStringAsFixed(2)} Mb',
+                              ? '${provider.receivedVideos[index].size!.toStringAsFixed(2)} ${TextStrings().kb}'
+                              : '${(provider.receivedVideos[index].size! / 1024).toStringAsFixed(2)} ${TextStrings().mb}',
                           style: CustomTextStyles.secondaryRegular12),
                       SizedBox(
                         width: 12.toWidth,

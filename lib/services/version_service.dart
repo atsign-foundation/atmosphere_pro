@@ -7,6 +7,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/version.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -157,7 +158,7 @@ class VersionService {
                   child: Column(
                     children: <Widget>[
                       Text(
-                          'You can update this app from ${packageInfo.version} to ${version!.latestVersion}')
+                          '${TextStrings().updateAppMsg} ${packageInfo.version} ${TextStrings().to} ${version!.latestVersion}')
                     ],
                   ),
                 ),
@@ -165,7 +166,7 @@ class VersionService {
               actions: [
                 TextButton(
                   onPressed: desktopUpdateHandler,
-                  child: Text('Update'),
+                  child: Text(TextStrings().update),
                 ),
                 isBackwardCompatible
                     ? TextButton(
@@ -176,7 +177,7 @@ class VersionService {
                                 .pop();
                           }
                         },
-                        child: Text('Maybe later'),
+                        child: Text(TextStrings().mayBeLater),
                       )
                     : SizedBox()
               ],

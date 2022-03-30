@@ -1,6 +1,7 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/person_vertical_tile.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -78,7 +79,7 @@ class _DesktopTranferOverlappingContactsState
                               size: 15.toFont,
                             ),
                             SizedBox(width: 5),
-                            Text('Downloaded by',
+                            Text(TextStrings().downloadedBy,
                                 style: CustomTextStyles.grey15),
                           ],
                         )
@@ -114,7 +115,7 @@ class _DesktopTranferOverlappingContactsState
                               size: 15.toFont,
                             ),
                             SizedBox(width: 5),
-                            Text('Delivered to',
+                            Text(TextStrings().deliveredTo,
                                 style: CustomTextStyles.grey15),
                           ],
                         )
@@ -154,13 +155,13 @@ class _DesktopTranferOverlappingContactsState
                                 ),
                                 SizedBox(width: 5),
                                 Text(
-                                  'Failed to send to',
+                                  TextStrings().failedToSend,
                                   style: CustomTextStyles.grey15,
                                 ),
                               ],
                             ),
                             Text(
-                              'Retry(${filedInDeliveringList.length})',
+                              '${TextStrings().retry}(${filedInDeliveringList.length})',
                               style: CustomTextStyles.red15,
                             ),
                           ],
