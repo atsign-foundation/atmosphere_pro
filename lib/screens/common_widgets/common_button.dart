@@ -2,7 +2,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CommonButton extends StatelessWidget {
-  final String title;
+  final String? title;
   final Function()? onTap;
   final double? border, height, width, fontSize;
   final Color? color;
@@ -47,7 +47,7 @@ class CommonButton extends StatelessWidget {
                 width: leading != null ? 5 : 0,
               ),
               Text(
-                title ?? '',
+                title!,
                 style: TextStyle(
                     color: textColor ?? Colors.white,
                     fontSize: fontSize ?? 15.toFont,
