@@ -101,6 +101,7 @@ class _DesktopReceivedFileDetailsState
 
   @override
   Widget build(BuildContext context) {
+    getFutureBuilders();
     return Container(
       color: ColorConstants.selago,
       height: SizeConfig().screenHeight,
@@ -278,9 +279,19 @@ class _DesktopReceivedFileDetailsState
               ],
             ),
             SizedBox(height: 15.toHeight),
-            Text(
-                '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}',
-                style: CustomTextStyles.greyText15),
+            RichText(
+              text: TextSpan(
+                  text:
+                      '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}  | ',
+                  style: CustomTextStyles.greyText15,
+                  children: [
+                    widget.fileTransfer!.isDownloading!
+                        ? TextSpan(
+                            text: '${getFileStateMessage()}',
+                            style: CustomTextStyles.blueRegular14)
+                        : TextSpan(text: ''),
+                  ]),
+            ),
             SizedBox(height: 15.toHeight),
             SizedBox(height: 15.toHeight),
           ],
@@ -398,7 +409,9 @@ class _DesktopReceivedFileDetailsState
   }
 
   downloadFiles() async {
-    var res = await Provider.of<HistoryProvider>(context, listen: false)
+    var res = await Provider.of<HistoryProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
         .downloadFiles(
       widget.fileTransfer!.key!,
       widget.fileTransfer!.sender!,
@@ -415,15 +428,44 @@ class _DesktopReceivedFileDetailsState
         });
       }
 
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().fileDownloadd,
+        bgColor: ColorConstants.successGreen,
+      );
+
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
           .sendFileDownloadAcknowledgement(widget.fileTransfer!);
     } else {
       SnackbarService().showSnackbar(
-        context,
+        NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,
       );
     }
+  }
+
+  String getFileStateMessage() {
+    FileTransferProgress? fileTransferProgress =
+        widget.fileTransfer!.fileTransferProgress;
+    if (fileTransferProgress == null) {
+      return '';
+    }
+
+    var index = widget.fileTransfer!.files!
+        .indexWhere((element) => element.name == fileTransferProgress.fileName);
+    String fileState = '';
+    if (fileTransferProgress.fileState == FileState.download) {
+      fileState = 'Downloading';
+    } else {
+      fileState = 'Decrypting';
+    }
+
+    if (index != -1) {
+      fileState =
+          '${fileState} ${index + 1} of ${widget.fileTransfer!.files!.length} File(s)';
+    }
+    return fileState;
   }
 }

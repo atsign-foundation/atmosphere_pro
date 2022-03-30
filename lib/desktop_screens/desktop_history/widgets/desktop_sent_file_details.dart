@@ -205,8 +205,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                       style: CustomTextStyles.greyText15),
             ],
           ),
-          SizedBox(height: 15.toHeight),
-          Text('Successfully transfered', style: CustomTextStyles.greyText15),
+          // SizedBox(height: 15.toHeight),
+          // Text('Successfully transfered', style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           Text(
               '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData!.fileDetails!.date!)}',

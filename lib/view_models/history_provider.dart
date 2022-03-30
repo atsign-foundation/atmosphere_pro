@@ -884,8 +884,6 @@ class HistoryProvider extends BaseModel {
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
       {String? downloadPath}) async {
-    updateFileTransferState(
-        transferId, null); //setting filetransfer progress as null
     var index =
         receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
@@ -930,6 +928,8 @@ class HistoryProvider extends BaseModel {
               listen: false)
           .checkForUndownloadedFiles();
 
+      updateFileTransferState(
+          transferId, null); //setting filetransfer progress as null
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
