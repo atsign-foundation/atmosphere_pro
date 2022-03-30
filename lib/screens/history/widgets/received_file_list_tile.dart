@@ -51,6 +51,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   Uint8List? videoThumbnail, image;
   int fileSize = 0;
   List<String?> existingFileNamesToOverwrite = [];
+  String nickName = '';
 
   Future videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -72,6 +73,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
     checkForDownloadAvailability();
     getAtSignDetail();
+    getDisplayDetails();
     isFilesAlreadyDownloaded();
     super.initState();
   }
@@ -107,6 +109,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         });
       }
     }
+  }
+
+  getDisplayDetails() async {
+    var displayDetails =
+        await getAtSignDetails(widget.receivedHistory!.sender! ?? '');
+    nickName =
+        displayDetails.tags!['nickname'] ?? displayDetails.tags!['name'] ?? '';
+    setState(() {});
+    print('NickName');
+    print(nickName);
   }
 
   isFilesAlreadyDownloaded() async {
@@ -216,93 +228,69 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         ),
                       )
                     : SizedBox(),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: widget.receivedHistory!.sender != null
-                          ? Text(
-                              widget.receivedHistory!.sender!,
-                              style: CustomTextStyles.primaryRegular16,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : SizedBox(),
-                    ),
-                    InkWell(
-                        onTap: () async {
-                          if (isOverwrite!) {
-                            overwriteDialog();
-                            return;
-                          }
-                          await downloadFiles(widget.receivedHistory);
-                        },
-                        child: isDownloadAvailable!
-                            ? widget.receivedHistory!.isDownloading!
-                                ? CircularProgressIndicator()
-                                : ((isDownloaded! || isFilesAvailableOfline!) &&
-                                        !isOverwrite!)
-                                    ? Icon(
-                                        Icons.done,
-                                        color: Color(0xFF08CB21),
-                                        size: 25.toFont,
-                                      )
-                                    : Icon(
-                                        Icons.download_sharp,
-                                        size: 25.toFont,
-                                      )
-                            : SizedBox())
-                  ],
-                ),
-                SizedBox(height: 5.toHeight),
-                SizedBox(
-                  height: 8.toHeight,
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+            title: Padding(
+              padding: EdgeInsets.only(top: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${widget.receivedHistory!.files!.length} File(s)',
-                        style: CustomTextStyles.secondaryRegular12,
+                      Expanded(
+                        child: nickName.isNotEmpty
+                            ? Text(
+                                nickName,
+                                style: CustomTextStyles.primaryRegular16,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : Text(
+                                widget.receivedHistory!.sender!.substring(1),
+                                style: CustomTextStyles.primaryRegular16,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                       ),
-                      SizedBox(width: 10.toHeight),
-                      Text(
-                        '.',
-                        style: CustomTextStyles.secondaryRegular12,
-                      ),
-                      SizedBox(width: 10.toHeight),
-                      Text(
-                        double.parse(fileSize.toString()) <= 1024
-                            ? '${fileSize} ' + TextStrings().kb
-                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                TextStrings().mb,
-                        style: CustomTextStyles.secondaryRegular12,
-                      )
+                      InkWell(
+                          onTap: () async {
+                            if (isOverwrite) {
+                              overwriteDialog();
+                              return;
+                            }
+                            await downloadFiles(widget.receivedHistory);
+                          },
+                          child: Padding(
+                              padding: EdgeInsets.only(top: 5.0),
+                              child: isDownloadAvailable
+                                  ? widget.receivedHistory!.isDownloading!
+                                      ? CircularProgressIndicator()
+                                      : ((isDownloaded ||
+                                                  isFilesAvailableOfline) &&
+                                              !isOverwrite)
+                                          ? Icon(
+                                              Icons.done,
+                                              color: Color(0xFF08CB21),
+                                              size: 25.toFont,
+                                            )
+                                          : Icon(
+                                              Icons.download_sharp,
+                                              size: 25.toFont,
+                                            )
+                                  : SizedBox()))
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 20.toHeight,
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      widget.receivedHistory!.date != null
-                          ? Text(
-                              '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory!.date!)}',
-                              style: CustomTextStyles.secondaryRegular12,
-                            )
-                          : SizedBox(),
-                      SizedBox(width: 10.toHeight),
-                      Container(
-                        color: ColorConstants.fontSecondary,
-                        height: 14.toHeight,
-                        width: 1.toWidth,
+                      Expanded(
+                        child: widget.receivedHistory!.sender != null
+                            ? Text(
+                                widget.receivedHistory!.sender!,
+                                style: CustomTextStyles.primaryMedium14,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : SizedBox(),
                       ),
                       SizedBox(width: 10.toHeight),
                       widget.receivedHistory!.date != null
@@ -361,12 +349,59 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   ),
                                 ),
                               )
-                            ],
-                          ),
+                            : SizedBox(),
+                        SizedBox(width: 10.toHeight),
+                        Container(
+                          color: ColorConstants.fontSecondary,
+                          height: 14.toHeight,
+                          width: 1.toWidth,
                         ),
-                      )
-                    : Container(),
-              ],
+                        SizedBox(width: 10.toHeight),
+                        widget.receivedHistory!.date != null
+                            ? Text(
+                                '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
+                                style: CustomTextStyles.secondaryRegular12,
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.toHeight,
+                  ),
+                  (!isOpen!)
+                      ? GestureDetector(
+                          onTap: () {
+                            if (mounted) {
+                              setState(() {
+                                isOpen = !isOpen!;
+                              });
+                            }
+                          },
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Text(
+                                  TextStrings().seeFiles,
+                                  style: CustomTextStyles.primaryBlueBold14,
+                                ),
+                                Container(
+                                  width: 22.toWidth,
+                                  height: 22.toWidth,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
             ),
           ),
           isOpen!
@@ -433,7 +468,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 width: 50.toHeight,
                                 child: FutureBuilder(
                                     future: isFilePresent(widget
-                                        .receivedHistory!.files![index].name),
+                                            .receivedHistory!
+                                            .files![index]
+                                            .name ??
+                                        ''),
                                     builder: (context,
                                         AsyncSnapshot<bool> snapshot) {
                                       return snapshot.connectionState ==
