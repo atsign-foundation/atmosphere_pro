@@ -127,17 +127,25 @@ class DesktopSetupRoutes {
         });
   }
 
-  static Future nested_pop() async {
-    GroupService().clearSelectedGroupContacts(
-        context: NavService.nestedNavKey.currentContext!,
-        onYesTap: () {
-          _provider.update(null);
+  static Future nested_pop({bool checkGroupSelection = true}) async {
+    if (checkGroupSelection) {
+      GroupService().clearSelectedGroupContacts(
+          context: NavService.nestedNavKey.currentContext!,
+          onYesTap: () async {
+            await _nested_pop();
+          });
+    } else {
+      await _nested_pop();
+    }
+  }
 
-          if ((NavService.nestedNavKey.currentState != null) &&
-              (Navigator.canPop(NavService.nestedNavKey.currentContext!))) {
-            Navigator.of(NavService.nestedNavKey.currentContext!).pop();
-          }
-        });
+  static Future _nested_pop() async {
+    _provider.update(null);
+
+    if ((NavService.nestedNavKey.currentState != null) &&
+        (Navigator.canPop(NavService.nestedNavKey.currentContext!))) {
+      Navigator.of(NavService.nestedNavKey.currentContext!).pop();
+    }
   }
 }
 
