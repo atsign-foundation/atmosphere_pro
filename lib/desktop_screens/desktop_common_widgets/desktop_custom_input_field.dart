@@ -35,13 +35,13 @@ class DesktopCustomInputField extends StatelessWidget {
         selection: TextSelection.collapsed(
             offset: initialValue != null ? initialValue.length : -1)));
     return Container(
-      width: width,
+      width: width.toWidth,
       height: height,
       decoration: BoxDecoration(
           color: backgroundColor ?? ColorConstants.inputFieldColor,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: ColorConstants.light_grey)),
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      padding: EdgeInsets.fromLTRB(10.toWidth, 0, 10.toWidth, 0),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Row(

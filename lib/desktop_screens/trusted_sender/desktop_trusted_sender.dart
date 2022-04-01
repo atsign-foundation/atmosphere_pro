@@ -71,7 +71,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                       searchText = s;
                                     });
                                   }),
-                              SizedBox(width: 15),
+                              SizedBox(width: 15.toWidth),
                               TextButton(
                                 onPressed: () {
                                   setState(() {
@@ -96,7 +96,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 15),
+                              SizedBox(width: 15.toWidth),
                               //TODO: filter option is removed from ui for now.
                               // InkWell(
                               //   onTap: () {
