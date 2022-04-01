@@ -118,7 +118,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       nickName = displayDetails.tags!['nickname'] ??
           displayDetails.tags!['name'] ??
           '';
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 

@@ -75,8 +75,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
       nickName = displayDetails.tags!['nickname'] ??
           displayDetails.tags!['name'] ??
           '';
+      if (mounted) {
+        setState(() {});
+      }
     }
-    setState(() {});
   }
 
   @override
@@ -746,10 +748,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   }
 
   Widget typingIndicator() {
-    return TypingIndicator(
-      showIndicator: true,
-      flashingCircleBrightColor: ColorConstants.dullText,
-      flashingCircleDarkColor: ColorConstants.fadedText,
+    return SizedBox(
+      height: 10,
+      child: TypingIndicator(
+        showIndicator: true,
+        flashingCircleBrightColor: ColorConstants.dullText,
+        flashingCircleDarkColor: ColorConstants.fadedText,
+      ),
     );
   }
 }

@@ -229,6 +229,7 @@ class TextStrings {
 
   static const uploaded = 'Uploaded';
   static const reUploadFileMsg = 'Do you want to reupload file ?';
+  static const uploadFile = 'Please upload file first.';
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';

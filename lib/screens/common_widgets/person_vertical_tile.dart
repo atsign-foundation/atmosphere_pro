@@ -6,6 +6,8 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -99,20 +101,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             borderRadius: BorderRadius.circular(50.toWidth),
                           ),
                           child: InkWell(
-                            onTap: () async {
-                              FileHistory selectedFileHistory =
-                                  Provider.of<FileTransferProvider>(context,
-                                          listen: false)
-                                      .getSelectedFileHistory!;
-
-                              print(
-                                  'selectedFileHistory : ${selectedFileHistory.fileTransferObject!.transferId}, atsign: ${widget.shareStatus.atsign}');
-
-                              await Provider.of<FileTransferProvider>(context,
-                                      listen: false)
-                                  .reSendFileNotification(selectedFileHistory,
-                                      widget.shareStatus.atsign!);
-                            },
+                            onTap: hanleResendFileNotificaiton,
                             child: widget.shareStatus.isSendingNotification!
                                 ? TypingIndicator(showIndicator: true)
                                 : Icon(Icons.refresh,
@@ -154,5 +143,29 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
         ],
       ),
     );
+  }
+
+  hanleResendFileNotificaiton() async {
+    FileHistory selectedFileHistory =
+        Provider.of<FileTransferProvider>(context, listen: false)
+            .getSelectedFileHistory!;
+    print(
+      'selectedFileHistory : ${selectedFileHistory.fileTransferObject!.transferId}, atsign: ${widget.shareStatus.atsign}',
+    );
+
+    // checking for unUploaded files
+    bool isAnyFileUploaded = selectedFileHistory.fileDetails!.files!
+        .any((element) => element.isUploaded == true);
+
+    if (isAnyFileUploaded) {
+      await Provider.of<FileTransferProvider>(context, listen: false)
+          .reSendFileNotification(
+              selectedFileHistory, widget.shareStatus.atsign!);
+    } else {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        'Please upload file first.',
+      );
+    }
   }
 }

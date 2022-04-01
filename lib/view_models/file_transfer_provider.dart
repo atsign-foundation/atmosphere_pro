@@ -366,7 +366,6 @@ class FileTransferProvider extends BaseModel {
       filename: _filesList[_index].name,
     );
 
-    var _atclient = AtClientManager.getInstance().atClient;
     try {
       File file =
           File(MixedConstants.DESKTOP_SENT_DIR + _filesList[_index].name!);
@@ -426,7 +425,6 @@ class FileTransferProvider extends BaseModel {
 
   reSendFileNotification(FileHistory fileHistory, String atsign) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
-    var _atclient = AtClientManager.getInstance().atClient;
 
     Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
             listen: false)
