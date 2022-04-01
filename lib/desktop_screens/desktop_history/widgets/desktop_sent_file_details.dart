@@ -75,12 +75,13 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                         child: ListTile(
                           title: Text(
                             widget.selectedFileData!.fileDetails!.files![index]
-                                .name
-                                .toString(),
+                                .name!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14.toFont,
                             ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           subtitle: Text(
                             double.parse(widget.selectedFileData!.fileDetails!

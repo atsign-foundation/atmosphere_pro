@@ -101,7 +101,6 @@ class _DesktopReceivedFileDetailsState
 
   @override
   Widget build(BuildContext context) {
-    getFutureBuilders();
     return Container(
       color: ColorConstants.selago,
       height: SizeConfig().screenHeight,

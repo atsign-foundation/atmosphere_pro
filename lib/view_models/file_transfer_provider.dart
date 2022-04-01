@@ -250,7 +250,6 @@ class FileTransferProvider extends BaseModel {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     try {
-      var _atclient = BackendService.getInstance().atClientInstance!;
       var _historyProvider = Provider.of<HistoryProvider>(
           NavService.navKey.currentContext!,
           listen: false);

@@ -52,7 +52,6 @@ class _DesktopHomeState extends State<DesktopHome> {
   @override
   void initState() {
     storeApplicationDocumentsDirectory();
-    _checkToOnboard();
     super.initState();
   }
 
@@ -71,6 +70,7 @@ class _DesktopHomeState extends State<DesktopHome> {
     }
 
     MixedConstants.ApplicationDocumentsDirectory = path.path;
+    _checkToOnboard();
   }
 
   void _checkToOnboard() async {

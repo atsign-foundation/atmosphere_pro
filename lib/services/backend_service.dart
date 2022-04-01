@@ -15,6 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.d
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -400,6 +401,9 @@ class BackendService {
             await onboardSuccessCallback(value, atsign!, atClientPrefernce);
           },
           onError: (error) {
+            SnackbarService().showSnackbar(
+                NavService.navKey.currentContext!, 'Onboarding failed.',
+                bgColor: ColorConstants.redAlert);
             print('Onboarding throws $error error');
           },
           appAPIKey: MixedConstants.ONBOARD_API_KEY);
@@ -448,6 +452,9 @@ class BackendService {
           },
           onError: (error) {
             print('Onboarding throws $error error');
+            SnackbarService().showSnackbar(
+                NavService.navKey.currentContext!, 'Onboarding failed.',
+                bgColor: ColorConstants.redAlert);
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);
           },
