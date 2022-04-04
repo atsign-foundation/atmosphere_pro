@@ -39,35 +39,23 @@ class AppVersion {
 
 class Version {
   String latestVersion;
-  String buildNumber;
   String minVersion;
-  String minBuildNumber;
-  bool isBackwardCompatible;
-  Version(
-      {required this.latestVersion,
-      required this.buildNumber,
-      required this.minVersion,
-      required this.isBackwardCompatible,
-      required this.minBuildNumber});
+  Version({
+    required this.latestVersion,
+    required this.minVersion,
+  });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['latestVersion'] = latestVersion;
     data['minVersion'] = minVersion;
-    data['buildNumber'] = buildNumber;
-    data['minBuildNumber'] = minBuildNumber;
-    data['isBackwardCompatible'] = isBackwardCompatible.toString();
     return data;
   }
 
   factory Version.fromJson(Map<String, dynamic> json) {
     return Version(
       latestVersion: json['latestVersion'],
-      buildNumber: json['buildNumber'],
       minVersion: json['minVersion'],
-      minBuildNumber: json['minBuildNumber'],
-      isBackwardCompatible:
-          json['isBackwardCompatible'] == 'true' ? true : false,
     );
   }
 }

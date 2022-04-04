@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/version.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class VersionService {
   VersionService._();
@@ -20,118 +20,53 @@ class VersionService {
     return _internal;
   }
 
-  AppVersion appVersion = AppVersion();
-  late Version? version;
+  Version? version;
   late PackageInfo packageInfo;
   bool isBackwardCompatible = true, isNewVersionAvailable = false;
 
   init() async {
     isBackwardCompatible = true;
     isNewVersionAvailable = false;
-    appVersion = AppVersion();
     await getVersion();
     compareVersions();
     showVersionUpgradeDialog();
   }
 
-  /// [setVersion] is used to update version data in key
-  /// should only be updated by [@significantredpanda]
-  setVersion() async {
-    var androidVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
-    );
-    var iosVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
-    );
-    var macosVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
-    );
-    var windowsVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
-    );
-    var linuxVersion = Version(
-      latestVersion: '1.0.5',
-      minVersion: '5.5.5',
-      buildNumber: '30',
-      minBuildNumber: '10',
-      isBackwardCompatible: false,
-    );
-
-    var appVersion = AppVersion(
-      android: androidVersion,
-      ios: iosVersion,
-      macOs: macosVersion,
-      windows: windowsVersion,
-      linux: linuxVersion,
-    );
-
-    AtKey atKey = getAtKey();
-    var res = await AtClientManager.getInstance().atClient.put(
-          atKey,
-          json.encode(appVersion.toJson()),
-        );
-
-    print('res : ${res}  : ${json.encode(appVersion.toJson())}');
-  }
-
   getVersion() async {
     packageInfo = await PackageInfo.fromPlatform();
-    print(
-      'info : ${packageInfo.version}, build no: ${packageInfo.buildNumber}',
-    );
 
-    AtKey atKey = getAtKey();
-    var atvalue =
-        await AtClientManager.getInstance().atClient.get(atKey).catchError((e) {
-      print('error in verison get : ${e}');
-      return AtValue();
-    });
+    try {
+      var response = await http.get(Uri.parse(MixedConstants.RELEASE_TAG_API));
 
-    if (atvalue.value != null) {
-      try {
-        appVersion = AppVersion.fromJson(jsonDecode(atvalue.value));
-      } catch (e) {
-        appVersion = AppVersion();
+      if (response.statusCode == 200) {
+        var decodedResponse = jsonDecode(response.body);
+
+        var body = decodedResponse['body'];
+        var minVersion = body.substring(0, 27) + '}';
+        minVersion = minVersion.replaceAll(
+          "minimumVersion",
+          '"minimumVersion"',
+        );
+        minVersion = minVersion.replaceAll("'", '"');
+
+        var minVersionJson = jsonDecode(minVersion);
+
+        version = Version(
+          latestVersion: decodedResponse['name'],
+          minVersion: minVersionJson['minimumVersion'],
+        );
+
+        print('version to json: ${version!.toJson()}');
+        print(
+            'packageInfo : ${packageInfo.version}.${packageInfo.buildNumber}');
       }
+    } catch (e) {
+      print('error in fetching release tag : $e');
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings.releaseTagError,
+      );
     }
-
-    print('appVersion : ${appVersion.toJson()}');
-
-    if (Platform.isIOS) {
-      version = appVersion.ios;
-    } else if (Platform.isAndroid) {
-      version = appVersion.android;
-    } else if (Platform.isMacOS) {
-      version = appVersion.macOs;
-    } else if (Platform.isWindows) {
-      version = appVersion.windows;
-    } else if (Platform.isLinux) {
-      version = appVersion.linux;
-    }
-  }
-
-  AtKey getAtKey() {
-    return AtKey()
-      ..key = 'app_versions'
-      ..metadata = Metadata()
-      ..metadata!.isPublic = true
-      ..sharedBy = '@significantredpanda';
   }
 
   showVersionUpgradeDialog() async {
@@ -158,7 +93,7 @@ class VersionService {
                   child: Column(
                     children: <Widget>[
                       Text(
-                          '${TextStrings().updateAppMsg} ${packageInfo.version} ${TextStrings().to} ${version!.latestVersion}')
+                          'You can now update this app from ${packageInfo.version}.${packageInfo.buildNumber} to ${version!.latestVersion}')
                     ],
                   ),
                 ),
@@ -206,7 +141,7 @@ class VersionService {
       } else if (int.parse(latestPackageNumbers[2]) >
           int.parse(currentPackageNumbers[2])) {
         isNewVersionAvailable = true;
-      } else if (int.parse(version!.buildNumber) >
+      } else if (int.parse(latestPackageNumbers[3]) >
           int.parse(packageInfo.buildNumber)) {
         isNewVersionAvailable = true;
       }
@@ -221,7 +156,7 @@ class VersionService {
       } else if (int.parse(minPackageNumbers[2]) >
           int.parse(currentPackageNumbers[2])) {
         isBackwardCompatible = false;
-      } else if (int.parse(version!.minBuildNumber) >
+      } else if (int.parse(minPackageNumbers[3]) >
           int.parse(packageInfo.buildNumber)) {
         isBackwardCompatible = false;
       }
@@ -241,10 +176,11 @@ class VersionService {
     // for forced version update
     if (!isBackwardCompatible && status != null) {
       newVersion.showUpdateDialog(
-        context: NavService.navKey.currentContext!,
-        versionStatus: status,
-        allowDismissal: false,
-      );
+          context: NavService.navKey.currentContext!,
+          versionStatus: status,
+          allowDismissal: false,
+          dialogText:
+              'You can now update this app from ${packageInfo.version}.${packageInfo.buildNumber} to ${version!.latestVersion}');
     } else {
       newVersion.showAlertIfNecessary(
           context: NavService.navKey.currentContext!);

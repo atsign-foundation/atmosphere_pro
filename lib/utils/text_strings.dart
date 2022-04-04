@@ -328,4 +328,5 @@ class TextStrings {
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
+  static const releaseTagError = 'Error in fetching release tag.';
 }
