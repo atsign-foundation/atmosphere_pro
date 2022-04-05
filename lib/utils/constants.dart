@@ -29,7 +29,7 @@ class MixedConstants {
       'https://www.microsoft.com/en-in/p/mospherepro/9nk4dhfxdnm1?cid=msft_web_chart&activetab=pivot:overviewtab';
 
   static const RELEASE_TAG_API =
-      'https://api.github.com/repos/atsign-foundation/atmosphere_pro/releases/latest';
+      'https://atsign-foundation.github.io/atmosphere-pro/version.html';
 
   static const LINUX_STORE_LINK = '';
 

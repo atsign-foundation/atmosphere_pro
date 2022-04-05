@@ -329,4 +329,8 @@ class TextStrings {
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
   static const releaseTagError = 'Error in fetching release tag.';
+  static const upgradeDialogShowError =
+      'Error in showing app upgrade dialog box.';
+  static const appVersionFetchError =
+      'Could not fetch latest app version details.';
 }

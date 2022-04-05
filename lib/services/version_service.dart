@@ -41,27 +41,17 @@ class VersionService {
       if (response.statusCode == 200) {
         var decodedResponse = jsonDecode(response.body);
 
-        var body = decodedResponse['body'];
-        var minVersion = body.substring(0, 27) + '}';
-        minVersion = minVersion.replaceAll(
-          "minimumVersion",
-          '"minimumVersion"',
-        );
-        minVersion = minVersion.replaceAll("'", '"');
-
-        var minVersionJson = jsonDecode(minVersion);
-
         version = Version(
-          latestVersion: decodedResponse['name'],
-          minVersion: minVersionJson['minimumVersion'],
+          latestVersion: decodedResponse['latestVersion'],
+          minVersion: decodedResponse['minimumVersion'],
         );
-
-        print('version to json: ${version!.toJson()}');
-        print(
-            'packageInfo : ${packageInfo.version}.${packageInfo.buildNumber}');
+      } else {
+        SnackbarService().showSnackbar(
+          NavService.navKey.currentContext!,
+          TextStrings.appVersionFetchError,
+        );
       }
     } catch (e) {
-      print('error in fetching release tag : $e');
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
         TextStrings.releaseTagError,
@@ -70,15 +60,22 @@ class VersionService {
   }
 
   showVersionUpgradeDialog() async {
-    if (Platform.isIOS || Platform.isAndroid) {
-      mobileUpgradedDialog();
-    } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      desktopUpgradeDialog();
+    try {
+      if (Platform.isIOS || Platform.isAndroid) {
+        mobileUpgradedDialog();
+      } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        desktopUpgradeDialog();
+      }
+    } catch (e) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings.upgradeDialogShowError,
+      );
     }
   }
 
   desktopUpgradeDialog() {
-    if (isNewVersionAvailable) {
+    if (isNewVersionAvailable && version != null) {
       showDialog(
           context: NavService.navKey.currentContext!,
           barrierDismissible: isBackwardCompatible ? true : false,
@@ -173,17 +170,13 @@ class VersionService {
     final newVersion = NewVersion();
     final status = await newVersion.getVersionStatus();
 
-    // for forced version update
-    if (!isBackwardCompatible && status != null) {
+    if (status != null && isNewVersionAvailable && version != null) {
       newVersion.showUpdateDialog(
           context: NavService.navKey.currentContext!,
           versionStatus: status,
-          allowDismissal: false,
+          allowDismissal: isBackwardCompatible ? true : false,
           dialogText:
               'You can now update this app from ${packageInfo.version}.${packageInfo.buildNumber} to ${version!.latestVersion}');
-    } else {
-      newVersion.showAlertIfNecessary(
-          context: NavService.navKey.currentContext!);
     }
   }
 
