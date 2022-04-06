@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -19,7 +20,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
     return Consumer<HistoryProvider>(builder: (_, provider, ___) {
       return provider.recentFile.isEmpty
           ? Center(
-              child: Text('No file found'),
+              child: Text(TextStrings().noFilesFound),
             )
           : Container(
               padding: const EdgeInsets.symmetric(horizontal: 50),

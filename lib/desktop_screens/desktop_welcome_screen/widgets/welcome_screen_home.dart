@@ -187,9 +187,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         return GroupContactView(
             asSelectionScreen: true,
             singleSelection: false,
-            showGroups: false,
+            showGroups: true,
             showContacts: true,
             isDesktop: true,
+            contactSelectedHistory: _welcomeScreenProvider.selectedContacts,
             selectedList: (_list) {
               Provider.of<WelcomeScreenProvider>(
                       NavService.navKey.currentContext!,
@@ -201,12 +202,23 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               if (selectedGroupContacts!.isNotEmpty) {
                 CommonUtilityFunctions().shownConfirmationDialog(
                     TextStrings().contactSelectionConfirmation, () {
+                  //// TODO: If we want to clear the selected list of contacts if user goes back
+                  // Provider.of<WelcomeScreenProvider>(
+                  //         NavService.navKey.currentContext!,
+                  //         listen: false)
+                  //     .updateSelectedContacts([]);
+
                   Navigator.of(NavService.navKey.currentContext!).pop();
                   setState(() {
                     _currentScreen = CurrentScreen.PlaceolderImage;
                   });
                 });
               } else {
+                Provider.of<WelcomeScreenProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .updateSelectedContacts(
+                        []); // clear selected list if nothing is selected
                 setState(() {
                   _currentScreen = CurrentScreen.PlaceolderImage;
                 });

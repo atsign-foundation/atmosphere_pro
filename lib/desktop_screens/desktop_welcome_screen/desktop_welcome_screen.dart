@@ -82,7 +82,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
           provider.update();
         },
         errorBuilder: (provider) {
-          return Text('Error');
+          return Text(TextStrings().error);
         },
         successBuilder: (provider) {
           atClient = AtClientManager.getInstance().atClient;
@@ -172,7 +172,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
               DesktopWelcomeScreen(),
               authenticating
                   ? LoadingDialog()
-                      .showTextLoader('Initialising for $currentatSign')
+                      .showTextLoader('${TextStrings().initialisingFor} $currentatSign')
                   : SizedBox()
             ]),
           );
@@ -392,7 +392,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       ],
                     ),
                     errorBuilder: (provider) => Center(
-                      child: Text('Some error occured'),
+                      child: Text(TextStrings().errorOccured),
                     ),
                   ),
                 ),

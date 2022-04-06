@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/person_vertical_tile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                             size: 15.toFont,
                           ),
                           SizedBox(width: 5),
-                          Text('Downloaded by', style: CustomTextStyles.grey15),
+                          Text(TextStrings().downloadedBy, style: CustomTextStyles.grey15),
                         ],
                       )
                     : SizedBox(),
@@ -125,7 +126,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                             size: 15.toFont,
                           ),
                           SizedBox(width: 5),
-                          Text('Delivered to', style: CustomTextStyles.grey15),
+                          Text(TextStrings().deliveredTo, style: CustomTextStyles.grey15),
                         ],
                       )
                     : SizedBox(),
@@ -173,13 +174,13 @@ class _FileRecipientsState extends State<FileRecipients> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                'Failed to send to',
+                                TextStrings().failedToSend,
                                 style: CustomTextStyles.grey15,
                               ),
                             ],
                           ),
                           Text(
-                            'Retry(${filedInDeliveringList.length})',
+                            '${TextStrings().retry}(${filedInDeliveringList.length})',
                             style: CustomTextStyles.red15,
                           ),
                         ],

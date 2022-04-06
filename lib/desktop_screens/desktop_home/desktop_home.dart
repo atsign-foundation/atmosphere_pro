@@ -31,21 +31,21 @@ class _DesktopHomeState extends State<DesktopHome> {
   var _constants = [
     [
       ImageConstants.homeCaraousel1,
-      'Easy file sharing',
-      'Share any files, no restrictions,',
-      'Fast and secure across your contacts',
+      TextStrings().easyFileSharing,
+      TextStrings().shareAnyFiles,
+      TextStrings().fastAndSecure,
     ],
     [
       ImageConstants.homeCaraousel2,
-      'Share with groups',
-      'create groups and transfer file across',
-      'all members',
+       TextStrings().shareWithGroup,
+       TextStrings().createGroupAndTransferFile,
+       TextStrings().allMembers,
     ],
     [
       ImageConstants.homeCaraousel3,
-      'Trusted Senders',
-      'Customise senders and receive files',
-      'From trusted senders.'
+       TextStrings().trustedSenders,
+       TextStrings().customiseFiles,
+       TextStrings().fromTrustedSenders
     ],
   ];
 
@@ -136,19 +136,19 @@ class _DesktopHomeState extends State<DesktopHome> {
                       height: 28,
                     ),
                     Text(
-                      'File transfer.',
+                      TextStrings().fileTransfer,
                       style: CustomTextStyles.desktopBlackPlayfairDisplay26,
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "It's safe!",
+                     TextStrings().itsSafe,
                       style: CustomTextStyles.desktopBlackPlayfairDisplay26,
                     ),
                     Spacer(),
                     Text(
-                      '@sign',
+                      TextStrings().welcomeContactPlaceholder,
                       style: CustomTextStyles.secondaryRegular16,
                     ),
                     SizedBox(
@@ -167,7 +167,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                               borderRadius: BorderRadius.circular(7),
                             ),
                             child: ListTile(
-                              title: Text(currentatSign ?? 'Enter @sign',
+                              title: Text(currentatSign ?? TextStrings().enterAtSign,
                                   style: CustomTextStyles
                                       .desktopSecondaryRegular18),
                             ))),
@@ -178,10 +178,10 @@ class _DesktopHomeState extends State<DesktopHome> {
                       alignment: Alignment.centerRight,
                       child: CommonButton(
                         authenticating
-                            ? 'Initialising for $currentatSign...'
+                            ? '${TextStrings().initialisingFor} $currentatSign...'
                             : (currentatSign != null && !onboardError
-                                ? 'Authenticating...'
-                                : 'Start'),
+                                ? TextStrings().authenticating
+                                : TextStrings().buttonStart),
                         (currentatSign != null && !onboardError)
                             ? null
                             : () {
@@ -203,7 +203,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                     Align(
                       alignment: Alignment.center,
                       child: TextButton(
-                        child: Text('RESET',
+                        child: Text(TextStrings.resetButton,
                             style:
                                 TextStyle(color: ColorConstants.orangeColor)),
                         onPressed: () {
@@ -213,11 +213,11 @@ class _DesktopHomeState extends State<DesktopHome> {
                     ),
                     Spacer(),
                     Text(
-                      '@mosphere',
+                      TextStrings().desktopAppName,
                       style: CustomTextStyles.blackBold(size: 14),
                     ),
                     Text(
-                      'The @company Copyrights',
+                      TextStrings().desktopCopyRight,
                       style: CustomTextStyles.secondaryRegular14,
                     ),
                   ],
@@ -373,7 +373,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              'Close',
+                              TextStrings().buttonClose,
                               style: TextStyle(
                                 fontSize: 15,
                                 // color: AtTheme.themecolor,
@@ -395,7 +395,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                               },
                               value: isSelectAll,
                               checkColor: Colors.white,
-                              title: Text('Select All',
+                              title: Text(TextStrings().selectAll,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )),
@@ -438,7 +438,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                                     _resetDevice(tempAtsignMap.keys.toList());
                                   }
                                 },
-                                child: Text('Remove',
+                                child: Text(TextStrings().remove,
                                     style: TextStyle(
                                       color: ColorConstants.fontPrimary,
                                       fontSize: 15,
@@ -449,7 +449,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text('Cancel',
+                                  child: Text(TextStrings().buttonCancel,
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black)))
                             ])

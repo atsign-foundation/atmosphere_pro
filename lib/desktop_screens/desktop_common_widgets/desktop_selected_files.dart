@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSelectedFiles extends StatefulWidget {
   ValueChanged<bool> onChange;
@@ -35,7 +36,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Selected files', style: CustomTextStyles.desktopPrimaryBold18),
+          Text(TextStrings().selectedFiles, style: CustomTextStyles.desktopPrimaryBold18),
           SizedBox(
             height: 30,
           ),

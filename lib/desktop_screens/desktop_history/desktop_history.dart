@@ -130,7 +130,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           successBuilder: (provider) {
                             return (provider.sentHistory.isEmpty)
                                 ? Center(
-                                    child: Text('No files sent',
+                                    child: Text(TextStrings().noFilesSent,
                                         style: TextStyle(fontSize: 15.toFont)),
                                   )
                                 : ListView.separated(
@@ -166,7 +166,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                   );
                           },
                           errorBuilder: (provider) => Center(
-                            child: Text('Some error occured'),
+                            child: Text(TextStrings().errorOccured),
                           ),
                           load: (provider) async {
                             provider.getSentHistory();
@@ -190,7 +190,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             return (provider.receivedHistoryLogs.isEmpty)
                                 ? Center(
                                     child: Text(
-                                      'No files received',
+                                      TextStrings().noFilesRecieved,
                                       style: TextStyle(fontSize: 15.toFont),
                                     ),
                                   )
@@ -234,7 +234,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                   );
                           },
                           errorBuilder: (provider) => Center(
-                            child: Text('Some error occured'),
+                            child: Text(TextStrings().errorOccured),
                           ),
                         ),
                       ],

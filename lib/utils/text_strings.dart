@@ -217,6 +217,103 @@ class TextStrings {
   String contactSelectionConfirmation =
       'Selected contacts will not be added , confirm?';
 
+  // Desktop Selected file
+  String selectedFiles = 'Selected files';
+
+  // Desktop download all files
+  String recievedFileDownloadMsg =
+      'All the files you have received will be downloaded in the folder you select.';
+  String selectedDownloadFolder = 'Selected download folder: ';
+  static const String selectDownloadFolder = 'Select download folder';
+  String downloadingFiles = 'Downloading files...';
+  String downloadComplete = 'Download complete';
+  String selectFolderToDownload = 'Select folder to download';
+  String downloadInProgress = 'Download in progress';
+  String failedToDownload = 'failed to download';
+  String filesFrom = 'file(s) from';
+
+  // Desktop recieved file detail
+  String details = 'Details';
+  String downloadsFolder = 'Downloads folder';
+  String fileNamed = 'A file named ';
+  String alreadyExistsMsg = ' already exists. Do you want to overwrite it?';
+  String fileExists = 'These files already exist: ';
+  String overWriteMsg = '\nDo you want to overwrite them?';
+
+  // Desktop sent file details
+  String successfullyTransfered = 'Successfully transfered';
+  String file_s = 'File(s)';
+
+  // Desktop transfer overlapping
+  String downloadedBy = 'Downloaded by';
+  String failedToSend = 'Failed to send to';
+  String retry = 'Retry';
+
+  // Desktop home
+  String remove = 'Remove';
+  String selectAll = 'Select All';
+  String desktopAppName = '@mosphere';
+  String desktopCopyRight = 'The @company Copyrights';
+  String enterAtSign = 'Enter @sign';
+  String authenticating = 'Authenticating...';
+  String initialisingFor = 'Initialising for ';
+  String itsSafe = "It's safe!";
+  String fileTransfer = 'File transfer.';
+  String easyFileSharing = 'Easy file sharing';
+  String shareAnyFiles = 'Share any files, no restrictions,';
+  String fastAndSecure = 'Fast and secure across your contacts';
+  String shareWithGroup = 'Share with groups';
+  String createGroupAndTransferFile = 'create groups and transfer file across';
+  String allMembers = 'all members';
+  String customiseFiles = 'Customise senders and receive files';
+  String fromTrustedSenders = 'From trusted senders.';
+
+  // Desktop apk
+  String noFilesFound = 'No file found';
+
+  // Desktop Welcome screen
+  String error = 'Error';
+
+  // Desktop trusted senders
+  String somethingWentWrong = 'Something went wrong.';
+  String search = 'Search...';
+  String sortBy = 'Sort by';
+  String byName = 'By name';
+  String byDate = 'By date';
+  String apply = 'Apply';
+
+  String downloading = 'Downloading...';
+
+  // Error Message
+
+  String unableToPerform = 'Unable to perform this action. Please try again.';
+  String unableToAuthenticate = 'Unable to authenticate. Please try again.';
+  String failedInProcessing = 'Failed in processing. Please try again.';
+  String unableToConnectServer =
+      'Unable to connect server. Please try again later.';
+  String unableToPerformRead_Write =
+      'Unable to perform read/write operation. Please try again.';
+  String unableToActivateServer =
+      'Unable to activate server. Please contact admin.';
+  String serverIsUnavailable = 'Server is unavailable. Please try again later.';
+  String unableToConnect =
+      'Unable to connect. Please check with network connection and try again.';
+  String invalidAtSign = 'Invalid atsign is provided. Please contact admin.';
+  String unknownError = 'Unknown error.';
+
+  // Backend Service
+  String syncFailed = 'Sync Failed.';
+
+  // Common Utility Functions
+  String deleteAtSign = 'Delete @sign';
+  String atSignDoesNotMatch = "The @sign doesn't match. Please retype.";
+
+  // Version Service
+  String updateAppMsg = 'You can update this app from';
+  String update = 'Update';
+  String mayBeLater = 'Maybe later';
+  String to = 'to';
+
   static final String resetButton = 'Reset';
   static const String resetDescription =
       'This will remove the selected @sign and its details from this app only.';
@@ -231,4 +328,9 @@ class TextStrings {
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
+  static const releaseTagError = 'Error in fetching release tag.';
+  static const upgradeDialogShowError =
+      'Error in showing app upgrade dialog box.';
+  static const appVersionFetchError =
+      'Could not fetch latest app version details.';
 }
