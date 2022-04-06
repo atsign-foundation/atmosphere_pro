@@ -229,7 +229,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           ),
                         )
                       : SizedBox(height: 50.toHeight),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     image: menuItemsIcons[0],
                     title: menuItemsTitle[0],
@@ -252,7 +252,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           .selectedContacts
                     },
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   Consumer<FileDownloadChecker>(
                     builder: (context, _fileDownloadChecker, _) {
                       return SideBarItem(
@@ -267,14 +267,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       );
                     },
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     image: menuItemsIcons[2],
                     title: menuItemsTitle[2],
                     routeName: targetScreens[2],
                     showIconOnly: !isExpanded,
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     isScale: true,
                     image: menuItemsIcons[3],
@@ -286,7 +286,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       "url": MixedConstants.TERMS_CONDITIONS
                     },
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     isScale: true,
                     image: menuItemsIcons[4],
@@ -298,7 +298,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           BackendService.getInstance().currentAtsign
                     },
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     image: menuItemsIcons[5],
                     title: menuItemsTitle[5],
@@ -309,7 +309,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       'url': MixedConstants.TERMS_CONDITIONS
                     },
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarBackupItem(
                     title: isExpanded ? TextStrings().sidebarBackupKey : '',
                     leadingIcon: Icon(Icons.file_copy,
@@ -323,7 +323,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       ).showBackupDialog(context);
                     },
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                       image: menuItemsIcons[6],
                       title: menuItemsTitle[6],
@@ -333,14 +333,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         'title': menuItemsTitle[6],
                         'url': MixedConstants.PRIVACY_POLICY
                       }),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     image: menuItemsIcons[7],
                     title: menuItemsTitle[7],
                     routeName: targetScreens[7],
                     showIconOnly: !isExpanded,
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   SideBarItem(
                     isScale: true,
                     image: menuItemsIcons[8],
@@ -348,7 +348,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     routeName: targetScreens[8],
                     showIconOnly: !isExpanded,
                   ),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   InkWell(
                       onTap: () async {
                         CommonUtilityFunctions().showResetAtsignDialog();
@@ -358,7 +358,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         child: Row(children: [
                           Icon(Icons.delete,
                               color: ColorConstants.fadedText,
-                              size: isTablet ? 20.toHeight : 25.toHeight),
+                              size: isTablet ? 15.toHeight : 25.toHeight),
                           SizedBox(width: 10),
                           isExpanded
                               ? Text(
@@ -371,7 +371,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               : SizedBox(),
                         ]),
                       )),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   InkWell(
                       onTap: () async {
                         var atSignList = await KeychainUtil.getAtsignList();
@@ -388,7 +388,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         child: Row(children: [
                           Image.asset(
                             ImageConstants.logoutIcon,
-                            height: isTablet ? 20.toHeight : 22.toHeight,
+                            height: isTablet ? 15.toHeight : 22.toHeight,
                             color: ColorConstants.fadedText,
                           ),
                           SizedBox(width: 10),
@@ -403,7 +403,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               : SizedBox(),
                         ]),
                       )),
-                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(height: isTablet ? 15.toHeight : 0),
                   isExpanded
                       ? Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
