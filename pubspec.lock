@@ -81,9 +81,11 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_contacts_flutter
+      ref: welcome_message
+      resolved-ref: "7e9bfe81c604ba6aadad7a25bdcc7331695dadcc"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.2"
   at_contacts_group_flutter:
     dependency: "direct main"

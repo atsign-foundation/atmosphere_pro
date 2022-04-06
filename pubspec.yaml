@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.3+29
+version: 1.0.4+30
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -88,6 +88,11 @@ dependency_overrides:
     #   url: git@github.com:atsign-foundation/at_client_sdk.git
     #   ref: trunk
     #   path: at_client
+  at_contacts_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: welcome_message
+      path: at_contacts_flutter
 
 dev_dependencies:
   flutter_test:
@@ -145,7 +150,7 @@ msix_config:
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
-  msix_version: 1.0.1.0
+  msix_version: 1.0.4.0
   logo_path: app-icon.png
   capabilities: internetClient
   store: true
