@@ -46,16 +46,20 @@ packages:
   at_client:
     dependency: "direct overridden"
     description:
-      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client"
-      relative: false
-    source: path
+      path: at_client
+      ref: release-atmosphere-pro-v2
+      resolved-ref: "6a0759168fc413a28a2b9b4ef28c43365d96ac59"
+      url: "git@github.com:atsign-foundation/at_client_sdk.git"
+    source: git
     version: "3.0.16"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: "/Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile"
-      relative: false
-    source: path
+      path: at_client_mobile
+      ref: release-atmosphere-pro-v2
+      resolved-ref: "6a0759168fc413a28a2b9b4ef28c43365d96ac59"
+      url: "git@github.com:atsign-foundation/at_client_sdk.git"
+    source: git
     version: "3.1.11"
   at_common_flutter:
     dependency: "direct main"
@@ -626,14 +630,14 @@ packages:
       name: package_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.2"
   package_info_plus_linux:
     dependency: transitive
     description:
       name: package_info_plus_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.5"
   package_info_plus_macos:
     dependency: transitive
     description:
@@ -654,14 +658,14 @@ packages:
       name: package_info_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   package_info_plus_windows:
     dependency: transitive
     description:
       name: package_info_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   path:
     dependency: transitive
     description:

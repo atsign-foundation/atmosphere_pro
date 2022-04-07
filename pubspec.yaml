@@ -54,7 +54,7 @@ dependencies:
   video_thumbnail: ^0.4.6
   webview_flutter: ^3.0.1
   http: ^0.13.4
-  package_info_plus: ^1.4.0
+  package_info_plus: ^1.4.2
   fluttertoast: ^8.0.9
   file_selector: ^0.8.3
   file_selector_macos: ^0.8.2
@@ -77,17 +77,15 @@ dependencies:
     
 dependency_overrides:
   at_client_mobile:
-    path: /Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client_mobile
-    # git:
-    #   url: git@github.com:atsign-foundation/at_client_sdk.git
-    #   ref: release-atmosphere-pro
-    #   path: at_client_mobile
+    git:
+      url: git@github.com:atsign-foundation/at_client_sdk.git
+      ref: release-atmosphere-pro-v2
+      path: at_client_mobile
   at_client:
-    path: /Users/sarikagautam/Sites/atcompany_projects/at_client_sdk/at_client
-    # git:
-    #   url: git@github.com:atsign-foundation/at_client_sdk.git
-    #   ref: release-atmosphere-pro
-    #   path: at_client
+    git:
+      url: git@github.com:atsign-foundation/at_client_sdk.git
+      ref: release-atmosphere-pro-v2
+      path: at_client
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
