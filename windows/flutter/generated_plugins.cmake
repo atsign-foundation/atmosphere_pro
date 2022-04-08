@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_window
   file_saver
   file_selector_windows
+  local_notifier
   permission_handler_windows
   url_launcher_windows
 )
