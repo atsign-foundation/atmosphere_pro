@@ -271,10 +271,16 @@ class CommonUtilityFunctions {
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: (snapshot.data == null)
-                        ? Image.asset(
-                            ImageConstants.unknownLogo,
+                        ? Image.asset(ImageConstants.unknownLogo,
                             fit: BoxFit.cover,
-                          )
+                            errorBuilder: (BuildContext _context, _, __) {
+                            return Container(
+                              child: Icon(
+                                Icons.image,
+                                size: 30.toFont,
+                              ),
+                            );
+                          })
                         : Image.memory(
                             snapshot.data as Uint8List,
                             fit: BoxFit.cover,
@@ -431,7 +437,7 @@ class CommonUtilityFunctions {
                 ),
                 SizedBox(height: 20),
                 Text(
-                   TextStrings().actionCannotUndone,
+                  TextStrings().actionCannotUndone,
                   style: TextStyle(
                     fontSize: 13.toFont,
                     letterSpacing: 0.1,
