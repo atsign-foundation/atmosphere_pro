@@ -220,7 +220,7 @@ class _HomeState extends State<Home> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  TextStrings().homeDescriptionMain,
+                                  TextStrings().homeDescriptionMobile,
                                   style: GoogleFonts.playfairDisplay(
                                     textStyle: TextStyle(
                                       fontSize: 38.toFont,

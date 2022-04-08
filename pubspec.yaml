@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.4+32
+version: 1.0.5+34
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -139,7 +139,7 @@ msix_config:
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
-  msix_version: 1.0.4.0
+  msix_version: 1.0.5.0
   logo_path: app-icon.png
   capabilities: internetClient
   store: true

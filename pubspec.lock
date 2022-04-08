@@ -63,7 +63,7 @@ packages:
       name: at_common_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.6"
   at_commons:
     dependency: "direct main"
     description:

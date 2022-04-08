@@ -37,15 +37,15 @@ class _DesktopHomeState extends State<DesktopHome> {
     ],
     [
       ImageConstants.homeCaraousel2,
-       TextStrings().shareWithGroup,
-       TextStrings().createGroupAndTransferFile,
-       TextStrings().allMembers,
+      TextStrings().shareWithGroup,
+      TextStrings().createGroupAndTransferFile,
+      TextStrings().allMembers,
     ],
     [
       ImageConstants.homeCaraousel3,
-       TextStrings().trustedSenders,
-       TextStrings().customiseFiles,
-       TextStrings().fromTrustedSenders
+      TextStrings().trustedSenders,
+      TextStrings().customiseFiles,
+      TextStrings().fromTrustedSenders
     ],
   ];
 
@@ -136,41 +136,22 @@ class _DesktopHomeState extends State<DesktopHome> {
                       height: 28,
                     ),
                     Text(
-                      TextStrings().fileTransfer,
+                      TextStrings().homeDescriptionDesktop,
                       style: CustomTextStyles.desktopBlackPlayfairDisplay26,
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    Text(
-                     TextStrings().itsSafe,
-                      style: CustomTextStyles.desktopBlackPlayfairDisplay26,
+                    Text.rich(
+                      TextSpan(
+                        text: TextStrings().homeDescriptionSub,
+                        style: TextStyle(
+                          fontSize: 20.toFont,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     Spacer(),
-                    Text(
-                      TextStrings().welcomeContactPlaceholder,
-                      style: CustomTextStyles.secondaryRegular16,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                        onTap: currentatSign != null
-                            ? () {}
-                            : () {
-                                _onBoard('');
-                              },
-                        child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: ColorConstants.textBoxBg,
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: ListTile(
-                              title: Text(currentatSign ?? TextStrings().enterAtSign,
-                                  style: CustomTextStyles
-                                      .desktopSecondaryRegular18),
-                            ))),
                     SizedBox(
                       height: 30,
                     ),
@@ -217,7 +198,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                       style: CustomTextStyles.blackBold(size: 14),
                     ),
                     Text(
-                      TextStrings().desktopCopyRight,
+                      TextStrings().copyRight,
                       style: CustomTextStyles.secondaryRegular14,
                     ),
                   ],
