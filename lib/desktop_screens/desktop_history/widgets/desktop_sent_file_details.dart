@@ -76,12 +76,13 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                         child: ListTile(
                           title: Text(
                             widget.selectedFileData!.fileDetails!.files![index]
-                                .name
-                                .toString(),
+                                .name!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14.toFont,
                             ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           subtitle: Text(
                             double.parse(widget.selectedFileData!.fileDetails!
@@ -207,8 +208,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                       style: CustomTextStyles.greyText15),
             ],
           ),
-          SizedBox(height: 15.toHeight),
-          Text(TextStrings().successfullyTransfered, style: CustomTextStyles.greyText15),
+          // SizedBox(height: 15.toHeight),
+          // Text('Successfully transfered', style: CustomTextStyles.greyText15),
           SizedBox(height: 15.toHeight),
           Text(
               '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData!.fileDetails!.date!)}',

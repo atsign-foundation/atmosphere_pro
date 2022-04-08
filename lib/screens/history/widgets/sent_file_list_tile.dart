@@ -71,8 +71,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   getDisplayDetails() async {
     var displayDetails = await getAtSignDetails(contactList[0] ?? '');
-    nickName = displayDetails.tags!['nickname'] ?? displayDetails.tags!['name'] ?? '';
-    setState(() {});
+    if (displayDetails.tags != null) {
+      nickName = displayDetails.tags!['nickname'] ??
+          displayDetails.tags!['name'] ??
+          '';
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -221,7 +227,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                     '${contactList.length - 1} others',
                                                 style: CustomTextStyles
                                                     .blueRegular16,
-                                                recognizer: TapGestureRecognizer()
+                                                recognizer:
+                                                    TapGestureRecognizer()
                                                       ..onTap = () {
                                                         openFileReceiptBottomSheet();
                                                       })
@@ -741,10 +748,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   }
 
   Widget typingIndicator() {
-    return TypingIndicator(
-      showIndicator: true,
-      flashingCircleBrightColor: ColorConstants.dullText,
-      flashingCircleDarkColor: ColorConstants.fadedText,
+    return SizedBox(
+      height: 10,
+      child: TypingIndicator(
+        showIndicator: true,
+        flashingCircleBrightColor: ColorConstants.dullText,
+        flashingCircleDarkColor: ColorConstants.fadedText,
+      ),
     );
   }
 }

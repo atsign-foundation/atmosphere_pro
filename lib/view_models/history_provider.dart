@@ -20,6 +20,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -904,11 +905,11 @@ class HistoryProvider extends BaseModel {
 
       var files;
       try {
-        files = await AtClientManager.getInstance().atClient.downloadFile(
-              transferId,
-              sharedBy,
-              downloadPath: downloadPath ?? _downloadPath,
-            );
+        files = await FileTransferService.getInstance().downloadFile(
+          transferId,
+          sharedBy,
+          downloadPath: downloadPath ?? _downloadPath,
+        );
       } catch (e) {
         SnackbarService().showSnackbar(
           NavService.navKey.currentContext!,
@@ -927,6 +928,8 @@ class HistoryProvider extends BaseModel {
               listen: false)
           .checkForUndownloadedFiles();
 
+      updateFileTransferState(
+          transferId, null); //setting filetransfer progress as null
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
@@ -1021,18 +1024,29 @@ class HistoryProvider extends BaseModel {
       throw Exception('json decode exception in download file ${e.toString()}');
     }
     var downloadedFiles = <File>[];
-    var fileDownloadReponse = await _downloadSingleFromFileBin(
-        fileTransferObject, downloadPath, fileName);
+
+    var tempDirectory =
+        await Directory(downloadPath).createTemp('encrypted-files');
+    var fileDownloadReponse =
+        await FileTransferService.getInstance().downloadIndividualFile(
+      fileTransferObject.fileUrl,
+      tempDirectory.path,
+      fileName,
+    );
+
     if (fileDownloadReponse.isError) {
       throw Exception('download fail');
     }
-    var encryptedFileList = Directory(fileDownloadReponse.filePath!).listSync();
+    var encryptedFileList = tempDirectory.listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
         var decryptedFile = await EncryptionService().decryptFileInChunks(
-            File(encryptedFile.path),
-            fileTransferObject.fileEncryptionKey,
-            4096);
+          File(encryptedFile.path),
+          fileTransferObject.fileEncryptionKey,
+          BackendService.getInstance()
+              .atClientPreference
+              .fileEncryptionChunkSize,
+        );
         decryptedFile.copySync(downloadPath +
             Platform.pathSeparator +
             encryptedFile.path.split(Platform.pathSeparator).last);
@@ -1203,6 +1217,16 @@ class HistoryProvider extends BaseModel {
       notifyListeners();
     }
     return res;
+  }
+
+  updateFileTransferState(
+      String transferId, FileTransferProgress? fileTransferProgress) {
+    var index =
+        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
+    if (index != -1) {
+      receivedHistoryLogs[index].fileTransferProgress = fileTransferProgress;
+      notifyListeners();
+    }
   }
 
   // save file in gallery function is not in use as of now.

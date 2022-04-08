@@ -114,11 +114,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   getDisplayDetails() async {
     var displayDetails =
         await getAtSignDetails(widget.receivedHistory!.sender! ?? '');
-    nickName =
-        displayDetails.tags!['nickname'] ?? displayDetails.tags!['name'] ?? '';
-    setState(() {});
-    print('NickName');
-    print(nickName);
+    if (displayDetails.tags != null) {
+      nickName = displayDetails.tags!['nickname'] ??
+          displayDetails.tags!['name'] ??
+          '';
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
   isFilesAlreadyDownloaded() async {
@@ -318,7 +321,24 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
                                   TextStrings().mb,
                           style: CustomTextStyles.secondaryRegular12,
-                        )
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        widget.receivedHistory!.isDownloading!
+                            ? Container(
+                                color: ColorConstants.fontSecondary,
+                                height: 14.toHeight,
+                                width: 1.toWidth,
+                              )
+                            : SizedBox(),
+                        SizedBox(width: 10.toHeight),
+                        widget.receivedHistory!.isDownloading!
+                            ? Expanded(
+                                child: Text(getFileStateMessage(),
+                                    style: TextStyle(
+                                        fontSize: 11.toFont,
+                                        color: ColorConstants.blueText)),
+                              )
+                            : SizedBox()
                       ],
                     ),
                   ),
@@ -362,6 +382,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 isOpen = !isOpen!;
                               });
                             }
+                            updateIsWidgetOpen();
                           },
                           child: Container(
                             child: Row(
@@ -573,6 +594,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             isOpen = !isOpen!;
                           });
                         }
+                        updateIsWidgetOpen();
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 85.toHeight),
@@ -611,7 +633,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     bool? isFilePresent = true,
   }) {
     // when file overwrite is true, we are not showing file preview.
-    if (isOverwrite!) {
+    if (isOverwrite) {
       isFilePresent = false;
     }
     if (FileTypes.IMAGE_TYPES.contains(extension)) {
@@ -745,7 +767,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   downloadFiles(FileTransfer? receivedHistory, {String? fileName}) async {
     var result;
     if (fileName != null) {
-      result = await Provider.of<HistoryProvider>(context, listen: false)
+      result = await Provider.of<HistoryProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
           .downloadSingleFile(
         widget.receivedHistory!.key,
         widget.receivedHistory!.sender,
@@ -753,7 +777,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         fileName,
       );
     } else {
-      result = await Provider.of<HistoryProvider>(context, listen: false)
+      result = await Provider.of<HistoryProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
           .downloadFiles(
         widget.receivedHistory!.key!,
         widget.receivedHistory!.sender!,
@@ -769,13 +795,18 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           isOverwrite = false;
         });
       }
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().fileDownloadd,
+        bgColor: ColorConstants.successGreen,
+      );
       // send download acknowledgement
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
           .sendFileDownloadAcknowledgement(receivedHistory!);
     } else if (result is bool && !result) {
       SnackbarService().showSnackbar(
-        context,
+        NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,
       );
@@ -884,5 +915,40 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       );
     }
     return textSpansMessage;
+  }
+
+  String getFileStateMessage() {
+    FileTransferProgress? fileTransferProgress =
+        widget.receivedHistory!.fileTransferProgress;
+    if (fileTransferProgress == null) {
+      return '';
+    }
+
+    var index = widget.receivedHistory!.files!
+        .indexWhere((element) => element.name == fileTransferProgress.fileName);
+    String fileState = '';
+    if (fileTransferProgress.fileState == FileState.download) {
+      fileState = 'Downloading';
+    } else {
+      fileState = 'Decrypting';
+    }
+
+    if (index != -1) {
+      fileState =
+          '${fileState} ${index + 1} of ${widget.receivedHistory!.files!.length} File(s)';
+    }
+    return fileState;
+  }
+
+  updateIsWidgetOpen() {
+    var receivedHistoryLogs = Provider.of<HistoryProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .receivedHistoryLogs;
+    var index = receivedHistoryLogs
+        .indexWhere((element) => element.key == widget.receivedHistory!.key);
+    if (index != -1) {
+      receivedHistoryLogs[index].isWidgetOpen = isOpen;
+    }
   }
 }

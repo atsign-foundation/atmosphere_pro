@@ -15,6 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.d
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -297,9 +298,8 @@ class BackendService {
 
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
-    if (syncStatus.dataChange && !historyProvider.isSyncedDataFetched) {
+    if (!historyProvider.isSyncedDataFetched) {
       historyProvider.isSyncedDataFetched = true;
-
       await VersionService.getInstance().init();
 
       if (historyProvider.status[historyProvider.DOWNLOAD_ACK] !=
@@ -316,6 +316,10 @@ class BackendService {
           Status.Loading) {
         await historyProvider.getReceivedHistory();
       }
+
+      Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
+              listen: false)
+          .checkForUndownloadedFiles();
     }
   }
 
@@ -336,7 +340,8 @@ class BackendService {
                       .hideCurrentSnackBar();
                   await AtSyncUIService().sync();
                 },
-                child: Text(TextStrings().retry, style: CustomTextStyles.whiteBold16),
+                child: Text(TextStrings().retry,
+                    style: CustomTextStyles.whiteBold16),
               )
             ],
           ),
@@ -398,6 +403,9 @@ class BackendService {
             await onboardSuccessCallback(value, atsign!, atClientPrefernce);
           },
           onError: (error) {
+            SnackbarService().showSnackbar(
+                NavService.navKey.currentContext!, 'Onboarding failed.',
+                bgColor: ColorConstants.redAlert);
             print('Onboarding throws $error error');
           },
           appAPIKey: MixedConstants.ONBOARD_API_KEY);
@@ -446,6 +454,9 @@ class BackendService {
           },
           onError: (error) {
             print('Onboarding throws $error error');
+            SnackbarService().showSnackbar(
+                NavService.navKey.currentContext!, 'Onboarding failed.',
+                bgColor: ColorConstants.redAlert);
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);
           },

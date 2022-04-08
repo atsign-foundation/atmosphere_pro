@@ -34,7 +34,7 @@ class _RecentsState extends State<Recents> {
                 margin: EdgeInsets.symmetric(
                     vertical: 10.toHeight, horizontal: 10.toWidth),
                 child: GridView.builder(
-                    itemCount: provider.receivedPhotos.length,
+                    itemCount: provider.recentFile.length,
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: SizeConfig().screenWidth / 4,
                       mainAxisExtent: 110.toHeight,

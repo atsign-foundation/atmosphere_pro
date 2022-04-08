@@ -143,6 +143,7 @@ class TextStrings {
   String groups = 'Groups';
   String downloadAllFiles = 'Download all files';
   String downloadFailed = 'Download failed, please try again.';
+  String fileDownloadd = 'File(s) downloaded';
   String noGroups = 'No Groups';
   String newGroup = 'New Group';
   String addGroups = 'Would you like to create a group';
@@ -325,6 +326,7 @@ class TextStrings {
 
   static const uploaded = 'Uploaded';
   static const reUploadFileMsg = 'Do you want to reupload file ?';
+  static const uploadFile = 'Please upload file first.';
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';

@@ -249,6 +249,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 _currentScreen = CurrentScreen.PlaceolderImage;
               }
               setState(() {
+                isFileShareFailed = false;
                 _welcomeScreenProvider.isSelectionItemChanged = true;
               });
             }),
@@ -261,6 +262,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   _filePickerProvider.selectedFiles.isEmpty) {
                 _currentScreen = CurrentScreen.PlaceolderImage;
               }
+              isFileShareFailed = false;
               setState(() {});
             }, showCancelIcon: !isFileSending),
           ],
@@ -331,6 +333,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   resetFileSelection() {
     if (mounted) {
       setState(() {
+        isFileShareFailed = false;
         _filePickerProvider.selectedFiles = [];
         _welcomeScreenProvider.selectedContacts = [];
         _currentScreen = CurrentScreen.PlaceolderImage;

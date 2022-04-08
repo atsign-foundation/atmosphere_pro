@@ -11,17 +11,18 @@ class FileTransfer {
   bool? isUpdate;
   bool? isDownloading;
   bool? isWidgetOpen;
-  FileTransfer({
-    this.url,
-    this.files,
-    this.expiry,
-    this.platformFiles,
-    this.date,
-    this.key,
-    this.isUpdate = false,
-    this.isDownloading = false,
-    this.isWidgetOpen = false,
-  }) {
+  FileTransferProgress? fileTransferProgress;
+  FileTransfer(
+      {this.url,
+      this.files,
+      this.expiry,
+      this.platformFiles,
+      this.date,
+      this.key,
+      this.isUpdate = false,
+      this.isDownloading = false,
+      this.isWidgetOpen = false,
+      this.fileTransferProgress}) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
 
@@ -209,3 +210,12 @@ class DownloadAcknowledgement {
     return data;
   }
 }
+
+class FileTransferProgress {
+  FileState fileState;
+  double percent;
+  String fileName;
+  FileTransferProgress(this.fileState, this.percent, this.fileName);
+}
+
+enum FileState { encrypt, decrypt, upload, download }
