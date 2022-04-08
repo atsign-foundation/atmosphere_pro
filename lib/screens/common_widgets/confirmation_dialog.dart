@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -33,13 +34,13 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       Navigator.of(context).pop();
                       await widget.onConfirmation();
                     },
-                    child: Text('Yes', style: TextStyle(fontSize: 16.toFont))),
+                    child: Text(TextStrings().yes, style: TextStyle(fontSize: 16.toFont))),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                     child:
-                        Text('Cancel', style: TextStyle(fontSize: 16.toFont)))
+                        Text(TextStrings().buttonCancel, style: TextStyle(fontSize: 16.toFont)))
               ],
             )
           ],

@@ -13,6 +13,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory? selectedFileData;
@@ -54,7 +55,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Details',
+          Text(TextStrings().details,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           SizedBox(height: 15.toHeight),
           Column(
@@ -88,9 +89,9 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                         .files![index].size
                                         .toString()) <=
                                     1024
-                                ? '${widget.selectedFileData!.fileDetails!.files![index].size} Kb' +
+                                ? '${widget.selectedFileData!.fileDetails!.files![index].size} ${TextStrings().kb}' +
                                     ' . ${widget.selectedFileData!.fileDetails!.files![index].name!.split('.').last}'
-                                : '${(widget.selectedFileData!.fileDetails!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                : '${(widget.selectedFileData!.fileDetails!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}' +
                                     ' . ${widget.selectedFileData!.fileDetails!.files![index].name!.split('.').last} ',
                             style: TextStyle(
                               color: ColorConstants.fadedText,
@@ -196,13 +197,14 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
           Row(
             children: <Widget>[
               Text(
-                '${fileCount.toString()} files . ',
+                '${fileCount.toString()} ${TextStrings().file_s}',
                 style: CustomTextStyles.greyText15,
               ),
               fileSize > 1024
-                  ? Text('${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB',
+                  ? Text(
+                      '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
                       style: CustomTextStyles.greyText15)
-                  : Text('${fileSize.toStringAsFixed(2)} KB',
+                  : Text('${fileSize.toStringAsFixed(2)} ${TextStrings().kb}',
                       style: CustomTextStyles.greyText15),
             ],
           ),

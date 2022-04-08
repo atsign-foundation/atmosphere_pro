@@ -1,5 +1,6 @@
 import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
@@ -91,35 +92,56 @@ class DesktopSetupRoutes {
   }
 
   static Future nested_push(String? value,
-      {Object? arguments, Function? callbackAfterNavigation}) {
-    if (_provider.current_route != null) {
-      var _res = nested_push_replacement(value!, arguments: arguments);
-      return _res;
-    }
-    _provider.update(value);
-    return Navigator.of(NavService.nestedNavKey.currentContext!)
-        .pushNamed(value!, arguments: arguments)
-        .then((response) {
-      if (callbackAfterNavigation != null) {
-        callbackAfterNavigation();
-      }
-    });
+      {Object? arguments, Function? callbackAfterNavigation}) async {
+    GroupService().clearSelectedGroupContacts(
+        context: NavService.nestedNavKey.currentContext!,
+        onYesTap: () {
+          if (_provider.current_route != null) {
+            var _res = nested_push_replacement(value!, arguments: arguments);
+            return _res;
+          }
+          _provider.update(value);
+          return Navigator.of(NavService.nestedNavKey.currentContext!)
+              .pushNamed(value!, arguments: arguments)
+              .then((response) {
+            if (callbackAfterNavigation != null) {
+              callbackAfterNavigation();
+            }
+          });
+        });
   }
 
   static Future nested_push_replacement(String value,
-      {Object? arguments, Function? callbackAfterNavigation}) {
-    _provider.update(value);
-    return Navigator.of(NavService.nestedNavKey.currentContext!)
-        .pushReplacementNamed(value, arguments: arguments)
-        .then((response) {
-      if (callbackAfterNavigation != null) {
-        callbackAfterNavigation();
-      }
-    });
+      {Object? arguments, Function? callbackAfterNavigation}) async {
+    GroupService().clearSelectedGroupContacts(
+        context: NavService.nestedNavKey.currentContext!,
+        onYesTap: () {
+          _provider.update(value);
+          return Navigator.of(NavService.nestedNavKey.currentContext!)
+              .pushReplacementNamed(value, arguments: arguments)
+              .then((response) {
+            if (callbackAfterNavigation != null) {
+              callbackAfterNavigation();
+            }
+          });
+        });
   }
 
-  static Future nested_pop() async {
+  static Future nested_pop({bool checkGroupSelection = true}) async {
+    if (checkGroupSelection) {
+      GroupService().clearSelectedGroupContacts(
+          context: NavService.nestedNavKey.currentContext!,
+          onYesTap: () async {
+            await _nested_pop();
+          });
+    } else {
+      await _nested_pop();
+    }
+  }
+
+  static Future _nested_pop() async {
     _provider.update(null);
+
     if ((NavService.nestedNavKey.currentState != null) &&
         (Navigator.canPop(NavService.nestedNavKey.currentContext!))) {
       Navigator.of(NavService.nestedNavKey.currentContext!).pop();

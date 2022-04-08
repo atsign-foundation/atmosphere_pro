@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class DesktopHeader extends StatelessWidget {
     return Container(
       child: Row(
         children: <Widget>[
-          SizedBox(width: 20),
+          SizedBox(width: 20.toWidth),
           showBackIcon
               ? InkWell(
                   onTap: () {
@@ -34,15 +35,16 @@ class DesktopHeader extends StatelessWidget {
                   child: Icon(Icons.arrow_back),
                 )
               : SizedBox(),
-          SizedBox(width: 15),
+          SizedBox(width: 15.toWidth),
           title != null && isTitleCentered
               ? Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: 20.toWidth),
                     child: Center(
                       child: Text(
                         title!,
                         style: CustomTextStyles.primaryRegular20,
+                        maxLines: 2,
                       ),
                     ),
                   ),
@@ -54,11 +56,12 @@ class DesktopHeader extends StatelessWidget {
                     child: Text(
                       title!,
                       style: CustomTextStyles.primaryRegular20,
+                      maxLines: 2,
                     ),
                   ),
                 )
               : SizedBox(),
-          SizedBox(width: 15),
+          SizedBox(width: 15.toWidth),
           !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
           actions != null
               ? Row(

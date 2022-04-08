@@ -27,7 +27,7 @@ class _RecentsState extends State<Recents> {
       successBuilder: (provider) {
         return (provider.recentFile.isEmpty)
             ? Center(
-                child: Text('No files received',
+                child: Text(TextStrings().noFilesRecieved,
                     style: TextStyle(fontSize: 15.toFont)),
               )
             : Container(

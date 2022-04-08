@@ -114,7 +114,7 @@ class CommonUtilityFunctions {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              'Close',
+                              TextStrings().buttonClose,
                               style: TextStyle(
                                 fontSize: 15,
                                 // color: AtTheme.themecolor,
@@ -137,7 +137,7 @@ class CommonUtilityFunctions {
                               },
                               value: isSelectAll,
                               checkColor: Colors.white,
-                              title: Text('Select All',
+                              title: Text(TextStrings().selectAll,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )),
@@ -186,7 +186,7 @@ class CommonUtilityFunctions {
                                     }, 'Remove ${atsignsListLength} @sign${atsignsListLength > 1 ? 's' : ''} from this device?');
                                   }
                                 },
-                                child: Text('Remove',
+                                child: Text(TextStrings().remove,
                                     style: TextStyle(
                                       color: ColorConstants.fontPrimary,
                                       fontSize: 15,
@@ -197,7 +197,7 @@ class CommonUtilityFunctions {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text('Cancel',
+                                  child: Text(TextStrings().buttonCancel,
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black)))
                             ])
@@ -271,10 +271,16 @@ class CommonUtilityFunctions {
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: (snapshot.data == null)
-                        ? Image.asset(
-                            ImageConstants.unknownLogo,
+                        ? Image.asset(ImageConstants.unknownLogo,
                             fit: BoxFit.cover,
-                          )
+                            errorBuilder: (BuildContext _context, _, __) {
+                            return Container(
+                              child: Icon(
+                                Icons.image,
+                                size: 30.toFont,
+                              ),
+                            );
+                          })
                         : Image.memory(
                             snapshot.data as Uint8List,
                             fit: BoxFit.cover,
@@ -370,7 +376,7 @@ class CommonUtilityFunctions {
             scrollable: true,
             title: Center(
               child: Text(
-                'Delete @sign',
+                TextStrings().deleteAtSign,
                 style: TextStyle(
                     color: Colors.black,
                     letterSpacing: 0.1,
@@ -382,7 +388,7 @@ class CommonUtilityFunctions {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Are you sure you want to delete all data associated with',
+                  TextStrings().deleteDataMessage,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     letterSpacing: 0.1,
@@ -399,7 +405,7 @@ class CommonUtilityFunctions {
                         fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 Text(
-                  'Type the @sign above to proceed',
+                  TextStrings().typeAtsignAbove,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey[700],
@@ -414,7 +420,7 @@ class CommonUtilityFunctions {
                     textAlign: TextAlign.center,
                     validator: (value) {
                       if (value != atsign) {
-                        return "The @sign doesn't match. Please retype.";
+                        return TextStrings().atSignDoesNotMatch;
                       } else {
                         return null;
                       }
@@ -431,7 +437,7 @@ class CommonUtilityFunctions {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Caution: this action can't be undone",
+                  TextStrings().actionCannotUndone,
                   style: TextStyle(
                     fontSize: 13.toFont,
                     letterSpacing: 0.1,
@@ -490,13 +496,13 @@ class CommonUtilityFunctions {
                       children: [
                         TextButton(
                             onPressed: onYesTap as void Function()?,
-                            child: Text('Yes',
+                            child: Text(TextStrings().yes,
                                 style: TextStyle(fontSize: 16.toFont))),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Cancel',
+                            child: Text(TextStrings().buttonCancel,
                                 style: TextStyle(fontSize: 16.toFont)))
                       ],
                     )

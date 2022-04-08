@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
             child: Column(
               children: [
                 Text(
-                  'All the files you have received will be downloaded in the folder you select.',
+                  TextStrings().recievedFileDownloadMsg,
                   style: TextStyle(
                       fontSize: 20.toFont,
                       fontWeight: FontWeight.bold,
@@ -49,7 +50,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                       textAlign: TextAlign.center,
                       text: TextSpan(children: [
                         TextSpan(
-                            text: 'Selected download folder: ',
+                            text: TextStrings().selectedDownloadFolder,
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(text: downloadFolder),
                       ])),
@@ -58,7 +59,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                 TextButton(
                   onPressed: _setDownloadFolder,
                   child: const Text(
-                    'Select download folder',
+                    TextStrings.selectDownloadFolder,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
@@ -67,8 +68,8 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                   onPressed: _fetchFiles,
                   child: Text(
                     isDownloading
-                        ? 'Downloading files...'
-                        : 'Download all files',
+                        ? TextStrings().downloadingFiles
+                        : TextStrings().downloadAllFiles,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
@@ -86,7 +87,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                         width: 150,
                         child: Row(
                           children: [
-                            Text('Download complete',
+                            Text(TextStrings().downloadComplete,
                                 style: TextStyle(color: Colors.green)),
                             Icon(
                               Icons.download_done,
@@ -116,14 +117,14 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
   _fetchFiles() async {
     if (downloadFolder == Platform.pathSeparator) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Select folder to download')),
+        SnackBar(content: Text(TextStrings().selectFolderToDownload)),
       );
       return;
     }
 
     if (isDownloading) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Download in progress')),
+        SnackBar(content: Text(TextStrings().downloadInProgress)),
       );
       return;
     }
@@ -152,7 +153,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'failed to download ${fileTransfer[i].files!.length} file(s) from ${fileTransfer[i].sender}'),
+                '${TextStrings().failedToDownload} ${fileTransfer[i].files!.length} ${TextStrings().filesFrom} ${fileTransfer[i].sender}'),
           ),
         );
       }

@@ -15,13 +15,31 @@ class WelcomeScreenProvider extends BaseModel {
   bool hasSelectedContactsChanged = false, authenticating = false;
   bool isSelectionItemChanged = false;
 
+  void _addtoContactsList(GroupContactsModel _obj) {
+    if (selectedContacts.indexWhere(
+            (element) => element.contact!.atSign == _obj.contact!.atSign) ==
+        -1) {
+      selectedContacts.add(_obj);
+    }
+  }
+
   updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
       selectedContacts = [];
       setStatus(updateContacts, Status.Loading);
-      updatedList.forEach((element) {
-        selectedContacts.add(element!);
-      });
+
+      for (var _obj in updatedList) {
+        if (_obj?.contact != null) {
+          _addtoContactsList(_obj!);
+        } else if (_obj!.group != null) {
+          /// add groups as contacts
+          /// this helps to remove contacts as well
+          _obj.group!.members?.forEach((element) {
+            _addtoContactsList(GroupContactsModel(contact: element));
+          });
+        }
+      }
+
       hasSelectedContactsChanged = true;
       scrollToBottom = true; // to scroll welcome screen to the bottom
       setStatus(updateContacts, Status.Done);

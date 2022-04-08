@@ -68,35 +68,14 @@ dependencies:
   at_lookup: ^3.0.11
   at_common_flutter: ^2.0.5
   
-  at_client_mobile: ^3.1.11
-  at_onboarding_flutter: ^4.0.0
-  at_backupkey_flutter: ^4.0.0
-  at_contacts_flutter: ^4.0.1
-  at_contacts_group_flutter: ^4.0.1
-   
+  at_client_mobile: ^3.1.12
+  at_onboarding_flutter: ^4.0.1
+  at_backupkey_flutter: ^4.0.1
+  at_contacts_flutter: ^4.0.2
+  at_contacts_group_flutter: ^4.0.2
+  local_notifier: ^0.1.1
     
 dependency_overrides:
-  
-  at_onboarding_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_onboarding_flutter
-  at_backupkey_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_backupkey_flutter
-  at_contacts_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: welcome_message
-      path: at_contacts_flutter
-  at_contacts_group_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_group_flutter
   at_sync_ui_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git

@@ -47,7 +47,7 @@ class CustomOnboarding {
         BackendService.getInstance().syncWithSecondary();
 
         if (!isInit) {
-          await DesktopSetupRoutes.nested_pop();
+          await DesktopSetupRoutes.nested_pop(checkGroupSelection: false);
         }
 
         if (showLoader != null) {

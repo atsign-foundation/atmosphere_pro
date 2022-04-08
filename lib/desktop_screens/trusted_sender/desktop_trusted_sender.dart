@@ -41,7 +41,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
           load: (provider) {},
           showError: false,
           errorBuilder: (provider) => Center(
-                child: Text('Something went wrong.'),
+                child: Text(TextStrings().somethingWentWrong),
               ),
           successBuilder: (provider) {
             return Stack(
@@ -54,14 +54,14 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                         children: <Widget>[
                           SizedBox(height: 20),
                           DesktopHeader(
-                            title: 'Trusted Senders',
+                            title: TextStrings().trustedSenders,
                             isTitleCentered: true,
                             showBackIcon: false,
                             onFilter: (val) {},
                             actions: [
                               DesktopCustomInputField(
                                   backgroundColor: Colors.white,
-                                  hintText: 'Search...',
+                                  hintText: TextStrings().search,
                                   icon: Icons.search,
                                   height: 45,
                                   iconColor: ColorConstants.greyText,
@@ -71,7 +71,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                       searchText = s;
                                     });
                                   }),
-                              SizedBox(width: 15),
+                              SizedBox(width: 15.toWidth),
                               TextButton(
                                 onPressed: () {
                                   setState(() {
@@ -90,13 +90,13 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                   },
                                 )),
                                 child: Text(
-                                  'Add',
+                                  TextStrings().add,
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 15),
+                              SizedBox(width: 15.toWidth),
                               //TODO: filter option is removed from ui for now.
                               // InkWell(
                               //   onTap: () {
@@ -216,7 +216,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Sort by',
+                                    TextStrings().sortBy,
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
@@ -235,8 +235,8 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                 height: 10,
                                 color: ColorConstants.greyText,
                               ),
-                              getFilterOptionWidget('By name', true),
-                              getFilterOptionWidget('By date', false),
+                              getFilterOptionWidget(TextStrings().byName, true),
+                              getFilterOptionWidget(TextStrings().byDate, false),
                               SizedBox(height: 15),
                               TextButton(
                                 onPressed: () {},
@@ -252,7 +252,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                   },
                                 )),
                                 child: Text(
-                                  'Apply',
+                                  TextStrings().apply,
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),

@@ -19,6 +19,7 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
@@ -332,14 +333,14 @@ class BackendService {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Sync Failed.', style: CustomTextStyles.grey15),
+              Text(TextStrings().syncFailed, style: CustomTextStyles.grey15),
               InkWell(
                 onTap: () async {
                   ScaffoldMessenger.of(NavService.navKey.currentContext!)
                       .hideCurrentSnackBar();
                   await AtSyncUIService().sync();
                 },
-                child: Text('Retry', style: CustomTextStyles.whiteBold16),
+                child: Text(TextStrings().retry, style: CustomTextStyles.whiteBold16),
               )
             ],
           ),
