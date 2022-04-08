@@ -44,23 +44,19 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_client
-      ref: release-atmosphere-pro-v2
-      resolved-ref: "6a0759168fc413a28a2b9b4ef28c43365d96ac59"
-      url: "git@github.com:atsign-foundation/at_client_sdk.git"
-    source: git
+      name: at_client
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.0.16"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: at_client_mobile
-      ref: release-atmosphere-pro-v2
-      resolved-ref: "6a0759168fc413a28a2b9b4ef28c43365d96ac59"
-      url: "git@github.com:atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.1.11"
+      name: at_client_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.12"
   at_common_flutter:
     dependency: "direct main"
     description:
