@@ -31,7 +31,7 @@ class MixedConstants {
   static const RELEASE_TAG_API =
       'https://atsign-foundation.github.io/atmosphere-pro/version.html';
 
-  static const LINUX_STORE_LINK = '';
+  static const LINUX_STORE_LINK = 'https://atsign.com/apps/';
 
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;

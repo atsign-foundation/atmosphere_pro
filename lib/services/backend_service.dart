@@ -340,7 +340,8 @@ class BackendService {
                       .hideCurrentSnackBar();
                   await AtSyncUIService().sync();
                 },
-                child: Text(TextStrings().retry, style: CustomTextStyles.whiteBold16),
+                child: Text(TextStrings().retry,
+                    style: CustomTextStyles.whiteBold16),
               )
             ],
           ),
