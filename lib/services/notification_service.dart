@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:local_notifier/local_notifier.dart';
@@ -25,26 +24,9 @@ class LocalNotificationService {
       _requestIOSPermission();
     }
 
-    if(Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
-        initializePlatformSpecifics();
+    if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
+      initializePlatformSpecifics();
     }
-
-    if(Platform.isWindows){
-      requestWindowsPermission();
-      
-    }
-  
-  }
-
-  requestWindowsPermission() async {
-    final localNotifier = LocalNotifier.instance;
-   LocalNotification notification = LocalNotification(
-      identifier: 'identifier',
-      title: "notification test",
-      subtitle: "example",
-      body: "hello flutter!",
-    );
-    await localNotifier.notify(notification);
   }
 
   initializePlatformSpecifics() {
@@ -84,54 +66,51 @@ class LocalNotificationService {
   }
 
   setOnNotificationClick(Function onNotificationClick) async {
-     if(Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
-           await _notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {
-      onNotificationClick(payload);
-    });
-     }
+    if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
+      await _notificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: (String? payload) async {
+        onNotificationClick(payload);
+      });
+    }
   }
 
   Future<void> showNotification(String from, String message) async {
-     if(Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
-         var androidChannelSpecifics = AndroidNotificationDetails(
-      'CHANNEL_ID',
-      'CHANNEL_NAME',
-      channelDescription: "CHANNEL_DESCRIPTION",
-      importance: Importance.high,
-      priority: Priority.high,
-      playSound: true,
-      timeoutAfter: 50000,
-      styleInformation: DefaultStyleInformation(true, true),
-    );
-    var iosChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        android: androidChannelSpecifics, iOS: iosChannelSpecifics);
-    NotificationPayload payload = NotificationPayload(
-      name: from,
-      // id: int.parse(id)
-    );
-    await _notificationsPlugin.show(
-        0, '$from sent you a file', message, platformChannelSpecifics,
-        payload: jsonEncode(payload));
-     } else if (Platform.isWindows){
-          final localNotifier = LocalNotifier.instance;
-   LocalNotification notification = LocalNotification(
-      identifier: 'identifier',
-      title: '$from sent you a file',
-      subtitle: message,
-    );
-    await localNotifier.notify(notification);
-     }
-
-  
+    if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
+      var androidChannelSpecifics = AndroidNotificationDetails(
+        'CHANNEL_ID',
+        'CHANNEL_NAME',
+        channelDescription: "CHANNEL_DESCRIPTION",
+        importance: Importance.high,
+        priority: Priority.high,
+        playSound: true,
+        timeoutAfter: 50000,
+        styleInformation: DefaultStyleInformation(true, true),
+      );
+      var iosChannelSpecifics = IOSNotificationDetails();
+      var platformChannelSpecifics = NotificationDetails(
+          android: androidChannelSpecifics, iOS: iosChannelSpecifics);
+      NotificationPayload payload = NotificationPayload(
+        name: from,
+        // id: int.parse(id)
+      );
+      await _notificationsPlugin.show(
+          0, '$from sent you a file', message, platformChannelSpecifics,
+          payload: jsonEncode(payload));
+    } else if (Platform.isWindows) {
+      final localNotifier = LocalNotifier.instance;
+      LocalNotification notification = LocalNotification(
+        identifier: 'identifier',
+        title: '$from sent you a file',
+        subtitle: message,
+      );
+      await localNotifier.notify(notification);
+    }
   }
 
   cancelNotifications() async {
-      if(Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
-         await _notificationsPlugin.cancelAll();
-      }
-   
+    if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
+      await _notificationsPlugin.cancelAll();
+    }
   }
 }
 
