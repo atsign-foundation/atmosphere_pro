@@ -44,23 +44,19 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_client
-      ref: trunk
-      resolved-ref: "1c8177c9d3ab53c0785677c6f46e25a58967291c"
-      url: "git@github.com:atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.0.14"
+      name: at_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.16"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: at_client_mobile
-      ref: trunk
-      resolved-ref: "1c8177c9d3ab53c0785677c6f46e25a58967291c"
-      url: "git@github.com:atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.1.10"
+      name: at_client_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.12"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -85,9 +81,11 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_contacts_flutter
+      ref: welcome_message
+      resolved-ref: "7e9bfe81c604ba6aadad7a25bdcc7331695dadcc"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.2"
   at_contacts_group_flutter:
     dependency: "direct main"
@@ -132,14 +130,12 @@ packages:
     source: hosted
     version: "1.0.3"
   at_sync_ui_flutter:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
-      path: at_sync_ui_flutter
-      ref: trunk
-      resolved-ref: "12eea91fb6517e4a3ab89188ac92f10710f8e15d"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
-    source: git
-    version: "1.0.1"
+      name: at_sync_ui_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   at_utf7:
     dependency: transitive
     description:
@@ -547,6 +543,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  local_notifier:
+    dependency: "direct main"
+    description:
+      name: local_notifier
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   logging:
     dependency: transitive
     description:
@@ -630,14 +633,14 @@ packages:
       name: package_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.2"
   package_info_plus_linux:
     dependency: transitive
     description:
       name: package_info_plus_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.5"
   package_info_plus_macos:
     dependency: transitive
     description:
@@ -658,14 +661,14 @@ packages:
       name: package_info_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   package_info_plus_windows:
     dependency: transitive
     description:
       name: package_info_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   path:
     dependency: transitive
     description:

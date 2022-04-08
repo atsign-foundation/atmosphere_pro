@@ -17,10 +17,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.3+26
+version: 1.0.4+32
 
 # Desktop version macos
-# version: 1.0.1+17
+# version: 1.0.1+19
 
 # Desktop version windows
 # version: 1.0.1+1
@@ -54,7 +54,7 @@ dependencies:
   video_thumbnail: ^0.4.6
   webview_flutter: ^3.0.1
   http: ^0.13.4
-  package_info_plus: ^1.4.0
+  package_info_plus: ^1.4.2
   fluttertoast: ^8.0.9
   file_selector: ^0.8.3
   file_selector_macos: ^0.8.2
@@ -67,21 +67,21 @@ dependencies:
   at_contact: ^3.0.5
   at_lookup: ^3.0.11
   at_common_flutter: ^2.0.5
+  local_notifier: ^0.1.1
   
   at_client_mobile: ^3.1.12
   at_onboarding_flutter: ^4.0.1
   at_backupkey_flutter: ^4.0.1
   at_contacts_flutter: ^4.0.2
   at_contacts_group_flutter: ^4.0.2
-  local_notifier: ^0.1.1
-   
+  at_sync_ui_flutter: ^1.0.2
     
 dependency_overrides:
-  at_sync_ui_flutter:
+  at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_sync_ui_flutter
+      ref: welcome_message
+      path: at_contacts_flutter
 
 dev_dependencies:
   flutter_test:
@@ -139,7 +139,7 @@ msix_config:
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
-  msix_version: 1.0.1.0
+  msix_version: 1.0.4.0
   logo_path: app-icon.png
   capabilities: internetClient
   store: true

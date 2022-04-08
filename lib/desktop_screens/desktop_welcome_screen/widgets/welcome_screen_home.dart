@@ -147,11 +147,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                             if (isFileSending) return;
 
                                             if (isFileShareFailed) {
-                                              reAttemptSendingFiles();
+                                              await reAttemptSendingFiles();
                                               return;
                                             }
 
-                                            sendFileWithFileBin();
+                                            await sendFileWithFileBin();
                                           },
                                           color: isFileSending
                                               ? ColorConstants.greyText
