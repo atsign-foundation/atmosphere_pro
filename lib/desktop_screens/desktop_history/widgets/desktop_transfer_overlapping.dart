@@ -97,6 +97,7 @@ class _DesktopTranferOverlappingContactsState
                       children: List.generate(downloadedByList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
+                            key: Key(downloadedByList[index].atsign!),
                             shareStatus: downloadedByList[index],
                             fileHistory: widget.fileHistory,
                           ),
@@ -133,6 +134,7 @@ class _DesktopTranferOverlappingContactsState
                       children: List.generate(deliveredToList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
+                            key: Key(deliveredToList[index].atsign!),
                             shareStatus: deliveredToList[index],
                             fileHistory: widget.fileHistory,
                           ),
@@ -181,6 +183,7 @@ class _DesktopTranferOverlappingContactsState
                           List.generate(filedInDeliveringList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
+                              key: Key(filedInDeliveringList[index].atsign!),
                               shareStatus: filedInDeliveringList[index],
                               fileHistory: widget.fileHistory,
                               isFailedAtsignList: true),
