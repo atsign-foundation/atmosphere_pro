@@ -268,6 +268,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             _fileDownloadChecker.undownloadedFilesExist
                                 ? ColorConstants.orangeColor
                                 : ColorConstants.fadedText,
+                        showNotificationDot:
+                            _fileDownloadChecker.undownloadedFilesExist
+                                ? true
+                                : false,
                       );
                     },
                   ),
