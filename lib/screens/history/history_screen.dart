@@ -6,6 +6,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -91,7 +92,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     RefreshIndicator(
                       onRefresh: () async {
-                        await historyProvider!.getSentHistory();
+                        if (historyProvider!
+                                .status[historyProvider!.PERIODIC_REFRESH] !=
+                            Status.Loading) {
+                          await historyProvider!.getSentHistory();
+                        }
                       },
                       child: ProviderHandler<HistoryProvider>(
                         functionName: historyProvider!.SENT_HISTORY,
@@ -158,7 +163,11 @@ class _HistoryScreenState extends State<HistoryScreen>
                     ),
                     RefreshIndicator(
                       onRefresh: () async {
-                        await historyProvider!.getReceivedHistory();
+                        if (historyProvider!
+                                .status[historyProvider!.PERIODIC_REFRESH] !=
+                            Status.Loading) {
+                          await historyProvider!.getReceivedHistory();
+                        }
                       },
                       child: ProviderHandler<HistoryProvider>(
                           functionName: historyProvider!.RECEIVED_HISTORY,

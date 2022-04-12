@@ -170,6 +170,7 @@ class FileTransferService {
       'file': file,
       'encryptionKey': encryptionKey,
       'fileEncryptionChunkSize': _preference.fileEncryptionChunkSize,
+      'path': MixedConstants.RECEIVED_FILE_DIRECTORY
     });
 
     receiverPort.listen((encryptedFile) {
@@ -396,9 +397,11 @@ class FileTransferService {
 
 void encryptFileInIsolate(Map params) async {
   final encryptedFile = await EncryptionService().encryptFileInChunks(
-      params['file'],
-      params['encryptionKey'],
-      params['fileEncryptionChunkSize']);
+    params['file'],
+    params['encryptionKey'],
+    params['fileEncryptionChunkSize'],
+    path: params['path'],
+  );
   params['sendPort'].send(encryptedFile);
 }
 

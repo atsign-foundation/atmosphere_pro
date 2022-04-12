@@ -77,6 +77,16 @@ dependencies:
   at_sync_ui_flutter: ^1.0.2
     
 dependency_overrides:
+  at_client:
+    git:
+      url: git@github.com:atsign-foundation/at_client_sdk.git
+      ref: fix/os-write-permission
+      path: at_client
+  at_client_mobile:
+    git:
+      url: git@github.com:atsign-foundation/at_client_sdk.git
+      ref: fix/os-write-permission
+      path: at_client_mobile
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git

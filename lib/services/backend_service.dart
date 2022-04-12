@@ -56,7 +56,7 @@ class BackendService {
   SyncService? syncService;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
-
+  Timer? periodicHistoryRefresh;
   String? get currentAtsign => currentAtSign;
   Directory? downloadDirectory;
   AnimationController? controller;
@@ -154,6 +154,13 @@ class BackendService {
         .subscribe(regex: MixedConstants.appNamespace)
         .listen((AtNotification notification) async {
       await _notificationCallBack(notification);
+    });
+  }
+
+  setPeriodicFileHistoryRefresh() {
+    periodicHistoryRefresh?.cancel();
+    periodicHistoryRefresh = Timer.periodic(Duration(minutes: 1), (timer) {
+      refreshHistoryScreen();
     });
   }
 
@@ -486,6 +493,7 @@ class BackendService {
 
     // start monitor and package initializations.
     await startMonitor();
+    setPeriodicFileHistoryRefresh();
     initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
@@ -562,5 +570,23 @@ class BackendService {
 
   showToast(String msg, {bool isError = false, bool isSuccess = true}) {
     ErrorDialog().show(msg, context: NavService.navKey.currentContext);
+  }
+
+  refreshHistoryScreen() async {
+    print('refreshing... history screen');
+    var historyProvider = Provider.of<HistoryProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
+    historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
+    if (historyProvider.status[historyProvider!.SENT_HISTORY] !=
+        Status.Loading) {
+      await historyProvider.getSentHistory(setLoading: false);
+    }
+
+    if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+        Status.Loading) {
+      await historyProvider.getReceivedHistory(setLoading: false);
+    }
+    historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Done);
   }
 }

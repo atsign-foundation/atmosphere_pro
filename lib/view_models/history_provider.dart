@@ -44,6 +44,7 @@ import 'file_download_checker.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
+  String PERIODIC_REFRESH = 'periodic_refresh';
   String RECENT_HISTORY = 'recent_history';
   String ADD_RECEIVED_FILE = 'add_received_file';
   String UPDATE_RECEIVED_RECORD = 'update_received_record';
@@ -52,11 +53,11 @@ class HistoryProvider extends BaseModel {
   String GET_ALL_FILE_DATA = 'get_all_file_data';
   String DOWNLOAD_FILE = 'download_file';
   String DOWNLOAD_ACK = 'download_ack';
-  List<FileHistory> sentHistory = [];
+  List<FileHistory> sentHistory = [], tempSentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
-  Map<String?, bool> individualSentFileId = {};
+  Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
 
   // on first transfer history fetch, we show loader in history screen.
@@ -217,9 +218,12 @@ class HistoryProvider extends BaseModel {
   // with new approach we are saving data in individual keys
   // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
   /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
-  getSentHistory() async {
-    sentHistory = [];
-    setStatus(SENT_HISTORY, Status.Loading);
+  getSentHistory({bool setLoading = true}) async {
+    if (setLoading) {
+      setStatus(SENT_HISTORY, Status.Loading);
+    }
+    tempSentHistory = [];
+
     try {
       AtKey key = AtKey()
         ..key = MixedConstants.SENT_FILE_HISTORY
@@ -241,7 +245,7 @@ class HistoryProvider extends BaseModel {
               filesModel.sharedWith,
               filesModel.fileTransferObject!.transferId,
             );
-            sentHistory.add(filesModel);
+            tempSentHistory.add(filesModel);
           });
         } catch (e) {
           print('error in file model conversion in getSentHistory: $e');
@@ -250,6 +254,7 @@ class HistoryProvider extends BaseModel {
 
       // fetching individually saved sent items.
       await getIndividuallySavedSentFileItems();
+      sentHistory = tempSentHistory;
       // deleting sent items records, older than 15 days.
       await removePastSentFiles();
       sortSentItems();
@@ -285,7 +290,7 @@ class HistoryProvider extends BaseModel {
             jsonDecode(atvalue.value),
           );
           individualSentFileId[fileHistory.fileDetails!.key] = true;
-          sentHistory.insert(0, fileHistory);
+          tempSentHistory.insert(0, fileHistory);
         } catch (e) {
           print('exeption in getSentFileItems : $e');
         }
@@ -409,9 +414,11 @@ class HistoryProvider extends BaseModel {
     setStatus(DOWNLOAD_ACK, Status.Done);
   }
 
-  getReceivedHistory() async {
-    receivedHistoryLogs = [];
-    setStatus(RECEIVED_HISTORY, Status.Loading);
+  getReceivedHistory({bool setLoading = true}) async {
+    if (setLoading) {
+      setStatus(RECEIVED_HISTORY, Status.Loading);
+    }
+
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
@@ -516,6 +523,18 @@ class HistoryProvider extends BaseModel {
 
     fileTransferResponse.retainWhere((element) =>
         !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
+
+    bool isNewKeyAvailable = false;
+    fileTransferResponse.forEach((element) {
+      if (receivedItemsId[element] == null) {
+        isNewKeyAvailable = true;
+      }
+      receivedItemsId[element] = true;
+    });
+
+    if (!isNewKeyAvailable) {
+      return;
+    }
 
     await Future.forEach(fileTransferResponse, (dynamic key) async {
       if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
