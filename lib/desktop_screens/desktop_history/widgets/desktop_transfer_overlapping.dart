@@ -59,144 +59,140 @@ class _DesktopTranferOverlappingContactsState
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: 20.toHeight, vertical: 5.toHeight),
-          child: Consumer<HistoryProvider>(
-            builder: (context, provider, _) {
-              sortAtsigns();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  downloadedByList.isNotEmpty
-                      ? Row(
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: 20.toHeight, vertical: 5.toHeight),
+      child: Consumer<HistoryProvider>(
+        builder: (context, provider, _) {
+          sortAtsigns();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              downloadedByList.isNotEmpty
+                  ? Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: ColorConstants.blueText,
+                          size: 15.toFont,
+                        ),
+                        SizedBox(width: 5),
+                        Text(TextStrings().downloadedBy,
+                            style: CustomTextStyles.grey15),
+                      ],
+                    )
+                  : SizedBox(),
+              downloadedByList.isNotEmpty
+                  ? SizedBox(height: 15.toHeight)
+                  : SizedBox(),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  runSpacing: 10.0,
+                  spacing: 15.0,
+                  children: List.generate(downloadedByList.length, (index) {
+                    return Container(
+                      child: CustomPersonVerticalTile(
+                        key: Key(downloadedByList[index].atsign!),
+                        shareStatus: downloadedByList[index],
+                        fileHistory: widget.fileHistory,
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              downloadedByList.isNotEmpty ? Divider() : SizedBox(),
+              SizedBox(height: 18.toHeight),
+              deliveredToList.isNotEmpty
+                  ? Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Color(0xFF0ACB21),
+                          size: 15.toFont,
+                        ),
+                        SizedBox(width: 5),
+                        Text(TextStrings().deliveredTo,
+                            style: CustomTextStyles.grey15),
+                      ],
+                    )
+                  : SizedBox(),
+              deliveredToList.isNotEmpty
+                  ? SizedBox(height: 15.toHeight)
+                  : SizedBox(),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  runSpacing: 10.0,
+                  spacing: 15.0,
+                  children: List.generate(deliveredToList.length, (index) {
+                    return Container(
+                      child: CustomPersonVerticalTile(
+                        key: Key(deliveredToList[index].atsign!),
+                        shareStatus: deliveredToList[index],
+                        fileHistory: widget.fileHistory,
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              deliveredToList.isNotEmpty ? Divider() : SizedBox(),
+              SizedBox(height: 18.toHeight),
+              filedInDeliveringList.isNotEmpty
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
                             Icon(
-                              Icons.check_circle,
-                              color: ColorConstants.blueText,
+                              Icons.error,
+                              color: ColorConstants.redAlert,
                               size: 15.toFont,
                             ),
                             SizedBox(width: 5),
-                            Text(TextStrings().downloadedBy,
-                                style: CustomTextStyles.grey15),
-                          ],
-                        )
-                      : SizedBox(),
-                  downloadedByList.isNotEmpty
-                      ? SizedBox(height: 15.toHeight)
-                      : SizedBox(),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      alignment: WrapAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      runSpacing: 10.0,
-                      spacing: 15.0,
-                      children: List.generate(downloadedByList.length, (index) {
-                        return Container(
-                          child: CustomPersonVerticalTile(
-                            key: Key(downloadedByList[index].atsign!),
-                            shareStatus: downloadedByList[index],
-                            fileHistory: widget.fileHistory,
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  downloadedByList.isNotEmpty ? Divider() : SizedBox(),
-                  SizedBox(height: 18.toHeight),
-                  deliveredToList.isNotEmpty
-                      ? Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              color: Color(0xFF0ACB21),
-                              size: 15.toFont,
-                            ),
-                            SizedBox(width: 5),
-                            Text(TextStrings().deliveredTo,
-                                style: CustomTextStyles.grey15),
-                          ],
-                        )
-                      : SizedBox(),
-                  deliveredToList.isNotEmpty
-                      ? SizedBox(height: 15.toHeight)
-                      : SizedBox(),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      alignment: WrapAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      runSpacing: 10.0,
-                      spacing: 15.0,
-                      children: List.generate(deliveredToList.length, (index) {
-                        return Container(
-                          child: CustomPersonVerticalTile(
-                            key: Key(deliveredToList[index].atsign!),
-                            shareStatus: deliveredToList[index],
-                            fileHistory: widget.fileHistory,
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  deliveredToList.isNotEmpty ? Divider() : SizedBox(),
-                  SizedBox(height: 18.toHeight),
-                  filedInDeliveringList.isNotEmpty
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.error,
-                                  color: ColorConstants.redAlert,
-                                  size: 15.toFont,
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  TextStrings().failedToSend,
-                                  style: CustomTextStyles.grey15,
-                                ),
-                              ],
-                            ),
                             Text(
-                              '${TextStrings().retry}(${filedInDeliveringList.length})',
-                              style: CustomTextStyles.red15,
+                              TextStrings().failedToSend,
+                              style: CustomTextStyles.grey15,
                             ),
                           ],
-                        )
-                      : SizedBox(),
-                  filedInDeliveringList.isNotEmpty
-                      ? SizedBox(height: 15.toHeight)
-                      : SizedBox(),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      alignment: WrapAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      runSpacing: 10.0,
-                      spacing: 15.0,
-                      children:
-                          List.generate(filedInDeliveringList.length, (index) {
-                        return Container(
-                          child: CustomPersonVerticalTile(
-                              key: Key(filedInDeliveringList[index].atsign!),
-                              shareStatus: filedInDeliveringList[index],
-                              fileHistory: widget.fileHistory,
-                              isFailedAtsignList: true),
-                        );
-                      }),
-                    ),
-                  ),
-                  filedInDeliveringList.isNotEmpty ? Divider() : SizedBox(),
-                ],
-              );
-            },
-          ),
-        ),
+                        ),
+                        Text(
+                          '${TextStrings().retry}(${filedInDeliveringList.length})',
+                          style: CustomTextStyles.red15,
+                        ),
+                      ],
+                    )
+                  : SizedBox(),
+              filedInDeliveringList.isNotEmpty
+                  ? SizedBox(height: 15.toHeight)
+                  : SizedBox(),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  runSpacing: 10.0,
+                  spacing: 15.0,
+                  children:
+                      List.generate(filedInDeliveringList.length, (index) {
+                    return Container(
+                      child: CustomPersonVerticalTile(
+                          key: Key(filedInDeliveringList[index].atsign!),
+                          shareStatus: filedInDeliveringList[index],
+                          fileHistory: widget.fileHistory,
+                          isFailedAtsignList: true),
+                    );
+                  }),
+                ),
+              ),
+              filedInDeliveringList.isNotEmpty ? Divider() : SizedBox(),
+            ],
+          );
+        },
       ),
     );
   }
