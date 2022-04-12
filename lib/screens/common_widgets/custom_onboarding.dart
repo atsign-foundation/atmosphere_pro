@@ -55,6 +55,7 @@ class CustomOnboarding {
         }
 
         await _backendService.startMonitor();
+        _backendService.setPeriodicFileHistoryRefresh();
         _backendService.initLocalNotification();
         await initServices();
         getTransferData();
