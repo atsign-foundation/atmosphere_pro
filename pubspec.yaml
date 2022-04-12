@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.5+35
+version: 1.0.5+36
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -80,12 +80,12 @@ dependency_overrides:
   at_client:
     git:
       url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: fix/os-write-permission
+      ref: release-atmosphere-pro-v3
       path: at_client
   at_client_mobile:
     git:
       url: git@github.com:atsign-foundation/at_client_sdk.git
-      ref: fix/os-write-permission
+      ref: release-atmosphere-pro-v3
       path: at_client_mobile
   at_contacts_flutter:
     git:
