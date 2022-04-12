@@ -285,6 +285,10 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   }
 
   refreshHistoryScreen() async {
+    if (historyProvider!.status[historyProvider!.PERIODIC_REFRESH] ==
+        Status.Loading) {
+      return;
+    }
     if (historyProvider!.status[historyProvider!.SENT_HISTORY] !=
         Status.Loading) {
       await historyProvider!.getSentHistory();

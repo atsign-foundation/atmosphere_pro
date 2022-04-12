@@ -44,6 +44,7 @@ import 'file_download_checker.dart';
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
   String RECEIVED_HISTORY = 'received_history';
+  String PERIODIC_REFRESH = 'periodic_refresh';
   String RECENT_HISTORY = 'recent_history';
   String ADD_RECEIVED_FILE = 'add_received_file';
   String UPDATE_RECEIVED_RECORD = 'update_received_record';
@@ -524,7 +525,6 @@ class HistoryProvider extends BaseModel {
         !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
 
     bool isNewKeyAvailable = false;
-
     fileTransferResponse.forEach((element) {
       if (receivedItemsId[element] == null) {
         isNewKeyAvailable = true;

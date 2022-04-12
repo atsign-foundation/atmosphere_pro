@@ -577,6 +577,7 @@ class BackendService {
     var historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentContext!,
         listen: false);
+    historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
     if (historyProvider.status[historyProvider!.SENT_HISTORY] !=
         Status.Loading) {
       await historyProvider.getSentHistory(setLoading: false);
@@ -586,5 +587,6 @@ class BackendService {
         Status.Loading) {
       await historyProvider.getReceivedHistory(setLoading: false);
     }
+    historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Done);
   }
 }
