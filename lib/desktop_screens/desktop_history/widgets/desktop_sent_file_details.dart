@@ -49,29 +49,29 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
   Widget build(BuildContext context) {
     return Container(
       color: ColorConstants.selago,
-      height: SizeConfig().screenHeight,
+      height: SizeConfig().screenHeight - MixedConstants.APPBAR_HEIGHT,
       width: SizeConfig().screenWidth * 0.45,
       padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(TextStrings().details,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          SizedBox(height: 15.toHeight),
-          Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  runAlignment: WrapAlignment.start,
-                  runSpacing: 10.0,
-                  spacing: 20.0,
-                  children: List.generate(
-                      widget.selectedFileData!.fileDetails!.files!.length,
-                      (index) {
-                    return Container(
-                      child: Container(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(TextStrings().details,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            SizedBox(height: 15.toHeight),
+            Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    runAlignment: WrapAlignment.start,
+                    runSpacing: 10.0,
+                    spacing: 20.0,
+                    children: List.generate(
+                        widget.selectedFileData!.fileDetails!.files!.length,
+                        (index) {
+                      return Container(
                         width: 250,
                         child: ListTile(
                           title: Text(
@@ -174,7 +174,10 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                         flashingCircleDarkColor:
                                             ColorConstants.fadedText,
                                       )
-                                    : Icon(Icons.refresh),
+                                    : Icon(
+                                        Icons.refresh,
+                                        color: ColorConstants.redAlert,
+                                      ),
                             onPressed: () async {
                               await Provider.of<FileTransferProvider>(context,
                                       listen: false)
@@ -186,48 +189,48 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                             },
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 15.toHeight),
+            Row(
+              children: <Widget>[
+                Text(
+                  '${fileCount.toString()} ${TextStrings().file_s}',
+                  style: CustomTextStyles.greyText15,
                 ),
-              )
-            ],
-          ),
-          SizedBox(height: 15.toHeight),
-          Row(
-            children: <Widget>[
-              Text(
-                '${fileCount.toString()} ${TextStrings().file_s}',
-                style: CustomTextStyles.greyText15,
-              ),
-              fileSize > 1024
-                  ? Text(
-                      '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
-                      style: CustomTextStyles.greyText15)
-                  : Text('${fileSize.toStringAsFixed(2)} ${TextStrings().kb}',
-                      style: CustomTextStyles.greyText15),
-            ],
-          ),
-          // SizedBox(height: 15.toHeight),
-          // Text('Successfully transfered', style: CustomTextStyles.greyText15),
-          SizedBox(height: 15.toHeight),
-          Text(
-              '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData!.fileDetails!.date!)}',
-              style: CustomTextStyles.greyText15),
-          SizedBox(height: 15.toHeight),
-          // Text('To', style: CustomTextStyles.greyText15),
-          // Container(
-          //   padding: EdgeInsets.symmetric(horizontal: 20.toHeight),
-          //   child: Divider(height: 5),
-          // ),
-          widget.selectedFileData != null
-              ? DesktopTranferOverlappingContacts(
-                  key: Key(
-                      widget.selectedFileData!.fileTransferObject!.transferId),
-                  selectedList: widget.selectedFileData!.sharedWith,
-                  fileHistory: widget.selectedFileData)
-              : SizedBox()
-        ],
+                fileSize > 1024
+                    ? Text(
+                        '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                        style: CustomTextStyles.greyText15)
+                    : Text('${fileSize.toStringAsFixed(2)} ${TextStrings().kb}',
+                        style: CustomTextStyles.greyText15),
+              ],
+            ),
+            // SizedBox(height: 15.toHeight),
+            // Text('Successfully transfered', style: CustomTextStyles.greyText15),
+            SizedBox(height: 15.toHeight),
+            Text(
+                '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData!.fileDetails!.date!)}',
+                style: CustomTextStyles.greyText15),
+            SizedBox(height: 15.toHeight),
+            // Text('To', style: CustomTextStyles.greyText15),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 20.toHeight),
+            //   child: Divider(height: 5),
+            // ),
+            widget.selectedFileData != null
+                ? DesktopTranferOverlappingContacts(
+                    key: Key(widget
+                        .selectedFileData!.fileTransferObject!.transferId),
+                    selectedList: widget.selectedFileData!.sharedWith,
+                    fileHistory: widget.selectedFileData)
+                : SizedBox()
+          ],
+        ),
       ),
     );
   }
