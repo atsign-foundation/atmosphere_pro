@@ -208,44 +208,51 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   Widget menuBar(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Scaffold.of(context).openEndDrawer();
-      },
-      child: Stack(
-        alignment: Alignment.topRight,
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 10.toHeight),
-            height: 22.toHeight,
-            width: 22.toWidth,
-            child: Image.asset(
-              ImageConstants.drawerIcon,
-            ),
+    return Consumer<FileDownloadChecker>(
+      builder: (context, _fileDownloadChecker, _) {
+        return IconButton(
+          onPressed: () {
+            Scaffold.of(context).openEndDrawer();
+          },
+          alignment: Alignment.topCenter,
+          tooltip: _fileDownloadChecker.undownloadedFilesExist
+              ? 'Hamburger Menu & Dot'
+              : 'Hamburger Menu',
+          padding: EdgeInsets.zero,
+          icon: Stack(
+            alignment: Alignment.topRight,
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 10.toHeight),
+                height: 22.toHeight,
+                width: 22.toWidth,
+                child: Image.asset(
+                  ImageConstants.drawerIcon,
+                  semanticLabel: '',
+                ),
+              ),
+              _fileDownloadChecker.undownloadedFilesExist
+                  ? Positioned(
+                      right: -4,
+                      top: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(1.toHeight),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.red,
+                          radius: 5.toWidth,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
+            ],
           ),
-          Consumer<FileDownloadChecker>(
-              builder: (context, _fileDownloadChecker, _) {
-            return _fileDownloadChecker.undownloadedFilesExist
-                ? Positioned(
-                    right: -4,
-                    top: 2,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: EdgeInsets.all(1.toHeight),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.red,
-                        radius: 5.toWidth,
-                      ),
-                    ),
-                  )
-                : SizedBox();
-          }),
-        ],
-      ),
+        );
+      },
     );
   }
 }
