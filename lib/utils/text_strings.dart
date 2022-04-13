@@ -10,7 +10,7 @@ class TextStrings {
   String homeDescriptionMobile = 'Truly\nencrypted file\ntransfer.';
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
-  String appName = '@mospherepro';
+  String appName = '@mospherePro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
@@ -261,14 +261,15 @@ class TextStrings {
   String initialisingFor = 'Initialising for ';
   String itsSafe = "It's safe!";
   String fileTransfer = 'File transfer.';
-  String easyFileSharing = 'Easy file sharing';
-  String shareAnyFiles = 'Share any files, no restrictions,';
-  String fastAndSecure = 'Fast and secure across your contacts';
+  String easyFileSharing = 'Simple file sharing';
+  String shareAnyFiles = 'Share any file type unmodified';
+  String fastAndSecure = 'fast and secure across your contacts';
   String shareWithGroup = 'Share with groups';
-  String createGroupAndTransferFile = 'create groups and transfer file across';
-  String allMembers = 'all members';
-  String customiseFiles = 'Customise senders and receive files';
-  String fromTrustedSenders = 'From trusted senders.';
+  String createGroupAndTransferFile = 'Create groups and transfer files to';
+  String allMembers = 'all group members';
+  String trustedContacts = 'Trusted Contacts';
+  String customiseFiles = 'Customize contacts and receive files';
+  String fromTrustedSenders = 'from trusted contacts';
 
   // Desktop apk
   String noFilesFound = 'No file found';
