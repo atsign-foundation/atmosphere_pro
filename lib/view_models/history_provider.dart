@@ -219,6 +219,33 @@ class HistoryProvider extends BaseModel {
   // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
   /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
   getSentHistory({bool setLoading = true}) async {
+    // checking, if new keys are available to show in sent history
+    AtClient atClient = AtClientManager.getInstance().atClient;
+    List<AtKey> sentFileAtkeys = await atClient.getAtKeys(
+      regex: MixedConstants.FILE_TRANSFER_KEY,
+      sharedBy: atClient.getCurrentAtSign(),
+    );
+
+    sentFileAtkeys.retainWhere(
+      (element) =>
+          !element.key!
+              .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
+          compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
+    );
+
+    bool isNewKeyAvailable = false;
+
+    sentFileAtkeys.forEach((AtKey atkey) {
+      if (individualSentFileId[atkey.key] == null) {
+        isNewKeyAvailable = true;
+      }
+      individualSentFileId[atkey.key] = true;
+    });
+
+    if (!isNewKeyAvailable) {
+      return;
+    }
+
     if (setLoading) {
       setStatus(SENT_HISTORY, Status.Loading);
     }
@@ -267,17 +294,21 @@ class HistoryProvider extends BaseModel {
 
   getIndividuallySavedSentFileItems() async {
     AtClient atClient = AtClientManager.getInstance().atClient;
-    List<String> sharedFileStrings = await atClient.getKeys(
+    List<AtKey> sentFileAtkeys = await atClient.getAtKeys(
       regex: MixedConstants.FILE_TRANSFER_KEY,
       sharedBy: atClient.getCurrentAtSign(),
     );
 
-    sharedFileStrings.retainWhere((element) => !element.contains('cached'));
+    sentFileAtkeys.retainWhere(
+      (element) =>
+          !element.key!
+              .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
+          compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
+    );
 
-    await Future.forEach(sharedFileStrings, (dynamic key) async {
-      AtKey atKey = AtKey.fromString(key);
+    await Future.forEach(sentFileAtkeys, (AtKey atkey) async {
       AtValue atvalue =
-          await backendService.atClientInstance!.get(atKey).catchError(
+          await backendService.atClientInstance!.get(atkey).catchError(
         (e) {
           print("Exception in getting atValue: $e");
           return AtValue();
@@ -492,6 +523,7 @@ class HistoryProvider extends BaseModel {
     } else {
       receivedHistoryNew.insert(0, filesModel);
       receivedHistoryLogs.insert(0, filesModel);
+      receivedItemsId[filesModel.key] = true;
     }
 
     await sortFiles(receivedHistoryLogs);
@@ -516,29 +548,31 @@ class HistoryProvider extends BaseModel {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
     List<FileTransfer> tempReceivedHistoryLogs = [];
 
-    List<String> fileTransferResponse =
-        await AtClientManager.getInstance().atClient.getKeys(
+    List<AtKey> fileTransferAtkeys =
+        await AtClientManager.getInstance().atClient.getAtKeys(
               regex: MixedConstants.FILE_TRANSFER_KEY,
             );
 
-    fileTransferResponse.retainWhere((element) =>
-        !element.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
+    fileTransferAtkeys.retainWhere((element) =>
+        !element.key!.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
 
     bool isNewKeyAvailable = false;
-    fileTransferResponse.forEach((element) {
-      if (receivedItemsId[element] == null) {
+    fileTransferAtkeys.forEach((AtKey atkey) {
+      if (receivedItemsId[atkey.key] == null) {
         isNewKeyAvailable = true;
       }
-      receivedItemsId[element] = true;
+      receivedItemsId[atkey.key] = true;
     });
 
     if (!isNewKeyAvailable) {
       return;
     }
 
-    await Future.forEach(fileTransferResponse, (dynamic key) async {
-      if (key.contains('cached') && !checkRegexFromBlockedAtsign(key)) {
-        AtKey atKey = AtKey.fromString(key);
+    for (var atKey in fileTransferAtkeys) {
+      var isCurrentAtsign = compareAtSign(
+          atKey.sharedBy!, BackendService.getInstance().currentAtSign!);
+      if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
+        receivedItemsId[atKey.key] = true;
 
         AtValue atvalue = await backendService.atClientInstance!.get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
@@ -553,7 +587,7 @@ class HistoryProvider extends BaseModel {
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
-            filesModel.sender = '@' + key.split('@').last;
+            filesModel.sender = atKey.sharedBy;
 
             if (filesModel.key != null) {
               tempReceivedHistoryLogs.insert(0, filesModel);
@@ -563,7 +597,7 @@ class HistoryProvider extends BaseModel {
           }
         }
       }
-    });
+    }
 
     receivedHistoryLogs = tempReceivedHistoryLogs;
     setStatus(GET_ALL_FILE_DATA, Status.Done);
@@ -817,12 +851,11 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  bool checkRegexFromBlockedAtsign(String regex) {
+  bool checkRegexFromBlockedAtsign(String atsign) {
     bool isBlocked = false;
-    String atsign = regex.split('@')[regex.split('@').length - 1];
 
     ContactService().blockContactList.forEach((element) {
-      if (element.atSign == '@${atsign}') {
+      if (compareAtSign(element.atSign!, atsign)) {
         isBlocked = true;
       }
     });
