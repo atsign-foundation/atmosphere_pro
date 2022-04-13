@@ -297,7 +297,7 @@ class FileTransferService {
 
       for (int i = 0; i < fileTransferObject.fileStatus.length; i++) {
         String fileName = fileTransferObject.fileStatus[i].fileName!;
-        String fileUrl = filebinContainer + Platform.pathSeparator + fileName;
+        String fileUrl = filebinContainer + '/' + fileName;
         updateFileTransferState(
           fileName,
           fileTransferObject.transferId,
