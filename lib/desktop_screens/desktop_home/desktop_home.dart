@@ -31,19 +31,19 @@ class _DesktopHomeState extends State<DesktopHome> {
   var _constants = [
     [
       ImageConstants.homeCaraousel1,
-      TextStrings().easyFileSharing,
-      TextStrings().shareAnyFiles,
-      TextStrings().fastAndSecure,
-    ],
-    [
-      ImageConstants.homeCaraousel2,
       TextStrings().shareWithGroup,
       TextStrings().createGroupAndTransferFile,
       TextStrings().allMembers,
     ],
     [
+      ImageConstants.homeCaraousel2,
+      TextStrings().easyFileSharing,
+      TextStrings().shareAnyFiles,
+      TextStrings().fastAndSecure,
+    ],
+    [
       ImageConstants.homeCaraousel3,
-      TextStrings().trustedSenders,
+      TextStrings().trustedContacts,
       TextStrings().customiseFiles,
       TextStrings().fromTrustedSenders
     ],
