@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class FileRecipients extends StatefulWidget {
   final List<ShareStatus>? filesharedWith;
   FileRecipientSection? fileRecipientSection;
-  FileRecipients(this.filesharedWith, {this.fileRecipientSection});
+  FileRecipients(this.filesharedWith, {this.fileRecipientSection, Key? key});
 
   @override
   _FileRecipientsState createState() => _FileRecipientsState();
@@ -82,7 +82,8 @@ class _FileRecipientsState extends State<FileRecipients> {
                             size: 15.toFont,
                           ),
                           SizedBox(width: 5),
-                          Text(TextStrings().downloadedBy, style: CustomTextStyles.grey15),
+                          Text(TextStrings().downloadedBy,
+                              style: CustomTextStyles.grey15),
                         ],
                       )
                     : SizedBox(),
@@ -126,7 +127,8 @@ class _FileRecipientsState extends State<FileRecipients> {
                             size: 15.toFont,
                           ),
                           SizedBox(width: 5),
-                          Text(TextStrings().deliveredTo, style: CustomTextStyles.grey15),
+                          Text(TextStrings().deliveredTo,
+                              style: CustomTextStyles.grey15),
                         ],
                       )
                     : SizedBox(),
