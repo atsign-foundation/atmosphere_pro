@@ -229,6 +229,8 @@ class _HomeState extends State<Home> {
                               children: [
                                 Text(
                                   TextStrings().homeDescriptionMobile,
+                                  semanticsLabel:
+                                      '${TextStrings().appName} \n ${TextStrings().homeDescriptionMobile}',
                                   style: GoogleFonts.playfairDisplay(
                                     textStyle: TextStyle(
                                       fontSize: 38.toFont,
@@ -266,18 +268,15 @@ class _HomeState extends State<Home> {
                                               await _backendService
                                                   .checkToOnboard();
                                             }),
-                                  SizedBox(height: 15.toHeight),
-                                  InkWell(
-                                    onTap: () {
+                                  // SizedBox(height: 15.toHeight),
+                                  CustomButton(
+                                    onPressed: () {
                                       CommonUtilityFunctions()
                                           .showResetAtsignDialog();
                                     },
-                                    child: Text(
-                                      TextStrings.resetButton,
-                                      style: TextStyle(
-                                          fontSize: 15.toFont,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                    isInverted: true,
+                                    width: SizeConfig().screenWidth * 0.8,
+                                    buttonText: TextStrings.resetButton,
                                   ),
                                 ],
                               ),
