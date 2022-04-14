@@ -47,6 +47,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         listen: false);
     isFileSending = _filePickerProvider.isFileSending;
 
+    _welcomeScreenProvider.addListener(() {
+      if (_selectedList.isEmpty &&
+          _filePickerProvider.selectedFiles.isEmpty &&
+          _currentScreen != CurrentScreen.PlaceolderImage) {
+        setState(() {
+          _currentScreen = CurrentScreen.PlaceolderImage;
+        });
+      }
+    });
+
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
     });
