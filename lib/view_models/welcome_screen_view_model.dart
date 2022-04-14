@@ -15,6 +15,11 @@ class WelcomeScreenProvider extends BaseModel {
   bool hasSelectedContactsChanged = false, authenticating = false;
   bool isSelectionItemChanged = false;
 
+  void resetData() {
+    selectedContacts = [];
+    setStatus(updateContacts, Status.Done);
+  }
+
   void _addtoContactsList(GroupContactsModel _obj) {
     if (selectedContacts.indexWhere(
             (element) => element.contact!.atSign == _obj.contact!.atSign) ==
