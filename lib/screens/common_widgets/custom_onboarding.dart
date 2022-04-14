@@ -54,11 +54,11 @@ class CustomOnboarding {
           LoadingDialog().showTextLoader('Initialising for $atsign');
         }
 
-        await _backendService.startMonitor();
-        _backendService.setPeriodicFileHistoryRefresh();
         _backendService.initLocalNotification();
         await initServices();
         getTransferData();
+        await _backendService.startMonitor();
+        _backendService.setPeriodicFileHistoryRefresh();
 
         if (showLoader != null) {
           showLoader(false, '');
@@ -98,8 +98,8 @@ class CustomOnboarding {
         NavService.navKey.currentContext!,
         listen: false);
     historyProvider.resetData();
-    await historyProvider.getSentHistory();
     await historyProvider.getReceivedHistory();
+    await historyProvider.getSentHistory();
 
     Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
             listen: false)
