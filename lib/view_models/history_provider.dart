@@ -103,6 +103,8 @@ class HistoryProvider extends BaseModel {
     receivedDocument = [];
     recentFile = [];
     receivedUnknown = [];
+    individualSentFileId = {};
+    receivedItemsId = {};
   }
 
   // setFileTransferHistory(

@@ -59,6 +59,11 @@ class FileTransferProvider extends BaseModel {
 
   FileHistory? _selectedFileHistory;
 
+  resetData() {
+    selectedFiles = [];
+    setStatus(PICK_FILES, Status.Done);
+  }
+
   set selectedFileHistory(FileHistory? fileHistory) {
     _selectedFileHistory = fileHistory;
   }
