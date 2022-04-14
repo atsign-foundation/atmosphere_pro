@@ -314,14 +314,14 @@ class BackendService {
         await historyProvider.getFileDownloadedAcknowledgement();
       }
 
-      if (historyProvider.status[historyProvider.SENT_HISTORY] !=
-          Status.Loading) {
-        await historyProvider.getSentHistory();
-      }
-
       if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
           Status.Loading) {
         await historyProvider.getReceivedHistory();
+      }
+
+      if (historyProvider.status[historyProvider.SENT_HISTORY] !=
+          Status.Loading) {
+        await historyProvider.getSentHistory();
       }
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
@@ -487,16 +487,6 @@ class BackendService {
     atClientServiceMap = atClientServiceMap;
     currentAtSign = onboardedAtsign;
     syncService = atClientManager.syncService;
-    await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
-
-    syncWithSecondary();
-
-    // start monitor and package initializations.
-    await startMonitor();
-    setPeriodicFileHistoryRefresh();
-    initLocalNotification();
-    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
-    initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
     // clearing file and contact informations.
     Provider.of<WelcomeScreenProvider>(NavService.navKey.currentState!.context,
@@ -508,6 +498,16 @@ class BackendService {
     Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
+
+    await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
+    syncWithSecondary();
+
+    // start monitor and package initializations.
+    await startMonitor();
+    setPeriodicFileHistoryRefresh();
+    initLocalNotification();
+    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
     await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
         Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
