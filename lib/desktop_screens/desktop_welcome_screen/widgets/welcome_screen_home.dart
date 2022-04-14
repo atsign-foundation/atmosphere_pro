@@ -91,7 +91,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   height: 20.toHeight,
                 ),
                 Text(
-                  'Type a receipient and start sending them files.',
+                  'Select a recipient and start sending them files.',
                   style: CustomTextStyles.desktopSecondaryRegular18,
                 ),
                 SizedBox(
