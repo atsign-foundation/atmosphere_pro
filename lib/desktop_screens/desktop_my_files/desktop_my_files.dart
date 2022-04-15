@@ -176,6 +176,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                             'Apply',
                             style: TextStyle(
                               color: Colors.white,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),

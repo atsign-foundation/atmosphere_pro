@@ -92,7 +92,10 @@ class _AddContactState extends State<AddContact> {
             decoration: InputDecoration(
               hintText: 'Enter Nick Name (Optional)',
             ),
-            style: TextStyle(fontSize: 15.toFont),
+            style: TextStyle(
+              fontSize: 15.toFont,
+              fontWeight: FontWeight.normal,
+            ),
           ),
           SizedBox(
             height: 10.toHeight,

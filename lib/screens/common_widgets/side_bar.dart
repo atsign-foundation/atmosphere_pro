@@ -209,8 +209,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                         ? Text(name ?? '',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style:
-                                                TextStyle(fontSize: 15.toFont))
+                                            style: TextStyle(
+                                              fontSize: 15.toFont,
+                                              fontWeight: FontWeight.normal,
+                                            ))
                                         : SizedBox(),
                                     Text(
                                       BackendService.getInstance()
@@ -218,8 +220,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                           TextStrings().atSign,
                                       maxLines: 1,
                                       style: TextStyle(
-                                          letterSpacing: 0.1,
-                                          fontSize: 15.toFont),
+                                        letterSpacing: 0.1,
+                                        fontSize: 15.toFont,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
@@ -366,6 +370,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                   style: TextStyle(
                                     color: ColorConstants.fadedText,
                                     fontSize: 14.toFont,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 )
                               : SizedBox(),
@@ -396,9 +401,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                               ? Text(
                                   TextStrings().sidebarSwitchOut,
                                   style: TextStyle(
-                                      color: ColorConstants.fadedText,
-                                      fontSize: 14.toFont,
-                                      letterSpacing: 0.1),
+                                    color: ColorConstants.fadedText,
+                                    fontSize: 14.toFont,
+                                    letterSpacing: 0.1,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 )
                               : SizedBox(),
                         ]),
