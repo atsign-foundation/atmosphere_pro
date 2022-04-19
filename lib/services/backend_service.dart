@@ -573,15 +573,10 @@ class BackendService {
   }
 
   refreshHistoryScreen() async {
-    print('refreshing... history screen');
     var historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentContext!,
         listen: false);
     historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
-    if (historyProvider.status[historyProvider.SENT_HISTORY] !=
-        Status.Loading) {
-      await historyProvider.getSentHistory(setLoading: false);
-    }
 
     if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
         Status.Loading) {
