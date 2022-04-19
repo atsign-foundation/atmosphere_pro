@@ -47,8 +47,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   Widget build(BuildContext context) {
-    filePickerModel = Provider.of<FileTransferProvider>(context);
-    _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(context);
+    filePickerModel = Provider.of<FileTransferProvider>(context, listen: false);
+    _welcomeScreenProvider =
+        Provider.of<WelcomeScreenProvider>(context, listen: false);
 
     return Container(
         width: double.infinity,
@@ -329,7 +330,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     _welcomeScreenProvider.resetSelectedContactsStatus();
     filePickerModel.resetSelectedFilesStatus();
     var res = await filePickerModel.sendFileWithFileBin(
-        filePickerModel.selectedFiles, _welcomeScreenProvider.selectedContacts);
+      filePickerModel.selectedFiles,
+      _welcomeScreenProvider.selectedContacts,
+      groupName: _welcomeScreenProvider.groupName,
+    );
 
     if (mounted && res is bool) {
       setState(() {

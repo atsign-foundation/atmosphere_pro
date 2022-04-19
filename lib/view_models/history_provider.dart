@@ -167,15 +167,16 @@ class HistoryProvider extends BaseModel {
   }
 
   saveNewSentFileItem(
-    FileTransferObject fileTransferObject,
-    List<String> sharedWithAtsigns,
-    Map<String, FileTransferObject> fileShareResult, {
-    bool isEdit = false,
-  }) async {
+      FileTransferObject fileTransferObject,
+      List<String> sharedWithAtsigns,
+      Map<String, FileTransferObject> fileShareResult,
+      {bool isEdit = false,
+      String? groupName}) async {
     FileHistory fileHistory = convertFileTransferObjectToFileHistory(
       fileTransferObject,
       sharedWithAtsigns,
       fileShareResult,
+      groupName: groupName,
     );
 
     return await saveIndividualSentItemInAtkey(fileHistory);
@@ -909,7 +910,8 @@ class HistoryProvider extends BaseModel {
   FileHistory convertFileTransferObjectToFileHistory(
       FileTransferObject fileTransferObject,
       List<String> sharedWithAtsigns,
-      Map<String, FileTransferObject> fileShareResult) {
+      Map<String, FileTransferObject> fileShareResult,
+      {String? groupName}) {
     List<FileData> files = [];
     var sthareStatus = <ShareStatus>[];
 
@@ -933,7 +935,8 @@ class HistoryProvider extends BaseModel {
     });
 
     return FileHistory(
-        fileTransfer, sthareStatus, HistoryType.send, fileTransferObject);
+        fileTransfer, sthareStatus, HistoryType.send, fileTransferObject,
+        groupName: groupName);
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,

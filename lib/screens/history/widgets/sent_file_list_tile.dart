@@ -40,8 +40,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   List<FileData>? filesList = [];
   List<String?> contactList = [];
   String nickName = '';
-  bool isOpen = false;
-  bool isDeepOpen = false;
+  bool isOpen = false, isDeepOpen = false, isFileSharedToGroup = false;
   Uint8List? videoThumbnail, firstContactImage;
 
   List<bool> fileResending = [];
@@ -66,6 +65,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     if (contactList[0] != null) {
       firstContactImage =
           CommonUtilityFunctions().getCachedContactImage(contactList[0]!);
+    }
+
+    if (widget.sentHistory!.groupName != null) {
+      isFileSharedToGroup = true;
     }
   }
 
@@ -110,14 +113,17 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 child: Container(
                                   width: 45.toHeight,
                                   height: 45.toHeight,
-                                  child: firstContactImage != null
+                                  child: (firstContactImage != null &&
+                                          !isFileSharedToGroup)
                                       ? CustomCircleAvatar(
                                           byteImage: firstContactImage,
                                           nonAsset: true,
                                           size: 50,
                                         )
                                       : ContactInitial(
-                                          initials: contactList[0],
+                                          initials: isFileSharedToGroup
+                                              ? widget.sentHistory!.groupName
+                                              : contactList[0],
                                           size: 50,
                                         ),
                                 ),
@@ -161,7 +167,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                           child: Center(
                                             child: contactList.length > 1
                                                 ? Text(
-                                                    '+${contactList.length - 1}',
+                                                    isFileSharedToGroup
+                                                        ? '+${contactList.length}'
+                                                        : '+${contactList.length - 1}',
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 10.toFont))
@@ -201,45 +209,57 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                               : SizedBox()),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: contactList.isNotEmpty
-                            ? RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                      text: '${contactList[0]} ',
-                                      style: CustomTextStyles.primaryMedium14,
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          openFileReceiptBottomSheet();
-                                        },
-                                      children: [
-                                        contactList.length - 1 > 0
-                                            ? TextSpan(
-                                                text: 'and ',
-                                              )
-                                            : TextSpan(),
-                                        contactList.length - 1 > 0
-                                            ? TextSpan(
-                                                text:
-                                                    '${contactList.length - 1} others',
-                                                style: CustomTextStyles
-                                                    .blueRegular16,
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        openFileReceiptBottomSheet();
-                                                      })
-                                            : TextSpan()
+                  isFileSharedToGroup == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: contactList.isNotEmpty
+                                  ? RichText(
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text: '${contactList[0]} ',
+                                            style: CustomTextStyles
+                                                .primaryMedium14,
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                openFileReceiptBottomSheet();
+                                              },
+                                            children: [
+                                              contactList.length - 1 > 0
+                                                  ? TextSpan(
+                                                      text: 'and ',
+                                                    )
+                                                  : TextSpan(),
+                                              contactList.length - 1 > 0
+                                                  ? TextSpan(
+                                                      text:
+                                                          '${contactList.length - 1} others',
+                                                      style: CustomTextStyles
+                                                          .blueRegular16,
+                                                      recognizer:
+                                                          TapGestureRecognizer()
+                                                            ..onTap = () {
+                                                              openFileReceiptBottomSheet();
+                                                            })
+                                                  : TextSpan()
+                                            ]),
                                       ]),
-                                ]),
-                              )
-                            : SizedBox(),
-                      ),
-                    ],
-                  ),
+                                    )
+                                  : SizedBox(),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Expanded(
+                              child: InkWell(
+                                  onTap: openFileReceiptBottomSheet,
+                                  child: Text(widget.sentHistory!.groupName!)),
+                            )
+                          ],
+                        ),
                   SizedBox(height: 5.toHeight),
                   SizedBox(
                     height: 8.toHeight,

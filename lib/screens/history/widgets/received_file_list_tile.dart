@@ -379,7 +379,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           onTap: () {
                             if (mounted) {
                               setState(() {
-                                isOpen = !isOpen!;
+                                isOpen = !isOpen;
                               });
                             }
                             updateIsWidgetOpen();
