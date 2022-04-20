@@ -31,6 +31,7 @@ class WelcomeScreenProvider extends BaseModel {
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
+      groupName = null;
       selectedContacts = [];
       setStatus(updateContacts, Status.Loading);
 

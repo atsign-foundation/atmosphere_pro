@@ -189,26 +189,29 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                          child: nickName.isNotEmpty
-                              ? RichText(
-                                  text: TextSpan(children: [
-                                    TextSpan(
-                                      text: '${nickName}',
-                                      style: CustomTextStyles.primaryRegular16,
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          openFileReceiptBottomSheet();
-                                        },
-                                    ),
-                                  ]),
-                                )
-                              : SizedBox()),
-                    ],
-                  ),
+                  isFileSharedToGroup == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                child: nickName.isNotEmpty
+                                    ? RichText(
+                                        text: TextSpan(children: [
+                                          TextSpan(
+                                            text: '${nickName}',
+                                            style: CustomTextStyles
+                                                .primaryRegular16,
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                openFileReceiptBottomSheet();
+                                              },
+                                          ),
+                                        ]),
+                                      )
+                                    : SizedBox()),
+                          ],
+                        )
+                      : SizedBox(),
                   isFileSharedToGroup == false
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
