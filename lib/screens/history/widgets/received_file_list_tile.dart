@@ -560,9 +560,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               : '',
                                           style: CustomTextStyles.redSmall12,
                                         ),
-                                        CommonUtilityFunctions()
-                                                .isFileDownloadAvailable(widget
-                                                    .receivedHistory!.date!)
+                                        (CommonUtilityFunctions()
+                                                    .isFileDownloadAvailable(
+                                                        widget.receivedHistory!
+                                                            .date!) ||
+                                                isFilesAvailableOfline)
                                             ? SizedBox()
                                             : Row(
                                                 children: [
