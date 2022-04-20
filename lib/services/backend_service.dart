@@ -111,6 +111,7 @@ class BackendService {
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
+      ..monitorHeartbeatInterval = Duration(minutes: 1)
       ..hiveStoragePath = path;
     return _atClientPreference;
   }
