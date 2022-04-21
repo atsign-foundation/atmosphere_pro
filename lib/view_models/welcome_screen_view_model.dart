@@ -14,6 +14,7 @@ class WelcomeScreenProvider extends BaseModel {
   bool isAutoAccept = false, isExpanded = false, scrollToBottom = false;
   bool hasSelectedContactsChanged = false, authenticating = false;
   bool isSelectionItemChanged = false;
+  String? groupName;
 
   void resetData() {
     selectedContacts = [];
@@ -30,6 +31,7 @@ class WelcomeScreenProvider extends BaseModel {
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList) {
     try {
+      groupName = null;
       selectedContacts = [];
       setStatus(updateContacts, Status.Loading);
 
@@ -37,6 +39,8 @@ class WelcomeScreenProvider extends BaseModel {
         if (_obj?.contact != null) {
           _addtoContactsList(_obj!);
         } else if (_obj!.group != null) {
+          groupName = _obj.group!.groupName;
+
           /// add groups as contacts
           /// this helps to remove contacts as well
           _obj.group!.members?.forEach((element) {
