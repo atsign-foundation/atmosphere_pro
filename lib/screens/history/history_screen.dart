@@ -135,7 +135,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 itemBuilder: (context, index) {
                                   return SentFilesListTile(
                                     sentHistory: provider.sentHistory[index],
-                                    key: UniqueKey(),
+                                    key: Key(provider
+                                        .sentHistory[index].fileDetails!.key!),
                                   );
                                 },
                               ),
@@ -209,7 +210,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: ReceivedFilesListTile(
-                                      key: UniqueKey(),
+                                      key: Key(provider
+                                          .receivedHistoryLogs[index].key!),
                                       receivedHistory:
                                           provider.receivedHistoryLogs[index],
                                       isWidgetOpen: provider

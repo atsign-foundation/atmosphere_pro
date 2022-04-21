@@ -657,8 +657,11 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 topRight: const Radius.circular(12.0),
               ),
             ),
-            child: FileRecipients(widget.sentHistory!.sharedWith,
-                fileRecipientSection: fileRecipientSection),
+            child: FileRecipients(
+              widget.sentHistory!.sharedWith,
+              fileRecipientSection: fileRecipientSection,
+              key: UniqueKey(),
+            ),
           );
         });
   }
