@@ -253,8 +253,9 @@ class FileTransferProvider extends BaseModel {
   /// returns [true] when file is siccessfully saved and all recipients have received notification.
   /// returns [false] if file entry is saved in sent history but notification did not go to every recipient.
   /// returns [null] if file is not saved in sent history.
-  Future<dynamic> sendFileWithFileBin(List<PlatformFile> selectedFiles,
-      List<GroupContactsModel?> contactList) async {
+  Future<dynamic> sendFileWithFileBin(
+      List<PlatformFile> selectedFiles, List<GroupContactsModel?> contactList,
+      {String? groupName}) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     try {
@@ -292,6 +293,7 @@ class FileTransferProvider extends BaseModel {
         uploadResult[_atSigns[0]]!,
         _atSigns,
         uploadResult,
+        groupName: groupName,
       );
 
       // checking if everyone received the notification or not.

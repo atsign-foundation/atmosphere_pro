@@ -167,15 +167,16 @@ class HistoryProvider extends BaseModel {
   }
 
   saveNewSentFileItem(
-    FileTransferObject fileTransferObject,
-    List<String> sharedWithAtsigns,
-    Map<String, FileTransferObject> fileShareResult, {
-    bool isEdit = false,
-  }) async {
+      FileTransferObject fileTransferObject,
+      List<String> sharedWithAtsigns,
+      Map<String, FileTransferObject> fileShareResult,
+      {bool isEdit = false,
+      String? groupName}) async {
     FileHistory fileHistory = convertFileTransferObjectToFileHistory(
       fileTransferObject,
       sharedWithAtsigns,
       fileShareResult,
+      groupName: groupName,
     );
 
     return await saveIndividualSentItemInAtkey(fileHistory);
@@ -909,7 +910,8 @@ class HistoryProvider extends BaseModel {
   FileHistory convertFileTransferObjectToFileHistory(
       FileTransferObject fileTransferObject,
       List<String> sharedWithAtsigns,
-      Map<String, FileTransferObject> fileShareResult) {
+      Map<String, FileTransferObject> fileShareResult,
+      {String? groupName}) {
     List<FileData> files = [];
     var sthareStatus = <ShareStatus>[];
 
@@ -933,7 +935,8 @@ class HistoryProvider extends BaseModel {
     });
 
     return FileHistory(
-        fileTransfer, sthareStatus, HistoryType.send, fileTransferObject);
+        fileTransfer, sthareStatus, HistoryType.send, fileTransferObject,
+        groupName: groupName);
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
@@ -1281,6 +1284,61 @@ class HistoryProvider extends BaseModel {
       receivedHistoryLogs[index].fileTransferProgress = fileTransferProgress;
       notifyListeners();
     }
+  }
+
+  refreshReceivedFile({bool setLoading = true}) async {
+    if (setLoading) {
+      setStatus(RECEIVED_HISTORY, Status.Loading);
+    }
+
+    List<AtKey> fileTransferAtkeys =
+        await AtClientManager.getInstance().atClient.getAtKeys(
+              regex: MixedConstants.FILE_TRANSFER_KEY,
+            );
+
+    fileTransferAtkeys.retainWhere((element) =>
+        !element.key!.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
+        receivedItemsId[element.key] != true);
+
+    for (var atKey in fileTransferAtkeys) {
+      var isCurrentAtsign = compareAtSign(
+          atKey.sharedBy!, BackendService.getInstance().currentAtSign!);
+      if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
+        receivedItemsId[atKey.key] = true;
+
+        AtValue atvalue = await backendService.atClientInstance!.get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) {
+          print("error in getting atValue in getAllFileTransferData : $e");
+          return AtValue();
+        });
+
+        if (atvalue != null && atvalue.value != null) {
+          try {
+            FileTransferObject fileTransferObject =
+                FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
+            FileTransfer filesModel =
+                convertFiletransferObjectToFileTransfer(fileTransferObject);
+            filesModel.sender = atKey.sharedBy;
+
+            if (filesModel.key != null) {
+              receivedHistoryLogs.insert(0, filesModel);
+            }
+          } catch (e) {
+            print('error in getAllFileTransferData file model conversion: $e');
+          }
+        }
+      }
+    }
+
+    try {
+      await sortFiles(receivedHistoryLogs);
+      populateTabs();
+    } catch (e) {
+      print('error in refreshReceivedFile : $e');
+    }
+
+    setStatus(RECEIVED_HISTORY, Status.Done);
   }
 
   // save file in gallery function is not in use as of now.
