@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.6+38
+version: 1.0.6+39
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -65,7 +65,7 @@ dependencies:
   
   at_commons: ^3.0.13
   at_contact: ^3.0.5
-  at_lookup: ^3.0.18
+  at_lookup: ^3.0.19
   at_common_flutter: ^2.0.6
   
   at_client_mobile: ^3.1.13
@@ -75,6 +75,18 @@ dependencies:
   at_contacts_group_flutter: ^4.0.3
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.2
+
+dependency_overrides:
+  at_contacts_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_contacts_flutter
+  at_contacts_group_flutter:
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: trunk
+      path: at_contacts_group_flutter
 
 dev_dependencies:
   flutter_test:

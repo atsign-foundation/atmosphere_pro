@@ -95,16 +95,20 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_contacts_flutter
+      ref: trunk
+      resolved-ref: "28c79e2fca4727750497a71b648ae36bb3858c8e"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.3"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_group_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_contacts_group_flutter
+      ref: trunk
+      resolved-ref: "28c79e2fca4727750497a71b648ae36bb3858c8e"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.3"
   at_lookup:
     dependency: "direct main"
@@ -112,7 +116,7 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.18"
+    version: "3.0.19"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
