@@ -60,6 +60,7 @@ class SideBarItem extends StatelessWidget {
                         color: displayColor,
                         letterSpacing: 0.1,
                         fontSize: 14.toFont,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   )

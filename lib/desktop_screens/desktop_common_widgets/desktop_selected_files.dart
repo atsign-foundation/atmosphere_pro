@@ -36,7 +36,8 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(TextStrings().selectedFiles, style: CustomTextStyles.desktopPrimaryBold18),
+          Text(TextStrings().selectedFiles,
+              style: CustomTextStyles.desktopPrimaryBold18),
           SizedBox(
             height: 30,
           ),
@@ -88,6 +89,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14.toFont,
+                                fontWeight: FontWeight.normal,
                               ),
                               maxLines: 1,
                             ),
@@ -102,6 +104,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                               style: TextStyle(
                                 color: ColorConstants.fadedText,
                                 fontSize: 14.toFont,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                             leading: CommonUtilityFunctions().thumbnail(

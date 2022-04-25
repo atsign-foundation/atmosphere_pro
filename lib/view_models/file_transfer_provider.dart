@@ -174,7 +174,10 @@ class FileTransferProvider extends BaseModel {
   //                                 .pop();
   //                           },
   //                           child: Text('Ok',
-  //                               style: TextStyle(fontSize: 16.toFont)))
+  //                               style: TextStyle(
+  //                                  fontSize: 16.toFont,
+  //                                  fontWeight: FontWeight.normal,
+  //                               )))
   //                     ],
   //                   )
   //                 ],

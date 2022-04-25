@@ -142,6 +142,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     style: TextStyle(
                       color: ColorConstants.fadedText,
                       fontSize: 14.toFont,
+                      fontWeight: FontWeight.normal,
                     )),
                 subtitle: filePickerProvider!.selectedFiles.isEmpty
                     ? null
@@ -154,6 +155,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                         style: TextStyle(
                           color: ColorConstants.fadedText,
                           fontSize: 10.toFont,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                 trailing: InkWell(
@@ -199,6 +201,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14.toFont,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
                               subtitle: Text(
@@ -212,6 +215,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                 style: TextStyle(
                                   color: ColorConstants.fadedText,
                                   fontSize: 14.toFont,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
                               leading: CommonUtilityFunctions().thumbnail(

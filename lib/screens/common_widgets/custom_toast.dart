@@ -18,7 +18,10 @@ class CustomToast {
         FlutterToastr.show(text, context,
             duration: FlutterToastr.lengthLong,
             backgroundColor: bgColor ?? ColorConstants.orangeColor,
-            textStyle: TextStyle(color: Colors.white));
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ));
       } else {
         Fluttertoast.showToast(
             msg: text,
