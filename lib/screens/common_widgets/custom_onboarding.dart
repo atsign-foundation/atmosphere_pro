@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -91,6 +92,12 @@ class CustomOnboarding {
       },
       onError: (error) {
         print('Onboarding throws error: $error ');
+        ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
+          SnackBar(
+            content: Text('Error in onboarding'),
+            backgroundColor: ColorConstants.red,
+          ),
+        );
         if (onError != null) {
           onError();
         }
