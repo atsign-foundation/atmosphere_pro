@@ -34,8 +34,8 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
         dividerColor: Colors.transparent,
         textTheme: TextTheme(
           subtitle1: TextStyle(
-            color: ColorConstants.inputFieldColor,
-          ),
+              color: ColorConstants.inputFieldColor,
+              fontWeight: FontWeight.normal),
         ),
       ),
       child: ClipRRect(
@@ -73,9 +73,9 @@ class _ExpansionTileWidget extends StatelessWidget {
         child: Text(
           headerText!,
           style: TextStyle(
-            color: ColorConstants.fadedText,
-            fontSize: 14.toFont,
-          ),
+              color: ColorConstants.fadedText,
+              fontSize: 14.toFont,
+              fontWeight: FontWeight.normal),
         ),
       ),
       trailing: InkWell(

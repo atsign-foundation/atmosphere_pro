@@ -552,12 +552,12 @@ class SideBarIcon extends StatelessWidget {
                                 title!,
                                 softWrap: true,
                                 style: TextStyle(
-                                  color: isCurrentRoute
-                                      ? ColorConstants.orangeColor
-                                      : ColorConstants.fadedText,
-                                  letterSpacing: 0.1,
-                                  fontSize: 12,
-                                ),
+                                    color: isCurrentRoute
+                                        ? ColorConstants.orangeColor
+                                        : ColorConstants.fadedText,
+                                    letterSpacing: 0.1,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal),
                               )
                             : SizedBox()
                       ],
@@ -600,12 +600,12 @@ class SideBarIcon extends StatelessWidget {
                             title!,
                             softWrap: true,
                             style: TextStyle(
-                              color: isCurrentRoute
-                                  ? ColorConstants.orangeColor
-                                  : ColorConstants.fadedText,
-                              letterSpacing: 0.1,
-                              fontSize: 12,
-                            ),
+                                color: isCurrentRoute
+                                    ? ColorConstants.orangeColor
+                                    : ColorConstants.fadedText,
+                                letterSpacing: 0.1,
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal),
                           )
                         : SizedBox()
                   ],

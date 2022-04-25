@@ -288,10 +288,10 @@ class _HomeState extends State<Home> {
                             child: Text(
                               TextStrings().copyRight,
                               style: TextStyle(
-                                fontSize: 14.toFont,
-                                fontFamily: 'HelveticaNeu',
-                                color: Colors.grey.withOpacity(0.8),
-                              ),
+                                  fontSize: 14.toFont,
+                                  fontFamily: 'HelveticaNeu',
+                                  color: Colors.grey.withOpacity(0.8),
+                                  fontWeight: FontWeight.normal),
                             ),
                           ),
                         ],

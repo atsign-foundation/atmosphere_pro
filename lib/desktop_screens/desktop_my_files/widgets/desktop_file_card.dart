@@ -58,7 +58,9 @@ class DesktopFileCard extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Text(
                         title!,
-                        style: TextStyle(color: Color(0xFF8A8E95)),
+                        style: TextStyle(
+                            color: Color(0xFF8A8E95),
+                            fontWeight: FontWeight.normal),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                       ),

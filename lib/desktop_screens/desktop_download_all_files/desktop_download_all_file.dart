@@ -60,7 +60,10 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                   onPressed: _setDownloadFolder,
                   child: const Text(
                     TextStrings.selectDownloadFolder,
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10.toHeight),
@@ -70,7 +73,8 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                     isDownloading
                         ? TextStrings().downloadingFiles
                         : TextStrings().downloadAllFiles,
-                    style: TextStyle(fontSize: 16),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                   ),
                 ),
                 isDownloading
@@ -88,7 +92,9 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                         child: Row(
                           children: [
                             Text(TextStrings().downloadComplete,
-                                style: TextStyle(color: Colors.green)),
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.normal)),
                             Icon(
                               Icons.download_done,
                               color: Colors.green,

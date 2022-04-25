@@ -118,8 +118,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
             elevation: 0,
-            selectedLabelStyle: TextStyle(fontSize: 12.toFont),
-            unselectedLabelStyle: TextStyle(fontSize: 12.toFont),
+            selectedLabelStyle:
+                TextStyle(fontSize: 12.toFont, fontWeight: FontWeight.normal),
+            unselectedLabelStyle:
+                TextStyle(fontSize: 12.toFont, fontWeight: FontWeight.normal),
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home, size: 20.toFont),

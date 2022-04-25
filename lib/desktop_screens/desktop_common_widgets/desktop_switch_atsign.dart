@@ -169,10 +169,10 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   'Backup your keys',
                   softWrap: true,
                   style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    letterSpacing: 0.1,
-                    fontSize: 14,
-                  ),
+                      color: ColorConstants.fadedText,
+                      letterSpacing: 0.1,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal),
                 ),
               )
             ],

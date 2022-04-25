@@ -34,13 +34,18 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       Navigator.of(context).pop();
                       await widget.onConfirmation();
                     },
-                    child: Text(TextStrings().yes, style: TextStyle(fontSize: 16.toFont))),
+                    child: Text(TextStrings().yes,
+                        style: TextStyle(
+                            fontSize: 16.toFont,
+                            fontWeight: FontWeight.normal))),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child:
-                        Text(TextStrings().buttonCancel, style: TextStyle(fontSize: 16.toFont)))
+                    child: Text(TextStrings().buttonCancel,
+                        style: TextStyle(
+                            fontSize: 16.toFont,
+                            fontWeight: FontWeight.normal)))
               ],
             )
           ],

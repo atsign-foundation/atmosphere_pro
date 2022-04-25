@@ -175,8 +175,8 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                           child: Text(
                             'Apply',
                             style: TextStyle(
-                              color: Colors.white,
-                            ),
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal),
                           ),
                         ),
                       ],

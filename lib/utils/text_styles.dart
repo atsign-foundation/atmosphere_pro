@@ -55,10 +55,10 @@ class CustomTextStyles {
       fontWeight: FontWeight.bold);
 
   static TextStyle primaryRegular18 = TextStyle(
-    color: ColorConstants.fontPrimary,
-    fontSize: 18.toFont,
-    letterSpacing: 0.1,
-  );
+      color: ColorConstants.fontPrimary,
+      fontSize: 18.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 
   static TextStyle secondaryRegular12 = TextStyle(
       color: ColorConstants.fontSecondary,
@@ -66,22 +66,30 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle grey13 =
-      TextStyle(fontSize: 13.toFont, color: ColorConstants.greyText);
+  static TextStyle grey13 = TextStyle(
+      fontSize: 13.toFont,
+      color: ColorConstants.greyText,
+      fontWeight: FontWeight.normal);
 
-  static TextStyle grey15 =
-      TextStyle(fontSize: 15.toFont, color: ColorConstants.greyText);
+  static TextStyle grey15 = TextStyle(
+      fontSize: 15.toFont,
+      color: ColorConstants.greyText,
+      fontWeight: FontWeight.normal);
 
-  static TextStyle red15 =
-      TextStyle(color: ColorConstants.redAlert, fontSize: 15.toFont);
+  static TextStyle red15 = TextStyle(
+      color: ColorConstants.redAlert,
+      fontSize: 15.toFont,
+      fontWeight: FontWeight.normal);
 
-  static TextStyle red20 =
-      TextStyle(color: ColorConstants.redAlert, fontSize: 20.toFont);
+  static TextStyle red20 = TextStyle(
+      color: ColorConstants.redAlert,
+      fontSize: 20.toFont,
+      fontWeight: FontWeight.normal);
 
   static TextStyle darkGrey13 = TextStyle(
-    color: ColorConstants.dullText,
-    fontSize: 13.toFont,
-  );
+      color: ColorConstants.dullText,
+      fontSize: 13.toFont,
+      fontWeight: FontWeight.normal);
   static TextStyle blueRegular12 = TextStyle(
       color: ColorConstants.blueText,
       fontSize: 12.toFont,
@@ -169,17 +177,25 @@ class CustomTextStyles {
 
   /// Desktop
 
-  static TextStyle greyText16 =
-      TextStyle(color: ColorConstants.greyText, fontSize: 16);
+  static TextStyle greyText16 = TextStyle(
+      color: ColorConstants.greyText,
+      fontSize: 16,
+      fontWeight: FontWeight.normal);
 
-  static TextStyle greyText15 =
-      TextStyle(color: ColorConstants.greyText, fontSize: 15);
+  static TextStyle greyText15 = TextStyle(
+      color: ColorConstants.greyText,
+      fontSize: 15,
+      fontWeight: FontWeight.normal);
 
-  static TextStyle orangeext15 =
-      TextStyle(color: ColorConstants.orangeColor, fontSize: 15);
+  static TextStyle orangeext15 = TextStyle(
+      color: ColorConstants.orangeColor,
+      fontSize: 15,
+      fontWeight: FontWeight.normal);
 
-  static TextStyle greyText12 =
-      TextStyle(color: ColorConstants.greyText, fontSize: 12);
+  static TextStyle greyText12 = TextStyle(
+      color: ColorConstants.greyText,
+      fontSize: 12,
+      fontWeight: FontWeight.normal);
 
   static TextStyle primaryRegular20 = TextStyle(
       color: ColorConstants.fontPrimary,
@@ -236,10 +252,10 @@ class CustomTextStyles {
       fontWeight: FontWeight.bold);
 
   static TextStyle desktopBlackPlayfairDisplay26 = TextStyle(
-    fontFamily: 'PlayfairDisplay',
-    fontSize: 44,
-    color: Colors.black,
-  );
+      fontFamily: 'PlayfairDisplay',
+      fontSize: 44,
+      color: Colors.black,
+      fontWeight: FontWeight.normal);
 
   static TextStyle desktopPrimaryRegular14 = TextStyle(
       color: Colors.black,

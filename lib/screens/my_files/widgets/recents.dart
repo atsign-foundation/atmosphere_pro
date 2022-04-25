@@ -28,7 +28,8 @@ class _RecentsState extends State<Recents> {
         return (provider.recentFile.isEmpty)
             ? Center(
                 child: Text(TextStrings().noFilesRecieved,
-                    style: TextStyle(fontSize: 15.toFont)),
+                    style: TextStyle(
+                        fontSize: 15.toFont, fontWeight: FontWeight.normal)),
               )
             : Container(
                 margin: EdgeInsets.symmetric(
@@ -77,7 +78,9 @@ Widget fileCard(String? title, String? filePath) {
                   child: Text(
                     title,
                     style: TextStyle(
-                        color: Color(0xFF8A8E95), fontSize: 12.toFont),
+                        color: Color(0xFF8A8E95),
+                        fontSize: 12.toFont,
+                        fontWeight: FontWeight.normal),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

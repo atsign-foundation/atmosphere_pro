@@ -140,9 +140,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                         ? TextStrings().welcomeFilePlaceholder
                         : TextStrings().welcomeAddFilePlaceholder,
                     style: TextStyle(
-                      color: ColorConstants.fadedText,
-                      fontSize: 14.toFont,
-                    )),
+                        color: ColorConstants.fadedText,
+                        fontSize: 14.toFont,
+                        fontWeight: FontWeight.normal)),
                 subtitle: filePickerProvider!.selectedFiles.isEmpty
                     ? null
                     : Text(
@@ -152,9 +152,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                             ? '${filePickerProvider!.totalSize} Kb . ${filePickerProvider!.selectedFiles.length} file(s)'
                             : '${(filePickerProvider!.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider!.selectedFiles.length} file(s)',
                         style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 10.toFont,
-                        ),
+                            color: ColorConstants.fadedText,
+                            fontSize: 10.toFont,
+                            fontWeight: FontWeight.normal),
                       ),
                 trailing: InkWell(
                   onTap: () {
@@ -197,9 +197,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                               title: Text(
                                 provider.selectedFiles[index].name.toString(),
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.toFont,
-                                ),
+                                    color: Colors.black,
+                                    fontSize: 14.toFont,
+                                    fontWeight: FontWeight.normal),
                               ),
                               subtitle: Text(
                                 double.parse(provider.selectedFiles[index].size
@@ -210,9 +210,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                     : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
                                         ' . ${provider.selectedFiles[index].extension}',
                                 style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                ),
+                                    color: ColorConstants.fadedText,
+                                    fontSize: 14.toFont,
+                                    fontWeight: FontWeight.normal),
                               ),
                               leading: CommonUtilityFunctions().thumbnail(
                                   provider.selectedFiles[index].extension

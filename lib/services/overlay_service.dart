@@ -81,7 +81,8 @@ class OverlayService {
                             TextStrings().buttonDismiss,
                             style: TextStyle(
                                 color: ColorConstants.fontPrimary,
-                                fontSize: 15.toFont),
+                                fontSize: 15.toFont,
+                                fontWeight: FontWeight.normal),
                           ),
                         ),
                       )

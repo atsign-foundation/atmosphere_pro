@@ -105,8 +105,10 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             ),
                             Text(
                               TextStrings().received,
-                              style:
-                                  TextStyle(letterSpacing: 0.1, fontSize: 20),
+                              style: TextStyle(
+                                  letterSpacing: 0.1,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
                             )
                           ],
                         ),
@@ -131,7 +133,9 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             return (provider.sentHistory.isEmpty)
                                 ? Center(
                                     child: Text(TextStrings().noFilesSent,
-                                        style: TextStyle(fontSize: 15.toFont)),
+                                        style: TextStyle(
+                                            fontSize: 15.toFont,
+                                            fontWeight: FontWeight.normal)),
                                   )
                                 : ListView.separated(
                                     padding:
@@ -191,7 +195,9 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                 ? Center(
                                     child: Text(
                                       TextStrings().noFilesRecieved,
-                                      style: TextStyle(fontSize: 15.toFont),
+                                      style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.normal),
                                     ),
                                   )
                                 : ListView.separated(

@@ -94,7 +94,8 @@ class CommonUtilityFunctions {
                   children: [
                     Text(TextStrings.resetDescription,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15)),
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.normal)),
                     SizedBox(
                       height: 10,
                     ),
@@ -106,7 +107,8 @@ class CommonUtilityFunctions {
                 content: atsignsList!.isEmpty
                     ? Column(mainAxisSize: MainAxisSize.min, children: [
                         Text(TextStrings.noAtsignToReset,
-                            style: TextStyle(fontSize: 15)),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.normal)),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: TextButton(
@@ -116,9 +118,9 @@ class CommonUtilityFunctions {
                             child: Text(
                               TextStrings().buttonClose,
                               style: TextStyle(
-                                fontSize: 15,
-                                // color: AtTheme.themecolor,
-                              ),
+                                  fontSize: 15,
+                                  // color: AtTheme.themecolor,
+                                  fontWeight: FontWeight.normal),
                             ),
                           ),
                         )
@@ -156,12 +158,16 @@ class CommonUtilityFunctions {
                             if (isSelectAtsign)
                               Text(TextStrings.resetErrorText,
                                   style: TextStyle(
-                                      color: Colors.red, fontSize: 14)),
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal)),
                             SizedBox(
                               height: 10,
                             ),
                             Text(TextStrings.resetWarningText,
-                                style: TextStyle(fontSize: 14)),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal)),
                             SizedBox(
                               height: 10,
                             ),
@@ -188,9 +194,9 @@ class CommonUtilityFunctions {
                                 },
                                 child: Text(TextStrings().remove,
                                     style: TextStyle(
-                                      color: ColorConstants.fontPrimary,
-                                      fontSize: 15,
-                                    )),
+                                        color: ColorConstants.fontPrimary,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal)),
                               ),
                               Spacer(),
                               TextButton(
@@ -199,7 +205,9 @@ class CommonUtilityFunctions {
                                   },
                                   child: Text(TextStrings().buttonCancel,
                                       style: TextStyle(
-                                          fontSize: 15, color: Colors.black)))
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal)))
                             ])
                           ],
                         ),
@@ -392,10 +400,10 @@ class CommonUtilityFunctions {
                   TextStrings().deleteDataMessage,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    letterSpacing: 0.1,
-                    color: Colors.grey[700],
-                    fontSize: 15.toFont,
-                  ),
+                      letterSpacing: 0.1,
+                      color: Colors.grey[700],
+                      fontSize: 15.toFont,
+                      fontWeight: FontWeight.normal),
                 ),
                 SizedBox(height: 20),
                 Text('$atsign',
@@ -409,10 +417,10 @@ class CommonUtilityFunctions {
                   TextStrings().typeAtsignAbove,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.grey[700],
-                    letterSpacing: 0.1,
-                    fontSize: 12.toFont,
-                  ),
+                      color: Colors.grey[700],
+                      letterSpacing: 0.1,
+                      fontSize: 12.toFont,
+                      fontWeight: FontWeight.normal),
                 ),
                 SizedBox(height: 5),
                 Form(
@@ -498,13 +506,17 @@ class CommonUtilityFunctions {
                         TextButton(
                             onPressed: onYesTap as void Function()?,
                             child: Text(TextStrings().yes,
-                                style: TextStyle(fontSize: 16.toFont))),
+                                style: TextStyle(
+                                    fontSize: 16.toFont,
+                                    fontWeight: FontWeight.normal))),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                             child: Text(TextStrings().buttonCancel,
-                                style: TextStyle(fontSize: 16.toFont)))
+                                style: TextStyle(
+                                    fontSize: 16.toFont,
+                                    fontWeight: FontWeight.normal)))
                       ],
                     )
                   ],

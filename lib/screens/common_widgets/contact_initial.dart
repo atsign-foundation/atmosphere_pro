@@ -20,6 +20,7 @@ class ContactInitial extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    var encodedInitials = initials!.runes;
     if (initials!.length < 3) {
       index = initials!.length;
     } else {
@@ -37,7 +38,8 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials!.substring((index == 1) ? 0 : 1, index).toUpperCase(),
+          String.fromCharCodes(encodedInitials, (index == 1) ? 0 : 1, index)
+              .toUpperCase(),
           style: CustomTextStyles.whiteBold(size: (size! ~/ 3)),
         ),
       ),

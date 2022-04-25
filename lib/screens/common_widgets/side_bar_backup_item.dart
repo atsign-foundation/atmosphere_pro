@@ -29,10 +29,10 @@ class SideBarBackupItem extends StatelessWidget {
                 title!,
                 softWrap: true,
                 style: TextStyle(
-                  color: ColorConstants.fadedText,
-                  letterSpacing: 0.1,
-                  fontSize: 14.toFont,
-                ),
+                    color: ColorConstants.fadedText,
+                    letterSpacing: 0.1,
+                    fontSize: 14.toFont,
+                    fontWeight: FontWeight.normal),
               ),
             )
           ],

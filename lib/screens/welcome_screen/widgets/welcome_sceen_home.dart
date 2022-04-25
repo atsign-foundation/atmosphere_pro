@@ -107,9 +107,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             Text(
                               TextStrings().welcomeRecipient,
                               style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 13.toFont,
-                              ),
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 13.toFont,
+                                  fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
                               height: 67.toHeight,
@@ -117,9 +117,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             Text(
                               TextStrings().welcomeSendFilesTo,
                               style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 12.toFont,
-                              ),
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 12.toFont,
+                                  fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
                               height: 20.toHeight,

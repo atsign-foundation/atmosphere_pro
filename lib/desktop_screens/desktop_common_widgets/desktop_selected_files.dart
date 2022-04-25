@@ -36,7 +36,8 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(TextStrings().selectedFiles, style: CustomTextStyles.desktopPrimaryBold18),
+          Text(TextStrings().selectedFiles,
+              style: CustomTextStyles.desktopPrimaryBold18),
           SizedBox(
             height: 30,
           ),
@@ -86,9 +87,9 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                             title: Text(
                               provider.selectedFiles[index].name,
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14.toFont,
-                              ),
+                                  color: Colors.black,
+                                  fontSize: 14.toFont,
+                                  fontWeight: FontWeight.normal),
                               maxLines: 1,
                             ),
                             subtitle: Text(
@@ -100,9 +101,9 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                                   : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
                                       ' . ${provider.selectedFiles[index].extension}',
                               style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 14.toFont,
-                              ),
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 14.toFont,
+                                  fontWeight: FontWeight.normal),
                             ),
                             leading: CommonUtilityFunctions().thumbnail(
                                 provider.selectedFiles[index].extension

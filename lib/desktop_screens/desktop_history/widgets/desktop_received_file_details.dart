@@ -140,8 +140,10 @@ class _DesktopReceivedFileDetailsState
                           Icon(Icons.save_alt_outlined, color: Colors.black),
                           SizedBox(width: 10),
                           Text(TextStrings().downloadsFolder,
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12)),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal)),
                         ],
                       ),
                     ),
@@ -206,9 +208,9 @@ class _DesktopReceivedFileDetailsState
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14.toFont,
-                              ),
+                                  color: Colors.black,
+                                  fontSize: 14.toFont,
+                                  fontWeight: FontWeight.normal),
                             ),
                             subtitle: Text(
                               double.parse(widget
@@ -220,9 +222,9 @@ class _DesktopReceivedFileDetailsState
                                   : '${(widget.fileTransfer!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}' +
                                       ' . ${widget.fileTransfer!.files![index].name!.split('.').last}',
                               style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 14.toFont,
-                              ),
+                                  color: ColorConstants.fadedText,
+                                  fontSize: 14.toFont,
+                                  fontWeight: FontWeight.normal),
                             ),
                             leading: FutureBuilder(
                                 key: Key(
@@ -338,7 +340,9 @@ class _DesktopReceivedFileDetailsState
                               Navigator.of(context).pop();
                             },
                             child: Text(TextStrings().buttonCancel,
-                                style: TextStyle(fontSize: 16.toFont)))
+                                style: TextStyle(
+                                    fontSize: 16.toFont,
+                                    fontWeight: FontWeight.normal)))
                       ],
                     )
                   ],
@@ -366,7 +370,10 @@ class _DesktopReceivedFileDetailsState
           children: [
             TextSpan(
                 text: TextStrings().fileNamed,
-                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal)),
             TextSpan(
                 text: '${existingFileNamesToOverwrite[0]}',
                 style: TextStyle(
@@ -375,14 +382,20 @@ class _DesktopReceivedFileDetailsState
                     fontWeight: FontWeight.bold)),
             TextSpan(
                 text: TextStrings().alreadyExistsMsg,
-                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal)),
           ],
         ),
       );
     } else if (existingFileNamesToOverwrite.length > 1) {
       textSpansMessage.add(TextSpan(
         text: TextStrings().fileExists,
-        style: TextStyle(color: Colors.black, fontSize: 15.toFont),
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 15.toFont,
+            fontWeight: FontWeight.normal),
       ));
 
       existingFileNamesToOverwrite.forEach((element) {
@@ -401,8 +414,11 @@ class _DesktopReceivedFileDetailsState
       textSpansMessage.add(
         TextSpan(
             text: TextStrings().overWriteMsg,
-            style:
-                TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15.toFont,
+                height: 2,
+                fontWeight: FontWeight.normal)),
       );
     }
     return textSpansMessage;

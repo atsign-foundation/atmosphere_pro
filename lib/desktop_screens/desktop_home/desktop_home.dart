@@ -185,8 +185,9 @@ class _DesktopHomeState extends State<DesktopHome> {
                       alignment: Alignment.center,
                       child: TextButton(
                         child: Text(TextStrings.resetButton,
-                            style:
-                                TextStyle(color: ColorConstants.orangeColor)),
+                            style: TextStyle(
+                                color: ColorConstants.orangeColor,
+                                fontWeight: FontWeight.normal)),
                         onPressed: () {
                           _showResetDialog();
                         },
@@ -334,7 +335,8 @@ class _DesktopHomeState extends State<DesktopHome> {
                   children: [
                     Text(TextStrings.resetDescription,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15)),
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.normal)),
                     SizedBox(
                       height: 10,
                     ),
@@ -346,7 +348,8 @@ class _DesktopHomeState extends State<DesktopHome> {
                 content: atsignsList!.isEmpty
                     ? Column(mainAxisSize: MainAxisSize.min, children: [
                         Text(TextStrings.noAtsignToReset,
-                            style: TextStyle(fontSize: 15)),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.normal)),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: TextButton(
@@ -356,9 +359,9 @@ class _DesktopHomeState extends State<DesktopHome> {
                             child: Text(
                               TextStrings().buttonClose,
                               style: TextStyle(
-                                fontSize: 15,
-                                // color: AtTheme.themecolor,
-                              ),
+                                  fontSize: 15,
+                                  // color: AtTheme.themecolor,
+                                  fontWeight: FontWeight.normal),
                             ),
                           ),
                         )
@@ -395,12 +398,16 @@ class _DesktopHomeState extends State<DesktopHome> {
                             if (isSelectAtsign)
                               Text(TextStrings.resetErrorText,
                                   style: TextStyle(
-                                      color: Colors.red, fontSize: 14)),
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal)),
                             SizedBox(
                               height: 10,
                             ),
                             Text(TextStrings.resetWarningText,
-                                style: TextStyle(fontSize: 14)),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal)),
                             SizedBox(
                               height: 10,
                             ),
@@ -421,9 +428,9 @@ class _DesktopHomeState extends State<DesktopHome> {
                                 },
                                 child: Text(TextStrings().remove,
                                     style: TextStyle(
-                                      color: ColorConstants.fontPrimary,
-                                      fontSize: 15,
-                                    )),
+                                        color: ColorConstants.fontPrimary,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal)),
                               ),
                               Spacer(),
                               TextButton(
@@ -432,7 +439,9 @@ class _DesktopHomeState extends State<DesktopHome> {
                                   },
                                   child: Text(TextStrings().buttonCancel,
                                       style: TextStyle(
-                                          fontSize: 15, color: Colors.black)))
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal)))
                             ])
                           ],
                         ),
