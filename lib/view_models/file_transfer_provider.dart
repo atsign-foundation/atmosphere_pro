@@ -9,6 +9,7 @@ import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -19,6 +20,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
@@ -90,6 +92,12 @@ class FileTransferProvider extends BaseModel {
   }
 
   pickFiles(String choice) async {
+    PermissionStatus status = await Permission.storage.status;
+    if (status.isDenied) {
+      await showNoPermissionDialog();
+      return;
+    }
+
     setStatus(PICK_FILES, Status.Loading);
     try {
       List<PlatformFile> tempList = [];
@@ -131,67 +139,25 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
+  showNoPermissionDialog() async {
+    await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth),
+              ),
+              content: PermissionDeniedMessage(
+                  TextStrings.permissionRequireMessage));
+        });
+  }
+
   calculateSize() async {
     totalSize = 0;
     selectedFiles?.forEach((element) {
       totalSize += element.size;
     });
-
-    // if ((totalSize / 1048576) >= 50) {
-    //   WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-    //     _showFileSizeLimit();
-    //   });
-    // }
   }
-
-  // _showFileSizeLimit() async {
-  //   await showDialog(
-  //       context: NavService.navKey.currentContext,
-  //       builder: (_context) {
-  //         return AlertDialog(
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(10.toWidth),
-  //           ),
-  //           content: Container(
-  //             color: Colors.white,
-  //             width: 300.toWidth,
-  //             padding: EdgeInsets.all(15.toFont),
-  //             child: SingleChildScrollView(
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Text(TextStrings.fileSizeLimit,
-  //                       style: CustomTextStyles.grey15),
-  //                   SizedBox(
-  //                     height: 10.toHeight,
-  //                   ),
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.end,
-  //                     children: [
-  //                       TextButton(
-  //                           onPressed: () {
-  //                             Navigator.of(NavService.navKey.currentContext)
-  //                                 .pop();
-  //                           },
-  //                           child: Text('Ok',
-  //                               style: TextStyle(
-  //                                  fontSize: 16.toFont,
-  //                                  fontWeight: FontWeight.normal,
-  //                               )))
-  //                     ],
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         );
-  //       });
-
-  //   selectedFiles = [];
-  //   totalSize = 0;
-  //   hasSelectedFilesChanged = false;
-  //   notifyListeners();
-  // }
 
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
