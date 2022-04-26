@@ -77,11 +77,17 @@ class _HistoryScreenState extends State<HistoryScreen>
                   tabs: [
                     Text(
                       TextStrings().sent,
-                      style: TextStyle(letterSpacing: 0.1),
+                      style: TextStyle(
+                        letterSpacing: 0.1,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                     Text(
                       TextStrings().received,
-                      style: TextStyle(letterSpacing: 0.1),
+                      style: TextStyle(
+                        letterSpacing: 0.1,
+                        fontWeight: FontWeight.normal,
+                      ),
                     )
                   ],
                 ),
@@ -117,7 +123,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                                     child: Center(
                                       child: Text(
                                         'No files sent',
-                                        style: TextStyle(fontSize: 15.toFont),
+                                        style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -153,7 +162,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                               child: Center(
                                 child: Text(
                                   'Some error occured',
-                                  style: TextStyle(fontSize: 15.toFont),
+                                  style: TextStyle(
+                                    fontSize: 15.toFont,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
                             ),
@@ -193,7 +205,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                                       child: Center(
                                         child: Text(
                                           'No files received',
-                                          style: TextStyle(fontSize: 15.toFont),
+                                          style: TextStyle(
+                                            fontSize: 15.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -234,7 +249,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                                     child: Center(
                                       child: Text(
                                         'Some error occured',
-                                        style: TextStyle(fontSize: 15.toFont),
+                                        style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
                                     ),
                                   ),

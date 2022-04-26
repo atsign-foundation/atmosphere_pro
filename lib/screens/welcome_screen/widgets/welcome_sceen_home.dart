@@ -109,6 +109,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               style: TextStyle(
                                 color: ColorConstants.fadedText,
                                 fontSize: 13.toFont,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                             SizedBox(
@@ -119,6 +120,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               style: TextStyle(
                                 color: ColorConstants.fadedText,
                                 fontSize: 12.toFont,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                             SizedBox(

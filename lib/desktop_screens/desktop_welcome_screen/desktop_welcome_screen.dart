@@ -557,6 +557,7 @@ class SideBarIcon extends StatelessWidget {
                                       : ColorConstants.fadedText,
                                   letterSpacing: 0.1,
                                   fontSize: 12,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               )
                             : SizedBox()
@@ -605,6 +606,7 @@ class SideBarIcon extends StatelessWidget {
                                   : ColorConstants.fadedText,
                               letterSpacing: 0.1,
                               fontSize: 12,
+                              fontWeight: FontWeight.normal,
                             ),
                           )
                         : SizedBox()

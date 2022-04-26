@@ -80,6 +80,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14.toFont,
+                              fontWeight: FontWeight.normal,
                             ),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
@@ -96,6 +97,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                             style: TextStyle(
                               color: ColorConstants.fadedText,
                               fontSize: 14.toFont,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                           leading: InkWell(

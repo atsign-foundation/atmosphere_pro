@@ -172,6 +172,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                     color: ColorConstants.fadedText,
                     letterSpacing: 0.1,
                     fontSize: 14,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               )

@@ -107,6 +107,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                         'Add',
                         style: TextStyle(
                           color: Colors.white,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ),

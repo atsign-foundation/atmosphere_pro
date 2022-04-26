@@ -80,8 +80,10 @@ class OverlayService {
                           child: Text(
                             TextStrings().buttonDismiss,
                             style: TextStyle(
-                                color: ColorConstants.fontPrimary,
-                                fontSize: 15.toFont),
+                              color: ColorConstants.fontPrimary,
+                              fontSize: 15.toFont,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ),
                       )
