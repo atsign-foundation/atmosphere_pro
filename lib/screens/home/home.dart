@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,13 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      Provider.of<InternetConnectivityChecker>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .checkConnectivity();
+    });
+
     storeApplicationDocumentsDirectory();
     filePickerProvider =
         Provider.of<FileTransferProvider>(context, listen: false);

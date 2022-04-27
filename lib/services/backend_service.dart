@@ -25,6 +25,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -461,9 +462,13 @@ class BackendService {
             isAuthuneticatingSink.add(authenticating);
           },
           onError: (error) {
-            print('Onboarding throws $error error');
-            SnackbarService().showSnackbar(
-                NavService.navKey.currentContext!, 'Onboarding failed.',
+            var isConnected = Provider.of<InternetConnectivityChecker>(
+                    NavService.navKey.currentContext!,
+                    listen: false)
+                .isInternetAvailable;
+
+            SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+                !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
                 bgColor: ColorConstants.redAlert);
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);

@@ -27,6 +27,8 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../view_models/internet_connectivity_checker.dart';
+
 class ReceivedFilesListTile extends StatefulWidget {
   final FileTransfer? receivedHistory;
   final bool? isWidgetOpen;
@@ -769,6 +771,20 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   /// provide [fileName] to download that file
   downloadFiles(FileTransfer? receivedHistory, {String? fileName}) async {
+    var isConnected = Provider.of<InternetConnectivityChecker>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .isInternetAvailable;
+
+    if (!isConnected) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings.noInternetMsg,
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+
     var result;
     if (fileName != null) {
       result = await Provider.of<HistoryProvider>(

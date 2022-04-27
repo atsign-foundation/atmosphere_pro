@@ -341,7 +341,7 @@ class TextStrings {
       'Error in showing app upgrade dialog box.';
   static const appVersionFetchError =
       'Could not fetch latest app version details.';
-
+  static const noInternetMsg = 'No internet available';
   static const permissionRequireMessage =
       'This action cannot be completed because the app does not have permission to access the required items. Please change the app permission settings to continue.';
 }
