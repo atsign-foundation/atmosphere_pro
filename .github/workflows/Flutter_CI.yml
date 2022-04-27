@@ -83,7 +83,7 @@ jobs:
       - name: Enable macOS build
         run: flutter config --enable-macos-desktop
       - name: Build artifacts
-        run: flutter build macos --release
+        run: flutter build macos --release --allowProvisioningUpdates
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
