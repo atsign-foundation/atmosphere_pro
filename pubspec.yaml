@@ -76,17 +76,17 @@ dependencies:
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.2
 
-dependency_overrides:
-  at_contacts_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_flutter
-  at_contacts_group_flutter:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_group_flutter
+# dependency_overrides:
+#   at_contacts_flutter:
+#     git:
+#       url: git@github.com:atsign-foundation/at_widgets.git
+#       ref: trunk
+#       path: at_contacts_flutter
+#   at_contacts_group_flutter:
+#     git:
+#       url: git@github.com:atsign-foundation/at_widgets.git
+#       ref: trunk
+#       path: at_contacts_group_flutter
 
 dev_dependencies:
   flutter_test:
