@@ -75,7 +75,10 @@ class LocalNotificationService {
   }
 
   Future<void> showNotification(String from, String message) async {
-    if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
+    if (Platform.isIOS ||
+        Platform.isAndroid ||
+        Platform.isMacOS ||
+        Platform.isLinux) {
       var androidChannelSpecifics = AndroidNotificationDetails(
         'CHANNEL_ID',
         'CHANNEL_NAME',
