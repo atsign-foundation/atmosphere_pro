@@ -405,8 +405,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     _filePickerProvider.resetSelectedFilesStatus();
 
     var res = await _filePickerProvider.sendFileWithFileBin(
-        _filePickerProvider.selectedFiles,
-        _welcomeScreenProvider.selectedContacts);
+      _filePickerProvider.selectedFiles,
+      _welcomeScreenProvider.selectedContacts,
+      groupName: _welcomeScreenProvider.groupName,
+    );
 
     if (mounted && res is bool) {
       setState(() {
