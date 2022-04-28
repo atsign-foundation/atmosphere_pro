@@ -5,7 +5,6 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
-import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
@@ -422,17 +421,6 @@ class BackendService {
       CustomOnboarding.onboard(
           atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
     }
-  }
-
-  Future<bool> checkAtsign(String atSign) async {
-    if (atSign == null) {
-      return false;
-    } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
-    }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, MixedConstants.ROOT_DOMAIN, AtClientPreference().rootPort);
-    return checkPresence != null;
   }
 
   bool authenticating = false;

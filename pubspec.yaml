@@ -65,7 +65,6 @@ dependencies:
   
   at_commons: ^3.0.13
   at_contact: ^3.0.5
-  at_lookup: ^3.0.19
   at_common_flutter: ^2.0.6
   
   at_client_mobile: ^3.1.13
