@@ -79,13 +79,23 @@ dependency_overrides:
   at_contacts_flutter:
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
+      ref: fix/missing-fontweight
       path: at_contacts_flutter
-  at_contacts_group_flutter:
+  at_common_flutter: 
     git:
       url: git@github.com:atsign-foundation/at_widgets.git
-      ref: trunk
-      path: at_contacts_group_flutter
+      ref: fix/missing-fontweight
+      path: at_common_flutter
+  at_onboarding_flutter: 
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: fix/missing-fontweight
+      path: at_onboarding_flutter
+  at_contacts_group_flutter: 
+    git:
+      url: git@github.com:atsign-foundation/at_widgets.git
+      ref: fix/missing-fontweight
+      path: at_contacts_flutter
 
 dev_dependencies:
   flutter_test:

@@ -63,7 +63,7 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.18"
+    version: "3.0.20"
   at_client_mobile:
     dependency: "direct main"
     description:
@@ -74,9 +74,11 @@ packages:
   at_common_flutter:
     dependency: "direct main"
     description:
-      name: at_common_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_common_flutter
+      ref: "fix/missing-fontweight"
+      resolved-ref: "983b874300a112db1a968c500bf9fe0e0e10fd14"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "2.0.6"
   at_commons:
     dependency: "direct main"
@@ -84,7 +86,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.13"
+    version: "3.0.14"
   at_contact:
     dependency: "direct main"
     description:
@@ -96,8 +98,8 @@ packages:
     dependency: "direct main"
     description:
       path: at_contacts_flutter
-      ref: trunk
-      resolved-ref: "28c79e2fca4727750497a71b648ae36bb3858c8e"
+      ref: "fix/missing-fontweight"
+      resolved-ref: "983b874300a112db1a968c500bf9fe0e0e10fd14"
       url: "git@github.com:atsign-foundation/at_widgets.git"
     source: git
     version: "4.0.3"
@@ -105,8 +107,8 @@ packages:
     dependency: "direct main"
     description:
       path: at_contacts_group_flutter
-      ref: trunk
-      resolved-ref: "28c79e2fca4727750497a71b648ae36bb3858c8e"
+      ref: "fix/missing-fontweight"
+      resolved-ref: "983b874300a112db1a968c500bf9fe0e0e10fd14"
       url: "git@github.com:atsign-foundation/at_widgets.git"
     source: git
     version: "4.0.3"
@@ -116,13 +118,15 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.19"
+    version: "3.0.20"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      name: at_onboarding_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_onboarding_flutter
+      ref: "fix/missing-fontweight"
+      resolved-ref: "983b874300a112db1a968c500bf9fe0e0e10fd14"
+      url: "git@github.com:atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.1"
   at_persistence_secondary_server:
     dependency: transitive
@@ -130,7 +134,7 @@ packages:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.23"
+    version: "3.0.24"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -186,7 +190,7 @@ packages:
       name: carousel_slider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.1"
   characters:
     dependency: transitive
     description:
@@ -436,7 +440,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.4.0"
+    version: "9.4.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -503,6 +507,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+  get_it:
+    dependency: transitive
+    description:
+      name: get_it
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.2.0"
   glob:
     dependency: transitive
     description:
@@ -516,7 +527,7 @@ packages:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   hive:
     dependency: transitive
     description:
@@ -600,7 +611,7 @@ packages:
       name: local_notifier
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   logging:
     dependency: transitive
     description:
@@ -649,7 +660,7 @@ packages:
       name: msix
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.1"
+    version: "3.5.1"
   mutex:
     dependency: transitive
     description:
@@ -817,7 +828,7 @@ packages:
       name: permission_handler_apple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.0.3"
+    version: "9.0.4"
   permission_handler_platform_interface:
     dependency: transitive
     description:
@@ -929,7 +940,7 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   share_plus_linux:
     dependency: transitive
     description:
@@ -1144,7 +1155,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.20"
+    version: "6.1.0"
   url_launcher_android:
     dependency: transitive
     description:
@@ -1256,14 +1267,14 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   webview_flutter_android:
     dependency: transitive
     description:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.3"
+    version: "2.8.5"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
@@ -1277,14 +1288,14 @@ packages:
       name: webview_flutter_wkwebview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.1"
+    version: "2.7.2"
   win32:
     dependency: transitive
     description:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.1"
+    version: "2.5.2"
   xdg_directories:
     dependency: transitive
     description:
