@@ -29,10 +29,10 @@ class TextStrings {
   String welcomeUser(String userName) => 'Welcome\n $userName';
   String welcome = 'Welcome';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
-  String welcomeSendFilesTo = 'Send file to';
+  String welcomeSendFilesTo = 'Send file(s) to';
   String welcomeContactPlaceholder = '@sign';
-  String welcomeFilePlaceholder = 'Select file to transfer';
-  String welcomeAddFilePlaceholder = 'Add file to transfer';
+  String welcomeFilePlaceholder = 'Select file(s) to transfer';
+  String welcomeAddFilePlaceholder = 'Add file(s) to transfer';
   String sendingFiles = 'Sending file ...';
   String oopsSomethingWentWrong = 'Oops! something went wrong';
   String hello = 'hello';
@@ -42,17 +42,17 @@ class TextStrings {
   String sidebarHome = 'Home';
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
-  String sidebarBlockedUser = 'Blocked @Signs';
+  String sidebarBlockedUser = 'Blocked @signs';
   String sidebarMyFiles = 'My Files';
   String sidebarTrustedSenders = 'Trusted Senders';
   String sidebarMyGroups = 'My Groups';
-  String sidebarBackupKey = 'Backup your keys';
+  String sidebarBackupKey = 'Backup Your keys';
   String sidebarTermsAndConditions = 'Terms and Conditions';
-  String sidebarPrivacyPolicy = "Privacy policy";
+  String sidebarPrivacyPolicy = "Privacy Policy";
   String sidebarFaqs = 'FAQ';
-  String sidebarAutoAcceptFile = 'Auto Accept Files';
+  String sidebarAutoAcceptFile = 'Auto-Accept Files';
   String sidebarEnablingMessage =
-      'Enabling this will auto accept all the files sent by your contacts.';
+      'Enabling this will auto-accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign(s)';
 
@@ -66,11 +66,11 @@ class TextStrings {
   String faqs = 'FAQ';
 
   //Contact texts
-  String searchContact = 'Search Contact';
+  String searchContact = 'Search Contacts';
   String addContactSearch = 'Search @sign';
   String contactSearchResults = 'Search Results';
   String addContact = 'Add Contact';
-  String addtoContact = 'Add to Contact';
+  String addtoContact = 'Add to Contacts';
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
@@ -116,7 +116,7 @@ class TextStrings {
 
   //add contact texts
   String addContactHeading =
-      'Are you sure you want to add the user to your contact list?';
+      'Are you sure you want to add this person to your contacts list?';
   String yes = 'Yes';
   String no = 'No';
   String add = 'Add';
@@ -134,11 +134,13 @@ class TextStrings {
   // trusted sender screens
   String trustedSenders = 'Trusted Senders';
   String selectperson = 'Select Person';
-  String noTrustedSenders = 'No Trusted Senders!';
-  String addTrustedSender = 'Would you like to add people?';
+  String noTrustedSenders = 'No Trusted Senders';
+  String addTrustedSender =
+      'Would you like to add people to your trusted senders list?';
   String removeTrustedSender =
-      "Are you sure you want to remove from Trusted sender's list?";
-  String removeGroupMember = "Are you sure you want to remove from Group ?";
+      "Are you sure you want to remove this person from your trusted senders list?";
+  String removeGroupMember =
+      "Are you sure you want to remove this person from Group ?";
 
   // my groups
   String groups = 'Groups';
@@ -151,7 +153,8 @@ class TextStrings {
   String create = 'Create';
   String groupName = 'Group Name';
   String enterGroupName = 'Enter group name';
-  String removeGroup = 'Are you sure you want to remove from group ?';
+  String removeGroup =
+      'Are you sure you want to remove this contact(s) from this group?';
   String changeGroupPhoto = 'Change Group Photo';
   String removeGroupPhoto = 'Remove Group Photo';
 
@@ -162,12 +165,12 @@ class TextStrings {
 
   // scan qr texts
   String scanQrTitle = 'Scan QR Code';
-  String scanQrMessage = 'Just scan the QR code displayed at www.atsign.com';
-  String scanQrFooter = 'Don’t have an @sign? Get now.';
+  String scanQrMessage = 'Just scan the QR Code displayed at my.atsign.com';
+  String scanQrFooter = 'Don’t have an @sign? Get one now.';
   String websiteTitle = 'Atsign';
 
   //error texts
-  String errorOccured = 'Some Error occured';
+  String errorOccured = 'An Error Occurred';
 
   // File choice dialog texts
   String fileChoiceQuestion = 'What would you like to send?';
@@ -186,7 +189,7 @@ class TextStrings {
   String unknownAtsign(String atSign) =>
       '$atSign is not found. Please check and try again.';
   String atsignExists(String atSign) => '$atSign already exists';
-  String emptyAtsign = 'Please type in an atsign';
+  String emptyAtsign = 'Please enter an @sign';
 
   // sort strings
   static const String SORT_NAME = 'Sort By Name';
@@ -194,10 +197,10 @@ class TextStrings {
   static const String SORT_SIZE = 'Sort By Size';
 
   // Flushbar messages
-  String receivingFile = 'Receiving file';
-  String sendingFile = 'Sending file';
-  String fileReceived = 'File received';
-  String fileSent = 'File sent';
+  String receivingFile = 'Receiving file(s)';
+  String sendingFile = 'Sending file(s)';
+  String fileReceived = 'File(s) received';
+  String fileSent = 'File(s) sent';
   String expired = 'Expired';
   String fileSentSuccessfully = 'File(s) sent successfully';
 
@@ -217,7 +220,7 @@ class TextStrings {
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
   String contactSelectionConfirmation =
-      'Selected contacts will not be added , confirm?';
+      'Selected contacts will not be added, confirm?';
 
   // Desktop Selected file
   String selectedFiles = 'Selected files';
@@ -227,7 +230,7 @@ class TextStrings {
       'All the files you have received will be downloaded in the folder you select.';
   String selectedDownloadFolder = 'Selected download folder: ';
   static const String selectDownloadFolder = 'Select download folder';
-  String downloadingFiles = 'Downloading files...';
+  String downloadingFiles = 'Downloading file(s)...';
   String downloadComplete = 'Download complete';
   String selectFolderToDownload = 'Select folder to download';
   String downloadInProgress = 'Download in progress';
@@ -320,14 +323,15 @@ class TextStrings {
   static final String resetButton = 'Reset';
   static const String resetDescription =
       'This will remove the selected @sign and its details from this app only.';
-  static const String noAtsignToReset = 'No @signs are paired to reset. ';
+  static const String noAtsignToReset =
+      'There are no @signs paired with this device. ';
   static const String resetErrorText =
-      'Please select atleast one @sign to reset';
+      'Please select at least one @sign to reset';
   static const String resetWarningText =
-      'Warning: This action cannot be undone';
+      'Warning: This action cannot be undone!';
 
   static const uploaded = 'Uploaded';
-  static const reUploadFileMsg = 'Do you want to reupload file ?';
+  static const reUploadFileMsg = 'Do you want to re-upload file ?';
   static const uploadFile = 'Please upload file first.';
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
   static const delete = 'Delete';
@@ -337,4 +341,7 @@ class TextStrings {
       'Error in showing app upgrade dialog box.';
   static const appVersionFetchError =
       'Could not fetch latest app version details.';
+  static const noInternetMsg = 'No internet available';
+  static const permissionRequireMessage =
+      'This action cannot be completed because the app does not have permission to access the required items. Please change the app permission settings to continue.';
 }

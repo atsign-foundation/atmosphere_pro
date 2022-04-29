@@ -52,13 +52,17 @@ class DesktopCustomInputField extends StatelessWidget {
                 readOnly: isReadOnly,
                 style: TextStyle(
                   fontSize: 15.toFont,
+                  fontWeight: FontWeight.normal,
                 ),
                 decoration: InputDecoration(
                   hintText: hintText,
                   enabledBorder: InputBorder.none,
                   border: InputBorder.none,
                   hintStyle: TextStyle(
-                      color: ColorConstants.light_grey, fontSize: 15.toFont),
+                    color: ColorConstants.light_grey,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 onTap: onTap as void Function()? ?? () {},
                 onChanged: (val) {

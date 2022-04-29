@@ -27,7 +27,10 @@ class _WelcomeScreenReceivedFilesState
           ? Center(
               child: Text(
                 TextStrings().noFilesRecieved,
-                style: TextStyle(fontSize: 15.toFont),
+                style: TextStyle(
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             )
           : ListView.separated(

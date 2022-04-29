@@ -99,12 +99,15 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                                   nonAsset: true,
                                                 )
                                               : ContactInitial(
-                                                  initials:
-                                                      widget.atSignList![index]),
+                                                  initials: widget
+                                                      .atSignList![index]),
                                         ),
                                       ),
                                       Text(widget.atSignList![index],
-                                          style: TextStyle(fontSize: 15.toFont))
+                                          style: TextStyle(
+                                            fontSize: 15.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ))
                                     ],
                                   ),
                                 ),

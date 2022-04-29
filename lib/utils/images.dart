@@ -23,7 +23,7 @@ class ImageConstants {
   static String txtLogo = '$_basePath/txtLogo.png';
   static String unknownLogo = '$_basePath/unknown.png';
   static String emptyTrustedSenders = '$_basePath/emptyTrustedSenders.png';
-  static String emptyGroup = '$_basePath/emptyGroup.png';
+  static String emptyGroup = '$_basePath/empty_group.png';
   static String profileImage = '$_basePath/profile.png';
   static String groupProfile = '$_basePath/groupProfile.png';
   static String emoji = '$_basePath/emoji.png';

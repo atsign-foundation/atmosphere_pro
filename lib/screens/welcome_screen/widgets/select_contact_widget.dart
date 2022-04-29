@@ -35,6 +35,7 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
         textTheme: TextTheme(
           subtitle1: TextStyle(
             color: ColorConstants.inputFieldColor,
+            fontWeight: FontWeight.normal,
           ),
         ),
       ),
@@ -75,6 +76,7 @@ class _ExpansionTileWidget extends StatelessWidget {
           style: TextStyle(
             color: ColorConstants.fadedText,
             fontSize: 14.toFont,
+            fontWeight: FontWeight.normal,
           ),
         ),
       ),

@@ -27,6 +27,8 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../view_models/internet_connectivity_checker.dart';
+
 class ReceivedFilesListTile extends StatefulWidget {
   final FileTransfer? receivedHistory;
   final bool? isWidgetOpen;
@@ -335,8 +337,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             ? Expanded(
                                 child: Text(getFileStateMessage(),
                                     style: TextStyle(
-                                        fontSize: 11.toFont,
-                                        color: ColorConstants.blueText)),
+                                      fontSize: 11.toFont,
+                                      color: ColorConstants.blueText,
+                                      fontWeight: FontWeight.normal,
+                                    )),
                               )
                             : SizedBox()
                       ],
@@ -767,6 +771,20 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   /// provide [fileName] to download that file
   downloadFiles(FileTransfer? receivedHistory, {String? fileName}) async {
+    var isConnected = Provider.of<InternetConnectivityChecker>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .isInternetAvailable;
+
+    if (!isConnected) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings.noInternetMsg,
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+
     var result;
     if (fileName != null) {
       result = await Provider.of<HistoryProvider>(
@@ -852,13 +870,19 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               await downloadFiles(widget.receivedHistory);
                             },
                             child: Text(TextStrings().yes,
-                                style: TextStyle(fontSize: 16.toFont))),
+                                style: TextStyle(
+                                  fontSize: 16.toFont,
+                                  fontWeight: FontWeight.normal,
+                                ))),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                             child: Text(TextStrings().buttonCancel,
-                                style: TextStyle(fontSize: 16.toFont)))
+                                style: TextStyle(
+                                  fontSize: 16.toFont,
+                                  fontWeight: FontWeight.normal,
+                                )))
                       ],
                     )
                   ],
@@ -877,23 +901,36 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           children: [
             TextSpan(
                 text: TextStrings().fileNamed,
-                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.normal,
+                )),
             TextSpan(
                 text: '${existingFileNamesToOverwrite[0]}',
                 style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15.toFont,
-                    fontWeight: FontWeight.bold)),
+                  color: Colors.black,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.bold,
+                )),
             TextSpan(
                 text: TextStrings().alreadyExistsMsg,
-                style: TextStyle(color: Colors.black, fontSize: 15.toFont)),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.normal,
+                )),
           ],
         ),
       );
     } else if (existingFileNamesToOverwrite.length > 1) {
       textSpansMessage.add(TextSpan(
         text: TextStrings().fileExists,
-        style: TextStyle(color: Colors.black, fontSize: 15.toFont),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 15.toFont,
+          fontWeight: FontWeight.normal,
+        ),
       ));
 
       existingFileNamesToOverwrite.forEach((element) {
@@ -912,8 +949,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       textSpansMessage.add(
         TextSpan(
             text: TextStrings().overWriteMsg,
-            style:
-                TextStyle(color: Colors.black, fontSize: 15.toFont, height: 2)),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 15.toFont,
+              height: 2,
+              fontWeight: FontWeight.normal,
+            )),
       );
     }
     return textSpansMessage;

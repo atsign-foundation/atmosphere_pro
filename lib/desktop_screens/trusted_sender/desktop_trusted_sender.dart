@@ -93,6 +93,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                   TextStrings().add,
                                   style: TextStyle(
                                     color: Colors.white,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 ),
                               ),
@@ -236,7 +237,8 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                 color: ColorConstants.greyText,
                               ),
                               getFilterOptionWidget(TextStrings().byName, true),
-                              getFilterOptionWidget(TextStrings().byDate, false),
+                              getFilterOptionWidget(
+                                  TextStrings().byDate, false),
                               SizedBox(height: 15),
                               TextButton(
                                 onPressed: () {},
@@ -255,6 +257,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                   TextStrings().apply,
                                   style: TextStyle(
                                     color: Colors.white,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 ),
                               ),

@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -50,6 +51,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => NestedRouteProvider()),
         ChangeNotifierProvider(create: (context) => SwitchAtsignProvider()),
         ChangeNotifierProvider(create: (context) => FileDownloadChecker()),
+        ChangeNotifierProvider(
+            create: (context) => InternetConnectivityChecker())
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget? child) {

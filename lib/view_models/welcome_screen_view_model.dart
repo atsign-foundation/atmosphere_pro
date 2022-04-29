@@ -73,6 +73,9 @@ class WelcomeScreenProvider extends BaseModel {
       setStatus(updateContacts, Status.Loading);
       selectedContacts.remove(contact);
       hasSelectedContactsChanged = true;
+
+      // when contacts is being modifed we reset group name
+      groupName = null;
       setStatus(updateContacts, Status.Done);
     } catch (error) {
       setError(updateContacts, error.toString());
