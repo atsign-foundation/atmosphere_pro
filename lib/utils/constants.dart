@@ -65,7 +65,7 @@ class MixedConstants {
   /// we change the directory after successful login
   static setNewApplicationDocumentsDirectory(String? _atsign) async {
     late var _dir;
-    if (Platform.isMacOS || Platform.isWindows) {
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       _dir = await getApplicationDocumentsDirectory();
     }
     final path = Directory(_dir.path +
