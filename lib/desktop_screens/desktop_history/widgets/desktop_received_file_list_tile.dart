@@ -43,7 +43,7 @@ class _DesktopReceivedFilesListTileState
   Uint8List? videoThumbnail, firstContactImage;
   String? contactName;
   List<bool> fileResending = [];
-  bool isResendingToFirstContact = false;
+  bool isResendingToFirstContact = false, showDownloadIndicator = false;
 
   @override
   void initState() {
@@ -90,6 +90,48 @@ class _DesktopReceivedFilesListTileState
     return videoThumbnail;
   }
 
+  checkIfDownloadAvailable() async {
+    bool isExpired = true;
+    var expiryDate = widget.receivedHistory!.date!.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isExpired = false;
+    }
+
+    if (isExpired) {
+      if (mounted) {
+        setState(() {
+          showDownloadIndicator = false;
+        });
+      }
+      return;
+    }
+
+    widget.receivedHistory!.files!.forEach((element) async {
+      String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
+          Platform.pathSeparator +
+          (widget.receivedHistory!.sender ?? '') +
+          Platform.pathSeparator +
+          (element.name ?? '');
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        showDownloadIndicator = true;
+      }
+    });
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await checkIfDownloadAvailable();
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
@@ -102,32 +144,45 @@ class _DesktopReceivedFilesListTileState
               : null,
           child: ListTile(
             leading: contactList.isNotEmpty
-                ? firstContactImage != null
-                    ? CustomCircleAvatar(
-                        byteImage: firstContactImage, nonAsset: true)
-                    : isResendingToFirstContact
-                        ? TypingIndicator(
-                            showIndicator: true,
-                            flashingCircleBrightColor: ColorConstants.dullText,
-                            flashingCircleDarkColor: ColorConstants.fadedText,
-                          )
-                        : Stack(
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 50,
-                                child: firstContactImage != null
-                                    ? CustomCircleAvatar(
-                                        byteImage: firstContactImage,
-                                        nonAsset: true,
-                                      )
-                                    : ContactInitial(
-                                        initials: contactList[0],
-                                        size: 50,
-                                      ),
-                              ),
-                            ],
-                          )
+                ? isResendingToFirstContact
+                    ? TypingIndicator(
+                        showIndicator: true,
+                        flashingCircleBrightColor: ColorConstants.dullText,
+                        flashingCircleDarkColor: ColorConstants.fadedText,
+                      )
+                    : Stack(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            child: firstContactImage != null
+                                ? CustomCircleAvatar(
+                                    byteImage: firstContactImage,
+                                    nonAsset: true)
+                                : ContactInitial(
+                                    initials: contactList[0],
+                                    size: 50,
+                                  ),
+                          ),
+                          showDownloadIndicator
+                              ? Positioned(
+                                  right: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    padding: EdgeInsets.all(1.toHeight),
+                                    child: CircleAvatar(
+                                      backgroundColor:
+                                          ColorConstants.orangeColor,
+                                      radius: 5.toWidth,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox()
+                        ],
+                      )
                 : SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,10 +211,7 @@ class _DesktopReceivedFilesListTileState
                     )),
                   ],
                 ),
-                SizedBox(height: 5.toHeight),
-                SizedBox(
-                  height: 8.toHeight,
-                ),
+                SizedBox(height: 13.toHeight),
                 Container(
                   child: Column(
                     children: [
