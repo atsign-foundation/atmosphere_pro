@@ -21,9 +21,13 @@ class _ErrorScreenState extends State<ErrorScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(ImageConstants.emptyGroup),
-            Text(
-              widget.title,
-              style: CustomTextStyles.greyText16,
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                widget.title,
+                style: CustomTextStyles.greyText16,
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
