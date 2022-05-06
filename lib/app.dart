@@ -57,11 +57,17 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
-          return MediaQuery(
-            data: data.copyWith(
-                textScaleFactor:
-                    data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor),
-            child: child!,
+          return GestureDetector(
+            onVerticalDragDown: (__) {
+              // When running in iOS, dismiss the keyboard when when user scrolls
+              if (Platform.isIOS) hideKeyboard(context);
+            },
+            child: MediaQuery(
+              data: data.copyWith(
+                  textScaleFactor:
+                      data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor),
+              child: child!,
+            ),
           );
         },
         title: 'AtSign Atmosphere Pro',
@@ -82,5 +88,12 @@ class _MyAppState extends State<MyApp> {
         routes: routes,
       ),
     );
+  }
+
+  void hideKeyboard(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 }
