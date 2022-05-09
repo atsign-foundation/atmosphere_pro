@@ -1,5 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
@@ -201,6 +202,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             showContacts: true,
             isDesktop: true,
             contactSelectedHistory: _welcomeScreenProvider.selectedContacts,
+            onContactsTap: (_list) {
+              Provider.of<WelcomeScreenProvider>(
+                      NavService.navKey.currentContext!,
+                      listen: false)
+                  .updateSelectedContacts(_list, notifyListeners: false);
+              _welcomeScreenProvider.isSelectionItemChanged = true;
+            },
             selectedList: (_list) {
               Provider.of<WelcomeScreenProvider>(
                       NavService.navKey.currentContext!,
@@ -303,6 +311,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
           } else {
             var file = await desktopImagePicker();
             if (file != null) {
+              GroupService().selectedGroupContacts = [];
+              GroupService().selectedContactsSink.add([]);
               _filePickerProvider.selectedFiles = file;
               _welcomeScreenProvider.isSelectionItemChanged = true;
               _currentScreen = CurrentScreen.SelectedItems;

@@ -29,11 +29,14 @@ class WelcomeScreenProvider extends BaseModel {
     }
   }
 
-  updateSelectedContacts(List<GroupContactsModel?> updatedList) {
+  updateSelectedContacts(List<GroupContactsModel?> updatedList,
+      {bool notifyListeners = true}) {
     try {
       groupName = null;
       selectedContacts = [];
-      setStatus(updateContacts, Status.Loading);
+      if (notifyListeners) {
+        setStatus(updateContacts, Status.Loading);
+      }
 
       for (var _obj in updatedList) {
         if (_obj?.contact != null) {
@@ -51,9 +54,13 @@ class WelcomeScreenProvider extends BaseModel {
 
       hasSelectedContactsChanged = true;
       scrollToBottom = true; // to scroll welcome screen to the bottom
-      setStatus(updateContacts, Status.Done);
+      if (notifyListeners) {
+        setStatus(updateContacts, Status.Done);
+      }
     } catch (error) {
-      setError(updateContacts, error.toString());
+      if (notifyListeners) {
+        setError(updateContacts, error.toString());
+      }
     }
   }
 
