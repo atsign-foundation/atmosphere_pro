@@ -43,7 +43,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
   bool isDeepOpen = false;
   Uint8List? videoThumbnail, firstContactImage;
   List<bool> fileResending = [];
-  bool isResendingToFirstContact = false;
+  bool isResendingToFirstContact = false, isFileSharedToGroup = false;
   String? contactName;
 
   @override
@@ -69,6 +69,9 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
     }
 
     getContactImage();
+    if (widget.sentHistory!.groupName != null) {
+      isFileSharedToGroup = true;
+    }
   }
 
   getContactImage() {
@@ -107,7 +110,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
           color: (widget.isSelected) ? ColorConstants.selected_list : null,
           child: ListTile(
             leading: contactList.isNotEmpty
-                ? firstContactImage != null
+                ? (firstContactImage != null && !isFileSharedToGroup)
                     ? CustomCircleAvatar(
                         byteImage: firstContactImage, nonAsset: true)
                     : Container(
@@ -126,13 +129,16 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                   Container(
                                     width: 100.toHeight,
                                     height: 100.toHeight,
-                                    child: firstContactImage != null
+                                    child: (firstContactImage != null &&
+                                            !isFileSharedToGroup)
                                         ? CustomCircleAvatar(
                                             byteImage: firstContactImage,
                                             nonAsset: true,
                                           )
                                         : ContactInitial(
-                                            initials: contactList[0],
+                                            initials: isFileSharedToGroup
+                                                ? widget.sentHistory!.groupName
+                                                : contactList[0],
                                             size: 45,
                                           ),
                                   ),
@@ -143,33 +149,46 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        contactList.isNotEmpty
-                            ? contactName != null
-                                ? Text(
-                                    contactName!,
-                                    style:
-                                        CustomTextStyles.primaryRegularBold18,
-                                  )
-                                : SizedBox()
-                            : SizedBox(),
-                        SizedBox(height: 10),
-                        contactList.isNotEmpty
-                            ? Text(
-                                contactList[0]!,
-                                style: CustomTextStyles.primaryRegular18,
-                              )
-                            : SizedBox(),
-                      ],
-                    )),
-                  ],
-                ),
+                isFileSharedToGroup == false
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              contactList.isNotEmpty
+                                  ? contactName != null
+                                      ? Text(
+                                          contactName!,
+                                          style: CustomTextStyles
+                                              .primaryRegularBold18,
+                                        )
+                                      : SizedBox()
+                                  : SizedBox(),
+                              SizedBox(height: 10),
+                              contactList.isNotEmpty
+                                  ? Text(
+                                      contactList[0]!,
+                                      style: CustomTextStyles.primaryRegular18,
+                                    )
+                                  : SizedBox(),
+                            ],
+                          )),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: InkWell(
+                                child: Text(
+                              widget.sentHistory!.groupName!,
+                              style: CustomTextStyles.primaryRegularBold18,
+                            )),
+                          )
+                        ],
+                      ),
                 SizedBox(height: 5.toHeight),
                 SizedBox(
                   height: 8.toHeight,

@@ -5,7 +5,6 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
-import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
@@ -25,6 +24,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -307,6 +307,11 @@ class BackendService {
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
     if (!historyProvider.isSyncedDataFetched) {
+      await Provider.of<TrustedContactProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .getTrustedContact();
+
       historyProvider.isSyncedDataFetched = true;
       await VersionService.getInstance().init();
 
@@ -318,6 +323,7 @@ class BackendService {
       if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
           Status.Loading) {
         await historyProvider.getReceivedHistory();
+        await historyProvider.downloadAllTrustedSendersData();
       }
 
       if (historyProvider.status[historyProvider.SENT_HISTORY] !=
@@ -423,17 +429,6 @@ class BackendService {
     }
   }
 
-  Future<bool> checkAtsign(String atSign) async {
-    if (atSign == null) {
-      return false;
-    } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
-    }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, MixedConstants.ROOT_DOMAIN, AtClientPreference().rootPort);
-    return checkPresence != null;
-  }
-
   bool authenticating = false;
 
   checkToOnboard({String? atSign}) async {
@@ -461,9 +456,13 @@ class BackendService {
             isAuthuneticatingSink.add(authenticating);
           },
           onError: (error) {
-            print('Onboarding throws $error error');
-            SnackbarService().showSnackbar(
-                NavService.navKey.currentContext!, 'Onboarding failed.',
+            var isConnected = Provider.of<InternetConnectivityChecker>(
+                    NavService.navKey.currentContext!,
+                    listen: false)
+                .isInternetAvailable;
+
+            SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+                !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
                 bgColor: ColorConstants.redAlert);
             authenticating = false;
             isAuthuneticatingSink.add(authenticating);

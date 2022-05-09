@@ -1,5 +1,6 @@
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_screen_received_files.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -13,10 +14,12 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:new_version/new_version.dart';
 import 'package:provider/provider.dart';
+import '../../utils/text_strings.dart';
 import '../common_widgets/side_bar.dart';
 import '../../view_models/file_transfer_provider.dart';
 import 'package:http/http.dart' as http;
@@ -160,7 +163,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           endDrawer: SideBarWidget(
             isExpanded: true,
           ),
-          body: _bottomSheetWidgetOptions[_selectedBottomNavigationIndex],
+          body: Consumer<InternetConnectivityChecker>(
+              builder: (_c, provider, widget) {
+            if (provider.isInternetAvailable) {
+              return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
+            } else {
+              return ErrorScreen(
+                TextStrings.noInternet,
+              );
+            }
+          }),
         ),
       ),
     );

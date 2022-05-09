@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -50,15 +51,23 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => NestedRouteProvider()),
         ChangeNotifierProvider(create: (context) => SwitchAtsignProvider()),
         ChangeNotifierProvider(create: (context) => FileDownloadChecker()),
+        ChangeNotifierProvider(
+            create: (context) => InternetConnectivityChecker())
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
-          return MediaQuery(
-            data: data.copyWith(
-                textScaleFactor:
-                    data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor),
-            child: child!,
+          return GestureDetector(
+            onVerticalDragDown: (__) {
+              // When running in iOS, dismiss the keyboard when when user scrolls
+              if (Platform.isIOS) hideKeyboard(context);
+            },
+            child: MediaQuery(
+              data: data.copyWith(
+                  textScaleFactor:
+                      data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor),
+              child: child!,
+            ),
           );
         },
         title: 'AtSign Atmosphere Pro',
@@ -79,5 +88,12 @@ class _MyAppState extends State<MyApp> {
         routes: routes,
       ),
     );
+  }
+
+  void hideKeyboard(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 }

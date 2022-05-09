@@ -329,7 +329,8 @@ class TextStrings {
       'Please select at least one @sign to reset';
   static const String resetWarningText =
       'Warning: This action cannot be undone!';
-
+  static const String noInternet =
+      'Offline. Please check your internet connection and try again.';
   static const uploaded = 'Uploaded';
   static const reUploadFileMsg = 'Do you want to re-upload file ?';
   static const uploadFile = 'Please upload file first.';
@@ -341,4 +342,7 @@ class TextStrings {
       'Error in showing app upgrade dialog box.';
   static const appVersionFetchError =
       'Could not fetch latest app version details.';
+  static const noInternetMsg = 'No internet available';
+  static const permissionRequireMessage =
+      'This action cannot be completed because the app does not have permission to access the required items. Please change the app permission settings to continue.';
 }
