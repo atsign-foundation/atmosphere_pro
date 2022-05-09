@@ -148,6 +148,8 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     List<FileTransfer> fileTransfer = getValidFileTransfers();
 
+    print("#########################\nNo. of file transfers found: ${fileTransfer.length}\n##################################\n");
+
     for (int i = 0; i < fileTransfer.length; i++) {
       var atsignDownloadPath =
           downloadFolder + Platform.pathSeparator + fileTransfer[i].sender!;
