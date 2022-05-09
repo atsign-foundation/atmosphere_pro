@@ -78,10 +78,10 @@ packages:
     description:
       path: at_common_flutter
       ref: "fix/missing-fontweight"
-      resolved-ref: "552a6f4c11f6cd25b89f9508fe47b4a643619f0f"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
+      resolved-ref: da2090e4fd06567e872f4b5ee791d239642852fe
+      url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "2.0.6"
+    version: "2.0.7"
   at_commons:
     dependency: "direct main"
     description:
@@ -100,18 +100,18 @@ packages:
     dependency: "direct main"
     description:
       path: at_contacts_flutter
-      ref: "fix/missing-fontweight"
-      resolved-ref: "552a6f4c11f6cd25b89f9508fe47b4a643619f0f"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
+      ref: "feat/598"
+      resolved-ref: a4ecda2faf1ffb8d7855aafaa09e129dbac8825f
+      url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.3"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
       path: at_contacts_group_flutter
-      ref: "fix/missing-fontweight"
-      resolved-ref: "552a6f4c11f6cd25b89f9508fe47b4a643619f0f"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
+      ref: "feat/598"
+      resolved-ref: a4ecda2faf1ffb8d7855aafaa09e129dbac8825f
+      url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.3"
   at_lookup:
@@ -126,10 +126,10 @@ packages:
     description:
       path: at_onboarding_flutter
       ref: "fix/missing-fontweight"
-      resolved-ref: "552a6f4c11f6cd25b89f9508fe47b4a643619f0f"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
+      resolved-ref: da2090e4fd06567e872f4b5ee791d239642852fe
+      url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.1"
+    version: "4.0.2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
