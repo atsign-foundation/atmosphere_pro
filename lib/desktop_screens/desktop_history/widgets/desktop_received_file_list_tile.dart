@@ -116,12 +116,22 @@ class _DesktopReceivedFilesListTileState
       bool fileExists = await test.exists();
       if (fileExists == false) {
         showDownloadIndicator = true;
+      } else {
+        showDownloadIndicator = false;
       }
     });
 
     if (mounted) {
       setState(() {});
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant DesktopReceivedFilesListTile oldWidget) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await checkIfDownloadAvailable();
+    });
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
