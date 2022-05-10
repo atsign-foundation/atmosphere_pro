@@ -26,11 +26,9 @@ import 'package:provider/provider.dart';
 
 class SentFilesListTile extends StatefulWidget {
   final FileHistory? sentHistory;
-  final String? searchText;
   const SentFilesListTile({
     Key? key,
     this.sentHistory,
-    this.searchText
   }) : super(key: key);
   @override
   _SentFilesListTileState createState() => _SentFilesListTileState();
@@ -43,7 +41,6 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   String nickName = '';
   bool isOpen = false, isDeepOpen = false, isFileSharedToGroup = false;
   Uint8List? videoThumbnail, firstContactImage;
-
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
 

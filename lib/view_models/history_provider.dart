@@ -54,7 +54,9 @@ class HistoryProvider extends BaseModel {
   String GET_ALL_FILE_DATA = 'get_all_file_data';
   String DOWNLOAD_FILE = 'download_file';
   String DOWNLOAD_ACK = 'download_ack';
-  List<FileHistory> sentHistory = [], tempSentHistory = [];
+  List<FileHistory> sentHistory = [],
+      tempSentHistory = [],
+      filteredSentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
   List<FileTransfer> receivedHistoryNew = [];
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
@@ -90,6 +92,7 @@ class HistoryProvider extends BaseModel {
   String SORT_LIST = 'sort_list';
   BackendService backendService = BackendService.getInstance();
   String? app_lifecycle_state;
+  String? searchText;
 
   resetData() {
     isSyncedDataFetched = false;
@@ -144,7 +147,12 @@ class HistoryProvider extends BaseModel {
   //     setStatus(SET_FILE_HISTORY, Status.Error);
   //   }
   // }
+  updateSearchText(String text) {
+    searchText = text;
+    filteredHistoryList();
+  }
 
+  filteredHistoryList() {}
   updateFileHistoryDetail(FileHistory fileHistory) async {
     // checking whether sent file is stored in individual atKey or in sentHistory list.
     if (individualSentFileId[fileHistory.fileDetails!.key] != null) {

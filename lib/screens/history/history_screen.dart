@@ -154,7 +154,6 @@ class _HistoryScreenState extends State<HistoryScreen>
                                         }),
                                       ),
                                       SentFilesListTile(
-                                        searchText: sentSearchText,
                                         sentHistory:
                                             provider.sentHistory[index],
                                         key: Key(provider.sentHistory[index]
@@ -247,7 +246,6 @@ class _HistoryScreenState extends State<HistoryScreen>
                                           }),
                                         ),
                                         ReceivedFilesListTile(
-                                          searchText: recievedSearchText,
                                           key: Key(provider
                                               .receivedHistoryLogs[index].key!),
                                           receivedHistory: provider
