@@ -26,10 +26,11 @@ import 'package:provider/provider.dart';
 
 class SentFilesListTile extends StatefulWidget {
   final FileHistory? sentHistory;
-
+  final String? searchText;
   const SentFilesListTile({
     Key? key,
     this.sentHistory,
+    this.searchText
   }) : super(key: key);
   @override
   _SentFilesListTileState createState() => _SentFilesListTileState();

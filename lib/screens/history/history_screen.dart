@@ -1,3 +1,4 @@
+import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
@@ -24,6 +25,9 @@ class _HistoryScreenState extends State<HistoryScreen>
   bool isOpen = false;
   HistoryProvider? historyProvider;
 
+  /// Text from the search field
+  String sentSearchText = '';
+  String recievedSearchText = '';
   @override
   void didChangeDependencies() async {
     if (historyProvider == null) {
@@ -142,10 +146,21 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 },
                                 itemCount: provider.sentHistory.length,
                                 itemBuilder: (context, index) {
-                                  return SentFilesListTile(
-                                    sentHistory: provider.sentHistory[index],
-                                    key: Key(provider
-                                        .sentHistory[index].fileDetails!.key!),
+                                  return Column(
+                                    children: [
+                                      searchTile(
+                                        (text) => setState(() {
+                                          sentSearchText = text;
+                                        }),
+                                      ),
+                                      SentFilesListTile(
+                                        searchText: sentSearchText,
+                                        sentHistory:
+                                            provider.sentHistory[index],
+                                        key: Key(provider.sentHistory[index]
+                                            .fileDetails!.key!),
+                                      ),
+                                    ],
                                   );
                                 },
                               ),
@@ -224,14 +239,24 @@ class _HistoryScreenState extends State<HistoryScreen>
                                       provider.receivedHistoryLogs.length,
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: ReceivedFilesListTile(
-                                      key: Key(provider
-                                          .receivedHistoryLogs[index].key!),
-                                      receivedHistory:
-                                          provider.receivedHistoryLogs[index],
-                                      isWidgetOpen: provider
-                                          .receivedHistoryLogs[index]
-                                          .isWidgetOpen,
+                                    child: Column(
+                                      children: [
+                                        searchTile(
+                                          (text) => setState(() {
+                                            recievedSearchText = text;
+                                          }),
+                                        ),
+                                        ReceivedFilesListTile(
+                                          searchText: recievedSearchText,
+                                          key: Key(provider
+                                              .receivedHistoryLogs[index].key!),
+                                          receivedHistory: provider
+                                              .receivedHistoryLogs[index],
+                                          isWidgetOpen: provider
+                                              .receivedHistoryLogs[index]
+                                              .isWidgetOpen,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -265,6 +290,17 @@ class _HistoryScreenState extends State<HistoryScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget searchTile(Function(String) onChange) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(vertical: 15.toHeight, horizontal: 15.toWidth),
+      child: ContactSearchField(
+        'Enter atsign or nickname',
+        onChange,
       ),
     );
   }

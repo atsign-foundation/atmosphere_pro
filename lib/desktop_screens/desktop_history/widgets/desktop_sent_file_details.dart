@@ -72,18 +72,18 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                         widget.selectedFileData!.fileDetails!.files!.length,
                         (index) {
                       return Container(
-                        width: 250,
+                        width: 350,
                         child: ListTile(
                           title: Text(
                             widget.selectedFileData!.fileDetails!.files![index]
                                 .name!,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14.toFont,
                               fontWeight: FontWeight.normal,
                             ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
                           ),
                           subtitle: Text(
                             double.parse(widget.selectedFileData!.fileDetails!

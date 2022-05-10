@@ -32,11 +32,12 @@ import '../../../view_models/internet_connectivity_checker.dart';
 class ReceivedFilesListTile extends StatefulWidget {
   final FileTransfer? receivedHistory;
   final bool? isWidgetOpen;
-
+  final String? searchText;
   const ReceivedFilesListTile({
     Key? key,
     this.receivedHistory,
     this.isWidgetOpen = false,
+    this.searchText
   }) : super(key: key);
   @override
   _ReceivedFilesListTileState createState() => _ReceivedFilesListTileState();
