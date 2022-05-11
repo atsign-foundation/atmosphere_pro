@@ -288,7 +288,7 @@ class TextStrings {
   String byDate = 'By date';
   String apply = 'Apply';
 
-  String downloading = 'Downloading...';
+  String downloading = 'Downloading';
 
   // Error Message
 

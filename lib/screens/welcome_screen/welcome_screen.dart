@@ -58,7 +58,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       WelcomeScreenProvider().isExpanded = false;
       await initPackages();
-      // await getSentAndReceivedHistory();
     });
 
     super.initState();
@@ -68,22 +67,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void dispose() {
     super.dispose();
   }
-
-  // getSentAndReceivedHistory() async {
-  // await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
-  //         listen: false)
-  //     .getFileDownloadedAcknowledgement();
-  // await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
-  //         listen: false)
-  //     .getSentHistory();
-  // await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
-  //         listen: false)
-  //     .getReceivedHistory();
-
-  // Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
-  //         listen: false)
-  //     .checkForUndownloadedFiles();
-  // }
 
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {

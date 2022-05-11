@@ -10,7 +10,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
@@ -43,6 +43,10 @@ class FileTransferService {
 
   Future<List<FileStatus>> _uploadFiles(
       String transferId, List<File> files, String encryptionKey) async {
+    var fileUploadProvider = Provider.of<FileProgressProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
+
     var _preference = BackendService.getInstance().atClientPreference;
     var fileStatuses = <FileStatus>[];
 
@@ -53,6 +57,8 @@ class FileTransferService {
         size: await file.length(),
       );
       try {
+        fileUploadProvider.updateSentFileTransferProgress =
+            FileTransferProgress(FileState.encrypt, null, null);
         final encryptedFile = await encryptFile(
           file,
           encryptionKey,
@@ -183,13 +189,24 @@ class FileTransferService {
   Future<dynamic> uploadToFileBinWithStreamedRequest(
       File file, String container, String fileName) async {
     try {
+      var fileUploadProvider = Provider.of<FileProgressProvider>(
+          NavService.navKey.currentContext!,
+          listen: false);
       var postUri =
           Uri.parse(MixedConstants.FILEBIN_URL + '$container/' + fileName);
       final streamedRequest = http.StreamedRequest('POST', postUri);
 
-      streamedRequest.contentLength = await file.length();
+      var uploadedBytes = 0;
+      var fileLength = await file.length();
+
+      streamedRequest.contentLength = fileLength;
       file.openRead().listen((chunk) {
         streamedRequest.sink.add(chunk);
+
+        uploadedBytes += chunk.length;
+        var percent = (uploadedBytes / fileLength) * 100;
+        fileUploadProvider.updateSentFileTransferProgress =
+            FileTransferProgress(FileState.upload, percent, fileName);
       }, onDone: () {
         streamedRequest.sink.close();
       });
@@ -240,7 +257,7 @@ class FileTransferService {
         updateFileTransferState(
             encryptedFile.path.split(Platform.pathSeparator).last,
             transferId,
-            0,
+            null,
             FileState.decrypt);
         var decryptedFile = await decryptFile(
             File(encryptedFile.path),
@@ -301,12 +318,12 @@ class FileTransferService {
         updateFileTransferState(
           fileName,
           fileTransferObject.transferId,
-          0,
+          null,
           FileState.download,
         );
 
-        var downloadResponse =
-            await downloadIndividualFile(fileUrl, tempDirectory.path, fileName);
+        var downloadResponse = await downloadIndividualFile(fileUrl,
+            tempDirectory.path, fileName, fileTransferObject.transferId);
         if (downloadResponse.isError) {
           fileDownloadResponse = FileDownloadResponse(
               isError: true,
@@ -326,8 +343,8 @@ class FileTransferService {
     return completer.future;
   }
 
-  Future downloadIndividualFile(
-      String fileUrl, String tempPath, String fileName) async {
+  Future downloadIndividualFile(String fileUrl, String tempPath,
+      String fileName, String transferId) async {
     final Completer<FileDownloadResponse> completer =
         Completer<FileDownloadResponse>();
     var httpClient = http.Client();
@@ -343,7 +360,7 @@ class FileTransferService {
 
     late StreamSubscription downloadSubscription;
     File file = File(tempPath + Platform.pathSeparator + fileName);
-    int downloaded = 0;
+    double downloaded = 0;
 
     try {
       downloadSubscription =
@@ -352,9 +369,16 @@ class FileTransferService {
           (List<int> chunk) {
             file.writeAsBytesSync(chunk, mode: FileMode.append);
             downloaded += chunk.length;
-            // if (r.contentLength != null) {
-            // print('percentage: ${(downloaded / r.contentLength!)}');
-            // }
+            if (r.contentLength != null) {
+              var percent = (downloaded / r.contentLength!) * 100;
+
+              updateFileTransferState(
+                fileName,
+                transferId,
+                percent.roundToDouble(),
+                FileState.download,
+              );
+            }
           },
           onDone: () async {
             await downloadSubscription.cancel();
@@ -378,17 +402,17 @@ class FileTransferService {
   }
 
   /// [updateFileTransferState] sets download/decrypt file state in history screen.
-  updateFileTransferState(
-      String fileName, String transferId, double percent, FileState fileState) {
+  updateFileTransferState(String fileName, String transferId, double? percent,
+      FileState fileState) {
     var fileTransferProgress = FileTransferProgress(
       fileState,
-      0, // currently not showing download/decrypt %
+      percent, // currently not showing download/decrypt %
       fileName,
     );
 
-    Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+    Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
             listen: false)
-        .updateFileTransferState(
+        .updateReceivedFileProgress(
       transferId,
       fileTransferProgress,
     );
