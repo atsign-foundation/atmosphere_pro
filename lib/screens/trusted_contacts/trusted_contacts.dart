@@ -106,11 +106,12 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                     style: CustomTextStyles.primaryBold18,
                                   ),
                                   SizedBox(height: 10.toHeight),
-                                  Text(
-                                    pro_text_strings.TextStrings()
-                                        .addTrustedSender,
-                                    style: CustomTextStyles.secondaryRegular16,
-                                  ),
+                                      Text(
+                                        pro_text_strings.TextStrings()
+                                            .addTrustedSender,
+                                        textAlign: TextAlign.center,
+                                        style: CustomTextStyles.secondaryRegular16,
+                                      ),
                                   SizedBox(
                                     height: 25.toHeight,
                                   ),
