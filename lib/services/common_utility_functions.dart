@@ -96,7 +96,7 @@ class CommonUtilityFunctions {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                         )),
                     SizedBox(
                       height: 10,
@@ -123,7 +123,7 @@ class CommonUtilityFunctions {
                               TextStrings().buttonClose,
                               style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.normal,
-                                // color: AtTheme.themecolor,
+                                color: ColorConstants.orangeColor,
                               ),
                             ),
                           ),
@@ -143,6 +143,7 @@ class CommonUtilityFunctions {
                               },
                               value: isSelectAll,
                               checkColor: Colors.white,
+                              activeColor: ColorConstants.orangeColor,
                               title: Text(TextStrings().selectAll,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -156,6 +157,7 @@ class CommonUtilityFunctions {
                                 },
                                 value: atsignMap[atsign],
                                 checkColor: Colors.white,
+                                activeColor: ColorConstants.orangeColor,
                                 title: Text('$atsign'),
                               ),
                             Divider(thickness: 0.8),
@@ -200,9 +202,9 @@ class CommonUtilityFunctions {
                                 },
                                 child: Text(TextStrings().remove,
                                     style: TextStyle(
-                                      color: ColorConstants.fontPrimary,
+                                      color: ColorConstants.orangeColor,
                                       fontSize: 15,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                     )),
                               ),
                               Spacer(),
@@ -213,8 +215,8 @@ class CommonUtilityFunctions {
                                   child: Text(TextStrings().buttonCancel,
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
+                                        color: ColorConstants.orangeColor,
+                                        fontWeight: FontWeight.bold,
                                       )))
                             ])
                           ],

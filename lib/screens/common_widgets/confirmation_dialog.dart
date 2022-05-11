@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title, style: CustomTextStyles.grey15),
+            Text(widget.title, style: CustomTextStyles.primaryBold13),
             SizedBox(
               height: 10.toHeight,
             ),
@@ -36,8 +37,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                     },
                     child: Text(TextStrings().yes,
                         style: TextStyle(
-                          fontSize: 16.toFont,
-                          fontWeight: FontWeight.normal,
+                          fontSize: 12.toFont,
+                          color: ColorConstants.orangeColor,
+                          fontWeight: FontWeight.bold,
                         ))),
                 TextButton(
                     onPressed: () {
@@ -45,8 +47,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                     },
                     child: Text(TextStrings().buttonCancel,
                         style: TextStyle(
-                          fontSize: 16.toFont,
-                          fontWeight: FontWeight.normal,
+                          fontSize: 12.toFont,
+                          color: ColorConstants.orangeColor,
+                          fontWeight: FontWeight.bold,
                         )))
               ],
             )

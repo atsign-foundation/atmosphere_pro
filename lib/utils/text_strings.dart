@@ -136,7 +136,7 @@ class TextStrings {
   String selectperson = 'Select Person';
   String noTrustedSenders = 'No Trusted Senders';
   String addTrustedSender =
-      'Would you like to add people to your trusted senders list?';
+      'Would you like to add people to\nyour trusted senders list?';
   String removeTrustedSender =
       "Are you sure you want to remove this person from your trusted senders list?";
   String removeGroupMember =

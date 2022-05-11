@@ -48,6 +48,11 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
+  static TextStyle primaryBold13 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 13.toFont,
+      fontWeight: FontWeight.bold);
+
   static TextStyle primaryRegularBold18 = TextStyle(
       color: ColorConstants.fontPrimary,
       fontSize: 18.toFont,
