@@ -58,7 +58,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   String nickName = '';
   Map<String?, Future> _futureBuilder = {};
 
-  Future videoThumbnailBuilder(String path) async {
+  Future<Uint8List?> videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
       imageFormat: ImageFormat.JPEG,
@@ -672,7 +672,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   Widget thumbnail(
     String? extension,
     String path, {
-    bool? isFilePresent = true,
+    bool isFilePresent = true,
   }) {
     // when file overwrite is true, we are not showing file preview.
     if (isOverwrite) {
@@ -684,7 +684,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         child: Container(
           height: 50.toHeight,
           width: 50.toWidth,
-          child: isFilePresent!
+          child: isFilePresent
               ? Image.file(
                   File(path),
                   fit: BoxFit.cover,
@@ -719,7 +719,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           fit: BoxFit.cover,
                         )
                       : Image.memory(
-                          videoThumbnail!,
+                          snapshot.data! as Uint8List,
                           fit: BoxFit.cover,
                           errorBuilder: (BuildContext _context, _, __) {
                             return Container(
