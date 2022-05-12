@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -19,6 +20,7 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -54,8 +56,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   int fileSize = 0;
   List<String?> existingFileNamesToOverwrite = [];
   String nickName = '';
+  Map<String?, Future> _futureBuilder = {};
 
-  Future videoThumbnailBuilder(String path) async {
+  Future<Uint8List?> videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
       imageFormat: ImageFormat.JPEG,
@@ -77,6 +80,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     getAtSignDetail();
     getDisplayDetails();
     isFilesAlreadyDownloaded();
+    getFutureBuilders();
     super.initState();
   }
 
@@ -150,6 +154,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           }
         }
       }
+    });
+  }
+
+  getFutureBuilders() {
+    widget.receivedHistory!.files!.forEach((element) {
+      _futureBuilder[element.name] = isFilePresent(element.name!);
     });
   }
 
@@ -266,22 +276,29 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           },
                           child: Padding(
                               padding: EdgeInsets.only(top: 5.0),
-                              child: isDownloadAvailable
-                                  ? widget.receivedHistory!.isDownloading!
-                                      ? CircularProgressIndicator()
-                                      : ((isDownloaded ||
-                                                  isFilesAvailableOfline) &&
-                                              !isOverwrite)
-                                          ? Icon(
-                                              Icons.done,
-                                              color: Color(0xFF08CB21),
-                                              size: 25.toFont,
-                                            )
-                                          : Icon(
-                                              Icons.download_sharp,
-                                              size: 25.toFont,
-                                            )
-                                  : SizedBox()))
+                              child: Consumer<FileProgressProvider>(
+                                  builder: (_c, provider, _) {
+                                var fileTransferProgress =
+                                    provider.receivedFileProgress[
+                                        widget.receivedHistory!.key!];
+                                return isDownloadAvailable
+                                    ? widget.receivedHistory!.isDownloading!
+                                        ? getDownloadStatus(
+                                            fileTransferProgress)
+                                        : ((isDownloaded ||
+                                                    isFilesAvailableOfline) &&
+                                                !isOverwrite)
+                                            ? Icon(
+                                                Icons.done,
+                                                color: Color(0xFF08CB21),
+                                                size: 25.toFont,
+                                              )
+                                            : Icon(
+                                                Icons.download_sharp,
+                                                size: 25.toFont,
+                                              )
+                                    : SizedBox();
+                              })))
                     ],
                   ),
                   Row(
@@ -335,12 +352,21 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         SizedBox(width: 10.toHeight),
                         widget.receivedHistory!.isDownloading!
                             ? Expanded(
-                                child: Text(getFileStateMessage(),
-                                    style: TextStyle(
-                                      fontSize: 11.toFont,
-                                      color: ColorConstants.blueText,
-                                      fontWeight: FontWeight.normal,
-                                    )),
+                                child: Consumer<FileProgressProvider>(
+                                  builder: (_context, provider, _widget) {
+                                    var fileTransferProgress =
+                                        provider.receivedFileProgress[
+                                            widget.receivedHistory!.key!];
+                                    return Text(
+                                        getFileStateMessage(
+                                            fileTransferProgress),
+                                        style: TextStyle(
+                                          fontSize: 11.toFont,
+                                          color: ColorConstants.blueText,
+                                          fontWeight: FontWeight.normal,
+                                        ));
+                                  },
+                                ),
                               )
                             : SizedBox()
                       ],
@@ -477,13 +503,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 height: 50.toHeight,
                                 width: 50.toHeight,
                                 child: FutureBuilder(
-                                    future: isFilePresent(widget
-                                            .receivedHistory!
-                                            .files![index]
-                                            .name ??
-                                        ''),
-                                    builder: (context,
-                                        AsyncSnapshot<bool> snapshot) {
+                                    key: Key(widget
+                                        .receivedHistory!.files![index].name!),
+                                    future: _futureBuilder[widget
+                                        .receivedHistory!.files![index].name],
+                                    builder: (context, snapshot) {
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
@@ -499,7 +523,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                                   (widget.receivedHistory!
                                                           .files![index].name ??
                                                       ''),
-                                              isFilePresent: snapshot.data)
+                                              isFilePresent:
+                                                  snapshot.data as bool)
                                           : SizedBox();
                                     }),
                               ),
@@ -556,14 +581,25 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               .secondaryRegular12,
                                         ),
                                         SizedBox(width: 10.toHeight),
-                                        Text(
-                                          (widget.receivedHistory!.files![index]
-                                                      .isDownloading ??
-                                                  false)
-                                              ? TextStrings().downloading
-                                              : '',
-                                          style: CustomTextStyles.redSmall12,
-                                        ),
+                                        Consumer<FileProgressProvider>(builder:
+                                            (_context, _provider, _widget) {
+                                          var fileTransferProgress =
+                                              _provider.receivedFileProgress[
+                                                  widget.receivedHistory!.key!];
+                                          return Text(
+                                            (widget
+                                                        .receivedHistory!
+                                                        .files![index]
+                                                        .isDownloading ??
+                                                    false)
+                                                ? getSingleFileDownloadMessage(
+                                                    fileTransferProgress,
+                                                    widget.receivedHistory!
+                                                        .files![index].name!)
+                                                : '',
+                                            style: CustomTextStyles.redSmall12,
+                                          );
+                                        }),
                                         (CommonUtilityFunctions()
                                                     .isFileDownloadAvailable(
                                                         widget.receivedHistory!
@@ -636,7 +672,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   Widget thumbnail(
     String? extension,
     String path, {
-    bool? isFilePresent = true,
+    bool isFilePresent = true,
   }) {
     // when file overwrite is true, we are not showing file preview.
     if (isOverwrite) {
@@ -648,7 +684,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         child: Container(
           height: 50.toHeight,
           width: 50.toWidth,
-          child: isFilePresent!
+          child: isFilePresent
               ? Image.file(
                   File(path),
                   fit: BoxFit.cover,
@@ -683,7 +719,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           fit: BoxFit.cover,
                         )
                       : Image.memory(
-                          videoThumbnail!,
+                          snapshot.data! as Uint8List,
                           fit: BoxFit.cover,
                           errorBuilder: (BuildContext _context, _, __) {
                             return Container(
@@ -809,6 +845,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
     if (result is bool && result) {
       if (mounted) {
+        getFutureBuilders();
         setState(() {
           isDownloaded = true;
           isFilesAvailableOfline = true;
@@ -960,9 +997,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     return textSpansMessage;
   }
 
-  String getFileStateMessage() {
-    FileTransferProgress? fileTransferProgress =
-        widget.receivedHistory!.fileTransferProgress;
+  String getFileStateMessage(FileTransferProgress? fileTransferProgress) {
     if (fileTransferProgress == null) {
       return '';
     }
@@ -993,5 +1028,40 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     if (index != -1) {
       receivedHistoryLogs[index].isWidgetOpen = isOpen;
     }
+  }
+
+  Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
+    Widget spinner = CircularProgressIndicator();
+
+    if (fileTransferProgress == null) {
+      return spinner;
+    }
+
+    if (fileTransferProgress.fileState == FileState.download &&
+        fileTransferProgress.percent != null) {
+      spinner = LabelledCircularProgressIndicator(
+          value: (fileTransferProgress.percent! / 100));
+    }
+
+    return spinner;
+  }
+
+  String getSingleFileDownloadMessage(
+      FileTransferProgress? fileTransferProgress, String fileName) {
+    String downloadMessage = TextStrings().downloading;
+
+    if (fileTransferProgress == null) {
+      return downloadMessage;
+    }
+
+    if (fileTransferProgress.fileState == FileState.download &&
+        fileTransferProgress.percent != null &&
+        fileTransferProgress.fileName == fileName) {
+      downloadMessage +=
+          '(${fileTransferProgress.percent!.toStringAsFixed(0)}%)';
+    } else if (fileTransferProgress.fileState == FileState.decrypt) {
+      downloadMessage = 'Decrypting...';
+    }
+    return downloadMessage;
   }
 }

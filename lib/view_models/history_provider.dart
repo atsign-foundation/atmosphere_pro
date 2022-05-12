@@ -29,9 +29,9 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
-import 'package:at_client/src/service/encryption_service.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
@@ -1037,8 +1037,10 @@ class HistoryProvider extends BaseModel {
               listen: false)
           .checkForUndownloadedFiles();
 
-      updateFileTransferState(
-          transferId, null); //setting filetransfer progress as null
+      Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .removeReceiveProgressItem(
+              transferId); //setting filetransfer progress as null
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
@@ -1136,12 +1138,9 @@ class HistoryProvider extends BaseModel {
 
     var tempDirectory =
         await Directory(downloadPath).createTemp('encrypted-files');
-    var fileDownloadReponse =
-        await FileTransferService.getInstance().downloadIndividualFile(
-      fileTransferObject.fileUrl,
-      tempDirectory.path,
-      fileName,
-    );
+    var fileDownloadReponse = await FileTransferService.getInstance()
+        .downloadIndividualFile(fileTransferObject.fileUrl, tempDirectory.path,
+            fileName, transferId!);
 
     if (fileDownloadReponse.isError) {
       throw Exception('download fail');
@@ -1149,13 +1148,21 @@ class HistoryProvider extends BaseModel {
     var encryptedFileList = tempDirectory.listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
-        var decryptedFile = await EncryptionService().decryptFileInChunks(
+        FileTransferService.getInstance().updateFileTransferState(
+          fileName,
+          fileTransferObject.transferId,
+          null,
+          FileState.decrypt,
+        );
+
+        var decryptedFile = await FileTransferService.getInstance().decryptFile(
           File(encryptedFile.path),
           fileTransferObject.fileEncryptionKey,
           BackendService.getInstance()
               .atClientPreference
               .fileEncryptionChunkSize,
         );
+
         decryptedFile.copySync(downloadPath +
             Platform.pathSeparator +
             encryptedFile.path.split(Platform.pathSeparator).last);
@@ -1164,6 +1171,10 @@ class HistoryProvider extends BaseModel {
             encryptedFile.path.split(Platform.pathSeparator).last));
         decryptedFile.deleteSync();
       }
+
+      Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .removeReceiveProgressItem(transferId);
       // deleting temp directory
       Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);
       return downloadedFiles;
@@ -1329,13 +1340,15 @@ class HistoryProvider extends BaseModel {
   }
 
   updateFileTransferState(
-      String transferId, FileTransferProgress? fileTransferProgress) {
-    var index =
-        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
-    if (index != -1) {
-      receivedHistoryLogs[index].fileTransferProgress = fileTransferProgress;
-      notifyListeners();
-    }
+      String transferId, FileTransferProgress fileTransferProgress) {
+    Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+            listen: false)
+        .updateReceivedFileProgress(
+      transferId,
+      fileTransferProgress,
+    );
+
+    notifyListeners();
   }
 
   refreshReceivedFile({bool setLoading = true}) async {
