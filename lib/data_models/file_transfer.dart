@@ -4,7 +4,8 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FileTransfer {
-  String? key, url, sender;
+  late String key, url;
+  String? sender;
   List<FileData>? files;
   DateTime? date, expiry;
   List<PlatformFile>? platformFiles;
@@ -12,12 +13,12 @@ class FileTransfer {
   bool? isDownloading;
   bool? isWidgetOpen;
   FileTransfer({
-    this.url,
+    required this.url,
     this.files,
     this.expiry,
     this.platformFiles,
     this.date,
-    this.key,
+    required this.key,
     this.isUpdate = false,
     this.isDownloading = false,
     this.isWidgetOpen = false,
