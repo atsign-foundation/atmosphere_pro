@@ -40,6 +40,7 @@ import 'package:at_client/src/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'file_download_checker.dart';
+import 'trusted_sender_view_model.dart';
 
 class HistoryProvider extends BaseModel {
   String SENT_HISTORY = 'sent_history';
@@ -463,6 +464,57 @@ class HistoryProvider extends BaseModel {
       setStatus(RECEIVED_HISTORY, Status.Error);
       setError(RECEIVED_HISTORY, error.toString());
     }
+  }
+
+  Future<void> downloadAllTrustedSendersData() async {
+    var isTrustedSender = false;
+
+    for (var value in receivedHistoryLogs) {
+      isTrustedSender = false;
+
+      for (var _contact in Provider.of<TrustedContactProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .trustedContacts) {
+        if (_contact!.atSign == value.sender) {
+          isTrustedSender = true;
+          break;
+        }
+      }
+
+      if (isTrustedSender && (value.files ?? []).isNotEmpty) {
+        var _isFileDownloaded =
+            await isFileDownloaded(value.sender, value.files![0]);
+
+        /// only check for one file and download entire zip if one is not present
+        if (!_isFileDownloaded) {
+          await downloadFiles(
+            value.key!,
+            value.sender!,
+            false,
+          );
+        }
+      }
+    }
+  }
+
+  Future<bool> isFileDownloaded(String? sender, FileData _fileData) async {
+    String path;
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      path = MixedConstants.RECEIVED_FILE_DIRECTORY +
+          Platform.pathSeparator +
+          (sender ?? '') +
+          Platform.pathSeparator +
+          (_fileData.name ?? '');
+    } else {
+      path = BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          (_fileData.name ?? '');
+    }
+    File test = File(path);
+    bool fileExists = await test.exists();
+
+    return fileExists;
   }
 
   checkForUpdatedOrNewNotification(String sharedBy, String decodedMsg) async {
