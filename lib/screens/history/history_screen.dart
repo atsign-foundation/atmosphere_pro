@@ -12,6 +12,8 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../common_widgets/history_app_bar.dart';
+
 class HistoryScreen extends StatefulWidget {
   final int tabIndex;
   HistoryScreen({this.tabIndex = 0});
@@ -49,13 +51,8 @@ class _HistoryScreenState extends State<HistoryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,
-      appBar: CustomAppBar(
-        showBackButton: true,
-        showTitle: true,
+      appBar: HistoryAppBar(
         title: TextStrings().history,
-        showTrailingButton: true,
-        trailingIcon: Icons.save_alt_outlined,
-        isHistory: true,
       ),
       body: SingleChildScrollView(
         child: Container(

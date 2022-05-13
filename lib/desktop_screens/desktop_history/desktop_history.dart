@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_details.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_received_file_list_tile.dart';
@@ -5,6 +6,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/de
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/widgets/desktop_sent_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -24,33 +26,45 @@ class DesktopHistoryScreen extends StatefulWidget {
 class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
     with SingleTickerProviderStateMixin {
   TabController? _controller;
-  HistoryProvider? historyProvider;
+  late HistoryProvider historyProvider;
   int sentSelectedIndex = 0;
   String? receivedSelectedFileId;
   FileHistory? selectedSentFileData;
   FileTransfer? receivedFileData;
-  bool isSentTab = false;
+  bool isSentTab = false, _showSearchField = false;
+  late TextEditingController _textController;
+
+  @override
+  void initState() {
+    historyProvider =
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext!);
+    _textController = TextEditingController();
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() async {
-    if (historyProvider == null) {
-      _controller =
-          TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
-      _controller!.addListener(onTabChanged);
-      historyProvider = Provider.of<HistoryProvider>(context);
-      if (historyProvider!.sentHistory.isNotEmpty) {
-        selectedSentFileData = historyProvider!.sentHistory[0];
-      }
-      if (historyProvider!.receivedHistoryLogs.isNotEmpty) {
-        receivedFileData = historyProvider!.receivedHistoryLogs[0];
-      }
+    _controller =
+        TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
+    _controller!.addListener(onTabChanged);
+
+    if (historyProvider.sentHistory.isNotEmpty) {
+      selectedSentFileData = historyProvider.sentHistory[0];
     }
+    if (historyProvider.receivedHistoryLogs.isNotEmpty) {
+      receivedFileData = historyProvider.receivedHistoryLogs[0];
+    }
+
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _controller!.removeListener(onTabChanged);
+    _textController.dispose();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      historyProvider.setHistorySearchText = '';
+    });
     super.dispose();
   }
 
@@ -123,9 +137,21 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                         child: InkWell(
                             onTap: refreshHistoryScreen,
                             child: Icon(Icons.refresh)),
-                      )
+                      ),
+                      Positioned(
+                        right: 45,
+                        top: 25,
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showSearchField = true;
+                              });
+                            },
+                            child: Icon(Icons.search)),
+                      ),
                     ],
                   ),
+                  _showSearchField ? searchHistoryField() : SizedBox(),
                   Expanded(
                     child: TabBarView(
                       controller: _controller,
@@ -134,45 +160,33 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           functionName: historyProvider!.SENT_HISTORY,
                           showError: false,
                           successBuilder: (provider) {
-                            return (provider.sentHistory.isEmpty)
-                                ? Center(
-                                    child: Text(TextStrings().noFilesSent,
-                                        style: TextStyle(
-                                          fontSize: 15.toFont,
-                                          fontWeight: FontWeight.normal,
-                                        )),
-                                  )
-                                : ListView.separated(
-                                    padding:
-                                        EdgeInsets.only(bottom: 170.toHeight),
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    separatorBuilder: (context, index) {
-                                      return Divider(
-                                        indent: 16.toWidth,
-                                      );
-                                    },
-                                    itemCount: provider.sentHistory.length,
-                                    itemBuilder: (context, index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            sentSelectedIndex = index;
-                                            selectedSentFileData =
-                                                provider.sentHistory[index];
-                                          });
-                                        },
-                                        child: DesktopSentFilesListTile(
-                                          sentHistory:
-                                              provider.sentHistory[index],
-                                          key: Key(provider.sentHistory[index]
-                                              .fileDetails!.key!),
-                                          isSelected: index == sentSelectedIndex
-                                              ? true
-                                              : false,
-                                        ),
-                                      );
-                                    },
-                                  );
+                            if ((provider.sentHistory.isEmpty)) {
+                              return Center(
+                                child: Text(TextStrings().noFilesSent,
+                                    style: TextStyle(
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.normal,
+                                    )),
+                              );
+                            } else {
+                              List<FileHistory> filteredSentHistory = [];
+                              provider.sentHistory.forEach((element) {
+                                if (element.sharedWith!.any(
+                                  (ShareStatus sharedStatus) => sharedStatus
+                                      .atsign!
+                                      .contains(provider.getSearchText),
+                                )) {
+                                  filteredSentHistory.add(element);
+                                }
+                              });
+                              if (filteredSentHistory.isNotEmpty) {
+                                return getSentHistory(filteredSentHistory);
+                              } else {
+                                return Center(
+                                  child: Text('No results found.'),
+                                );
+                              }
+                            }
                           },
                           errorBuilder: (provider) => Center(
                             child: Text(TextStrings().errorOccured),
@@ -196,54 +210,32 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                   provider.receivedHistoryLogs[0];
                             }
 
-                            return (provider.receivedHistoryLogs.isEmpty)
-                                ? Center(
-                                    child: Text(
-                                      TextStrings().noFilesRecieved,
-                                      style: TextStyle(
-                                        fontSize: 15.toFont,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  )
-                                : ListView.separated(
-                                    padding:
-                                        EdgeInsets.only(bottom: 170.toHeight),
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    separatorBuilder: (context, index) =>
-                                        Divider(
-                                      indent: 16.toWidth,
-                                    ),
-                                    itemCount:
-                                        provider.receivedHistoryLogs.length,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          receivedFileData = provider
-                                              .receivedHistoryLogs[index];
+                            if ((provider.receivedHistoryLogs.isEmpty)) {
+                              return Center(
+                                child: Text(
+                                  TextStrings().noFilesRecieved,
+                                  style: TextStyle(
+                                    fontSize: 15.toFont,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              List<FileTransfer> filteredReceivedList = [];
+                              provider.receivedHistoryLogs.forEach((element) {
+                                if (element.sender!.contains(
+                                  provider.getSearchText,
+                                )) {
+                                  filteredReceivedList.add(element);
+                                }
+                              });
 
-                                          setState(() {
-                                            receivedSelectedFileId = provider
-                                                .receivedHistoryLogs[index].key;
-                                          });
-                                        },
-                                        child: DesktopReceivedFilesListTile(
-                                          key: Key(provider
-                                              .receivedHistoryLogs[index].key!),
-                                          receivedHistory: provider
-                                              .receivedHistoryLogs[index],
-                                          isSelected: receivedSelectedFileId ==
-                                                  provider
-                                                      .receivedHistoryLogs[
-                                                          index]
-                                                      .key
-                                              ? true
-                                              : false,
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                              if (filteredReceivedList.isNotEmpty) {
+                                return getReceivedTiles(filteredReceivedList);
+                              } else {
+                                return Center(child: Text('No results found'));
+                              }
+                            }
                           },
                           errorBuilder: (provider) => Center(
                             child: Text(TextStrings().errorOccured),
@@ -284,7 +276,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             }
 
                             return DesktopReceivedFileDetails(
-                              key: Key(receivedFileData!.key!),
+                              key: Key(receivedFileData!.key),
                               fileTransfer: receivedFileData,
                             );
                           },
@@ -297,18 +289,114 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   }
 
   refreshHistoryScreen() async {
-    if (historyProvider!.status[historyProvider!.PERIODIC_REFRESH] ==
+    if (historyProvider.status[historyProvider.PERIODIC_REFRESH] ==
         Status.Loading) {
       return;
     }
-    if (historyProvider!.status[historyProvider!.SENT_HISTORY] !=
+    if (historyProvider.status[historyProvider.SENT_HISTORY] !=
         Status.Loading) {
-      await historyProvider!.getSentHistory();
+      await historyProvider.getSentHistory();
     }
 
-    if (historyProvider!.status[historyProvider!.RECEIVED_HISTORY] !=
+    if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
         Status.Loading) {
-      await historyProvider!.getReceivedHistory();
+      await historyProvider.getReceivedHistory();
     }
+  }
+
+  searchHistoryField() {
+    return Container(
+      height: 50.toHeight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: ColorConstants.receivedSelectedTileColor,
+      ),
+      padding: EdgeInsets.fromLTRB(10, 3, 10, 5),
+      margin: EdgeInsets.fromLTRB(10, 3, 10, 5),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              autofocus: true,
+              controller: _textController,
+              style: TextStyle(fontSize: 12),
+              onChanged: (String txt) {
+                historyProvider.setHistorySearchText = txt;
+              },
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Search history by atsign'),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              setState(() {
+                _showSearchField = false;
+              });
+            },
+            child: Icon(Icons.close),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getReceivedTiles(List<FileTransfer> filteredReceivedList) {
+    return ListView.separated(
+      padding: EdgeInsets.only(bottom: 170.toHeight),
+      physics: AlwaysScrollableScrollPhysics(),
+      separatorBuilder: (context, index) => Divider(
+        indent: 16.toWidth,
+      ),
+      itemCount: filteredReceivedList.length,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: InkWell(
+          onTap: () {
+            receivedFileData = filteredReceivedList[index];
+
+            setState(() {
+              receivedSelectedFileId = filteredReceivedList[index].key;
+            });
+          },
+          child: DesktopReceivedFilesListTile(
+            key: Key(filteredReceivedList[index].key),
+            receivedHistory: filteredReceivedList[index],
+            isSelected:
+                receivedSelectedFileId == filteredReceivedList[index].key
+                    ? true
+                    : false,
+          ),
+        ),
+      ),
+    );
+  }
+
+  getSentHistory(List<FileHistory> filteredSentHistory) {
+    return ListView.separated(
+      padding: EdgeInsets.only(bottom: 170.toHeight),
+      physics: AlwaysScrollableScrollPhysics(),
+      separatorBuilder: (context, index) {
+        return Divider(
+          indent: 16.toWidth,
+        );
+      },
+      itemCount: filteredSentHistory.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            setState(() {
+              sentSelectedIndex = index;
+              selectedSentFileData = filteredSentHistory[index];
+            });
+          },
+          child: DesktopSentFilesListTile(
+            sentHistory: filteredSentHistory[index],
+            key: Key(filteredSentHistory[index].fileDetails!.key),
+            isSelected: index == sentSelectedIndex ? true : false,
+          ),
+        );
+      },
+    );
   }
 }
