@@ -13,6 +13,7 @@ class SideBarItem extends StatelessWidget {
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
   bool isScale;
+  final bool showNotificationDot;
   SideBarItem(
       {Key? key,
       this.image,
@@ -22,6 +23,7 @@ class SideBarItem extends StatelessWidget {
       this.showIconOnly = false,
       this.isScale = false,
       this.displayColor = ColorConstants.fadedText,
+      this.showNotificationDot = false,
       this.isDesktop = false})
       : super(key: key);
   @override
@@ -42,15 +44,34 @@ class SideBarItem extends StatelessWidget {
         height: 50,
         child: Row(
           children: [
-            Transform.scale(
-              scale: isScale ? 1.2 : 1,
-              child: Image.asset(
-                image!,
-                height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
-                color: displayColor,
-              ),
+            Stack(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: isDesktop ? 20 : 10),
+                  child: Transform.scale(
+                    scale: isScale ? 1.2 : 1,
+                    child: Image.asset(
+                      image!,
+                      height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
+                      color: displayColor,
+                    ),
+                  ),
+                ),
+                if (showNotificationDot)
+                  Positioned(
+                    top: 0,
+                    right: (isDesktop ? 20 : 10) - 4.toWidth,
+                    child: Container(
+                      width: 8.toWidth,
+                      height: 8.toWidth,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                    ),
+                  )
+              ],
             ),
-            SizedBox(width: isDesktop ? 20 : 10),
             !showIconOnly
                 ? Expanded(
                     child: Text(

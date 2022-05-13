@@ -119,133 +119,129 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      child: InkWell(
-        onTap: () {
-          _showFileChoice();
-        },
-        child: Container(
-          padding: SizeConfig().isTablet(context)
-              ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
-              : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.toFont),
-            color: ColorConstants.inputFieldColor,
-          ),
-          child: Column(
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.all(0),
-                title: Text(
-                    filePickerProvider!.selectedFiles.isEmpty
-                        ? TextStrings().welcomeFilePlaceholder
-                        : TextStrings().welcomeAddFilePlaceholder,
-                    style: TextStyle(
-                      color: ColorConstants.fadedText,
-                      fontSize: 14.toFont,
-                      fontWeight: FontWeight.normal,
-                    )),
-                subtitle: filePickerProvider!.selectedFiles.isEmpty
-                    ? null
-                    : Text(
-                        double.parse(
-                                    filePickerProvider!.totalSize.toString()) <=
-                                1024
-                            ? '${filePickerProvider!.totalSize} Kb . ${filePickerProvider!.selectedFiles.length} file(s)'
-                            : '${(filePickerProvider!.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider!.selectedFiles.length} file(s)',
-                        style: TextStyle(
-                          color: ColorConstants.fadedText,
-                          fontSize: 10.toFont,
-                          fontWeight: FontWeight.normal,
-                        ),
+      child: Container(
+        // padding: SizeConfig().isTablet(context)
+        //     ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
+        //     : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.toFont),
+          color: ColorConstants.inputFieldColor,
+        ),
+        child: Column(
+          children: [
+            ListTile(
+              // contentPadding: EdgeInsets.all(0),
+              title: Text(
+                  filePickerProvider!.selectedFiles.isEmpty
+                      ? TextStrings().welcomeFilePlaceholder
+                      : TextStrings().welcomeAddFilePlaceholder,
+                  semanticsLabel: 'Select file to transfer button',
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    fontSize: 14.toFont,
+                    fontWeight: FontWeight.normal,
+                  )),
+              subtitle: filePickerProvider!.selectedFiles.isEmpty
+                  ? null
+                  : Text(
+                      double.parse(
+                                  filePickerProvider!.totalSize.toString()) <=
+                              1024
+                          ? '${filePickerProvider!.totalSize} Kb . ${filePickerProvider!.selectedFiles.length} file(s)'
+                          : '${(filePickerProvider!.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider!.selectedFiles.length} file(s)',
+                      style: TextStyle(
+                        color: ColorConstants.fadedText,
+                        fontSize: 10.toFont,
+                        fontWeight: FontWeight.normal,
                       ),
-                trailing: InkWell(
-                  onTap: () {
-                    _showFileChoice();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                    child: Icon(
-                      Icons.add_circle,
-                      color: Colors.black,
                     ),
-                  ),
+              onTap: () {
+                _showFileChoice();
+              },
+              trailing: Container(
+                padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                child: Icon(
+                  Icons.add_circle,
+                  color: Colors.black,
                 ),
               ),
-              filePickerProvider!.selectedFiles.isNotEmpty
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: filePickerProvider!.selectedFiles.isNotEmpty
-                          ? int.parse(filePickerProvider!.selectedFiles.length
-                              .toString())
-                          : 0,
-                      itemBuilder: (c, index) {
-                        return Consumer<FileTransferProvider>(
-                            builder: (context, provider, _) {
-                          if (provider.selectedFiles.isEmpty) {
-                            return SizedBox();
-                          }
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: ColorConstants.dividerColor
-                                      .withOpacity(0.1),
-                                  width: 1.toHeight,
-                                ),
+            ),
+            filePickerProvider!.selectedFiles.isNotEmpty
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemCount: filePickerProvider!.selectedFiles.isNotEmpty
+                        ? int.parse(filePickerProvider!.selectedFiles.length
+                            .toString())
+                        : 0,
+                    itemBuilder: (c, index) {
+                      return Consumer<FileTransferProvider>(
+                          builder: (context, provider, _) {
+                        if (provider.selectedFiles.isEmpty) {
+                          return SizedBox();
+                        }
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: ColorConstants.dividerColor
+                                    .withOpacity(0.1),
+                                width: 1.toHeight,
                               ),
                             ),
-                            child: ListTile(
-                              title: Text(
-                                provider.selectedFiles[index].name.toString(),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.toFont,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              subtitle: Text(
-                                double.parse(provider.selectedFiles[index].size
-                                            .toString()) <=
-                                        1024
-                                    ? '${provider.selectedFiles[index].size} Kb' +
-                                        ' . ${provider.selectedFiles[index].extension}'
-                                    : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
-                                        ' . ${provider.selectedFiles[index].extension}',
-                                style: TextStyle(
-                                  color: ColorConstants.fadedText,
-                                  fontSize: 14.toFont,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              leading: CommonUtilityFunctions().thumbnail(
-                                  provider.selectedFiles[index].extension
-                                      .toString(),
-                                  provider.selectedFiles[index].path
-                                      .toString()),
-                              trailing: IconButton(
-                                icon: Icon(Icons.clear),
-                                onPressed: () {
-                                  setState(() {
-                                    provider.selectedFiles.removeAt(index);
-                                    provider.calculateSize();
-                                    provider.hasSelectedFilesChanged = true;
-                                  });
-                                  if (provider.selectedFiles.isEmpty) {
-                                    widget.onUpdate(false);
-                                  } else {
-                                    widget.onUpdate(true);
-                                  }
-                                },
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              provider.selectedFiles[index].name.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.toFont,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
-                          );
-                        });
-                      },
-                    )
-                  : SizedBox(),
-            ],
-          ),
+                            subtitle: Text(
+                              double.parse(provider.selectedFiles[index].size
+                                          .toString()) <=
+                                      1024
+                                  ? '${provider.selectedFiles[index].size} Kb' +
+                                      ' . ${provider.selectedFiles[index].extension}'
+                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                      ' . ${provider.selectedFiles[index].extension}',
+                              style: TextStyle(
+                                color: ColorConstants.fadedText,
+                                fontSize: 14.toFont,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            leading: CommonUtilityFunctions().thumbnail(
+                                provider.selectedFiles[index].extension
+                                    .toString(),
+                                provider.selectedFiles[index].path
+                                    .toString()),
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  provider.selectedFiles.removeAt(index);
+                                  provider.calculateSize();
+                                  provider.hasSelectedFilesChanged = true;
+                                });
+                                if (provider.selectedFiles.isEmpty) {
+                                  widget.onUpdate(false);
+                                } else {
+                                  widget.onUpdate(true);
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                  )
+                : SizedBox(),
+          ],
         ),
       ),
     );
