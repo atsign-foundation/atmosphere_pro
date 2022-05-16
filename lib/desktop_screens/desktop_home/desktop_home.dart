@@ -57,11 +57,7 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   /// before login we keep atmospher-pro as the directory
   storeApplicationDocumentsDirectory() async {
-    late var _dir;
-    // TODO: have to implement for linux and windows
-    if (Platform.isMacOS || Platform.isWindows) {
-      _dir = await getApplicationDocumentsDirectory();
-    }
+    var _dir = await getApplicationDocumentsDirectory();
     final path =
         Directory(_dir.path + Platform.pathSeparator + '@mosphere-pro');
 

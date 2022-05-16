@@ -405,8 +405,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     height: 3.toHeight,
                   ),
                   (!isOpen!)
-                      ? GestureDetector(
-                          onTap: () {
+                      ? TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () {
                             if (mounted) {
                               setState(() {
                                 isOpen = !isOpen;
@@ -629,8 +633,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             );
                           }),
                     ),
-                    GestureDetector(
-                      onTap: () {
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
                         if (mounted) {
                           setState(() {
                             isOpen = !isOpen!;

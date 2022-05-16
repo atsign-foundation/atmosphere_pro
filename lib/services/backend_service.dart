@@ -307,6 +307,11 @@ class BackendService {
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
     if (!historyProvider.isSyncedDataFetched) {
+      await Provider.of<TrustedContactProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .getTrustedContact();
+
       historyProvider.isSyncedDataFetched = true;
       await VersionService.getInstance().init();
 
@@ -318,6 +323,7 @@ class BackendService {
       if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
           Status.Loading) {
         await historyProvider.getReceivedHistory();
+        await historyProvider.downloadAllTrustedSendersData();
       }
 
       if (historyProvider.status[historyProvider.SENT_HISTORY] !=

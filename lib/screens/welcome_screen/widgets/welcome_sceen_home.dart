@@ -75,6 +75,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           children: [
                             Text(
                               TextStrings().welcome,
+                              semanticsLabel: TextStrings().welcome,
                               style: GoogleFonts.playfairDisplay(
                                 textStyle: TextStyle(
                                   fontSize: 26.toFont,
