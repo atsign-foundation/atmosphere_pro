@@ -56,10 +56,10 @@ class HistoryProvider extends BaseModel {
   String DOWNLOAD_ACK = 'download_ack';
   List<FileHistory> sentHistory = [], tempSentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
-  List<FileTransfer> receivedHistoryNew = [];
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
+  String _historySearchText = '';
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
@@ -82,7 +82,6 @@ class HistoryProvider extends BaseModel {
 
   List<Widget> tabs = [Recents()];
 
-  List<FilesModel>? receivedHistory, receivedAudioModel = [];
   List<Widget> desktopTabs = [DesktopRecents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
@@ -108,42 +107,12 @@ class HistoryProvider extends BaseModel {
     receivedItemsId = {};
   }
 
-  // setFileTransferHistory(
-  //   FileTransferObject fileTransferObject,
-  //   List<String> sharedWithAtsigns,
-  //   Map<String, FileTransferObject> fileShareResult, {
-  //   bool isEdit = false,
-  // }) async {
-  //   FileHistory fileHistory = convertFileTransferObjectToFileHistory(
-  //     fileTransferObject,
-  //     sharedWithAtsigns,
-  //     fileShareResult,
-  //   );
+  String get getSearchText => _historySearchText;
 
-  //   setStatus(SET_FILE_HISTORY, Status.Loading);
-  //   await getSentHistory();
-  //   if (isEdit) {
-  //     int index = sentHistory.indexWhere((element) =>
-  //         element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
-
-  //     if (index > -1) {
-  //       sendFileHistory['history'][index] = fileHistory.toJson();
-  //       sentHistory[index] = fileHistory;
-  //     }
-  //   } else {
-  //     sendFileHistory['history'].insert(0, (fileHistory.toJson()));
-  //     sentHistory.insert(0, fileHistory);
-  //   }
-
-  //   try {
-  //     var result = await updateSentHistory();
-  //     setStatus(SET_FILE_HISTORY, Status.Done);
-  //     return result;
-  //   } catch (e) {
-  //     setError(SET_FILE_HISTORY, e.toString());
-  //     setStatus(SET_FILE_HISTORY, Status.Error);
-  //   }
-  // }
+  set setHistorySearchText(String txt) {
+    _historySearchText = txt.trim().toLowerCase();
+    notifyListeners();
+  }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
     // checking whether sent file is stored in individual atKey or in sentHistory list.
@@ -576,7 +545,6 @@ class HistoryProvider extends BaseModel {
         receivedHistoryLogs[index] = filesModel;
       }
     } else {
-      receivedHistoryNew.insert(0, filesModel);
       receivedHistoryLogs.insert(0, filesModel);
       receivedItemsId[filesModel.key] = true;
     }
@@ -642,7 +610,7 @@ class HistoryProvider extends BaseModel {
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
-            filesModel.sender = atKey.sharedBy;
+            filesModel.sender = atKey.sharedBy!;
 
             if (filesModel.key != null) {
               tempReceivedHistoryLogs.insert(0, filesModel);
@@ -1384,7 +1352,7 @@ class HistoryProvider extends BaseModel {
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
-            filesModel.sender = atKey.sharedBy;
+            filesModel.sender = atKey.sharedBy!;
 
             if (filesModel.key != null) {
               receivedHistoryLogs.insert(0, filesModel);

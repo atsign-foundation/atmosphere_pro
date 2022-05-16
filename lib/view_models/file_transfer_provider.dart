@@ -229,11 +229,10 @@ class FileTransferProvider extends BaseModel {
           NavService.navKey.currentContext!,
           listen: false);
 
-      FileTransfer filesToTransfer = FileTransfer(platformFiles: selectedFiles);
       var _files = <File>[];
       var _atSigns = <String>[];
 
-      filesToTransfer.files!.forEach((element) {
+      selectedFiles.forEach((element) {
         _files.add(File(element.path!));
       });
 
