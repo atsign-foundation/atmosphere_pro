@@ -139,24 +139,13 @@ class _HistoryScreenState extends State<HistoryScreen>
                               }
                             });
 
-                            return ListView.separated(
-                              padding: EdgeInsets.only(bottom: 170.toHeight),
-                              physics: AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) {
-                                return Divider(
-                                  indent: 16.toWidth,
-                                );
-                              },
-                              itemCount: filteredSentHistory.length,
-                              itemBuilder: (context, index) {
-                                return SentFilesListTile(
-                                  sentHistory: filteredSentHistory[index],
-                                  key: Key(filteredSentHistory[index]
-                                      .fileDetails!
-                                      .key),
-                                );
-                              },
-                            );
+                            if (filteredSentHistory.isNotEmpty) {
+                              return getSentList(filteredSentHistory);
+                            } else {
+                              return Center(
+                                child: Text('No results found'),
+                              );
+                            }
                           }
                         },
                         errorBuilder: (provider) => ListView.separated(
@@ -231,23 +220,13 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 }
                               });
 
-                              return ListView.separated(
-                                padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) =>
-                                    Divider(indent: 16.toWidth),
-                                itemCount: filteredReceivedList.length,
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ReceivedFilesListTile(
-                                    key: Key(filteredReceivedList[index].key),
-                                    receivedHistory:
-                                        filteredReceivedList[index],
-                                    isWidgetOpen: filteredReceivedList[index]
-                                        .isWidgetOpen,
-                                  ),
-                                ),
-                              );
+                              if (filteredReceivedList.isNotEmpty) {
+                                return getReceivedList(filteredReceivedList);
+                              } else {
+                                return Center(
+                                  child: Text('No results found'),
+                                );
+                              }
                             }
                           },
                           errorBuilder: (provider) => ListView.separated(
@@ -279,6 +258,42 @@ class _HistoryScreenState extends State<HistoryScreen>
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget getSentList(List<FileHistory> filteredSentHistory) {
+    return ListView.separated(
+      padding: EdgeInsets.only(bottom: 170.toHeight),
+      physics: AlwaysScrollableScrollPhysics(),
+      separatorBuilder: (context, index) {
+        return Divider(
+          indent: 16.toWidth,
+        );
+      },
+      itemCount: filteredSentHistory.length,
+      itemBuilder: (context, index) {
+        return SentFilesListTile(
+          sentHistory: filteredSentHistory[index],
+          key: Key(filteredSentHistory[index].fileDetails!.key),
+        );
+      },
+    );
+  }
+
+  Widget getReceivedList(List<FileTransfer> filteredReceivedList) {
+    return ListView.separated(
+      padding: EdgeInsets.only(bottom: 170.toHeight),
+      physics: AlwaysScrollableScrollPhysics(),
+      separatorBuilder: (context, index) => Divider(indent: 16.toWidth),
+      itemCount: filteredReceivedList.length,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ReceivedFilesListTile(
+          key: Key(filteredReceivedList[index].key),
+          receivedHistory: filteredReceivedList[index],
+          isWidgetOpen: filteredReceivedList[index].isWidgetOpen,
         ),
       ),
     );

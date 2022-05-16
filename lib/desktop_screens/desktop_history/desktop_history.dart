@@ -157,7 +157,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                       controller: _controller,
                       children: [
                         ProviderHandler<HistoryProvider>(
-                          functionName: historyProvider!.SENT_HISTORY,
+                          functionName: historyProvider.SENT_HISTORY,
                           showError: false,
                           successBuilder: (provider) {
                             if ((provider.sentHistory.isEmpty)) {
@@ -183,7 +183,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                 return getSentHistory(filteredSentHistory);
                               } else {
                                 return Center(
-                                  child: Text('No results found.'),
+                                  child: Text('No results found'),
                                 );
                               }
                             }
@@ -196,7 +196,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           },
                         ),
                         ProviderHandler<HistoryProvider>(
-                          functionName: historyProvider!.RECEIVED_HISTORY,
+                          functionName: historyProvider.RECEIVED_HISTORY,
                           load: (provider) async {
                             await provider.getReceivedHistory();
                           },
