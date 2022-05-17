@@ -32,6 +32,7 @@ class TextStrings {
   String welcomeSendFilesTo = 'Send file(s) to';
   String welcomeContactPlaceholder = '@sign';
   String welcomeFilePlaceholder = 'Select file(s) to transfer';
+  String welcomeAddTranscripts = 'Add your message here(Optional)';
   String welcomeAddFilePlaceholder = 'Add file(s) to transfer';
   String sendingFiles = 'Sending file ...';
   String oopsSomethingWentWrong = 'Oops! something went wrong';

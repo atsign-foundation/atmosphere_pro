@@ -2,8 +2,10 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/widgets/desktop_add_transcripts.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/add_transcripts.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -118,6 +120,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 SizedBox(
                   height: 20.toHeight,
                 ),
+                DesktopAddTranscripts(),
+                SizedBox(
+                  height: 20.toHeight,
+                ),
                 (_filePickerProvider.selectedFiles.isNotEmpty &&
                         _welcomeScreenProvider.selectedContacts.isNotEmpty)
                     ? Row(
@@ -202,13 +208,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             showContacts: true,
             isDesktop: true,
             contactSelectedHistory: _welcomeScreenProvider.selectedContacts,
-            onContactsTap: (_list) {
-              Provider.of<WelcomeScreenProvider>(
-                      NavService.navKey.currentContext!,
-                      listen: false)
-                  .updateSelectedContacts(_list, notifyListeners: false);
-              _welcomeScreenProvider.isSelectionItemChanged = true;
-            },
+            // onContactsTap: (_list) {
+            //   Provider.of<WelcomeScreenProvider>(
+            //           NavService.navKey.currentContext!,
+            //           listen: false)
+            //       .updateSelectedContacts(_list, notifyListeners: false);
+            //   _welcomeScreenProvider.isSelectionItemChanged = true;
+            // },
             selectedList: (_list) {
               Provider.of<WelcomeScreenProvider>(
                       NavService.navKey.currentContext!,

@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/add_transcripts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
@@ -162,7 +163,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               },
                             ),
                             SizedBox(
-                              height: 40.toHeight,
+                              height: 30.toHeight,
                             ),
                             SelectFileWidget(
                               (b) {
@@ -172,7 +173,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               },
                             ),
                             SizedBox(
-                              height: 60.toHeight,
+                              height: 30.toHeight,
+                            ),
+                           AddTranscripts(),
+                            SizedBox(
+                              height: 30.toHeight,
                             ),
                             if (_welcomeScreenProvider.selectedContacts !=
                                     null &&
@@ -218,9 +223,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                         )
                                       : SizedBox(),
                                 ],
-                              ),
-                              SizedBox(
-                                height: 60.toHeight,
                               ),
                             ],
                           ],
