@@ -208,13 +208,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             showContacts: true,
             isDesktop: true,
             contactSelectedHistory: _welcomeScreenProvider.selectedContacts,
-            // onContactsTap: (_list) {
-            //   Provider.of<WelcomeScreenProvider>(
-            //           NavService.navKey.currentContext!,
-            //           listen: false)
-            //       .updateSelectedContacts(_list, notifyListeners: false);
-            //   _welcomeScreenProvider.isSelectionItemChanged = true;
-            // },
+            onContactsTap: (_list) {
+              Provider.of<WelcomeScreenProvider>(
+                      NavService.navKey.currentContext!,
+                      listen: false)
+                  .updateSelectedContacts(_list, notifyListeners: false);
+              _welcomeScreenProvider.isSelectionItemChanged = true;
+            },
             selectedList: (_list) {
               Provider.of<WelcomeScreenProvider>(
                       NavService.navKey.currentContext!,
