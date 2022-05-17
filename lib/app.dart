@@ -79,6 +79,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
             fontFamily: 'HelveticaNeu',
             scaffoldBackgroundColor: Colors.white,
+            primaryColor: Color.fromARGB(255, 240, 94, 62),
             appBarTheme: AppBarTheme(
               color: Colors.white,
               elevation: 0,
