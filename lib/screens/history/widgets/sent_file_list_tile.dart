@@ -413,7 +413,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                 filesList![index]
                                                     .name
                                                     ?.split('.')
-                                                    ?.last,
+                                                    .last,
                                                 MixedConstants
                                                         .SENT_FILE_DIRECTORY +
                                                     filesList![index].name!,

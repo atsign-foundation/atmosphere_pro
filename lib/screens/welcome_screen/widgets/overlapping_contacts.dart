@@ -162,16 +162,16 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                             itemCount: widget.selectedList!.length,
                             itemBuilder: (context, index) {
                               Uint8List? image;
-                              if (provider.selectedContacts[index]?.contact
+                              if (provider.selectedContacts[index].contact
                                           ?.tags !=
                                       null &&
-                                  provider.selectedContacts[index]?.contact
+                                  provider.selectedContacts[index].contact
                                           ?.tags!['image'] !=
                                       null) {
                                 image = CommonUtilityFunctions()
                                     .getContactImage(
                                         provider.selectedContacts[index] != null
-                                            ? provider.selectedContacts[index]!
+                                            ? provider.selectedContacts[index]
                                                 .contact!
                                             : AtContact());
                               }
@@ -184,15 +184,15 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                       provider.selectedContacts[index]);
                                   widget.onChnage!(true);
                                 },
-                                name: provider.selectedContacts[index]?.contact
-                                        ?.atSign
+                                name: provider
+                                        .selectedContacts[index].contact?.atSign
                                         ?.substring(1) ??
-                                    provider.selectedContacts[index]?.group
+                                    provider.selectedContacts[index].group
                                         ?.groupName
                                         ?.substring(0),
-                                atSign: provider.selectedContacts[index]
-                                        ?.contact?.atSign ??
-                                    '${provider.selectedContacts[index]?.group?.members?.length.toString()} Members',
+                                atSign: provider.selectedContacts[index].contact
+                                        ?.atSign ??
+                                    '${provider.selectedContacts[index].group?.members?.length.toString()} Members',
                                 image: (image != null)
                                     ? CustomCircleAvatar(
                                         byteImage: image,
@@ -201,10 +201,10 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                     : ContactInitial(
                                         initials: provider
                                                 .selectedContacts[index]
-                                                ?.contact
+                                                .contact
                                                 ?.atSign ??
                                             provider.selectedContacts[index]
-                                                ?.group?.groupName,
+                                                .group?.groupName,
                                       ),
                               );
                             },

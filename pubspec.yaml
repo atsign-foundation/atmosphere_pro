@@ -79,7 +79,7 @@ dependency_overrides:
   at_client: 
     git:
       url: https://github.com/atsign-foundation/at_client_sdk
-      ref: get_keys_bugfix
+      ref: last_notificationid_bug
       path: at_client
   at_contacts_flutter:
     git:

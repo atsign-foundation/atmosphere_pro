@@ -144,7 +144,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                                         .files![index]
                                                         .name
                                                         ?.split('.')
-                                                        ?.last,
+                                                        .last,
                                                     MixedConstants
                                                             .DESKTOP_SENT_DIR +
                                                         widget

@@ -66,7 +66,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: widget.elevation ?? 0,
+      elevation: widget.elevation,
       centerTitle: true,
       leading: (widget.showLeadingicon)
           ? Image.asset(ImageConstants.logoIcon)

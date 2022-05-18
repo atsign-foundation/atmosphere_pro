@@ -285,7 +285,7 @@ class FileTransferService {
     var receiverPort = ReceivePort();
     var _preference = BackendService.getInstance().atClientPreference;
 
-    Isolate.spawn(decryptFileInIsolate, {
+    await Isolate.spawn(decryptFileInIsolate, {
       'sendPort': receiverPort.sendPort,
       'file': file,
       'encryptionKey': encryptionKey,

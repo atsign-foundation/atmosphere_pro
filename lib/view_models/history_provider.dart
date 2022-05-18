@@ -123,7 +123,7 @@ class HistoryProvider extends BaseModel {
 
     // if file is not saved individually, we will update file index in sent history list.
     int index = sentHistory.indexWhere((element) =>
-        element.fileDetails!.key!.contains(fileHistory.fileDetails!.key!));
+        element.fileDetails!.key.contains(fileHistory.fileDetails!.key));
 
     var result = false;
     if (index > -1) {
@@ -311,7 +311,7 @@ class HistoryProvider extends BaseModel {
           fileHistory.fileDetails!.date!.add(Duration(days: 15));
       if (sentFileDeletionDate.difference(DateTime.now()) <
           Duration(seconds: 0)) {
-        idsToDelete.add(sentHistory[i].fileDetails!.key!);
+        idsToDelete.add(sentHistory[i].fileDetails!.key);
       }
     }
 
@@ -458,7 +458,7 @@ class HistoryProvider extends BaseModel {
         /// only check for one file and download entire zip if one is not present
         if (!_isFileDownloaded) {
           await downloadFiles(
-            value.key!,
+            value.key,
             value.sender!,
             false,
           );
@@ -539,8 +539,8 @@ class HistoryProvider extends BaseModel {
     filesModel.sender = sharedBy;
 
     if (filesModel.isUpdate!) {
-      int index = receivedHistoryLogs
-          .indexWhere((element) => element.key!.contains(filesModel.key!));
+      int index = receivedHistoryLogs.indexWhere(
+          (FileTransfer element) => element.key.contains(filesModel.key));
       if (index > -1) {
         receivedHistoryLogs[index] = filesModel;
       }
@@ -961,14 +961,9 @@ class HistoryProvider extends BaseModel {
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,
       {String? downloadPath}) async {
-    var index =
-        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
     try {
-      if (index > -1) {
-        receivedHistoryLogs[index].isDownloading = true;
-        receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
-      }
-      notifyListeners();
+      FileTransferService.getInstance()
+          .updateFileTransferState('', transferId, null, FileState.processing);
 
       var _downloadPath;
 
@@ -993,13 +988,11 @@ class HistoryProvider extends BaseModel {
           e.toString(),
           bgColor: ColorConstants.redAlert,
         );
-        receivedHistoryLogs[index].isDownloading = false;
         return false;
       }
 
       await sortFiles(receivedHistoryLogs);
       populateTabs();
-      receivedHistoryLogs[index].isDownloading = false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
@@ -1020,14 +1013,16 @@ class HistoryProvider extends BaseModel {
       }
     } catch (e) {
       print('error in downloading file: $e');
-      receivedHistoryLogs[index].isDownloading = false;
+      Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .removeReceiveProgressItem(transferId);
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
     }
   }
 
   downloadSingleFile(
-    String? transferId,
+    String transferId,
     String? sharedBy,
     bool? isWidgetOpen,
     String fileName,
@@ -1063,7 +1058,9 @@ class HistoryProvider extends BaseModel {
       }
     } catch (e) {
       print('error in downloading file: $e');
-      receivedHistoryLogs[index].isDownloading = false;
+      Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .removeReceiveProgressItem(transferId);
       receivedHistoryLogs[index].files![_fileIndex].isDownloading = false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
@@ -1152,29 +1149,6 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  Future<FileDownloadResponse> _downloadSingleFromFileBin(
-      FileTransferObject fileTransferObject,
-      String downloadPath,
-      String fileName) async {
-    try {
-      var response = await http.get(Uri.parse(fileTransferObject.fileUrl));
-      if (response.statusCode != 200) {
-        return FileDownloadResponse(
-            isError: true, errorMsg: 'error in fetching data');
-      }
-      var tempDirectory =
-          await Directory(downloadPath).createTemp('encrypted-files');
-      var encryptedFile =
-          File(tempDirectory.path + Platform.pathSeparator + fileName);
-      encryptedFile.writeAsBytesSync(response.bodyBytes);
-
-      return FileDownloadResponse(filePath: tempDirectory.path);
-    } catch (e) {
-      print('error in downloading file: $e');
-      return FileDownloadResponse(isError: true, errorMsg: e.toString());
-    }
-  }
-
   Future<bool> sendFileDownloadAcknowledgement(
       FileTransfer fileTransfer) async {
     var downloadAcknowledgement =
@@ -1184,7 +1158,7 @@ class HistoryProvider extends BaseModel {
       ..metadata = Metadata()
       ..metadata!.ttr = -1
       ..metadata!.ccd = true
-      ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key!
+      ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key
       ..metadata!.ttl = 518400000
       ..sharedWith = fileTransfer.sender;
     try {
@@ -1263,7 +1237,7 @@ class HistoryProvider extends BaseModel {
       {bool isDelete = false}) {
     int index = sentHistory.indexWhere(
       (element) =>
-          element.fileDetails!.key!.contains(fileHistory.fileDetails!.key!),
+          element.fileDetails!.key.contains(fileHistory.fileDetails!.key),
     );
     if (index != -1) {
       if (isDelete) {
@@ -1346,7 +1320,7 @@ class HistoryProvider extends BaseModel {
           return AtValue();
         });
 
-        if (atvalue != null && atvalue.value != null) {
+        if (atvalue.value != null) {
           try {
             FileTransferObject fileTransferObject =
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
@@ -1354,9 +1328,7 @@ class HistoryProvider extends BaseModel {
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = atKey.sharedBy!;
 
-            if (filesModel.key != null) {
-              receivedHistoryLogs.insert(0, filesModel);
-            }
+            receivedHistoryLogs.insert(0, filesModel);
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
           }
