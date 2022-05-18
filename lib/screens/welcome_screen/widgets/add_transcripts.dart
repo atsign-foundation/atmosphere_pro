@@ -21,26 +21,21 @@ class _AddTranscriptsState extends State<AddTranscripts> {
           ),
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15.toFont),
-        child: Container(
-            color: ColorConstants.inputFieldColor,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 15.toWidth, vertical: 5.toHeight),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    hintText: TextStrings().welcomeAddTranscripts,
-                    border: InputBorder.none,
-                    suffixIcon: Icon(Icons.edit, color: Colors.black)),
-                style: TextStyle(
-                  color: ColorConstants.fadedText,
-                  fontSize: 14.toFont,
-                  fontWeight: FontWeight.normal,
-                ),
+      child: ListTile(
+       tileColor: ColorConstants.inputFieldColor,
+       shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.toFont),
+        ),
+        title: TextFormField(
+              decoration: InputDecoration(
+                  hintText: TextStrings().welcomeAddTranscripts,
+                  border: InputBorder.none,),
+              style: TextStyle(
+                color: ColorConstants.fadedText,
+                fontSize: 14.toFont,
+                fontWeight: FontWeight.normal,
               ),
-            )),
-      ),
+            ),trailing: Icon(Icons.edit, color: Colors.black),),
     );
   }
 }
