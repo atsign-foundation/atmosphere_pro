@@ -405,6 +405,12 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   SizedBox(
                     height: 20.toHeight,
                   ),
+                  widget.receivedHistory!.notes != null
+                      ? Text(
+                          '${widget.receivedHistory!.notes}',
+                          style: CustomTextStyles.secondaryRegular12,
+                        )
+                      : SizedBox(),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

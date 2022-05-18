@@ -5,6 +5,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
@@ -31,7 +32,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:at_client/src/stream/file_transfer_object.dart';
+// import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
@@ -900,6 +901,7 @@ class HistoryProvider extends BaseModel {
       files: files,
       date: fileTransferObject.date,
       key: fileTransferObject.transferId,
+      notes: fileTransferObject.notes,
     );
   }
 
@@ -955,8 +957,13 @@ class HistoryProvider extends BaseModel {
     });
 
     return FileHistory(
-        fileTransfer, sthareStatus, HistoryType.send, fileTransferObject,
-        groupName: groupName);
+      fileTransfer,
+      sthareStatus,
+      HistoryType.send,
+      fileTransferObject,
+      groupName: groupName,
+      notes: fileTransferObject.notes,
+    );
   }
 
   downloadFiles(String transferId, String sharedBy, bool isWidgetOpen,

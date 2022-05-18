@@ -221,7 +221,7 @@ class FileTransferProvider extends BaseModel {
   /// returns [null] if file is not saved in sent history.
   Future<dynamic> sendFileWithFileBin(
       List<PlatformFile> selectedFiles, List<GroupContactsModel?> contactList,
-      {String? groupName}) async {
+      {String? groupName, String? notes}) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     try {
@@ -252,6 +252,7 @@ class FileTransferProvider extends BaseModel {
       var uploadResult = await FileTransferService.getInstance().uploadFile(
         _files,
         _atSigns,
+        notes: notes,
       );
 
       await _historyProvider.saveNewSentFileItem(
@@ -416,7 +417,8 @@ class FileTransferProvider extends BaseModel {
           fileHistory.fileTransferObject!.fileUrl,
           fileHistory.fileTransferObject!.fileEncryptionKey,
           fileHistory.fileTransferObject!.fileStatus,
-          date: fileHistory.fileTransferObject!.date);
+          date: fileHistory.fileTransferObject!.date,
+          notes: fileHistory.notes);
 
       if (sendResponse[atsign]!.sharedStatus!) {
         var indexToUpdate = fileHistory.sharedWith!.indexWhere(

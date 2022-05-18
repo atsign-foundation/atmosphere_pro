@@ -13,7 +13,13 @@ import 'package:provider/provider.dart';
 
 class SelectFileWidget extends StatefulWidget {
   final Function(bool) onUpdate;
-  SelectFileWidget(this.onUpdate);
+  final Function onNotesUpdate;
+  final String? initialValue;
+  SelectFileWidget(
+    this.onUpdate,
+    this.onNotesUpdate, {
+    this.initialValue,
+  });
   @override
   _SelectFileWidgetState createState() => _SelectFileWidgetState();
 }
@@ -169,9 +175,11 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             filePickerProvider!.selectedFiles.isNotEmpty
                 ? CustomInputField(
                     hintText: 'Type a message',
-                    initialValue: '',
+                    initialValue: widget.initialValue ?? '',
                     inputFieldColor: ColorConstants.fadedGrey,
-                    value: (String txt) {},
+                    value: (String txt) {
+                      widget.onNotesUpdate(txt);
+                    },
                     onSubmitted: (String txt) {},
                   )
                 : SizedBox(),

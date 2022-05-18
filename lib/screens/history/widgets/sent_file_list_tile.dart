@@ -297,6 +297,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   SizedBox(
                     height: 20.toHeight,
                   ),
+                  widget.sentHistory!.notes != null
+                      ? Text(
+                          '${widget.sentHistory!.notes}',
+                          style: CustomTextStyles.secondaryRegular12,
+                        )
+                      : SizedBox(),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

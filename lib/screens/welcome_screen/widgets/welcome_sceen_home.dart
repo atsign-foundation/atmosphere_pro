@@ -37,6 +37,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       isSentFileEntrySaved = true;
   ScrollController scrollController = ScrollController();
   late FileTransferProvider filePickerModel;
+  String? notes;
 
   @override
   void initState() {
@@ -170,6 +171,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                   isFileSelected = b;
                                 });
                               },
+                              (_str) {
+                                setState(() {
+                                  notes = _str;
+                                });
+                              },
+                              initialValue: notes,
                             ),
                             SizedBox(
                               height: 60.toHeight,
@@ -337,6 +344,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       filePickerModel.selectedFiles,
       _welcomeScreenProvider.selectedContacts,
       groupName: _welcomeScreenProvider.groupName,
+      notes: notes,
     );
 
     if (mounted && res is bool) {
