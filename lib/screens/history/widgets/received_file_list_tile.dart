@@ -266,6 +266,36 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                       ),
+                      // InkWell(
+                      //     onTap: () {
+                      //       openMessageBottomSheet();
+                      //     },
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.only(top: 5.0),
+                      //       child: Icon(
+                      //         Icons.message,
+                      //         size: 22.toFont,
+                      //       ),
+                      //     )),
+                      Tooltip(
+                        padding: const EdgeInsets.all(8.0),
+                        triggerMode: TooltipTriggerMode.tap,
+                        decoration: BoxDecoration(
+                            color: ColorConstants.orangeColor,
+                            borderRadius: BorderRadius.circular(2.toWidth)),
+                        textStyle: TextStyle(color: Colors.white),
+                        message: 'This is a message',
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(
+                            Icons.message,
+                            size: 22.toFont,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
                       InkWell(
                           onTap: () async {
                             if (isOverwrite) {
@@ -1071,5 +1101,53 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       downloadMessage = 'Decrypting...';
     }
     return downloadMessage;
+  }
+
+  openMessageBottomSheet() async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.transparent,
+      builder: (context) => BottomSheet(
+        onClosing: () {},
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+          color: Colors.white,
+          height: 100,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          child: Row(
+            children: [
+              Container(
+                height: 45.toHeight,
+                width: 45.toHeight,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
+                child: ContactInitial(
+                  initials: widget.receivedHistory!.sender,
+                  size: 45,
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: ColorConstants.orangeColor,
+                    borderRadius: BorderRadius.circular(2.toWidth)),
+                width: 300,
+                height: 60,
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Text(
+                  'This is a message',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
