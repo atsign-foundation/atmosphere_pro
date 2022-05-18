@@ -4,58 +4,6 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 
 enum HistoryType { send, received }
 
-class FilesModel {
-  List<String>? name;
-  String? handle;
-  String? date;
-  int? id;
-  double? totalSize;
-  HistoryType? historyType;
-
-  List<FilesDetail>? files;
-
-  FilesModel(
-      {this.name,
-      this.handle,
-      this.date,
-      this.files,
-      this.id,
-      this.historyType,
-      this.totalSize});
-
-  FilesModel.fromJson(json) {
-    name = jsonDecode(json['name']);
-    handle = json['handle'].toString();
-    date = json['date'].toString();
-    id = json['id'];
-    totalSize = double.parse(json['total_size'].toString());
-
-    if (json['files'] != null) {
-      files = <FilesDetail>[];
-      json['files'].forEach((v) {
-        if (v.runtimeType == String) {
-          files!.add(FilesDetail.fromJson(v));
-        } else {
-          files!.add(FilesDetail.fromMap(v));
-        }
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = jsonEncode(this.name);
-    data['handle'] = this.handle;
-    data['date'] = this.date;
-    data['total_size'] = this.totalSize;
-    data['id'] = this.id;
-    if (this.files != null) {
-      data['files'] = this.files!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
 class FilesDetail {
   String? fileName;
   String? filePath;

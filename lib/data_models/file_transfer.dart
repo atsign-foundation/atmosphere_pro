@@ -4,25 +4,25 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FileTransfer {
-  String? key, url, sender;
+  late String key, url;
+  String? sender;
   List<FileData>? files;
   DateTime? date, expiry;
   List<PlatformFile>? platformFiles;
   bool? isUpdate;
   bool? isDownloading;
   bool? isWidgetOpen;
-  FileTransferProgress? fileTransferProgress;
-  FileTransfer(
-      {this.url,
-      this.files,
-      this.expiry,
-      this.platformFiles,
-      this.date,
-      this.key,
-      this.isUpdate = false,
-      this.isDownloading = false,
-      this.isWidgetOpen = false,
-      this.fileTransferProgress}) {
+  FileTransfer({
+    required this.url,
+    this.files,
+    this.expiry,
+    this.platformFiles,
+    this.date,
+    required this.key,
+    this.isUpdate = false,
+    this.isDownloading = false,
+    this.isWidgetOpen = false,
+  }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
 
@@ -216,8 +216,8 @@ class DownloadAcknowledgement {
 
 class FileTransferProgress {
   FileState fileState;
-  double percent;
-  String fileName;
+  double? percent;
+  String? fileName;
   FileTransferProgress(this.fileState, this.percent, this.fileName);
 }
 

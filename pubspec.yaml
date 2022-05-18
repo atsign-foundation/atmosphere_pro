@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.6+40
+version: 1.0.7+41
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -65,42 +65,41 @@ dependencies:
   
   at_commons: ^3.0.14
   at_contact: ^3.0.5
-  at_common_flutter: ^2.0.6
+  at_common_flutter: ^2.0.7
   
-  at_client_mobile: ^3.1.13
-  at_onboarding_flutter: ^4.0.1
+  at_client_mobile: ^3.1.15
+  at_onboarding_flutter: ^4.0.2
   at_backupkey_flutter: ^4.0.1
-  at_contacts_flutter: ^4.0.3
-  at_contacts_group_flutter: ^4.0.3
+  at_contacts_flutter: ^4.0.4
+  at_contacts_group_flutter: ^4.0.4
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.2
 
 dependency_overrides:
-  at_client: 
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk
-      ref: get_keys_bugfix
-      path: at_client
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: feat/598
+      ref: trunk
       path: at_contacts_flutter
   at_common_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: fix/missing-fontweight
+      ref: trunk
       path: at_common_flutter
   at_onboarding_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: fix/missing-fontweight
+      ref: trunk
       path: at_onboarding_flutter
   at_contacts_group_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: feat/598
+      ref: trunk
       path: at_contacts_group_flutter
+  file_saver:
+    git:
+      url: https://github.com/incrediblezayed/file_saver.git
+      ref: main
 
 dev_dependencies:
   flutter_test:

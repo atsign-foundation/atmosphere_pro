@@ -29,9 +29,9 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:at_client/src/stream/file_transfer_object.dart';
-import 'package:at_client/src/service/encryption_service.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:at_client/src/service/notification_service.dart';
@@ -56,10 +56,10 @@ class HistoryProvider extends BaseModel {
   String DOWNLOAD_ACK = 'download_ack';
   List<FileHistory> sentHistory = [], tempSentHistory = [];
   List<FileTransfer> receivedHistoryLogs = [];
-  List<FileTransfer> receivedHistoryNew = [];
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
+  String _historySearchText = '';
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
@@ -82,7 +82,6 @@ class HistoryProvider extends BaseModel {
 
   List<Widget> tabs = [Recents()];
 
-  List<FilesModel>? receivedHistory, receivedAudioModel = [];
   List<Widget> desktopTabs = [DesktopRecents()];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
@@ -108,42 +107,12 @@ class HistoryProvider extends BaseModel {
     receivedItemsId = {};
   }
 
-  // setFileTransferHistory(
-  //   FileTransferObject fileTransferObject,
-  //   List<String> sharedWithAtsigns,
-  //   Map<String, FileTransferObject> fileShareResult, {
-  //   bool isEdit = false,
-  // }) async {
-  //   FileHistory fileHistory = convertFileTransferObjectToFileHistory(
-  //     fileTransferObject,
-  //     sharedWithAtsigns,
-  //     fileShareResult,
-  //   );
+  String get getSearchText => _historySearchText;
 
-  //   setStatus(SET_FILE_HISTORY, Status.Loading);
-  //   await getSentHistory();
-  //   if (isEdit) {
-  //     int index = sentHistory.indexWhere((element) =>
-  //         element?.fileDetails?.key?.contains(fileHistory.fileDetails.key));
-
-  //     if (index > -1) {
-  //       sendFileHistory['history'][index] = fileHistory.toJson();
-  //       sentHistory[index] = fileHistory;
-  //     }
-  //   } else {
-  //     sendFileHistory['history'].insert(0, (fileHistory.toJson()));
-  //     sentHistory.insert(0, fileHistory);
-  //   }
-
-  //   try {
-  //     var result = await updateSentHistory();
-  //     setStatus(SET_FILE_HISTORY, Status.Done);
-  //     return result;
-  //   } catch (e) {
-  //     setError(SET_FILE_HISTORY, e.toString());
-  //     setStatus(SET_FILE_HISTORY, Status.Error);
-  //   }
-  // }
+  set setHistorySearchText(String txt) {
+    _historySearchText = txt.trim().toLowerCase();
+    notifyListeners();
+  }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
     // checking whether sent file is stored in individual atKey or in sentHistory list.
@@ -576,7 +545,6 @@ class HistoryProvider extends BaseModel {
         receivedHistoryLogs[index] = filesModel;
       }
     } else {
-      receivedHistoryNew.insert(0, filesModel);
       receivedHistoryLogs.insert(0, filesModel);
       receivedItemsId[filesModel.key] = true;
     }
@@ -642,7 +610,7 @@ class HistoryProvider extends BaseModel {
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
-            filesModel.sender = atKey.sharedBy;
+            filesModel.sender = atKey.sharedBy!;
 
             if (filesModel.key != null) {
               tempReceivedHistoryLogs.insert(0, filesModel);
@@ -1037,8 +1005,10 @@ class HistoryProvider extends BaseModel {
               listen: false)
           .checkForUndownloadedFiles();
 
-      updateFileTransferState(
-          transferId, null); //setting filetransfer progress as null
+      Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .removeReceiveProgressItem(
+              transferId); //setting filetransfer progress as null
       if (files is List<File>) {
         await sortFiles(receivedHistoryLogs);
         populateTabs();
@@ -1136,12 +1106,9 @@ class HistoryProvider extends BaseModel {
 
     var tempDirectory =
         await Directory(downloadPath).createTemp('encrypted-files');
-    var fileDownloadReponse =
-        await FileTransferService.getInstance().downloadIndividualFile(
-      fileTransferObject.fileUrl,
-      tempDirectory.path,
-      fileName,
-    );
+    var fileDownloadReponse = await FileTransferService.getInstance()
+        .downloadIndividualFile(fileTransferObject.fileUrl, tempDirectory.path,
+            fileName, transferId!);
 
     if (fileDownloadReponse.isError) {
       throw Exception('download fail');
@@ -1149,13 +1116,21 @@ class HistoryProvider extends BaseModel {
     var encryptedFileList = tempDirectory.listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
-        var decryptedFile = await EncryptionService().decryptFileInChunks(
+        FileTransferService.getInstance().updateFileTransferState(
+          fileName,
+          fileTransferObject.transferId,
+          null,
+          FileState.decrypt,
+        );
+
+        var decryptedFile = await FileTransferService.getInstance().decryptFile(
           File(encryptedFile.path),
           fileTransferObject.fileEncryptionKey,
           BackendService.getInstance()
               .atClientPreference
               .fileEncryptionChunkSize,
         );
+
         decryptedFile.copySync(downloadPath +
             Platform.pathSeparator +
             encryptedFile.path.split(Platform.pathSeparator).last);
@@ -1164,6 +1139,10 @@ class HistoryProvider extends BaseModel {
             encryptedFile.path.split(Platform.pathSeparator).last));
         decryptedFile.deleteSync();
       }
+
+      Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .removeReceiveProgressItem(transferId);
       // deleting temp directory
       Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);
       return downloadedFiles;
@@ -1329,13 +1308,15 @@ class HistoryProvider extends BaseModel {
   }
 
   updateFileTransferState(
-      String transferId, FileTransferProgress? fileTransferProgress) {
-    var index =
-        receivedHistoryLogs.indexWhere((element) => element.key == transferId);
-    if (index != -1) {
-      receivedHistoryLogs[index].fileTransferProgress = fileTransferProgress;
-      notifyListeners();
-    }
+      String transferId, FileTransferProgress fileTransferProgress) {
+    Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+            listen: false)
+        .updateReceivedFileProgress(
+      transferId,
+      fileTransferProgress,
+    );
+
+    notifyListeners();
   }
 
   refreshReceivedFile({bool setLoading = true}) async {
@@ -1371,7 +1352,7 @@ class HistoryProvider extends BaseModel {
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
-            filesModel.sender = atKey.sharedBy;
+            filesModel.sender = atKey.sharedBy!;
 
             if (filesModel.key != null) {
               receivedHistoryLogs.insert(0, filesModel);

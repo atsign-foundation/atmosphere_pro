@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -9,6 +10,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -152,10 +154,14 @@ class _DesktopReceivedFileDetailsState
                     widget.fileTransfer!.isDownloading!
                         ? Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: CircularProgressIndicator()),
+                            child: Consumer<FileProgressProvider>(
+                                builder: (_c, provider, _) {
+                              var fileTransferProgress =
+                                  provider.receivedFileProgress[
+                                      widget.fileTransfer!.key!];
+
+                              return getDownloadStatus(fileTransferProgress);
+                            }),
                           )
                         : isDownloadAvailable
                             ? Padding(
@@ -284,18 +290,25 @@ class _DesktopReceivedFileDetailsState
               ],
             ),
             SizedBox(height: 15.toHeight),
-            RichText(
-              text: TextSpan(
-                  text:
-                      '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}  | ',
-                  style: CustomTextStyles.greyText15,
-                  children: [
-                    widget.fileTransfer!.isDownloading!
-                        ? TextSpan(
-                            text: '${getFileStateMessage()}',
-                            style: CustomTextStyles.blueRegular14)
-                        : TextSpan(text: ''),
-                  ]),
+            Consumer<FileProgressProvider>(
+              builder: (_context, provider, _widget) {
+                var fileTransferProgress =
+                    provider.receivedFileProgress[widget.fileTransfer!.key!];
+                return RichText(
+                  text: TextSpan(
+                      text:
+                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}  | ',
+                      style: CustomTextStyles.greyText15,
+                      children: [
+                        widget.fileTransfer!.isDownloading!
+                            ? TextSpan(
+                                text:
+                                    '${getFileStateMessage(fileTransferProgress)}',
+                                style: CustomTextStyles.blueRegular14)
+                            : TextSpan(text: ''),
+                      ]),
+                );
+              },
             ),
             SizedBox(height: 15.toHeight),
             SizedBox(height: 15.toHeight),
@@ -470,9 +483,7 @@ class _DesktopReceivedFileDetailsState
     }
   }
 
-  String getFileStateMessage() {
-    FileTransferProgress? fileTransferProgress =
-        widget.fileTransfer!.fileTransferProgress;
+  String getFileStateMessage(FileTransferProgress? fileTransferProgress) {
     if (fileTransferProgress == null) {
       return '';
     }
@@ -491,5 +502,21 @@ class _DesktopReceivedFileDetailsState
           '${fileState} ${index + 1} of ${widget.fileTransfer!.files!.length} File(s)';
     }
     return fileState;
+  }
+
+  Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
+    Widget spinner = CircularProgressIndicator();
+
+    if (fileTransferProgress == null) {
+      return spinner;
+    }
+
+    if (fileTransferProgress.fileState == FileState.download &&
+        fileTransferProgress.percent != null) {
+      spinner = LabelledCircularProgressIndicator(
+          value: (fileTransferProgress.percent! / 100));
+    }
+
+    return spinner;
   }
 }
