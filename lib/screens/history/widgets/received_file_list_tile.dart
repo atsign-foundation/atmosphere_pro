@@ -57,6 +57,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   List<String?> existingFileNamesToOverwrite = [];
   String nickName = '';
   Map<String?, Future> _futureBuilder = {};
+  bool isTextExpanded = false;
 
   Future<Uint8List?> videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -406,11 +407,25 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                     height: 20.toHeight,
                   ),
                   widget.receivedHistory!.notes != null
-                      ? Text(
-                          '${widget.receivedHistory!.notes}',
-                          style: CustomTextStyles.secondaryRegular12,
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              isTextExpanded = !isTextExpanded;
+                            });
+                          },
+                          child: Text(
+                            '${widget.receivedHistory!.notes}',
+                            style: CustomTextStyles.redSmall12,
+                            maxLines: isTextExpanded ? null : 1,
+                            overflow:
+                                isTextExpanded ? null : TextOverflow.ellipsis,
+                          ),
                         )
                       : SizedBox(),
+                  SizedBox(
+                    height:
+                        widget.receivedHistory!.notes != null ? 5.toHeight : 0,
+                  ),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

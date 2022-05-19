@@ -45,6 +45,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   List<bool> fileResending = [];
   bool isResendingToFirstContact = false;
+  bool isTextExpanded = false;
 
   @override
   void initState() {
@@ -295,14 +296,27 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.toHeight,
+                    height: 10.toHeight,
                   ),
                   widget.sentHistory!.notes != null
-                      ? Text(
-                          '${widget.sentHistory!.notes}',
-                          style: CustomTextStyles.secondaryRegular12,
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              isTextExpanded = !isTextExpanded;
+                            });
+                          },
+                          child: Text(
+                            '${widget.sentHistory!.notes}',
+                            style: CustomTextStyles.redSmall12,
+                            maxLines: isTextExpanded ? null : 1,
+                            overflow:
+                                isTextExpanded ? null : TextOverflow.ellipsis,
+                          ),
                         )
                       : SizedBox(),
+                  SizedBox(
+                    height: widget.sentHistory!.notes != null ? 5.toHeight : 0,
+                  ),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
