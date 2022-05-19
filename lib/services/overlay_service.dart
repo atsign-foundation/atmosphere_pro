@@ -1,8 +1,11 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'navigation_service.dart';
 
 class OverlayService {
@@ -29,79 +32,107 @@ class OverlayService {
   }
 
   OverlayEntry _buildSnackBarOverlayEntry(FLUSHBAR_STATUS flushbarStatus) {
-    String text = _getText(flushbarStatus);
     Color bgColor = _getColor(flushbarStatus);
 
     return OverlayEntry(builder: (context) {
       final size = MediaQuery.of(context).size;
-      return Positioned(
-        width: size.width,
-        height: 100,
-        bottom: 0,
-        child: Material(
-          child: Container(
-            alignment: Alignment.center,
-            color: bgColor,
-            child: Column(
-              children: [
-                flushbarStatus == FLUSHBAR_STATUS.SENDING
-                    ? LinearProgressIndicator()
-                    : SizedBox(),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          text,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: flushbarStatus == FLUSHBAR_STATUS.SENDING
-                                ? Colors.black
-                                : Colors.white,
-                            fontSize: 18.toFont,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          hideOverlay();
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.white,
-                          ),
-                          child: Text(
-                            TextStrings().buttonDismiss,
-                            style: TextStyle(
-                              color: ColorConstants.fontPrimary,
-                              fontSize: 15.toFont,
-                              fontWeight: FontWeight.normal,
+      return Consumer<FileProgressProvider>(
+        builder: (_context, provider, _) {
+          String text = _getText(flushbarStatus,
+              fileTransferProgress: provider.sentFileTransferProgress);
+          return Positioned(
+            width: size.width,
+            height: 100,
+            bottom: 0,
+            child: Material(
+              child: Container(
+                alignment: Alignment.center,
+                color: bgColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    flushbarStatus == FLUSHBAR_STATUS.SENDING
+                        ? provider.sentFileTransferProgress != null
+                            ? getProgressBar(provider.sentFileTransferProgress!)
+                            : LinearProgressIndicator()
+                        : SizedBox(),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    text,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: flushbarStatus ==
+                                              FLUSHBAR_STATUS.SENDING
+                                          ? Colors.black
+                                          : Colors.white,
+                                      fontSize: 18.toFont,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
+                          TextButton(
+                            onPressed: () {
+                              hideOverlay();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 7, horizontal: 7),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: Colors.white,
+                              ),
+                              child: Text(
+                                TextStrings().buttonDismiss,
+                                style: TextStyle(
+                                  color: ColorConstants.fontPrimary,
+                                  fontSize: 15.toFont,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
     });
   }
 
-  String _getText(FLUSHBAR_STATUS flushbarStatus) {
+  String _getText(FLUSHBAR_STATUS flushbarStatus,
+      {FileTransferProgress? fileTransferProgress}) {
     switch (flushbarStatus) {
       case FLUSHBAR_STATUS.SENDING:
-        return transferMessages[0];
+        String sendingMessage = transferMessages[0];
+        if (fileTransferProgress != null) {
+          if (fileTransferProgress.fileState == FileState.encrypt) {
+            sendingMessage = 'Encrypting ${fileTransferProgress.fileName}';
+          } else if (fileTransferProgress.fileState == FileState.upload) {
+            sendingMessage = 'Uploading ${fileTransferProgress.fileName}';
+          } else if (fileTransferProgress.fileState == FileState.processing) {
+            sendingMessage = 'Uploading ${fileTransferProgress.fileName}';
+          }
+        }
+        return sendingMessage;
       case FLUSHBAR_STATUS.DONE:
         return transferMessages[1];
       case FLUSHBAR_STATUS.FAILED:
@@ -109,6 +140,25 @@ class OverlayService {
       default:
         return '';
     }
+  }
+
+  String getFileUploadMessage(FileTransferProgress fileTransferProgress) {
+    String uploadMessage = '';
+
+    if (fileTransferProgress.fileState == FileState.upload &&
+        fileTransferProgress.percent != null) {
+      uploadMessage = ' ${fileTransferProgress.percent}%';
+    }
+    return uploadMessage;
+  }
+
+  Widget getProgressBar(FileTransferProgress fileTransferProgress) {
+    if (fileTransferProgress.fileState == FileState.upload &&
+        fileTransferProgress.percent != null) {
+      var percent = fileTransferProgress.percent! / 100;
+      return LinearProgressIndicator(value: percent);
+    }
+    return LinearProgressIndicator();
   }
 
   Color _getColor(FLUSHBAR_STATUS flushbarStatus) {

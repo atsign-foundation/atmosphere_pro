@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -213,6 +214,9 @@ class FileTransferProvider extends BaseModel {
       {String? groupName}) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
+    var fileUploadProvider = Provider.of<FileProgressProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
     try {
       var _historyProvider = Provider.of<HistoryProvider>(
           NavService.navKey.currentContext!,
@@ -254,16 +258,20 @@ class FileTransferProvider extends BaseModel {
       for (var atsignStatus in uploadResult.entries) {
         if (atsignStatus.value.sharedStatus != null &&
             !atsignStatus.value.sharedStatus!) {
+          fileUploadProvider.removeSentFileProgress();
           setStatus(SEND_FILES, Status.Error);
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+
           return false;
         }
       }
 
+      fileUploadProvider.removeSentFileProgress();
       flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
       setStatus(SEND_FILES, Status.Done);
       return true;
     } catch (e) {
+      fileUploadProvider.removeSentFileProgress();
       setStatus(SEND_FILES, Status.Error);
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
     }
