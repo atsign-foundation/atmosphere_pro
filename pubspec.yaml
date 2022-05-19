@@ -71,7 +71,7 @@ dependencies:
   at_onboarding_flutter: ^4.0.1
   at_backupkey_flutter: ^4.0.1
   at_contacts_flutter: ^4.0.3
-  at_contacts_group_flutter: ^4.0.3
+  # at_contacts_group_flutter: ^4.0.3
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.2
 
@@ -84,7 +84,7 @@ dependency_overrides:
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: feat/598
+      ref: feat/issue_496
       path: at_contacts_flutter
   at_common_flutter: 
     git:
@@ -96,7 +96,7 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_widgets
       ref: fix/missing-fontweight
       path: at_onboarding_flutter
-  at_contacts_group_flutter: 
+  at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       ref: feat/issue_496
