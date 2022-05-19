@@ -173,17 +173,6 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               ),
             ),
             filePickerProvider!.selectedFiles.isNotEmpty
-                ? CustomInputField(
-                    hintText: 'Type a message',
-                    initialValue: widget.initialValue ?? '',
-                    inputFieldColor: ColorConstants.fadedGrey,
-                    value: (String txt) {
-                      widget.onNotesUpdate(txt);
-                    },
-                    onSubmitted: (String txt) {},
-                  )
-                : SizedBox(),
-            filePickerProvider!.selectedFiles.isNotEmpty
                 ? ListView.builder(
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),

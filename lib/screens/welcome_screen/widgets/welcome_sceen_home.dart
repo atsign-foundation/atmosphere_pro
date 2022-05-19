@@ -165,6 +165,48 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 40.toHeight,
                             ),
+                            (_welcomeScreenProvider.selectedContacts != null &&
+                                    _welcomeScreenProvider
+                                        .selectedContacts.isNotEmpty &&
+                                    filePickerModel.selectedFiles.isNotEmpty)
+                                ? ListTile(
+                                    tileColor: ColorConstants.inputFieldColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(15.toFont),
+                                    ),
+                                    title: TextFormField(
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            TextStrings().welcomeAddTranscripts,
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextStyle(
+                                        color: ColorConstants.fadedText,
+                                        fontSize: 14.toFont,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      initialValue: notes,
+                                      onChanged: (String txt) {
+                                        setState(() {
+                                          notes = txt;
+                                        });
+                                      },
+                                    ),
+                                    trailing:
+                                        Icon(Icons.edit, color: Colors.black),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: (_welcomeScreenProvider
+                                              .selectedContacts !=
+                                          null &&
+                                      _welcomeScreenProvider
+                                          .selectedContacts.isNotEmpty &&
+                                      filePickerModel.selectedFiles.isNotEmpty)
+                                  ? 10.toHeight
+                                  : 0,
+                            ),
                             SelectFileWidget(
                               (b) {
                                 setState(() {

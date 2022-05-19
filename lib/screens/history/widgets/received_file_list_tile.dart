@@ -413,12 +413,21 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               isTextExpanded = !isTextExpanded;
                             });
                           },
-                          child: Text(
-                            '${widget.receivedHistory!.notes}',
-                            style: CustomTextStyles.redSmall12,
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Note: ',
+                              style: CustomTextStyles.primaryMedium14,
+                              children: [
+                                TextSpan(
+                                  text: '${widget.receivedHistory!.notes}',
+                                  style: CustomTextStyles.redSmall12,
+                                )
+                              ],
+                            ),
                             maxLines: isTextExpanded ? null : 1,
-                            overflow:
-                                isTextExpanded ? null : TextOverflow.ellipsis,
+                            overflow: isTextExpanded
+                                ? TextOverflow.clip
+                                : TextOverflow.ellipsis,
                           ),
                         )
                       : SizedBox(),
