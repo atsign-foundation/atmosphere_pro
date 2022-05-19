@@ -99,7 +99,7 @@ dependency_overrides:
   at_contacts_group_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: feat/496
+      ref: feat/issue_496
       path: at_contacts_group_flutter
 
 dev_dependencies:
