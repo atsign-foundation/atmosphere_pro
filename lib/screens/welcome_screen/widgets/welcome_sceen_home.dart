@@ -242,6 +242,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                       filePickerModel.selectedFiles.clear();
                                       filePickerModel
                                           .resetSelectedFilesStatus();
+                                      notes = '';
                                     });
                                   }),
                                   Expanded(child: SizedBox()),

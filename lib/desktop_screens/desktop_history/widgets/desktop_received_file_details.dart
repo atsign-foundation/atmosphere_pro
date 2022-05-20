@@ -311,6 +311,21 @@ class _DesktopReceivedFileDetailsState
               },
             ),
             SizedBox(height: 15.toHeight),
+            widget.fileTransfer!.notes != null
+                ? RichText(
+                    text: TextSpan(
+                      text: 'Note: ',
+                      style: CustomTextStyles.primaryMedium14,
+                      children: [
+                        TextSpan(
+                          text: '${widget.fileTransfer!.notes}',
+                          style: CustomTextStyles.redSmall12,
+                        )
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+            SizedBox(height: 15.toHeight),
             SizedBox(height: 15.toHeight),
           ],
         ),
