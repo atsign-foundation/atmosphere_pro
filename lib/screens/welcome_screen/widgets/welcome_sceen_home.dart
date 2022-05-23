@@ -163,49 +163,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               },
                             ),
                             SizedBox(
-                              height: 40.toHeight,
-                            ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
-                                        .selectedContacts.isNotEmpty &&
-                                    filePickerModel.selectedFiles.isNotEmpty)
-                                ? ListTile(
-                                    tileColor: ColorConstants.inputFieldColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(15.toFont),
-                                    ),
-                                    title: TextFormField(
-                                      decoration: InputDecoration(
-                                        hintText:
-                                            TextStrings().welcomeAddTranscripts,
-                                        border: InputBorder.none,
-                                      ),
-                                      style: TextStyle(
-                                        color: ColorConstants.fadedText,
-                                        fontSize: 14.toFont,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                      initialValue: notes,
-                                      onChanged: (String txt) {
-                                        setState(() {
-                                          notes = txt;
-                                        });
-                                      },
-                                    ),
-                                    trailing:
-                                        Icon(Icons.edit, color: Colors.black),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: (_welcomeScreenProvider
-                                              .selectedContacts !=
-                                          null &&
-                                      _welcomeScreenProvider
-                                          .selectedContacts.isNotEmpty &&
-                                      filePickerModel.selectedFiles.isNotEmpty)
-                                  ? 10.toHeight
-                                  : 0,
+                              height: 20.toHeight,
                             ),
                             SelectFileWidget(
                               (b) {
@@ -221,7 +179,71 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               initialValue: notes,
                             ),
                             SizedBox(
-                              height: 60.toHeight,
+                              height: (_welcomeScreenProvider
+                                              .selectedContacts !=
+                                          null &&
+                                      _welcomeScreenProvider
+                                          .selectedContacts.isNotEmpty &&
+                                      filePickerModel.selectedFiles.isNotEmpty)
+                                  ? 20.toHeight
+                                  : 60.toHeight,
+                            ),
+                            (_welcomeScreenProvider.selectedContacts != null &&
+                                    _welcomeScreenProvider
+                                        .selectedContacts.isNotEmpty &&
+                                    filePickerModel.selectedFiles.isNotEmpty)
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      color: ColorConstants.inputFieldColor,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10.toWidth,
+                                        ),
+                                        Expanded(
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              hintText: TextStrings()
+                                                  .welcomeAddTranscripts,
+                                              hintStyle: TextStyle(
+                                                color: ColorConstants.fadedText,
+                                                fontSize: 14.toFont,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              border: InputBorder.none,
+                                              fillColor: ColorConstants
+                                                  .inputFieldColor,
+                                              focusColor: ColorConstants
+                                                  .inputFieldColor,
+                                              hoverColor: ColorConstants
+                                                  .inputFieldColor,
+                                            ),
+                                            style: TextStyle(
+                                              color: ColorConstants.fadedText,
+                                              fontSize: 14.toFont,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            onChanged: (String txt) {
+                                              setState(() {
+                                                notes = txt;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        Icon(Icons.edit, color: Colors.black),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 30.toHeight,
                             ),
                             if (_welcomeScreenProvider.selectedContacts !=
                                     null &&
