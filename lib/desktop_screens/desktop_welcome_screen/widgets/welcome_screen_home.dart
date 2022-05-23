@@ -124,30 +124,34 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         _filePickerProvider.selectedFiles.isNotEmpty)
                     ? Container(
                         color: Colors.white,
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.toFont),
-                          ),
-                          title: TextFormField(
-                            decoration: InputDecoration(
-                              hintText: TextStrings().welcomeAddTranscripts,
-                              hintStyle:
-                                  CustomTextStyles.desktopSecondaryRegular16,
-                              border: InputBorder.none,
-                              fillColor: Colors.white,
-                              focusColor: Colors.white,
-                              hoverColor: Colors.white,
-                              filled: true,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: TextStrings().welcomeAddTranscripts,
+                                  hintStyle: CustomTextStyles
+                                      .desktopSecondaryRegular16,
+                                  border: InputBorder.none,
+                                  fillColor: Colors.white,
+                                  focusColor: Colors.white,
+                                  hoverColor: Colors.white,
+                                  filled: true,
+                                ),
+                                style:
+                                    CustomTextStyles.desktopSecondaryRegular18,
+                                onChanged: (String txt) {
+                                  setState(() {
+                                    notes = txt;
+                                  });
+                                },
+                              ),
                             ),
-                            style: CustomTextStyles.desktopSecondaryRegular18,
-                            initialValue: notes,
-                            onChanged: (String txt) {
-                              setState(() {
-                                notes = txt;
-                              });
-                            },
-                          ),
-                          trailing: Icon(Icons.edit, color: Colors.black),
+                            Icon(Icons.edit, color: Colors.black),
+                            SizedBox(
+                              width: 15,
+                            ),
+                          ],
                         ),
                       )
                     : SizedBox(),
