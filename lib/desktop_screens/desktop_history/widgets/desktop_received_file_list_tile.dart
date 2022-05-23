@@ -128,7 +128,7 @@ class _DesktopReceivedFilesListTileState
 
   @override
   void didUpdateWidget(covariant DesktopReceivedFilesListTile oldWidget) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await checkIfDownloadAvailable();
     });
     super.didUpdateWidget(oldWidget);
@@ -136,7 +136,7 @@ class _DesktopReceivedFilesListTileState
 
   @override
   void didChangeDependencies() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await checkIfDownloadAvailable();
     });
     super.didChangeDependencies();

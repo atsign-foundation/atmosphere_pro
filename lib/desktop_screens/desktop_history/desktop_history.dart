@@ -62,7 +62,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   void dispose() {
     _controller!.removeListener(onTabChanged);
     _textController.dispose();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       historyProvider.setHistorySearchText = '';
     });
     super.dispose();
