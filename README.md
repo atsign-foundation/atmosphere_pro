@@ -6,7 +6,7 @@
 
 > Peer-to-peer encrypted file sharing has never been easier.
 
-[@mosphere PRO](https://atsign.com/apps/atmosphere/) makes peer-to-peer
+[@mosphere PRO](https://atsign.com/apps/atmospherepro/) makes peer-to-peer
 encrypted file sharing possible. In real-time, you can send files across
 any device regardless of your location — with the added benefit of total
 privacy. You can fearlessly share contracts, tax information, or other
