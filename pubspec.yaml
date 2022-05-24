@@ -84,7 +84,7 @@ dependency_overrides:
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: feat/598
+      ref: fix/trusted-sender-selection
       path: at_contacts_flutter
   at_common_flutter: 
     git:
@@ -99,7 +99,7 @@ dependency_overrides:
   at_contacts_group_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: feat/598
+      ref: fix/trusted-sender-selection
       path: at_contacts_group_flutter
 
 dev_dependencies:

@@ -50,7 +50,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                 body: SafeArea(
                   child: Column(children: [
                     provider.fetchedTrustedContact.isEmpty
-                        ? Container()
+                        ? SizedBox()
                         : Container(
                             padding: EdgeInsets.only(right: 20.toWidth),
                             child: Row(
@@ -104,12 +104,14 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                     pro_text_strings.TextStrings()
                                         .noTrustedSenders,
                                     style: CustomTextStyles.primaryBold18,
+                                    textAlign: TextAlign.center,
                                   ),
                                   SizedBox(height: 10.toHeight),
                                   Text(
                                     pro_text_strings.TextStrings()
                                         .addTrustedSender,
                                     style: CustomTextStyles.secondaryRegular16,
+                                    textAlign: TextAlign.center,
                                   ),
                                   SizedBox(
                                     height: 25.toHeight,
@@ -127,8 +129,6 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                             builder: (context) =>
                                                 ContactsScreen(
                                                   asSelectionScreen: true,
-                                                  context: NavService
-                                                      .navKey.currentContext,
                                                   selectedList: (s) async {
                                                     s.forEach((element) async {
                                                       await provider

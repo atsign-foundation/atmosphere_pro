@@ -164,23 +164,24 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 }
                               }
                             } else if (widget.isTrustedContactScreen) {
+                              var trustedContactProvider =
+                                  Provider.of<TrustedContactProvider>(context,
+                                      listen: false);
+
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ContactsScreen(
                                     asSelectionScreen: true,
-                                    context: NavService.navKey.currentContext,
+                                    selectedContactsHistory:
+                                        trustedContactProvider
+                                            .fetchedTrustedContact,
                                     selectedList: (s) async {
                                       s.forEach((element) async {
-                                        await Provider.of<
-                                                    TrustedContactProvider>(
-                                                context,
-                                                listen: false)
+                                        await trustedContactProvider
                                             .addTrustedContacts(element);
                                       });
-                                      await Provider.of<TrustedContactProvider>(
-                                              context,
-                                              listen: false)
+                                      await trustedContactProvider
                                           .setTrustedContact();
                                     },
                                   ),

@@ -15,7 +15,7 @@ class TrustedContactProvider extends BaseModel {
   bool trustedContactOperation = false;
   List<String?> trustedNames = [];
   String GetTrustedContacts = 'get_trusted_contacts';
-  List<AtContact?> fetchedTrustedContact = [];
+  List<AtContact> fetchedTrustedContact = [];
   BackendService backendService = BackendService.getInstance();
 
   addTrustedContacts(AtContact? trustedContact) async {
