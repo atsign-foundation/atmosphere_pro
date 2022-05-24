@@ -39,6 +39,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       isSentFileEntrySaved = true,
       isFileShareFailed = false;
   String? notes;
+  FocusNode _notesFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -128,6 +129,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           children: [
                             Expanded(
                               child: TextField(
+                                focusNode: _notesFocusNode,
                                 decoration: InputDecoration(
                                   hintText: TextStrings().welcomeAddTranscripts,
                                   hintStyle: CustomTextStyles
@@ -147,7 +149,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 },
                               ),
                             ),
-                            Icon(Icons.edit, color: Colors.black),
+                            InkWell(
+                              onTap: () {
+                                FocusScope.of(context)
+                                    .requestFocus(_notesFocusNode);
+                              },
+                              child: Icon(Icons.edit, color: Colors.black),
+                            ),
                             SizedBox(
                               width: 15,
                             ),
