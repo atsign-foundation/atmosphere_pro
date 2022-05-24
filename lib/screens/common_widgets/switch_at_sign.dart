@@ -40,14 +40,35 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                 height: 155.toHeight < 155 ? 155 : 150.toHeight,
                 width: SizeConfig().screenWidth,
                 color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Text(TextStrings().sidebarSwitchOut,
-                          style: CustomTextStyles.blackBold(size: 15)),
+                    Row(
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Text(TextStrings().sidebarSwitchOut,
+                              style: CustomTextStyles.blackBold(size: 15)),
+                        ),
+                        Tooltip(
+                          triggerMode: TooltipTriggerMode.tap,
+                          message: "This is used to switch between @signs",
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(50)),
+                            margin: EdgeInsets.all(0),
+                            height: 20,
+                            width: 20,
+                            child: Icon(
+                              Icons.question_mark,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       height: 100.toHeight < 105 ? 105 : 100.toHeight,

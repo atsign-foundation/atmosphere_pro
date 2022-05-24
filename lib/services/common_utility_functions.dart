@@ -92,12 +92,40 @@ class CommonUtilityFunctions {
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(TextStrings.resetDescription,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                        )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            TextStrings.resetDescription,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Tooltip(
+                          triggerMode: TooltipTriggerMode.tap,
+                          message: "Removes the @sign.",
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(50)),
+                            margin: EdgeInsets.all(0),
+                            height: 20,
+                            width: 20,
+                            child: Icon(
+                              Icons.question_mark,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(
                       height: 10,
                     ),
