@@ -224,18 +224,20 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
             //   padding: EdgeInsets.symmetric(horizontal: 20.toHeight),
             //   child: Divider(height: 5),
             // ),
-            RichText(
-              text: TextSpan(
-                text: 'Note: ',
-                style: CustomTextStyles.primaryMedium14,
-                children: [
-                  TextSpan(
-                    text: '${widget.selectedFileData!.notes}',
-                    style: CustomTextStyles.redSmall12,
+            widget.selectedFileData!.notes != null
+                ? RichText(
+                    text: TextSpan(
+                      text: 'Note: ',
+                      style: CustomTextStyles.primaryMedium14,
+                      children: [
+                        TextSpan(
+                          text: '${widget.selectedFileData!.notes}',
+                          style: CustomTextStyles.redSmall12,
+                        )
+                      ],
+                    ),
                   )
-                ],
-              ),
-            ),
+                : SizedBox(),
             SizedBox(height: 15.toHeight),
             widget.selectedFileData != null
                 ? DesktopTranferOverlappingContacts(
