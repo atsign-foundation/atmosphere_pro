@@ -46,9 +46,9 @@ packages:
   at_backupkey_flutter:
     dependency: "direct main"
     description:
-      name: at_backupkey_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "/Users/sarthaksbakre/dev/at_widgets/at_backupkey_flutter"
+      relative: false
+    source: path
     version: "4.0.1"
   at_base2e15:
     dependency: transitive

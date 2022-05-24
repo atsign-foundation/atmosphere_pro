@@ -76,6 +76,8 @@ dependencies:
   at_sync_ui_flutter: ^1.0.2
 
 dependency_overrides:
+  at_backupkey_flutter:
+    path: /Users/sarthaksbakre/dev/at_widgets/at_backupkey_flutter
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets

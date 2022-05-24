@@ -121,17 +121,45 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                     ),
                                   ),
                                   SizedBox(height: 20.toHeight),
-                                  Text(
-                                    pro_text_strings.TextStrings()
-                                        .noTrustedSenders,
-                                    style: CustomTextStyles.primaryBold18,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        pro_text_strings.TextStrings()
+                                            .noTrustedSenders,
+                                        style: CustomTextStyles.primaryBold18,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Tooltip(
+                                          triggerMode: TooltipTriggerMode.tap,
+                                          message:
+                                              "You can manage your trusted senders here",
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(50)),
+                                            margin: EdgeInsets.all(0),
+                                            height: 20,
+                                            width: 20,
+                                            child: Icon(
+                                              Icons.question_mark,
+                                              size: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(height: 10.toHeight),
                                   Text(
-                                    pro_text_strings.TextStrings()
-                                        .addTrustedSender,
-                                    style: CustomTextStyles.secondaryRegular16,
-                                  ),
+                                      pro_text_strings.TextStrings()
+                                          .addTrustedSender,
+                                      style:
+                                          CustomTextStyles.secondaryRegular16,
+                                      textAlign: TextAlign.center),
                                   SizedBox(
                                     height: 25.toHeight,
                                   ),
