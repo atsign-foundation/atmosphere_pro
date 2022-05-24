@@ -40,7 +40,7 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _historyProvider.setHistorySearchText = '';
     });
 

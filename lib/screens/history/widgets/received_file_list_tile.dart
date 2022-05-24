@@ -158,7 +158,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   getFutureBuilders() {
     widget.receivedHistory!.files!.forEach((element) {
-      _futureBuilder[element.name] = isFilePresent(element.name!);
+      String filePath = BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          element.name!;
+      _futureBuilder[element.name] =
+          CommonUtilityFunctions().isFilePresent(filePath);
     });
   }
 
@@ -355,14 +359,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                           width: 1.toWidth,
                                         ),
                                         SizedBox(width: 10.toHeight),
-                                        Text(
-                                            getFileStateMessage(
-                                                fileTransferProgress),
-                                            style: TextStyle(
-                                              fontSize: 11.toFont,
-                                              color: ColorConstants.blueText,
-                                              fontWeight: FontWeight.normal,
-                                            )),
+                                        Expanded(
+                                          child: Text(
+                                              getFileStateMessage(
+                                                  fileTransferProgress),
+                                              style: TextStyle(
+                                                fontSize: 11.toFont,
+                                                color: ColorConstants.blueText,
+                                                fontWeight: FontWeight.normal,
+                                              )),
+                                        ),
                                       ],
                                     )
                                   : SizedBox();
@@ -515,7 +521,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
-                                          ? thumbnail(
+                                          ? CommonUtilityFunctions().thumbnail(
                                               widget.receivedHistory!
                                                   .files![index].name
                                                   ?.split('.')
@@ -675,105 +681,6 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         ],
       ),
     );
-  }
-
-  Widget thumbnail(
-    String? extension,
-    String path, {
-    bool isFilePresent = true,
-  }) {
-    // when file overwrite is true, we are not showing file preview.
-    if (isOverwrite) {
-      isFilePresent = false;
-    }
-    if (FileTypes.IMAGE_TYPES.contains(extension)) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(10.toHeight),
-        child: Container(
-          height: 50.toHeight,
-          width: 50.toWidth,
-          child: isFilePresent
-              ? Image.file(
-                  File(path),
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext _context, _, __) {
-                    return Container(
-                      child: Icon(
-                        Icons.image,
-                        size: 30.toFont,
-                      ),
-                    );
-                  },
-                )
-              : Icon(
-                  Icons.image,
-                  size: 30.toFont,
-                ),
-        ),
-      );
-    } else {
-      return FileTypes.VIDEO_TYPES.contains(extension)
-          ? FutureBuilder(
-              future: videoThumbnailBuilder(path),
-              builder: (context, snapshot) => ClipRRect(
-                borderRadius: BorderRadius.circular(10.toHeight),
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  height: 50.toHeight,
-                  width: 50.toWidth,
-                  child: (snapshot.data == null)
-                      ? Image.asset(
-                          ImageConstants.unknownLogo,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.memory(
-                          snapshot.data! as Uint8List,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext _context, _, __) {
-                            return Container(
-                              child: Icon(
-                                Icons.image,
-                                size: 30.toFont,
-                              ),
-                            );
-                          },
-                        ),
-                ),
-              ),
-            )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(10.toHeight),
-              child: Container(
-                padding: EdgeInsets.only(left: 10),
-                height: 50.toHeight,
-                width: 50.toWidth,
-                child: Image.asset(
-                  FileTypes.PDF_TYPES.contains(extension)
-                      ? ImageConstants.pdfLogo
-                      : FileTypes.AUDIO_TYPES.contains(extension)
-                          ? ImageConstants.musicLogo
-                          : FileTypes.WORD_TYPES.contains(extension)
-                              ? ImageConstants.wordLogo
-                              : FileTypes.EXEL_TYPES.contains(extension)
-                                  ? ImageConstants.exelLogo
-                                  : FileTypes.TEXT_TYPES.contains(extension)
-                                      ? ImageConstants.txtLogo
-                                      : ImageConstants.unknownLogo,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
-    }
-  }
-
-  Future<bool> isFilePresent(String? fileName) async {
-    String filePath = BackendService.getInstance().downloadDirectory!.path +
-        Platform.pathSeparator +
-        (fileName ?? '');
-
-    File file = File(filePath);
-    bool fileExists = await file.exists();
-    return fileExists;
   }
 
   /// provide [fileName] to download that file

@@ -63,15 +63,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
     return popupMenuList;
   }
 
-  cleanKeyChain() async {
-    var _keyChainManager = KeyChainManager.getInstance();
-    var _atSignsList = await _keyChainManager.getAtSignListFromKeychain();
-    _atSignsList?.forEach((element) {
-      _keyChainManager.deleteAtSignFromKeychain(element);
-    });
-    print('Keychain cleaned');
-  }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -117,8 +108,6 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
                         ),
                       ),
                       actions: [
-                        // Icon(Icons.notifications, size: 30),
-                        // SizedBox(width: 30),
                         FutureBuilder(
                             key: Key(AtClientManager.getInstance()
                                 .atClient

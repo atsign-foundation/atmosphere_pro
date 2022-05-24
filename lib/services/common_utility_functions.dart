@@ -475,22 +475,35 @@ class CommonUtilityFunctions {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    FlatButton(
-                        child: Text(TextStrings().buttonDelete,
-                            style: CustomTextStyles.primaryBold14),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        TextStrings().buttonCancel,
+                        style: TextStyle(
+                          fontSize: 16.toFont,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor)),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await BackendService.getInstance()
                                 .deleteAtSignFromKeyChain(atsign);
                           }
-                        }),
-                    Spacer(),
-                    FlatButton(
-                        child: Text(TextStrings().buttonCancel,
-                            style: CustomTextStyles.primaryBold14),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        })
+                        },
+                        child: Text(TextStrings().buttonDelete,
+                            style: TextStyle(
+                                fontSize: 16.toFont,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white))),
                   ],
                 )
               ],

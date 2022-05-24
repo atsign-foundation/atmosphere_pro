@@ -27,7 +27,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     loading = true;
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForNetwork();
     });
   }
