@@ -298,7 +298,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   SizedBox(
                     height: 10.toHeight,
                   ),
-                  widget.sentHistory!.notes != null
+                  widget.sentHistory!.notes != null &&
+                          widget.sentHistory!.notes!.isNotEmpty
                       ? InkWell(
                           onTap: () {
                             setState(() {

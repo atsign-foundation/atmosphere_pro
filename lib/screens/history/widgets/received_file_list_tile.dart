@@ -379,7 +379,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   SizedBox(
                     height: 20.toHeight,
                   ),
-                  widget.receivedHistory!.notes != null
+                  widget.receivedHistory!.notes != null &&
+                          widget.receivedHistory!.notes!.isNotEmpty
                       ? InkWell(
                           onTap: () {
                             setState(() {

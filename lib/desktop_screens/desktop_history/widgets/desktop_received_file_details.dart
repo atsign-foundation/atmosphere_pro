@@ -311,7 +311,8 @@ class _DesktopReceivedFileDetailsState
               },
             ),
             SizedBox(height: 15.toHeight),
-            widget.fileTransfer!.notes != null
+            widget.fileTransfer!.notes != null &&
+                    widget.fileTransfer!.notes!.isNotEmpty
                 ? RichText(
                     text: TextSpan(
                       text: 'Note: ',

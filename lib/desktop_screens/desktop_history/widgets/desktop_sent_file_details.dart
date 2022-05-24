@@ -224,7 +224,8 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
             //   padding: EdgeInsets.symmetric(horizontal: 20.toHeight),
             //   child: Divider(height: 5),
             // ),
-            widget.selectedFileData!.notes != null
+            widget.selectedFileData!.notes != null &&
+                    widget.selectedFileData!.notes!.isNotEmpty
                 ? RichText(
                     text: TextSpan(
                       text: 'Note: ',
