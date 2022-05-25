@@ -133,8 +133,14 @@ class _HistoryScreenState extends State<HistoryScreen>
                               if (element.sharedWith!.any(
                                 (ShareStatus sharedStatus) => sharedStatus
                                     .atsign!
+                                    .toLowerCase()
                                     .contains(provider.getSearchText),
                               )) {
+                                filteredSentHistory.add(element);
+                              } else if (element.groupName != null &&
+                                  element.groupName!
+                                      .toLowerCase()
+                                      .contains(provider.getSearchText)) {
                                 filteredSentHistory.add(element);
                               }
                             });

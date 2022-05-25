@@ -1,4 +1,6 @@
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
@@ -44,6 +46,10 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                 child: Text(TextStrings().somethingWentWrong),
               ),
           successBuilder: (provider) {
+            List<GroupContactsModel> trustedContactsHistory = [];
+            provider.fetchedTrustedContact.forEach((el) {
+              trustedContactsHistory.add(GroupContactsModel(contact: el));
+            });
             return Stack(
               children: [
                 Row(
@@ -163,6 +169,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               showGroups: false,
                               showContacts: true,
                               isDesktop: true,
+                              contactSelectedHistory: trustedContactsHistory,
                               selectedList: (_list) {
                                 providerCallback<TrustedContactProvider>(
                                     context,
@@ -185,6 +192,8 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         context: context));
                               },
                               onBackArrowTap: (selectedGroupContacts) {
+                                GroupService().selectedGroupContacts = [];
+                                GroupService().selectedContactsSink.add([]);
                                 if (mounted) {
                                   setState(() {
                                     isContactSelection = !isContactSelection;

@@ -177,6 +177,11 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                       .contains(provider.getSearchText),
                                 )) {
                                   filteredSentHistory.add(element);
+                                } else if (element.groupName != null &&
+                                    element.groupName!
+                                        .toLowerCase()
+                                        .contains(provider.getSearchText)) {
+                                  filteredSentHistory.add(element);
                                 }
                               });
                               if (filteredSentHistory.isNotEmpty) {
