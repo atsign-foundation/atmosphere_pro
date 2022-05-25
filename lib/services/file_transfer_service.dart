@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:at_client/src/stream/file_transfer_object.dart';
+// import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -25,7 +26,8 @@ class FileTransferService {
   }
 
   Future<Map<String, FileTransferObject>> uploadFile(
-      List<File> files, List<String> sharedWithAtSigns) async {
+      List<File> files, List<String> sharedWithAtSigns,
+      {String? notes}) async {
     var _encryptionService =
         AtClientManager.getInstance().atClient.encryptionService;
 
@@ -38,7 +40,8 @@ class FileTransferService {
     var fileStatus = await _uploadFiles(key, files, encryptionKey);
     var fileUrl = MixedConstants.FILEBIN_URL + 'archive/' + key + '/zip';
     return shareFiles(
-        sharedWithAtSigns, key, fileUrl, encryptionKey, fileStatus);
+        sharedWithAtSigns, key, fileUrl, encryptionKey, fileStatus,
+        notes: notes);
   }
 
   Future<List<FileStatus>> _uploadFiles(
@@ -105,12 +108,14 @@ class FileTransferService {
   }
 
   Future<Map<String, FileTransferObject>> shareFiles(
-      List<String> sharedWithAtSigns,
-      String key,
-      String fileUrl,
-      String encryptionKey,
-      List<FileStatus> fileStatus,
-      {DateTime? date}) async {
+    List<String> sharedWithAtSigns,
+    String key,
+    String fileUrl,
+    String encryptionKey,
+    List<FileStatus> fileStatus, {
+    DateTime? date,
+    String? notes,
+  }) async {
     var result = <String, FileTransferObject>{};
     bool isAnyFileUploaded = false;
     for (var file in fileStatus) {
@@ -123,7 +128,7 @@ class FileTransferService {
     for (var sharedWithAtSign in sharedWithAtSigns) {
       var fileTransferObject = FileTransferObject(
           key, encryptionKey, fileUrl, sharedWithAtSign, fileStatus,
-          date: date);
+          date: date, notes: notes);
 
       // if no files are uploaded, no notification will be sent.
       if (!isAnyFileUploaded) {

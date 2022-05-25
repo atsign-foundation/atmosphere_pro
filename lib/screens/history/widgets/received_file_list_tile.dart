@@ -57,6 +57,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   List<String?> existingFileNamesToOverwrite = [];
   String nickName = '';
   Map<String?, Future> _futureBuilder = {};
+  bool isTextExpanded = false;
 
   Future<Uint8List?> videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -266,6 +267,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
                       InkWell(
                           onTap: () async {
                             if (isOverwrite) {
@@ -374,6 +378,36 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   ),
                   SizedBox(
                     height: 20.toHeight,
+                  ),
+                  widget.receivedHistory!.notes != null &&
+                          widget.receivedHistory!.notes!.isNotEmpty
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              isTextExpanded = !isTextExpanded;
+                            });
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Note: ',
+                              style: CustomTextStyles.primaryMedium14,
+                              children: [
+                                TextSpan(
+                                  text: '${widget.receivedHistory!.notes}',
+                                  style: CustomTextStyles.redSmall12,
+                                )
+                              ],
+                            ),
+                            maxLines: isTextExpanded ? null : 1,
+                            overflow: isTextExpanded
+                                ? TextOverflow.clip
+                                : TextOverflow.ellipsis,
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    height:
+                        widget.receivedHistory!.notes != null ? 5.toHeight : 0,
                   ),
                   Container(
                     child: Row(

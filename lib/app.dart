@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           return GestureDetector(
             onVerticalDragDown: (__) {
               // When running in iOS, dismiss the keyboard when when user scrolls
-              if (Platform.isIOS) hideKeyboard(context);
+              // if (Platform.isIOS) hideKeyboard(context);
             },
             child: MediaQuery(
               data: data.copyWith(
