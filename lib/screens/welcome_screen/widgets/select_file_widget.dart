@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -12,7 +13,13 @@ import 'package:provider/provider.dart';
 
 class SelectFileWidget extends StatefulWidget {
   final Function(bool) onUpdate;
-  SelectFileWidget(this.onUpdate);
+  final Function onNotesUpdate;
+  final String? initialValue;
+  SelectFileWidget(
+    this.onUpdate,
+    this.onNotesUpdate, {
+    this.initialValue,
+  });
   @override
   _SelectFileWidgetState createState() => _SelectFileWidgetState();
 }
@@ -144,8 +151,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               subtitle: filePickerProvider!.selectedFiles.isEmpty
                   ? null
                   : Text(
-                      double.parse(
-                                  filePickerProvider!.totalSize.toString()) <=
+                      double.parse(filePickerProvider!.totalSize.toString()) <=
                               1024
                           ? '${filePickerProvider!.totalSize} Kb . ${filePickerProvider!.selectedFiles.length} file(s)'
                           : '${(filePickerProvider!.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider!.selectedFiles.length} file(s)',
@@ -171,8 +177,8 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),
                     itemCount: filePickerProvider!.selectedFiles.isNotEmpty
-                        ? int.parse(filePickerProvider!.selectedFiles.length
-                            .toString())
+                        ? int.parse(
+                            filePickerProvider!.selectedFiles.length.toString())
                         : 0,
                     itemBuilder: (c, index) {
                       return Consumer<FileTransferProvider>(
@@ -216,8 +222,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                             leading: CommonUtilityFunctions().thumbnail(
                                 provider.selectedFiles[index].extension
                                     .toString(),
-                                provider.selectedFiles[index].path
-                                    .toString()),
+                                provider.selectedFiles[index].path.toString()),
                             trailing: IconButton(
                               icon: Icon(
                                 Icons.clear,

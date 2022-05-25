@@ -40,6 +40,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   Uint8List? videoThumbnail, firstContactImage;
 
   List<bool> fileResending = [];
+  bool isTextExpanded = false;
 
   @override
   void initState() {
@@ -178,7 +179,36 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.toHeight,
+                    height: 10.toHeight,
+                  ),
+                  widget.sentHistory!.notes != null &&
+                          widget.sentHistory!.notes!.isNotEmpty
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              isTextExpanded = !isTextExpanded;
+                            });
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Note: ',
+                              style: CustomTextStyles.primaryMedium14,
+                              children: [
+                                TextSpan(
+                                  text: '${widget.sentHistory!.notes}',
+                                  style: CustomTextStyles.redSmall12,
+                                )
+                              ],
+                            ),
+                            maxLines: isTextExpanded ? null : 1,
+                            overflow: isTextExpanded
+                                ? TextOverflow.clip
+                                : TextOverflow.ellipsis,
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    height: widget.sentHistory!.notes != null ? 5.toHeight : 0,
                   ),
                   Container(
                     child: Row(

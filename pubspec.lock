@@ -58,13 +58,11 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_client
-      ref: last_notificationid_bug
-      resolved-ref: fa0a1939b3d01c1e3dcabc48297cc41c84d4a320
-      url: "https://github.com/atsign-foundation/at_client_sdk"
-    source: git
+      name: at_client
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.0.23"
   at_client_mobile:
     dependency: "direct main"
@@ -72,13 +70,13 @@ packages:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.14"
+    version: "3.1.15"
   at_common_flutter:
     dependency: "direct main"
     description:
       path: at_common_flutter
-      ref: "fix/missing-fontweight"
-      resolved-ref: da2090e4fd06567e872f4b5ee791d239642852fe
+      ref: trunk
+      resolved-ref: a30bad49fd2825865b9545dd080081b5c0641e65
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "2.0.7"
@@ -100,20 +98,20 @@ packages:
     dependency: "direct main"
     description:
       path: at_contacts_flutter
-      ref: "feat/598"
-      resolved-ref: a4ecda2faf1ffb8d7855aafaa09e129dbac8825f
+      ref: trunk
+      resolved-ref: a30bad49fd2825865b9545dd080081b5c0641e65
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.3"
+    version: "4.0.4"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
       path: at_contacts_group_flutter
-      ref: "feat/598"
-      resolved-ref: a4ecda2faf1ffb8d7855aafaa09e129dbac8825f
+      ref: trunk
+      resolved-ref: a30bad49fd2825865b9545dd080081b5c0641e65
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.3"
+    version: "4.0.4"
   at_lookup:
     dependency: transitive
     description:
@@ -125,8 +123,8 @@ packages:
     dependency: "direct main"
     description:
       path: at_onboarding_flutter
-      ref: "fix/missing-fontweight"
-      resolved-ref: da2090e4fd06567e872f4b5ee791d239642852fe
+      ref: trunk
+      resolved-ref: a30bad49fd2825865b9545dd080081b5c0641e65
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.2"
@@ -355,11 +353,13 @@ packages:
     source: hosted
     version: "4.5.1"
   file_saver:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: file_saver
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: main
+      resolved-ref: "877b25c6088491037be79e426a7c9c1598d17142"
+      url: "https://github.com/incrediblezayed/file_saver.git"
+    source: git
     version: "0.1.0"
   file_selector:
     dependency: "direct main"

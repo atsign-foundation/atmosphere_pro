@@ -37,6 +37,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       isSentFileEntrySaved = true;
   ScrollController scrollController = ScrollController();
   late FileTransferProvider filePickerModel;
+  String? notes;
+  FocusNode _notesFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -162,7 +164,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               },
                             ),
                             SizedBox(
-                              height: 40.toHeight,
+                              height: 20.toHeight,
                             ),
                             SelectFileWidget(
                               (b) {
@@ -170,9 +172,87 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                   isFileSelected = b;
                                 });
                               },
+                              (_str) {
+                                setState(() {
+                                  notes = _str;
+                                });
+                              },
+                              initialValue: notes,
                             ),
                             SizedBox(
-                              height: 60.toHeight,
+                              height: (_welcomeScreenProvider
+                                              .selectedContacts !=
+                                          null &&
+                                      _welcomeScreenProvider
+                                          .selectedContacts.isNotEmpty &&
+                                      filePickerModel.selectedFiles.isNotEmpty)
+                                  ? 20.toHeight
+                                  : 60.toHeight,
+                            ),
+                            (_welcomeScreenProvider.selectedContacts != null &&
+                                    _welcomeScreenProvider
+                                        .selectedContacts.isNotEmpty &&
+                                    filePickerModel.selectedFiles.isNotEmpty)
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      color: ColorConstants.inputFieldColor,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10.toWidth,
+                                        ),
+                                        Expanded(
+                                          child: TextField(
+                                            focusNode: _notesFocusNode,
+                                            decoration: InputDecoration(
+                                              hintText: TextStrings()
+                                                  .welcomeAddTranscripts,
+                                              hintStyle: TextStyle(
+                                                color: ColorConstants.fadedText,
+                                                fontSize: 14.toFont,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              border: InputBorder.none,
+                                              fillColor: ColorConstants
+                                                  .inputFieldColor,
+                                              focusColor: ColorConstants
+                                                  .inputFieldColor,
+                                              hoverColor: ColorConstants
+                                                  .inputFieldColor,
+                                            ),
+                                            style: TextStyle(
+                                              color: ColorConstants.fadedText,
+                                              fontSize: 14.toFont,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            onChanged: (String txt) {
+                                              setState(() {
+                                                notes = txt;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            FocusScope.of(context)
+                                                .requestFocus(_notesFocusNode);
+                                          },
+                                          child: Icon(Icons.edit,
+                                              color: Colors.black),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 30.toHeight,
                             ),
                             if (_welcomeScreenProvider.selectedContacts !=
                                     null &&
@@ -193,6 +273,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                       filePickerModel.selectedFiles.clear();
                                       filePickerModel
                                           .resetSelectedFilesStatus();
+                                      notes = '';
                                     });
                                   }),
                                   Expanded(child: SizedBox()),
@@ -337,6 +418,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       filePickerModel.selectedFiles,
       _welcomeScreenProvider.selectedContacts,
       groupName: _welcomeScreenProvider.groupName,
+      notes: notes,
     );
 
     if (mounted && res is bool) {
