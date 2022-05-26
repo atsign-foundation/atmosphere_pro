@@ -66,7 +66,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                 size: isCurrentAtsign ? 40 : 40,
               )
             : ContactInitial(
-                initials: _atsign ?? ' ',
+                initials: _atsign,
                 size: isCurrentAtsign ? 40 : 40,
                 maxSize: isCurrentAtsign ? 50 : 40,
                 minSize: isCurrentAtsign ? 40 : 30,

@@ -60,7 +60,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       }
     });
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
     });
     super.initState();

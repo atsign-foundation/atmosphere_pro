@@ -128,7 +128,7 @@ class _DesktopReceivedFilesListTileState
 
   @override
   void didUpdateWidget(covariant DesktopReceivedFilesListTile oldWidget) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await checkIfDownloadAvailable();
     });
     super.didUpdateWidget(oldWidget);
@@ -136,7 +136,7 @@ class _DesktopReceivedFilesListTileState
 
   @override
   void didChangeDependencies() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await checkIfDownloadAvailable();
     });
     super.didChangeDependencies();
@@ -314,7 +314,7 @@ class _DesktopReceivedFilesListTileState
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList![index].name?.split('.')?.last)) {
+                                filesList![index].name?.split('.').last)) {
                               videoThumbnailBuilder(filesList![index].path!);
                             }
                             return ListTile(
@@ -349,7 +349,7 @@ class _DesktopReceivedFilesListTileState
                                               filesList![index]
                                                   .name
                                                   ?.split('.')
-                                                  ?.last,
+                                                  .last,
                                               MixedConstants
                                                       .SENT_FILE_DIRECTORY +
                                                   Platform.pathSeparator +
