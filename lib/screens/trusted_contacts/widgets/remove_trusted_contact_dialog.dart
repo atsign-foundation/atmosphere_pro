@@ -64,7 +64,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         ],
       ),
       content: Container(
-        height: 260.toHeight,
+        height: 260.toHeight < 250 ? 250 : 260.toHeight,
         child: Column(
           children: [
             Row(
