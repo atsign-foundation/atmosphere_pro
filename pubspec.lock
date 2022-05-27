@@ -107,8 +107,8 @@ packages:
     dependency: "direct main"
     description:
       path: at_contacts_group_flutter
-      ref: trunk
-      resolved-ref: a30bad49fd2825865b9545dd080081b5c0641e65
+      ref: "feature/improve-contact-group"
+      resolved-ref: cd8383166cf3b0420ad7348dee4e5de5d1eb556b
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.4"

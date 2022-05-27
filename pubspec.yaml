@@ -94,7 +94,7 @@ dependency_overrides:
   at_contacts_group_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: trunk
+      ref: feature/improve-contact-group
       path: at_contacts_group_flutter
   file_saver:
     git:
