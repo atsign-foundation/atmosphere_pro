@@ -77,6 +77,7 @@ class TextStrings {
   String buttonSend = 'Send';
   String buttonClose = 'Close';
   String buttonResend = 'Resend';
+  String tryMe = 'Try Me';
 
   String accept = 'Accept';
   String reject = 'Reject';

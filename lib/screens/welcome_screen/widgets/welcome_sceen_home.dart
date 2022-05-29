@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
@@ -14,6 +17,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -254,6 +258,19 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 30.toHeight,
                             ),
+                            (_welcomeScreenProvider.selectedContacts != null &&
+                                    _welcomeScreenProvider
+                                        .selectedContacts.isNotEmpty &&
+                                    filePickerModel.selectedFiles.isNotEmpty)
+                                ? SizedBox()
+                                : Align(
+                                    alignment: Alignment.centerRight,
+                                    child: CommonButton(
+                                      TextStrings().tryMe,
+                                      tryMeFunction,
+                                      color: Colors.amber[800],
+                                    ),
+                                  ),
                             if (_welcomeScreenProvider.selectedContacts !=
                                     null &&
                                 _welcomeScreenProvider
@@ -433,6 +450,101 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         });
       }
     }
+  }
+
+  tryMeFunction() async {
+    Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext!,
+            listen: false)
+        .updateSelectedContacts(
+      [
+        GroupContactsModel(
+          contact: AtContact(
+            atSign: '@sunglowgenrous',
+          ),
+          contactType: ContactsType.CONTACT,
+        )
+      ],
+    );
+
+    _showFileChoice();
+
+    ////sendFileWithFileBin();
+  }
+
+  void _showFileChoice() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              padding: EdgeInsets.only(left: 10.toWidth),
+              height: 200.0.toHeight < 170 ? 170 : 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Text(
+                    TextStrings().fileChoiceQuestion,
+                    style: CustomTextStyles.primaryBold16,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        providerCallback<FileTransferProvider>(context,
+                            task: (provider) =>
+                                provider.pickFiles(provider.MEDIA),
+                            taskName: (provider) => provider.PICK_FILES,
+                            onSuccess: (provider) {},
+                            onError: (err) => ErrorDialog()
+                                .show(err.toString(), context: context));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(
+                          Icons.camera,
+                          size: 30.toFont,
+                          color: Colors.black,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              TextStrings().choice1,
+                              style: CustomTextStyles.primaryBold14,
+                            ))
+                      ])),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        providerCallback<FileTransferProvider>(context,
+                            task: (provider) =>
+                                provider.pickFiles(provider.FILES),
+                            taskName: (provider) => provider.PICK_FILES,
+                            onSuccess: (provider) {},
+                            onError: (err) => ErrorDialog()
+                                .show(err.toString(), context: context));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(
+                          Icons.file_copy,
+                          size: 30.toFont,
+                          color: Colors.black,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              TextStrings().choice2,
+                              style: CustomTextStyles.primaryBold14,
+                            ))
+                      ]))
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   switchAtsign() async {
