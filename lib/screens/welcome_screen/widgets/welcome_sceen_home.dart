@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -459,16 +460,15 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       [
         GroupContactsModel(
           contact: AtContact(
-            atSign: '@sunglowgenrous',
+            atSign: MixedConstants.tryMeAtsign,
           ),
           contactType: ContactsType.CONTACT,
         )
       ],
     );
 
+    /// on Successfully choosing a file we will send the file.
     _showFileChoice();
-
-    ////sendFileWithFileBin();
   }
 
   void _showFileChoice() {
@@ -498,7 +498,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             task: (provider) =>
                                 provider.pickFiles(provider.MEDIA),
                             taskName: (provider) => provider.PICK_FILES,
-                            onSuccess: (provider) {},
+                            onSuccess: (provider) {
+                              setState(() {
+                                notes = 'Sent from the TRY ME feature.';
+                              });
+                              sendFileWithFileBin();
+                            },
                             onError: (err) => ErrorDialog()
                                 .show(err.toString(), context: context));
                       },
@@ -523,7 +528,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             task: (provider) =>
                                 provider.pickFiles(provider.FILES),
                             taskName: (provider) => provider.PICK_FILES,
-                            onSuccess: (provider) {},
+                            onSuccess: (provider) {
+                              setState(() {
+                                notes = 'Sent from the TRY ME feature.';
+                              });
+                              sendFileWithFileBin();
+                            },
                             onError: (err) => ErrorDialog()
                                 .show(err.toString(), context: context));
                       },
