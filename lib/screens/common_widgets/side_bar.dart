@@ -419,7 +419,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   InkWell(
                       onTap: () async {
                         await launchUrlString(
-                            'mailto:atmospherepro@atsign.com?subject=""&body=""');
+                            'mailto:atmospherepro@atsign.com?subject=insert subject&body=insert body here');
                       },
                       child: Container(
                         height: 50,
