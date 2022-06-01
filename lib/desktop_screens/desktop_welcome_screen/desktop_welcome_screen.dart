@@ -24,6 +24,7 @@ import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
@@ -240,6 +241,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     TextStrings().sidebarTrustedSenders,
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarFaqs,
+    TextStrings().sidebarContactUs,
   ];
 
   final List<String> routes = [
@@ -378,6 +380,15 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                           title: menuItemsTitle[8],
                           isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
                         ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[2],
+                          routes[7],
+                          isEmailLauncher: true,
+                          arguments: {"email": 'atmospherepro@atsign.com'},
+                          title: menuItemsTitle[9],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
                       ],
                     ),
                     errorBuilder: (provider) => Center(
@@ -479,10 +490,11 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
 class SideBarIcon extends StatelessWidget {
   final String? image, routeName, title;
   final Map<String, dynamic>? arguments;
-  final bool isUrlLauncher, isSidebarExpanded;
+  final bool isUrlLauncher, isSidebarExpanded, isEmailLauncher;
   SideBarIcon(this.image, this.routeName,
       {this.arguments,
       this.isUrlLauncher = false,
+      this.isEmailLauncher = false,
       this.isSidebarExpanded = true,
       this.title});
   bool isHovered = false;
@@ -520,6 +532,11 @@ class SideBarIcon extends StatelessWidget {
                 (arguments != null) &&
                 (arguments!['url'] != null)) {
               _launchInBrowser(arguments!['url']);
+            }
+            if ((isEmailLauncher) &&
+                (arguments != null) &&
+                (arguments!['email'] != null)) {
+              _launchInEmail(arguments!['email']);
             }
           },
           child: routeName == DesktopRoutes.DESKTOP_HISTORY
@@ -605,14 +622,23 @@ class SideBarIcon extends StatelessWidget {
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
+    if (await canLaunchUrl(Uri(path: url))) {
+      await launchUrl(
+        Uri(path: url),
+        // forceSafariVC: false,
+        // forceWebView: false,
       );
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<void> _launchInEmail(String email) async {
+    await launchUrl(
+      Uri(
+        scheme: 'mailto',
+        path: email,
+      ),
+    );
   }
 }
