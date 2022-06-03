@@ -276,7 +276,7 @@ class _DesktopReceivedFileDetailsState
             Row(
               children: <Widget>[
                 Text(
-                  '${fileCount} files . ',
+                  '${fileCount} File(s) . ',
                   style: CustomTextStyles.greyText15,
                 ),
                 fileSize > 1024
@@ -296,7 +296,7 @@ class _DesktopReceivedFileDetailsState
                 return RichText(
                   text: TextSpan(
                       text:
-                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}  | ',
+                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk:mm').format(widget.fileTransfer!.date!)}  | ',
                       style: CustomTextStyles.greyText15,
                       children: [
                         fileTransferProgress != null
