@@ -65,7 +65,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   listenForFlushBarStatus() {
-    FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
+    FileTransferProvider()
+        .flushBarStatusStream
+        .listen((FLUSHBAR_STATUS flushbarStatus) async {
       OverlayService.instance.showOverlay(flushbarStatus);
     });
   }

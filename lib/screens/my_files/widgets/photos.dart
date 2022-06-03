@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'downloads_folders.dart';
 
@@ -52,6 +55,9 @@ class _PhotosState extends State<Photos> {
             onTap: () async {
               await openFilePath(provider.receivedPhotos[index].filePath!);
             },
+            onLongPress: () {
+              deleteFile(provider.receivedPhotos[index].filePath!);
+            },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.toHeight),
               child: Container(
@@ -73,5 +79,25 @@ class _PhotosState extends State<Photos> {
             ),
           );
         });
+  }
+
+  deleteFile(String filePath) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(onConfirmation: () {
+        var file = File(filePath);
+        file.deleteSync();
+
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .sortFiles();
+        Future.delayed(Duration(seconds: 1), () {
+          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .populateTabs();
+        });
+      }),
+    );
   }
 }

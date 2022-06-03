@@ -1,13 +1,17 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import 'downloads_folders.dart';
@@ -42,7 +46,7 @@ class _VideosState extends State<Videos> {
       functionName: 'sort_files',
       showError: false,
       load: (provider) {
-        return provider.sortFiles(provider.receivedHistoryLogs);
+        return provider.sortFiles();
       },
       successBuilder: (provider) => Container(
         margin:
@@ -67,6 +71,9 @@ class _VideosState extends State<Videos> {
         itemBuilder: (context, index) {
           DateTime date = DateTime.parse(provider.receivedVideos[index].date!);
           return InkWell(
+            onLongPress: () {
+              deleteFile(provider.receivedVideos[index].filePath!);
+            },
             onTap: () async {
               print(
                   'provider.receivedVideos[index].size====>${provider.receivedVideos[index].size}');
@@ -128,5 +135,25 @@ class _VideosState extends State<Videos> {
             ),
           );
         });
+  }
+
+  deleteFile(String filePath) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(onConfirmation: () {
+        var file = File(filePath);
+        file.deleteSync();
+
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .sortFiles();
+        Future.delayed(Duration(seconds: 1), () {
+          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .populateTabs();
+        });
+      }),
+    );
   }
 }

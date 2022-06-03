@@ -427,7 +427,7 @@ class HistoryProvider extends BaseModel {
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
-      await sortFiles(receivedHistoryLogs);
+      await sortFiles();
       populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
@@ -550,7 +550,7 @@ class HistoryProvider extends BaseModel {
       receivedItemsId[filesModel.key] = true;
     }
 
-    await sortFiles(receivedHistoryLogs);
+    await sortFiles();
     await populateTabs();
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
@@ -627,7 +627,7 @@ class HistoryProvider extends BaseModel {
     setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 
-  sortFiles(List<FileTransfer> filesList) async {
+  sortFiles() async {
     try {
       setStatus(SORT_FILES, Status.Loading);
       receivedAudio = [];
@@ -637,7 +637,7 @@ class HistoryProvider extends BaseModel {
       receivedVideos = [];
       receivedUnknown = [];
       recentFile = [];
-      await Future.forEach(filesList, (dynamic fileData) async {
+      await Future.forEach(receivedHistoryLogs, (dynamic fileData) async {
         await Future.forEach(fileData.files, (dynamic file) async {
           String? fileExtension = file.name.split('.').last;
           String filePath =
@@ -784,37 +784,37 @@ class HistoryProvider extends BaseModel {
       setStatus(POPULATE_TABS, Status.Loading);
 
       if (receivedApk.isNotEmpty) {
-        if (!tabs.contains(APK) || !tabs.contains(APK())) {
+        if (!tabs.contains(APK)) {
           tabs.add(isDesktop ? DesktopAPK() : APK());
           tabNames.add('APK');
         }
       }
       if (receivedAudio.isNotEmpty) {
-        if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
+        if (!tabs.contains(Audios)) {
           tabs.add(isDesktop ? DesktopAudios() : Audios());
           tabNames.add('Audios');
         }
       }
       if (receivedDocument.isNotEmpty) {
-        if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
+        if (!tabs.contains(Documents)) {
           tabs.add(isDesktop ? DesktopDocuments() : Documents());
           tabNames.add('Documents');
         }
       }
       if (receivedPhotos.isNotEmpty) {
-        if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
+        if (!tabs.contains(Photos)) {
           tabs.add(isDesktop ? DesktopPhotos() : Photos());
           tabNames.add('Photos');
         }
       }
       if (receivedVideos.isNotEmpty) {
-        if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
+        if (!tabs.contains(Videos)) {
           tabs.add(isDesktop ? DesktopVideos() : Videos());
           tabNames.add('Videos');
         }
       }
       if (receivedUnknown.isNotEmpty) {
-        if (!tabs.contains(Unknowns()) || !tabs.contains(Unknowns())) {
+        if (!tabs.contains(Unknowns())) {
           tabs.add(isDesktop ? DesktopUnknowns() : Unknowns());
           tabNames.add('Unknowns');
         }
@@ -998,7 +998,7 @@ class HistoryProvider extends BaseModel {
         return false;
       }
 
-      await sortFiles(receivedHistoryLogs);
+      await sortFiles();
       populateTabs();
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
@@ -1010,7 +1010,7 @@ class HistoryProvider extends BaseModel {
           .removeReceiveProgressItem(
               transferId); //setting filetransfer progress as null
       if (files is List<File>) {
-        await sortFiles(receivedHistoryLogs);
+        await sortFiles();
         populateTabs();
         setStatus(DOWNLOAD_FILE, Status.Done);
         return true;
@@ -1055,7 +1055,7 @@ class HistoryProvider extends BaseModel {
           .checkForUndownloadedFiles();
 
       if (files is List<File>) {
-        await sortFiles(receivedHistoryLogs);
+        await sortFiles();
         populateTabs();
         setStatus(DOWNLOAD_FILE, Status.Done);
         return true;
@@ -1344,7 +1344,7 @@ class HistoryProvider extends BaseModel {
     }
 
     try {
-      await sortFiles(receivedHistoryLogs);
+      await sortFiles();
       populateTabs();
     } catch (e) {
       print('error in refreshReceivedFile : $e');

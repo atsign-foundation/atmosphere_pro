@@ -20,7 +20,6 @@ class MyFiles extends StatefulWidget {
 
 class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   TabController? _controller;
-  HistoryProvider? historyProvider;
   bool isOpen = false;
   List<Widget> tabs = [];
   List<String> tabNames = [];
@@ -29,14 +28,11 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   Type runtimeType = Videos;
   @override
   void initState() {
-    historyProvider = HistoryProvider();
-
-    ini();
-    setState(() {});
+    getTabsInformation();
     super.initState();
   }
 
-  ini() async {
+  getTabsInformation() async {
     tabs = [];
     tabNames = [];
     tabs = Provider.of<HistoryProvider>(context, listen: false).tabs;
@@ -47,6 +43,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    getTabsInformation();
     SizeConfig().init(context);
     return Scaffold(
       appBar: CustomAppBar(
@@ -143,38 +140,46 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
       body: SingleChildScrollView(
         child: (isLoading)
             ? Center(child: CircularProgressIndicator())
-            : Container(
-                // reducing size by 120 , so that last list item will be shown
-                height: SizeConfig().screenHeight - 120.toHeight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 40,
-                      child: TabBar(
-                        onTap: (index) async {},
-                        isScrollable: true,
-                        labelColor: ColorConstants.fontPrimary,
-                        indicatorWeight: 5.toHeight,
-                        indicatorColor: Colors.black,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        labelStyle: CustomTextStyles.primaryBold14,
-                        unselectedLabelStyle:
-                            CustomTextStyles.secondaryRegular14,
-                        controller: _controller,
-                        tabs: List<Text>.generate(
-                            tabNames.length, (index) => Text(tabNames[index])),
-                      ),
+            : Consumer<HistoryProvider>(
+                builder: (BuildContext _context, _provider, _) {
+                  if (_provider.tabs.length != tabs.length) {
+                    getTabsInformation();
+                  }
+
+                  return Container(
+                    // reducing size by 120 , so that last list item will be shown
+                    height: SizeConfig().screenHeight - 120.toHeight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 40,
+                          child: TabBar(
+                            onTap: (index) async {},
+                            isScrollable: true,
+                            labelColor: ColorConstants.fontPrimary,
+                            indicatorWeight: 5.toHeight,
+                            indicatorColor: Colors.black,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelStyle: CustomTextStyles.primaryBold14,
+                            unselectedLabelStyle:
+                                CustomTextStyles.secondaryRegular14,
+                            controller: _controller,
+                            tabs: List<Text>.generate(_provider.tabNames.length,
+                                (index) => Text(_provider.tabNames[index])),
+                          ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _controller,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            children: _provider.tabs,
+                          ),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _controller,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        children: tabs,
-                      ),
-                    )
-                  ],
-                ),
+                  );
+                },
               ),
       ),
     );

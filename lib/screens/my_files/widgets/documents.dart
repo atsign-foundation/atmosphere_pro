@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -7,6 +11,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'downloads_folders.dart';
 
@@ -21,7 +26,7 @@ class _DocumentsState extends State<Documents> {
     return ProviderHandler<HistoryProvider>(
       functionName: 'sort_files',
       showError: false,
-      load: (provider) => provider.sortFiles(provider.receivedHistoryLogs),
+      load: (provider) => provider.sortFiles(),
       successBuilder: (provider) => Container(
         margin:
             EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
@@ -32,7 +37,11 @@ class _DocumentsState extends State<Documents> {
                   DateTime.parse(provider.receivedDocument[index].date!);
               return InkWell(
                 onTap: () async {
-                  await openFilePath(provider.receivedDocument[index].filePath!);
+                  await openFilePath(
+                      provider.receivedDocument[index].filePath!);
+                },
+                onLongPress: () {
+                  deleteFile(provider.receivedDocument[index].filePath!);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -107,6 +116,26 @@ class _DocumentsState extends State<Documents> {
               );
             }),
       ),
+    );
+  }
+
+  deleteFile(String filePath) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(onConfirmation: () {
+        var file = File(filePath);
+        file.deleteSync();
+
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .sortFiles();
+        Future.delayed(Duration(seconds: 1), () {
+          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .populateTabs();
+        });
+      }),
     );
   }
 }
