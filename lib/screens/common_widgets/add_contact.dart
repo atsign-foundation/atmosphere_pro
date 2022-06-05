@@ -90,7 +90,7 @@ class _AddContactState extends State<AddContact> {
               nickName = value;
             },
             decoration: InputDecoration(
-              hintText: 'Enter Nick Name (Optional)',
+              hintText: 'Enter nickname (optional)',
             ),
             style: TextStyle(
               fontSize: 15.toFont,

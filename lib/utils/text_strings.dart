@@ -221,7 +221,7 @@ class TextStrings {
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
   String contactSelectionConfirmation =
-      'Selected contacts will not be added, confirm?';
+      'Your contact selection will be cleared if you leave this screen. Would you like to continue with your new action?';
 
   // Desktop Selected file
   String selectedFiles = 'Selected files';
