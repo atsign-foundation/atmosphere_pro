@@ -1,12 +1,17 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -170,6 +175,18 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       ? 10.toHeight
                       : 0,
                 ),
+                (_welcomeScreenProvider.selectedContacts != null &&
+                        _welcomeScreenProvider.selectedContacts.isNotEmpty &&
+                        _filePickerProvider.selectedFiles.isNotEmpty)
+                    ? SizedBox()
+                    : Align(
+                        alignment: Alignment.centerRight,
+                        child: CommonButton(
+                          TextStrings().tryMe,
+                          tryMeFunction,
+                          color: Colors.amber[800],
+                        ),
+                      ),
                 (_filePickerProvider.selectedFiles.isNotEmpty &&
                         _welcomeScreenProvider.selectedContacts.isNotEmpty)
                     ? Row(
@@ -514,5 +531,122 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         isFileSending = false;
       });
     }
+  }
+
+  tryMeFunction() async {
+    Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext!,
+            listen: false)
+        .updateSelectedContacts(
+      [
+        GroupContactsModel(
+          contact: AtContact(
+            atSign: MixedConstants.tryMeAtsign,
+          ),
+          contactType: ContactsType.CONTACT,
+        )
+      ],
+    );
+
+    /// on Successfully choosing a file we will send the file.
+    var file = await desktopImagePicker();
+    if (file != null) {
+      GroupService().selectedGroupContacts = [];
+      GroupService().selectedContactsSink.add([]);
+      _filePickerProvider.selectedFiles = file;
+      _welcomeScreenProvider.isSelectionItemChanged = true;
+      _currentScreen = CurrentScreen.SelectedItems;
+    }
+
+    setState(() {
+      notes = 'Sent from the TRY ME feature.';
+    });
+    sendFileWithFileBin();
+    // _showFileChoice();
+  }
+
+  void _showFileChoice() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              padding: EdgeInsets.only(left: 10.toWidth),
+              height: 200.0.toHeight < 170 ? 170 : 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Text(
+                    TextStrings().fileChoiceQuestion,
+                    style: CustomTextStyles.primaryBold16,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        providerCallback<FileTransferProvider>(context,
+                            task: (provider) =>
+                                provider.pickFiles(provider.MEDIA),
+                            taskName: (provider) => provider.PICK_FILES,
+                            onSuccess: (provider) {
+                              setState(() {
+                                notes = 'Sent from the TRY ME feature.';
+                              });
+                              sendFileWithFileBin();
+                            },
+                            onError: (err) => ErrorDialog()
+                                .show(err.toString(), context: context));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(
+                          Icons.camera,
+                          size: 30.toFont,
+                          color: Colors.black,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              TextStrings().choice1,
+                              style: CustomTextStyles.primaryBold14,
+                            ))
+                      ])),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        providerCallback<FileTransferProvider>(context,
+                            task: (provider) =>
+                                provider.pickFiles(provider.FILES),
+                            taskName: (provider) => provider.PICK_FILES,
+                            onSuccess: (provider) {
+                              setState(() {
+                                notes = 'Sent from the TRY ME feature.';
+                              });
+                              sendFileWithFileBin();
+                            },
+                            onError: (err) => ErrorDialog()
+                                .show(err.toString(), context: context));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(
+                          Icons.file_copy,
+                          size: 30.toFont,
+                          color: Colors.black,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              TextStrings().choice2,
+                              style: CustomTextStyles.primaryBold14,
+                            ))
+                      ]))
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
