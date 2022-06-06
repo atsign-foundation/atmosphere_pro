@@ -336,6 +336,8 @@ class TextStrings {
   static const reUploadFileMsg = 'Do you want to re-upload file ?';
   static const uploadFile = 'Please upload file first.';
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
+  static const deleteDownloadedFileMessage =
+      'Do you also want to delete the downloaded items?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
   static const releaseTagError = 'Error in fetching release tag.';

@@ -380,6 +380,29 @@ class HistoryProvider extends BaseModel {
     return false;
   }
 
+  Future<bool> deleteReceivedItem(FileTransfer fileTransfer) async {
+    var atKey = AtKey()
+      ..key = fileTransfer.key
+      ..sharedBy = fileTransfer.sender
+      ..sharedWith = AtClientManager.getInstance().atClient.getCurrentAtSign()
+      ..metadata = (Metadata()..isCached = true);
+
+    var res = await AtClientManager.getInstance().atClient.delete(atKey);
+    if (res) {
+      var i = receivedHistoryLogs.indexWhere(
+        (element) => element.key == fileTransfer.key,
+      );
+
+      if (i != -1) {
+        receivedHistoryLogs.removeAt(i);
+        notifyListeners();
+      }
+      return res;
+    } else {
+      return res;
+    }
+  }
+
   getFileDownloadedAcknowledgement() async {
     setStatus(DOWNLOAD_ACK, Status.Loading);
     var atKeys = await AtClientManager.getInstance()
