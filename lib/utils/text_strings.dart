@@ -86,6 +86,7 @@ class TextStrings {
   String buttonDelete = 'DELETE';
   String buttonDismiss = 'DISMISS';
   String ok = 'Ok';
+  String buttonRetry = 'RETRY';
 
   //history screen texts
   String sent = 'Sent';
