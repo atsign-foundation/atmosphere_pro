@@ -228,6 +228,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.termsAndConditionsIcon,
     ImageConstants.faqsIcon,
     ImageConstants.trustedSendersIcon,
+    ImageConstants.contactUs,
   ];
 
   final List<String> menuItemsTitle = [
@@ -382,7 +383,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         ),
                         SizedBox(height: 40.toHeight),
                         SideBarIcon(
-                          menuItemsIcons[2],
+                          menuItemsIcons[10],
                           routes[7],
                           isEmailLauncher: true,
                           arguments: {"email": 'atmospherepro@atsign.com'},
