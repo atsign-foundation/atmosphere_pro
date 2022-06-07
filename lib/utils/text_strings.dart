@@ -11,7 +11,7 @@ class TextStrings {
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
   String appName = '@mospherePro';
-  String copyRight = '© 2022 The @ Company';
+  String copyRight = '© 2022 The Atsign Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
@@ -259,7 +259,7 @@ class TextStrings {
   String remove = 'Remove';
   String selectAll = 'Select All';
   String desktopAppName = '@mospherePro';
-  String desktopCopyRight = 'The @company Copyrights';
+  String desktopCopyRight = 'The Atsign Company Copyrights';
   String enterAtSign = 'Enter @sign';
   String authenticating = 'Authenticating...';
   String initialisingFor = 'Initialising for ';
