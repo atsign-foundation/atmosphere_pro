@@ -39,6 +39,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   late FileTransferProvider filePickerModel;
   String? notes;
   FocusNode _notesFocusNode = FocusNode();
+  TextEditingController _notesController = TextEditingController();
 
   @override
   void initState() {
@@ -206,8 +207,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           width: 10.toWidth,
                                         ),
                                         Expanded(
-                                          child: TextField(
+                                          child: TextFormField(
                                             focusNode: _notesFocusNode,
+                                            controller: _notesController,
+                                            // initialValue: notes,
                                             decoration: InputDecoration(
                                               hintText: TextStrings()
                                                   .welcomeAddTranscripts,
@@ -236,14 +239,26 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                             },
                                           ),
                                         ),
-                                        InkWell(
-                                          onTap: () {
-                                            FocusScope.of(context)
-                                                .requestFocus(_notesFocusNode);
-                                          },
-                                          child: Icon(Icons.edit,
-                                              color: Colors.black),
-                                        ),
+                                        notes != null
+                                            ? InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    notes = null;
+                                                  });
+                                                  _notesController.clear();
+                                                },
+                                                child: Icon(Icons.clear,
+                                                    color: Colors.black),
+                                              )
+                                            : InkWell(
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          _notesFocusNode);
+                                                },
+                                                child: Icon(Icons.edit,
+                                                    color: Colors.black),
+                                              ),
                                         SizedBox(
                                           width: 15,
                                         ),
@@ -273,7 +288,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                       filePickerModel.selectedFiles.clear();
                                       filePickerModel
                                           .resetSelectedFilesStatus();
-                                      notes = '';
+                                      notes = null;
+                                      _notesController.clear();
                                     });
                                   }),
                                   Expanded(child: SizedBox()),
