@@ -49,7 +49,7 @@ packages:
       name: at_backupkey_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.1"
   at_base2e15:
     dependency: transitive
     description:
@@ -76,10 +76,10 @@ packages:
     description:
       path: at_common_flutter
       ref: trunk
-      resolved-ref: "7f6f39ac7fce8d8a29881413246ae682932d7294"
+      resolved-ref: f2861496be82dbb99705c45d106295896187135e
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "2.0.8"
+    version: "2.0.7"
   at_commons:
     dependency: "direct main"
     description:
@@ -99,19 +99,19 @@ packages:
     description:
       path: at_contacts_flutter
       ref: trunk
-      resolved-ref: "7f6f39ac7fce8d8a29881413246ae682932d7294"
+      resolved-ref: f2861496be82dbb99705c45d106295896187135e
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.5"
+    version: "4.0.4"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
       path: at_contacts_group_flutter
       ref: trunk
-      resolved-ref: "7f6f39ac7fce8d8a29881413246ae682932d7294"
+      resolved-ref: f2861496be82dbb99705c45d106295896187135e
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.5"
+    version: "4.0.4"
   at_lookup:
     dependency: transitive
     description:
@@ -124,10 +124,10 @@ packages:
     description:
       path: at_onboarding_flutter
       ref: trunk
-      resolved-ref: "7f6f39ac7fce8d8a29881413246ae682932d7294"
+      resolved-ref: f2861496be82dbb99705c45d106295896187135e
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.3"
+    version: "4.0.2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
@@ -155,7 +155,7 @@ packages:
       name: at_sync_ui_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.2"
   at_utf7:
     dependency: transitive
     description:
@@ -428,7 +428,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.6.1"
+    version: "4.6.0"
   file_saver:
     dependency: "direct overridden"
     description:
@@ -458,7 +458,7 @@ packages:
       name: file_selector_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.2+2"
+    version: "0.8.2+1"
   file_selector_platform_interface:
     dependency: transitive
     description:
@@ -479,7 +479,7 @@ packages:
       name: file_selector_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.2+2"
+    version: "0.8.2+1"
   filesystem_picker:
     dependency: "direct main"
     description:
@@ -519,14 +519,14 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.6.0"
+    version: "9.5.3+1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
       name: flutter_local_notifications_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0+1"
+    version: "0.4.2"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
@@ -704,7 +704,7 @@ packages:
       name: local_notifier
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.4"
   logging:
     dependency: transitive
     description:
@@ -774,7 +774,7 @@ packages:
       name: new_version
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.0"
   node_preamble:
     dependency: transitive
     description:
@@ -851,7 +851,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.11"
+    version: "2.0.10"
   path_provider_android:
     dependency: transitive
     description:
@@ -1040,7 +1040,7 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.7"
+    version: "4.0.5"
   share_plus_linux:
     dependency: transitive
     description:
@@ -1388,21 +1388,21 @@ packages:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.10"
+    version: "2.8.9"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.1"
+    version: "1.9.0"
   webview_flutter_wkwebview:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.1"
+    version: "2.8.0"
   win32:
     dependency: transitive
     description:
