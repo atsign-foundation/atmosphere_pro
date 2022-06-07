@@ -85,6 +85,7 @@ class TextStrings {
   String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
   String buttonDismiss = 'DISMISS';
+  String buttonShowMore = 'Show More';
   String ok = 'Ok';
 
   //history screen texts
