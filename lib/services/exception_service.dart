@@ -11,6 +11,7 @@ class ExceptionService {
   static ExceptionService get instance => _instance;
   OverlayEntry? exceptionOverlayEntry;
 
+  /// exceptions for get method
   String getExceptions(Object e) {
     switch (e) {
       case AtKeyException:
@@ -29,10 +30,11 @@ class ExceptionService {
         return 'AtClientException';
 
       default:
-        return 'Something went wrong !!!';
+        return 'getExceptions Something went wrong !!!';
     }
   }
 
+  /// exceptions for put method
   putExceptions(Object e) {
     switch (e) {
       default:
@@ -40,14 +42,22 @@ class ExceptionService {
     }
   }
 
+  showGetExceptionOverlay(Object e, {Function? onRetry}) async {
+    var _error = getExceptions(e);
+    _showExceptionOverlay(_error, onRetry: onRetry);
+  }
+
+  showPutExceptionOverlay(Object e, {Function? onRetry}) async {
+    var _error = putExceptions(e);
+    _showExceptionOverlay(_error, onRetry: onRetry);
+  }
+
   //// UI part
-  showOverlayException(Object e,
-      {bool isGetError = true, Function? onRetry}) async {
+  _showExceptionOverlay(String error, {Function? onRetry}) async {
     hideOverlay();
 
     exceptionOverlayEntry = _buildexceptionOverlayEntry(
-      e,
-      isGetError: isGetError,
+      error,
       onRetry: onRetry,
     );
     NavService.navKey.currentState?.overlay?.insert(exceptionOverlayEntry!);
@@ -61,12 +71,7 @@ class ExceptionService {
     exceptionOverlayEntry = null;
   }
 
-  OverlayEntry _buildexceptionOverlayEntry(
-    Object e, {
-    bool isGetError = true,
-    Function? onRetry,
-  }) {
-    String text = isGetError ? getExceptions(e) : putExceptions(e);
+  OverlayEntry _buildexceptionOverlayEntry(String error, {Function? onRetry}) {
     Color bgColor = ColorConstants.redAlert;
 
     return OverlayEntry(builder: (context) {
@@ -86,7 +91,7 @@ class ExceptionService {
                 children: [
                   Expanded(
                     child: Text(
-                      text,
+                      error,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
