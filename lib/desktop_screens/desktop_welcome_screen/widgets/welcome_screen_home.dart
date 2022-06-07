@@ -38,6 +38,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   bool isFileSending = false,
       isSentFileEntrySaved = true,
       isFileShareFailed = false;
+  String? notes;
+  FocusNode _notesFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -58,7 +60,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       }
     });
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
     });
     super.initState();
@@ -117,6 +119,56 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 sendFileTo(),
                 SizedBox(
                   height: 20.toHeight,
+                ),
+                (_welcomeScreenProvider.selectedContacts != null &&
+                        _welcomeScreenProvider.selectedContacts.isNotEmpty &&
+                        _filePickerProvider.selectedFiles.isNotEmpty)
+                    ? Container(
+                        color: Colors.white,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                focusNode: _notesFocusNode,
+                                decoration: InputDecoration(
+                                  hintText: TextStrings().welcomeAddTranscripts,
+                                  hintStyle: CustomTextStyles
+                                      .desktopSecondaryRegular16,
+                                  border: InputBorder.none,
+                                  fillColor: Colors.white,
+                                  focusColor: Colors.white,
+                                  hoverColor: Colors.white,
+                                  filled: true,
+                                ),
+                                style:
+                                    CustomTextStyles.desktopSecondaryRegular18,
+                                onChanged: (String txt) {
+                                  setState(() {
+                                    notes = txt;
+                                  });
+                                },
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                FocusScope.of(context)
+                                    .requestFocus(_notesFocusNode);
+                              },
+                              child: Icon(Icons.edit, color: Colors.black),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
+                SizedBox(
+                  height: (_welcomeScreenProvider.selectedContacts != null &&
+                          _welcomeScreenProvider.selectedContacts.isNotEmpty &&
+                          _filePickerProvider.selectedFiles.isNotEmpty)
+                      ? 10.toHeight
+                      : 0,
                 ),
                 (_filePickerProvider.selectedFiles.isNotEmpty &&
                         _welcomeScreenProvider.selectedContacts.isNotEmpty)
@@ -358,6 +410,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         _welcomeScreenProvider.selectedContacts = [];
         _currentScreen = CurrentScreen.PlaceolderImage;
         _welcomeScreenProvider.isSelectionItemChanged = false;
+        notes = null;
       });
     }
   }
@@ -418,6 +471,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       _filePickerProvider.selectedFiles,
       _welcomeScreenProvider.selectedContacts,
       groupName: _welcomeScreenProvider.groupName,
+      notes: notes,
     );
 
     if (mounted && res is bool) {

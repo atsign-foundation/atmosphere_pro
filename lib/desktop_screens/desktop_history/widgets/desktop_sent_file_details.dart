@@ -144,7 +144,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                                         .files![index]
                                                         .name
                                                         ?.split('.')
-                                                        ?.last,
+                                                        .last,
                                                     MixedConstants
                                                             .DESKTOP_SENT_DIR +
                                                         widget
@@ -224,6 +224,22 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
             //   padding: EdgeInsets.symmetric(horizontal: 20.toHeight),
             //   child: Divider(height: 5),
             // ),
+            widget.selectedFileData!.notes != null &&
+                    widget.selectedFileData!.notes!.isNotEmpty
+                ? RichText(
+                    text: TextSpan(
+                      text: 'Note: ',
+                      style: CustomTextStyles.primaryMedium14,
+                      children: [
+                        TextSpan(
+                          text: '${widget.selectedFileData!.notes}',
+                          style: CustomTextStyles.redSmall12,
+                        )
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+            SizedBox(height: 15.toHeight),
             widget.selectedFileData != null
                 ? DesktopTranferOverlappingContacts(
                     key: Key(widget

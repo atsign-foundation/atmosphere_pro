@@ -7,7 +7,6 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -57,6 +56,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   List<String?> existingFileNamesToOverwrite = [];
   String nickName = '';
   Map<String?, Future> _futureBuilder = {};
+  bool isTextExpanded = false;
 
   Future<Uint8List?> videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
@@ -119,7 +119,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   getDisplayDetails() async {
     var displayDetails =
-        await getAtSignDetails(widget.receivedHistory!.sender! ?? '');
+        await getAtSignDetails(widget.receivedHistory!.sender!);
     if (displayDetails.tags != null) {
       nickName = displayDetails.tags!['nickname'] ??
           displayDetails.tags!['name'] ??
@@ -159,16 +159,19 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
   getFutureBuilders() {
     widget.receivedHistory!.files!.forEach((element) {
-      _futureBuilder[element.name] = isFilePresent(element.name!);
+      String filePath = BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          element.name!;
+      _futureBuilder[element.name] =
+          CommonUtilityFunctions().isFilePresent(filePath);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     sendTime = DateTime.now();
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-      color: isOpen! ? Color(0xffEFEFEF) : Colors.white,
+      color: isOpen ? Color(0xffEFEFEF) : Colors.white,
       child: Column(
         children: [
           ListTile(
@@ -266,6 +269,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
                       InkWell(
                           onTap: () async {
                             if (isOverwrite) {
@@ -280,9 +286,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   builder: (_c, provider, _) {
                                 var fileTransferProgress =
                                     provider.receivedFileProgress[
-                                        widget.receivedHistory!.key!];
+                                        widget.receivedHistory!.key];
                                 return isDownloadAvailable
-                                    ? widget.receivedHistory!.isDownloading!
+                                    ? fileTransferProgress != null
                                         ? getDownloadStatus(
                                             fileTransferProgress)
                                         : ((isDownloaded ||
@@ -342,38 +348,72 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                           style: CustomTextStyles.secondaryRegular12,
                         ),
                         SizedBox(width: 10.toHeight),
-                        widget.receivedHistory!.isDownloading!
-                            ? Container(
-                                color: ColorConstants.fontSecondary,
-                                height: 14.toHeight,
-                                width: 1.toWidth,
-                              )
-                            : SizedBox(),
-                        SizedBox(width: 10.toHeight),
-                        widget.receivedHistory!.isDownloading!
-                            ? Expanded(
-                                child: Consumer<FileProgressProvider>(
-                                  builder: (_context, provider, _widget) {
-                                    var fileTransferProgress =
-                                        provider.receivedFileProgress[
-                                            widget.receivedHistory!.key!];
-                                    return Text(
-                                        getFileStateMessage(
-                                            fileTransferProgress),
-                                        style: TextStyle(
-                                          fontSize: 11.toFont,
-                                          color: ColorConstants.blueText,
-                                          fontWeight: FontWeight.normal,
-                                        ));
-                                  },
-                                ),
-                              )
-                            : SizedBox()
+                        Expanded(
+                          child: Consumer<FileProgressProvider>(
+                            builder: (_context, provider, _widget) {
+                              var fileTransferProgress =
+                                  provider.receivedFileProgress[
+                                      widget.receivedHistory!.key];
+                              return fileTransferProgress != null
+                                  ? Row(
+                                      children: [
+                                        Container(
+                                          color: ColorConstants.fontSecondary,
+                                          height: 14.toHeight,
+                                          width: 1.toWidth,
+                                        ),
+                                        SizedBox(width: 10.toHeight),
+                                        Expanded(
+                                          child: Text(
+                                              getFileStateMessage(
+                                                  fileTransferProgress),
+                                              style: TextStyle(
+                                                fontSize: 11.toFont,
+                                                color: ColorConstants.blueText,
+                                                fontWeight: FontWeight.normal,
+                                              )),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox();
+                            },
+                          ),
+                        )
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 20.toHeight,
+                  ),
+                  widget.receivedHistory!.notes != null &&
+                          widget.receivedHistory!.notes!.isNotEmpty
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              isTextExpanded = !isTextExpanded;
+                            });
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Note: ',
+                              style: CustomTextStyles.primaryMedium14,
+                              children: [
+                                TextSpan(
+                                  text: '${widget.receivedHistory!.notes}',
+                                  style: CustomTextStyles.redSmall12,
+                                )
+                              ],
+                            ),
+                            maxLines: isTextExpanded ? null : 1,
+                            overflow: isTextExpanded
+                                ? TextOverflow.clip
+                                : TextOverflow.ellipsis,
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    height:
+                        widget.receivedHistory!.notes != null ? 5.toHeight : 0,
                   ),
                   Container(
                     child: Row(
@@ -404,7 +444,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   SizedBox(
                     height: 3.toHeight,
                   ),
-                  (!isOpen!)
+                  (!isOpen)
                       ? TextButton(
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -444,7 +484,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               ),
             ),
           ),
-          isOpen!
+          isOpen
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -471,7 +511,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             if (FileTypes.VIDEO_TYPES.contains(widget
                                 .receivedHistory!.files![index].name
                                 ?.split('.')
-                                ?.last)) {
+                                .last)) {
                               // videoThumbnailBuilder(
                               //     widget.receivedHistory.files[index].filePath);
 
@@ -515,11 +555,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       return snapshot.connectionState ==
                                                   ConnectionState.done &&
                                               snapshot.data != null
-                                          ? thumbnail(
+                                          ? CommonUtilityFunctions().thumbnail(
                                               widget.receivedHistory!
                                                   .files![index].name
                                                   ?.split('.')
-                                                  ?.last,
+                                                  .last,
                                               BackendService.getInstance()
                                                       .downloadDirectory!
                                                       .path +
@@ -589,7 +629,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                             (_context, _provider, _widget) {
                                           var fileTransferProgress =
                                               _provider.receivedFileProgress[
-                                                  widget.receivedHistory!.key!];
+                                                  widget.receivedHistory!.key];
                                           return Text(
                                             (widget
                                                         .receivedHistory!
@@ -641,7 +681,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       onPressed: () {
                         if (mounted) {
                           setState(() {
-                            isOpen = !isOpen!;
+                            isOpen = !isOpen;
                           });
                         }
                         updateIsWidgetOpen();
@@ -677,144 +717,16 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     );
   }
 
-  Widget thumbnail(
-    String? extension,
-    String path, {
-    bool isFilePresent = true,
-  }) {
-    // when file overwrite is true, we are not showing file preview.
-    if (isOverwrite) {
-      isFilePresent = false;
-    }
-    if (FileTypes.IMAGE_TYPES.contains(extension)) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(10.toHeight),
-        child: Container(
-          height: 50.toHeight,
-          width: 50.toWidth,
-          child: isFilePresent
-              ? Image.file(
-                  File(path),
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext _context, _, __) {
-                    return Container(
-                      child: Icon(
-                        Icons.image,
-                        size: 30.toFont,
-                      ),
-                    );
-                  },
-                )
-              : Icon(
-                  Icons.image,
-                  size: 30.toFont,
-                ),
-        ),
-      );
-    } else {
-      return FileTypes.VIDEO_TYPES.contains(extension)
-          ? FutureBuilder(
-              future: videoThumbnailBuilder(path),
-              builder: (context, snapshot) => ClipRRect(
-                borderRadius: BorderRadius.circular(10.toHeight),
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  height: 50.toHeight,
-                  width: 50.toWidth,
-                  child: (snapshot.data == null)
-                      ? Image.asset(
-                          ImageConstants.unknownLogo,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.memory(
-                          snapshot.data! as Uint8List,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext _context, _, __) {
-                            return Container(
-                              child: Icon(
-                                Icons.image,
-                                size: 30.toFont,
-                              ),
-                            );
-                          },
-                        ),
-                ),
-              ),
-            )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(10.toHeight),
-              child: Container(
-                padding: EdgeInsets.only(left: 10),
-                height: 50.toHeight,
-                width: 50.toWidth,
-                child: Image.asset(
-                  FileTypes.PDF_TYPES.contains(extension)
-                      ? ImageConstants.pdfLogo
-                      : FileTypes.AUDIO_TYPES.contains(extension)
-                          ? ImageConstants.musicLogo
-                          : FileTypes.WORD_TYPES.contains(extension)
-                              ? ImageConstants.wordLogo
-                              : FileTypes.EXEL_TYPES.contains(extension)
-                                  ? ImageConstants.exelLogo
-                                  : FileTypes.TEXT_TYPES.contains(extension)
-                                      ? ImageConstants.txtLogo
-                                      : ImageConstants.unknownLogo,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
-    }
-  }
-
-  void _showNoFileDialog(double deviceTextFactor) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
-              height: 200.0.toHeight,
-              width: 300.0.toWidth,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
-                  Text(
-                    TextStrings().noFileFound,
-                    style: CustomTextStyles.primaryBold16,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 30.0)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomButton(
-                        height: 50.toHeight * deviceTextFactor,
-                        isInverted: false,
-                        buttonText: TextStrings().buttonClose,
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<bool> isFilePresent(String? fileName) async {
-    String filePath = BackendService.getInstance().downloadDirectory!.path +
-        Platform.pathSeparator +
-        (fileName ?? '');
-
-    File file = File(filePath);
-    bool fileExists = await file.exists();
-    return fileExists;
-  }
-
   /// provide [fileName] to download that file
   downloadFiles(FileTransfer? receivedHistory, {String? fileName}) async {
+    var fileTransferProgress = Provider.of<FileProgressProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .receivedFileProgress[widget.receivedHistory!.key];
+
+    if (fileTransferProgress != null) {
+      return; //returning because download is still in progress
+    }
     var isConnected = Provider.of<InternetConnectivityChecker>(
             NavService.navKey.currentContext!,
             listen: false)
@@ -845,7 +757,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               NavService.navKey.currentContext!,
               listen: false)
           .downloadFiles(
-        widget.receivedHistory!.key!,
+        widget.receivedHistory!.key,
         widget.receivedHistory!.sender!,
         isOpen,
       );
@@ -1015,7 +927,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     String fileState = '';
     if (fileTransferProgress.fileState == FileState.download) {
       fileState = 'Downloading';
-    } else {
+    } else if (fileTransferProgress.fileState == FileState.decrypt) {
       fileState = 'Decrypting';
     }
 

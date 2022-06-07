@@ -17,6 +17,11 @@ class FileProgressProvider extends BaseModel {
     notifyListeners();
   }
 
+  removeSentFileProgress() {
+    _sentFileTransferProgress = null;
+    notifyListeners();
+  }
+
   updateReceivedFileProgress(
       String transferId, FileTransferProgress fileTransferProgress) {
     _receivedFileProgress[transferId] = fileTransferProgress;

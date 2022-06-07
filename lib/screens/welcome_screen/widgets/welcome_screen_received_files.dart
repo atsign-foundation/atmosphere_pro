@@ -41,7 +41,7 @@ class _WelcomeScreenReceivedFilesState
               itemBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ReceivedFilesListTile(
-                  key: Key(provider.receivedHistoryLogs[index].key!),
+                  key: Key(provider.receivedHistoryLogs[index].key),
                   receivedHistory: provider.receivedHistoryLogs[index],
                   isWidgetOpen:
                       provider.receivedHistoryLogs[index].isWidgetOpen,

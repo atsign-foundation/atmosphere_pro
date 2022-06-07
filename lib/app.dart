@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           return GestureDetector(
             onVerticalDragDown: (__) {
               // When running in iOS, dismiss the keyboard when when user scrolls
-              if (Platform.isIOS) hideKeyboard(context);
+              // if (Platform.isIOS) hideKeyboard(context);
             },
             child: MediaQuery(
               data: data.copyWith(
@@ -79,6 +79,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
             fontFamily: 'HelveticaNeu',
             scaffoldBackgroundColor: Colors.white,
+            primaryColor: Color.fromARGB(255, 240, 94, 62),
             appBarTheme: AppBarTheme(
               color: Colors.white,
               elevation: 0,

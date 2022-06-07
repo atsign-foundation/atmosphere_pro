@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FileTransfer {
@@ -10,8 +10,8 @@ class FileTransfer {
   DateTime? date, expiry;
   List<PlatformFile>? platformFiles;
   bool? isUpdate;
-  bool? isDownloading;
   bool? isWidgetOpen;
+  String? notes;
   FileTransfer({
     required this.url,
     this.files,
@@ -20,8 +20,8 @@ class FileTransfer {
     this.date,
     required this.key,
     this.isUpdate = false,
-    this.isDownloading = false,
     this.isWidgetOpen = false,
+    this.notes,
   }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
@@ -33,7 +33,6 @@ class FileTransfer {
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
     isUpdate = json['isUpdate'];
-    isDownloading = json['isDownloading'];
     isWidgetOpen = json['isWidgetOpen'];
     url = json['url'];
     sender = json['sender'];
@@ -47,17 +46,18 @@ class FileTransfer {
       FileData file = FileData.fromJson(jsonDecode(element));
       files!.add(file);
     });
+    notes = json['notes'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['isUpdate'] = isUpdate;
-    data['isDownloading'] = isDownloading;
     data['isWidgetOpen'] = isWidgetOpen;
     data['url'] = this.url;
     data['sender'] = this.sender;
     data['key'] = this.key;
     data['files'] = [];
+    data['notes'] = notes;
     this.files!.forEach((element) {
       data['files'].add(jsonEncode(element.toJson()));
     });
@@ -131,10 +131,11 @@ class FileHistory {
   // used to determine whether any opearation is running over this file or not
   // only for front end used , this value is not saved.
   bool? isOperating;
+  String? notes;
 
   FileHistory(
       this.fileDetails, this.sharedWith, this.type, this.fileTransferObject,
-      {this.isOperating, this.groupName});
+      {this.isOperating, this.groupName, this.notes});
   FileHistory.fromJson(Map<String, dynamic> data) {
     if (data['fileDetails'] != null) {
       fileDetails = FileTransfer.fromJson(data['fileDetails']);
@@ -156,6 +157,7 @@ class FileHistory {
           FileTransferObject.fromJson(jsonDecode(data['fileTransferObject']));
     }
     groupName = data['groupName'];
+    notes = data['notes'];
   }
 
   Map<String, dynamic> toJson() {
@@ -165,6 +167,7 @@ class FileHistory {
     data['type'] = this.type.toString();
     data['fileTransferObject'] = jsonEncode(this.fileTransferObject!.toJson());
     data['groupName'] = this.groupName;
+    data['notes'] = notes;
     return data;
   }
 }
@@ -221,4 +224,4 @@ class FileTransferProgress {
   FileTransferProgress(this.fileState, this.percent, this.fileName);
 }
 
-enum FileState { encrypt, decrypt, upload, download }
+enum FileState { encrypt, decrypt, upload, download, processing }
