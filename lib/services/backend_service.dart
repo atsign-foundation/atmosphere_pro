@@ -5,6 +5,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
@@ -57,6 +58,7 @@ class BackendService {
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
   Timer? periodicHistoryRefresh;
+
   String? get currentAtsign => currentAtSign;
   Directory? downloadDirectory;
   AnimationController? controller;
@@ -389,23 +391,49 @@ class BackendService {
             (Route<dynamic> route) => false);
       }
     } else if (Platform.isAndroid || Platform.isIOS) {
-      await Onboarding(
-          atsign: tempAtsign,
-          context: NavService.navKey.currentContext!,
-          atClientPreference: atClientPrefernce,
+      final result = await AtOnboarding.start(
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
-          appColor: Color.fromARGB(255, 240, 94, 62),
-          onboard: (value, atsign) async {
-            await onboardSuccessCallback(value, atsign!, atClientPrefernce);
-          },
-          onError: (error) {
-            SnackbarService().showSnackbar(
-                NavService.navKey.currentContext!, 'Onboarding failed.',
-                bgColor: ColorConstants.redAlert);
-            print('Onboarding throws $error error');
-          },
-          appAPIKey: MixedConstants.ONBOARD_API_KEY);
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+      );
+      switch (result.status) {
+        case AtOnboardingResultStatus.success:
+          final OnboardingService onboardingService =
+              OnboardingService.getInstance();
+          final value = onboardingService.atClientServiceMap;
+          await onboardSuccessCallback(
+              value, result.atsign!, atClientPrefernce);
+          break;
+        case AtOnboardingResultStatus.error:
+          SnackbarService().showSnackbar(
+              NavService.navKey.currentContext!, 'Onboarding failed.',
+              bgColor: ColorConstants.redAlert);
+          break;
+        case AtOnboardingResultStatus.cancel:
+          // TODO: Handle this case.
+          break;
+      }
+      // await Onboarding(
+      //     atsign: tempAtsign,
+      //     context: NavService.navKey.currentContext!,
+      //     atClientPreference: atClientPrefernce,
+      //     domain: MixedConstants.ROOT_DOMAIN,
+      //     rootEnvironment: RootEnvironment.Production,
+      //     appColor: Color.fromARGB(255, 240, 94, 62),
+      //     onboard: (value, atsign) async {
+      //       await onboardSuccessCallback(value, atsign!, atClientPrefernce);
+      //     },
+      //     onError: (error) {
+      //       SnackbarService().showSnackbar(
+      //           NavService.navKey.currentContext!, 'Onboarding failed.',
+      //           bgColor: ColorConstants.redAlert);
+      //       print('Onboarding throws $error error');
+      //     },
+      //     appAPIKey: MixedConstants.ONBOARD_API_KEY);
     } else {
       CustomOnboarding.onboard(
           atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
@@ -423,36 +451,73 @@ class BackendService {
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
-      Onboarding(
-          atsign: atSign,
-          context: NavService.navKey.currentContext!,
-          atClientPreference: atClientPrefernce,
-          domain: MixedConstants.ROOT_DOMAIN,
-          rootEnvironment: RootEnvironment.Production,
-          appColor: Color.fromARGB(255, 240, 94, 62),
-          onboard: (value, onboardedAtsign) async {
-            authenticating = true;
-            isAuthuneticatingSink.add(authenticating);
-            await onboardSuccessCallback(
-                value, onboardedAtsign!, atClientPrefernce);
-            authenticating = false;
-            isAuthuneticatingSink.add(authenticating);
-          },
-          onError: (error) {
-            var isConnected = Provider.of<InternetConnectivityChecker>(
-                    NavService.navKey.currentContext!,
-                    listen: false)
-                .isInternetAvailable;
-
-            SnackbarService().showSnackbar(NavService.navKey.currentContext!,
-                !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
-                bgColor: ColorConstants.redAlert);
-            authenticating = false;
-            isAuthuneticatingSink.add(authenticating);
-          },
-          appAPIKey: MixedConstants.ONBOARD_API_KEY);
+      // Onboarding(
+      //     atsign: atSign,
+      //     context: NavService.navKey.currentContext!,
+      //     atClientPreference: atClientPrefernce,
+      //     domain: MixedConstants.ROOT_DOMAIN,
+      //     rootEnvironment: RootEnvironment.Production,
+      //     appColor: Color.fromARGB(255, 240, 94, 62),
+      //     onboard: (value, onboardedAtsign) async {
+      //       authenticating = true;
+      //       isAuthuneticatingSink.add(authenticating);
+      //       await onboardSuccessCallback(
+      //           value, onboardedAtsign!, atClientPrefernce);
+      //       authenticating = false;
+      //       isAuthuneticatingSink.add(authenticating);
+      //     },
+      //     onError: (error) {
+      //       var isConnected = Provider.of<InternetConnectivityChecker>(
+      //               NavService.navKey.currentContext!,
+      //               listen: false)
+      //           .isInternetAvailable;
+      //
+      //       SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+      //           !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
+      //           bgColor: ColorConstants.redAlert);
+      //       authenticating = false;
+      //       isAuthuneticatingSink.add(authenticating);
+      //     },
+      //     appAPIKey: MixedConstants.ONBOARD_API_KEY);
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
+      final result = await AtOnboarding.start(
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
+          domain: MixedConstants.ROOT_DOMAIN,
+          rootEnvironment: RootEnvironment.Production,
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+      );
+      switch (result.status) {
+        case AtOnboardingResultStatus.success:
+          final OnboardingService onboardingService =
+              OnboardingService.getInstance();
+          final value = onboardingService.atClientServiceMap;
+          authenticating = true;
+          isAuthuneticatingSink.add(authenticating);
+          await onboardSuccessCallback(
+              value, result.atsign!, atClientPrefernce);
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+          break;
+        case AtOnboardingResultStatus.error:
+          var isConnected = Provider.of<InternetConnectivityChecker>(
+                  NavService.navKey.currentContext!,
+                  listen: false)
+              .isInternetAvailable;
+
+          SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+              !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
+              bgColor: ColorConstants.redAlert);
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+          break;
+        case AtOnboardingResultStatus.cancel:
+          // TODO: Handle this case.
+          break;
+      }
     } catch (e) {
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
