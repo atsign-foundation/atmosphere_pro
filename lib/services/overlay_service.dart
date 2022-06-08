@@ -88,10 +88,12 @@ class OverlayService {
                             ),
                           ),
                           flushbarStatus == FLUSHBAR_STATUS.FAILED
-                              ? textButton(openFileReceiptBottomSheet(context),
-                                  TextStrings.buttonShowMore)
-                              : textButton(
-                                  hideOverlay(), TextStrings.buttonDismiss),
+                              ? textButton(() {
+                                  openFileReceiptBottomSheet(context);
+                                }, TextStrings.buttonShowMore)
+                              : textButton(() {
+                                  hideOverlay();
+                                }, TextStrings.buttonDismiss),
                         ],
                       ),
                     ),
@@ -170,7 +172,7 @@ class OverlayService {
   textButton(Function buttonFunc, String buttonText) {
     TextButton(
       onPressed: () {
-        buttonFunc;
+        buttonFunc();
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
