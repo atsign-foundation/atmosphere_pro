@@ -84,8 +84,8 @@ class TextStrings {
   String uploadKey = 'Upload key file';
   String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
-  String buttonDismiss = 'DISMISS';
-  String buttonShowMore = 'Show More';
+  static final String buttonDismiss = 'DISMISS';
+  static final String buttonShowMore = 'Show More';
   String ok = 'Ok';
 
   //history screen texts

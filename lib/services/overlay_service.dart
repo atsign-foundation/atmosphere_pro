@@ -88,48 +88,10 @@ class OverlayService {
                             ),
                           ),
                           flushbarStatus == FLUSHBAR_STATUS.FAILED
-                              ? TextButton(
-                                  onPressed: () {
-                                    openFileReceiptBottomSheet(context);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 7, horizontal: 7),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Text(
-                                      TextStrings().buttonShowMore,
-                                      style: TextStyle(
-                                        color: ColorConstants.fontPrimary,
-                                        fontSize: 15.toFont,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : TextButton(
-                                  onPressed: () {
-                                    hideOverlay();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 7, horizontal: 7),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Text(
-                                      TextStrings().buttonDismiss,
-                                      style: TextStyle(
-                                        color: ColorConstants.fontPrimary,
-                                        fontSize: 15.toFont,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                )
+                              ? textButton(openFileReceiptBottomSheet(context),
+                                  TextStrings.buttonShowMore)
+                              : textButton(
+                                  hideOverlay(), TextStrings.buttonDismiss),
                         ],
                       ),
                     ),
@@ -204,6 +166,29 @@ class OverlayService {
     'File(s) sent',
     'Oops! something went wrong'
   ];
+
+  textButton(Function buttonFunc, String buttonText) {
+    TextButton(
+      onPressed: () {
+        buttonFunc;
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.white,
+        ),
+        child: Text(
+          buttonText,
+          style: TextStyle(
+            color: ColorConstants.fontPrimary,
+            fontSize: 15.toFont,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+  }
 
   openFileReceiptBottomSheet(context,
       {FileRecipientSection? fileRecipientSection}) {
