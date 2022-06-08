@@ -391,7 +391,7 @@ class BackendService {
             (Route<dynamic> route) => false);
       }
     } else if (Platform.isAndroid || Platform.isIOS) {
-      final result = await AtOnboarding.start(
+      final result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
           atClientPreference: atClientPrefernce!,
@@ -481,7 +481,7 @@ class BackendService {
       //     appAPIKey: MixedConstants.ONBOARD_API_KEY);
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
-      final result = await AtOnboarding.start(
+      final result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
           atClientPreference: atClientPrefernce!,

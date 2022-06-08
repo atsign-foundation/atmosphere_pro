@@ -28,7 +28,7 @@ class CustomOnboarding {
       Function? showLoader,
       bool isInit = false,
       Function? onError}) async {
-    final result = await AtOnboarding.start(
+    final result = await AtOnboarding.onboard(
       context: NavService.navKey.currentContext!,
       config: AtOnboardingConfig(
         atClientPreference: atClientPrefernce!,
