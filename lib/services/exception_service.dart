@@ -11,8 +11,18 @@ class ExceptionService {
   static ExceptionService get instance => _instance;
   OverlayEntry? exceptionOverlayEntry;
 
+  showGetExceptionOverlay(Object e, {Function? onRetry}) async {
+    var _error = _getExceptions(e);
+    _showExceptionOverlay(_error, onRetry: onRetry);
+  }
+
+  showPutExceptionOverlay(Object e, {Function? onRetry}) async {
+    var _error = _putExceptions(e);
+    _showExceptionOverlay(_error, onRetry: onRetry);
+  }
+
   /// exceptions for get method
-  String getExceptions(Object e) {
+  String _getExceptions(Object e) {
     switch (e) {
       case AtKeyException:
         return 'AtKeyException';
@@ -30,26 +40,16 @@ class ExceptionService {
         return 'AtClientException';
 
       default:
-        return 'getExceptions Something went wrong !!!';
-    }
-  }
-
-  /// exceptions for put method
-  putExceptions(Object e) {
-    switch (e) {
-      default:
         return 'Something went wrong !!!';
     }
   }
 
-  showGetExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = getExceptions(e);
-    _showExceptionOverlay(_error, onRetry: onRetry);
-  }
-
-  showPutExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = putExceptions(e);
-    _showExceptionOverlay(_error, onRetry: onRetry);
+  /// exceptions for put method
+  String _putExceptions(Object e) {
+    switch (e) {
+      default:
+        return 'Something went wrong !!!';
+    }
   }
 
   //// UI part
@@ -78,25 +78,25 @@ class ExceptionService {
       final size = MediaQuery.of(context).size;
       return Positioned(
         width: size.width,
-        height: 100,
+        height: 80,
         bottom: 0,
         child: Material(
           child: Container(
             alignment: Alignment.center,
             color: bgColor,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+              padding: EdgeInsets.fromLTRB(15, 3, 15, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
-                      error,
+                      '$error',
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.toFont,
+                        fontSize: 15.toFont,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
