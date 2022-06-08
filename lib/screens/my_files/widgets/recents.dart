@@ -10,7 +10,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -23,7 +23,7 @@ class Recents extends StatefulWidget {
 class _RecentsState extends State<Recents> {
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       load: (provider) => provider.getrecentHistoryFiles(),
       functionName: 'recent_history',
       showError: false,
@@ -49,7 +49,9 @@ class _RecentsState extends State<Recents> {
                     ),
                     itemBuilder: (context, index) {
                       return fileCard(provider.recentFile[index].fileName,
-                          provider.recentFile[index].filePath);
+                          provider.recentFile[index].filePath,
+                          fileTransferId:
+                              provider.recentFile[index].fileTransferId);
                     }),
               );
       },
@@ -57,30 +59,27 @@ class _RecentsState extends State<Recents> {
   }
 }
 
-deleteFile(String filePath) async {
+deleteFile(String filePath, {String? fileTransferId}) async {
   await showModalBottomSheet(
     context: NavService.navKey.currentContext!,
     backgroundColor: Colors.white,
     builder: (context) => EditBottomSheet(onConfirmation: () {
       var file = File(filePath);
       file.deleteSync();
-
-      Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-              listen: false)
-          .sortFiles();
-      Future.delayed(Duration(seconds: 1), () {
-        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+      if (fileTransferId != null) {
+        Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                 listen: false)
-            .populateTabs();
-      });
+            .removeParticularFile(
+                fileTransferId, filePath.split(Platform.pathSeparator).last);
+      }
     }),
   );
 }
 
-Widget fileCard(String? title, String? filePath) {
+Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
   return InkWell(
     onLongPress: () {
-      deleteFile(filePath!);
+      deleteFile(filePath!, fileTransferId: fileTransferId);
     },
     child: Column(
       children: <Widget>[

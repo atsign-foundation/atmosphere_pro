@@ -47,6 +47,7 @@ class MixedConstants {
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
   static const String FILE_TRANSFER_KEY = 'file_transfer_';
+  static const String MY_FILES_KEY = 'my_files_';
   static const String FILE_TRANSFER_ACKNOWLEDGEMENT = 'file_download_ack_';
   static const String RECEIVED_FILE_HISTORY = 'receivedHistory_v2';
   static const String SENT_FILE_HISTORY = 'sentHistory_v2';

@@ -9,7 +9,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -42,7 +42,7 @@ class _VideosState extends State<Videos> {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       showError: false,
       load: (provider) {
@@ -65,14 +65,16 @@ class _VideosState extends State<Videos> {
     );
   }
 
-  Widget listVideoWidget(HistoryProvider provider, dynamic videos) {
+  Widget listVideoWidget(MyFilesProvider provider, dynamic videos) {
     return ListView.builder(
         itemCount: provider.receivedVideos.length,
         itemBuilder: (context, index) {
           DateTime date = DateTime.parse(provider.receivedVideos[index].date!);
           return InkWell(
             onLongPress: () {
-              deleteFile(provider.receivedVideos[index].filePath!);
+              deleteFile(provider.receivedVideos[index].filePath!,
+                  fileTransferId:
+                      provider.receivedVideos[index].fileTransferId);
             },
             onTap: () async {
               print(
@@ -137,22 +139,19 @@ class _VideosState extends State<Videos> {
         });
   }
 
-  deleteFile(String filePath) async {
+  deleteFile(String filePath, {String? fileTransferId}) async {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
       builder: (context) => EditBottomSheet(onConfirmation: () {
         var file = File(filePath);
         file.deleteSync();
-
-        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .sortFiles();
-        Future.delayed(Duration(seconds: 1), () {
-          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+        if (fileTransferId != null) {
+          Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                   listen: false)
-              .populateTabs();
-        });
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
       }),
     );
   }

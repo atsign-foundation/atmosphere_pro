@@ -25,6 +25,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +153,7 @@ class BackendService {
   startMonitor() async {
     await AtClientManager.getInstance()
         .notificationService
-        .subscribe(regex: MixedConstants.appNamespace)
+        .subscribe(regex: MixedConstants.appNamespace, shouldDecrypt: true)
         .listen((AtNotification notification) async {
       await _notificationCallBack(notification);
     });
@@ -180,15 +181,7 @@ class BackendService {
 
     if (notificationKey
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
-      var value = response.value!;
-
-      var decryptedMessage = await atClientInstance!.encryptionService!
-          .decrypt(value, fromAtSign)
-          .catchError((e) {
-        print("error in decrypting: $e");
-        showToast(e.toString());
-        return '';
-      });
+      var decryptedMessage = response.value!;
 
       if (decryptedMessage != null && decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
@@ -205,21 +198,10 @@ class BackendService {
         !notificationKey
             .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var atKey = notificationKey.split(':')[1];
-      var value = response.value!;
+      var decryptedMessage = response.value!;
 
       //TODO: only for testing
       await sendNotificationAck(notificationKey, fromAtSign);
-
-      var decryptedMessage =
-          await atClientInstance!.encryptionService!.decrypt(value, fromAtSign)
-              // ignore: return_of_invalid_type_from_catch_error
-              .catchError((e) {
-        print("error in decrypting: $e");
-        //TODO: only for closed testing purpose , we are showing error dialog
-        // should be removed before general release.
-        showToast(e.toString());
-        return '';
-      });
 
       if (decryptedMessage != null && decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -304,6 +286,10 @@ class BackendService {
         NavService.navKey.currentState!.context,
         listen: false);
 
+    var myFilesProvider = Provider.of<MyFilesProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
+
     print(
         'syncStatus type : $syncStatus, datachanged : ${syncStatus.dataChange}');
     if (!historyProvider.isSyncedDataFetched) {
@@ -330,6 +316,8 @@ class BackendService {
           Status.Loading) {
         await historyProvider.getSentHistory();
       }
+
+      await myFilesProvider.init();
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)

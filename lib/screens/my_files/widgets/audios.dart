@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class Audios extends StatefulWidget {
 class _AudiosState extends State<Audios> {
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       showError: false,
       load: (provider) => provider.sortFiles(),
@@ -38,7 +38,9 @@ class _AudiosState extends State<Audios> {
                   await openFilePath(provider.receivedAudio[index].filePath!);
                 },
                 onLongPress: () {
-                  deleteFile(provider.receivedAudio[index].filePath!);
+                  deleteFile(provider.receivedAudio[index].filePath!,
+                      fileTransferId:
+                          provider.receivedAudio[index].fileTransferId);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -95,22 +97,19 @@ class _AudiosState extends State<Audios> {
     );
   }
 
-  deleteFile(String filePath) async {
+  deleteFile(String filePath, {String? fileTransferId}) async {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
       builder: (context) => EditBottomSheet(onConfirmation: () {
         var file = File(filePath);
         file.deleteSync();
-
-        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .sortFiles();
-        Future.delayed(Duration(seconds: 1), () {
-          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+        if (fileTransferId != null) {
+          Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                   listen: false)
-              .populateTabs();
-        });
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
       }),
     );
   }

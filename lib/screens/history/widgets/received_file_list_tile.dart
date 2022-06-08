@@ -22,6 +22,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -778,6 +779,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           isOverwrite = false;
         });
       }
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(widget.receivedHistory!);
+
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
         TextStrings().fileDownloadd,
@@ -1019,15 +1024,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   }
                 });
 
-                Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                        listen: false)
-                    .sortFiles();
-                Future.delayed(Duration(seconds: 1), () {
-                  Provider.of<HistoryProvider>(
-                          NavService.navKey.currentContext!,
-                          listen: false)
-                      .populateTabs();
-                });
+                //TODO: add option to delete my file record
               }));
         });
   }

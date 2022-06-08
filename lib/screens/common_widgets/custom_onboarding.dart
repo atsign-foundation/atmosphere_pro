@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
@@ -115,9 +116,16 @@ class CustomOnboarding {
     HistoryProvider historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentContext!,
         listen: false);
+    var myFilesProvider = Provider.of<MyFilesProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
+
     historyProvider.resetData();
+    myFilesProvider.resetData();
     await historyProvider.getReceivedHistory();
+    await historyProvider.getFileDownloadedAcknowledgement();
     await historyProvider.getSentHistory();
+    await myFilesProvider.init();
 
     await Provider.of<TrustedContactProvider>(NavService.navKey.currentContext!,
             listen: false)

@@ -7,9 +7,9 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,8 +35,8 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   getTabsInformation() async {
     tabs = [];
     tabNames = [];
-    tabs = Provider.of<HistoryProvider>(context, listen: false).tabs;
-    tabNames = Provider.of<HistoryProvider>(context, listen: false).tabNames;
+    tabs = Provider.of<MyFilesProvider>(context, listen: false).tabs;
+    tabNames = Provider.of<MyFilesProvider>(context, listen: false).tabNames;
     _controller =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }
@@ -62,7 +62,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                 onSelected: (dynamic s) {
                   switch (s) {
                     case TextStrings.SORT_NAME:
-                      providerCallback<HistoryProvider>(context,
+                      providerCallback<MyFilesProvider>(context,
                           task: (provider) {
                             if (runtimeType == Photos) {
                               provider.sortByName(provider.receivedPhotos);
@@ -80,7 +80,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                           onSuccess: (provider) {});
                       break;
                     case TextStrings.SORT_SIZE:
-                      providerCallback<HistoryProvider>(context,
+                      providerCallback<MyFilesProvider>(context,
                           task: (provider) {
                             if (runtimeType == Photos) {
                               provider.sortBySize(provider.receivedPhotos);
@@ -98,7 +98,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                           onSuccess: (provider) {});
                       break;
                     case TextStrings.SORT_DATE:
-                      providerCallback<HistoryProvider>(context,
+                      providerCallback<MyFilesProvider>(context,
                           task: (provider) {
                             if (runtimeType == Photos) {
                               provider.sortByDate(provider.receivedPhotos);
@@ -140,7 +140,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
       body: SingleChildScrollView(
         child: (isLoading)
             ? Center(child: CircularProgressIndicator())
-            : Consumer<HistoryProvider>(
+            : Consumer<MyFilesProvider>(
                 builder: (BuildContext _context, _provider, _) {
                   if (_provider.tabs.length != tabs.length) {
                     getTabsInformation();

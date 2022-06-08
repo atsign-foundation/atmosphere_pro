@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,10 +25,10 @@ class _APKState extends State<APK> {
     return Container(
       margin:
           EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
-      child: ProviderHandler<HistoryProvider>(
+      child: ProviderHandler<MyFilesProvider>(
         functionName: 'received_history',
         showError: false,
-        load: (provider) => provider.getReceivedHistory(),
+        load: (provider) {},
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,
             itemBuilder: (context, index) {
@@ -38,7 +38,9 @@ class _APKState extends State<APK> {
                   await openFilePath(provider.receivedApk[index].filePath!);
                 },
                 onLongPress: () {
-                  deleteFile(provider.receivedApk[index].filePath!);
+                  deleteFile(provider.receivedApk[index].filePath!,
+                      fileTransferId:
+                          provider.receivedApk[index].fileTransferId);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -87,22 +89,19 @@ class _APKState extends State<APK> {
     );
   }
 
-  deleteFile(String filePath) async {
+  deleteFile(String filePath, {String? fileTransferId}) async {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
       builder: (context) => EditBottomSheet(onConfirmation: () {
         var file = File(filePath);
         file.deleteSync();
-
-        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .sortFiles();
-        Future.delayed(Duration(seconds: 1), () {
-          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+        if (fileTransferId != null) {
+          Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                   listen: false)
-              .populateTabs();
-        });
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
       }),
     );
   }
