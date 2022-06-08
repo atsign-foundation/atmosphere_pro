@@ -89,8 +89,8 @@ dependency_overrides:
   at_onboarding_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
-      ref: trunk
       path: at_onboarding_flutter
+      ref: feature/on-boarding-2.0
   at_contacts_group_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets

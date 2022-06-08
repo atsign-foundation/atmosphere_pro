@@ -123,11 +123,11 @@ packages:
     dependency: "direct main"
     description:
       path: at_onboarding_flutter
-      ref: trunk
-      resolved-ref: f2861496be82dbb99705c45d106295896187135e
+      ref: "feature/on-boarding-2.0"
+      resolved-ref: "6e5c69f999d9f77903c6b1acc826f23ccf6aa3a2"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.2"
+    version: "4.0.1"
   at_persistence_secondary_server:
     dependency: transitive
     description:
@@ -915,6 +915,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  qr_code_scanner:
+    dependency: transitive
+    description:
+      name: qr_code_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   qr_flutter:
     dependency: "direct main"
     description:
