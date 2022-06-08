@@ -9,6 +9,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -235,7 +236,14 @@ class FileTransferService {
     var atKey = AtKey()
       ..key = transferId
       ..sharedBy = sharedByAtSign;
-    var result = await AtClientManager.getInstance().atClient.get(atKey);
+    var result =
+        await AtClientManager.getInstance().atClient.get(atKey).catchError(
+      (e) {
+        print('Error in get $e');
+        ExceptionService.instance.showGetExceptionOverlay(e);
+      },
+    );
+
     FileTransferObject fileTransferObject;
     try {
       if (FileTransferObject.fromJson(jsonDecode(result.value)) == null) {
