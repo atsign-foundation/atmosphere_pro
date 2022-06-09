@@ -29,6 +29,11 @@ class CustomOnboarding {
       bool isInit = false,
       Function? onError}) async {
     AtOnboardingResult result;
+    final OnboardingService _onboardingService =
+    OnboardingService.getInstance();
+
+    _onboardingService.setAtsign = atSign;
+
     if (isInit) {
       //Case: onboarding
       result = await AtOnboarding.onboard(
