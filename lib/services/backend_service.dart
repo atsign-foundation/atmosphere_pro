@@ -442,15 +442,20 @@ class BackendService {
 
   bool authenticating = false;
 
-  checkToOnboard({String? atSign}) async {
+  checkToOnboard({
+    String? atSign,
+    bool isSwitchAccount = false,
+  }) async {
     try {
-      authenticating = true;
-      isAuthuneticatingSink.add(authenticating);
+      final OnboardingService _onboardingService =
+          OnboardingService.getInstance();
       late var atClientPrefernce;
+      AtOnboardingResult result;
       //  await getAtClientPreference();
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
+
       // Onboarding(
       //     atsign: atSign,
       //     context: NavService.navKey.currentContext!,
@@ -481,20 +486,32 @@ class BackendService {
       //     appAPIKey: MixedConstants.ONBOARD_API_KEY);
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
-      final result = await AtOnboarding.onboard(
-        context: NavService.navKey.currentContext!,
-        config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
-          domain: MixedConstants.ROOT_DOMAIN,
-          rootEnvironment: RootEnvironment.Production,
-          appAPIKey: MixedConstants.ONBOARD_API_KEY,
-        ),
-      );
+
+      if (isSwitchAccount) {
+        result = await AtOnboarding.start(
+          context: NavService.navKey.currentContext!,
+          config: AtOnboardingConfig(
+            atClientPreference: atClientPrefernce!,
+            domain: MixedConstants.ROOT_DOMAIN,
+            rootEnvironment: RootEnvironment.Production,
+            appAPIKey: MixedConstants.ONBOARD_API_KEY,
+          ),
+        );
+      } else {
+        result = await AtOnboarding.onboard(
+          context: NavService.navKey.currentContext!,
+          config: AtOnboardingConfig(
+            atClientPreference: atClientPrefernce!,
+            domain: MixedConstants.ROOT_DOMAIN,
+            rootEnvironment: RootEnvironment.Production,
+            appAPIKey: MixedConstants.ONBOARD_API_KEY,
+          ),
+        );
+      }
+
       switch (result.status) {
         case AtOnboardingResultStatus.success:
-          final OnboardingService onboardingService =
-              OnboardingService.getInstance();
-          final value = onboardingService.atClientServiceMap;
+          final value = _onboardingService.atClientServiceMap;
           authenticating = true;
           isAuthuneticatingSink.add(authenticating);
           await onboardSuccessCallback(
@@ -518,6 +535,9 @@ class BackendService {
           // TODO: Handle this case.
           break;
       }
+
+      authenticating = true;
+      isAuthuneticatingSink.add(authenticating);
     } catch (e) {
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
