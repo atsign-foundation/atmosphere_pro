@@ -28,7 +28,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideBarWidget extends StatefulWidget {
   final bool isExpanded;
@@ -418,8 +418,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(
                       onTap: () async {
-                        await launchUrlString(
-                            'mailto:atmospherepro@atsign.com?subject=insert subject&body=insert body here');
+                        await launchUrl(Uri(
+                            scheme: 'mailto',
+                            path: 'atmospherepro@atsign.com'));
                       },
                       child: Container(
                         height: 50,
