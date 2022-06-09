@@ -155,7 +155,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
       await checkIfFolderExists(atsignDownloadPath);
 
       var res = await historyProvider.downloadFiles(
-          fileTransfer[i].key!, fileTransfer[i].sender!, false,
+          fileTransfer[i].key, fileTransfer[i].sender!, false,
           downloadPath: atsignDownloadPath);
 
       if (res is bool && !res) {

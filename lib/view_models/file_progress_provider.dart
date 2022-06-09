@@ -17,10 +17,24 @@ class FileProgressProvider extends BaseModel {
     notifyListeners();
   }
 
+  removeSentFileProgress() {
+    _sentFileTransferProgress = null;
+    notifyListeners();
+  }
+
   updateReceivedFileProgress(
       String transferId, FileTransferProgress fileTransferProgress) {
-    _receivedFileProgress[transferId] = fileTransferProgress;
-    notifyListeners();
+    double? prevPercent = _receivedFileProgress[transferId]?.percent;
+    double? newPercent = fileTransferProgress.percent;
+    double res = 1.0;
+    if (prevPercent != null && newPercent != null) {
+      res = newPercent - prevPercent;
+    }
+    if (res >= 1.0) {
+      fileTransferProgress.percent = fileTransferProgress.percent?.roundToDouble();
+      _receivedFileProgress[transferId] = fileTransferProgress;
+      notifyListeners();
+    }
   }
 
   removeReceiveProgressItem(String transferId) {

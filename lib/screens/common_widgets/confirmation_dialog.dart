@@ -24,30 +24,37 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
           children: [
             Text(widget.title, style: CustomTextStyles.grey15),
             SizedBox(
-              height: 10.toHeight,
+              height: 20.toHeight,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    TextStrings().buttonCancel,
+                    style: TextStyle(
+                      fontSize: 16.toFont,
+                      fontWeight: FontWeight.normal,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                TextButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor)),
                     onPressed: () async {
                       Navigator.of(context).pop();
                       await widget.onConfirmation();
                     },
                     child: Text(TextStrings().yes,
                         style: TextStyle(
-                          fontSize: 16.toFont,
-                          fontWeight: FontWeight.normal,
-                        ))),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(TextStrings().buttonCancel,
-                        style: TextStyle(
-                          fontSize: 16.toFont,
-                          fontWeight: FontWeight.normal,
-                        )))
+                            fontSize: 16.toFont,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white))),
               ],
             )
           ],

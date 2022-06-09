@@ -2,21 +2,18 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
-import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +22,6 @@ import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
 import 'package:at_client/src/stream/file_transfer_object.dart';
-import 'package:uuid/uuid.dart';
 
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
@@ -51,7 +47,6 @@ class FileTransferProvider extends BaseModel {
   Uint8List? videoThumbnail;
   double totalSize = 0;
   bool clearList = false;
-  BackendService _backendService = BackendService.getInstance();
   List<AtContact> temporaryContactList = [];
   bool hasSelectedFilesChanged = false, scrollToBottom = false;
 
@@ -154,7 +149,7 @@ class FileTransferProvider extends BaseModel {
 
   calculateSize() async {
     totalSize = 0;
-    selectedFiles?.forEach((element) {
+    selectedFiles.forEach((element) {
       totalSize += element.size;
     });
   }
@@ -179,9 +174,6 @@ class FileTransferProvider extends BaseModel {
             await calculateSize();
             hasSelectedFilesChanged = true;
           });
-
-          print(
-              "Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
         }
       }, onError: (err) {
         print("getIntentDataStream error: $err");
@@ -204,8 +196,6 @@ class FileTransferProvider extends BaseModel {
             await calculateSize();
             hasSelectedFilesChanged = true;
           });
-          print(
-              "Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
           BuildContext c = NavService.navKey.currentContext!;
           Navigator.pushReplacementNamed(c, Routes.WELCOME_SCREEN);
         }
@@ -224,6 +214,9 @@ class FileTransferProvider extends BaseModel {
       {String? groupName, String? notes}) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
     setStatus(SEND_FILES, Status.Loading);
+    var fileUploadProvider = Provider.of<FileProgressProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
     try {
       var _historyProvider = Provider.of<HistoryProvider>(
           NavService.navKey.currentContext!,
@@ -266,16 +259,20 @@ class FileTransferProvider extends BaseModel {
       for (var atsignStatus in uploadResult.entries) {
         if (atsignStatus.value.sharedStatus != null &&
             !atsignStatus.value.sharedStatus!) {
+          fileUploadProvider.removeSentFileProgress();
           setStatus(SEND_FILES, Status.Error);
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+
           return false;
         }
       }
 
+      fileUploadProvider.removeSentFileProgress();
       flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
       setStatus(SEND_FILES, Status.Done);
       return true;
     } catch (e) {
+      fileUploadProvider.removeSentFileProgress();
       setStatus(SEND_FILES, Status.Error);
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
     }
