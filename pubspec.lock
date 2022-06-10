@@ -63,14 +63,14 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.23"
+    version: "3.0.25"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.15"
+    version: "3.1.16"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -86,7 +86,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.14"
+    version: "3.0.16"
   at_contact:
     dependency: "direct main"
     description:
@@ -118,7 +118,7 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.22"
+    version: "3.0.24"
   at_onboarding_flutter:
     dependency: "direct main"
     description:

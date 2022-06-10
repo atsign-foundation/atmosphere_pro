@@ -383,7 +383,7 @@ class FileTransferService {
               updateFileTransferState(
                 fileName,
                 transferId,
-                percent.roundToDouble(),
+                percent,
                 FileState.download,
               );
             }
