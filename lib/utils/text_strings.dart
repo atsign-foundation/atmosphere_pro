@@ -56,6 +56,7 @@ class TextStrings {
       'Enabling this will auto-accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign(s)';
+  String sidebarContactUs = 'Contact us';
 
   String atSign = '@sign';
   String switchingAtSign = 'Switching atsign...';
