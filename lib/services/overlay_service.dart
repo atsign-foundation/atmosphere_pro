@@ -26,7 +26,7 @@ class OverlayService {
     if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
       await Future.delayed(Duration(seconds: 3));
       hideOverlay();
-    } else {
+    } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
       await Future.delayed(Duration(seconds: 5));
       hideOverlay();
     }
@@ -211,8 +211,11 @@ class OverlayService {
   textButton(Function buttonFunc, String buttonText) {}
 
   openFileReceiptBottomSheet(context,
-      {FileRecipientSection? fileRecipientSection}) {
+      {FileRecipientSection? fileRecipientSection =
+          FileRecipientSection.FAILED}) {
     var _historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    Provider.of<FileTransferProvider>(context, listen: false)
+        .selectedFileHistory = _historyProvider.sentHistory[0];
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
