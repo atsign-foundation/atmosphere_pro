@@ -62,7 +62,7 @@ class FileTransferService {
       );
       try {
         fileUploadProvider.updateSentFileTransferProgress =
-            FileTransferProgress(FileState.encrypt, null, filename);
+            FileTransferProgress(FileState.encrypt, null, filename, null);
         final encryptedFile = await encryptFile(
           file,
           encryptionKey,
@@ -213,7 +213,7 @@ class FileTransferService {
         var percent = (uploadedBytes / fileLength) * 100;
         fileUploadProvider.updateSentFileTransferProgress =
             FileTransferProgress(
-                FileState.upload, fileLength.toDouble(), fileName);
+                FileState.upload, percent, fileName, fileLength.toDouble());
       }, onDone: () {
         // fileUploadProvider.updateSentFileTransferProgress =
         //     FileTransferProgress(FileState.processing, null, fileName);
@@ -417,6 +417,7 @@ class FileTransferService {
       fileState,
       percent, // currently not showing download/decrypt %
       fileName,
+      null,
     );
 
     Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,

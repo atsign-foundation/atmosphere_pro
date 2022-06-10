@@ -221,7 +221,9 @@ class FileTransferProgress {
   FileState fileState;
   double? percent;
   String? fileName;
-  FileTransferProgress(this.fileState, this.percent, this.fileName);
+  double? fileSize;
+  FileTransferProgress(
+      this.fileState, this.percent, this.fileName, this.fileSize);
 }
 
 enum FileState { encrypt, decrypt, upload, download, processing }

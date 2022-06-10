@@ -149,8 +149,8 @@ class OverlayService {
     String uploadMessage = '';
 
     if (fileTransferProgress?.fileState == FileState.upload &&
-        fileTransferProgress?.percent != null) {
-      var fileSize = fileTransferProgress?.percent ?? 0;
+        fileTransferProgress?.fileSize != null) {
+      var fileSize = fileTransferProgress?.fileSize ?? 0;
       if (fileSize < 2000000) {
         uploadMessage = 'This might take around 5 seconds...';
       } else if (fileSize < 10000000) {
@@ -159,6 +159,10 @@ class OverlayService {
         uploadMessage = 'This might take around 1 minutes...';
       } else if (fileSize < 20000000) {
         uploadMessage = 'This might take around 4 minutes...';
+      } else if (fileSize < 50000000) {
+        uploadMessage = 'This might take around 6 minutes...';
+      } else if (fileSize < 100000000) {
+        uploadMessage = 'This might take around 11 minutes...';
       } else {
         uploadMessage = 'This might take a while...';
       }
