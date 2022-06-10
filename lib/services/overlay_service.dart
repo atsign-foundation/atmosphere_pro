@@ -208,8 +208,6 @@ class OverlayService {
     'Oops! something went wrong'
   ];
 
-  textButton(Function buttonFunc, String buttonText) {}
-
   openFileReceiptBottomSheet(context,
       {FileRecipientSection? fileRecipientSection =
           FileRecipientSection.FAILED}) {
