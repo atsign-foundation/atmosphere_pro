@@ -1,12 +1,15 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
+import '../data_models/file_transfer_status.dart';
 
 class OverlayService {
   OverlayService._();
@@ -22,6 +25,9 @@ class OverlayService {
 
     if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
       await Future.delayed(Duration(seconds: 3));
+      hideOverlay();
+    } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
+      await Future.delayed(Duration(seconds: 5));
       hideOverlay();
     }
   }
@@ -87,27 +93,49 @@ class OverlayService {
                               ],
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              hideOverlay();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 7, horizontal: 7),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: Colors.white,
-                              ),
-                              child: Text(
-                                TextStrings().buttonDismiss,
-                                style: TextStyle(
-                                  color: ColorConstants.fontPrimary,
-                                  fontSize: 15.toFont,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          )
+                          flushbarStatus == FLUSHBAR_STATUS.FAILED
+                              ? TextButton(
+                                  onPressed: () {
+                                    openFileReceiptBottomSheet(context);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 7, horizontal: 7),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: Colors.white,
+                                    ),
+                                    child: Text(
+                                      TextStrings.buttonShowMore,
+                                      style: TextStyle(
+                                        color: ColorConstants.fontPrimary,
+                                        fontSize: 15.toFont,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : TextButton(
+                                  onPressed: () {
+                                    hideOverlay();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 7, horizontal: 7),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: Colors.white,
+                                    ),
+                                    child: Text(
+                                      TextStrings.buttonDismiss,
+                                      style: TextStyle(
+                                        color: ColorConstants.fontPrimary,
+                                        fontSize: 15.toFont,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                )
                         ],
                       ),
                     ),
@@ -198,4 +226,33 @@ class OverlayService {
     'File(s) sent',
     'Oops! something went wrong'
   ];
+
+  openFileReceiptBottomSheet(context,
+      {FileRecipientSection? fileRecipientSection =
+          FileRecipientSection.FAILED}) {
+    var _historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    Provider.of<FileTransferProvider>(context, listen: false)
+        .selectedFileHistory = _historyProvider.sentHistory[0];
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: StadiumBorder(),
+        builder: (_context) {
+          return Container(
+            height: SizeConfig().screenHeight * 0.8,
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12.0),
+                topRight: const Radius.circular(12.0),
+              ),
+            ),
+            child: FileRecipients(
+              _historyProvider.sentHistory[0].sharedWith,
+              fileRecipientSection: fileRecipientSection,
+              key: UniqueKey(),
+            ),
+          );
+        });
+  }
 }
