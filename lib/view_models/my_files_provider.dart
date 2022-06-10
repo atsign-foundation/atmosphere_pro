@@ -41,6 +41,7 @@ class MyFilesProvider extends BaseModel {
   String SORT_LIST = 'sort_list';
   String RECENT_HISTORY = 'recent_history';
   String MY_FILES = 'my_files';
+  String fileSearchText = '';
 
   List<Widget> tabs = [Recents()];
 
@@ -90,6 +91,7 @@ class MyFilesProvider extends BaseModel {
       }
     });
     myFiles = myFilesRecord;
+    print('myFiles length: ${myFiles.length}');
     await sortFiles();
     populateTabs();
     setStatus(MY_FILES, Status.Done);
@@ -342,6 +344,11 @@ class MyFilesProvider extends BaseModel {
     }
   }
 
+  setFileSearchText(String str) {
+    fileSearchText = str;
+    notifyListeners();
+  }
+
   /// loops over receivedHistoryData and checks if my files is saved for a particular item.
   // saveMyFilesItems(List<FileTransfer> receivedHistoryLogs) async {
   //   var _atClient = AtClientManager.getInstance().atClient;
@@ -471,17 +478,17 @@ class MyFilesProvider extends BaseModel {
   }
 
   /// for testing only
-  // deleteMyfilekeys() async {
-  //   var atClient = AtClientManager.getInstance().atClient;
-  //   var myFilesAtKeys =
-  //       await atClient.getAtKeys(regex: MixedConstants.MY_FILES_KEY);
+  deleteMyfilekeys() async {
+    var atClient = AtClientManager.getInstance().atClient;
+    var myFilesAtKeys =
+        await atClient.getAtKeys(regex: MixedConstants.MY_FILES_KEY);
 
-  //   await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
-  //     var deleted = await atClient.delete(atkey);
-  //     print('deleted : ${deleted}');
-  //   });
+    await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
+      var deleted = await atClient.delete(atkey);
+      print('deleted : ${deleted}');
+    });
 
-  //   await sortFiles();
-  //   populateTabs();
-  // }
+    await sortFiles();
+    populateTabs();
+  }
 }

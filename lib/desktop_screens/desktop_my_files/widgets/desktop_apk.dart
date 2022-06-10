@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/d
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -16,7 +17,7 @@ class DesktopAPK extends StatefulWidget {
 class _DesktopAPKState extends State<DesktopAPK> {
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       load: (provider) {
         // provider.getReceivedHistory();

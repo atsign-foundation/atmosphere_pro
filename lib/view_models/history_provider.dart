@@ -61,7 +61,6 @@ class HistoryProvider extends BaseModel {
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
   bool isSyncedDataFetched = false;
-  String fileSearchText = '';
   List<FilesDetail>? sentPhotos,
       sentVideos,
       sentAudio,
@@ -1013,11 +1012,6 @@ class HistoryProvider extends BaseModel {
             isSending;
       }
     }
-    notifyListeners();
-  }
-
-  setFileSearchText(String str) {
-    fileSearchText = str;
     notifyListeners();
   }
 
