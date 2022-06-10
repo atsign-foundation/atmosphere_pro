@@ -64,21 +64,24 @@ class OverlayService {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: Row(
+                            child: Column(
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    text,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: flushbarStatus ==
-                                              FLUSHBAR_STATUS.SENDING
-                                          ? Colors.black
-                                          : Colors.white,
-                                      fontSize: 18.toFont,
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                                Text(
+                                  text,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: flushbarStatus ==
+                                            FLUSHBAR_STATUS.SENDING
+                                        ? Colors.black
+                                        : Colors.white,
+                                    fontSize: 18.toFont,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                Text(
+                                  getFileUploadMessage(
+                                    provider.sentFileTransferProgress,
                                   ),
                                 ),
                               ],
@@ -142,13 +145,25 @@ class OverlayService {
     }
   }
 
-  String getFileUploadMessage(FileTransferProgress fileTransferProgress) {
+  String getFileUploadMessage(FileTransferProgress? fileTransferProgress) {
     String uploadMessage = '';
 
-    if (fileTransferProgress.fileState == FileState.upload &&
-        fileTransferProgress.percent != null) {
-      uploadMessage = ' ${fileTransferProgress.percent}%';
+    if (fileTransferProgress?.fileState == FileState.upload &&
+        fileTransferProgress?.percent != null) {
+      var fileSize = fileTransferProgress?.percent ?? 0;
+      if (fileSize < 2000000) {
+        uploadMessage = 'This might take around 5 seconds...';
+      } else if (fileSize < 10000000) {
+        uploadMessage = 'This might take around 10 seconds...';
+      } else if (fileSize < 60000000) {
+        uploadMessage = 'This might take around 1 minutes...';
+      } else if (fileSize < 20000000) {
+        uploadMessage = 'This might take around 4 minutes...';
+      } else {
+        uploadMessage = 'This might take a while...';
+      }
     }
+
     return uploadMessage;
   }
 

@@ -212,10 +212,11 @@ class FileTransferService {
         uploadedBytes += chunk.length;
         var percent = (uploadedBytes / fileLength) * 100;
         fileUploadProvider.updateSentFileTransferProgress =
-            FileTransferProgress(FileState.upload, percent, fileName);
+            FileTransferProgress(
+                FileState.upload, fileLength.toDouble(), fileName);
       }, onDone: () {
-        fileUploadProvider.updateSentFileTransferProgress =
-            FileTransferProgress(FileState.processing, null, fileName);
+        // fileUploadProvider.updateSentFileTransferProgress =
+        //     FileTransferProgress(FileState.processing, null, fileName);
         streamedRequest.sink.close();
       });
 
