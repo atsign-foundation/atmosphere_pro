@@ -205,7 +205,7 @@ SPEC CHECKSUMS:
   DKImagePickerController: 72fd378f244cef3d27288e0aebf217a4467e4012
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   emoji_picker_flutter: df19dac03a2b39ac667dc8d1da939ef3a9e21347
-  file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
+  file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   file_saver: 503e386464dbe118f630e17b4c2e1190fa0cf808
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
