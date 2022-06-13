@@ -204,11 +204,12 @@ class OverlayService {
   }
 
   Widget getProgressBar(FileTransferProgress fileTransferProgress) {
-    if (fileTransferProgress.fileState == FileState.upload &&
-        fileTransferProgress.percent != null) {
-      // var percent = fileTransferProgress.percent! / 100;
-      return LinearProgressIndicator();
-    }
+    /// Not showing upload percent
+    // if (fileTransferProgress.fileState == FileState.upload &&
+    // fileTransferProgress.percent != null) {
+    // var percent = fileTransferProgress.percent! / 100;
+    // return LinearProgressIndicator();
+    // }
     return LinearProgressIndicator();
   }
 
