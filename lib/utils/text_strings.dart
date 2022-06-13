@@ -250,7 +250,7 @@ class TextStrings {
 
   // Desktop sent file details
   String successfullyTransfered = 'Successfully transfered';
-  String file_s = 'File(s)';
+  String file_s = 'File(s) . ';
 
   // Desktop transfer overlapping
   String downloadedBy = 'Downloaded by';
