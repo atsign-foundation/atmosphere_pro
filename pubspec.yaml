@@ -101,6 +101,9 @@ dependency_overrides:
       url: https://github.com/incrediblezayed/file_saver.git
       ref: main
 
+  at_sync_ui_flutter:
+    path: /Users/apple/Desktop/client_projects/at_company_github/at_widgets/at_sync_ui_flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
