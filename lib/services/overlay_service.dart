@@ -71,6 +71,8 @@ class OverlayService {
                         children: [
                           Expanded(
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   text,
@@ -81,14 +83,16 @@ class OverlayService {
                                             FLUSHBAR_STATUS.SENDING
                                         ? Colors.black
                                         : Colors.white,
-                                    fontSize: 18.toFont,
+                                    fontSize: 16.toFont,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
+                                SizedBox(height: 5),
                                 Text(
                                   getFileUploadMessage(
                                     provider.sentFileTransferProgress,
                                   ),
+                                  style: TextStyle(fontSize: 12.toFont),
                                 ),
                               ],
                             ),
@@ -200,11 +204,12 @@ class OverlayService {
   }
 
   Widget getProgressBar(FileTransferProgress fileTransferProgress) {
-    if (fileTransferProgress.fileState == FileState.upload &&
-        fileTransferProgress.percent != null) {
-      var percent = fileTransferProgress.percent! / 100;
-      return LinearProgressIndicator(value: percent);
-    }
+    /// Not showing upload percent
+    // if (fileTransferProgress.fileState == FileState.upload &&
+    // fileTransferProgress.percent != null) {
+    // var percent = fileTransferProgress.percent! / 100;
+    // return LinearProgressIndicator();
+    // }
     return LinearProgressIndicator();
   }
 
