@@ -54,7 +54,8 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         ),
                         Tooltip(
                           triggerMode: TooltipTriggerMode.tap,
-                          message: "This is used to switch between @signs",
+                          message:
+                              "You can pair multiple @Signs with this app. Use the + icon to either generate a new free @sign or pair an existing one. All paired @Signs will appear here, where you can switch between them.",
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.grey.shade400,

@@ -110,7 +110,8 @@ class CommonUtilityFunctions {
                         ),
                         Tooltip(
                           triggerMode: TooltipTriggerMode.tap,
-                          message: "Removes the @sign.",
+                          message:
+                              "You can have more than one @sign associated with this app and can remove one or all of the @Signs from the app at any time.",
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.grey.shade400,

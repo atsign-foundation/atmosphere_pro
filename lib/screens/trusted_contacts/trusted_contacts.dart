@@ -135,7 +135,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                         child: Tooltip(
                                           triggerMode: TooltipTriggerMode.tap,
                                           message:
-                                              "You can manage your trusted senders here",
+                                              "When someone on your Trusted Senders list sends you a file while you’re in the app, it will be automatically downloaded. If they send it when you’re not in the app, it will download the next time you open it.",
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.grey.shade400,
