@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:open_file/open_file.dart';
@@ -15,6 +15,8 @@ class DesktopAudios extends StatefulWidget {
 }
 
 class _DesktopAudiosState extends State<DesktopAudios> {
+  String? onHoverFileName;
+
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<MyFilesProvider>(
@@ -56,11 +58,29 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                                     provider.receivedAudio[index].filePath);
                               }
                             },
-                            child: DesktopFileCard(
-                              title: provider.receivedAudio[index].filePath!
-                                  .split(Platform.pathSeparator)
-                                  .last,
-                              filePath: provider.receivedAudio[index].filePath,
+                            child: MouseRegion(
+                              onEnter: (PointerEnterEvent e) {
+                                setState(() {
+                                  onHoverFileName =
+                                      provider.receivedAudio[index].fileName;
+                                });
+                              },
+                              onExit: (PointerExitEvent e) {
+                                setState(() {
+                                  onHoverFileName = null;
+                                });
+                              },
+                              child: DesktopFileCard(
+                                title: provider.receivedAudio[index].filePath!
+                                    .split(Platform.pathSeparator)
+                                    .last,
+                                filePath:
+                                    provider.receivedAudio[index].filePath,
+                                showDelete: onHoverFileName ==
+                                    provider.receivedAudio[index].fileName,
+                                transferId: provider
+                                    .receivedAudio[index].fileTransferId!,
+                              ),
                             ),
                           );
                         } else {

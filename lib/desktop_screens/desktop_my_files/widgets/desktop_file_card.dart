@@ -1,14 +1,43 @@
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DesktopFileCard extends StatelessWidget {
+class DesktopFileCard extends StatefulWidget {
   final String? title;
   final String? filePath;
-  DesktopFileCard({this.title, this.filePath});
+  final bool showDelete;
+  final String transferId;
+  DesktopFileCard(
+      {this.title,
+      this.filePath,
+      this.showDelete = false,
+      required this.transferId});
+
+  @override
+  State<DesktopFileCard> createState() => _DesktopFileCardState();
+}
+
+class _DesktopFileCardState extends State<DesktopFileCard> {
+  late Future _futureBuilder;
+  @override
+  void initState() {
+    super.initState();
+    getFutureBuilders();
+  }
+
+  getFutureBuilders() {
+    _futureBuilder = CommonUtilityFunctions().isFilePresent(widget.filePath!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,26 +47,30 @@ class DesktopFileCard extends StatelessWidget {
           child: Card(
             child: Column(
               children: <Widget>[
-                filePath != null
+                widget.filePath != null
                     ? Container(
                         width: 180,
                         height: 120,
                         child: FutureBuilder(
-                          future:
-                              CommonUtilityFunctions().isFilePresent(filePath!),
+                          future: _futureBuilder,
                           builder: (BuildContext cotext, snapshot) {
                             return snapshot.connectionState ==
                                         ConnectionState.done &&
                                     snapshot.data != null
                                 ? CommonUtilityFunctions().thumbnail(
-                                    filePath!
+                                    widget.filePath!
                                         .split(Platform.pathSeparator)
                                         .last
                                         .split('.')
                                         .last,
-                                    filePath,
+                                    widget.filePath,
                                     isFilePresent: snapshot.data as bool)
-                                : SizedBox();
+                                : Container(
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 30.toFont,
+                                    ),
+                                  );
                           },
                         ),
                       )
@@ -49,7 +82,7 @@ class DesktopFileCard extends StatelessWidget {
                               fit: BoxFit.fill),
                         ),
                       ),
-                title != null
+                widget.title != null
                     ? Container(
                         width: 180,
                         height: 30,
@@ -60,7 +93,7 @@ class DesktopFileCard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            title!,
+                            widget.title!,
                             style: TextStyle(
                               color: Color(0xFF8A8E95),
                               fontWeight: FontWeight.normal,
@@ -75,12 +108,65 @@ class DesktopFileCard extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: Icon(Icons.close),
-        )
+        widget.showDelete
+            ? Positioned(
+                right: 0,
+                top: 0,
+                child: InkWell(
+                  onTap: deleteMyFiletem,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: ColorConstants.light_grey)),
+                    child: Icon(Icons.close, size: 20),
+                  ),
+                ),
+              )
+            : SizedBox()
       ],
+    );
+  }
+
+  deleteMyFiletem() async {
+    await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth),
+              ),
+              content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
+                  () async {
+                var file = File(widget.filePath!);
+                if (await file.exists()) {
+                  await file.delete();
+                }
+
+                await Provider.of<MyFilesProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .removeParticularFile(widget.transferId,
+                        widget.filePath!.split(Platform.pathSeparator).last);
+              }));
+        });
+  }
+
+  deleteFile(String filePath, {String? fileTransferId}) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(onConfirmation: () {
+        var file = File(filePath);
+        file.deleteSync();
+
+        if (fileTransferId != null) {
+          Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
+      }),
     );
   }
 }

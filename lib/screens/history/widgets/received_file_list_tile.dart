@@ -1024,7 +1024,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   }
                 });
 
-                //TODO: add option to delete my file record
+                await Provider.of<MyFilesProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .deletMyFileRecord(widget.receivedHistory!.key);
               }));
         });
   }

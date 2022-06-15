@@ -135,58 +135,58 @@ class MyFilesProvider extends BaseModel {
               fileTransferId: fileData.key);
 
           // check if file exists
-          File tempFile = File(fileDetail.filePath!);
-          bool isFileDownloaded = await tempFile.exists();
+          // File tempFile = File(fileDetail.filePath!);
+          // bool isFileDownloaded = await tempFile.exists();
 
-          if (isFileDownloaded) {
-            if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-              int index = receivedAudio.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedAudio.add(fileDetail);
-              }
-            } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-              int index = receivedVideos.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedVideos.add(fileDetail);
-              }
-            } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-              int index = receivedPhotos.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                // checking is photo is downloaded or not
-                //if photo is downloaded then only it's shown in my files screen
-                File file = File(fileDetail.filePath!);
-                bool isFileDownloaded = await file.exists();
+          // if (isFileDownloaded) {
+          if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
+            int index = receivedAudio.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedAudio.add(fileDetail);
+            }
+          } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
+            int index = receivedVideos.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedVideos.add(fileDetail);
+            }
+          } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
+            int index = receivedPhotos.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              // checking is photo is downloaded or not
+              //if photo is downloaded then only it's shown in my files screen
+              // File file = File(fileDetail.filePath!);
+              // bool isFileDownloaded = await file.exists();
 
-                if (isFileDownloaded) {
-                  receivedPhotos.add(fileDetail);
-                }
-              }
-            } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
-                FileTypes.PDF_TYPES.contains(fileExtension) ||
-                FileTypes.WORD_TYPES.contains(fileExtension) ||
-                FileTypes.EXEL_TYPES.contains(fileExtension)) {
-              int index = receivedDocument.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedDocument.add(fileDetail);
-              }
-            } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
-              int index = receivedApk.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedApk.add(fileDetail);
-              }
-            } else {
-              int index = receivedUnknown.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedUnknown.add(fileDetail);
-              }
+              // if (isFileDownloaded) {
+              receivedPhotos.add(fileDetail);
+              // }
+            }
+          } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+              FileTypes.PDF_TYPES.contains(fileExtension) ||
+              FileTypes.WORD_TYPES.contains(fileExtension) ||
+              FileTypes.EXEL_TYPES.contains(fileExtension)) {
+            int index = receivedDocument.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedDocument.add(fileDetail);
+            }
+          } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
+            int index = receivedApk.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedApk.add(fileDetail);
+            }
+          } else {
+            int index = receivedUnknown.indexWhere(
+                (element) => element.fileName == fileDetail.fileName);
+            if (index == -1) {
+              receivedUnknown.add(fileDetail);
             }
           }
+          // }
         });
       });
       getrecentHistoryFiles();
@@ -328,12 +328,12 @@ class MyFilesProvider extends BaseModel {
               contactName: fileData.sender,
               fileTransferId: fileData.key);
 
-          File tempFile = File(fileDetail.filePath!);
-          bool isFileDownloaded = await tempFile.exists();
+          // File tempFile = File(fileDetail.filePath!);
+          // bool isFileDownloaded = await tempFile.exists();
           int index = recentFile
               .indexWhere((element) => element.fileName == fileDetail.fileName);
 
-          if (isFileDownloaded && index == -1) {
+          if (index == -1) {
             recentFile.add(fileDetail);
           }
         });
@@ -460,7 +460,8 @@ class MyFilesProvider extends BaseModel {
     return AtKey()
       ..key = MixedConstants.MY_FILES_KEY + transferUniqueId
       ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
-      ..metadata = Metadata();
+      ..metadata = Metadata()
+      ..metadata!.ttr = -1;
   }
 
   Future<bool> deletMyFileRecord(String fileTransferId) async {
@@ -472,6 +473,9 @@ class MyFilesProvider extends BaseModel {
       if (i != -1) {
         myFiles.removeAt(i);
       }
+
+      await sortFiles();
+      populateTabs();
     }
 
     return res;

@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_file_card.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:open_file/open_file.dart';
@@ -16,6 +15,8 @@ class DesktopRecents extends StatefulWidget {
 }
 
 class _DesktopRecentsState extends State<DesktopRecents> {
+  String? onHoverFileName;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MyFilesProvider>(builder: (_, provider, ___) {
@@ -52,11 +53,28 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                                   provider.recentFile[index].filePath);
                             }
                           },
-                          child: DesktopFileCard(
-                            title: provider.recentFile[index].filePath!
-                                .split(Platform.pathSeparator)
-                                .last,
-                            filePath: provider.recentFile[index].filePath,
+                          child: MouseRegion(
+                            onEnter: (PointerEnterEvent e) {
+                              setState(() {
+                                onHoverFileName =
+                                    provider.recentFile[index].fileName;
+                              });
+                            },
+                            onExit: (PointerExitEvent e) {
+                              setState(() {
+                                onHoverFileName = null;
+                              });
+                            },
+                            child: DesktopFileCard(
+                              title: provider.recentFile[index].filePath!
+                                  .split(Platform.pathSeparator)
+                                  .last,
+                              filePath: provider.recentFile[index].filePath,
+                              showDelete: onHoverFileName ==
+                                  provider.recentFile[index].fileName,
+                              transferId:
+                                  provider.recentFile[index].fileTransferId!,
+                            ),
                           ),
                         );
                       } else {
