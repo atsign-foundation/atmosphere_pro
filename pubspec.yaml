@@ -79,12 +79,12 @@ dependency_overrides:
   at_client: 
     git:
       url: https://github.com/atsign-foundation/at_client_sdk
-      ref: put_exception_handling
+      ref: trunk
       path: at_client
   at_client_mobile: 
     git:
       url: https://github.com/atsign-foundation/at_client_sdk
-      ref: put_exception_handling
+      ref: trunk
       path: at_client_mobile
   at_commons: 
     git:

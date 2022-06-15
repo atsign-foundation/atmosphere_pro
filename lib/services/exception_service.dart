@@ -25,19 +25,19 @@ class ExceptionService {
   String _getExceptions(Object e) {
     switch (e) {
       case AtKeyException:
-        return 'AtKeyException';
+        return 'AtKeyException: Something went wrong';
       case AtDecryptionException:
-        return 'AtDecryptionException';
+        return 'AtDecryptionException: Decryption failed';
       case AtPrivateKeyNotFoundException:
-        return 'AtPrivateKeyNotFoundException';
+        return 'AtPrivateKeyNotFoundException: Decryption failed';
       case AtPublicKeyChangeException:
-        return 'AtPublicKeyChangeException';
+        return 'AtPublicKeyChangeException: Decryption failed';
       case SharedKeyNotFoundException:
-        return 'SharedKeyNotFoundException';
+        return 'SharedKeyNotFoundException: Decryption failed';
       case SelfKeyNotFoundException:
-        return 'SelfKeyNotFoundException';
+        return 'SelfKeyNotFoundException: Decryption failed';
       case AtClientException:
-        return 'AtClientException';
+        return 'AtClientException: Cloud secondary is invalid or not reachable';
 
       default:
         return 'Something went wrong !!!';

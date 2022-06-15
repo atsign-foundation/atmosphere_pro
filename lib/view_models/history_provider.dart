@@ -288,7 +288,8 @@ class HistoryProvider extends BaseModel {
           await backendService.atClientInstance!.get(atkey).catchError(
         (e) {
           print("Exception in getting atValue: $e");
-          ExceptionService.instance.showGetExceptionOverlay(e);
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         },
       );
@@ -399,7 +400,8 @@ class HistoryProvider extends BaseModel {
             .get(atKey)
             .catchError((e) {
           print('error in get in getFileDownloadedAcknowledgement : $e');
-          ExceptionService.instance.showGetExceptionOverlay(e);
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
         if (atValue != null && atValue.value != null) {
@@ -607,7 +609,8 @@ class HistoryProvider extends BaseModel {
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
-          ExceptionService.instance.showGetExceptionOverlay(e);
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
 
@@ -1358,7 +1361,8 @@ class HistoryProvider extends BaseModel {
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
-          ExceptionService.instance.showGetExceptionOverlay(e);
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
 
