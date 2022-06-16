@@ -15,6 +15,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.da
 import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -35,7 +36,11 @@ class _TrustedContactsState extends State<TrustedContacts> {
             functionName: 'get_trusted_contacts',
             load: (provider) async => await provider.getTrustedContact(),
             showError: false,
-            errorBuilder: (provider) => Container(),
+            errorBuilder: (provider) => Scaffold(
+                  body: Center(
+                    child: Text(TextStrings().errorOccured),
+                  ),
+                ),
             successBuilder: (provider) {
               return Scaffold(
                 appBar: CustomAppBar(
