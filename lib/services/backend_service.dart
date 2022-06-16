@@ -152,7 +152,7 @@ class BackendService {
   startMonitor() async {
     await AtClientManager.getInstance()
         .notificationService
-        .subscribe(regex: MixedConstants.appNamespace)
+        .subscribe(regex: MixedConstants.appNamespace, shouldDecrypt: true)
         .listen((AtNotification notification) async {
       await _notificationCallBack(notification);
     });
@@ -180,15 +180,7 @@ class BackendService {
 
     if (notificationKey
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
-      var value = response.value!;
-
-      var decryptedMessage = await atClientInstance!.encryptionService!
-          .decrypt(value, fromAtSign)
-          .catchError((e) {
-        print("error in decrypting: $e");
-        showToast(e.toString());
-        return '';
-      });
+      var decryptedMessage = response.value!;
 
       if (decryptedMessage != null && decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
@@ -205,21 +197,10 @@ class BackendService {
         !notificationKey
             .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var atKey = notificationKey.split(':')[1];
-      var value = response.value!;
+      var decryptedMessage = response.value!;
 
       //TODO: only for testing
-      await sendNotificationAck(notificationKey, fromAtSign);
-
-      var decryptedMessage =
-          await atClientInstance!.encryptionService!.decrypt(value, fromAtSign)
-              // ignore: return_of_invalid_type_from_catch_error
-              .catchError((e) {
-        print("error in decrypting: $e");
-        //TODO: only for closed testing purpose , we are showing error dialog
-        // should be removed before general release.
-        showToast(e.toString());
-        return '';
-      });
+      // await sendNotificationAck(notificationKey, fromAtSign);
 
       if (decryptedMessage != null && decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -334,6 +315,8 @@ class BackendService {
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
           .checkForUndownloadedFiles();
+
+      setPeriodicFileHistoryRefresh();
     }
   }
 
@@ -504,7 +487,6 @@ class BackendService {
 
     // start monitor and package initializations.
     await startMonitor();
-    setPeriodicFileHistoryRefresh();
     initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);

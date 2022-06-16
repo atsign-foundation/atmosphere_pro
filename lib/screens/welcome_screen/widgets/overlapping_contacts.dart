@@ -29,6 +29,22 @@ class OverlappingContacts extends StatefulWidget {
 
 class _OverlappingContactsState extends State<OverlappingContacts> {
   bool isExpanded = false;
+  Map _atsignImages = {};
+
+  @override
+  void initState() {
+    for (var index = 0; index < widget.selectedList!.length; index++) {
+      Uint8List? image;
+      if (widget.selectedList![index]?.contact?.tags != null &&
+          widget.selectedList![index]?.contact?.tags!['image'] != null) {
+        image = CommonUtilityFunctions()
+            .getContactImage(widget.selectedList![index]!.contact!);
+      }
+      _atsignImages[widget.selectedList![index]?.contact?.atSign] = image;
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +69,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                     ? 3
                     : widget.selectedList!.length,
                 (index) {
-                  Uint8List? image;
-                  if (widget.selectedList![index]?.contact?.tags != null &&
-                      widget.selectedList![index]?.contact?.tags!['image'] !=
-                          null) {
-                    image = CommonUtilityFunctions()
-                        .getContactImage(widget.selectedList![index]!.contact!);
-                  }
+                  Uint8List? image = _atsignImages[
+                      widget.selectedList![index]?.contact?.atSign];
+
                   return Positioned(
                     left: 5 + double.parse((index * 10).toString()),
                     top: 5.toHeight,
@@ -161,20 +173,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                           child: ListView.builder(
                             itemCount: widget.selectedList!.length,
                             itemBuilder: (context, index) {
-                              Uint8List? image;
-                              if (provider.selectedContacts[index].contact
-                                          ?.tags !=
-                                      null &&
-                                  provider.selectedContacts[index].contact
-                                          ?.tags!['image'] !=
-                                      null) {
-                                image = CommonUtilityFunctions()
-                                    .getContactImage(
-                                        provider.selectedContacts[index] != null
-                                            ? provider.selectedContacts[index]
-                                                .contact!
-                                            : AtContact());
-                              }
+                              Uint8List? image = _atsignImages[
+                                  widget.selectedList![index]?.contact?.atSign];
+
                               return ContactListTile(
                                 isSelected: provider.selectedContacts
                                     .contains(provider.selectedContacts[index]),
