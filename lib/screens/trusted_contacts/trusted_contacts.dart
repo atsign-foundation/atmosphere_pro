@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
@@ -49,27 +48,6 @@ class _TrustedContactsState extends State<TrustedContacts> {
                 ),
                 body: SafeArea(
                   child: Column(children: [
-                    provider.fetchedTrustedContact.isEmpty
-                        ? Container()
-                        : Container(
-                            padding: EdgeInsets.only(right: 20.toWidth),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                    child: Icon(
-                                  Icons.view_module,
-                                  color: pro_color_constants
-                                      .ColorConstants.greyText,
-                                )),
-                                Container(
-                                  child: Icon(Icons.view_list,
-                                      color: pro_color_constants
-                                          .ColorConstants.greyText),
-                                ),
-                              ],
-                            ),
-                          ),
                     Expanded(
                         child: provider.fetchedTrustedContact.isEmpty
                             ? Column(
