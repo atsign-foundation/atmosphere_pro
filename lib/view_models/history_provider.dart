@@ -1220,6 +1220,7 @@ class HistoryProvider extends BaseModel {
         return false;
       }
     } catch (e) {
+      ExceptionService.instance.showNotifyExceptionOverlay(e);
       return false;
     }
   }

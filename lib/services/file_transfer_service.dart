@@ -154,7 +154,11 @@ class FileTransferService {
                     atKey,
                     value: jsonEncode(fileTransferObject.toJson()),
                   ),
-                );
+                )
+            //     .catchError((e) {
+            //   ExceptionService.instance.showNotifyExceptionOverlay(e);
+            // })
+            ;
 
         if (notificationResult.notificationStatusEnum ==
             NotificationStatusEnum.delivered) {

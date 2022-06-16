@@ -21,6 +21,11 @@ class ExceptionService {
     _showExceptionOverlay(_error, onRetry: onRetry);
   }
 
+  showNotifyExceptionOverlay(Object e, {Function? onRetry}) async {
+    var _error = _notifyExceptions(e);
+    _showExceptionOverlay(_error, onRetry: onRetry);
+  }
+
   /// exceptions for get method
   String _getExceptions(Object e) {
     switch (e) {
@@ -47,6 +52,20 @@ class ExceptionService {
   /// exceptions for put method
   String _putExceptions(Object e) {
     switch (e) {
+      default:
+        return 'Something went wrong !!!';
+    }
+  }
+
+  /// exceptions for notify method
+  String _notifyExceptions(Object e) {
+    switch (e) {
+      case AtKeyException:
+        return 'AtKeyException: Something went wrong';
+      case InvalidAtSignException:
+        return 'InvalidAtSignException: Invalid atsign';
+      case AtClientException:
+        return 'AtClientException: Encryption failed or cloud secondary not reachable';
       default:
         return 'Something went wrong !!!';
     }
