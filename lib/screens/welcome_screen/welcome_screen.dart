@@ -35,6 +35,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   HistoryProvider? historyProvider;
   bool isExpanded = true;
   int _selectedBottomNavigationIndex = 0;
+  late FileTransferProvider _fileTransferProvider;
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -52,6 +53,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   String? currentAtSign;
   @override
   void initState() {
+    _fileTransferProvider =
+        Provider.of<FileTransferProvider>(context, listen: false);
     setAtSign();
 
     listenForFlushBarStatus();
@@ -70,7 +73,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   listenForFlushBarStatus() {
     FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
-      OverlayService.instance.showOverlay(flushbarStatus);
+      OverlayService.instance.showOverlay(
+        flushbarStatus,
+        errorMessage: flushbarStatus == FLUSHBAR_STATUS.FAILED
+            ? _fileTransferProvider.error[_fileTransferProvider.SEND_FILES]
+            : null,
+      );
     });
   }
 

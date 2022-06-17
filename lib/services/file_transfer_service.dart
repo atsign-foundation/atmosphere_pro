@@ -165,10 +165,13 @@ class FileTransferService {
           fileTransferObject.sharedStatus = true;
         } else {
           fileTransferObject.sharedStatus = false;
+          fileTransferObject.atClientException =
+              notificationResult.atClientException;
         }
       } on Exception catch (e) {
         fileTransferObject.sharedStatus = false;
         fileTransferObject.error = e.toString();
+        fileTransferObject.atClientException = e;
       }
       result[sharedWithAtSign] = fileTransferObject;
     }

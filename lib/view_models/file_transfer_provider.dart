@@ -11,6 +11,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -267,6 +268,12 @@ class FileTransferProvider extends BaseModel {
         if (atsignStatus.value.sharedStatus != null &&
             !atsignStatus.value.sharedStatus!) {
           setStatus(SEND_FILES, Status.Error);
+          setError(
+            SEND_FILES,
+            ExceptionService.instance.notifyExceptions(
+              atsignStatus.value.atClientException ?? Exception(),
+            ),
+          );
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
           return false;
         }
@@ -277,6 +284,10 @@ class FileTransferProvider extends BaseModel {
       return true;
     } catch (e) {
       setStatus(SEND_FILES, Status.Error);
+      setError(
+        SEND_FILES,
+        'Something went wrong',
+      );
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
     }
   }

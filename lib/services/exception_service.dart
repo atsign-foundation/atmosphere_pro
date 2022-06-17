@@ -12,22 +12,22 @@ class ExceptionService {
   OverlayEntry? exceptionOverlayEntry;
 
   showGetExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = _getExceptions(e);
+    var _error = getExceptions(e);
     _showExceptionOverlay(_error, onRetry: onRetry);
   }
 
   showPutExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = _putExceptions(e);
+    var _error = putExceptions(e);
     _showExceptionOverlay(_error, onRetry: onRetry);
   }
 
   showNotifyExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = _notifyExceptions(e);
+    var _error = notifyExceptions(e);
     _showExceptionOverlay(_error, onRetry: onRetry);
   }
 
   /// exceptions for get method
-  String _getExceptions(Object e) {
+  String getExceptions(Object e) {
     switch (e) {
       case AtKeyException:
         return 'AtKeyException: Something went wrong';
@@ -50,7 +50,7 @@ class ExceptionService {
   }
 
   /// exceptions for put method
-  String _putExceptions(Object e) {
+  String putExceptions(Object e) {
     switch (e) {
       default:
         return 'Something went wrong !!!';
@@ -58,8 +58,9 @@ class ExceptionService {
   }
 
   /// exceptions for notify method
-  String _notifyExceptions(Object e) {
-    switch (e) {
+  String notifyExceptions(Object e) {
+    print('notifyExceptions: $e');
+    switch (e.runtimeType) {
       case AtKeyException:
         return 'AtKeyException: Something went wrong';
       case InvalidAtSignException:
