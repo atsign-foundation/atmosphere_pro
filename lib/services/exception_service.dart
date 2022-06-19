@@ -28,7 +28,7 @@ class ExceptionService {
 
   /// exceptions for get method
   String getExceptions(Object e) {
-    switch (e) {
+    switch (e.runtimeType) {
       case AtKeyException:
         return 'AtKeyException: Something went wrong';
       case AtDecryptionException:
@@ -51,7 +51,7 @@ class ExceptionService {
 
   /// exceptions for put method
   String putExceptions(Object e) {
-    switch (e) {
+    switch (e.runtimeType) {
       default:
         return 'Something went wrong !!!';
     }
