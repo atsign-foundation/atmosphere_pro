@@ -1,6 +1,5 @@
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
@@ -122,7 +121,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
-                                if (provider.trustedContacts[index]!.atSign!
+                                if (provider.trustedContacts[index].atSign!
                                     .contains(searchText)) {
                                   return InkWell(
                                     onTap: () {
@@ -134,16 +133,16 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                           TextStrings().removeTrustedSender,
                                           contact: AtContact(
                                               atSign: provider
-                                                  .trustedContacts[index]!
+                                                  .trustedContacts[index]
                                                   .atSign),
                                         ),
                                       );
                                     },
                                     child: DesktopCustomPersonVerticalTile(
                                         title: provider
-                                            .trustedContacts[index]!.atSign,
+                                            .trustedContacts[index].atSign,
                                         subTitle: provider
-                                            .trustedContacts[index]!.atSign,
+                                            .trustedContacts[index].atSign,
                                         showCancelIcon: false),
                                   );
                                 } else {
@@ -163,6 +162,9 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               showGroups: false,
                               showContacts: true,
                               isDesktop: true,
+                              contactSelectedHistory: provider.trustedContacts
+                                  .map((e) => GroupContactsModel(contact: e))
+                                  .toList(),
                               selectedList: (_list) {
                                 providerCallback<TrustedContactProvider>(
                                     context,
@@ -170,7 +172,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                       _list.forEach((element) async {
                                         if (element!.contact != null) {
                                           await provider.addTrustedContacts(
-                                              element.contact);
+                                              element.contact!);
                                         }
                                       });
 

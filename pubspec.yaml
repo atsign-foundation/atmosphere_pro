@@ -52,7 +52,7 @@ dependencies:
   share_plus: ^4.0.1
   url_launcher: ^6.0.20
   video_thumbnail: ^0.4.6
-  webview_flutter: ^3.0.1
+  webview_flutter: ^3.0.4
   http: ^0.13.4
   package_info_plus: ^1.4.2
   fluttertoast: ^8.0.9

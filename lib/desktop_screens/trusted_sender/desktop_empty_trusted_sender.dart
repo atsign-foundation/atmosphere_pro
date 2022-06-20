@@ -129,7 +129,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                               _list.forEach((element) async {
                                 if (element!.contact != null) {
                                   await provider
-                                      .addTrustedContacts(element.contact);
+                                      .addTrustedContacts(element.contact!);
                                 }
                               });
                               await provider.setTrustedContact();
