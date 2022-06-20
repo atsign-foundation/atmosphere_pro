@@ -25,6 +25,8 @@ class _AddContactState extends State<AddContact> {
 
   @override
   Widget build(BuildContext context) {
+    final isKeyBoard = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Container(
       height: 100,
       width: 100,
@@ -50,9 +52,10 @@ class _AddContactState extends State<AddContact> {
               maxHeight: (widget.name != null) ? 190.toHeight : 160.toHeight),
           child: Column(
             children: [
-              SizedBox(
-                height: 21.toHeight,
-              ),
+              if (!isKeyBoard)
+                SizedBox(
+                  height: 21.toHeight,
+                ),
               widget.image != null
                   ? CustomCircleAvatar(
                       nonAsset: true,
@@ -90,7 +93,7 @@ class _AddContactState extends State<AddContact> {
               nickName = value;
             },
             decoration: InputDecoration(
-              hintText: 'Enter Nick Name (Optional)',
+              hintText: 'Enter nickname (optional)',
             ),
             style: TextStyle(
               fontSize: 15.toFont,

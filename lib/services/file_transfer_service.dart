@@ -55,14 +55,15 @@ class FileTransferService {
     var fileStatuses = <FileStatus>[];
 
     for (var file in files) {
+      var filename = file.path.split(Platform.pathSeparator).last;
       var fileStatus = FileStatus(
-        fileName: file.path.split(Platform.pathSeparator).last,
+        fileName: filename,
         isUploaded: false,
         size: await file.length(),
       );
       try {
         fileUploadProvider.updateSentFileTransferProgress =
-            FileTransferProgress(FileState.encrypt, null, null);
+            FileTransferProgress(FileState.encrypt, null, filename, null);
         final encryptedFile = await encryptFile(
           file,
           encryptionKey,
@@ -219,8 +220,11 @@ class FileTransferService {
         uploadedBytes += chunk.length;
         var percent = (uploadedBytes / fileLength) * 100;
         fileUploadProvider.updateSentFileTransferProgress =
-            FileTransferProgress(FileState.upload, percent, fileName);
+            FileTransferProgress(
+                FileState.upload, percent, fileName, fileLength.toDouble());
       }, onDone: () {
+        // fileUploadProvider.updateSentFileTransferProgress =
+        //     FileTransferProgress(FileState.processing, null, fileName);
         streamedRequest.sink.close();
       });
 
@@ -305,7 +309,7 @@ class FileTransferService {
     var receiverPort = ReceivePort();
     var _preference = BackendService.getInstance().atClientPreference;
 
-    Isolate.spawn(decryptFileInIsolate, {
+    await Isolate.spawn(decryptFileInIsolate, {
       'sendPort': receiverPort.sendPort,
       'file': file,
       'encryptionKey': encryptionKey,
@@ -395,7 +399,7 @@ class FileTransferService {
               updateFileTransferState(
                 fileName,
                 transferId,
-                percent.roundToDouble(),
+                percent,
                 FileState.download,
               );
             }
@@ -428,6 +432,7 @@ class FileTransferService {
       fileState,
       percent, // currently not showing download/decrypt %
       fileName,
+      null,
     );
 
     Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,

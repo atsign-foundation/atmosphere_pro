@@ -40,6 +40,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       isFileShareFailed = false;
   String? notes;
   FocusNode _notesFocusNode = FocusNode();
+  TextEditingController _notesController = TextEditingController();
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       }
     });
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await BackendService.getInstance().syncWithSecondary();
     });
     super.initState();
@@ -128,8 +129,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: TextField(
+                              child: TextFormField(
                                 focusNode: _notesFocusNode,
+                                controller: _notesController,
                                 decoration: InputDecoration(
                                   hintText: TextStrings().welcomeAddTranscripts,
                                   hintStyle: CustomTextStyles
@@ -149,13 +151,25 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 },
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(_notesFocusNode);
-                              },
-                              child: Icon(Icons.edit, color: Colors.black),
-                            ),
+                            notes != null
+                                ? InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        notes = null;
+                                      });
+                                      _notesController.clear();
+                                    },
+                                    child:
+                                        Icon(Icons.clear, color: Colors.black),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(_notesFocusNode);
+                                    },
+                                    child:
+                                        Icon(Icons.edit, color: Colors.black),
+                                  ),
                             SizedBox(
                               width: 15,
                             ),
@@ -411,6 +425,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         _currentScreen = CurrentScreen.PlaceolderImage;
         _welcomeScreenProvider.isSelectionItemChanged = false;
         notes = null;
+        _notesController.clear();
       });
     }
   }

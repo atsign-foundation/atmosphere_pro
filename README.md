@@ -14,12 +14,12 @@ confidential information without worrying about your data being stored on
 a server in the cloud.
 
 This repo holds the open source code for the @mosphere PRO app, to serve as
-an example of apps that can be build on the @ Platform.
+an example of apps that can be build on the atPlatform.
 
 ## Developer
 
 The purpose of this repo is primarily to be an example of what can be done
-with the @ Platform. So if you're a developer take a look at the code here.
+with the atPlatform. So if you're a developer take a look at the code here.
 
 ### Contributor
 

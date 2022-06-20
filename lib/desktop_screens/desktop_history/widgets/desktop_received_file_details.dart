@@ -151,46 +151,45 @@ class _DesktopReceivedFileDetailsState
                       ),
                     ),
                     SizedBox(height: 5),
-                    widget.fileTransfer!.isDownloading!
-                        ? Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Consumer<FileProgressProvider>(
-                                builder: (_c, provider, _) {
-                              var fileTransferProgress =
-                                  provider.receivedFileProgress[
-                                      widget.fileTransfer!.key!];
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Consumer<FileProgressProvider>(
+                          builder: (_c, provider, _) {
+                        var fileTransferProgress = provider
+                            .receivedFileProgress[widget.fileTransfer!.key];
 
-                              return getDownloadStatus(fileTransferProgress);
-                            }),
-                          )
-                        : isDownloadAvailable
-                            ? Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: IconButton(
-                                  icon: ((isDownloaded ||
-                                              isFilesAvailableOfline) &&
-                                          !isOverwrite)
-                                      ? Icon(
-                                          Icons.done,
-                                          color: Color(0xFF08CB21),
-                                          size: 25.toFont,
-                                        )
-                                      : Icon(
-                                          Icons.download,
-                                          color: Color(0xFF08CB21),
-                                          size: 30,
-                                        ),
-                                  onPressed: () async {
-                                    if (isOverwrite) {
-                                      overwriteDialog();
-                                      return;
-                                    }
+                        return fileTransferProgress != null
+                            ? getDownloadStatus(fileTransferProgress)
+                            : isDownloadAvailable
+                                ? Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: IconButton(
+                                      icon: ((isDownloaded ||
+                                                  isFilesAvailableOfline) &&
+                                              !isOverwrite)
+                                          ? Icon(
+                                              Icons.done,
+                                              color: Color(0xFF08CB21),
+                                              size: 25.toFont,
+                                            )
+                                          : Icon(
+                                              Icons.download,
+                                              color: Color(0xFF08CB21),
+                                              size: 30,
+                                            ),
+                                      onPressed: () async {
+                                        if (isOverwrite) {
+                                          overwriteDialog();
+                                          return;
+                                        }
 
-                                    downloadFiles();
-                                  },
-                                ),
-                              )
-                            : SizedBox(),
+                                        downloadFiles();
+                                      },
+                                    ),
+                                  )
+                                : SizedBox();
+                      }),
+                    )
                   ],
                 ),
               ],
@@ -256,7 +255,7 @@ class _DesktopReceivedFileDetailsState
                                                   widget.fileTransfer!
                                                       .files![index].name
                                                       ?.split('.')
-                                                      ?.last,
+                                                      .last,
                                                   getDownloadDirectory(
                                                       widget.fileTransfer!
                                                           .files![index].name!),
@@ -277,7 +276,7 @@ class _DesktopReceivedFileDetailsState
             Row(
               children: <Widget>[
                 Text(
-                  '${fileCount} files . ',
+                  '${fileCount} File(s) . ',
                   style: CustomTextStyles.greyText15,
                 ),
                 fileSize > 1024
@@ -293,14 +292,14 @@ class _DesktopReceivedFileDetailsState
             Consumer<FileProgressProvider>(
               builder: (_context, provider, _widget) {
                 var fileTransferProgress =
-                    provider.receivedFileProgress[widget.fileTransfer!.key!];
+                    provider.receivedFileProgress[widget.fileTransfer!.key];
                 return RichText(
                   text: TextSpan(
                       text:
-                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk: mm').format(widget.fileTransfer!.date!)}  | ',
+                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk:mm').format(widget.fileTransfer!.date!)}  | ',
                       style: CustomTextStyles.greyText15,
                       children: [
-                        widget.fileTransfer!.isDownloading!
+                        fileTransferProgress != null
                             ? TextSpan(
                                 text:
                                     '${getFileStateMessage(fileTransferProgress)}',
@@ -466,7 +465,7 @@ class _DesktopReceivedFileDetailsState
             NavService.navKey.currentContext!,
             listen: false)
         .downloadFiles(
-      widget.fileTransfer!.key!,
+      widget.fileTransfer!.key,
       widget.fileTransfer!.sender!,
       false,
     );
@@ -509,7 +508,7 @@ class _DesktopReceivedFileDetailsState
     String fileState = '';
     if (fileTransferProgress.fileState == FileState.download) {
       fileState = 'Downloading';
-    } else {
+    } else if (fileTransferProgress.fileState == FileState.decrypt) {
       fileState = 'Decrypting';
     }
 

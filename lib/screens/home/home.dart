@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -47,7 +46,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<InternetConnectivityChecker>(
               NavService.navKey.currentContext!,
               listen: false)
@@ -123,7 +122,7 @@ class _HomeState extends State<Home> {
           await filePickerProvider.setFiles();
         });
 
-        print("Shared:" + (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+        print("Shared:" + (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
         // check to see if atsign is paired
         var atsign = await _backendService.currentAtsign;
         if (atsign != null) {
@@ -154,7 +153,7 @@ class _HomeState extends State<Home> {
         });
 
         print("Shared second:" +
-            (_sharedFiles?.map((f) => f.path)?.join(",") ?? ""));
+            (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
       }
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');

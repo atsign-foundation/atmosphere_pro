@@ -38,6 +38,7 @@ class ImageConstants {
   static String trustedSender = '$_basePath/trusted_sender.png';
   static String myFiles = '$_basePath/my_files.png';
   static String groups = '$_basePath/groups.png';
+  static String contactUs = '$_basePath/contactUs.png';
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';
 

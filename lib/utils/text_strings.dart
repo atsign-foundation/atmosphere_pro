@@ -56,6 +56,7 @@ class TextStrings {
       'Enabling this will auto-accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign(s)';
+  String sidebarContactUs = 'Contact us';
 
   String atSign = '@sign';
   String switchingAtSign = 'Switching atsign...';
@@ -84,7 +85,8 @@ class TextStrings {
   String uploadKey = 'Upload key file';
   String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
-  String buttonDismiss = 'DISMISS';
+  static final String buttonDismiss = 'DISMISS';
+  static final String buttonShowMore = 'Show More';
   String ok = 'Ok';
   String buttonRetry = 'RETRY';
 
@@ -222,7 +224,7 @@ class TextStrings {
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
   String contactSelectionConfirmation =
-      'Selected contacts will not be added, confirm?';
+      'Your contact selection will be cleared if you leave this screen. Would you like to continue with your new action?';
 
   // Desktop Selected file
   String selectedFiles = 'Selected files';
@@ -249,7 +251,7 @@ class TextStrings {
 
   // Desktop sent file details
   String successfullyTransfered = 'Successfully transfered';
-  String file_s = 'File(s)';
+  String file_s = 'File(s) . ';
 
   // Desktop transfer overlapping
   String downloadedBy = 'Downloaded by';

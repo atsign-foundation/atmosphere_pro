@@ -128,7 +128,7 @@ class _DesktopReceivedFilesListTileState
 
   @override
   void didUpdateWidget(covariant DesktopReceivedFilesListTile oldWidget) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await checkIfDownloadAvailable();
     });
     super.didUpdateWidget(oldWidget);
@@ -136,7 +136,7 @@ class _DesktopReceivedFilesListTileState
 
   @override
   void didChangeDependencies() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await checkIfDownloadAvailable();
     });
     super.didChangeDependencies();
@@ -229,7 +229,7 @@ class _DesktopReceivedFilesListTileState
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            '${fileLength} Files',
+                            '${fileLength} File(s)',
                             style: CustomTextStyles.secondaryRegular14,
                           ),
                           SizedBox(width: 10.toHeight),
@@ -284,7 +284,7 @@ class _DesktopReceivedFilesListTileState
                       SizedBox(width: 10.toHeight),
                       widget.receivedHistory!.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.receivedHistory!.date!)}',
+                              '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -314,7 +314,7 @@ class _DesktopReceivedFilesListTileState
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
-                                filesList![index].name?.split('.')?.last)) {
+                                filesList![index].name?.split('.').last)) {
                               videoThumbnailBuilder(filesList![index].path!);
                             }
                             return ListTile(
@@ -349,7 +349,7 @@ class _DesktopReceivedFilesListTileState
                                               filesList![index]
                                                   .name
                                                   ?.split('.')
-                                                  ?.last,
+                                                  .last,
                                               MixedConstants
                                                       .SENT_FILE_DIRECTORY +
                                                   Platform.pathSeparator +

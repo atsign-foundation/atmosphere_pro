@@ -144,7 +144,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                                         .files![index]
                                                         .name
                                                         ?.split('.')
-                                                        ?.last,
+                                                        .last,
                                                     MixedConstants
                                                             .DESKTOP_SENT_DIR +
                                                         widget
@@ -216,7 +216,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
             // Text('Successfully transfered', style: CustomTextStyles.greyText15),
             SizedBox(height: 15.toHeight),
             Text(
-                '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk: mm').format(widget.selectedFileData!.fileDetails!.date!)}',
+                '${DateFormat("MM-dd-yyyy").format(widget.selectedFileData!.fileDetails!.date!)}  |  ${DateFormat('kk:mm').format(widget.selectedFileData!.fileDetails!.date!)}',
                 style: CustomTextStyles.greyText15),
             SizedBox(height: 15.toHeight),
             // Text('To', style: CustomTextStyles.greyText15),

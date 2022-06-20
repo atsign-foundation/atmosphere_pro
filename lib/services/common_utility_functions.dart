@@ -143,6 +143,7 @@ class CommonUtilityFunctions {
                               },
                               value: isSelectAll,
                               checkColor: Colors.white,
+                              activeColor: Theme.of(context).primaryColor,
                               title: Text(TextStrings().selectAll,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -156,6 +157,7 @@ class CommonUtilityFunctions {
                                 },
                                 value: atsignMap[atsign],
                                 checkColor: Colors.white,
+                                activeColor: Theme.of(context).primaryColor,
                                 title: Text('$atsign'),
                               ),
                             Divider(thickness: 0.8),
@@ -179,6 +181,23 @@ class CommonUtilityFunctions {
                             ),
                             Row(children: [
                               TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  TextStrings().buttonCancel,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Theme.of(context).primaryColor)),
                                 onPressed: () async {
                                   var tempAtsignMap = {};
                                   tempAtsignMap.addAll(atsignMap);
@@ -200,22 +219,11 @@ class CommonUtilityFunctions {
                                 },
                                 child: Text(TextStrings().remove,
                                     style: TextStyle(
-                                      color: ColorConstants.fontPrimary,
+                                      color: Colors.white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                     )),
                               ),
-                              Spacer(),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(TextStrings().buttonCancel,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      )))
                             ])
                           ],
                         ),
@@ -467,22 +475,35 @@ class CommonUtilityFunctions {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    FlatButton(
-                        child: Text(TextStrings().buttonDelete,
-                            style: CustomTextStyles.primaryBold14),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        TextStrings().buttonCancel,
+                        style: TextStyle(
+                          fontSize: 16.toFont,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor)),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await BackendService.getInstance()
                                 .deleteAtSignFromKeyChain(atsign);
                           }
-                        }),
-                    Spacer(),
-                    FlatButton(
-                        child: Text(TextStrings().buttonCancel,
-                            style: CustomTextStyles.primaryBold14),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        })
+                        },
+                        child: Text(TextStrings().buttonDelete,
+                            style: TextStyle(
+                                fontSize: 16.toFont,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white))),
                   ],
                 )
               ],

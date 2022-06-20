@@ -10,7 +10,6 @@ class FileTransfer {
   DateTime? date, expiry;
   List<PlatformFile>? platformFiles;
   bool? isUpdate;
-  bool? isDownloading;
   bool? isWidgetOpen;
   String? notes;
   FileTransfer({
@@ -21,7 +20,6 @@ class FileTransfer {
     this.date,
     required this.key,
     this.isUpdate = false,
-    this.isDownloading = false,
     this.isWidgetOpen = false,
     this.notes,
   }) {
@@ -35,7 +33,6 @@ class FileTransfer {
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
     isUpdate = json['isUpdate'];
-    isDownloading = json['isDownloading'];
     isWidgetOpen = json['isWidgetOpen'];
     url = json['url'];
     sender = json['sender'];
@@ -55,7 +52,6 @@ class FileTransfer {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['isUpdate'] = isUpdate;
-    data['isDownloading'] = isDownloading;
     data['isWidgetOpen'] = isWidgetOpen;
     data['url'] = this.url;
     data['sender'] = this.sender;
@@ -225,7 +221,9 @@ class FileTransferProgress {
   FileState fileState;
   double? percent;
   String? fileName;
-  FileTransferProgress(this.fileState, this.percent, this.fileName);
+  double? fileSize;
+  FileTransferProgress(
+      this.fileState, this.percent, this.fileName, this.fileSize);
 }
 
-enum FileState { encrypt, decrypt, upload, download }
+enum FileState { encrypt, decrypt, upload, download, processing }

@@ -23,7 +23,7 @@ Widget customPersonVerticalTile(
         child: Stack(
           children: [
             ContactInitial(
-              initials: title ?? ' ',
+              initials: title,
               size: 50,
               maxSize: (80.0 - 30.0),
               minSize: 50,
