@@ -18,6 +18,9 @@ class TrustedContactProvider extends BaseModel {
   BackendService backendService = BackendService.getInstance();
 
   addTrustedContacts(AtContact trustedContact) async {
+    if (trustedContact.tags != null && trustedContact.tags!['image'] != null) {
+      trustedContact.tags!['image'] = null;
+    }
     setStatus(AddTrustedContacts, Status.Loading);
 
     try {

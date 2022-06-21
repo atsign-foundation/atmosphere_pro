@@ -76,6 +76,18 @@ dependencies:
   at_sync_ui_flutter: ^1.0.3
 
 dependency_overrides:
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      ref: fix/buffer-size
+      path: at_contacts_flutter
+  
+  at_contacts_group_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      ref: fix/buffer-size
+      path: at_contacts_group_flutter
+    
   file_saver:
     git:
       url: https://github.com/incrediblezayed/file_saver.git

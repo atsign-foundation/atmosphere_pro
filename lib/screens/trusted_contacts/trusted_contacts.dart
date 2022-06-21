@@ -117,12 +117,11 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                 itemBuilder: (context, index) {
                                   Uint8List? byteImage;
 
-                                  if (provider.trustedContacts[index]
-                                          .tags!['image'] !=
+                                  if (provider.trustedContacts[index].atSign !=
                                       null) {
                                     byteImage = CommonUtilityFunctions()
-                                        .getContactImage(
-                                            provider.trustedContacts[index]);
+                                        .getCachedContactImage(provider
+                                            .trustedContacts[index].atSign!);
                                   }
 
                                   return ContactListTile(

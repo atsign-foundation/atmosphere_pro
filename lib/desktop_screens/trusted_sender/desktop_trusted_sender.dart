@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
@@ -8,6 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.d
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -121,6 +124,15 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
+                                Uint8List? byteImage;
+
+                                if (provider.trustedContacts[index].atSign !=
+                                    null) {
+                                  byteImage = CommonUtilityFunctions()
+                                      .getCachedContactImage(provider
+                                          .trustedContacts[index].atSign!);
+                                }
+
                                 if (provider.trustedContacts[index].atSign!
                                     .contains(searchText)) {
                                   return InkWell(
@@ -139,11 +151,15 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                       );
                                     },
                                     child: DesktopCustomPersonVerticalTile(
-                                        title: provider
-                                            .trustedContacts[index].atSign,
-                                        subTitle: provider
-                                            .trustedContacts[index].atSign,
-                                        showCancelIcon: false),
+                                      title: provider
+                                          .trustedContacts[index].atSign,
+                                      subTitle: provider
+                                          .trustedContacts[index].atSign,
+                                      showCancelIcon: false,
+                                      showImage:
+                                          byteImage != null ? true : false,
+                                      image: byteImage,
+                                    ),
                                   );
                                 } else {
                                   return SizedBox();
