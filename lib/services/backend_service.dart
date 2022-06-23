@@ -256,13 +256,20 @@ class BackendService {
   }
 
   downloadFiles(BuildContext context, String key, String fromAtSign) async {
-    var result = await Provider.of<HistoryProvider>(context, listen: false)
-        .downloadFiles(
+    var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    var result = await historyProvider.downloadFiles(
       key,
       fromAtSign,
       false,
     );
     if (result is bool && result) {
+      var i = historyProvider.receivedHistoryLogs
+          .indexWhere((element) => element.key == key);
+      if (i != -1) {
+        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .saveNewDataInMyFiles(historyProvider.receivedHistoryLogs[i]);
+      }
     } else if (result is bool && !result) {}
   }
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/gestures.dart';
@@ -56,6 +57,8 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                               if (fileExists) {
                                 await OpenFile.open(
                                     provider.receivedAudio[index].filePath);
+                              } else {
+                                CommonUtilityFunctions().showNoFileDialog();
                               }
                             },
                             child: MouseRegion(
