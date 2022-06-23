@@ -77,9 +77,6 @@ class _VideosState extends State<Videos> {
                       provider.receivedVideos[index].fileTransferId);
             },
             onTap: () async {
-              print(
-                  'provider.receivedVideos[index].size====>${provider.receivedVideos[index].size}');
-              //      await openDownloadsFolder(context);
               await openFilePath(provider.receivedVideos[index].filePath!);
             },
             child: Card(
