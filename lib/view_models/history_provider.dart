@@ -808,6 +808,9 @@ class HistoryProvider extends BaseModel {
           downloadPath: downloadPath ?? _downloadPath,
         );
       } catch (e) {
+        Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .removeReceiveProgressItem(transferId);
         SnackbarService().showSnackbar(
           NavService.navKey.currentContext!,
           e.toString(),
