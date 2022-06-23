@@ -101,11 +101,13 @@ class _AudiosState extends State<Audios> {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
-      builder: (context) => EditBottomSheet(onConfirmation: () {
+      builder: (context) => EditBottomSheet(onConfirmation: () async {
         var file = File(filePath);
-        file.deleteSync();
+        if (await file.exists()) {
+          file.deleteSync();
+        }
         if (fileTransferId != null) {
-          Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                   listen: false)
               .removeParticularFile(
                   fileTransferId, filePath.split(Platform.pathSeparator).last);
