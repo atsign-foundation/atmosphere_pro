@@ -195,6 +195,10 @@ class HistoryProvider extends BaseModel {
   // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
   /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
   getSentHistory({bool setLoading = true}) async {
+    if (setLoading) {
+      setStatus(SENT_HISTORY, Status.Loading);
+    }
+
     // checking, if new keys are available to show in sent history
     AtClient atClient = AtClientManager.getInstance().atClient;
     List<AtKey> sentFileAtkeys = await atClient.getAtKeys(
@@ -219,12 +223,10 @@ class HistoryProvider extends BaseModel {
     });
 
     if (!isNewKeyAvailable) {
+      setStatus(SENT_HISTORY, Status.Done);
       return;
     }
 
-    if (setLoading) {
-      setStatus(SENT_HISTORY, Status.Loading);
-    }
     tempSentHistory = [];
 
     try {
