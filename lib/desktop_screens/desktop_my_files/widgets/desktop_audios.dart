@@ -74,6 +74,8 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                                 });
                               },
                               child: DesktopFileCard(
+                                key: Key(
+                                    provider.receivedAudio[index].filePath!),
                                 title: provider.receivedAudio[index].filePath!
                                     .split(Platform.pathSeparator)
                                     .last,

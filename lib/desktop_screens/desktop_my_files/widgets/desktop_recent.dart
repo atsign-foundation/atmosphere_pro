@@ -69,6 +69,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                               });
                             },
                             child: DesktopFileCard(
+                              key: Key(provider.recentFile[index].filePath!),
                               title: provider.recentFile[index].filePath!
                                   .split(Platform.pathSeparator)
                                   .last,

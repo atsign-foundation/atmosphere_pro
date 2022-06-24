@@ -79,6 +79,8 @@ class _DesktopAPKState extends State<DesktopAPK> {
                                 });
                               },
                               child: DesktopFileCard(
+                                  key: Key(
+                                      provider.receivedApk[index].filePath!),
                                   title: provider.receivedApk[index].filePath!
                                       .split(Platform.pathSeparator)
                                       .last,

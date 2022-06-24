@@ -74,6 +74,8 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                                 });
                               },
                               child: DesktopFileCard(
+                                key: Key(
+                                    provider.receivedDocument[index].filePath!),
                                 title: provider
                                     .receivedDocument[index].filePath!
                                     .split(Platform.pathSeparator)

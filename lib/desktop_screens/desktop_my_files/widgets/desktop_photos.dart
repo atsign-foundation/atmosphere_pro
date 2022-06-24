@@ -79,6 +79,8 @@ class _DesktopPhotosState extends State<DesktopPhotos> {
                                 });
                               },
                               child: DesktopFileCard(
+                                key: Key(
+                                    provider.receivedPhotos[index].filePath!),
                                 title: provider.receivedPhotos[index].filePath!
                                     .split(Platform.pathSeparator)
                                     .last,

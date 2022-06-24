@@ -74,6 +74,8 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                                 });
                               },
                               child: DesktopFileCard(
+                                key: Key(
+                                    provider.receivedUnknown[index].filePath!),
                                 title: provider.receivedUnknown[index].filePath!
                                     .split(Platform.pathSeparator)
                                     .last,

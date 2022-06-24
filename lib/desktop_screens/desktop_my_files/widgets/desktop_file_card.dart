@@ -17,11 +17,13 @@ class DesktopFileCard extends StatefulWidget {
   final String? filePath;
   final bool showDelete;
   final String transferId;
+  Key? key;
   DesktopFileCard(
       {this.title,
       this.filePath,
       this.showDelete = false,
-      required this.transferId});
+      required this.transferId,
+      this.key});
 
   @override
   State<DesktopFileCard> createState() => _DesktopFileCardState();

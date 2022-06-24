@@ -73,6 +73,8 @@ class _DesktopVideosState extends State<DesktopVideos> {
                                 });
                               },
                               child: DesktopFileCard(
+                                key: Key(
+                                    provider.receivedVideos[index].filePath!),
                                 title: provider.receivedVideos[index].filePath!
                                     .split(Platform.pathSeparator)
                                     .last,

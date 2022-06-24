@@ -679,7 +679,9 @@ class _DesktopReceivedFilesListTileState
 
                   if (await CommonUtilityFunctions().isFilePresent(filePath)) {
                     var file = File(filePath);
-                    file.deleteSync();
+                    if (await file.existsSync()) {
+                      file.deleteSync();
+                    }
                   }
                 });
 
