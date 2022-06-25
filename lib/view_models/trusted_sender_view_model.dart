@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
@@ -95,7 +94,7 @@ class TrustedContactProvider extends BaseModel {
       });
 
       var jsonValue;
-      if (keyValue != null && keyValue.value != null) {
+      if (keyValue.value != null) {
         jsonValue = jsonDecode(keyValue.value);
         jsonValue['trustedContacts'].forEach((contact) {
           final c = AtContact.fromJson(contact);

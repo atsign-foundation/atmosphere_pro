@@ -19,12 +19,9 @@ import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {

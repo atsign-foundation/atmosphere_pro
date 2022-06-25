@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
 
 class LabelledCircularProgressIndicator extends StatelessWidget {
-  double? value;
+  final double? value;
   LabelledCircularProgressIndicator({this.value});
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,4 @@
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/dektop_custom_person_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';

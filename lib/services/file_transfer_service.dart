@@ -5,7 +5,6 @@ import 'dart:isolate';
 
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -15,7 +14,6 @@ import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_client/src/service/encryption_service.dart';
 
 class FileTransferService {
