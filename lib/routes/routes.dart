@@ -43,8 +43,9 @@ class SetupRoutes {
         );
       },
       Routes.GROUPS: (context) {
-        Map<String, dynamic>? args =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+        // args isn't used
+        // Map<String, dynamic>? args =
+        //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
         return GroupList();
       },
       Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
@@ -34,8 +33,6 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
 import 'package:at_client/src/service/sync_service.dart';
-import 'package:at_client/src/service/notification_service_impl.dart';
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 
 class BackendService {
@@ -182,7 +179,7 @@ class BackendService {
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
             DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
@@ -202,7 +199,7 @@ class BackendService {
       //TODO: only for testing
       // await sendNotificationAck(notificationKey, fromAtSign);
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
@@ -235,20 +232,22 @@ class BackendService {
       transferId = transferId.split('@')[0];
       transferId = transferId.replaceAll('.mospherepro', '');
       transferId = transferId.replaceAll('file_transfer_', '');
-      AtKey atKey = AtKey()
-        ..key = 'receive_ack_$transferId'
-        ..sharedWith = fromAtsign
-        ..metadata = Metadata()
-        ..metadata!.ttr = -1
-        ..metadata!.ttl = 518400000;
+      // atKey isn't used
+      // AtKey atKey = AtKey()
+      //   ..key = 'receive_ack_$transferId'
+      //   ..sharedWith = fromAtsign
+      //   ..metadata = Metadata()
+      //   ..metadata!.ttr = -1
+      //   ..metadata!.ttl = 518400000;
 
-      var notificationResult =
-          await AtClientManager.getInstance().notificationService.notify(
-                NotificationParams.forUpdate(
-                  atKey,
-                  value: 'receive_ack_$key',
-                ),
-              );
+      // noificationResult isn't used, apparently
+      // var notificationResult =
+      //     await AtClientManager.getInstance().notificationService.notify(
+      //           NotificationParams.forUpdate(
+      //             atKey,
+      //             value: 'receive_ack_$key',
+      //           ),
+      //         );
     } catch (e) {
       print('error in ack: $e');
     }
@@ -538,7 +537,7 @@ class BackendService {
         MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
       );
     } else if (Platform.isMacOS) {
-      DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+      await DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
     }
   }
 

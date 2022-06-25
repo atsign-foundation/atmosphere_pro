@@ -71,8 +71,8 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                             .checkToOnboard(
                                                 atSign:
                                                     widget.atSignList![index]);
-
-                                        Navigator.pop(context);
+                                        
+                                        // Navigator.pop(context);
                                         // Navigator.pop(context);
                                       },
                                 child: Padding(

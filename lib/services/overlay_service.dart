@@ -17,16 +17,16 @@ class OverlayService {
   static OverlayService get instance => _instance;
   OverlayEntry? snackBarOverlayEntry;
 
-  showOverlay(FLUSHBAR_STATUS flushbarStatus) async {
+  showOverlay(FlushbarStatus flushbarStatus) async {
     hideOverlay();
 
     snackBarOverlayEntry = _buildSnackBarOverlayEntry(flushbarStatus);
     NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry!);
 
-    if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
+    if (flushbarStatus == FlushbarStatus.DONE) {
       await Future.delayed(Duration(seconds: 3));
       hideOverlay();
-    } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
+    } else if (flushbarStatus == FlushbarStatus.FAILED) {
       await Future.delayed(Duration(seconds: 5));
       hideOverlay();
     }
@@ -37,7 +37,7 @@ class OverlayService {
     snackBarOverlayEntry = null;
   }
 
-  OverlayEntry _buildSnackBarOverlayEntry(FLUSHBAR_STATUS flushbarStatus) {
+  OverlayEntry _buildSnackBarOverlayEntry(FlushbarStatus flushbarStatus) {
     Color bgColor = _getColor(flushbarStatus);
 
     return OverlayEntry(builder: (context) {
@@ -58,7 +58,7 @@ class OverlayService {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    flushbarStatus == FLUSHBAR_STATUS.SENDING
+                    flushbarStatus == FlushbarStatus.SENDING
                         ? provider.sentFileTransferProgress != null
                             ? getProgressBar(provider.sentFileTransferProgress!)
                             : LinearProgressIndicator()
@@ -79,10 +79,10 @@ class OverlayService {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: flushbarStatus ==
-                                            FLUSHBAR_STATUS.SENDING
-                                        ? Colors.black
-                                        : Colors.white,
+                                    color:
+                                        flushbarStatus == FlushbarStatus.SENDING
+                                            ? Colors.black
+                                            : Colors.white,
                                     fontSize: 16.toFont,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -97,7 +97,7 @@ class OverlayService {
                               ],
                             ),
                           ),
-                          flushbarStatus == FLUSHBAR_STATUS.FAILED
+                          flushbarStatus == FlushbarStatus.FAILED
                               ? TextButton(
                                   onPressed: () {
                                     openFileReceiptBottomSheet(context);
@@ -153,10 +153,10 @@ class OverlayService {
     });
   }
 
-  String _getText(FLUSHBAR_STATUS flushbarStatus,
+  String _getText(FlushbarStatus flushbarStatus,
       {FileTransferProgress? fileTransferProgress}) {
     switch (flushbarStatus) {
-      case FLUSHBAR_STATUS.SENDING:
+      case FlushbarStatus.SENDING:
         String sendingMessage = transferMessages[0];
         if (fileTransferProgress != null) {
           if (fileTransferProgress.fileState == FileState.encrypt) {
@@ -168,9 +168,9 @@ class OverlayService {
           }
         }
         return sendingMessage;
-      case FLUSHBAR_STATUS.DONE:
+      case FlushbarStatus.DONE:
         return transferMessages[1];
-      case FLUSHBAR_STATUS.FAILED:
+      case FlushbarStatus.FAILED:
         return transferMessages[2];
       default:
         return '';
@@ -213,13 +213,13 @@ class OverlayService {
     return LinearProgressIndicator();
   }
 
-  Color _getColor(FLUSHBAR_STATUS flushbarStatus) {
+  Color _getColor(FlushbarStatus flushbarStatus) {
     switch (flushbarStatus) {
-      case FLUSHBAR_STATUS.SENDING:
+      case FlushbarStatus.SENDING:
         return Colors.amber;
-      case FLUSHBAR_STATUS.DONE:
+      case FlushbarStatus.DONE:
         return Color(0xFF5FAA45);
-      case FLUSHBAR_STATUS.FAILED:
+      case FlushbarStatus.FAILED:
         return ColorConstants.redAlert;
       default:
         return Colors.amber;

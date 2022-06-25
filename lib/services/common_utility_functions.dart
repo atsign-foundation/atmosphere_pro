@@ -12,7 +12,6 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -29,8 +28,7 @@ class CommonUtilityFunctions {
     Uint8List? image;
     AtContact contact = checkForCachedContactDetail(atsign);
 
-    if (contact != null &&
-        contact.tags != null &&
+    if (contact.tags != null &&
         contact.tags!['image'] != null) {
       try {
         return getContactImage(contact);
@@ -57,8 +55,7 @@ class CommonUtilityFunctions {
     String? _name;
     AtContact contact = checkForCachedContactDetail(atsign);
 
-    if (contact != null &&
-        contact.tags != null &&
+    if (contact.tags != null &&
         contact.tags!['name'] != null) {
       _name = contact.tags!['name'].toString();
     }

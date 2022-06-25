@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -34,10 +33,6 @@ import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:at_client/src/service/notification_service.dart';
-import 'package:provider/provider.dart';
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'file_download_checker.dart';
@@ -235,7 +230,7 @@ class HistoryProvider extends BaseModel {
         print('error in getSentHistory : $e');
         return AtValue();
       });
-      if (keyValue != null && keyValue.value != null) {
+      if (keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
@@ -289,7 +284,7 @@ class HistoryProvider extends BaseModel {
         },
       );
 
-      if (atvalue != null && atvalue.value != null) {
+      if (atvalue.value != null) {
         try {
           FileHistory fileHistory = FileHistory.fromJson(
             jsonDecode(atvalue.value),
@@ -397,7 +392,7 @@ class HistoryProvider extends BaseModel {
           print('error in get in getFileDownloadedAcknowledgement : $e');
           return AtValue();
         });
-        if (atValue != null && atValue.value != null) {
+        if (atValue.value != null) {
           var downloadAcknowledgement =
               DownloadAcknowledgement.fromJson(jsonDecode(atValue.value));
 
@@ -605,7 +600,7 @@ class HistoryProvider extends BaseModel {
           return AtValue();
         });
 
-        if (atvalue != null && atvalue.value != null) {
+        if (atvalue.value != null) {
           try {
             FileTransferObject fileTransferObject =
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
@@ -613,9 +608,7 @@ class HistoryProvider extends BaseModel {
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = atKey.sharedBy!;
 
-            if (filesModel.key != null) {
-              tempReceivedHistoryLogs.insert(0, filesModel);
-            }
+            tempReceivedHistoryLogs.insert(0, filesModel);
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
           }
@@ -1045,24 +1038,25 @@ class HistoryProvider extends BaseModel {
         receivedHistoryLogs[index].isWidgetOpen = isWidgetOpen;
       }
       notifyListeners();
-
-      var files =
-          await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
+      // files isn't used
+      // var files =
+      //     await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
       receivedHistoryLogs[index].files![_fileIndex].isDownloading = false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
           .checkForUndownloadedFiles();
 
-      if (files is List<File>) {
-        await sortFiles(receivedHistoryLogs);
-        populateTabs();
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return true;
-      } else {
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return false;
-      }
+      // unnecessary check: it'll always be true
+      // if (files is List<File>) {
+      await sortFiles(receivedHistoryLogs);
+      populateTabs();
+      setStatus(DOWNLOAD_FILE, Status.Done);
+      return true;
+      // } else {
+      //   setStatus(DOWNLOAD_FILE, Status.Done);
+      //   return false;
+      // }
     } catch (e) {
       print('error in downloading file: $e');
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
@@ -1073,6 +1067,8 @@ class HistoryProvider extends BaseModel {
       return false;
     }
   }
+
+  /* This function isn't even referenced/used
 
   Future<List<File>> _downloadSingleFileFromWeb(
       String? transferId, String? sharedByAtSign, String fileName,
@@ -1091,9 +1087,10 @@ class HistoryProvider extends BaseModel {
       return AtValue();
     });
 
-    if (result == null) {
-      return [];
-    }
+    // result can't be null
+    // if (result == null) {
+    //   return [];
+    // }
     FileTransferObject? fileTransferObject;
     try {
       var _jsonData = jsonDecode(result.value);
@@ -1155,6 +1152,7 @@ class HistoryProvider extends BaseModel {
       return [];
     }
   }
+  */
 
   Future<bool> sendFileDownloadAcknowledgement(
       FileTransfer fileTransfer) async {

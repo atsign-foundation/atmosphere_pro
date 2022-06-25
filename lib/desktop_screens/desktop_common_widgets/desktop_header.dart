@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 class DesktopHeader extends StatelessWidget {
   final String? title;
   final ValueChanged<bool>? onFilter;
-  List<Widget>? actions;
-  List<String> options = [
+  final List<Widget>? actions;
+  final List<String> options = [
     'By type',
     'By name',
     'By size',
     'By date',
     'add-btn'
   ];
-  bool showBackIcon, isTitleCentered;
+  final bool showBackIcon, isTitleCentered;
   DesktopHeader(
       {this.title,
       this.showBackIcon = true,

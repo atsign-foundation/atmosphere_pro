@@ -75,8 +75,8 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) {
-        Map<String, dynamic>? args =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+        // Map<String, dynamic>? args =
+        //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
         DesktopGroupSetupRoutes.setExitFunction(() {
           DesktopSetupRoutes.nested_pop();
         });
