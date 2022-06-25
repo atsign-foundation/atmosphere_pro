@@ -2,7 +2,6 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SideBarItem extends StatelessWidget {
   final String? image;
@@ -12,7 +11,7 @@ class SideBarItem extends StatelessWidget {
   final bool showIconOnly, isDesktop;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
-  bool isScale;
+  final bool isScale;
   final bool showNotificationDot;
   SideBarItem(
       {Key? key,
@@ -28,8 +27,10 @@ class SideBarItem extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    // since all arguments should be final in stateless widget
+    bool _isScale = isScale;
     if (SizeConfig().isMobile(context)) {
-      isScale = false;
+      _isScale = false;
     }
 
     return InkWell(
@@ -49,7 +50,7 @@ class SideBarItem extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(right: isDesktop ? 20 : 10),
                   child: Transform.scale(
-                    scale: isScale ? 1.2 : 1,
+                    scale: _isScale ? 1.2 : 1,
                     child: Image.asset(
                       image!,
                       height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
@@ -92,15 +93,16 @@ class SideBarItem extends StatelessWidget {
     );
   }
 
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // this function isn't used
+  // Future<void> _launchInBrowser(String url) async {
+  //   if (await canLaunchUrl(Uri.parse(url))) {
+  //     await launchUrl(
+  //       Uri.parse(url),
+  //       // forceSafariVC: false,
+  //       // forceWebView: false,
+  //     );
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 }

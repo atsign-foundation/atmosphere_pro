@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({

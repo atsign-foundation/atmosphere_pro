@@ -39,7 +39,7 @@ class FileTransferProvider extends BaseModel {
   List<SharedMediaFile>? _sharedFiles;
   FilePickerResult? result;
   PlatformFile? file;
-  FLUSHBAR_STATUS? flushbarStatus;
+  FlushbarStatus? flushbarStatus;
   List<PlatformFile> selectedFiles = [];
   List<FileTransferStatus> transferStatus = [];
   Map<String, List<Map<String, bool>>> transferStatusMap = {};
@@ -50,9 +50,9 @@ class FileTransferProvider extends BaseModel {
   List<AtContact> temporaryContactList = [];
   bool hasSelectedFilesChanged = false, scrollToBottom = false;
 
-  final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
-  Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
-  StreamSink<FLUSHBAR_STATUS> get flushBarStatusSink => _flushBarStream.sink;
+  final _flushBarStream = StreamController<FlushbarStatus>.broadcast();
+  Stream<FlushbarStatus> get flushBarStatusStream => _flushBarStream.stream;
+  StreamSink<FlushbarStatus> get flushBarStatusSink => _flushBarStream.sink;
 
   FileHistory? _selectedFileHistory;
 
@@ -212,7 +212,7 @@ class FileTransferProvider extends BaseModel {
   Future<dynamic> sendFileWithFileBin(
       List<PlatformFile> selectedFiles, List<GroupContactsModel?> contactList,
       {String? groupName, String? notes}) async {
-    flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
+    flushBarStatusSink.add(FlushbarStatus.SENDING);
     setStatus(SEND_FILES, Status.Loading);
     var fileUploadProvider = Provider.of<FileProgressProvider>(
         NavService.navKey.currentContext!,
@@ -261,20 +261,20 @@ class FileTransferProvider extends BaseModel {
             !atsignStatus.value.sharedStatus!) {
           fileUploadProvider.removeSentFileProgress();
           setStatus(SEND_FILES, Status.Error);
-          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          flushBarStatusSink.add(FlushbarStatus.FAILED);
 
           return false;
         }
       }
 
       fileUploadProvider.removeSentFileProgress();
-      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+      flushBarStatusSink.add(FlushbarStatus.DONE);
       setStatus(SEND_FILES, Status.Done);
       return true;
     } catch (e) {
       fileUploadProvider.removeSentFileProgress();
       setStatus(SEND_FILES, Status.Error);
-      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      flushBarStatusSink.add(FlushbarStatus.FAILED);
     }
   }
 
@@ -292,7 +292,7 @@ class FileTransferProvider extends BaseModel {
     }
 
     try {
-      flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
+      flushBarStatusSink.add(FlushbarStatus.SENDING);
 
       //  reuploading files
       for (var fileData in _fileHistory.fileDetails!.files!) {
@@ -314,14 +314,14 @@ class FileTransferProvider extends BaseModel {
       for (var element in _fileHistory.sharedWith!) {
         if (element.isNotificationSend != null &&
             !element.isNotificationSend!) {
-          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          flushBarStatusSink.add(FlushbarStatus.FAILED);
           return false;
         }
       }
-      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+      flushBarStatusSink.add(FlushbarStatus.DONE);
       return true;
     } catch (e) {
-      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      flushBarStatusSink.add(FlushbarStatus.FAILED);
       return false;
     }
   }
@@ -455,4 +455,4 @@ class FileTransferProvider extends BaseModel {
   }
 }
 
-enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED, DONE }
+enum FlushbarStatus { IDLE, SENDING, FAILED, DONE }

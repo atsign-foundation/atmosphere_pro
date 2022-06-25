@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:at_common_flutter/services/size_config.dart';

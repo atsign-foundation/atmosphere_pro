@@ -6,8 +6,8 @@ import 'package:at_common_flutter/services/size_config.dart';
 class ContactInitial extends StatelessWidget {
   final double? size, maxSize, minSize;
   final String? initials;
-  int? index;
-  Color? background;
+  final int? index;
+  final Color? background;
 
   ContactInitial(
       {Key? key,
@@ -20,10 +20,11 @@ class ContactInitial extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    int? _index = index;
     if (initials!.length < 3) {
-      index = initials!.length;
+      _index = initials!.length;
     } else {
-      index = 3;
+      _index = 3;
     }
 
     return Container(
@@ -37,7 +38,7 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials!.substring((index == 1) ? 0 : 1, index).toUpperCase(),
+          initials!.substring((_index == 1) ? 0 : 1, _index).toUpperCase(),
           style: CustomTextStyles.whiteBold(size: (size! ~/ 3)),
         ),
       ),
