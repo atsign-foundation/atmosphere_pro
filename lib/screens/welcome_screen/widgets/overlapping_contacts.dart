@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:at_contact/at_contact.dart';
 
 /// This is a custom widget to display the selected contacts
 /// in a row with overlapping profile pictures

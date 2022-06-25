@@ -182,16 +182,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             ),
                             SizedBox(
                               height: (_welcomeScreenProvider
-                                              .selectedContacts !=
-                                          null &&
-                                      _welcomeScreenProvider
                                           .selectedContacts.isNotEmpty &&
                                       filePickerModel.selectedFiles.isNotEmpty)
                                   ? 20.toHeight
                                   : 60.toHeight,
                             ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
+                            (_welcomeScreenProvider
                                         .selectedContacts.isNotEmpty &&
                                     filePickerModel.selectedFiles.isNotEmpty)
                                 ? Container(
@@ -269,9 +265,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 30.toHeight,
                             ),
-                            if (_welcomeScreenProvider.selectedContacts !=
-                                    null &&
-                                _welcomeScreenProvider
+                            if (_welcomeScreenProvider
                                     .selectedContacts.isNotEmpty &&
                                 filePickerModel.selectedFiles.isNotEmpty) ...[
                               Row(

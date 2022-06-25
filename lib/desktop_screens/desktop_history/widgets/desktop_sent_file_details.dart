@@ -17,7 +17,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory? selectedFileData;
-  Key? key;
+  final Key? key;
   DesktopSentFileDetails({this.key, this.selectedFileData});
 
   @override

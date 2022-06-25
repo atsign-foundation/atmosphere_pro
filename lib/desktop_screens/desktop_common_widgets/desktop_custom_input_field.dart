@@ -31,9 +31,11 @@ class DesktopCustomInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
+        // initalValue can't be null
+        text: initialValue,
         selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+            // initialValue can't be null
+            offset: initialValue.length)));
     return Container(
       width: width.toWidth,
       height: height,
