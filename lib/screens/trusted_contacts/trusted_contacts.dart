@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
 import 'package:atsign_atmosphere_pro/utils/colors.dart' as pro_color_constants;
@@ -78,6 +77,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                     pro_text_strings.TextStrings()
                                         .addTrustedSender,
                                     style: CustomTextStyles.secondaryRegular16,
+                                    textAlign: TextAlign.center,
                                   ),
                                   SizedBox(
                                     height: 25.toHeight,
@@ -95,13 +95,13 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                             builder: (context) =>
                                                 ContactsScreen(
                                                   asSelectionScreen: true,
-                                                  context: NavService
-                                                      .navKey.currentContext,
+                                                  selectedContactsHistory:
+                                                      provider.trustedContacts,
                                                   selectedList: (s) async {
                                                     s.forEach((element) async {
                                                       await provider
                                                           .addTrustedContacts(
-                                                              element);
+                                                              element!);
                                                     });
                                                     await provider
                                                         .setTrustedContact();
@@ -117,12 +117,11 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                 itemBuilder: (context, index) {
                                   Uint8List? byteImage;
 
-                                  if (provider.trustedContacts[index]!
-                                          .tags!['image'] !=
+                                  if (provider.trustedContacts[index].atSign !=
                                       null) {
                                     byteImage = CommonUtilityFunctions()
-                                        .getContactImage(
-                                            provider.trustedContacts[index]!);
+                                        .getCachedContactImage(provider
+                                            .trustedContacts[index].atSign!);
                                   }
 
                                   return ContactListTile(
@@ -145,18 +144,18 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                     onAdd: () {},
                                     onRemove: () {},
                                     name:
-                                        provider.trustedContacts[index]!.tags !=
+                                        provider.trustedContacts[index].tags !=
                                                     null &&
-                                                provider.trustedContacts[index]!
+                                                provider.trustedContacts[index]
                                                         .tags!['name'] !=
                                                     null
-                                            ? provider.trustedContacts[index]!
+                                            ? provider.trustedContacts[index]
                                                 .tags!['name']
                                             : provider
-                                                .trustedContacts[index]!.atSign!
+                                                .trustedContacts[index].atSign!
                                                 .substring(1),
                                     atSign:
-                                        provider.trustedContacts[index]!.atSign,
+                                        provider.trustedContacts[index].atSign,
                                     image: byteImage != null
                                         ? CustomCircleAvatar(
                                             byteImage: byteImage,
@@ -164,7 +163,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                           )
                                         : ContactInitial(
                                             initials: provider
-                                                .trustedContacts[index]!.atSign,
+                                                .trustedContacts[index].atSign,
                                           ),
                                   );
                                 },

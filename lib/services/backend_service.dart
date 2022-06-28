@@ -217,7 +217,7 @@ class BackendService {
             Provider.of<TrustedContactProvider>(context, listen: false);
 
         trustedContactProvider.trustedContacts.forEach((element) {
-          if (element!.atSign == fromAtSign) {
+          if (element.atSign == fromAtSign) {
             trustedSender = true;
           }
         });
