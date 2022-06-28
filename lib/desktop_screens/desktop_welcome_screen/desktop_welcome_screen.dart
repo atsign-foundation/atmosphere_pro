@@ -623,23 +623,16 @@ class SideBarIcon extends StatelessWidget {
   }
 
   Future<void> _launchInBrowser(String url) async {
-    // print("inside launch in browser!");
-    // if (await canLaunchUrl(Uri(path: url))) {
-    //   await launchUrl(
-    //     Uri(path: url),
-    //     // forceSafariVC: false,
-    //     // forceWebView: false,
-    //   );
-    // } else {
-    //   throw 'Could not launch $url';
-    // }
-    // print(url);
-    await launchUrl(
-      Uri(
-        scheme: 'https',
-        path: url,
-      ),
-    );
+    try {
+      await launchUrl(
+        Uri(
+          scheme: 'https',
+          path: url,
+        ),
+      );
+    } catch (e) {
+      throw 'Could not launch $url';
+    }
   }
 
   Future<void> _launchInEmail(String email) async {
