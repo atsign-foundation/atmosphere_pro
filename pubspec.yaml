@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.7+43
+version: 1.0.7+44
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -52,7 +52,7 @@ dependencies:
   share_plus: ^4.0.1
   url_launcher: ^6.0.20
   video_thumbnail: ^0.4.6
-  webview_flutter: ^3.0.1
+  webview_flutter: ^3.0.4
   http: ^0.13.4
   package_info_plus: ^1.4.2
   fluttertoast: ^8.0.9
@@ -71,7 +71,7 @@ dependencies:
   at_onboarding_flutter: ^4.0.3
   at_backupkey_flutter: ^4.0.1
   at_contacts_flutter: ^4.0.5
-  at_contacts_group_flutter: ^4.0.6
+  at_contacts_group_flutter: ^4.0.7
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.3
 
