@@ -97,7 +97,7 @@ class TrustedContactProvider extends BaseModel {
       });
 
       var jsonValue;
-      if (keyValue != null && keyValue.value != null) {
+      if (keyValue.value != null) {
         jsonValue = jsonDecode(keyValue.value);
         jsonValue['trustedContacts'].forEach((contact) {
           final c = AtContact.fromJson(contact);

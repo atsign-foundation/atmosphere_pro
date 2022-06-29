@@ -9,13 +9,14 @@ class BaseModel with ChangeNotifier {
   }
 
   setError(String function, String _error, [Status? _status]) {
-    if (_error != null) {
-      error[function] = _error;
-      status[function] = Status.Error;
-    } else {
-      this.error[function] = null;
-      this.status[function] = _status ?? Status.Idle;
-    }
+    // unnecessary check: it'll always be true
+    // if (_error != null) {
+    error[function] = _error;
+    status[function] = Status.Error;
+    // } else {
+    //   this.error[function] = null;
+    //   this.status[function] = _status ?? Status.Idle;
+    // }
     notifyListeners();
   }
 

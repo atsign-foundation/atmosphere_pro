@@ -12,7 +12,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSwitchAtsign extends StatefulWidget {
-  String atsign;
+  final String atsign;
   DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
 
   @override
@@ -91,7 +91,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   ),
                 ),
                 SizedBox(height: 5),
-                (_name != null && _name != '')
+                (_name != '')
                     ? SizedBox(
                         width: 180,
                         child: Text(

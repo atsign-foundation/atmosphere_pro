@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class FileRecipients extends StatefulWidget {
   final List<ShareStatus>? filesharedWith;
-  FileRecipientSection? fileRecipientSection;
+  final FileRecipientSection? fileRecipientSection;
   FileRecipients(this.filesharedWith, {this.fileRecipientSection, Key? key});
 
   @override

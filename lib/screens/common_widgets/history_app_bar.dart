@@ -147,8 +147,8 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
     } else {
       String url = 'shareddocuments://' +
           BackendService.getInstance().atClientPreference.downloadPath!;
-      if (await canLaunch(url)) {
-        await launch(url);
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
       } else {
         throw 'Could not launch $url';
       }
