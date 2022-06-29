@@ -80,7 +80,12 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       path: at_onboarding_flutter
-      ref: feature/on-boarding-2.0
+      ref: feature/on-boarding-3.0
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      ref: feature/at-client-mobile-2.0
+      path: at_client_mobile
   file_saver:
     git:
       url: https://github.com/incrediblezayed/file_saver.git

@@ -67,10 +67,12 @@ packages:
   at_client_mobile:
     dependency: "direct main"
     description:
-      name: at_client_mobile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.18"
+      path: at_client_mobile
+      ref: "feature/at-client-mobile-2.0"
+      resolved-ref: "2e3bb9f629b1bbe6ced953efb3dfbfdd4b3202f4"
+      url: "https://github.com/atsign-foundation/at_client_sdk.git"
+    source: git
+    version: "3.1.17"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -117,8 +119,8 @@ packages:
     dependency: "direct main"
     description:
       path: at_onboarding_flutter
-      ref: "feature/on-boarding-2.0"
-      resolved-ref: f2279284bf08599ca336b85b2265c7fcba86177f
+      ref: "feature/on-boarding-3.0"
+      resolved-ref: "032986301d784eb915aff9d739eda370ac2970d5"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.1"
