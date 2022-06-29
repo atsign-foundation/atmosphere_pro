@@ -49,7 +49,7 @@ packages:
       name: at_backupkey_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   at_base2e15:
     dependency: transitive
     description:
@@ -120,7 +120,7 @@ packages:
     description:
       path: at_onboarding_flutter
       ref: "feature/on-boarding-3.0"
-      resolved-ref: "032986301d784eb915aff9d739eda370ac2970d5"
+      resolved-ref: c110fa5d76b5dd6b4a3f81e3edf7e16975ca98db
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.1"
