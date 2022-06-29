@@ -267,6 +267,7 @@ class HistoryProvider extends BaseModel {
 
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
+      ExceptionService.instance.showPutExceptionOverlay(error);
       setError(SENT_HISTORY, error.toString());
     }
   }
@@ -440,6 +441,7 @@ class HistoryProvider extends BaseModel {
       populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
+      ExceptionService.instance.showPutExceptionOverlay(error);
       setStatus(RECEIVED_HISTORY, Status.Error);
       setError(RECEIVED_HISTORY, error.toString());
     }
