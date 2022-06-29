@@ -76,6 +76,11 @@ dependencies:
   at_sync_ui_flutter: ^1.0.3
 
 dependency_overrides:
+  at_onboarding_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      path: at_onboarding_flutter
+      ref: feature/on-boarding-2.0
   file_saver:
     git:
       url: https://github.com/incrediblezayed/file_saver.git
