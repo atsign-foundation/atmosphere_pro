@@ -80,6 +80,11 @@ dependency_overrides:
     git:
       url: https://github.com/incrediblezayed/file_saver.git
       ref: main
+  at_sync_ui_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      ref: feat/switch-atsign-while-syncing
+      path: at_sync_ui_flutter
 
 dev_dependencies:
   flutter_test:

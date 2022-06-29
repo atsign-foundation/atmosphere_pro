@@ -144,9 +144,11 @@ packages:
   at_sync_ui_flutter:
     dependency: "direct main"
     description:
-      name: at_sync_ui_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_sync_ui_flutter
+      ref: "feat/switch-atsign-while-syncing"
+      resolved-ref: "861ddfe225822bc39a43ebd9c9cd230897ffcfc5"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
     version: "1.0.3"
   at_utf7:
     dependency: transitive

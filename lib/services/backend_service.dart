@@ -12,6 +12,7 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -271,6 +272,9 @@ class BackendService {
       onSuccessCallback: _onSuccessCallback,
       onErrorCallback: _onSyncErrorCallback,
       primaryColor: ColorConstants.orangeColor,
+      atClientPreference: atClientPreference,
+      onboardSuccessCallback: onboardSuccessCallback,
+      onAtsignDelete: deleteAtSignFromKeyChain,
     );
 
     await AtSyncUIService().sync();
