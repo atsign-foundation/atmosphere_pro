@@ -487,27 +487,16 @@ class BackendService {
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
 
-      if (isSwitchAccount) {
-        result = await AtOnboarding.start(
-          context: NavService.navKey.currentContext!,
-          config: AtOnboardingConfig(
-            atClientPreference: atClientPrefernce!,
-            domain: MixedConstants.ROOT_DOMAIN,
-            rootEnvironment: RootEnvironment.Production,
-            appAPIKey: MixedConstants.ONBOARD_API_KEY,
-          ),
-        );
-      } else {
-        result = await AtOnboarding.onboard(
-          context: NavService.navKey.currentContext!,
-          config: AtOnboardingConfig(
-            atClientPreference: atClientPrefernce!,
-            domain: MixedConstants.ROOT_DOMAIN,
-            rootEnvironment: RootEnvironment.Production,
-            appAPIKey: MixedConstants.ONBOARD_API_KEY,
-          ),
-        );
-      }
+      result = await AtOnboarding.onboard(
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
+          domain: MixedConstants.ROOT_DOMAIN,
+          rootEnvironment: RootEnvironment.Production,
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+        isSwitchingAtsign: isSwitchAccount,
+      );
 
       switch (result.status) {
         case AtOnboardingResultStatus.success:

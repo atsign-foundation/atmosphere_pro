@@ -34,43 +34,17 @@ class CustomOnboarding {
 
     _onboardingService.setAtsign = atSign;
 
-    if (isInit) {
-      //Case: onboarding
-      result = await AtOnboarding.onboard(
-        context: NavService.navKey.currentContext!,
-        config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
-          domain: MixedConstants.ROOT_DOMAIN,
-          rootEnvironment: RootEnvironment.Production,
-          appAPIKey: MixedConstants.ONBOARD_API_KEY,
-        ),
-      );
-    } else {
-      if ((atSign ?? '').isNotEmpty) {
-        //Case: switch account
-        await AtOnboarding.changePrimaryAtsign(atsign: atSign!);
-        result = result = await AtOnboarding.onboard(
-          context: NavService.navKey.currentContext!,
-          config: AtOnboardingConfig(
-            atClientPreference: atClientPrefernce!,
-            domain: MixedConstants.ROOT_DOMAIN,
-            rootEnvironment: RootEnvironment.Production,
-            appAPIKey: MixedConstants.ONBOARD_API_KEY,
-          ),
-        );
-      } else {
-        //Case: add new account
-        result = await AtOnboarding.start(
-          context: NavService.navKey.currentContext!,
-          config: AtOnboardingConfig(
-            atClientPreference: atClientPrefernce!,
-            domain: MixedConstants.ROOT_DOMAIN,
-            rootEnvironment: RootEnvironment.Production,
-            appAPIKey: MixedConstants.ONBOARD_API_KEY,
-          ),
-        );
-      }
-    }
+    result = await AtOnboarding.onboard(
+      context: NavService.navKey.currentContext!,
+      config: AtOnboardingConfig(
+        atClientPreference: atClientPrefernce!,
+        domain: MixedConstants.ROOT_DOMAIN,
+        rootEnvironment: RootEnvironment.Production,
+        appAPIKey: MixedConstants.ONBOARD_API_KEY,
+      ),
+      isSwitchingAtsign: !isInit,
+      atsign: atSign
+    );
 
     switch (result.status) {
       case AtOnboardingResultStatus.success:
