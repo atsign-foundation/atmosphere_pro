@@ -103,8 +103,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                           .addTrustedContacts(
                                                               element);
                                                     });
-                                                    await provider
-                                                        .setTrustedContact();
+                                                    // await provider
+                                                    //     .setTrustedContact();
                                                   },
                                                 )),
                                       );
