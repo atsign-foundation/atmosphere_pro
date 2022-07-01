@@ -12,24 +12,24 @@ class TrustedContactProvider extends BaseModel {
   factory TrustedContactProvider() => _instance;
   String AddTrustedContacts = 'add_trusted_contacts';
   List<AtContact?> trustedContacts = [];
-  List<AtContact?> new_trustedContacts = [];
-  List<AtKey?> new_trustedContactsKeys = [];
+  // List<AtContact?> new_trustedContacts = [];
+  List<AtKey> new_trustedContactsKeys = [];
   bool trustedContactOperation = false;
   List<String?> trustedNames = [];
-  List<String?> new_trustedNames = [];
+  // List<String?> new_trustedNames = [];
   String GetTrustedContacts = 'get_trusted_contacts';
   List<AtContact?> fetchedTrustedContact = [];
-  List<AtContact?> new_fetchedTrustedContact = [];
+  // List<AtContact?> new_fetchedTrustedContact = [];
   BackendService backendService = BackendService.getInstance();
 
   addTrustedContacts(AtContact? trustedContact) async {
     trustedContactOperation = true;
-
+    print("xxxx");
     setStatus(AddTrustedContacts, Status.Loading);
     String at_sign_name = trustedContact!.atSign!.replaceAll("@", "");
     try {
       bool isAlreadyPresent = false;
-      for (AtContact? contact in new_trustedContacts) {
+      for (AtContact? contact in trustedContacts) {
         if (contact.toString() == trustedContact.toString()) {
           isAlreadyPresent = true;
           break;
@@ -42,15 +42,16 @@ class TrustedContactProvider extends BaseModel {
         await AtClientManager.getInstance().atClient.put(
               trustedContactsKey,
               trustedContact.atSign,
-              // trustedContact,
             );
         trustedContacts.add(trustedContact);
-        new_trustedContactsKeys = await AtClientManager.getInstance()
-            .atClient
-            .getAtKeys(regex: 'trusted_contact_');
-        print("the key created now is : ${trustedContactsKey}");
-        print("new_trustedContactskey is :${new_trustedContactsKeys}");
       }
+
+      //trying to create a new contact from at-sign
+      // new_trustedContactsKeys = await AtClientManager.getInstance()
+      //     .atClient
+      //     .getAtKeys(regex: 'trusted_contact_');
+      AtContact selectedContact = AtContact(atSign: trustedContact.atSign);
+      print("the Contact formed using the at-sign is: ${selectedContact}");
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
@@ -92,8 +93,7 @@ class TrustedContactProvider extends BaseModel {
       //       trustedContactsKey,
       //       json.encode({"trustedContacts": trustedContacts}),
       //     );
-      // print(
-      //     "trusted contacts key in setTrustedContacts: ${trustedContactsKey}");
+      print("trusted contacts in setTrustedContacts: ${trustedContacts}");
       print("inside setTrustedContacts!");
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
@@ -104,69 +104,29 @@ class TrustedContactProvider extends BaseModel {
   }
 
   getTrustedContact() async {
-    setStatus(GetTrustedContacts, Status.Loading);
     fetchedTrustedContact = [];
-    // fetchedTrustedContact = [];
-    // for (AtKey? new_key in new_trustedContactsKeys) {
-    //   try {
-    //     AtValue keyValue = await backendService.atClientInstance!
-    //         .get(new_key!)
-    //         .catchError((e) {
-    //       print('error in get in getTrustedContact : $e ');
-    //       return AtValue();
-    //     });
-    //     var jsonValue;
-    //     if (keyValue != null && keyValue.value != null) {
-    //       jsonValue = jsonDecode(keyValue.value);
-    //       jsonValue[new_key].forEach((contact) {
-    //         final c = AtContact.fromJson(contact);
-    //         fetchedTrustedContact.add(c);
-    //         trustedNames.add(c.atSign);
-    //       });
-    //     }
+    setStatus(GetTrustedContacts, Status.Loading);
 
-    //     trustedContacts = [];
-    //     trustedContacts = fetchedTrustedContact;
-    //     print("in getTrustedContacts trustedContacts: ${trustedContacts}");
-    //     print(
-    //         "in getTrustedContacts fetchedTrustedContact: ${fetchedTrustedContact}");
-    //     setStatus(GetTrustedContacts, Status.Done);
-    //   } catch (e) {
-    //     print('ERROR=====>$e');
-    //     setError(GetTrustedContacts, e.toString());
-    //   }
-    // }
+    new_trustedContactsKeys = await AtClientManager.getInstance()
+        .atClient
+        .getAtKeys(regex: 'trusted_contact_');
     try {
-      AtKey trustedContactsKey = AtKey()
-        ..key = 'trustedContactsKey'
-        ..metadata = Metadata();
-
-      AtValue keyValue = await backendService.atClientInstance!
-          .get(trustedContactsKey)
-          .catchError((e) {
-        print('error in get in getTrustedContact : $e ');
-        return AtValue();
-      });
-
-      var jsonValue;
-      if (keyValue != null && keyValue.value != null) {
-        jsonValue = jsonDecode(keyValue.value);
-        jsonValue['trustedContacts'].forEach((contact) {
-          final c = AtContact.fromJson(contact);
-          fetchedTrustedContact.add(c);
-          trustedNames.add(c.atSign);
+      for (var new_key in new_trustedContactsKeys) {
+        AtValue keyValue =
+            await backendService.atClientInstance!.get(new_key).catchError((e) {
+          print('error in get in getTrustedContact : $e ');
+          return AtValue();
         });
+        print("value in addTrustedContact key ${new_key}: ${keyValue}");
+        //  new AtContact(atSign: keyValue.value);
+        fetchedTrustedContact.add(new AtContact(atSign: keyValue.value));
       }
-
       trustedContacts = [];
       trustedContacts = fetchedTrustedContact;
-      print("in getTrustedContacts trustedContacts: ${trustedContacts}");
-      print(
-          "in getTrustedContacts fetchedTrustedContact: ${fetchedTrustedContact}");
       setStatus(GetTrustedContacts, Status.Done);
-    } catch (error) {
-      print('ERROR=====>$error');
-      setError(GetTrustedContacts, error.toString());
+    } catch (e) {
+      print('ERROR=====>$e');
+      setError(GetTrustedContacts, e.toString());
     }
   }
 }
