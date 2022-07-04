@@ -46,11 +46,8 @@ class TrustedContactProvider extends BaseModel {
         trustedContacts.add(trustedContact);
       }
 
-      //trying to create a new contact from at-sign
-      // new_trustedContactsKeys = await AtClientManager.getInstance()
-      //     .atClient
-      //     .getAtKeys(regex: 'trusted_contact_');
-      AtContact selectedContact = AtContact(atSign: trustedContact.atSign);
+      AtContact selectedContact = AtContact(
+          atSign: trustedContact.atSign); //checking if this actually works
       print("the Contact formed using the at-sign is: ${selectedContact}");
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
@@ -119,7 +116,7 @@ class TrustedContactProvider extends BaseModel {
         });
         print("value in addTrustedContact key ${new_key}: ${keyValue}");
         //  new AtContact(atSign: keyValue.value);
-        fetchedTrustedContact.add(new AtContact(atSign: keyValue.value));
+        fetchedTrustedContact.add(AtContact(atSign: keyValue.value));
       }
       trustedContacts = [];
       trustedContacts = fetchedTrustedContact;

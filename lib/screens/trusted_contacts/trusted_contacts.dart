@@ -118,7 +118,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                   Uint8List? byteImage;
 
                                   if (provider.trustedContacts[index]!
-                                          .tags!['image'] !=
+                                          .tags?['image'] !=
                                       null) {
                                     byteImage = CommonUtilityFunctions()
                                         .getContactImage(
