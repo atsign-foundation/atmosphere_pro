@@ -30,7 +30,7 @@ class TrustedContactProvider extends BaseModel {
     try {
       bool isAlreadyPresent = false;
       for (AtContact? contact in trustedContacts) {
-        if (contact.toString() == trustedContact.toString()) {
+        if (contact?.atSign.toString() == trustedContact.atSign.toString()) {
           isAlreadyPresent = true;
           break;
         }
@@ -67,6 +67,12 @@ class TrustedContactProvider extends BaseModel {
         if (contact!.atSign == trustedContact!.atSign) {
           int index = trustedContacts.indexOf(contact);
           trustedContacts.removeAt(index);
+          AtKey key = AtKey()
+            ..key =
+                'trusted_contact_${trustedContact.atSign!.replaceAll("@", "")}'
+            ..metadata = Metadata();
+          await AtClientManager.getInstance().atClient.delete(key);
+          print("THE KEY ${key} IS REMOVED FROM LOCAL");
           break;
         }
       }
@@ -120,6 +126,7 @@ class TrustedContactProvider extends BaseModel {
       }
       trustedContacts = [];
       trustedContacts = fetchedTrustedContact;
+      print("CONTACTS IN trustedContacts ARRAY IS: ${trustedContacts}");
       setStatus(GetTrustedContacts, Status.Done);
     } catch (e) {
       print('ERROR=====>$e');
