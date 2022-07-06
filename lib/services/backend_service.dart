@@ -409,8 +409,10 @@ class BackendService {
           break;
         case AtOnboardingResultStatus.error:
           SnackbarService().showSnackbar(
-              NavService.navKey.currentContext!, 'Onboarding failed.',
-              bgColor: ColorConstants.redAlert);
+            NavService.navKey.currentContext!,
+            (result.message ?? '').isNotEmpty ? '' : 'Onboarding failed.',
+            bgColor: ColorConstants.redAlert,
+          );
           break;
         case AtOnboardingResultStatus.cancel:
           // TODO: Handle this case.

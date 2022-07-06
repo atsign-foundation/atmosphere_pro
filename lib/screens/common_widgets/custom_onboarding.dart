@@ -108,7 +108,11 @@ class CustomOnboarding {
       case AtOnboardingResultStatus.error:
         ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
           SnackBar(
-            content: Text('Error in onboarding'),
+            content: Text(
+              (result.message ?? '').isNotEmpty
+                  ? result.message!
+                  : 'Error in onboarding',
+            ),
             backgroundColor: ColorConstants.red,
           ),
         );
