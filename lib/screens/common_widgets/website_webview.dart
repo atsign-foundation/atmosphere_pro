@@ -4,6 +4,8 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -72,6 +74,11 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
         WebView(
           initialUrl: widget.url,
           javascriptMode: JavascriptMode.unrestricted,
+          gestureRecognizers: {
+            Factory<VerticalDragGestureRecognizer>(
+              () => VerticalDragGestureRecognizer()..onUpdate = (_) {},
+            )
+          },
           onPageFinished: (test1) {
             this.setState(() {
               loading = false;

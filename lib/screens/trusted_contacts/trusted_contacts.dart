@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
 import 'package:atsign_atmosphere_pro/utils/colors.dart' as pro_color_constants;
@@ -19,6 +18,8 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
+
+import '../../services/navigation_service.dart';
 
 class TrustedContacts extends StatefulWidget {
   @override
@@ -158,7 +159,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                           (element) async {
                                                         await provider
                                                             .addTrustedContacts(
-                                                                element);
+                                                                element!);
                                                       });
                                                       await provider
                                                           .setTrustedContact();
