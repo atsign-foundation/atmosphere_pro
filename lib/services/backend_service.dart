@@ -277,6 +277,8 @@ class BackendService {
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
+    await startMonitor();
+
     // removes failed snackbar message.
     ScaffoldMessenger.of(NavService.navKey.currentContext!)
         .hideCurrentSnackBar();
@@ -486,7 +488,7 @@ class BackendService {
     syncWithSecondary();
 
     // start monitor and package initializations.
-    await startMonitor();
+    // await startMonitor();
     initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
