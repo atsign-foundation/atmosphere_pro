@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "40.0.0"
+    version: "41.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.0"
   archive:
     dependency: "direct main"
     description:
@@ -49,7 +49,7 @@ packages:
       name: at_backupkey_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.3"
   at_base2e15:
     dependency: transitive
     description:
@@ -63,14 +63,16 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.28"
+    version: "3.0.29"
   at_client_mobile:
     dependency: "direct main"
     description:
-      name: at_client_mobile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.18"
+      path: at_client_mobile
+      ref: "feature/at-client-mobile-2.0"
+      resolved-ref: "2e3bb9f629b1bbe6ced953efb3dfbfdd4b3202f4"
+      url: "https://github.com/atsign-foundation/at_client_sdk.git"
+    source: git
+    version: "3.1.17"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -106,6 +108,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.7"
+  at_file_saver:
+    dependency: transitive
+    description:
+      name: at_file_saver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   at_lookup:
     dependency: transitive
     description:
@@ -116,10 +125,12 @@ packages:
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      name: at_onboarding_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.3"
+      path: at_onboarding_flutter
+      ref: "feature/on-boarding-3.0"
+      resolved-ref: "45d15c5dccbd8696b3f8edfe768a1d3f0d20c8fa"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
+    version: "4.0.1"
   at_persistence_secondary_server:
     dependency: transitive
     description:
@@ -344,15 +355,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.1"
-  file_saver:
-    dependency: "direct overridden"
-    description:
-      path: "."
-      ref: main
-      resolved-ref: c0ea84007896c6014c72785a8bcde0e9c53dc804
-      url: "https://github.com/incrediblezayed/file_saver.git"
-    source: git
-    version: "0.1.0"
   file_selector:
     dependency: "direct main"
     description:
@@ -528,7 +530,7 @@ packages:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.2"
+    version: "2.2.3"
   html:
     dependency: transitive
     description:
@@ -914,6 +916,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  qr_code_scanner:
+    dependency: transitive
+    description:
+      name: qr_code_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   qr_flutter:
     dependency: "direct main"
     description:
