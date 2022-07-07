@@ -1,11 +1,11 @@
 PODS:
+  - at_file_saver (0.0.1):
+    - FlutterMacOS
   - biometric_storage (0.0.1):
     - FlutterMacOS
   - desktop_window (0.0.1):
     - FlutterMacOS
   - emoji_picker_flutter (0.0.1):
-    - FlutterMacOS
-  - file_saver (0.0.1):
     - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
@@ -28,10 +28,10 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - at_file_saver (from `Flutter/ephemeral/.symlinks/plugins/at_file_saver/macos`)
   - biometric_storage (from `Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos`)
   - desktop_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_window/macos`)
   - emoji_picker_flutter (from `Flutter/ephemeral/.symlinks/plugins/emoji_picker_flutter/macos`)
-  - file_saver (from `Flutter/ephemeral/.symlinks/plugins/file_saver/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
@@ -44,14 +44,14 @@ DEPENDENCIES:
   - video_compress (from `Flutter/ephemeral/.symlinks/plugins/video_compress/macos`)
 
 EXTERNAL SOURCES:
+  at_file_saver:
+    :path: Flutter/ephemeral/.symlinks/plugins/at_file_saver/macos
   biometric_storage:
     :path: Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos
   desktop_window:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_window/macos
   emoji_picker_flutter:
     :path: Flutter/ephemeral/.symlinks/plugins/emoji_picker_flutter/macos
-  file_saver:
-    :path: Flutter/ephemeral/.symlinks/plugins/file_saver/macos
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   flutter_local_notifications:
@@ -74,10 +74,10 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/video_compress/macos
 
 SPEC CHECKSUMS:
+  at_file_saver: 1fc6ed722f17c7a20ce79cce168d1100fcad4b95
   biometric_storage: 43caa6e7ef00e8e19c074216e7e1786dacda9e76
   desktop_window: fb7c4f12c1129f947ac482296b6f14059d57a3c3
   emoji_picker_flutter: 533634326b1c5de9a181ba14b9758e6dfe967a20
-  file_saver: 44e6fbf666677faf097302460e214e977fdd977b
   file_selector_macos: f1b08a781e66103e3ba279fd5d4024a2478b3af6
   flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
   FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
@@ -91,4 +91,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.0

@@ -30,21 +30,20 @@ class CustomOnboarding {
       Function? onError}) async {
     AtOnboardingResult result;
     final OnboardingService _onboardingService =
-    OnboardingService.getInstance();
+        OnboardingService.getInstance();
 
     _onboardingService.setAtsign = atSign;
 
     result = await AtOnboarding.onboard(
-      context: NavService.navKey.currentContext!,
-      config: AtOnboardingConfig(
-        atClientPreference: atClientPrefernce!,
-        domain: MixedConstants.ROOT_DOMAIN,
-        rootEnvironment: RootEnvironment.Production,
-        appAPIKey: MixedConstants.ONBOARD_API_KEY,
-      ),
-      isSwitchingAtsign: !isInit,
-      atsign: atSign
-    );
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
+          domain: MixedConstants.ROOT_DOMAIN,
+          rootEnvironment: RootEnvironment.Production,
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+        isSwitchingAtsign: !isInit,
+        atsign: atSign);
 
     switch (result.status) {
       case AtOnboardingResultStatus.success:
@@ -124,83 +123,6 @@ class CustomOnboarding {
         // TODO: Handle this case.
         break;
     }
-    // await Onboarding(
-    //   atsign: atSign,
-    //   context: NavService.navKey.currentContext!,
-    //   atClientPreference: atClientPrefernce,
-    //   domain: MixedConstants.ROOT_DOMAIN,
-    //   appColor: Color.fromARGB(255, 240, 94, 62),
-    //   appAPIKey: MixedConstants.ONBOARD_API_KEY,
-    //   rootEnvironment: RootEnvironment.Production,
-    //   onboard: (value, atsign) async {
-    //     await KeychainUtil.makeAtSignPrimary(atsign!);
-    //
-    //     await AtClientManager.getInstance().setCurrentAtSign(
-    //         atsign, MixedConstants.appNamespace, atClientPrefernce);
-    //
-    //     _backendService.atClientInstance =
-    //         value[atsign]!.atClientManager.atClient;
-    //     _backendService.atClientServiceInstance = value[atsign];
-    //     _backendService.atClientManager = value[atsign]!.atClientManager;
-    //     _backendService.currentAtSign =
-    //         value[atsign]!.atClientManager.atClient.getCurrentAtSign();
-    //
-    //     BackendService.getInstance().syncWithSecondary();
-    //
-    //     if (!isInit) {
-    //       await DesktopSetupRoutes.nested_pop(checkGroupSelection: false);
-    //     }
-    //
-    //     if (showLoader != null) {
-    //       LoadingDialog().showTextLoader('Initialising for $atsign');
-    //     }
-    //
-    //     _backendService.initLocalNotification();
-    //     await initServices();
-    //     getTransferData();
-    //     await _backendService.startMonitor();
-    //     _backendService.setPeriodicFileHistoryRefresh();
-    //
-    //     if (showLoader != null) {
-    //       showLoader(false, '');
-    //       LoadingDialog().hide();
-    //     }
-    //
-    //     if (isInit) {
-    //       await Navigator.pushReplacementNamed(
-    //         NavService.navKey.currentContext!,
-    //         DesktopRoutes.DESKTOP_WELCOME,
-    //       );
-    //     }
-    //
-    //     if (!isInit) {
-    //       // if it is not init then we re-render the welcome screen
-    //       Provider.of<SwitchAtsignProvider>(NavService.navKey.currentContext!,
-    //               listen: false)
-    //           .update();
-    //       Provider.of<FileTransferProvider>(NavService.navKey.currentContext!,
-    //               listen: false)
-    //           .resetData();
-    //
-    //       /// WelcomeScreenHome "currentScreen" depends on WelcomeScreenProvider , so we first change FileTransferProvider and then WelcomeScreenProvider
-    //       Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext!,
-    //               listen: false)
-    //           .resetData();
-    //     }
-    //   },
-    //   onError: (error) {
-    //     print('Onboarding throws error: $error ');
-    //     ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Error in onboarding'),
-    //         backgroundColor: ColorConstants.red,
-    //       ),
-    //     );
-    //     if (onError != null) {
-    //       onError();
-    //     }
-    //   },
-    // );
   }
 
   static initServices() async {

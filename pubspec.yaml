@@ -69,7 +69,7 @@ dependencies:
   
   at_client_mobile: ^3.1.17
   at_onboarding_flutter: ^4.0.3
-  at_backupkey_flutter: ^4.0.1
+  at_backupkey_flutter: ^4.0.3
   at_contacts_flutter: ^4.0.5
   at_contacts_group_flutter: ^4.0.7
   local_notifier: ^0.1.1
@@ -86,10 +86,6 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       ref: feature/at-client-mobile-2.0
       path: at_client_mobile
-  file_saver:
-    git:
-      url: https://github.com/incrediblezayed/file_saver.git
-      ref: main
 
 dev_dependencies:
   flutter_test:

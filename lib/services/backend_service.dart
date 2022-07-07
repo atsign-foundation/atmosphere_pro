@@ -418,23 +418,6 @@ class BackendService {
           // TODO: Handle this case.
           break;
       }
-      // await Onboarding(
-      //     atsign: tempAtsign,
-      //     context: NavService.navKey.currentContext!,
-      //     atClientPreference: atClientPrefernce,
-      //     domain: MixedConstants.ROOT_DOMAIN,
-      //     rootEnvironment: RootEnvironment.Production,
-      //     appColor: Color.fromARGB(255, 240, 94, 62),
-      //     onboard: (value, atsign) async {
-      //       await onboardSuccessCallback(value, atsign!, atClientPrefernce);
-      //     },
-      //     onError: (error) {
-      //       SnackbarService().showSnackbar(
-      //           NavService.navKey.currentContext!, 'Onboarding failed.',
-      //           bgColor: ColorConstants.redAlert);
-      //       print('Onboarding throws $error error');
-      //     },
-      //     appAPIKey: MixedConstants.ONBOARD_API_KEY);
     } else {
       CustomOnboarding.onboard(
           atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
@@ -462,34 +445,6 @@ class BackendService {
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
 
-      // Onboarding(
-      //     atsign: atSign,
-      //     context: NavService.navKey.currentContext!,
-      //     atClientPreference: atClientPrefernce,
-      //     domain: MixedConstants.ROOT_DOMAIN,
-      //     rootEnvironment: RootEnvironment.Production,
-      //     appColor: Color.fromARGB(255, 240, 94, 62),
-      //     onboard: (value, onboardedAtsign) async {
-      //       authenticating = true;
-      //       isAuthuneticatingSink.add(authenticating);
-      //       await onboardSuccessCallback(
-      //           value, onboardedAtsign!, atClientPrefernce);
-      //       authenticating = false;
-      //       isAuthuneticatingSink.add(authenticating);
-      //     },
-      //     onError: (error) {
-      //       var isConnected = Provider.of<InternetConnectivityChecker>(
-      //               NavService.navKey.currentContext!,
-      //               listen: false)
-      //           .isInternetAvailable;
-      //
-      //       SnackbarService().showSnackbar(NavService.navKey.currentContext!,
-      //           !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
-      //           bgColor: ColorConstants.redAlert);
-      //       authenticating = false;
-      //       isAuthuneticatingSink.add(authenticating);
-      //     },
-      //     appAPIKey: MixedConstants.ONBOARD_API_KEY);
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
 
@@ -527,11 +482,12 @@ class BackendService {
           isAuthuneticatingSink.add(authenticating);
           break;
         case AtOnboardingResultStatus.cancel:
-          // TODO: Handle this case.
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
           break;
       }
 
-      authenticating = true;
+      authenticating = false;
       isAuthuneticatingSink.add(authenticating);
     } catch (e) {
       authenticating = false;
