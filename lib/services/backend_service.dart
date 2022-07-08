@@ -524,7 +524,6 @@ class BackendService {
     syncWithSecondary();
 
     // start monitor and package initializations.
-    // await startMonitor();
     initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
