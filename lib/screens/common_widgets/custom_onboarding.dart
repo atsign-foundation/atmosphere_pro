@@ -29,10 +29,6 @@ class CustomOnboarding {
       bool isInit = false,
       Function? onError}) async {
     AtOnboardingResult result;
-    final OnboardingService _onboardingService =
-        OnboardingService.getInstance();
-
-    _onboardingService.setAtsign = atSign;
 
     result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,

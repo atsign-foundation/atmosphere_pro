@@ -436,10 +436,6 @@ class BackendService {
       late var atClientPrefernce;
       AtOnboardingResult result;
 
-      if ((atSign ?? '').isNotEmpty) {
-        _onboardingService.setAtsign = atSign;
-      }
-
       //  await getAtClientPreference();
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
