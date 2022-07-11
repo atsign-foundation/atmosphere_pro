@@ -14,6 +14,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:provider/provider.dart';
 
 class DesktopTrustedSender extends StatefulWidget {
   @override
@@ -24,8 +25,19 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
   bool _isFilterOption = false, isContactSelection = false;
   List<AtContact> trustedContacts = [];
   String searchText = '';
+  TrustedContactProvider? trustedContact;
 
   @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var trustedContact =
+          Provider.of<TrustedContactProvider>(context, listen: false);
+      trustedContact.migrateTrustedContact();
+    });
+
+    super.didChangeDependencies();
+  }
+
   void initState() {
     super.initState();
   }

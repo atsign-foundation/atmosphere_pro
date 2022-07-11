@@ -30,7 +30,6 @@ class _TrustedContactsState extends State<TrustedContacts> {
   bool toggleList = false;
   @override
   void didChangeDependencies() {
-    // print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var trustedContact =
           Provider.of<TrustedContactProvider>(context, listen: false);
