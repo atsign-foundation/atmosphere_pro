@@ -13,9 +13,7 @@ class TrustedContactProvider extends BaseModel {
   String AddTrustedContacts = 'add_trusted_contacts';
   List<AtContact?> trustedContacts = [];
   var jsonValue;
-  var flag;
   List<AtKey> new_trustedContactsKeys = [];
-  List<AtKey> old_trustedContactsKeys = [];
   bool trustedContactOperation = false;
   List<String?> trustedNames = [];
   String GetTrustedContacts = 'get_trusted_contacts';
@@ -114,7 +112,6 @@ class TrustedContactProvider extends BaseModel {
           await backendService.atClientInstance!.get(trustedContactsKey);
       jsonValue = jsonDecode(old_trustedContactsKeys.value);
       for (var i = 0; i < jsonValue['trustedContacts'].length; i++) {
-        flag = true;
         var j = trustedContacts.indexWhere((element) =>
             element!.atSign == jsonValue['trustedContacts'][i]['atSign']);
         if (j == -1) {
@@ -142,8 +139,6 @@ class TrustedContactProvider extends BaseModel {
               );
         }
       }
-      print("migration OLD FORMAT ARRAY= ${jsonValue['trustedContacts']}");
-      print("migration NEW FORMAT ARRAY= ${trustedContacts}");
 
       // await AtClientManager.getInstance().atClient.put(
       //       trustedContactsKey,
