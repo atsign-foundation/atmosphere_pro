@@ -53,7 +53,7 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>We need access to your bluetooth connection to message when wi-fi is not available</string>
 	<key>NSCameraUsageDescription</key>
-	<string>The camera is used to scan QR code to pair your device with your @sign</string>
+	<string>The camera is used to scan QR code to pair your device with your atSign</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Enable @mosphere-pro to save images and videos in photos after being downloaded. </string>
 	<key>NSPhotoLibraryUsageDescription</key>
