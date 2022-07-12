@@ -59,6 +59,27 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   }
 
   @override
+  void didUpdateWidget(covariant DesktopHistoryScreen oldWidget) {
+    var i = historyProvider.sentHistory.indexWhere((element) =>
+        element.fileTransferObject?.transferId ==
+        selectedSentFileData?.fileTransferObject?.transferId);
+    if (i == -1 && historyProvider.sentHistory.isNotEmpty) {
+      selectedSentFileData = historyProvider.sentHistory[0];
+      sentSelectedIndex = 0;
+    }
+
+    var j = historyProvider.receivedHistoryLogs
+        .indexWhere((element) => element.key == receivedFileData?.key);
+    if (j == -1 && historyProvider.receivedHistoryLogs.isNotEmpty) {
+      receivedFileData = historyProvider.receivedHistoryLogs[0];
+      receivedSelectedFileId = historyProvider.receivedHistoryLogs[0].key;
+    }
+
+    setState(() {});
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     _controller!.removeListener(onTabChanged);
     _textController.dispose();

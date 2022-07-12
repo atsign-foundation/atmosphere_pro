@@ -6,9 +6,11 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -16,11 +18,11 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
@@ -170,11 +172,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   @override
   Widget build(BuildContext context) {
     sendTime = DateTime.now();
-    return Container(
-      color: isOpen ? Color(0xffEFEFEF) : Colors.white,
-      child: Column(
-        children: [
-          ListTile(
+    return Column(
+      children: [
+        Container(
+          color: isOpen ? Color(0xffEFEFEF) : null,
+          child: ListTile(
+            enableFeedback: true,
+            onLongPress: deleteReceivedFile,
             leading:
                 // CustomCircleAvatar(image: ImageConstants.imagePlaceholder),
                 widget.receivedHistory!.sender != null
@@ -484,8 +488,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               ),
             ),
           ),
-          isOpen
-              ? Column(
+        ),
+        isOpen
+            ? Container(
+                color: isOpen ? Color(0xffEFEFEF) : Colors.white,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
@@ -710,10 +717,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       ),
                     ),
                   ],
-                )
-              : Container()
-        ],
-      ),
+                ),
+              )
+            : SizedBox()
+      ],
     );
   }
 
@@ -772,6 +779,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
           isOverwrite = false;
         });
       }
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(widget.receivedHistory!);
+
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
         TextStrings().fileDownloadd,
@@ -964,6 +975,61 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     }
 
     return spinner;
+  }
+
+  deleteReceivedFile() async {
+    await showModalBottomSheet(
+        context: NavService.navKey.currentContext!,
+        backgroundColor: Colors.white,
+        builder: (context) => EditBottomSheet(
+              onConfirmation: () async {
+                var res =
+                    await Provider.of<HistoryProvider>(context, listen: false)
+                        .deleteReceivedItem(widget.receivedHistory!);
+
+                if (res) {
+                  SnackbarService().showSnackbar(
+                      NavService.navKey.currentContext!,
+                      'Removed from received items list',
+                      bgColor: ColorConstants.successGreen);
+                  await deleteFileWhenRecevedItemRemoved();
+                } else {
+                  SnackbarService().showSnackbar(
+                      NavService.navKey.currentContext!, 'Failed',
+                      bgColor: ColorConstants.redAlert);
+                }
+              },
+            ));
+  }
+
+  deleteFileWhenRecevedItemRemoved() async {
+    await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth),
+              ),
+              content: ConfirmationDialog(
+                  TextStrings.deleteDownloadedFileMessage, () async {
+                await Future.forEach(widget.receivedHistory!.files!,
+                    (FileData element) async {
+                  String filePath =
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          element.name!;
+                  if (await CommonUtilityFunctions().isFilePresent(filePath)) {
+                    var file = File(filePath);
+                    file.deleteSync();
+                  }
+                });
+
+                await Provider.of<MyFilesProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .deletMyFileRecord(widget.receivedHistory!.key);
+              }));
+        });
   }
 
   String getSingleFileDownloadMessage(

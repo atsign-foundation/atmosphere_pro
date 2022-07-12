@@ -25,6 +25,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -255,13 +256,20 @@ class BackendService {
   }
 
   downloadFiles(BuildContext context, String key, String fromAtSign) async {
-    var result = await Provider.of<HistoryProvider>(context, listen: false)
-        .downloadFiles(
+    var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    var result = await historyProvider.downloadFiles(
       key,
       fromAtSign,
       false,
     );
     if (result is bool && result) {
+      var i = historyProvider.receivedHistoryLogs
+          .indexWhere((element) => element.key == key);
+      if (i != -1) {
+        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .saveNewDataInMyFiles(historyProvider.receivedHistoryLogs[i]);
+      }
     } else if (result is bool && !result) {}
   }
 
@@ -285,6 +293,10 @@ class BackendService {
 
     var historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentState!.context,
+        listen: false);
+
+    var myFilesProvider = Provider.of<MyFilesProvider>(
+        NavService.navKey.currentContext!,
         listen: false);
 
     print(
@@ -313,6 +325,8 @@ class BackendService {
           Status.Loading) {
         await historyProvider.getSentHistory();
       }
+
+      await myFilesProvider.init();
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)

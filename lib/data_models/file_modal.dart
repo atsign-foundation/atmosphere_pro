@@ -12,17 +12,18 @@ class FilesDetail {
   String? contactName;
   int? id;
   String? date;
+  String? fileTransferId;
   FileTransferStatus? status;
-  FilesDetail({
-    this.fileName,
-    this.filePath,
-    this.size,
-    this.type,
-    this.status,
-    this.contactName,
-    this.id,
-    this.date,
-  });
+  FilesDetail(
+      {this.fileName,
+      this.filePath,
+      this.size,
+      this.type,
+      this.status,
+      this.contactName,
+      this.id,
+      this.date,
+      this.fileTransferId});
 
   FilesDetail copyWith({
     String? fileName,

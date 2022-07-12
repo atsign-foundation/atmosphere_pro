@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'downloads_folders.dart';
 
@@ -20,10 +25,10 @@ class _APKState extends State<APK> {
     return Container(
       margin:
           EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
-      child: ProviderHandler<HistoryProvider>(
+      child: ProviderHandler<MyFilesProvider>(
         functionName: 'received_history',
         showError: false,
-        load: (provider) => provider.getReceivedHistory(),
+        load: (provider) {},
         successBuilder: (provider) => ListView.builder(
             itemCount: provider.receivedApk.length,
             itemBuilder: (context, index) {
@@ -31,6 +36,11 @@ class _APKState extends State<APK> {
               return InkWell(
                 onTap: () async {
                   await openFilePath(provider.receivedApk[index].filePath!);
+                },
+                onLongPress: () {
+                  deleteFile(provider.receivedApk[index].filePath!,
+                      fileTransferId:
+                          provider.receivedApk[index].fileTransferId);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -59,8 +69,10 @@ class _APKState extends State<APK> {
                               double.parse(provider.receivedApk[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.receivedApk[index].size!.toStringAsFixed(2)} '+ TextStrings().kb
-                                  : '${(provider.receivedApk[index].size! / 1024).toStringAsFixed(2)} '+ TextStrings().mb,
+                                  ? '${provider.receivedApk[index].size!.toStringAsFixed(2)} ' +
+                                      TextStrings().kb
+                                  : '${(provider.receivedApk[index].size! / 1024).toStringAsFixed(2)} ' +
+                                      TextStrings().mb,
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,
@@ -74,6 +86,25 @@ class _APKState extends State<APK> {
               );
             }),
       ),
+    );
+  }
+
+  deleteFile(String filePath, {String? fileTransferId}) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(onConfirmation: () async {
+        var file = File(filePath);
+        if (await file.exists()) {
+          file.deleteSync();
+        }
+        if (fileTransferId != null) {
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
+      }),
     );
   }
 }
