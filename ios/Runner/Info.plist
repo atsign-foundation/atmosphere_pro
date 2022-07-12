@@ -6,6 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>atmospherePro</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>@mosphere-pro</string>
+	<string>atmospherePro</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -55,9 +57,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is used to scan QR code to pair your device with your @sign</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Enable @mosphere-pro to save images and videos in photos after being downloaded. </string>
+	<string>Enable atmospherePro to save images and videos in photos after being downloaded. </string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Enable @mosphere-pro to access your photos to upload the ones you choose in file transfer.</string>
+	<string>Enable atmospherePro to access your photos to upload the ones you choose in file transfer.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

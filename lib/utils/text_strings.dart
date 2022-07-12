@@ -10,7 +10,7 @@ class TextStrings {
   String homeDescriptionMobile = 'Truly\nencrypted file\ntransfer.';
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
-  String appName = '@mospherePro';
+  String appName = 'atmospherePro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
@@ -260,7 +260,7 @@ class TextStrings {
   // Desktop home
   String remove = 'Remove';
   String selectAll = 'Select All';
-  String desktopAppName = '@mospherePro';
+  String desktopAppName = 'atmospherePro';
   String desktopCopyRight = 'The @company Copyrights';
   String enterAtSign = 'Enter @sign';
   String authenticating = 'Authenticating...';
