@@ -2,6 +2,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
@@ -28,17 +29,29 @@ class CustomOnboarding {
       Function? showLoader,
       bool isInit = false,
       Function? onError}) async {
-    await Onboarding(
-      atsign: atSign,
-      context: NavService.navKey.currentContext!,
-      atClientPreference: atClientPrefernce,
-      domain: MixedConstants.ROOT_DOMAIN,
-      appColor: Color.fromARGB(255, 240, 94, 62),
-      appAPIKey: MixedConstants.ONBOARD_API_KEY,
-      rootEnvironment: RootEnvironment.Production,
-      onboard: (value, atsign) async {
-        await KeychainUtil.makeAtSignPrimary(atsign!);
+    AtOnboardingResult result;
+    final OnboardingService _onboardingService =
+        OnboardingService.getInstance();
 
+    _onboardingService.setAtsign = atSign;
+
+    result = await AtOnboarding.onboard(
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
+          domain: MixedConstants.ROOT_DOMAIN,
+          rootEnvironment: RootEnvironment.Production,
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+        isSwitchingAtsign: !isInit,
+        atsign: atSign);
+
+    switch (result.status) {
+      case AtOnboardingResultStatus.success:
+        final atsign = result.atsign!;
+        final OnboardingService _onboardingService =
+            OnboardingService.getInstance();
+        final value = _onboardingService.atClientServiceMap;
         await AtClientManager.getInstance().setCurrentAtSign(
             atsign, MixedConstants.appNamespace, atClientPrefernce);
 
@@ -91,20 +104,26 @@ class CustomOnboarding {
                   listen: false)
               .resetData();
         }
-      },
-      onError: (error) {
-        print('Onboarding throws error: $error ');
+        break;
+      case AtOnboardingResultStatus.error:
         ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
           SnackBar(
-            content: Text('Error in onboarding'),
+            content: Text(
+              (result.message ?? '').isNotEmpty
+                  ? result.message!
+                  : 'Error in onboarding',
+            ),
             backgroundColor: ColorConstants.red,
           ),
         );
         if (onError != null) {
           onError();
         }
-      },
-    );
+        break;
+      case AtOnboardingResultStatus.cancel:
+        // TODO: Handle this case.
+        break;
+    }
   }
 
   static initServices() async {

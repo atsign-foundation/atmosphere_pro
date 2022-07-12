@@ -235,7 +235,7 @@ class _DesktopReceivedFilesListTileState
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            '${fileLength} Files',
+                            '${fileLength} File(s)',
                             style: CustomTextStyles.secondaryRegular14,
                           ),
                           SizedBox(width: 10.toHeight),
@@ -295,7 +295,7 @@ class _DesktopReceivedFilesListTileState
                       SizedBox(width: 10.toHeight),
                       widget.receivedHistory!.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.receivedHistory!.date!)}',
+                              '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

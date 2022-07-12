@@ -123,7 +123,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 isLoading = true;
                                 Navigator.pop(context);
                               });
-                              await backendService.checkToOnboard(atSign: "");
+                              await backendService.checkToOnboard(
+                                atSign: "",
+                                isSwitchAccount: true,
+                              );
 
                               setState(() {
                                 isLoading = false;

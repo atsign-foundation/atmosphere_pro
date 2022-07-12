@@ -232,7 +232,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         SizedBox(width: 10.toHeight),
                         widget.sentHistory!.fileDetails!.date != null
                             ? Text(
-                                '${DateFormat('kk: mm').format(widget.sentHistory!.fileDetails!.date!)}',
+                                '${DateFormat('kk:mm').format(widget.sentHistory!.fileDetails!.date!)}',
                                 style: CustomTextStyles.secondaryRegular12,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

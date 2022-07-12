@@ -15,13 +15,13 @@ class MixedConstants {
 
   static const int ROOT_PORT = 64;
 
-  static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
+  static const String TERMS_CONDITIONS = 'atsign.com/terms-conditions/';
 
   static const String FILEBIN_URL = 'https://ck6agzxiog6kmb.atsign.com/';
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
-  static const String FAQ = "https://atsign.com/faqs/";
+  static const String FAQ = "atsign.com/faqs/";
 
   static const MACOS_STORE_LINK = 'https://apps.apple.com/app/id1550936444';
 

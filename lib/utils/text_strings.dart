@@ -10,7 +10,7 @@ class TextStrings {
   String homeDescriptionMobile = 'Truly\nencrypted file\ntransfer.';
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
-  String appName = '@mospherePro';
+  String appName = 'atmospherePro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
@@ -56,6 +56,7 @@ class TextStrings {
       'Enabling this will auto-accept all the files sent by your contacts.';
   String sidebarSwitchOut = 'Switch @sign';
   String sidebarDeleteAtsign = 'Delete @sign(s)';
+  String sidebarContactUs = 'Contact us';
 
   String atSign = '@sign';
   String switchingAtSign = 'Switching atsign...';
@@ -84,7 +85,8 @@ class TextStrings {
   String uploadKey = 'Upload key file';
   String buttonCancel = 'Cancel';
   String buttonDelete = 'DELETE';
-  String buttonDismiss = 'DISMISS';
+  static final String buttonDismiss = 'DISMISS';
+  static final String buttonShowMore = 'Show More';
   String ok = 'Ok';
 
   //history screen texts
@@ -221,7 +223,7 @@ class TextStrings {
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
   String contactSelectionConfirmation =
-      'Selected contacts will not be added, confirm?';
+      'Your contact selection will be cleared if you leave this screen. Would you like to continue with your new action?';
 
   // Desktop Selected file
   String selectedFiles = 'Selected files';
@@ -248,7 +250,7 @@ class TextStrings {
 
   // Desktop sent file details
   String successfullyTransfered = 'Successfully transfered';
-  String file_s = 'File(s)';
+  String file_s = 'File(s) . ';
 
   // Desktop transfer overlapping
   String downloadedBy = 'Downloaded by';
@@ -258,7 +260,7 @@ class TextStrings {
   // Desktop home
   String remove = 'Remove';
   String selectAll = 'Select All';
-  String desktopAppName = '@mospherePro';
+  String desktopAppName = 'atmospherePro';
   String desktopCopyRight = 'The @company Copyrights';
   String enterAtSign = 'Enter @sign';
   String authenticating = 'Authenticating...';

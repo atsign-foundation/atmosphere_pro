@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
@@ -201,7 +201,7 @@ class BackendService {
       var decryptedMessage = response.value!;
 
       //TODO: only for testing
-      await sendNotificationAck(notificationKey, fromAtSign);
+      // await sendNotificationAck(notificationKey, fromAtSign);
 
       if (decryptedMessage != null && decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -218,7 +218,7 @@ class BackendService {
             Provider.of<TrustedContactProvider>(context, listen: false);
 
         trustedContactProvider.trustedContacts.forEach((element) {
-          if (element!.atSign == fromAtSign) {
+          if (element.atSign == fromAtSign) {
             trustedSender = true;
           }
         });
@@ -285,6 +285,8 @@ class BackendService {
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
+    await startMonitor();
+
     // removes failed snackbar message.
     ScaffoldMessenger.of(NavService.navKey.currentContext!)
         .hideCurrentSnackBar();
@@ -329,6 +331,8 @@ class BackendService {
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
           .checkForUndownloadedFiles();
+
+      setPeriodicFileHistoryRefresh();
     }
   }
 
@@ -401,23 +405,34 @@ class BackendService {
             (Route<dynamic> route) => false);
       }
     } else if (Platform.isAndroid || Platform.isIOS) {
-      await Onboarding(
-          atsign: tempAtsign,
-          context: NavService.navKey.currentContext!,
-          atClientPreference: atClientPrefernce,
+      final result = await AtOnboarding.onboard(
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
-          appColor: Color.fromARGB(255, 240, 94, 62),
-          onboard: (value, atsign) async {
-            await onboardSuccessCallback(value, atsign!, atClientPrefernce);
-          },
-          onError: (error) {
-            SnackbarService().showSnackbar(
-                NavService.navKey.currentContext!, 'Onboarding failed.',
-                bgColor: ColorConstants.redAlert);
-            print('Onboarding throws $error error');
-          },
-          appAPIKey: MixedConstants.ONBOARD_API_KEY);
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+      );
+      switch (result.status) {
+        case AtOnboardingResultStatus.success:
+          final OnboardingService onboardingService =
+              OnboardingService.getInstance();
+          final value = onboardingService.atClientServiceMap;
+          await onboardSuccessCallback(
+              value, result.atsign!, atClientPrefernce);
+          break;
+        case AtOnboardingResultStatus.error:
+          SnackbarService().showSnackbar(
+            NavService.navKey.currentContext!,
+            (result.message ?? '').isNotEmpty ? '' : 'Onboarding failed.',
+            bgColor: ColorConstants.redAlert,
+          );
+          break;
+        case AtOnboardingResultStatus.cancel:
+          // TODO: Handle this case.
+          break;
+      }
     } else {
       CustomOnboarding.onboard(
           atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
@@ -426,43 +441,67 @@ class BackendService {
 
   bool authenticating = false;
 
-  checkToOnboard({String? atSign}) async {
+  checkToOnboard({
+    String? atSign,
+    bool isSwitchAccount = false,
+  }) async {
     try {
-      authenticating = true;
-      isAuthuneticatingSink.add(authenticating);
+      final OnboardingService _onboardingService =
+          OnboardingService.getInstance();
       late var atClientPrefernce;
+      AtOnboardingResult result;
+
+      if ((atSign ?? '').isNotEmpty) {
+        _onboardingService.setAtsign = atSign;
+      }
+
       //  await getAtClientPreference();
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
           .catchError((e) => print(e));
-      Onboarding(
-          atsign: atSign,
-          context: NavService.navKey.currentContext!,
-          atClientPreference: atClientPrefernce,
+
+      authenticating = false;
+      isAuthuneticatingSink.add(authenticating);
+
+      result = await AtOnboarding.onboard(
+        context: NavService.navKey.currentContext!,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPrefernce!,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
-          appColor: Color.fromARGB(255, 240, 94, 62),
-          onboard: (value, onboardedAtsign) async {
-            authenticating = true;
-            isAuthuneticatingSink.add(authenticating);
-            await onboardSuccessCallback(
-                value, onboardedAtsign!, atClientPrefernce);
-            authenticating = false;
-            isAuthuneticatingSink.add(authenticating);
-          },
-          onError: (error) {
-            var isConnected = Provider.of<InternetConnectivityChecker>(
-                    NavService.navKey.currentContext!,
-                    listen: false)
-                .isInternetAvailable;
+          appAPIKey: MixedConstants.ONBOARD_API_KEY,
+        ),
+        isSwitchingAtsign: isSwitchAccount,
+      );
 
-            SnackbarService().showSnackbar(NavService.navKey.currentContext!,
-                !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
-                bgColor: ColorConstants.redAlert);
-            authenticating = false;
-            isAuthuneticatingSink.add(authenticating);
-          },
-          appAPIKey: MixedConstants.ONBOARD_API_KEY);
+      switch (result.status) {
+        case AtOnboardingResultStatus.success:
+          final value = _onboardingService.atClientServiceMap;
+          authenticating = true;
+          isAuthuneticatingSink.add(authenticating);
+          await onboardSuccessCallback(
+              value, result.atsign!, atClientPrefernce);
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+          break;
+        case AtOnboardingResultStatus.error:
+          var isConnected = Provider.of<InternetConnectivityChecker>(
+                  NavService.navKey.currentContext!,
+                  listen: false)
+              .isInternetAvailable;
+
+          SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+              !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
+              bgColor: ColorConstants.redAlert);
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+          break;
+        case AtOnboardingResultStatus.cancel:
+          authenticating = false;
+          isAuthuneticatingSink.add(authenticating);
+          break;
+      }
+
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
     } catch (e) {
@@ -498,8 +537,6 @@ class BackendService {
     syncWithSecondary();
 
     // start monitor and package initializations.
-    await startMonitor();
-    setPeriodicFileHistoryRefresh();
     initLocalNotification();
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);

@@ -28,6 +28,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideBarWidget extends StatefulWidget {
   final bool isExpanded;
@@ -408,6 +409,32 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     color: ColorConstants.fadedText,
                                     fontSize: 14.toFont,
                                     letterSpacing: 0.1,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                )
+                              : SizedBox(),
+                        ]),
+                      )),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  InkWell(
+                      onTap: () async {
+                        await launchUrl(Uri(
+                            scheme: 'mailto',
+                            path: 'atmospherepro@atsign.com'));
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(children: [
+                          Icon(Icons.email,
+                              color: ColorConstants.fadedText,
+                              size: isTablet ? 20.toHeight : 25.toHeight),
+                          SizedBox(width: 10),
+                          isExpanded
+                              ? Text(
+                                  TextStrings().sidebarContactUs,
+                                  style: TextStyle(
+                                    color: ColorConstants.fadedText,
+                                    fontSize: 14.toFont,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 )

@@ -263,7 +263,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                       SizedBox(width: 10.toHeight),
                       widget.sentHistory!.fileDetails!.date != null
                           ? Text(
-                              '${DateFormat('kk: mm').format(widget.sentHistory!.fileDetails!.date!)}',
+                              '${DateFormat('kk:mm').format(widget.sentHistory!.fileDetails!.date!)}',
                               style: CustomTextStyles.secondaryRegular14,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
