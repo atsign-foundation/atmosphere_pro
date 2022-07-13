@@ -8,10 +8,12 @@ class FileTransferObject {
   bool? sharedStatus;
   DateTime? date;
   String? error;
+  //// [atClientException] not saved in any key, only used to display the error in frontend
+  Exception? atClientException;
 
   FileTransferObject(this.transferId, this.fileEncryptionKey, this.fileUrl,
       this.sharedWith, this.fileStatus,
-      {this.date, this.error, this.notes}) {
+      {this.date, this.error, this.notes, this.atClientException}) {
     date ??= DateTime.now();
   }
 

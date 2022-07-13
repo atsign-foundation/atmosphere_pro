@@ -88,6 +88,7 @@ class TextStrings {
   static final String buttonDismiss = 'DISMISS';
   static final String buttonShowMore = 'Show More';
   String ok = 'Ok';
+  String buttonRetry = 'RETRY';
 
   //history screen texts
   String sent = 'Sent';

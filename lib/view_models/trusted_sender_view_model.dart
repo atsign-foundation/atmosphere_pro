@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class TrustedContactProvider extends BaseModel {
@@ -76,6 +77,7 @@ class TrustedContactProvider extends BaseModel {
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
+      ExceptionService.instance.showPutExceptionOverlay(error);
       trustedContactOperation = false;
       setError(AddTrustedContacts, error.toString());
     }
@@ -93,6 +95,7 @@ class TrustedContactProvider extends BaseModel {
           .get(trustedContactsKey)
           .catchError((e) {
         print('error in get in getTrustedContact : $e ');
+        ExceptionService.instance.showGetExceptionOverlay(e);
         return AtValue();
       });
 

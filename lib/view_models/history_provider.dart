@@ -21,6 +21,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
@@ -175,6 +176,7 @@ class HistoryProvider extends BaseModel {
       notifyListeners();
       return res;
     } catch (e) {
+      ExceptionService.instance.showPutExceptionOverlay(e);
       print('exception in adding new sent history : $e');
       return false;
     }
@@ -188,6 +190,10 @@ class HistoryProvider extends BaseModel {
   // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
   /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
   getSentHistory({bool setLoading = true}) async {
+    if (setLoading) {
+      setStatus(SENT_HISTORY, Status.Loading);
+    }
+
     // checking, if new keys are available to show in sent history
     AtClient atClient = AtClientManager.getInstance().atClient;
     List<AtKey> sentFileAtkeys = await atClient.getAtKeys(
@@ -212,12 +218,10 @@ class HistoryProvider extends BaseModel {
     });
 
     if (!isNewKeyAvailable) {
+      setStatus(SENT_HISTORY, Status.Done);
       return;
     }
 
-    if (setLoading) {
-      setStatus(SENT_HISTORY, Status.Loading);
-    }
     tempSentHistory = [];
 
     try {
@@ -228,6 +232,7 @@ class HistoryProvider extends BaseModel {
       var keyValue =
           await backendService.atClientInstance!.get(key).catchError((e) {
         print('error in getSentHistory : $e');
+        ExceptionService.instance.showGetExceptionOverlay(e);
         return AtValue();
       });
       if (keyValue != null && keyValue.value != null) {
@@ -257,6 +262,7 @@ class HistoryProvider extends BaseModel {
 
       setStatus(SENT_HISTORY, Status.Done);
     } catch (error) {
+      ExceptionService.instance.showPutExceptionOverlay(error);
       setError(SENT_HISTORY, error.toString());
     }
   }
@@ -280,6 +286,8 @@ class HistoryProvider extends BaseModel {
           await backendService.atClientInstance!.get(atkey).catchError(
         (e) {
           print("Exception in getting atValue: $e");
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         },
       );
@@ -413,6 +421,8 @@ class HistoryProvider extends BaseModel {
             .get(atKey)
             .catchError((e) {
           print('error in get in getFileDownloadedAcknowledgement : $e');
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
         if (atValue != null && atValue.value != null) {
@@ -447,6 +457,7 @@ class HistoryProvider extends BaseModel {
       sortReceivedNotifications();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
+      ExceptionService.instance.showPutExceptionOverlay(error);
       setStatus(RECEIVED_HISTORY, Status.Error);
       setError(RECEIVED_HISTORY, error.toString());
     }
@@ -616,6 +627,8 @@ class HistoryProvider extends BaseModel {
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
 
@@ -902,6 +915,7 @@ class HistoryProvider extends BaseModel {
     var result =
         await AtClientManager.getInstance().atClient.get(atKey).catchError((e) {
       print('error in _downloadSingleFileFromWeb : $e');
+      ExceptionService.instance.showGetExceptionOverlay(e);
       return AtValue();
     });
 
@@ -998,6 +1012,7 @@ class HistoryProvider extends BaseModel {
         return false;
       }
     } catch (e) {
+      ExceptionService.instance.showNotifyExceptionOverlay(e);
       return false;
     }
   }
@@ -1044,6 +1059,7 @@ class HistoryProvider extends BaseModel {
     try {
       return await atClient.put(atKey, json.encode(sendFileHistory));
     } catch (e) {
+      ExceptionService.instance.showPutExceptionOverlay(e);
       print('error in update sent hisory  : $e');
       return false;
     }
@@ -1133,6 +1149,8 @@ class HistoryProvider extends BaseModel {
             // ignore: return_of_invalid_type_from_catch_error
             .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
+          //// Removing exception as called in a loop
+          // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
 
