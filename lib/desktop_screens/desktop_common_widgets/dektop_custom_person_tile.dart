@@ -44,7 +44,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                   )
                 : ContactInitial(
                     initials: title ?? ' ',
-                    size: 30,
+                    size: 50,
                     maxSize: (80.0 - 30.0),
                     minSize: 50,
                   ),

@@ -87,13 +87,14 @@ class OverlayService {
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
-                                SizedBox(height: 5),
-                                Text(
-                                  getFileUploadMessage(
-                                    provider.sentFileTransferProgress,
-                                  ),
-                                  style: TextStyle(fontSize: 12.toFont),
-                                ),
+                                //// Not showing estimated file upload time.
+                                // SizedBox(height: 5),
+                                // Text(
+                                //   getFileUploadMessage(
+                                //     provider.sentFileTransferProgress,
+                                //   ),
+                                //   style: TextStyle(fontSize: 12.toFont),
+                                // ),
                               ],
                             ),
                           ),

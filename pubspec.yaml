@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.7+43
+version: 1.0.7+45
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -52,7 +52,7 @@ dependencies:
   share_plus: ^4.0.1
   url_launcher: ^6.0.20
   video_thumbnail: ^0.4.6
-  webview_flutter: ^3.0.1
+  webview_flutter: ^3.0.4
   http: ^0.13.4
   package_info_plus: ^1.4.2
   fluttertoast: ^8.0.9
@@ -69,17 +69,23 @@ dependencies:
   
   at_client_mobile: ^3.1.17
   at_onboarding_flutter: ^4.0.3
-  at_backupkey_flutter: ^4.0.1
+  at_backupkey_flutter: ^4.0.3
   at_contacts_flutter: ^4.0.5
-  at_contacts_group_flutter: ^4.0.6
+  at_contacts_group_flutter: ^4.0.7
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.3
 
 dependency_overrides:
-  file_saver:
+  at_onboarding_flutter:
     git:
-      url: https://github.com/incrediblezayed/file_saver.git
-      ref: main
+      url: https://github.com/atsign-foundation/at_widgets
+      path: at_onboarding_flutter
+      ref: feature/on-boarding-3.0
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      ref: feature/at-client-mobile-2.0
+      path: at_client_mobile
 
 dev_dependencies:
   flutter_test:

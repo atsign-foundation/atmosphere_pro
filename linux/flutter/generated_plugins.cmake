@@ -3,9 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  at_file_saver
   biometric_storage
   desktop_window
-  file_saver
   file_selector_linux
   local_notifier
   url_launcher_linux
