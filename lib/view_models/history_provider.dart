@@ -28,16 +28,12 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:at_client/src/service/notification_service.dart';
-import 'package:provider/provider.dart';
 import 'package:at_client/src/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
@@ -66,7 +62,6 @@ class HistoryProvider extends BaseModel {
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
   bool isSyncedDataFetched = false;
-  String fileSearchText = '';
   List<FilesDetail>? sentPhotos,
       sentVideos,
       sentAudio,
@@ -388,6 +383,29 @@ class HistoryProvider extends BaseModel {
     return false;
   }
 
+  Future<bool> deleteReceivedItem(FileTransfer fileTransfer) async {
+    var atKey = AtKey()
+      ..key = fileTransfer.key
+      ..sharedBy = fileTransfer.sender
+      ..sharedWith = AtClientManager.getInstance().atClient.getCurrentAtSign()
+      ..metadata = (Metadata()..isCached = true);
+
+    var res = await AtClientManager.getInstance().atClient.delete(atKey);
+    if (res) {
+      var i = receivedHistoryLogs.indexWhere(
+        (element) => element.key == fileTransfer.key,
+      );
+
+      if (i != -1) {
+        receivedHistoryLogs.removeAt(i);
+        notifyListeners();
+      }
+      return res;
+    } else {
+      return res;
+    }
+  }
+
   getFileDownloadedAcknowledgement() async {
     setStatus(DOWNLOAD_ACK, Status.Loading);
     var atKeys = await AtClientManager.getInstance()
@@ -437,8 +455,6 @@ class HistoryProvider extends BaseModel {
     try {
       await getAllFileTransferData();
       sortReceivedNotifications();
-      await sortFiles(receivedHistoryLogs);
-      populateTabs();
       setStatus(RECEIVED_HISTORY, Status.Done);
     } catch (error) {
       ExceptionService.instance.showPutExceptionOverlay(error);
@@ -561,8 +577,6 @@ class HistoryProvider extends BaseModel {
       receivedItemsId[filesModel.key] = true;
     }
 
-    await sortFiles(receivedHistoryLogs);
-    await populateTabs();
     setStatus(ADD_RECEIVED_FILE, Status.Done);
   }
 
@@ -640,102 +654,6 @@ class HistoryProvider extends BaseModel {
     setStatus(GET_ALL_FILE_DATA, Status.Done);
   }
 
-  sortFiles(List<FileTransfer> filesList) async {
-    try {
-      setStatus(SORT_FILES, Status.Loading);
-      receivedAudio = [];
-      receivedApk = [];
-      receivedDocument = [];
-      receivedPhotos = [];
-      receivedVideos = [];
-      receivedUnknown = [];
-      recentFile = [];
-      await Future.forEach(filesList, (dynamic fileData) async {
-        await Future.forEach(fileData.files, (dynamic file) async {
-          String? fileExtension = file.name.split('.').last;
-          String filePath =
-              BackendService.getInstance().downloadDirectory!.path +
-                  Platform.pathSeparator +
-                  file.name;
-
-          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
-                Platform.pathSeparator +
-                fileData.sender +
-                Platform.pathSeparator +
-                file.name;
-          }
-          FilesDetail fileDetail = FilesDetail(
-            fileName: file.name,
-            filePath: filePath,
-            size: double.parse(file.size.toString()),
-            date: fileData.date.toLocal().toString(),
-            type: file.name.split('.').last,
-            contactName: fileData.sender,
-          );
-
-          // check if file exists
-          File tempFile = File(fileDetail.filePath!);
-          bool isFileDownloaded = await tempFile.exists();
-
-          if (isFileDownloaded) {
-            if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
-              int index = receivedAudio.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedAudio.add(fileDetail);
-              }
-            } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
-              int index = receivedVideos.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedVideos.add(fileDetail);
-              }
-            } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
-              int index = receivedPhotos.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                // checking is photo is downloaded or not
-                //if photo is downloaded then only it's shown in my files screen
-                File file = File(fileDetail.filePath!);
-                bool isFileDownloaded = await file.exists();
-
-                if (isFileDownloaded) {
-                  receivedPhotos.add(fileDetail);
-                }
-              }
-            } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
-                FileTypes.PDF_TYPES.contains(fileExtension) ||
-                FileTypes.WORD_TYPES.contains(fileExtension) ||
-                FileTypes.EXEL_TYPES.contains(fileExtension)) {
-              int index = receivedDocument.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedDocument.add(fileDetail);
-              }
-            } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
-              int index = receivedApk.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedApk.add(fileDetail);
-              }
-            } else {
-              int index = receivedUnknown.indexWhere(
-                  (element) => element.fileName == fileDetail.fileName);
-              if (index == -1) {
-                receivedUnknown.add(fileDetail);
-              }
-            }
-          }
-        });
-      });
-      getrecentHistoryFiles();
-      setStatus(SORT_FILES, Status.Done);
-    } catch (e) {
-      setError(SORT_FILES, e.toString());
-    }
-  }
-
   getrecentHistoryFiles() async {
     // finding last 15 received files data for recent tab
     setStatus(RECENT_HISTORY, Status.Loading);
@@ -784,108 +702,8 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  populateTabs() {
-    bool isDesktop = false;
-    tabNames = ['Recents'];
-    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      isDesktop = true;
-    }
-    tabs = [];
-    tabs = [isDesktop ? DesktopRecents() : Recents()];
-
-    try {
-      setStatus(POPULATE_TABS, Status.Loading);
-
-      if (receivedApk.isNotEmpty) {
-        if (!tabs.contains(APK) || !tabs.contains(APK())) {
-          tabs.add(isDesktop ? DesktopAPK() : APK());
-          tabNames.add('APK');
-        }
-      }
-      if (receivedAudio.isNotEmpty) {
-        if (!tabs.contains(Audios) || !tabs.contains(Audios())) {
-          tabs.add(isDesktop ? DesktopAudios() : Audios());
-          tabNames.add('Audios');
-        }
-      }
-      if (receivedDocument.isNotEmpty) {
-        if (!tabs.contains(Documents) || !tabs.contains(Documents())) {
-          tabs.add(isDesktop ? DesktopDocuments() : Documents());
-          tabNames.add('Documents');
-        }
-      }
-      if (receivedPhotos.isNotEmpty) {
-        if (!tabs.contains(Photos) || !tabs.contains(Photos())) {
-          tabs.add(isDesktop ? DesktopPhotos() : Photos());
-          tabNames.add('Photos');
-        }
-      }
-      if (receivedVideos.isNotEmpty) {
-        if (!tabs.contains(Videos) || !tabs.contains(Videos())) {
-          tabs.add(isDesktop ? DesktopVideos() : Videos());
-          tabNames.add('Videos');
-        }
-      }
-      if (receivedUnknown.isNotEmpty) {
-        if (!tabs.contains(Unknowns()) || !tabs.contains(Unknowns())) {
-          tabs.add(isDesktop ? DesktopUnknowns() : Unknowns());
-          tabNames.add('Unknowns');
-        }
-      }
-      setStatus(POPULATE_TABS, Status.Done);
-    } catch (e) {
-      setError(POPULATE_TABS, e.toString());
-    }
-  }
-
   sortReceivedNotifications() {
     receivedHistoryLogs.sort((a, b) => b.date!.compareTo(a.date!));
-  }
-
-  sortByName(List<FilesDetail> list) {
-    try {
-      setStatus(SORT_LIST, Status.Loading);
-      list.sort((a, b) => a.fileName!.compareTo(b.fileName!));
-
-      setStatus(SORT_LIST, Status.Done);
-    } catch (e) {
-      setError(SORT_LIST, e.toString());
-    }
-  }
-
-  sortBySize(List<FilesDetail> list) {
-    try {
-      setStatus(SORT_LIST, Status.Loading);
-      list.sort((a, b) => a.size!.compareTo(b.size!));
-
-      setStatus(SORT_LIST, Status.Done);
-    } catch (e) {
-      setError(SORT_LIST, e.toString());
-    }
-  }
-
-  sortByType(List<FilesDetail> list) {
-    try {
-      setStatus(SORT_LIST, Status.Loading);
-      list.sort((a, b) =>
-          a.fileName!.split('.').last.compareTo(b.fileName!.split('.').last));
-
-      setStatus(SORT_LIST, Status.Done);
-    } catch (e) {
-      setError(SORT_LIST, e.toString());
-    }
-  }
-
-  sortByDate(List<FilesDetail> list) {
-    try {
-      setStatus(SORT_LIST, Status.Loading);
-
-      list.sort(
-          (a, b) => DateTime.parse(a.date!).compareTo(DateTime.parse(b.date!)));
-      setStatus(SORT_LIST, Status.Done);
-    } catch (e) {
-      setError(SORT_LIST, e.toString());
-    }
   }
 
   bool checkRegexFromBlockedAtsign(String atsign) {
@@ -1003,6 +821,9 @@ class HistoryProvider extends BaseModel {
           downloadPath: downloadPath ?? _downloadPath,
         );
       } catch (e) {
+        Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .removeReceiveProgressItem(transferId);
         SnackbarService().showSnackbar(
           NavService.navKey.currentContext!,
           e.toString(),
@@ -1010,9 +831,6 @@ class HistoryProvider extends BaseModel {
         );
         return false;
       }
-
-      await sortFiles(receivedHistoryLogs);
-      populateTabs();
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
@@ -1023,8 +841,6 @@ class HistoryProvider extends BaseModel {
           .removeReceiveProgressItem(
               transferId); //setting filetransfer progress as null
       if (files is List<File>) {
-        await sortFiles(receivedHistoryLogs);
-        populateTabs();
         setStatus(DOWNLOAD_FILE, Status.Done);
         return true;
       } else {
@@ -1068,8 +884,6 @@ class HistoryProvider extends BaseModel {
           .checkForUndownloadedFiles();
 
       if (files is List<File>) {
-        await sortFiles(receivedHistoryLogs);
-        populateTabs();
         setStatus(DOWNLOAD_FILE, Status.Done);
         return true;
       } else {
@@ -1219,11 +1033,6 @@ class HistoryProvider extends BaseModel {
     notifyListeners();
   }
 
-  setFileSearchText(String str) {
-    fileSearchText = str;
-    notifyListeners();
-  }
-
   bool compareAtSign(String atsign1, String atsign2) {
     if (atsign1[0] != '@') {
       atsign1 = '@' + atsign1;
@@ -1361,10 +1170,7 @@ class HistoryProvider extends BaseModel {
       }
     }
 
-    try {
-      await sortFiles(receivedHistoryLogs);
-      populateTabs();
-    } catch (e) {
+    try {} catch (e) {
       print('error in refreshReceivedFile : $e');
     }
 

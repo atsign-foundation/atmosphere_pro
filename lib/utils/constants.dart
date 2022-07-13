@@ -15,13 +15,13 @@ class MixedConstants {
 
   static const int ROOT_PORT = 64;
 
-  static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
+  static const String TERMS_CONDITIONS = 'atsign.com/terms-conditions/';
 
   static const String FILEBIN_URL = 'https://ck6agzxiog6kmb.atsign.com/';
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
-  static const String FAQ = "https://atsign.com/faqs/";
+  static const String FAQ = "atsign.com/faqs/";
 
   static const MACOS_STORE_LINK = 'https://apps.apple.com/app/id1550936444';
 
@@ -47,6 +47,7 @@ class MixedConstants {
   static const String AUTO_ACCEPT_TOGGLE_BOX = 'autoAcceptBox';
   static const String AUTO_ACCEPT_TOGGLE_KEY = 'autoAcceptKey';
   static const String FILE_TRANSFER_KEY = 'file_transfer_';
+  static const String MY_FILES_KEY = 'my_files_';
   static const String FILE_TRANSFER_ACKNOWLEDGEMENT = 'file_download_ack_';
   static const String RECEIVED_FILE_HISTORY = 'receivedHistory_v2';
   static const String SENT_FILE_HISTORY = 'sentHistory_v2';

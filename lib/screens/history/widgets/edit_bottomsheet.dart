@@ -1,17 +1,14 @@
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class EditBottomSheet extends StatefulWidget {
-  final FileHistory? fileHistory;
-  EditBottomSheet({required this.fileHistory});
+  final Function onConfirmation;
+  EditBottomSheet({required this.onConfirmation});
   @override
   _EditBottomSheetState createState() => _EditBottomSheetState();
 }
@@ -59,8 +56,7 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
               ),
               content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
                   () async {
-                await Provider.of<HistoryProvider>(context, listen: false)
-                    .deleteSentItem(widget.fileHistory!.fileDetails!.key);
+                widget.onConfirmation();
               }));
         });
 

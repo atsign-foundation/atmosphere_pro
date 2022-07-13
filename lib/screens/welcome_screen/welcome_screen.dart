@@ -75,7 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ? _fileTransferProvider.error[_fileTransferProvider.SEND_FILES]
             : null,
       );
-    });
+      });
   }
 
   setAtSign() async {

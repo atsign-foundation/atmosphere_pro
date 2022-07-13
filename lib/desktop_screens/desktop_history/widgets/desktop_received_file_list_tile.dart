@@ -3,21 +3,27 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -248,10 +254,15 @@ class _DesktopReceivedFilesListTileState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Transform.rotate(
-                                  angle: 180 * math.pi / 340,
-                                  child: Icon(Icons.keyboard_arrow_up),
-                                ),
+                                widget.isSelected
+                                    ? InkWell(
+                                        onTap: deleteReceivedItem,
+                                        child: Icon(Icons.delete),
+                                      )
+                                    : Transform.rotate(
+                                        angle: 180 * math.pi / 340,
+                                        child: Icon(Icons.keyboard_arrow_up),
+                                      ),
                               ],
                             ),
                           )
@@ -617,5 +628,68 @@ class _DesktopReceivedFilesListTileState
     File file = File(filePath);
     bool fileExists = await file.exists();
     return fileExists;
+  }
+
+  deleteReceivedItem() async {
+    await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth),
+              ),
+              content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
+                  () async {
+                var res =
+                    await Provider.of<HistoryProvider>(context, listen: false)
+                        .deleteReceivedItem(widget.receivedHistory!);
+
+                if (res) {
+                  SnackbarService().showSnackbar(
+                      NavService.navKey.currentContext!,
+                      'Removed from received items list',
+                      bgColor: ColorConstants.successGreen);
+                  await deleteFileWhenRecevedItemRemoved();
+                } else {
+                  SnackbarService().showSnackbar(
+                      NavService.navKey.currentContext!, 'Failed',
+                      bgColor: ColorConstants.redAlert);
+                }
+              }));
+        });
+  }
+
+  deleteFileWhenRecevedItemRemoved() async {
+    await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth),
+              ),
+              content: ConfirmationDialog(
+                  TextStrings.deleteDownloadedFileMessage, () async {
+                await Future.forEach(widget.receivedHistory!.files!,
+                    (FileData element) async {
+                  String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                      Platform.pathSeparator +
+                      (widget.receivedHistory!.sender ?? '') +
+                      Platform.pathSeparator +
+                      (element.name ?? '');
+
+                  if (await CommonUtilityFunctions().isFilePresent(filePath)) {
+                    var file = File(filePath);
+                    if (await file.existsSync()) {
+                      file.deleteSync();
+                    }
+                  }
+                });
+
+                await Provider.of<MyFilesProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .deletMyFileRecord(widget.receivedHistory!.key);
+              }));
+        });
   }
 }
