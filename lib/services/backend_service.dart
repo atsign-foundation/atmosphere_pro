@@ -49,12 +49,10 @@ class BackendService {
   }
 
   AtClientService? atClientServiceInstance;
-  late AtClientManager atClientManager;
-  AtClient? atClientInstance;
+
   String? currentAtSign;
   String? app_lifecycle_state;
   late AtClientPreference atClientPreference;
-  SyncService? syncService;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
   Timer? periodicHistoryRefresh;
@@ -503,11 +501,8 @@ class BackendService {
     await AtClientManager.getInstance().setCurrentAtSign(
         onboardedAtsign, MixedConstants.appNamespace, atClientPreference);
     atClientServiceInstance = atClientServiceMap[onboardedAtsign];
-    atClientManager = atClientServiceMap[onboardedAtsign]!.atClientManager;
-    atClientInstance = atClientManager.atClient;
     atClientServiceMap = atClientServiceMap;
     currentAtSign = onboardedAtsign;
-    syncService = atClientManager.syncService;
 
     // clearing file and contact informations.
     Provider.of<WelcomeScreenProvider>(NavService.navKey.currentState!.context,
