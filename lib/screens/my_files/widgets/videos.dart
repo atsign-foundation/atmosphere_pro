@@ -1,13 +1,17 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import 'downloads_folders.dart';
@@ -38,11 +42,11 @@ class _VideosState extends State<Videos> {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       showError: false,
       load: (provider) {
-        return provider.sortFiles(provider.receivedHistoryLogs);
+        return provider.sortFiles();
       },
       successBuilder: (provider) => Container(
         margin:
@@ -61,16 +65,18 @@ class _VideosState extends State<Videos> {
     );
   }
 
-  Widget listVideoWidget(HistoryProvider provider, dynamic videos) {
+  Widget listVideoWidget(MyFilesProvider provider, dynamic videos) {
     return ListView.builder(
         itemCount: provider.receivedVideos.length,
         itemBuilder: (context, index) {
           DateTime date = DateTime.parse(provider.receivedVideos[index].date!);
           return InkWell(
+            onLongPress: () {
+              deleteFile(provider.receivedVideos[index].filePath!,
+                  fileTransferId:
+                      provider.receivedVideos[index].fileTransferId);
+            },
             onTap: () async {
-              print(
-                  'provider.receivedVideos[index].size====>${provider.receivedVideos[index].size}');
-              //      await openDownloadsFolder(context);
               await openFilePath(provider.receivedVideos[index].filePath!);
             },
             child: Card(
@@ -128,5 +134,24 @@ class _VideosState extends State<Videos> {
             ),
           );
         });
+  }
+
+  deleteFile(String filePath, {String? fileTransferId}) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(onConfirmation: () async {
+        var file = File(filePath);
+        if (await file.exists()) {
+          file.deleteSync();
+        }
+        if (fileTransferId != null) {
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
+      }),
+    );
   }
 }

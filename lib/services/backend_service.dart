@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
@@ -14,6 +13,7 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
@@ -26,6 +26,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -252,17 +253,25 @@ class BackendService {
               );
     } catch (e) {
       print('error in ack: $e');
+      ExceptionService.instance.showNotifyExceptionOverlay(e);
     }
   }
 
   downloadFiles(BuildContext context, String key, String fromAtSign) async {
-    var result = await Provider.of<HistoryProvider>(context, listen: false)
-        .downloadFiles(
+    var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    var result = await historyProvider.downloadFiles(
       key,
       fromAtSign,
       false,
     );
     if (result is bool && result) {
+      var i = historyProvider.receivedHistoryLogs
+          .indexWhere((element) => element.key == key);
+      if (i != -1) {
+        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .saveNewDataInMyFiles(historyProvider.receivedHistoryLogs[i]);
+      }
     } else if (result is bool && !result) {}
   }
 
@@ -286,6 +295,10 @@ class BackendService {
 
     var historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentState!.context,
+        listen: false);
+
+    var myFilesProvider = Provider.of<MyFilesProvider>(
+        NavService.navKey.currentContext!,
         listen: false);
 
     print(
@@ -314,6 +327,8 @@ class BackendService {
           Status.Loading) {
         await historyProvider.getSentHistory();
       }
+
+      await myFilesProvider.init();
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
@@ -37,5 +38,7 @@ Future<void> openFilePath(String path) async {
   bool fileExists = await test.exists();
   if (fileExists) {
     await OpenFile.open(path);
+  } else {
+    CommonUtilityFunctions().showNoFileDialog();
   }
 }

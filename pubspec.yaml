@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.7+45
+version: 1.0.7+46
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -63,12 +63,12 @@ dependencies:
   video_compress: ^3.1.0
   new_version: ^0.3.0
   
-  at_commons: ^3.0.17
-  at_contact: ^3.0.6
+  at_commons: ^3.0.18
+  at_contact: ^3.0.7
   at_common_flutter: ^2.0.8
   
-  at_client_mobile: ^3.1.17
-  at_onboarding_flutter: ^4.0.3
+  at_client_mobile: ^3.1.18
+  at_onboarding_flutter: ^4.0.4
   at_backupkey_flutter: ^4.0.3
   at_contacts_flutter: ^4.0.5
   at_contacts_group_flutter: ^4.0.7
@@ -140,7 +140,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 msix_config:
-  display_name: "@mospherePro"
+  display_name: "atmospherePro"
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF

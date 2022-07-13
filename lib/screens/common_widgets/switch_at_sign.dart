@@ -23,13 +23,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
   GlobalKey _two = GlobalKey();
   BuildContext? myContext;
 
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback(
-  //       (_) => ShowCaseWidget.of(myContext!)?.startShowCase([_one, _two]));
-  //   super.initState();
-  // }
-
   BackendService backendService = BackendService.getInstance();
   bool isLoading = false;
   var atClientPrefernce;
@@ -65,7 +58,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                             Showcase(
                               key: _one,
                               description:
-                                  'You can pair multiple @Signs with this app.',
+                                  'You can pair multiple atSigns with this app.',
                               shapeBorder: CircleBorder(),
                               disableAnimation: true,
                               radius: BorderRadius.all(Radius.circular(40)),
@@ -185,7 +178,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 child: Showcase(
                                   key: _two,
                                   description:
-                                      'Use the + icon to either generate a new free @sign or pair an existing one. All paired @Signs will appear here, where you can switch between them.',
+                                      'Use the + icon to either generate a new free atSign or pair an existing one. All paired atSigns will appear here, where you can switch between them.',
                                   shapeBorder: CircleBorder(),
                                   radius: BorderRadius.all(Radius.circular(40)),
                                   showArrow: false,
