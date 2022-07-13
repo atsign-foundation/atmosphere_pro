@@ -74,6 +74,7 @@ dependencies:
   at_contacts_group_flutter: ^4.0.7
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.3
+  showcaseview: ^1.1.5
 
 dependency_overrides:
   at_onboarding_flutter:
