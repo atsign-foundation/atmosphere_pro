@@ -26,7 +26,7 @@ version: 1.0.7+45
 # version: 1.0.1+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -62,11 +62,11 @@ dependencies:
   flutter_toastr: ^1.0.3
   video_compress: ^3.1.0
   new_version: ^0.3.0
-  
+
   at_commons: ^3.0.17
   at_contact: ^3.0.6
   at_common_flutter: ^2.0.8
-  
+
   at_client_mobile: ^3.1.17
   at_onboarding_flutter: ^4.0.3
   at_backupkey_flutter: ^4.0.3
@@ -76,6 +76,11 @@ dependencies:
   at_sync_ui_flutter: ^1.0.3
 
 dependency_overrides:
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      path: at_common_flutter
+      ref: ui/back-arrow-icon
   at_onboarding_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
