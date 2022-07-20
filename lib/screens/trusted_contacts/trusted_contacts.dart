@@ -54,14 +54,14 @@ class _TrustedContactsState extends State<TrustedContacts> {
                   showTitle: true,
                   title: pro_text_strings.TextStrings().trustedSenders,
                   showTrailingButton:
-                      provider.fetchedTrustedContact.isEmpty ? false : true,
+                      provider.trustedContacts.isEmpty ? false : true,
                   trailingIcon: Icons.add,
                   isTrustedContactScreen: true,
                 ),
                 body: SafeArea(
                   child: Column(children: [
                     Expanded(
-                        child: provider.fetchedTrustedContact.isEmpty
+                        child: provider.trustedContacts.isEmpty
                             ? Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -109,15 +109,12 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                 ContactsScreen(
                                                   asSelectionScreen: true,
                                                   selectedContactsHistory:
-                                                      provider.trustedContacts,
+                                                      [],
                                                   selectedList: (s) async {
-                                                    s.forEach((element) async {
+                                                    for(var element in s){
                                                       await provider
-                                                          .addTrustedContacts(
-                                                              element!);
-                                                    });
-                                                    await provider
-                                                        .setTrustedContact();
+                                                        .addTrustedContacts(element!);
+                                                    }
                                                   },
                                                 )),
                                       );
@@ -150,7 +147,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                           pro_text_strings.TextStrings()
                                               .removeTrustedSender,
                                           contact: provider
-                                              .fetchedTrustedContact[index],
+                                              .trustedContacts[index],
                                         ),
                                       );
                                     },

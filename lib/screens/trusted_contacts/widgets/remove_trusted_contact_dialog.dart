@@ -139,9 +139,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                               await Provider.of<TrustedContactProvider>(context,
                                       listen: false)
                                   .removeTrustedContacts(widget.contact);
-                              await Provider.of<TrustedContactProvider>(context,
-                                      listen: false)
-                                  .setTrustedContact();
+                              
                               Navigator.pop(context);
                             },
                           ),
