@@ -73,7 +73,7 @@ class _ExpansionTileWidget extends StatelessWidget {
           fontSize: 14.toFont,
           fontWeight: FontWeight.normal,
         ),
-        semanticsLabel: 'Select @sign from contacts button',
+        semanticsLabel: 'Select atSign from contacts button',
       ),
       trailing: Container(
         padding: EdgeInsets.symmetric(vertical: 15),
