@@ -230,7 +230,7 @@ class HistoryProvider extends BaseModel {
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
       var keyValue =
-          await backendService.atClientInstance!.get(key).catchError((e) {
+          await AtClientManager.getInstance().atClient.get(key).catchError((e) {
         print('error in getSentHistory : $e');
         ExceptionService.instance.showGetExceptionOverlay(e);
         return AtValue();
@@ -283,7 +283,7 @@ class HistoryProvider extends BaseModel {
 
     await Future.forEach(sentFileAtkeys, (AtKey atkey) async {
       AtValue atvalue =
-          await backendService.atClientInstance!.get(atkey).catchError(
+          await AtClientManager.getInstance().atClient.get(atkey).catchError(
         (e) {
           print("Exception in getting atValue: $e");
           //// Removing exception as called in a loop
@@ -623,9 +623,10 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue = await backendService.atClientInstance!.get(atKey)
-            // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) {
+        AtValue atvalue =
+            await AtClientManager.getInstance().atClient.get(atKey)
+                // ignore: return_of_invalid_type_from_catch_error
+                .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);
@@ -1145,9 +1146,10 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue = await backendService.atClientInstance!.get(atKey)
-            // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) {
+        AtValue atvalue =
+            await AtClientManager.getInstance().atClient.get(atKey)
+                // ignore: return_of_invalid_type_from_catch_error
+                .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);

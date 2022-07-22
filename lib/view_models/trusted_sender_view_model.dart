@@ -90,8 +90,8 @@ class TrustedContactProvider extends BaseModel {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
-
-      AtValue keyValue = await backendService.atClientInstance!
+      AtValue keyValue = await AtClientManager.getInstance()
+          .atClient
           .get(trustedContactsKey)
           .catchError((e) {
         print('error in get in getTrustedContact : $e ');

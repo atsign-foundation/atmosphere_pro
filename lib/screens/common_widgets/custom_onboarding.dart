@@ -55,10 +55,7 @@ class CustomOnboarding {
         await AtClientManager.getInstance().setCurrentAtSign(
             atsign, MixedConstants.appNamespace, atClientPrefernce);
 
-        _backendService.atClientInstance =
-            value[atsign]!.atClientManager.atClient;
         _backendService.atClientServiceInstance = value[atsign];
-        _backendService.atClientManager = value[atsign]!.atClientManager;
         _backendService.currentAtSign =
             value[atsign]!.atClientManager.atClient.getCurrentAtSign();
 
