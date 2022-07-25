@@ -10,7 +10,7 @@ class TextStrings {
   String homeDescriptionMobile = 'Truly\nencrypted file\ntransfer.';
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
-  String appName = '@mospherePro';
+  String appName = 'atmospherePro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
@@ -88,6 +88,7 @@ class TextStrings {
   static final String buttonDismiss = 'DISMISS';
   static final String buttonShowMore = 'Show More';
   String ok = 'Ok';
+  String buttonRetry = 'RETRY';
 
   //history screen texts
   String sent = 'Sent';
@@ -260,7 +261,7 @@ class TextStrings {
   // Desktop home
   String remove = 'Remove';
   String selectAll = 'Select All';
-  String desktopAppName = '@mospherePro';
+  String desktopAppName = 'atmospherePro';
   String desktopCopyRight = 'The @company Copyrights';
   String enterAtSign = 'Enter atSign';
   String authenticating = 'Authenticating...';
@@ -327,7 +328,7 @@ class TextStrings {
   static const String resetDescription =
       'This will remove the selected atSign and its details from this app only.';
   static const String noAtsignToReset =
-      'There are no atSigns paired with this device. ';
+      'There are no atSigns paired with this device.';
   static const String resetErrorText =
       'Please select at least one atSign to reset';
   static const String resetWarningText =
@@ -338,6 +339,8 @@ class TextStrings {
   static const reUploadFileMsg = 'Do you want to re-upload file ?';
   static const uploadFile = 'Please upload file first.';
   static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
+  static const deleteDownloadedFileMessage =
+      'Do you also want to delete the downloaded items?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
   static const releaseTagError = 'Error in fetching release tag.';

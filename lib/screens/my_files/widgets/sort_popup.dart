@@ -1,5 +1,5 @@
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 
 class SortPopup extends StatefulWidget {
@@ -20,7 +20,7 @@ class _SortPopupState extends State<SortPopup> {
               onChanged: (dynamic s) {
                 setState(() {
                   ratioItem = s;
-                  providerCallback<HistoryProvider>(context,
+                  providerCallback<MyFilesProvider>(context,
                       task: (provider) =>
                           provider.sortByName(provider.receivedPhotos),
                       taskName: (provider) => provider.SORT_LIST,

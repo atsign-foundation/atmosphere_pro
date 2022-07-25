@@ -17,10 +17,11 @@ class OverlayService {
   static OverlayService get instance => _instance;
   OverlayEntry? snackBarOverlayEntry;
 
-  showOverlay(FLUSHBAR_STATUS flushbarStatus) async {
+  showOverlay(FLUSHBAR_STATUS flushbarStatus, {String? errorMessage}) async {
     hideOverlay();
 
-    snackBarOverlayEntry = _buildSnackBarOverlayEntry(flushbarStatus);
+    snackBarOverlayEntry =
+        _buildSnackBarOverlayEntry(flushbarStatus, errorMessage: errorMessage);
     NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry!);
 
     if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
@@ -37,15 +38,20 @@ class OverlayService {
     snackBarOverlayEntry = null;
   }
 
-  OverlayEntry _buildSnackBarOverlayEntry(FLUSHBAR_STATUS flushbarStatus) {
+  OverlayEntry _buildSnackBarOverlayEntry(
+    FLUSHBAR_STATUS flushbarStatus, {
+    String? errorMessage,
+  }) {
     Color bgColor = _getColor(flushbarStatus);
+    String text = errorMessage ?? _getText(flushbarStatus);
 
     return OverlayEntry(builder: (context) {
       final size = MediaQuery.of(context).size;
       return Consumer<FileProgressProvider>(
         builder: (_context, provider, _) {
-          String text = _getText(flushbarStatus,
-              fileTransferProgress: provider.sentFileTransferProgress);
+          text = errorMessage ??
+              _getText(flushbarStatus,
+                  fileTransferProgress: provider.sentFileTransferProgress);
           return Positioned(
             width: size.width,
             height: 100,

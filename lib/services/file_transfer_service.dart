@@ -9,6 +9,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -154,17 +155,24 @@ class FileTransferService {
                     atKey,
                     value: jsonEncode(fileTransferObject.toJson()),
                   ),
-                );
+                )
+            //     .catchError((e) {
+            //   ExceptionService.instance.showNotifyExceptionOverlay(e);
+            // })
+            ;
 
         if (notificationResult.notificationStatusEnum ==
             NotificationStatusEnum.delivered) {
           fileTransferObject.sharedStatus = true;
         } else {
           fileTransferObject.sharedStatus = false;
+          fileTransferObject.atClientException =
+              notificationResult.atClientException;
         }
       } on Exception catch (e) {
         fileTransferObject.sharedStatus = false;
         fileTransferObject.error = e.toString();
+        fileTransferObject.atClientException = e;
       }
       result[sharedWithAtSign] = fileTransferObject;
     }
@@ -239,7 +247,14 @@ class FileTransferService {
     var atKey = AtKey()
       ..key = transferId
       ..sharedBy = sharedByAtSign;
-    var result = await AtClientManager.getInstance().atClient.get(atKey);
+    var result =
+        await AtClientManager.getInstance().atClient.get(atKey).catchError(
+      (e) {
+        print('Error in get $e');
+        ExceptionService.instance.showGetExceptionOverlay(e);
+      },
+    );
+
     FileTransferObject fileTransferObject;
     try {
       if (FileTransferObject.fromJson(jsonDecode(result.value)) == null) {

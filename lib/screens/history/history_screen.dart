@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
@@ -158,14 +159,27 @@ class _HistoryScreenState extends State<HistoryScreen>
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
                               height: SizeConfig().screenHeight - 120.toHeight,
-                              child: Center(
-                                child: Text(
-                                  'Some error occured',
-                                  style: TextStyle(
-                                    fontSize: 15.toFont,
-                                    fontWeight: FontWeight.normal,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Some error occured',
+                                    style: TextStyle(
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(height: 10.toHeight),
+                                  CustomButton(
+                                    isOrange: true,
+                                    buttonText: TextStrings().retry,
+                                    height: 40.toHeight,
+                                    width: 115.toWidth,
+                                    onPressed: () {
+                                      historyProvider!.getSentHistory();
+                                    },
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -240,14 +254,29 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   child: SizedBox(
                                     height: SizeConfig().screenHeight -
                                         120.toHeight,
-                                    child: Center(
-                                      child: Text(
-                                        'Some error occured',
-                                        style: TextStyle(
-                                          fontSize: 15.toFont,
-                                          fontWeight: FontWeight.normal,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Some error occured',
+                                          style: TextStyle(
+                                            fontSize: 15.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
-                                      ),
+                                        SizedBox(height: 10.toHeight),
+                                        CustomButton(
+                                          isOrange: true,
+                                          buttonText: TextStrings().retry,
+                                          height: 40.toHeight,
+                                          width: 115.toWidth,
+                                          onPressed: () {
+                                            historyProvider!
+                                                .getReceivedHistory();
+                                          },
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),

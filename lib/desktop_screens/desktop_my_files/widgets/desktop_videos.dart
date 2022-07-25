@@ -1,7 +1,9 @@
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -13,9 +15,11 @@ class DesktopVideos extends StatefulWidget {
 }
 
 class _DesktopVideosState extends State<DesktopVideos> {
+  String? onHoverFileName;
+
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       load: (provider) {
         // provider.getReceivedHistory();
@@ -52,13 +56,35 @@ class _DesktopVideosState extends State<DesktopVideos> {
                               if (fileExists) {
                                 await OpenFile.open(
                                     provider.receivedVideos[index].filePath);
+                              } else {
+                                CommonUtilityFunctions().showNoFileDialog();
                               }
                             },
-                            child: DesktopFileCard(
-                              title: provider.receivedVideos[index].filePath!
-                                  .split(Platform.pathSeparator)
-                                  .last,
-                              filePath: provider.receivedVideos[index].filePath,
+                            child: MouseRegion(
+                              onEnter: (PointerEnterEvent e) {
+                                setState(() {
+                                  onHoverFileName =
+                                      provider.receivedVideos[index].fileName;
+                                });
+                              },
+                              onExit: (PointerExitEvent e) {
+                                setState(() {
+                                  onHoverFileName = null;
+                                });
+                              },
+                              child: DesktopFileCard(
+                                key: Key(
+                                    provider.receivedVideos[index].filePath!),
+                                title: provider.receivedVideos[index].filePath!
+                                    .split(Platform.pathSeparator)
+                                    .last,
+                                filePath:
+                                    provider.receivedVideos[index].filePath,
+                                showDelete: onHoverFileName ==
+                                    provider.receivedVideos[index].fileName,
+                                transferId: provider
+                                    .receivedVideos[index].fileTransferId!,
+                              ),
                             ),
                           );
                         } else {
