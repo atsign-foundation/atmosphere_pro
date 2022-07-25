@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:flutter/material.dart';
@@ -221,6 +222,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                       : CommonButton(
                                           isFileShareFailed ? 'Resend' : 'Send',
                                           () async {
+                                            await Provider.of<MyFilesProvider>(
+                                                    NavService
+                                                        .navKey.currentContext!,
+                                                    listen: false)
+                                                .deleteMyfilekeys();
+                                            return;
                                             if (isFileSending) return;
 
                                             if (isFileShareFailed) {

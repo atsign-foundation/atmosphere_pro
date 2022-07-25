@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class DesktopMyFiles extends StatefulWidget {
 class _DesktopMyFilesState extends State<DesktopMyFiles>
     with TickerProviderStateMixin {
   TabController? _controller;
-  late HistoryProvider historyProvider;
+  late MyFilesProvider myFilesProvider;
   bool _isFilterOption = false;
   List<Widget> tabs = [];
   List<String> tabNames = [];
@@ -23,7 +24,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
   bool isLoading = false;
   @override
   void initState() {
-    historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    myFilesProvider = Provider.of<MyFilesProvider>(context, listen: false);
     ini();
     setState(() {});
     super.initState();
@@ -32,8 +33,8 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
   ini() async {
     tabs = [];
     tabNames = [];
-    tabs = Provider.of<HistoryProvider>(context, listen: false).tabs;
-    tabNames = Provider.of<HistoryProvider>(context, listen: false).tabNames;
+    tabs = Provider.of<MyFilesProvider>(context, listen: false).tabs;
+    tabNames = Provider.of<MyFilesProvider>(context, listen: false).tabNames;
     _controller =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }
@@ -71,7 +72,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                                   height: 45,
                                   iconColor: ColorConstants.greyText,
                                   value: (val) {
-                                    historyProvider
+                                    myFilesProvider
                                         .setFileSearchText(val.toLowerCase());
                                   }),
                               SizedBox(width: 15),

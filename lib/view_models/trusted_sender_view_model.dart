@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class TrustedContactProvider extends BaseModel {
@@ -92,13 +93,14 @@ class TrustedContactProvider extends BaseModel {
         ..metadata = Metadata();
 
       AtValue old_trustedContactsKeys =
-          await backendService.atClientInstance!.get(trustedContactsKey);
+          await AtClientManager.getInstance().atClient.get(trustedContactsKey);
 
       jsonValue = jsonDecode(old_trustedContactsKeys.value);
 
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
     } catch (error) {
+      ExceptionService.instance.showPutExceptionOverlay(error);
       trustedContactOperation = false;
       setError(AddTrustedContacts, error.toString());
     }
@@ -111,7 +113,7 @@ class TrustedContactProvider extends BaseModel {
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
       AtValue old_trustedContactsKeys =
-          await backendService.atClientInstance!.get(trustedContactsKey);
+          await AtClientManager.getInstance().atClient.get(trustedContactsKey);
       jsonValue = jsonDecode(old_trustedContactsKeys.value);
       for (var i = 0; i < jsonValue['trustedContacts'].length; i++) {
         var j = trustedContacts.indexWhere((element) =>
@@ -163,8 +165,10 @@ class TrustedContactProvider extends BaseModel {
         .getAtKeys(regex: 'trusted_contact_');
     try {
       for (var new_key in new_trustedContactsKeys) {
-        AtValue keyValue =
-            await backendService.atClientInstance!.get(new_key).catchError((e) {
+        AtValue keyValue = await AtClientManager.getInstance()
+            .atClient
+            .get(new_key)
+            .catchError((e) {
           print('error in get in getTrustedContact : $e ');
           return AtValue();
         });
