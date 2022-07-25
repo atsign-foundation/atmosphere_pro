@@ -328,7 +328,7 @@ class TextStrings {
   static const String resetDescription =
       'This will remove the selected atSign and its details from this app only.';
   static const String noAtsignToReset =
-      'There are not atSigns paired with this device.';
+      'There are no atSigns paired with this device.';
   static const String resetErrorText =
       'Please select at least one atSign to reset';
   static const String resetWarningText =
