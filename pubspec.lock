@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "41.0.0"
+    version: "40.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.1.0"
   archive:
     dependency: "direct main"
     description:
@@ -63,16 +63,16 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.29"
+    version: "3.0.28"
   at_client_mobile:
     dependency: "direct main"
     description:
       path: at_client_mobile
       ref: "feature/at-client-mobile-2.0"
-      resolved-ref: "2e3bb9f629b1bbe6ced953efb3dfbfdd4b3202f4"
+      resolved-ref: "239d337895ff69b98145f554b3b5cd08ae662e5e"
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
-    version: "3.1.17"
+    version: "3.1.18"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -530,7 +530,7 @@ packages:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.3"
+    version: "2.2.2"
   html:
     dependency: transitive
     description:
@@ -1070,6 +1070,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  showcaseview:
+    dependency: "direct main"
+    description:
+      name: showcaseview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.5"
   sky_engine:
     dependency: transitive
     description: flutter

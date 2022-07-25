@@ -90,11 +90,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             InkWell(
                               onTap: switchAtsign,
                               child: Text(
-                                BackendService.getInstance().atClientInstance !=
-                                        null
-                                    ? BackendService.getInstance()
-                                        .currentAtSign!
-                                    : '',
+                                BackendService.getInstance().currentAtSign!,
                                 style: GoogleFonts.playfairDisplay(
                                   textStyle: TextStyle(
                                     fontSize: 26.toFont,
