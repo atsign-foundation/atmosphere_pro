@@ -57,6 +57,7 @@ class BackendService {
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
   Timer? periodicHistoryRefresh;
+
   String? get currentAtsign => currentAtSign;
   Directory? downloadDirectory;
   AnimationController? controller;
@@ -472,6 +473,7 @@ class BackendService {
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
         ),
         isSwitchingAtsign: isSwitchAccount,
+        atsign: atSign,
       );
 
       switch (result.status) {
