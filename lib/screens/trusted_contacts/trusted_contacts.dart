@@ -38,7 +38,10 @@ class _TrustedContactsState extends State<TrustedContacts> {
     return Container(
         child: ProviderHandler<TrustedContactProvider>(
             functionName: 'get_trusted_contacts',
-            load: (provider) async => await provider.getTrustedContact(),
+            load: (provider) async {
+              await provider.getTrustedContact();
+              await provider.migrateTrustedContact();
+            },
             showError: false,
             errorBuilder: (provider) => Scaffold(
                   body: Center(

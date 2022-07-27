@@ -30,16 +30,6 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
   TrustedContactProvider? trustedContact;
 
   @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var trustedContact =
-          Provider.of<TrustedContactProvider>(context, listen: false);
-      trustedContact.migrateTrustedContact();
-    });
-
-    super.didChangeDependencies();
-  }
-
   void initState() {
     super.initState();
   }
@@ -52,7 +42,10 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
       color: ColorConstants.fadedBlue,
       child: ProviderHandler<TrustedContactProvider>(
           functionName: 'get_trusted_contacts',
-          load: (provider) {},
+          load: (provider) async {
+            await provider.getTrustedContact();
+            await provider.migrateTrustedContact();
+          },
           showError: false,
           errorBuilder: (provider) => Center(
                 child: Text(TextStrings().somethingWentWrong),

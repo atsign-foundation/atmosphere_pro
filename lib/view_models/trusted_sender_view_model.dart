@@ -5,6 +5,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:flutter/material.dart';
 
 class TrustedContactProvider extends BaseModel {
   TrustedContactProvider._();
@@ -50,11 +51,10 @@ class TrustedContactProvider extends BaseModel {
         AtKey trustedContactsKey = AtKey()
           ..key = 'trusted_contact_${at_sign_name}'
           ..metadata = Metadata();
-        var _additionResult = await AtClientManager.getInstance().atClient.put(
+        await AtClientManager.getInstance().atClient.put(
               trustedContactsKey,
               trustedContact.atSign,
             );
-        print('additionResult of at_sign_name: $_additionResult');
         _trustedContacts.add(trustedContact);
       }
 
@@ -70,23 +70,27 @@ class TrustedContactProvider extends BaseModel {
   removeTrustedContacts(AtContact? trustedContact) async {
     setStatus(AddTrustedContacts, Status.Loading);
     trustedContactOperation = true;
-
+    var res;
     try {
       for (AtContact? contact in _trustedContacts) {
         if (contact!.atSign == trustedContact!.atSign) {
           int index = _trustedContacts.indexOf(contact);
-          _trustedContacts.removeAt(index);
           AtKey key = AtKey()
             ..key =
                 'trusted_contact_${trustedContact.atSign!.replaceAll("@", "")}'
             ..metadata = Metadata();
-          await AtClientManager.getInstance().atClient.delete(key);
-
+          res = await AtClientManager.getInstance().atClient.delete(key);
+          if (res) {
+            _trustedContacts.removeAt(index);
+          } else {
+            print("error in deleting atKey from server");
+          }
           break;
         }
       }
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
+      return res;
     } catch (error) {
       trustedContactOperation = false;
       setError(AddTrustedContacts, error.toString());
@@ -110,41 +114,27 @@ class TrustedContactProvider extends BaseModel {
             ..key =
                 'trusted_contact_${jsonValue['trustedContacts'][i]['atSign'].replaceAll("@", "")}'
             ..metadata = Metadata();
-          var _migrationRes = await AtClientManager.getInstance().atClient.put(
+          await AtClientManager.getInstance().atClient.put(
                 new_trustedContactsKey,
                 jsonValue['trustedContacts'][i]['atSign'],
               );
-          print('Migration result: $_migrationRes');
 
           _trustedContacts.add(
               AtContact(atSign: jsonValue['trustedContacts'][i]['atSign']));
           jsonValue['trustedContacts'].removeAt(i);
 
-          var _migrationRemovalRes = await AtClientManager.getInstance()
-              .atClient
-              .put(
+          await AtClientManager.getInstance().atClient.put(
                 trustedContactsKey,
                 json.encode({"trustedContacts": jsonValue["trustedContacts"]}),
               );
-          print('Migration removal result for $_migrationRemovalRes');
         } else {
-          // in case we have to delete the at-sign trusted contacts which exists both in old format and new format
           jsonValue['trustedContacts'].removeAt(i);
-          var _migrationRemovalRes = await AtClientManager.getInstance()
-              .atClient
-              .put(
+          await AtClientManager.getInstance().atClient.put(
                 trustedContactsKey,
                 json.encode({"trustedContacts": jsonValue["trustedContacts"]}),
               );
-          print(
-              'Migration removal result atsign not present $_migrationRemovalRes');
         }
       }
-
-      // await AtClientManager.getInstance().atClient.put(
-      //       trustedContactsKey,
-      //       json.encode({"trustedContacts": jsonValue["trustedContacts"]}),
-      //     );
 
       setStatus(MigrateTrustedContacts, Status.Done);
     } catch (e) {
@@ -167,7 +157,6 @@ class TrustedContactProvider extends BaseModel {
             .atClient
             .get(new_key)
             .catchError((e) {
-          print('error in get in getTrustedContact : $e ');
           return AtValue();
         });
         fetchedTrustedContact.add(AtContact(atSign: keyValue.value));
