@@ -76,9 +76,11 @@ packages:
   at_common_flutter:
     dependency: "direct main"
     description:
-      name: at_common_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_common_flutter
+      ref: "ui/back-arrow-icon"
+      resolved-ref: "87d67276a87e32c881c91045b0b9e04597309380"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
     version: "2.0.8"
   at_commons:
     dependency: "direct main"

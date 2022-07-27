@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
 import 'package:atsign_atmosphere_pro/utils/colors.dart' as pro_color_constants;
@@ -19,7 +18,6 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../services/navigation_service.dart';
@@ -30,19 +28,7 @@ class TrustedContacts extends StatefulWidget {
 }
 
 class _TrustedContactsState extends State<TrustedContacts> {
-  TrustedContactProvider? trustedContact;
   bool toggleList = false;
-  @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var trustedContact =
-          Provider.of<TrustedContactProvider>(context, listen: false);
-      trustedContact.migrateTrustedContact();
-    });
-
-    super.didChangeDependencies();
-  }
-
   GlobalKey _one = GlobalKey();
   GlobalKey _two = GlobalKey();
   BuildContext? myContext;
@@ -68,14 +54,14 @@ class _TrustedContactsState extends State<TrustedContacts> {
                     showTitle: true,
                     title: pro_text_strings.TextStrings().trustedSenders,
                     showTrailingButton:
-                        provider.fetchedTrustedContact.isEmpty ? false : true,
+                        provider.trustedContacts.isEmpty ? false : true,
                     trailingIcon: Icons.add,
                     isTrustedContactScreen: true,
                   ),
                   body: SafeArea(
                     child: Column(children: [
                       Expanded(
-                          child: provider.fetchedTrustedContact.isEmpty
+                          child: provider.trustedContacts.isEmpty
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,20 +149,15 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   ContactsScreen(
-                                                    asSelectionScreen: true,
-                                                    context: NavService
-                                                        .navKey.currentContext,
-                                                    selectedList: (s) async {
-                                                      s.forEach(
-                                                          (element) async {
-                                                        await provider
-                                                            .addTrustedContacts(
-                                                                element!);
-                                                      });
-                                                      await provider
-                                                          .setTrustedContact();
-                                                    },
-                                                  )),
+                                                      asSelectionScreen: true,
+                                                      selectedContactsHistory: [],
+                                                      selectedList: (s) async {
+                                                        for (var element in s) {
+                                                          await provider
+                                                              .addTrustedContacts(
+                                                                  element!);
+                                                        }
+                                                      })),
                                         );
                                       },
                                     )
@@ -207,8 +188,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                               RemoveTrustedContact(
                                             pro_text_strings.TextStrings()
                                                 .removeTrustedSender,
-                                            contact: provider
-                                                .fetchedTrustedContact[index],
+                                            contact:
+                                                provider.trustedContacts[index],
                                           ),
                                         );
                                       },

@@ -132,7 +132,6 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                                       .addTrustedContacts(element.contact!);
                                 }
                               });
-                              await provider.setTrustedContact();
                               isContactSelecttion = false;
                             },
                             taskName: (provider) => provider.AddTrustedContacts,

@@ -7,6 +7,7 @@
 ///therefore it has it's navigation embedded in the widget itself.
 
 import 'dart:io';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -164,29 +165,20 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 }
                               }
                             } else if (widget.isTrustedContactScreen) {
-                              var trustedContacts =
-                                  Provider.of<TrustedContactProvider>(
-                                          NavService.navKey.currentContext!,
-                                          listen: false)
-                                      .trustedContacts;
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ContactsScreen(
                                     asSelectionScreen: true,
-                                    selectedContactsHistory: trustedContacts,
+                                    selectedContactsHistory: [],
                                     selectedList: (s) async {
-                                      s.forEach((element) async {
+                                      for(var element in s){
                                         await Provider.of<
-                                                    TrustedContactProvider>(
-                                                context,
-                                                listen: false)
-                                            .addTrustedContacts(element!);
-                                      });
-                                      await Provider.of<TrustedContactProvider>(
-                                              context,
-                                              listen: false)
-                                          .setTrustedContact();
+                                            TrustedContactProvider>(
+                                            context,
+                                            listen: false)
+                                        .addTrustedContacts(element!);
+                                      }
                                     },
                                   ),
                                 ),

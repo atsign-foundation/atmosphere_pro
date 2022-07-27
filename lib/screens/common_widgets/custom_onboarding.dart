@@ -145,6 +145,9 @@ class CustomOnboarding {
 
     await Provider.of<TrustedContactProvider>(NavService.navKey.currentContext!,
             listen: false)
+        .resetData();
+    await Provider.of<TrustedContactProvider>(NavService.navKey.currentContext!,
+            listen: false)
         .getTrustedContact();
     await historyProvider.downloadAllTrustedSendersData();
 

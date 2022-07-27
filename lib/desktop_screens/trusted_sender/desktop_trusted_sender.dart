@@ -204,7 +204,6 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         }
                                       });
 
-                                      await provider.setTrustedContact();
                                       isContactSelection = false;
                                     },
                                     taskName: (provider) =>
