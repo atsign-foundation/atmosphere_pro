@@ -38,7 +38,10 @@ class _TrustedContactsState extends State<TrustedContacts> {
     return Container(
         child: ProviderHandler<TrustedContactProvider>(
             functionName: 'get_trusted_contacts',
-            load: (provider) async => await provider.getTrustedContact(),
+            load: (provider) async {
+              await provider.getTrustedContact();
+              await provider.migrateTrustedContact();
+            },
             showError: false,
             errorBuilder: (provider) => Scaffold(
                   body: Center(
@@ -54,14 +57,14 @@ class _TrustedContactsState extends State<TrustedContacts> {
                     showTitle: true,
                     title: pro_text_strings.TextStrings().trustedSenders,
                     showTrailingButton:
-                        provider.fetchedTrustedContact.isEmpty ? false : true,
+                        provider.trustedContacts.isEmpty ? false : true,
                     trailingIcon: Icons.add,
                     isTrustedContactScreen: true,
                   ),
                   body: SafeArea(
                     child: Column(children: [
                       Expanded(
-                          child: provider.fetchedTrustedContact.isEmpty
+                          child: provider.trustedContacts.isEmpty
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -149,20 +152,15 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   ContactsScreen(
-                                                    asSelectionScreen: true,
-                                                    context: NavService
-                                                        .navKey.currentContext,
-                                                    selectedList: (s) async {
-                                                      s.forEach(
-                                                          (element) async {
-                                                        await provider
-                                                            .addTrustedContacts(
-                                                                element!);
-                                                      });
-                                                      await provider
-                                                          .setTrustedContact();
-                                                    },
-                                                  )),
+                                                      asSelectionScreen: true,
+                                                      selectedContactsHistory: [],
+                                                      selectedList: (s) async {
+                                                        for (var element in s) {
+                                                          await provider
+                                                              .addTrustedContacts(
+                                                                  element!);
+                                                        }
+                                                      })),
                                         );
                                       },
                                     )
@@ -193,8 +191,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                               RemoveTrustedContact(
                                             pro_text_strings.TextStrings()
                                                 .removeTrustedSender,
-                                            contact: provider
-                                                .fetchedTrustedContact[index],
+                                            contact:
+                                                provider.trustedContacts[index],
                                           ),
                                         );
                                       },

@@ -305,6 +305,10 @@ class BackendService {
       await Provider.of<TrustedContactProvider>(
               NavService.navKey.currentContext!,
               listen: false)
+          .resetData();
+      await Provider.of<TrustedContactProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
           .getTrustedContact();
 
       historyProvider.isSyncedDataFetched = true;
