@@ -267,7 +267,7 @@ class CommonUtilityFunctions {
                                             await _resetDevice(
                                                 tempAtsignMap.keys.toList());
                                             await _onboardNextAtsign();
-                                          }, 'Remove ${atsignsListLength} @sign${atsignsListLength > 1 ? 's' : ''} from this device?');
+                                          }, 'Remove ${atsignsListLength} atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
                                         }
                                       },
                                       child: Text(TextStrings().remove,
