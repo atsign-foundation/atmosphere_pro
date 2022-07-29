@@ -77,6 +77,11 @@ dependencies:
   showcaseview: ^1.1.5
 
 dependency_overrides:
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      path: at_contacts_flutter
+      ref: ui/change_@sign_to_atSign
   at_common_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
