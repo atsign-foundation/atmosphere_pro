@@ -77,8 +77,8 @@ packages:
     dependency: "direct main"
     description:
       path: at_common_flutter
-      ref: "ui/back-arrow-icon"
-      resolved-ref: "87d67276a87e32c881c91045b0b9e04597309380"
+      ref: trunk
+      resolved-ref: "66edc5b51f27dbbae5219f3374df2e1a0081f06a"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "2.0.8"
@@ -99,9 +99,11 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_contacts_flutter
+      ref: trunk
+      resolved-ref: "66edc5b51f27dbbae5219f3374df2e1a0081f06a"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
     version: "4.0.5"
   at_contacts_group_flutter:
     dependency: "direct main"
