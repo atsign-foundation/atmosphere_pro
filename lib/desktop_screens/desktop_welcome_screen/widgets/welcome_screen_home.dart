@@ -227,7 +227,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                                         .navKey.currentContext!,
                                                     listen: false)
                                                 .deleteMyfilekeys();
-                                            return;
                                             if (isFileSending) return;
 
                                             if (isFileShareFailed) {
