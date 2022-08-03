@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:provider/provider.dart';
 
 class DesktopTrustedSender extends StatefulWidget {
   @override
@@ -26,6 +27,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
   bool _isFilterOption = false, isContactSelection = false;
   List<AtContact> trustedContacts = [];
   String searchText = '';
+  TrustedContactProvider? trustedContact;
 
   @override
   void initState() {
@@ -40,7 +42,10 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
       color: ColorConstants.fadedBlue,
       child: ProviderHandler<TrustedContactProvider>(
           functionName: 'get_trusted_contacts',
-          load: (provider) {},
+          load: (provider) async {
+            await provider.getTrustedContact();
+            await provider.migrateTrustedContact();
+          },
           showError: false,
           errorBuilder: (provider) => Center(
                 child: Text(TextStrings().somethingWentWrong),
@@ -192,7 +197,6 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         }
                                       });
 
-                                      await provider.setTrustedContact();
                                       isContactSelection = false;
                                     },
                                     taskName: (provider) =>

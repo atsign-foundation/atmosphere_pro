@@ -63,22 +63,20 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.28"
+    version: "3.0.33"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: at_client_mobile
-      ref: "feature/at-client-mobile-2.0"
-      resolved-ref: "239d337895ff69b98145f554b3b5cd08ae662e5e"
-      url: "https://github.com/atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.1.18"
+      name: at_client_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.1"
   at_common_flutter:
     dependency: "direct main"
     description:
       path: at_common_flutter
-      ref: "ui/back-arrow-icon"
-      resolved-ref: "8fe143b72bf6aab62d3f48db33d20517800085fb"
+      ref: trunk
+      resolved-ref: "66edc5b51f27dbbae5219f3374df2e1a0081f06a"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "2.0.8"
@@ -88,7 +86,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.18"
+    version: "3.0.21"
   at_contact:
     dependency: "direct main"
     description:
@@ -99,9 +97,11 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_contacts_flutter
+      ref: trunk
+      resolved-ref: "66edc5b51f27dbbae5219f3374df2e1a0081f06a"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
     version: "4.0.5"
   at_contacts_group_flutter:
     dependency: "direct main"
@@ -123,23 +123,23 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.26"
+    version: "3.0.28"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
       path: at_onboarding_flutter
       ref: "feature/on-boarding-3.0"
-      resolved-ref: "45d15c5dccbd8696b3f8edfe768a1d3f0d20c8fa"
+      resolved-ref: "8d58d8cfdced4af45f3c08019bc94c03f8fbc800"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.1"
+    version: "4.0.3"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.29"
+    version: "3.0.31"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -603,13 +603,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
-  lints:
-    dependency: transitive
-    description:
-      name: lints
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   local_notifier:
     dependency: "direct main"
     description:
@@ -770,7 +763,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.16"
+    version: "2.0.14"
   path_provider_ios:
     dependency: transitive
     description:
@@ -952,7 +945,7 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.10"
+    version: "4.0.8"
   share_plus_linux:
     dependency: transitive
     description:
@@ -1057,7 +1050,7 @@ packages:
       name: shelf_packages_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.0"
   shelf_static:
     dependency: transitive
     description:
@@ -1078,7 +1071,7 @@ packages:
       name: showcaseview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5"
+    version: "1.1.7"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1174,7 +1167,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.4"
+    version: "6.1.3"
   url_launcher_android:
     dependency: transitive
     description:
@@ -1209,7 +1202,7 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.0.5"
   url_launcher_web:
     dependency: transitive
     description:
@@ -1244,7 +1237,7 @@ packages:
       name: video_compress
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.0"
   video_thumbnail:
     dependency: "direct main"
     description:
@@ -1293,7 +1286,7 @@ packages:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.14"
+    version: "2.8.11"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
