@@ -63,16 +63,14 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.27"
+    version: "3.0.33"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: at_client_mobile
-      ref: "feature/at-client-mobile-2.0"
-      resolved-ref: bef780b5db676f1ca2e729c223c5776852e4edda
-      url: "https://github.com/atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.1.18"
+      name: at_client_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.1"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -88,7 +86,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.20"
+    version: "3.0.21"
   at_contact:
     dependency: "direct main"
     description:
@@ -125,23 +123,23 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.25"
+    version: "3.0.28"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
       path: at_onboarding_flutter
       ref: "feature/on-boarding-3.0"
-      resolved-ref: bb8cd6b0d1a8978e45aca7bcdd30506f097b6ad0
+      resolved-ref: "8d58d8cfdced4af45f3c08019bc94c03f8fbc800"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.1"
+    version: "4.0.3"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.28"
+    version: "3.0.31"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -605,13 +603,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
-  lints:
-    dependency: transitive
-    description:
-      name: lints
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   local_notifier:
     dependency: "direct main"
     description:
