@@ -222,11 +222,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                       : CommonButton(
                                           isFileShareFailed ? 'Resend' : 'Send',
                                           () async {
-                                            await Provider.of<MyFilesProvider>(
-                                                    NavService
-                                                        .navKey.currentContext!,
-                                                    listen: false)
-                                                .deleteMyfilekeys();
                                             if (isFileSending) return;
 
                                             if (isFileShareFailed) {
