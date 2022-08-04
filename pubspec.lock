@@ -129,7 +129,7 @@ packages:
     description:
       path: at_onboarding_flutter
       ref: "feature/on-boarding-3.0"
-      resolved-ref: "8d58d8cfdced4af45f3c08019bc94c03f8fbc800"
+      resolved-ref: "3192132a5772b876536fce8c78b6df7a6ee3b4db"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
     version: "4.0.3"
