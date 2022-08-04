@@ -171,7 +171,8 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                   itemBuilder: (context, index) {
                                     Uint8List? byteImage;
 
-                                    if (provider.trustedContacts[index]!
+                                    if ( provider.trustedContacts[index]!
+                                            .tags != null && provider.trustedContacts[index]!
                                             .tags!['image'] !=
                                         null) {
                                       byteImage = CommonUtilityFunctions()
