@@ -198,8 +198,10 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                           .contains(provider.getSearchText),
                                     ) ||
                                     (element.groupName != null &&
-                                        element.groupName!.contains(
-                                            provider.getSearchText))) {
+                                        element.groupName!
+                                            .toLowerCase()
+                                            .contains(provider.getSearchText
+                                                .toLowerCase()))) {
                                   filteredSentHistory.add(element);
                                 }
                               });
