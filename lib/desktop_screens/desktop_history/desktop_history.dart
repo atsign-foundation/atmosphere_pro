@@ -193,10 +193,13 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                               List<FileHistory> filteredSentHistory = [];
                               provider.sentHistory.forEach((element) {
                                 if (element.sharedWith!.any(
-                                  (ShareStatus sharedStatus) => sharedStatus
-                                      .atsign!
-                                      .contains(provider.getSearchText),
-                                )) {
+                                      (ShareStatus sharedStatus) => sharedStatus
+                                          .atsign!
+                                          .contains(provider.getSearchText),
+                                    ) ||
+                                    (element.groupName != null &&
+                                        element.groupName!.contains(
+                                            provider.getSearchText))) {
                                   filteredSentHistory.add(element);
                                 }
                               });
