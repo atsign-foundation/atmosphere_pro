@@ -354,7 +354,7 @@ class CommonUtilityFunctions {
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: (snapshot.data == null)
-                        ? Image.asset(ImageConstants.unknownLogo,
+                        ? Image.asset(ImageConstants.videoLogo,
                             fit: BoxFit.cover,
                             errorBuilder: (BuildContext _context, _, __) {
                             return Container(
