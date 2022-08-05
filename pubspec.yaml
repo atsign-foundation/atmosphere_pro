@@ -67,7 +67,7 @@ dependencies:
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.8
 
-  at_client_mobile: ^3.1.18
+  at_client_mobile: ^3.2.1
   at_onboarding_flutter: ^4.0.4
   at_backupkey_flutter: ^4.0.3
   at_contacts_flutter: ^4.0.5
@@ -81,22 +81,17 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       path: at_contacts_flutter
-      ref: ui/change_@sign_to_atSign
+      ref: trunk
   at_common_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       path: at_common_flutter
-      ref: ui/back-arrow-icon
+      ref: trunk
   at_onboarding_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       path: at_onboarding_flutter
       ref: feature/on-boarding-3.0
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      ref: feature/at-client-mobile-2.0
-      path: at_client_mobile
 
 dev_dependencies:
   flutter_test:
