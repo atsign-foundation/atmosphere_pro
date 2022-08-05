@@ -529,7 +529,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                     width: 50.toWidth,
                     child: (snapshot.data == null)
                         ? Image.asset(
-                            ImageConstants.unknownLogo,
+                            ImageConstants.videoLogo,
                             fit: BoxFit.cover,
                           )
                         : Image.memory(

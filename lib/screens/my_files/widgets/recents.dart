@@ -165,7 +165,7 @@ Widget thumbnail(String extension, String path) {
                     width: 50.toWidth,
                     child: (snapshot.data == null || videoThumbnail == null)
                         ? Image.asset(
-                            ImageConstants.unknownLogo,
+                            ImageConstants.videoLogo,
                             fit: BoxFit.cover,
                           )
                         : (videoThumbnail != null)
