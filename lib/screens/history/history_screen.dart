@@ -137,8 +137,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                                         .contains(provider.getSearchText),
                                   ) ||
                                   (element.groupName != null &&
-                                      element.groupName!
-                                          .contains(provider.getSearchText))) {
+                                      element.groupName!.toLowerCase().contains(
+                                          provider.getSearchText
+                                              .toLowerCase()))) {
                                 filteredSentHistory.add(element);
                               }
                             });
