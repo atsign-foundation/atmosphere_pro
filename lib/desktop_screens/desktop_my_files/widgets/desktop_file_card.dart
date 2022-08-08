@@ -139,7 +139,7 @@ class _DesktopFileCardState extends State<DesktopFileCard> {
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
               content: ConfirmationDialog(
-                  TextStrings.deleteFileConfirmationMsg_myFiles, () async {
+                  TextStrings.deleteFileConfirmationMsgMyFiles, () async {
                 var file = File(widget.filePath!);
                 if (await file.exists()) {
                   await file.delete();

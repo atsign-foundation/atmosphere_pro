@@ -617,7 +617,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
               content: ConfirmationDialog(
-                  TextStrings.deleteFileConfirmationMsg_myFiles, () async {
+                  TextStrings.deleteFileConfirmationMsgMyFiles, () async {
                 await Provider.of<HistoryProvider>(context, listen: false)
                     .deleteSentItem(widget.sentHistory!.fileDetails!.key);
               }));
