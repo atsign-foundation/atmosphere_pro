@@ -54,8 +54,8 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
-              content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
-                  () async {
+              content: ConfirmationDialog(
+                  TextStrings.deleteFileConfirmationMsgMyFiles, () async {
                 widget.onConfirmation();
               }));
         });
