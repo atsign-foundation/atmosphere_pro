@@ -545,7 +545,7 @@ class _DesktopReceivedFilesListTileState
                     width: 50.toWidth,
                     child: (snapshot.data == null)
                         ? Image.asset(
-                            ImageConstants.unknownLogo,
+                            ImageConstants.videoLogo,
                             fit: BoxFit.cover,
                           )
                         : Image.memory(

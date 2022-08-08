@@ -97,7 +97,7 @@ class _VideosState extends State<Videos> {
                             videos.isEmpty ||
                             videos[index] == null)
                         ? Image.asset(
-                            ImageConstants.unknownLogo,
+                            ImageConstants.videoLogo,
                             fit: BoxFit.cover,
                           )
                         : Image.memory(
