@@ -49,7 +49,7 @@ packages:
       name: at_backupkey_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   at_base2e15:
     dependency: transitive
     description:
@@ -86,7 +86,7 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.21"
+    version: "3.0.24"
   at_contact:
     dependency: "direct main"
     description:
@@ -128,11 +128,11 @@ packages:
     dependency: "direct main"
     description:
       path: at_onboarding_flutter
-      ref: "feature/on-boarding-3.0"
-      resolved-ref: "3192132a5772b876536fce8c78b6df7a6ee3b4db"
+      ref: "feature/on-boarding-4.0"
+      resolved-ref: b44d48dca3d97e7f097ac07e90897bbfc14fe60a
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.3"
+    version: "5.0.0"
   at_persistence_secondary_server:
     dependency: transitive
     description:
@@ -917,7 +917,7 @@ packages:
       name: qr_code_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   qr_flutter:
     dependency: "direct main"
     description:
@@ -1154,6 +1154,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.0"
+  tutorial_coach_mark:
+    dependency: transitive
+    description:
+      name: tutorial_coach_mark
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.4"
   typed_data:
     dependency: transitive
     description:
