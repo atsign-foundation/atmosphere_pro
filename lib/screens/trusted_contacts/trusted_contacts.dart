@@ -169,17 +169,11 @@ class _TrustedContactsState extends State<TrustedContacts> {
                               : ListView.builder(
                                   itemCount: provider.trustedContacts.length,
                                   itemBuilder: (context, index) {
-                                    Uint8List? byteImage;
-
-                                    if ( provider.trustedContacts[index]!
-                                            .tags != null && provider.trustedContacts[index]!
-                                            .tags!['image'] !=
-                                        null) {
-                                      byteImage = CommonUtilityFunctions()
-                                          .getContactImage(
-                                              provider.trustedContacts[index]!);
-                                    }
-
+                                    Uint8List? byteImage =
+                                        CommonUtilityFunctions()
+                                            .getCachedContactImage(
+                                      provider.trustedContacts[index]!.atSign!,
+                                    );
                                     return ContactListTile(
                                       plainView: true,
                                       isSelected: false,
