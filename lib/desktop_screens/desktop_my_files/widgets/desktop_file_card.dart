@@ -158,17 +158,19 @@ class _DesktopFileCardState extends State<DesktopFileCard> {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
-      builder: (context) => EditBottomSheet(onConfirmation: () {
-        var file = File(filePath);
-        file.deleteSync();
+      builder: (context) => EditBottomSheet(
+          onConfirmation: () {
+            var file = File(filePath);
+            file.deleteSync();
 
-        if (fileTransferId != null) {
-          Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                  listen: false)
-              .removeParticularFile(
-                  fileTransferId, filePath.split(Platform.pathSeparator).last);
-        }
-      }),
+            if (fileTransferId != null) {
+              Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                      listen: false)
+                  .removeParticularFile(fileTransferId,
+                      filePath.split(Platform.pathSeparator).last);
+            }
+          },
+          deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles),
     );
   }
 }

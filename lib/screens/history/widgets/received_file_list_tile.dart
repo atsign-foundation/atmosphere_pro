@@ -999,6 +999,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       bgColor: ColorConstants.redAlert);
                 }
               },
+              deleteMessage: TextStrings.deleteFileConfirmationMsg,
             ));
   }
 
