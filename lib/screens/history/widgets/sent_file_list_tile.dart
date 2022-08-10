@@ -437,6 +437,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 await Provider.of<HistoryProvider>(context, listen: false)
                     .deleteSentItem(widget.sentHistory!.fileDetails!.key);
               },
+              deleteMessage: TextStrings.deleteFileConfirmationMsg,
             ));
   }
 

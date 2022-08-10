@@ -340,6 +340,8 @@ class TextStrings {
   static const uploadFile = 'Please upload file first.';
   static const deleteFileConfirmationMsg =
       'Are you sure you want to remove this item from your transfer history?';
+  static const deleteFileConfirmationMsgMyFiles =
+      'Are you sure you want to remove this item from your files list?';
   static const deleteDownloadedFileMessage =
       'Do you also want to delete the downloaded items?';
   static const delete = 'Delete';

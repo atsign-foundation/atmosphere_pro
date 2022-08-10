@@ -63,18 +63,21 @@ deleteFile(String filePath, {String? fileTransferId}) async {
   await showModalBottomSheet(
     context: NavService.navKey.currentContext!,
     backgroundColor: Colors.white,
-    builder: (context) => EditBottomSheet(onConfirmation: () async {
-      var file = File(filePath);
-      if (await file.exists()) {
-        file.deleteSync();
-      }
-      if (fileTransferId != null) {
-        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .removeParticularFile(
-                fileTransferId, filePath.split(Platform.pathSeparator).last);
-      }
-    }),
+    builder: (context) => EditBottomSheet(
+      onConfirmation: () async {
+        var file = File(filePath);
+        if (await file.exists()) {
+          file.deleteSync();
+        }
+        if (fileTransferId != null) {
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
+        }
+      },
+      deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
+    ),
   );
 }
 

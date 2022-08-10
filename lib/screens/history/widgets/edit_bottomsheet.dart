@@ -8,7 +8,8 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class EditBottomSheet extends StatefulWidget {
   final Function onConfirmation;
-  EditBottomSheet({required this.onConfirmation});
+  final String deleteMessage;
+  EditBottomSheet({required this.onConfirmation, required this.deleteMessage});
   @override
   _EditBottomSheetState createState() => _EditBottomSheetState();
 }
@@ -28,7 +29,9 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           InkWell(
-            onTap: deleteSentItem,
+            onTap: () {
+              deleteSentItem(widget.deleteMessage);
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -46,7 +49,7 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
     );
   }
 
-  deleteSentItem() async {
+  deleteSentItem(String message) async {
     await showDialog(
         context: NavService.navKey.currentContext!,
         builder: (context) {
@@ -54,8 +57,7 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
-              content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
-                  () async {
+              content: ConfirmationDialog(message, () async {
                 widget.onConfirmation();
               }));
         });

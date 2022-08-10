@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 import 'downloads_folders.dart';
 
@@ -85,19 +86,23 @@ class _PhotosState extends State<Photos> {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
-      builder: (context) => EditBottomSheet(onConfirmation: () async {
-        var file = File(filePath);
-        if (await file.exists()) {
-          file.deleteSync();
-        }
+      builder: (context) => EditBottomSheet(
+        onConfirmation: () async {
+          var file = File(filePath);
+          if (await file.exists()) {
+            file.deleteSync();
+          }
 
-        if (fileTransferId != null) {
-          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                  listen: false)
-              .removeParticularFile(
-                  fileTransferId, filePath.split(Platform.pathSeparator).last);
-        }
-      }),
+          if (fileTransferId != null) {
+            await Provider.of<MyFilesProvider>(
+                    NavService.navKey.currentContext!,
+                    listen: false)
+                .removeParticularFile(fileTransferId,
+                    filePath.split(Platform.pathSeparator).last);
+          }
+        },
+        deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
+      ),
     );
   }
 }
