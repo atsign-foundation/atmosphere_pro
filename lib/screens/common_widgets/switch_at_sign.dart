@@ -76,7 +76,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                             GestureDetector(
                               onTap: () {
                                 ShowCaseWidget.of(myContext!)
-                                    ?.startShowCase([_one, _two]);
+                                    .startShowCase([_one, _two]);
                               },
                               child: Container(
                                 decoration: BoxDecoration(

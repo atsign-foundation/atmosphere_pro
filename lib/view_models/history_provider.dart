@@ -473,7 +473,7 @@ class HistoryProvider extends BaseModel {
               NavService.navKey.currentContext!,
               listen: false)
           .trustedContacts) {
-        if (_contact!.atSign == value.sender) {
+        if (_contact.atSign == value.sender) {
           isTrustedSender = true;
           break;
         }

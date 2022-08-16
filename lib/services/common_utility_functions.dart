@@ -129,7 +129,7 @@ class CommonUtilityFunctions {
                               GestureDetector(
                                 onTap: () {
                                   ShowCaseWidget.of(myContext!)
-                                      ?.startShowCase([_one]);
+                                      .startShowCase([_one]);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -197,7 +197,7 @@ class CommonUtilityFunctions {
                                           fontWeight: FontWeight.bold,
                                         )),
                                   ),
-                                  for (var atsign in atsignsList!)
+                                  for (var atsign in atsignsList)
                                     CheckboxListTile(
                                       onChanged: (value) {
                                         atsignMap[atsign] = value;
