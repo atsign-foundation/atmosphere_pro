@@ -112,7 +112,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                         GestureDetector(
                                           onTap: () {
                                             ShowCaseWidget.of(myContext!)
-                                                ?.startShowCase([_one]);
+                                                .startShowCase([_one]);
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
@@ -172,7 +172,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                     Uint8List? byteImage =
                                         CommonUtilityFunctions()
                                             .getCachedContactImage(
-                                      provider.trustedContacts[index]!.atSign!,
+                                      provider.trustedContacts[index].atSign!,
                                     );
                                     return ContactListTile(
                                       plainView: true,
@@ -193,19 +193,19 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                       },
                                       onAdd: () {},
                                       onRemove: () {},
-                                      name: provider.trustedContacts[index]!
+                                      name: provider.trustedContacts[index]
                                                       .tags !=
                                                   null &&
-                                              provider.trustedContacts[index]!
+                                              provider.trustedContacts[index]
                                                       .tags!['name'] !=
                                                   null
-                                          ? provider.trustedContacts[index]!
+                                          ? provider.trustedContacts[index]
                                               .tags!['name']
                                           : provider
-                                              .trustedContacts[index]!.atSign!
+                                              .trustedContacts[index].atSign!
                                               .substring(1),
                                       atSign: provider
-                                          .trustedContacts[index]!.atSign,
+                                          .trustedContacts[index].atSign,
                                       image: byteImage != null
                                           ? CustomCircleAvatar(
                                               byteImage: byteImage,
@@ -213,7 +213,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                             )
                                           : ContactInitial(
                                               initials: provider
-                                                  .trustedContacts[index]!
+                                                  .trustedContacts[index]
                                                   .atSign,
                                             ),
                                     );
