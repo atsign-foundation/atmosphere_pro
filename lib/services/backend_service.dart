@@ -35,9 +35,6 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
-import 'package:at_client/src/service/sync_service.dart';
-import 'package:at_client/src/service/notification_service_impl.dart';
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 
 class BackendService {
@@ -112,7 +109,9 @@ class BackendService {
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
       ..monitorHeartbeatInterval = Duration(minutes: 1)
-      ..hiveStoragePath = path;
+      ..hiveStoragePath = path
+      // ignore: deprecated_member_use
+      ..enforceNamespace = false;
     return _atClientPreference;
   }
 
@@ -182,7 +181,7 @@ class BackendService {
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
             DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
@@ -202,7 +201,7 @@ class BackendService {
       //TODO: only for testing
       // await sendNotificationAck(notificationKey, fromAtSign);
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
@@ -242,6 +241,7 @@ class BackendService {
         ..metadata!.ttr = -1
         ..metadata!.ttl = 518400000;
 
+      // ignore: unused_local_variable
       var notificationResult =
           await AtClientManager.getInstance().notificationService.notify(
                 NotificationParams.forUpdate(
@@ -281,7 +281,7 @@ class BackendService {
       primaryColor: ColorConstants.orangeColor,
     );
 
-    await AtSyncUIService().sync();
+    AtSyncUIService().sync();
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
@@ -355,7 +355,7 @@ class BackendService {
                 onTap: () async {
                   ScaffoldMessenger.of(NavService.navKey.currentContext!)
                       .hideCurrentSnackBar();
-                  await AtSyncUIService().sync();
+                  AtSyncUIService().sync();
                 },
                 child: Text(TextStrings().retry,
                     style: CustomTextStyles.whiteBold16),
@@ -462,6 +462,7 @@ class BackendService {
       //  await getAtClientPreference();
       await getAtClientPreference()
           .then((value) => atClientPrefernce = value)
+          // ignore: invalid_return_type_for_catch_error
           .catchError((e) => print(e));
 
       authenticating = false;
@@ -589,7 +590,7 @@ class BackendService {
         MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
       );
     } else if (Platform.isMacOS) {
-      DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+      await DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
     }
   }
 
