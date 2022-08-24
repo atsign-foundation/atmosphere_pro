@@ -281,7 +281,7 @@ class BackendService {
       primaryColor: ColorConstants.orangeColor,
     );
 
-    await AtSyncUIService().sync();
+    AtSyncUIService().sync();
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
@@ -355,7 +355,7 @@ class BackendService {
                 onTap: () async {
                   ScaffoldMessenger.of(NavService.navKey.currentContext!)
                       .hideCurrentSnackBar();
-                  await AtSyncUIService().sync();
+                  AtSyncUIService().sync();
                 },
                 child: Text(TextStrings().retry,
                     style: CustomTextStyles.whiteBold16),
