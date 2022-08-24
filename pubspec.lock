@@ -432,7 +432,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.8.0+1"
+    version: "9.7.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -911,7 +911,7 @@ packages:
       name: qr_code_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.0"
   qr_flutter:
     dependency: "direct main"
     description:
