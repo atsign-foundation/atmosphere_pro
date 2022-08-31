@@ -129,14 +129,12 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
-                                Uint8List? byteImage;
-
-                                if (provider.trustedContacts[index].atSign !=
-                                    null) {
-                                  byteImage = CommonUtilityFunctions()
-                                      .getCachedContactImage(provider
-                                          .trustedContacts[index].atSign!);
-                                }
+                                Uint8List? byteImage = CommonUtilityFunctions()
+                                    .getCachedContactImage(
+                                  provider.trustedContacts[index].atSign!,
+                                );
+                                print(
+                                    "BYTEIMAGE =====> ${byteImage}"); //at-contacts getContact details/image
 
                                 if (provider.trustedContacts[index].atSign!
                                     .contains(searchText)) {
@@ -154,6 +152,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                                   .atSign),
                                         ),
                                       );
+                                      setState(() {});
                                     },
                                     child: DesktopCustomPersonVerticalTile(
                                       title: provider
