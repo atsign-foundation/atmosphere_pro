@@ -151,7 +151,6 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                                   .atSign),
                                         ),
                                       );
-                                      setState(() {});
                                     },
                                     child: DesktopCustomPersonVerticalTile(
                                       title: provider

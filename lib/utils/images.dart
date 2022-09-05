@@ -36,7 +36,7 @@ class ImageConstants {
   static String documentFile = '$_basePath/documentFile.png';
   static String exclamation = '$_basePath/exclamation.png';
   static String close = '$_basePath/close.png';
-  static String trustedSender = '$_basePath/trustedSendersIcon.png';
+  static String trustedSender = '$_basePath/trusted_sender.png';
   static String myFiles = '$_basePath/my_files.png';
   static String groups = '$_basePath/groups.png';
   static String contactUs = '$_basePath/contactUs.png';
