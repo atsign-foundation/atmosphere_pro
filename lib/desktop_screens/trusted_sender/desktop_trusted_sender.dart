@@ -129,14 +129,10 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
-                                Uint8List? byteImage;
-
-                                if (provider.trustedContacts[index].atSign !=
-                                    null) {
-                                  byteImage = CommonUtilityFunctions()
-                                      .getCachedContactImage(provider
-                                          .trustedContacts[index].atSign!);
-                                }
+                                Uint8List? byteImage = CommonUtilityFunctions()
+                                    .getCachedContactImage(
+                                  provider.trustedContacts[index].atSign!,
+                                );
 
                                 if (provider.trustedContacts[index].atSign!
                                     .contains(searchText)) {
@@ -148,6 +144,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         builder: (context) =>
                                             RemoveTrustedContact(
                                           TextStrings().removeTrustedSender,
+                                          image: byteImage,
                                           contact: AtContact(
                                               atSign: provider
                                                   .trustedContacts[index]

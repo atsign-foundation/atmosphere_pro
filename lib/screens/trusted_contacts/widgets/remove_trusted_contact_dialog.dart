@@ -17,7 +17,9 @@ import 'package:provider/provider.dart';
 import '../../../utils/colors.dart';
 
 class RemoveTrustedContact extends StatefulWidget {
-  final String? image, title;
+  final String? title;
+  final Uint8List? image;
+
   final String? name;
   final String? atSign;
   final AtContact? contact;
@@ -72,9 +74,9 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                (image != null)
+                (widget.image != null)
                     ? CustomCircleAvatar(
-                        byteImage: image,
+                        byteImage: widget.image,
                         nonAsset: true,
                       )
                     : ContactInitial(
