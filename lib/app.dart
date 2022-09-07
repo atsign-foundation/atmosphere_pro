@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'dart:io';
 import 'routes/routes.dart';
 
@@ -28,6 +29,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
+    ReceiveSharingIntent.getMediaStream()
+        .listen((List<SharedMediaFile> value) async {
+      print("called this here....");
+    });
+
     if (Platform.isAndroid || Platform.isIOS) {
       initialRoute = SetupRoutes.initialRoute;
       routes = SetupRoutes.routes;
