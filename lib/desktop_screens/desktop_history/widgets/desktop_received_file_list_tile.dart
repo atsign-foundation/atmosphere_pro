@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
@@ -180,6 +182,30 @@ class _DesktopReceivedFilesListTileState
                                     size: 50,
                                   ),
                           ),
+                          // ((widget.receivedHistory!.sender != null) &&
+                          //         (ContactService().contactList.indexWhere(
+                          //                 (element) =>
+                          //                     element.atSign ==
+                          //                     widget.receivedHistory!.sender) ==
+                          //             -1))
+                          //     // showDownloadIndicator
+                          //     ? Positioned(
+                          //         left: 0,
+                          //         bottom: -5,
+                          //         child: Container(
+                          //           height: 25,
+                          //           width: 25,
+                          //           decoration: BoxDecoration(
+                          //             shape: BoxShape.circle,
+                          //             color: Colors.white,
+                          //           ),
+                          //           child: Icon(
+                          //             Icons.person_add,
+                          //             size: 15.toFont,
+                          //           ),
+                          //         ),
+                          //       )
+                          //     : SizedBox(),
                           showDownloadIndicator
                               ? Positioned(
                                   right: 0,
@@ -196,7 +222,7 @@ class _DesktopReceivedFilesListTileState
                                     ),
                                   ),
                                 )
-                              : SizedBox()
+                              : SizedBox(),
                         ],
                       )
                 : SizedBox(),
@@ -307,6 +333,54 @@ class _DesktopReceivedFilesListTileState
                 SizedBox(height: 3.toHeight),
               ],
             ),
+            trailing: widget.receivedHistory!.sender != null
+                ? GestureDetector(
+                    onTap: ((widget.receivedHistory!.sender != null) &&
+                            (ContactService().contactList.indexWhere(
+                                    (element) =>
+                                        element.atSign ==
+                                        widget.receivedHistory!.sender) ==
+                                -1))
+                        ? () async {
+                            await showDialog<void>(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) {
+                                return AddContact(
+                                  atSignName: widget.receivedHistory!.sender,
+                                  image: firstContactImage,
+                                );
+                              },
+                            );
+                            if (mounted) {
+                              setState(() {});
+                            }
+                          }
+                        : null,
+                    child: ((widget.receivedHistory!.sender != null) &&
+                            (ContactService().contactList.indexWhere(
+                                    (element) =>
+                                        element.atSign ==
+                                        widget.receivedHistory!.sender) ==
+                                -1))
+                        ? Positioned(
+                            left: 0,
+                            bottom: -10,
+                            child: Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                Icons.person_add,
+                                size: 15.toFont,
+                              ),
+                            ),
+                          )
+                        : SizedBox())
+                : SizedBox(),
           ),
         ),
         (isOpen)
