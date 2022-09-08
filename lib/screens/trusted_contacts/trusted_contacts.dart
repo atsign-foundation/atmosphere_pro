@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
     as pro_text_strings;
@@ -169,11 +170,16 @@ class _TrustedContactsState extends State<TrustedContacts> {
                               : ListView.builder(
                                   itemCount: provider.trustedContacts.length,
                                   itemBuilder: (context, index) {
+                                    ContactService().addAtSign(
+                                        atSign: provider
+                                            .trustedContacts.last.atSign,
+                                        nickName: "");
                                     Uint8List? byteImage =
                                         CommonUtilityFunctions()
                                             .getCachedContactImage(
                                       provider.trustedContacts[index].atSign!,
                                     );
+
                                     return ContactListTile(
                                       plainView: true,
                                       isSelected: false,
@@ -188,6 +194,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                                 .removeTrustedSender,
                                             contact:
                                                 provider.trustedContacts[index],
+                                            image: byteImage,
                                           ),
                                         );
                                       },
