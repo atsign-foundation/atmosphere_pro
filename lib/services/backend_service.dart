@@ -285,8 +285,6 @@ class BackendService {
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
-    await startMonitor();
-
     // removes failed snackbar message.
     ScaffoldMessenger.of(NavService.navKey.currentContext!)
         .hideCurrentSnackBar();
@@ -535,6 +533,7 @@ class BackendService {
         .resetData();
 
     await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
+    startMonitor();
     syncWithSecondary();
 
     // start monitor and package initializations.
