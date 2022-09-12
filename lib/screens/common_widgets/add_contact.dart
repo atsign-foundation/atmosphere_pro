@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
@@ -112,7 +113,9 @@ class _AddContactState extends State<AddContact> {
               : Container(
                   alignment: Alignment.center,
                   child: SizedBox(
-                    width: 150.toWidth,
+                    width: (Platform.isAndroid || Platform.isIOS)
+                        ? SizeConfig().screenWidth
+                        : 150.toWidth,
                     child: CustomButton(
                       buttonText: 'Yes',
                       fontColor: Colors.white,
@@ -140,7 +143,9 @@ class _AddContactState extends State<AddContact> {
               : Container(
                   alignment: Alignment.center,
                   child: SizedBox(
-                      width: 150.toWidth,
+                      width: (Platform.isAndroid || Platform.isIOS)
+                          ? SizeConfig().screenWidth
+                          : 150.toWidth,
                       child: CustomButton(
                         buttonColor: Colors.white,
                         buttonText: 'No',

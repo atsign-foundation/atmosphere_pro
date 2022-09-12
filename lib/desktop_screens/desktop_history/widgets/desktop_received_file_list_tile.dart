@@ -184,7 +184,7 @@ class _DesktopReceivedFilesListTileState
                           ),
                           showDownloadIndicator
                               ? Positioned(
-                                  right: 0,
+                                  right: 1,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -200,55 +200,58 @@ class _DesktopReceivedFilesListTileState
                                 )
                               : SizedBox(),
                           widget.receivedHistory!.sender != null
-                              ? GestureDetector(
-                                  onTap: ((widget.receivedHistory!.sender !=
-                                              null) &&
-                                          (ContactService()
-                                                  .contactList
-                                                  .indexWhere((element) =>
-                                                      element.atSign ==
-                                                      widget.receivedHistory!
-                                                          .sender) ==
-                                              -1))
-                                      ? () async {
-                                          await showDialog<void>(
-                                            context: context,
-                                            barrierDismissible: true,
-                                            builder: (BuildContext context) {
-                                              return AddContact(
-                                                atSignName: widget
-                                                    .receivedHistory!.sender,
-                                                image: firstContactImage,
-                                              );
-                                            },
-                                          );
-                                          if (mounted) {
-                                            setState(() {});
+                              ? Positioned(
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: ((widget.receivedHistory!.sender !=
+                                                null) &&
+                                            (ContactService()
+                                                    .contactList
+                                                    .indexWhere((element) =>
+                                                        element.atSign ==
+                                                        widget.receivedHistory!
+                                                            .sender) ==
+                                                -1))
+                                        ? () async {
+                                            await showDialog<void>(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return AddContact(
+                                                  atSignName: widget
+                                                      .receivedHistory!.sender,
+                                                  image: firstContactImage,
+                                                );
+                                              },
+                                            );
+                                            if (mounted) {
+                                              setState(() {});
+                                            }
                                           }
-                                        }
-                                      : null,
-                                  child: ((widget.receivedHistory!.sender !=
-                                              null) &&
-                                          (ContactService()
-                                                  .contactList
-                                                  .indexWhere((element) =>
-                                                      element.atSign ==
-                                                      widget.receivedHistory!
-                                                          .sender) ==
-                                              -1))
-                                      ? Container(
-                                          height: 20,
-                                          width: 20,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
-                                          ),
-                                          child: Icon(
-                                            Icons.person_add,
-                                            size: 15.toFont,
-                                          ),
-                                        )
-                                      : SizedBox(),
+                                        : null,
+                                    child: ((widget.receivedHistory!.sender !=
+                                                null) &&
+                                            (ContactService()
+                                                    .contactList
+                                                    .indexWhere((element) =>
+                                                        element.atSign ==
+                                                        widget.receivedHistory!
+                                                            .sender) ==
+                                                -1))
+                                        ? Container(
+                                            height: 20,
+                                            width: 20,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white,
+                                            ),
+                                            child: Icon(
+                                              Icons.person_add,
+                                              size: 15.toFont,
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                  ),
                                 )
                               : SizedBox(),
                         ],
