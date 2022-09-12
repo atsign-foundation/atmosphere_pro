@@ -50,8 +50,8 @@ class _AddContactState extends State<AddContact> {
         ),
         content: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: (widget.name != null) ? 300.toWidth : 200.toWidth,
-            maxHeight: (widget.name != null) ? 190.toHeight : 100.toHeight,
+            // maxWidth: (widget.name != null) ? 300.toWidth : 200.toWidth,
+            maxHeight: (widget.name != null) ? 190.toHeight : 120.toHeight,
           ),
           child: Column(
             children: [
