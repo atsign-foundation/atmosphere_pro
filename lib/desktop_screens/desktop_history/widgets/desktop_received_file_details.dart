@@ -294,10 +294,10 @@ class _DesktopReceivedFileDetailsState
               builder: (_context, provider, _widget) {
                 var fileTransferProgress =
                     provider.receivedFileProgress[widget.fileTransfer!.key];
-                return RichText(
-                  text: TextSpan(
+                return Text.rich(
+                  TextSpan(
                       text:
-                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk:mm').format(widget.fileTransfer!.date!)}  | ',
+                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk:mm').format(widget.fileTransfer!.date!)}',
                       style: CustomTextStyles.greyText15,
                       children: [
                         fileTransferProgress != null
