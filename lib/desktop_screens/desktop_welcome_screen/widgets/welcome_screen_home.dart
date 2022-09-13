@@ -395,8 +395,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               title: _currentScreen != CurrentScreen.PlaceolderImage
                   ? Text(
                       (isSelectContacts
-                          ? '${_welcomeScreenProvider.selectedContacts.length} contacts added'
-                          : '${_filePickerProvider.selectedFiles.length} files selected'),
+                          ? _welcomeScreenProvider.selectedContacts.length == 1
+                              ? '${_welcomeScreenProvider.selectedContacts.length} contact selected'
+                              : '${_welcomeScreenProvider.selectedContacts.length} contacts selected'
+                          : _filePickerProvider.selectedFiles.length == 1
+                              ? '${_filePickerProvider.selectedFiles.length} file selected'
+                              : '${_filePickerProvider.selectedFiles.length} files selected'),
                       style: CustomTextStyles.desktopSecondaryRegular18)
                   : SizedBox(),
               trailing: isSelectContacts

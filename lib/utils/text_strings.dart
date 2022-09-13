@@ -30,7 +30,7 @@ class TextStrings {
   String welcome = 'Welcome';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file(s) to';
-  String welcomeContactPlaceholder = 'atSign';
+  String welcomeContactPlaceholder = 'atSign(s)';
   String welcomeFilePlaceholder = 'Select file(s) to transfer';
   String welcomeAddFilePlaceholder = 'Add file(s) to transfer';
   String welcomeAddTranscripts = 'Add a note (Optional)';

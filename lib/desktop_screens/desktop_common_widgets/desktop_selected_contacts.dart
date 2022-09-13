@@ -38,7 +38,10 @@ class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
           style: CustomTextStyles.desktopPrimaryBold18,
           children: [
             TextSpan(
-              text: '  ${selectedContacts.length} people selected',
+              // text: '  ${selectedContacts.length} people selected',
+              text: selectedContacts.length == 1
+                  ? '  ${selectedContacts.length} person selected'
+                  : '  ${selectedContacts.length} people selected',
               style: CustomTextStyles.desktopSecondaryRegular18,
             )
           ],
