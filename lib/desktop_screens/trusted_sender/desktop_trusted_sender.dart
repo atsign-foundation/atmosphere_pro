@@ -130,10 +130,6 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
-                                ContactService().addAtSign(
-                                    atSign:
-                                        provider.trustedContacts.last.atSign,
-                                    nickName: "");
                                 Uint8List? byteImage = CommonUtilityFunctions()
                                     .getCachedContactImage(
                                   provider.trustedContacts[index].atSign!,

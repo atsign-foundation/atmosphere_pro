@@ -170,10 +170,6 @@ class _TrustedContactsState extends State<TrustedContacts> {
                               : ListView.builder(
                                   itemCount: provider.trustedContacts.length,
                                   itemBuilder: (context, index) {
-                                    ContactService().addAtSign(
-                                        atSign: provider
-                                            .trustedContacts.last.atSign,
-                                        nickName: "");
                                     Uint8List? byteImage =
                                         CommonUtilityFunctions()
                                             .getCachedContactImage(
