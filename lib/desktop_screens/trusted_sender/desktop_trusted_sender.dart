@@ -17,6 +17,7 @@ import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:provider/provider.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 
 class DesktopTrustedSender extends StatefulWidget {
   @override
@@ -129,15 +130,10 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               spacing: 30.0,
                               children: List.generate(
                                   provider.trustedContacts.length, (index) {
-                                Uint8List? byteImage;
-
-                                if (provider.trustedContacts[index].atSign !=
-                                    null) {
-                                  byteImage = CommonUtilityFunctions()
-                                      .getCachedContactImage(provider
-                                          .trustedContacts[index].atSign!);
-                                }
-
+                                Uint8List? byteImage = CommonUtilityFunctions()
+                                    .getCachedContactImage(
+                                  provider.trustedContacts[index].atSign!,
+                                );
                                 if (provider.trustedContacts[index].atSign!
                                     .contains(searchText)) {
                                   return InkWell(
@@ -148,6 +144,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         builder: (context) =>
                                             RemoveTrustedContact(
                                           TextStrings().removeTrustedSender,
+                                          image: byteImage,
                                           contact: AtContact(
                                               atSign: provider
                                                   .trustedContacts[index]
