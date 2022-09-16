@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.8+47
+version: 1.0.8+48
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -63,29 +63,29 @@ dependencies:
   video_compress: ^3.1.0
   new_version: ^0.3.0
 
-  at_commons: ^3.0.18
+  at_commons: ^3.0.25
   at_contact: ^3.0.7
-  at_common_flutter: ^2.0.8
+  at_common_flutter: ^2.0.10
 
-  at_client_mobile: ^3.2.3+1
-  at_onboarding_flutter: ^5.0.0
-  at_backupkey_flutter: ^4.0.4
-  at_contacts_flutter: ^4.0.6
-  at_contacts_group_flutter: ^4.0.8
+  at_client_mobile: ^3.2.5
+  at_onboarding_flutter: ^5.0.2
+  at_backupkey_flutter: ^4.0.5
+  at_contacts_flutter: ^4.0.7
+  at_contacts_group_flutter: ^4.0.9
   local_notifier: ^0.1.1
-  at_sync_ui_flutter: ^1.0.5
+  at_sync_ui_flutter: ^1.0.6
   showcaseview: ^1.1.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   msix: ^3.3.1
-dependency_overrides:
-  at_contacts_flutter:
+dependency_overrides: 
+  at_contacts_group_flutter:
     git:
-      url: https://github.com/atsign-foundation/at_widgets/
-      path: at_contacts_flutter
-      ref: fix/trusted_sender_image
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_contacts_group_flutter
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
