@@ -42,14 +42,16 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.2"
+    version: "2.9.0"
   at_backupkey_flutter:
     dependency: "direct main"
     description:
-      name: at_backupkey_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.4"
+      path: at_backupkey_flutter
+      ref: fix_flutter_qr_reader
+      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
+    version: "4.0.5"
   at_base2e15:
     dependency: transitive
     description:
@@ -63,28 +65,28 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.35"
+    version: "3.0.39"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.3+1"
+    version: "3.2.6"
   at_common_flutter:
     dependency: "direct main"
     description:
       name: at_common_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9"
+    version: "2.0.10"
   at_commons:
     dependency: "direct main"
     description:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.24"
+    version: "3.0.25"
   at_contact:
     dependency: "direct main"
     description:
@@ -95,17 +97,21 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.6"
+      path: at_contacts_flutter
+      ref: "feat/android-fixes"
+      resolved-ref: a9c9ef78d0afee5ef6b467c911f3d52a4a6dfdaa
+      url: "https://github.com/atsign-foundation/at_widgets/"
+    source: git
+    version: "4.0.7"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_group_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.8"
+      path: at_contacts_group_flutter
+      ref: "feat/android-fixes"
+      resolved-ref: a9c9ef78d0afee5ef6b467c911f3d52a4a6dfdaa
+      url: "https://github.com/atsign-foundation/at_widgets/"
+    source: git
+    version: "4.0.9"
   at_file_saver:
     dependency: transitive
     description:
@@ -119,21 +125,23 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.29"
+    version: "3.0.30"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      name: at_onboarding_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.0"
+      path: at_onboarding_flutter
+      ref: fix_flutter_qr_reader
+      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
+    version: "5.0.2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.34"
+    version: "3.0.36"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -168,14 +176,14 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.10"
+    version: "3.0.11"
   biometric_storage:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: biometric_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "4.1.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -196,7 +204,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   charcode:
     dependency: transitive
     description:
@@ -224,7 +232,7 @@ packages:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   collection:
     dependency: transitive
     description:
@@ -252,7 +260,7 @@ packages:
       name: cron
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2"
+    version: "0.5.0"
   cross_file:
     dependency: transitive
     description:
@@ -329,7 +337,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   ffi:
     dependency: transitive
     description:
@@ -454,13 +462,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7"
-  flutter_qr_reader:
-    dependency: "direct main"
-    description:
-      name: flutter_qr_reader
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -617,21 +618,21 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.11"
+    version: "0.12.12"
   material_color_utilities:
     dependency: transitive
     description:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.1.5"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0"
   mime:
     dependency: transitive
     description:
@@ -743,7 +744,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.2"
   path_provider:
     dependency: transitive
     description:
@@ -1091,7 +1092,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.9.0"
   stack_trace:
     dependency: transitive
     description:
@@ -1112,35 +1113,35 @@ packages:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   term_glyph:
     dependency: transitive
     description:
       name: term_glyph
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   test:
     dependency: transitive
     description:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.21.1"
+    version: "1.21.4"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.9"
+    version: "0.4.12"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.13"
+    version: "0.4.16"
   timezone:
     dependency: transitive
     description:
