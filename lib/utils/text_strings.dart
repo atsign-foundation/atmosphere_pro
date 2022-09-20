@@ -10,7 +10,7 @@ class TextStrings {
   String homeDescriptionMobile = 'Truly\nencrypted file\ntransfer.';
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
-  String appName = '@mospherePro';
+  String appName = 'atmospherePro';
   String copyRight = '© 2022 The @ Company';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
@@ -30,7 +30,7 @@ class TextStrings {
   String welcome = 'Welcome';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file(s) to';
-  String welcomeContactPlaceholder = '@sign';
+  String welcomeContactPlaceholder = 'atSign(s)';
   String welcomeFilePlaceholder = 'Select file(s) to transfer';
   String welcomeAddFilePlaceholder = 'Add file(s) to transfer';
   String welcomeAddTranscripts = 'Add a note (Optional)';
@@ -43,7 +43,7 @@ class TextStrings {
   String sidebarHome = 'Home';
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
-  String sidebarBlockedUser = 'Blocked @signs';
+  String sidebarBlockedUser = 'Blocked atSigns';
   String sidebarMyFiles = 'My Files';
   String sidebarTrustedSenders = 'Trusted Senders';
   String sidebarMyGroups = 'My Groups';
@@ -54,22 +54,22 @@ class TextStrings {
   String sidebarAutoAcceptFile = 'Auto-Accept Files';
   String sidebarEnablingMessage =
       'Enabling this will auto-accept all the files sent by your contacts.';
-  String sidebarSwitchOut = 'Switch @sign';
-  String sidebarDeleteAtsign = 'Delete @sign(s)';
+  String sidebarSwitchOut = 'Switch atSign';
+  String sidebarDeleteAtsign = 'Delete atSign(s)';
   String sidebarContactUs = 'Contact us';
 
-  String atSign = '@sign';
+  String atSign = 'atSign';
   String switchingAtSign = 'Switching atsign...';
   String deleteDataMessage =
       'Are you sure you want to delete all data associated with';
-  String typeAtsignAbove = 'Type the @sign above to proceed';
+  String typeAtsignAbove = 'Type the atSign above to proceed';
   String actionCannotUndone = "Caution: this action can't be undone";
   //FAQs texts
   String faqs = 'FAQ';
 
   //Contact texts
   String searchContact = 'Search Contacts';
-  String addContactSearch = 'Search @sign';
+  String addContactSearch = 'Search atSign';
   String contactSearchResults = 'Search Results';
   String addContact = 'Add Contact';
   String addtoContact = 'Add to Contacts';
@@ -88,6 +88,7 @@ class TextStrings {
   static final String buttonDismiss = 'DISMISS';
   static final String buttonShowMore = 'Show More';
   String ok = 'Ok';
+  String buttonRetry = 'RETRY';
 
   //history screen texts
   String sent = 'Sent';
@@ -169,7 +170,7 @@ class TextStrings {
   // scan qr texts
   String scanQrTitle = 'Scan QR Code';
   String scanQrMessage = 'Just scan the QR Code displayed at my.atsign.com';
-  String scanQrFooter = 'Don’t have an @sign? Get one now.';
+  String scanQrFooter = 'Don’t have an atSign? Get one now.';
   String websiteTitle = 'Atsign';
 
   //error texts
@@ -192,7 +193,7 @@ class TextStrings {
   String unknownAtsign(String atSign) =>
       '$atSign is not found. Please check and try again.';
   String atsignExists(String atSign) => '$atSign already exists';
-  String emptyAtsign = 'Please enter an @sign';
+  String emptyAtsign = 'Please enter an atSign';
 
   // sort strings
   static const String SORT_NAME = 'Sort By Name';
@@ -213,7 +214,7 @@ class TextStrings {
   String atmosphereDownloadFolder = 'Atmosphere download folder';
 
   // private key qrcode generator
-  String atsignRequired = 'An @sign is required.';
+  String atsignRequired = 'An atSign is required.';
 
   // transfer overlapping
   String and = 'and';
@@ -260,9 +261,9 @@ class TextStrings {
   // Desktop home
   String remove = 'Remove';
   String selectAll = 'Select All';
-  String desktopAppName = '@mospherePro';
+  String desktopAppName = 'atmospherePro';
   String desktopCopyRight = 'The @company Copyrights';
-  String enterAtSign = 'Enter @sign';
+  String enterAtSign = 'Enter atSign';
   String authenticating = 'Authenticating...';
   String initialisingFor = 'Initialising for ';
   String itsSafe = "It's safe!";
@@ -314,8 +315,8 @@ class TextStrings {
   String syncFailed = 'Sync Failed.';
 
   // Common Utility Functions
-  String deleteAtSign = 'Delete @sign';
-  String atSignDoesNotMatch = "The @sign doesn't match. Please retype.";
+  String deleteAtSign = 'Delete atSign';
+  String atSignDoesNotMatch = "The atSign doesn't match. Please retype.";
 
   // Version Service
   String updateAppMsg = 'You can update this app from';
@@ -325,11 +326,11 @@ class TextStrings {
 
   static final String resetButton = 'Reset';
   static const String resetDescription =
-      'This will remove the selected @sign and its details from this app only.';
+      'This will remove the selected atSign and its details from this app only.';
   static const String noAtsignToReset =
-      'There are no @signs paired with this device. ';
+      'There are no atSigns paired with this device.';
   static const String resetErrorText =
-      'Please select at least one @sign to reset';
+      'Please select at least one atSign to reset';
   static const String resetWarningText =
       'Warning: This action cannot be undone!';
   static const String noInternet =
@@ -337,7 +338,12 @@ class TextStrings {
   static const uploaded = 'Uploaded';
   static const reUploadFileMsg = 'Do you want to re-upload file ?';
   static const uploadFile = 'Please upload file first.';
-  static const deleteFileConfirmationMsg = 'Are you sure to delete this item ?';
+  static const deleteFileConfirmationMsg =
+      'Are you sure you want to remove this item from your transfer history?';
+  static const deleteFileConfirmationMsgMyFiles =
+      'Are you sure you want to remove this item from your files list?';
+  static const deleteDownloadedFileMessage =
+      'Do you also want to delete the downloaded items?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
   static const releaseTagError = 'Error in fetching release tag.';

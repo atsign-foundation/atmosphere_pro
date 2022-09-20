@@ -7,9 +7,9 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +20,6 @@ class MyFiles extends StatefulWidget {
 
 class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   TabController? _controller;
-  HistoryProvider? historyProvider;
   bool isOpen = false;
   List<Widget> tabs = [];
   List<String> tabNames = [];
@@ -29,24 +28,22 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   Type runtimeType = Videos;
   @override
   void initState() {
-    historyProvider = HistoryProvider();
-
-    ini();
-    setState(() {});
+    getTabsInformation();
     super.initState();
   }
 
-  ini() async {
+  getTabsInformation() async {
     tabs = [];
     tabNames = [];
-    tabs = Provider.of<HistoryProvider>(context, listen: false).tabs;
-    tabNames = Provider.of<HistoryProvider>(context, listen: false).tabNames;
+    tabs = Provider.of<MyFilesProvider>(context, listen: false).tabs;
+    tabNames = Provider.of<MyFilesProvider>(context, listen: false).tabNames;
     _controller =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
   }
 
   @override
   Widget build(BuildContext context) {
+    getTabsInformation();
     SizeConfig().init(context);
     return Scaffold(
       appBar: CustomAppBar(
@@ -65,7 +62,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                 onSelected: (dynamic s) {
                   switch (s) {
                     case TextStrings.SORT_NAME:
-                      providerCallback<HistoryProvider>(context,
+                      providerCallback<MyFilesProvider>(context,
                           task: (provider) {
                             if (runtimeType == Photos) {
                               provider.sortByName(provider.receivedPhotos);
@@ -83,7 +80,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                           onSuccess: (provider) {});
                       break;
                     case TextStrings.SORT_SIZE:
-                      providerCallback<HistoryProvider>(context,
+                      providerCallback<MyFilesProvider>(context,
                           task: (provider) {
                             if (runtimeType == Photos) {
                               provider.sortBySize(provider.receivedPhotos);
@@ -101,7 +98,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                           onSuccess: (provider) {});
                       break;
                     case TextStrings.SORT_DATE:
-                      providerCallback<HistoryProvider>(context,
+                      providerCallback<MyFilesProvider>(context,
                           task: (provider) {
                             if (runtimeType == Photos) {
                               provider.sortByDate(provider.receivedPhotos);
@@ -143,38 +140,46 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
       body: SingleChildScrollView(
         child: (isLoading)
             ? Center(child: CircularProgressIndicator())
-            : Container(
-                // reducing size by 120 , so that last list item will be shown
-                height: SizeConfig().screenHeight - 120.toHeight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 40,
-                      child: TabBar(
-                        onTap: (index) async {},
-                        isScrollable: true,
-                        labelColor: ColorConstants.fontPrimary,
-                        indicatorWeight: 5.toHeight,
-                        indicatorColor: Colors.black,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        labelStyle: CustomTextStyles.primaryBold14,
-                        unselectedLabelStyle:
-                            CustomTextStyles.secondaryRegular14,
-                        controller: _controller,
-                        tabs: List<Text>.generate(
-                            tabNames.length, (index) => Text(tabNames[index])),
-                      ),
+            : Consumer<MyFilesProvider>(
+                builder: (BuildContext _context, _provider, _) {
+                  if (_provider.tabs.length != tabs.length) {
+                    getTabsInformation();
+                  }
+
+                  return Container(
+                    // reducing size by 120 , so that last list item will be shown
+                    height: SizeConfig().screenHeight - 120.toHeight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 40,
+                          child: TabBar(
+                            onTap: (index) async {},
+                            isScrollable: true,
+                            labelColor: ColorConstants.fontPrimary,
+                            indicatorWeight: 5.toHeight,
+                            indicatorColor: Colors.black,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelStyle: CustomTextStyles.primaryBold14,
+                            unselectedLabelStyle:
+                                CustomTextStyles.secondaryRegular14,
+                            controller: _controller,
+                            tabs: List<Text>.generate(_provider.tabNames.length,
+                                (index) => Text(_provider.tabNames[index])),
+                          ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _controller,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            children: _provider.tabs,
+                          ),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _controller,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        children: tabs,
-                      ),
-                    )
-                  ],
-                ),
+                  );
+                },
               ),
       ),
     );

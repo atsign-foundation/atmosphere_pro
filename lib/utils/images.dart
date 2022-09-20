@@ -22,6 +22,7 @@ class ImageConstants {
   static String exelLogo = '$_basePath/exelLogo.jpeg';
   static String txtLogo = '$_basePath/txtLogo.png';
   static String unknownLogo = '$_basePath/unknown.png';
+  static String videoLogo = '$_basePath/video-camera.png';
   static String emptyTrustedSenders = '$_basePath/emptyTrustedSenders.png';
   static String emptyGroup = '$_basePath/empty_group.png';
   static String profileImage = '$_basePath/profile.png';
@@ -35,7 +36,7 @@ class ImageConstants {
   static String documentFile = '$_basePath/documentFile.png';
   static String exclamation = '$_basePath/exclamation.png';
   static String close = '$_basePath/close.png';
-  static String trustedSender = '$_basePath/trusted_sender.png';
+  static String trustedSender = '$_basePath/trustedSendersIcon.png';
   static String myFiles = '$_basePath/my_files.png';
   static String groups = '$_basePath/groups.png';
   static String contactUs = '$_basePath/contactUs.png';

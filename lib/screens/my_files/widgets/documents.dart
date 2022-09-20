@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'downloads_folders.dart';
 
@@ -18,10 +23,10 @@ class Documents extends StatefulWidget {
 class _DocumentsState extends State<Documents> {
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       showError: false,
-      load: (provider) => provider.sortFiles(provider.receivedHistoryLogs),
+      load: (provider) => provider.sortFiles(),
       successBuilder: (provider) => Container(
         margin:
             EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 10.toWidth),
@@ -32,7 +37,13 @@ class _DocumentsState extends State<Documents> {
                   DateTime.parse(provider.receivedDocument[index].date!);
               return InkWell(
                 onTap: () async {
-                  await openFilePath(provider.receivedDocument[index].filePath!);
+                  await openFilePath(
+                      provider.receivedDocument[index].filePath!);
+                },
+                onLongPress: () {
+                  deleteFile(provider.receivedDocument[index].filePath!,
+                      fileTransferId:
+                          provider.receivedDocument[index].fileTransferId);
                 },
                 child: Card(
                   margin: EdgeInsets.only(top: 15.toHeight),
@@ -106,6 +117,29 @@ class _DocumentsState extends State<Documents> {
                 ),
               );
             }),
+      ),
+    );
+  }
+
+  deleteFile(String filePath, {String? fileTransferId}) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(
+        onConfirmation: () async {
+          var file = File(filePath);
+          if (await file.exists()) {
+            file.deleteSync();
+          }
+          if (fileTransferId != null) {
+            await Provider.of<MyFilesProvider>(
+                    NavService.navKey.currentContext!,
+                    listen: false)
+                .removeParticularFile(fileTransferId,
+                    filePath.split(Platform.pathSeparator).last);
+          }
+        },
+        deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
       ),
     );
   }

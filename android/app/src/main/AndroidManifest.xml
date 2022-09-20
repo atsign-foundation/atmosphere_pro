@@ -19,7 +19,7 @@
     <uses-feature android:name="android.hardware.camera.flash" />
     <application
         android:name="${applicationName}"
-        android:label="@mosphere"
+        android:label="atmospherePro"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

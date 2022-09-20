@@ -14,8 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/colors.dart';
+
 class RemoveTrustedContact extends StatefulWidget {
-  final String? image, title;
+  final String? title;
+  final Uint8List? image;
+
   final String? name;
   final String? atSign;
   final AtContact? contact;
@@ -70,9 +74,9 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                (image != null)
+                (widget.image != null)
                     ? CustomCircleAvatar(
-                        byteImage: image,
+                        byteImage: widget.image,
                         nonAsset: true,
                       )
                     : ContactInitial(
@@ -136,13 +140,24 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                             buttonText: TextStrings().yes,
                             width: 200.toWidth,
                             onPressed: () async {
-                              await Provider.of<TrustedContactProvider>(context,
-                                      listen: false)
-                                  .removeTrustedContacts(widget.contact);
-                              await Provider.of<TrustedContactProvider>(context,
-                                      listen: false)
-                                  .setTrustedContact();
-                              Navigator.pop(context);
+                              var res =
+                                  await Provider.of<TrustedContactProvider>(
+                                          context,
+                                          listen: false)
+                                      .removeTrustedContacts(widget.contact);
+                              if (res) {
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  backgroundColor: ColorConstants.red,
+                                  content: Text(
+                                    'Error occured to delete the atKey',
+                                    style: CustomTextStyles.secondaryRegular14,
+                                  ),
+                                ));
+                              }
                             },
                           ),
                   ],

@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.7+45
+version: 1.0.8+48
 
 # Desktop version macos
 # version: 1.0.1+19
@@ -26,7 +26,7 @@ version: 1.0.7+45
 # version: 1.0.1+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -38,7 +38,6 @@ dependencies:
   desktop_window: ^0.4.0
   flutter_keychain: ^2.1.0
   flutter_local_notifications: ^9.4.0
-  flutter_qr_reader: ^1.0.5
   flutter_slidable: ^0.6.0
   google_fonts: ^2.3.1
   intl: ^0.17.0
@@ -62,30 +61,44 @@ dependencies:
   flutter_toastr: ^1.0.3
   video_compress: ^3.1.0
   new_version: ^0.3.0
-  
-  at_commons: ^3.0.17
-  at_contact: ^3.0.6
-  at_common_flutter: ^2.0.8
-  
-  at_client_mobile: ^3.1.17
-  at_onboarding_flutter: ^4.0.4
-  at_backupkey_flutter: ^4.0.1
-  at_contacts_flutter: ^4.0.5
-  at_contacts_group_flutter: ^4.0.7
-  local_notifier: ^0.1.1
-  at_sync_ui_flutter: ^1.0.3
 
-dependency_overrides:
-  file_saver:
-    git:
-      url: https://github.com/incrediblezayed/file_saver.git
-      ref: main
+  at_commons: ^3.0.25
+  at_contact: ^3.0.7
+  at_common_flutter: ^2.0.10
+
+  at_client_mobile: ^3.2.5
+  at_onboarding_flutter: ^5.0.2
+  at_backupkey_flutter: ^4.0.5
+  at_contacts_flutter: ^4.0.7
+  at_contacts_group_flutter: ^4.0.9
+  local_notifier: ^0.1.1
+  at_sync_ui_flutter: ^1.0.6
+  showcaseview: ^1.1.5
+  biometric_storage: ^4.1.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   msix: ^3.3.1
   build_runner: ^2.1.10
+  
+dependency_overrides: 
+  biometric_storage: ^4.1.3
+  at_contacts_group_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_contacts_group_flutter
+      ref: trunk
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_backupkey_flutter
+      ref: fix_flutter_qr_reader
+  at_onboarding_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_onboarding_flutter
+      ref: fix_flutter_qr_reader        
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -134,7 +147,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 msix_config:
-  display_name: "@mospherePro"
+  display_name: "atmospherePro"
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF

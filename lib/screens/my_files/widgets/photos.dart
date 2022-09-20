@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 import 'downloads_folders.dart';
 
@@ -12,7 +16,7 @@ class Photos extends StatefulWidget {
 }
 
 class _PhotosState extends State<Photos> {
-  HistoryProvider provider = HistoryProvider();
+  MyFilesProvider provider = MyFilesProvider();
 
   @override
   void initState() {
@@ -26,19 +30,17 @@ class _PhotosState extends State<Photos> {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderHandler<HistoryProvider>(
+    return ProviderHandler<MyFilesProvider>(
       functionName: 'sort_files',
       showError: false,
-      load: (provider) {
-        provider.getReceivedHistory();
-      },
+      load: (provider) {},
       successBuilder: (provider) {
         return renderItems(provider);
       },
     );
   }
 
-  Widget renderItems(HistoryProvider provider) {
+  Widget renderItems(MyFilesProvider provider) {
     return GridView.builder(
         itemCount: provider.receivedPhotos.length,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -51,6 +53,11 @@ class _PhotosState extends State<Photos> {
           return GestureDetector(
             onTap: () async {
               await openFilePath(provider.receivedPhotos[index].filePath!);
+            },
+            onLongPress: () {
+              deleteFile(provider.receivedPhotos[index].filePath!,
+                  fileTransferId:
+                      provider.receivedPhotos[index].fileTransferId);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.toHeight),
@@ -73,5 +80,29 @@ class _PhotosState extends State<Photos> {
             ),
           );
         });
+  }
+
+  deleteFile(String filePath, {String? fileTransferId}) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(
+        onConfirmation: () async {
+          var file = File(filePath);
+          if (await file.exists()) {
+            file.deleteSync();
+          }
+
+          if (fileTransferId != null) {
+            await Provider.of<MyFilesProvider>(
+                    NavService.navKey.currentContext!,
+                    listen: false)
+                .removeParticularFile(fileTransferId,
+                    filePath.split(Platform.pathSeparator).last);
+          }
+        },
+        deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
+      ),
+    );
   }
 }

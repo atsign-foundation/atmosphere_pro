@@ -14,6 +14,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -431,7 +432,13 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     await showModalBottomSheet(
         context: NavService.navKey.currentContext!,
         backgroundColor: Colors.white,
-        builder: (context) => EditBottomSheet(fileHistory: widget.sentHistory));
+        builder: (context) => EditBottomSheet(
+              onConfirmation: () async {
+                await Provider.of<HistoryProvider>(context, listen: false)
+                    .deleteSentItem(widget.sentHistory!.fileDetails!.key);
+              },
+              deleteMessage: TextStrings.deleteFileConfirmationMsg,
+            ));
   }
 
   onFileViewChange(bool _isOpen) {
