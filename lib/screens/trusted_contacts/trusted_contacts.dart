@@ -137,6 +137,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                                           .addTrustedSender,
                                       style:
                                           CustomTextStyles.secondaryRegular16,
+                                      textAlign: TextAlign.center,
                                     ),
                                     SizedBox(
                                       height: 25.toHeight,
