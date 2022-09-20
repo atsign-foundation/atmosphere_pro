@@ -46,9 +46,11 @@ packages:
   at_backupkey_flutter:
     dependency: "direct main"
     description:
-      name: at_backupkey_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_backupkey_flutter
+      ref: fix_flutter_qr_reader
+      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
     version: "4.0.5"
   at_base2e15:
     dependency: transitive
@@ -125,9 +127,11 @@ packages:
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      name: at_onboarding_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_onboarding_flutter
+      ref: fix_flutter_qr_reader
+      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
     version: "5.0.2"
   at_persistence_secondary_server:
     dependency: transitive
@@ -172,12 +176,12 @@ packages:
     source: hosted
     version: "3.0.11"
   biometric_storage:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: biometric_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "4.1.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -456,13 +460,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7"
-  flutter_qr_reader:
-    dependency: "direct main"
-    description:
-      name: flutter_qr_reader
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   flutter_slidable:
     dependency: "direct main"
     description:
