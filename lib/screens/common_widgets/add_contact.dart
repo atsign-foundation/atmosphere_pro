@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
@@ -49,7 +50,8 @@ class _AddContactState extends State<AddContact> {
         ),
         content: ConstrainedBox(
           constraints: BoxConstraints(
-              maxHeight: (widget.name != null) ? 190.toHeight : 160.toHeight),
+            maxHeight: (widget.name != null) ? 190.toHeight : 150.toHeight,
+          ),
           child: Column(
             children: [
               if (!isKeyBoard)
@@ -107,24 +109,29 @@ class _AddContactState extends State<AddContact> {
               ? Center(
                   child: CircularProgressIndicator(),
                 )
-              : SizedBox(
-                  width: SizeConfig().screenWidth,
-                  child: CustomButton(
-                    buttonText: 'Yes',
-                    fontColor: Colors.white,
-                    onPressed: () async {
-                      setState(() {
-                        isContactAdding = true;
-                      });
-                      await ContactService().addAtSign(
-                        atSign: widget.atSignName,
-                        nickName: nickName,
-                      );
-                      setState(() {
-                        isContactAdding = false;
-                      });
-                      Navigator.pop(context);
-                    },
+              : Container(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: (Platform.isAndroid || Platform.isIOS)
+                        ? SizeConfig().screenWidth
+                        : 150.toWidth,
+                    child: CustomButton(
+                      buttonText: 'Yes',
+                      fontColor: Colors.white,
+                      onPressed: () async {
+                        setState(() {
+                          isContactAdding = true;
+                        });
+                        await ContactService().addAtSign(
+                          atSign: widget.atSignName,
+                          nickName: nickName,
+                        );
+                        setState(() {
+                          isContactAdding = false;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
                 ),
           SizedBox(
@@ -132,15 +139,20 @@ class _AddContactState extends State<AddContact> {
           ),
           isContactAdding
               ? SizedBox()
-              : SizedBox(
-                  width: SizeConfig().screenWidth,
-                  child: CustomButton(
-                    buttonColor: Colors.white,
-                    buttonText: 'No',
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )),
+              : Container(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                      width: (Platform.isAndroid || Platform.isIOS)
+                          ? SizeConfig().screenWidth
+                          : 150.toWidth,
+                      child: CustomButton(
+                        buttonColor: Colors.white,
+                        buttonText: 'No',
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )),
+                ),
         ],
       ),
     );
