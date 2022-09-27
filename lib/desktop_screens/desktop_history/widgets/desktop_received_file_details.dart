@@ -297,7 +297,7 @@ class _DesktopReceivedFileDetailsState
                 return Text.rich(
                   TextSpan(
                       text:
-                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk:mm').format(widget.fileTransfer!.date!)}',
+                          '${DateFormat("MM-dd-yyyy").format(widget.fileTransfer!.date!)}  |  ${DateFormat('kk:mm').format(widget.fileTransfer!.date!)}  ',
                       style: CustomTextStyles.greyText15,
                       children: [
                         fileTransferProgress != null
