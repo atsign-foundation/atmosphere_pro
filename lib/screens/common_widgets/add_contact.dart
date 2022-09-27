@@ -48,7 +48,8 @@ class _AddContactState extends State<AddContact> {
             )
           ],
         ),
-        content: ConstrainedBox(
+        content: Container(
+          width: 495,
           constraints: BoxConstraints(
             maxHeight: (widget.name != null) ? 190.toHeight : 150.toHeight,
           ),
@@ -114,7 +115,7 @@ class _AddContactState extends State<AddContact> {
                   child: SizedBox(
                     width: (Platform.isAndroid || Platform.isIOS)
                         ? SizeConfig().screenWidth
-                        : 150.toWidth,
+                        : 150,
                     child: CustomButton(
                       buttonText: 'Yes',
                       fontColor: Colors.white,
@@ -144,7 +145,7 @@ class _AddContactState extends State<AddContact> {
                   child: SizedBox(
                       width: (Platform.isAndroid || Platform.isIOS)
                           ? SizeConfig().screenWidth
-                          : 150.toWidth,
+                          : 150,
                       child: CustomButton(
                         buttonColor: Colors.white,
                         buttonText: 'No',
@@ -153,6 +154,9 @@ class _AddContactState extends State<AddContact> {
                         },
                       )),
                 ),
+          SizedBox(
+            height: 10.toHeight,
+          ),
         ],
       ),
     );
