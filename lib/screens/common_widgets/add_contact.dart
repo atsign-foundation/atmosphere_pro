@@ -107,8 +107,11 @@ class _AddContactState extends State<AddContact> {
             height: 10.toHeight,
           ),
           isContactAdding
-              ? Center(
-                  child: CircularProgressIndicator(),
+              ? Container(
+                  padding: EdgeInsets.all(32),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 )
               : Container(
                   alignment: Alignment.center,
