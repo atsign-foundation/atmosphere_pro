@@ -1,7 +1,7 @@
 class ImageConstants {
   static String _basePath = 'assets/images';
 
-  static String welcomeBackground = '$_basePath/welcome_bg.png';
+  static String welcomeBackground = '$_basePath/new_welcome_bg.png';
   static String logoIcon = '$_basePath/logo.png';
   // static String myFiles = '$_basePath/myfiles.png';
   static String group = '$_basePath/group.png';
@@ -40,8 +40,17 @@ class ImageConstants {
   static String myFiles = '$_basePath/my_files.png';
   static String groups = '$_basePath/groups.png';
   static String contactUs = '$_basePath/contactUs.png';
+  static String settings = '$_basePath/settings.png';
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';
+
+  // New UI Settings Screen
+  static String switchAtSign = '$_basePath/switch_atsign.png';
+  static String backupKeys = '$_basePath/backup_keys.png';
+  static String faqs = '$_basePath/faq.png';
+  static String contactUsLogo = '$_basePath/contact_us.png';
+  static String termsAndConditions = '$_basePath/terms.png';
+  static String deleteAtsigns = '$_basePath/delete_atsigns.png';
 
   // Sample profile pictures
   static String barbara = '$_basePath/barbara.jpg';
