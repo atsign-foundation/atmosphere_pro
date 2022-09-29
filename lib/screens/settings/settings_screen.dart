@@ -2,6 +2,7 @@ import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -142,7 +143,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Divider(
                     height: 58,
-                    color: Color(0xFFD9D9D9),
+                    color: ColorConstants.dividerGrey,
                   ),
                   SettingsButton(
                     buttonText: optionTitle[2],

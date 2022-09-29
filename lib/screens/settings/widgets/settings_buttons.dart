@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -18,10 +19,10 @@ class SettingsButton extends StatelessWidget {
     return MaterialButton(
       elevation: 0,
       onPressed: onPressed,
-      color: Color(0xFFF1F1F1),
+      color: ColorConstants.fadedGreyN,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: Color(0xFF939393),
+          color: ColorConstants.grey,
           width: 1,
           style: BorderStyle.solid,
         ),
