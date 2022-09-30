@@ -2,6 +2,7 @@ import 'package:at_contacts_flutter/screens/blocked_screen.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/contacts/contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/home/home.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
@@ -31,16 +32,17 @@ class SetupRoutes {
       Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
-        Map<String, dynamic> args =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-        return GroupContactView(
-          asSelectionScreen: args['asSelectionScreen'],
-          singleSelection: args['singleSelection'],
-          showGroups: args['showGroups'],
-          showContacts: args['showContacts'],
-          selectedList: args['selectedList'],
-          contactSelectedHistory: args['showSelectedData'],
-        );
+        return ContactsScreen();
+        //   Map<String, dynamic> args =
+        //       ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        //   return GroupContactView(
+        //     asSelectionScreen: args['asSelectionScreen'],
+        //     singleSelection: args['singleSelection'],
+        //     showGroups: args['showGroups'],
+        //     showContacts: args['showContacts'],
+        //     selectedList: args['selectedList'],
+        //     contactSelectedHistory: args['showSelectedData'],
+        //   );
       },
       Routes.GROUPS: (context) {
         Map<String, dynamic>? args =
