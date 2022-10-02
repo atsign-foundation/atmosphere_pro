@@ -9,10 +9,12 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/setting_page_button.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -126,6 +128,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 20.toHeight,
                             ),
+                            SettingPageButton(
+                              iconPath: ImageConstants.termsAndConditionsIcon,
+                              title: "Terms & Conditions",
+                            ),
+                            SizedBox(
+                              height: 20.toHeight,
+                            ),
                             SelectContactWidget(
                               (b) {
                                 setState(() {
@@ -178,16 +187,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             ),
                             SizedBox(
                               height: (_welcomeScreenProvider
-                                              .selectedContacts !=
-                                          null &&
-                                      _welcomeScreenProvider
                                           .selectedContacts.isNotEmpty &&
                                       filePickerModel.selectedFiles.isNotEmpty)
                                   ? 20.toHeight
                                   : 60.toHeight,
                             ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
+                            (_welcomeScreenProvider
                                         .selectedContacts.isNotEmpty &&
                                     filePickerModel.selectedFiles.isNotEmpty)
                                 ? Container(
@@ -265,9 +270,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 30.toHeight,
                             ),
-                            if (_welcomeScreenProvider.selectedContacts !=
-                                    null &&
-                                _welcomeScreenProvider
+                            if (_welcomeScreenProvider
                                     .selectedContacts.isNotEmpty &&
                                 filePickerModel.selectedFiles.isNotEmpty) ...[
                               Row(
