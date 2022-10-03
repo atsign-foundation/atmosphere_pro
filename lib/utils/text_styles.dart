@@ -281,4 +281,26 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w600,
   );
+
+  //INTER FONTS
+  static TextStyle interBold = TextStyle(
+    color: Colors.black,
+    fontSize: 20.toFont,
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w700,
+  );
+
+  static TextStyle interSemiBold = TextStyle(
+    fontSize: 10.toFont,
+    fontFamily: 'Inter',
+    color: Color(0xFF7B7B7B),
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle interRegular = TextStyle(
+    fontSize: 14.toFont,
+    fontFamily: 'Inter',
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+  );
 }

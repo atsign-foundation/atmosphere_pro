@@ -19,6 +19,7 @@ class ColorConstants {
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
+  static const Color yellowColor = Color(0xffEAA743);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
@@ -32,6 +33,7 @@ class ColorConstants {
   static const Color light_border_color = Color(0xFFEEF1F4);
   static const Color textBoxBg = Color(0xFFF2F2F2);
   static const Color lightBlueBg = Color(0xFFF8FBFF);
+  static const Color outlineGrey = Color(0xFF939393);
 }
 
 class ContactInitialsColors {

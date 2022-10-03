@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_outlined_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
+import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_senders.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
@@ -111,6 +114,30 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 fontSize: 13.toFont,
                                 fontWeight: FontWeight.normal,
                               ),
+                            ),
+                            CustomOutlinedButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    elevation: 10,
+                                    isScrollControlled: true,
+                                    //color with gradient
+                                    barrierColor: Colors.white
+                                        .withOpacity(0.25)
+                                        //TODO
+                                        .withOpacity(0.6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft:
+                                                Radius.circular(20.toWidth),
+                                            topRight:
+                                                Radius.circular(20.toWidth))),
+                                    builder: (context) => BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                          sigmaY: -2,
+                                        ),
+                                        child: TrustedSenders()));
+                              },
                             ),
                             SizedBox(
                               height: 67.toHeight,
