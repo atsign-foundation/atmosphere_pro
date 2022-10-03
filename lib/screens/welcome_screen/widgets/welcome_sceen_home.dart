@@ -115,30 +115,31 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-                            CustomOutlinedButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    elevation: 10,
-                                    isScrollControlled: true,
-                                    //color with gradient
-                                    barrierColor: Colors.white
-                                        .withOpacity(0.25)
-                                        //TODO
-                                        .withOpacity(0.6),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft:
-                                                Radius.circular(20.toWidth),
-                                            topRight:
-                                                Radius.circular(20.toWidth))),
-                                    builder: (context) => BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaY: -2,
-                                        ),
-                                        child: TrustedSenders()));
-                              },
-                            ),
+                            // CustomOutlinedButton(
+                            //   buttonText: 'Trusted Senders',
+                            //   onPressed: () {
+                            //     showModalBottomSheet(
+                            //         context: context,
+                            //         elevation: 10,
+                            //         isScrollControlled: true,
+                            //         //color with gradient
+                            //         barrierColor: Colors.white
+                            //             .withOpacity(0.25)
+                            //             //TODO
+                            //             .withOpacity(0.6),
+                            //         shape: RoundedRectangleBorder(
+                            //             borderRadius: BorderRadius.only(
+                            //                 topLeft:
+                            //                     Radius.circular(20.toWidth),
+                            //                 topRight:
+                            //                     Radius.circular(20.toWidth))),
+                            //         builder: (context) => BackdropFilter(
+                            //             filter: ImageFilter.blur(
+                            //               sigmaY: -2,
+                            //             ),
+                            //             child: TrustedSenders()));
+                            //   },
+                            // ),
                             SizedBox(
                               height: 67.toHeight,
                             ),
