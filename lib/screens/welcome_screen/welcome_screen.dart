@@ -1,6 +1,8 @@
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_screen_received_files.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
@@ -98,7 +100,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
     WelcomeScreenHome(),
-    WelcomeScreenReceivedFiles()
+    MyFiles(),
+    HistoryScreen(),
+    WelcomeScreenReceivedFiles(),
   ];
 
   @override
