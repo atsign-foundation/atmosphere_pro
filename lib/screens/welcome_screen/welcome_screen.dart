@@ -184,7 +184,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           topRight: Radius.circular(30.0),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
