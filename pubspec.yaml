@@ -75,6 +75,7 @@ dependencies:
   at_sync_ui_flutter: ^1.0.6
   showcaseview: ^1.1.5
   biometric_storage: ^4.1.3
+  flutter_svg: ^1.1.5
 
 dev_dependencies:
   flutter_test:
