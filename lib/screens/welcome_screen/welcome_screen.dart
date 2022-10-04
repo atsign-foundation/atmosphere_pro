@@ -107,81 +107,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: ColorConstants.scaffoldColor,
       child: SafeArea(
         child: Scaffold(
-          // bottomNavigationBar: Container(
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.only(
-          //         topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-          //     boxShadow: [
-          //       BoxShadow(
-          //           color: Colors.black26, spreadRadius: 0, blurRadius: 10),
-          //     ],
-          //   ),
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.only(
-          //       topLeft: Radius.circular(30.0),
-          //       topRight: Radius.circular(30.0),
-          //     ),
-          //     child: BottomNavigationBar(
-          //       elevation: 0,
-          //       selectedLabelStyle: TextStyle(
-          //         fontSize: 12.toFont,
-          //         fontWeight: FontWeight.normal,
-          //       ),
-          //       unselectedLabelStyle: TextStyle(
-          //         fontSize: 12.toFont,
-          //         fontWeight: FontWeight.normal,
-          //       ),
-          //       items: <BottomNavigationBarItem>[
-          //         BottomNavigationBarItem(
-          //           icon: SvgPicture.asset("assets/svg/contacts.svg"),
-          //           label:
-          //               _selectedBottomNavigationIndex == 0 ? '' : 'Contacts',
-          //           activeIcon: SizedBox(
-          //             height: 50,
-          //             child: Column(
-          //               children: [
-          //                 SvgPicture.asset("assets/svg/contacts.svg",
-          //                     color: Color(0xffEAA743)),
-          //                 Text("Contacts"),
-          //                 // SizedBox(
-          //                 //   height: 5,
-          //                 //   width: 60,
-          //                 //   child: CustomPaint(
-          //                 //     painter: PainterOne(),
-          //                 //   ),
-          //                 // ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //         BottomNavigationBarItem(
-          //           icon: SvgPicture.asset("assets/svg/my_files.svg",
-          //               color: _selectedBottomNavigationIndex == 1
-          //                   ? Color(0xffEAA743)
-          //                   : Colors.black),
-          //           label: 'My Files',
-          //         ),
-          //         BottomNavigationBarItem(
-          //           icon: SvgPicture.asset("assets/svg/history.svg",
-          //               color: _selectedBottomNavigationIndex == 2
-          //                   ? Color(0xffEAA743)
-          //                   : Colors.black),
-          //           label: 'History',
-          //         ),
-          //         BottomNavigationBarItem(
-          //           icon: SvgPicture.asset("assets/svg/settings.svg",
-          //               color: _selectedBottomNavigationIndex == 3
-          //                   ? Color(0xffEAA743)
-          //                   : Colors.black),
-          //           label: 'Settings',
-          //         ),
-          //       ],
-          //       currentIndex: _selectedBottomNavigationIndex,
-          //       selectedItemColor: Colors.amber[800],
-          //       onTap: _onBottomNavigationSelect,
-          //     ),
-          //   ),
-          // ),
           bottomNavigationBar: customBottomNavigationBar(),
           key: _scaffoldKey,
           backgroundColor: ColorConstants.scaffoldColor,
@@ -194,7 +119,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 shape: BoxShape.circle,
                 gradient:
                 LinearGradient(
-                  colors: [Color(0xffF05E3F), Color(0xffEAA743)],
+                  colors: [Color(0xffF05E3F), Color(0xffe9a642)],
                   stops: [0.1, 0.8],
                 )
             ),
@@ -202,7 +127,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               elevation: 0,
               backgroundColor: Colors.transparent,
               onPressed: () {},
-              child: SvgPicture.asset("assets/svg/plus.svg",),
+              child: _selectedBottomNavigationIndex == 3 ? SvgPicture.asset("assets/svg/plus.svg",) : SvgPicture.asset("assets/svg/home.svg",) ,
             ),
           ),
           appBar: _selectedBottomNavigationIndex == 0
@@ -276,9 +201,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget bottomNavigationItem(String assetLocation, String label, int index) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedBottomNavigationIndex = index;
-        });
+        _onBottomNavigationSelect(index);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
