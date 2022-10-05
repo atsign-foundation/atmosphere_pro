@@ -103,54 +103,61 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ColorConstants.scaffoldColor,
-      child: SafeArea(
-        child: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-            elevation: 0,
-            selectedLabelStyle: TextStyle(
-              fontSize: 12.toFont,
-              fontWeight: FontWeight.normal,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 12.toFont,
-              fontWeight: FontWeight.normal,
-            ),
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home, size: 20.toFont),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.import_export, size: 20.toFont),
-                label: 'Received',
-              ),
-            ],
-            currentIndex: _selectedBottomNavigationIndex,
-            selectedItemColor: Colors.amber[800],
-            onTap: _onBottomNavigationSelect,
+      // color: Colors.transparent,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white.withOpacity(0.5),
+          elevation: 0,
+          selectedLabelStyle: TextStyle(
+            fontSize: 12.toFont,
+            fontWeight: FontWeight.normal,
           ),
-          key: _scaffoldKey,
-          backgroundColor: ColorConstants.scaffoldColor,
-          appBar: _selectedBottomNavigationIndex == 0
-              ? (SizeConfig().isTablet(context)
-                  ? null
-                  : CustomAppBar(
-                      showLeadingicon: true,
-                    ))
-              : CustomAppBar(
-                  showMenu: true,
-                  showBackButton: false,
-                  showTrailingButton: true,
-                  showTitle: true,
-                  showClosedBtnText: false,
-                  title: 'Received Files'),
-          extendBody: true,
-          drawerScrimColor: Colors.transparent,
-          endDrawer: SideBarWidget(
-            isExpanded: true,
+          unselectedLabelStyle: TextStyle(
+            fontSize: 12.toFont,
+            fontWeight: FontWeight.normal,
           ),
-          body: Consumer<InternetConnectivityChecker>(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, size: 20.toFont),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.import_export, size: 20.toFont),
+              label: 'Received',
+            ),
+          ],
+          currentIndex: _selectedBottomNavigationIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onBottomNavigationSelect,
+        ),
+        key: _scaffoldKey,
+        // backgroundColor: ColorConstants.scaffoldColor,
+        // appBar: _selectedBottomNavigationIndex == 0
+        //     ? (SizeConfig().isTablet(context)
+        //         ? null
+        //         : CustomAppBar(
+        //             showLeadingicon: true,
+        //           ))
+        //     : CustomAppBar(
+        //         showMenu: true,
+        //         showBackButton: false,
+        //         showTrailingButton: true,
+        //         showTitle: true,
+        //         showClosedBtnText: false,
+        //         title: 'Received Files'),
+        extendBody: true,
+        drawerScrimColor: Colors.transparent,
+        endDrawer: SideBarWidget(
+          isExpanded: true,
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/main_background.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Consumer<InternetConnectivityChecker>(
               builder: (_c, provider, widget) {
             if (provider.isInternetAvailable) {
               return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];

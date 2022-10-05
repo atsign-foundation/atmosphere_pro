@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -76,13 +77,15 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(height: 30,),
+                            SizedBox(height: 50, child: Image.asset(ImageConstants.logoIcon)),
+                            SizedBox(height: 10,),
                             Text(
-                              TextStrings().welcome,
-                              semanticsLabel: TextStrings().welcome,
-                              style: GoogleFonts.playfairDisplay(
+                              TextStrings().hi,
+                              semanticsLabel: TextStrings().hi,
+                              style: GoogleFonts.inter(
                                 textStyle: TextStyle(
-                                  fontSize: 26.toFont,
-                                  fontWeight: FontWeight.w800,
+                                  fontSize: 40.toFont,
                                   height: 1.3,
                                 ),
                               ),
@@ -91,43 +94,53 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               onTap: switchAtsign,
                               child: Text(
                                 BackendService.getInstance().currentAtSign!,
-                                style: GoogleFonts.playfairDisplay(
+                                style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                    fontSize: 26.toFont,
+                                    fontSize: 40.toFont,
                                     fontWeight: FontWeight.w800,
                                     height: 1.3,
-                                    color: ColorConstants.orangeColor,
+                                    color: ColorConstants.fontPrimary,
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(
-                              height: 10.toHeight,
+                              height: 20.toHeight,
                             ),
                             Text(
-                              TextStrings().welcomeRecipient,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 13.toFont,
-                                fontWeight: FontWeight.normal,
+                              TextStrings().selectedFiles,
+                              style: GoogleFonts.inter(
+                                color: ColorConstants.fontPrimary,
+                                fontSize: 20.toFont,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             SizedBox(
-                              height: 67.toHeight,
+                              height: 10.toHeight,
                             ),
-                            Text(
-                              TextStrings().welcomeSendFilesTo,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 12.toFont,
-                                fontWeight: FontWeight.normal,
-                              ),
+                            SelectFileWidget(
+                              (b) {
+                                setState(() {
+                                  isFileSelected = b;
+                                });
+                              },
+                              (_str) {
+                                setState(() {
+                                  notes = _str;
+                                });
+                              },
+                              initialValue: notes,
                             ),
+
+                            SizedBox(
+                              height: 20.toHeight,
+                            ),
+                            Text("Select Contacts"),
                             SizedBox(
                               height: 20.toHeight,
                             ),
                             SelectContactWidget(
-                              (b) {
+                                  (b) {
                                 setState(() {
                                   isContactSelected = b;
                                 });
@@ -138,11 +151,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             ),
                             Consumer<FileTransferProvider>(
                                 builder: (context, provider, _) {
-                              if (filePickerModel.scrollToBottom) {
-                                scrollToBottom();
-                              }
-                              return SizedBox();
-                            }),
+                                  if (filePickerModel.scrollToBottom) {
+                                    scrollToBottom();
+                                  }
+                                  return SizedBox();
+                                }),
                             Consumer<WelcomeScreenProvider>(
                               builder: (context, provider, _) {
                                 if (provider.scrollToBottom) {
@@ -159,22 +172,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                   );
                                 }
                               },
-                            ),
-                            SizedBox(
-                              height: 20.toHeight,
-                            ),
-                            SelectFileWidget(
-                              (b) {
-                                setState(() {
-                                  isFileSelected = b;
-                                });
-                              },
-                              (_str) {
-                                setState(() {
-                                  notes = _str;
-                                });
-                              },
-                              initialValue: notes,
                             ),
                             SizedBox(
                               height: (_welcomeScreenProvider

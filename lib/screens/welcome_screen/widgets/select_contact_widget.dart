@@ -41,7 +41,14 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15.toFont),
         child: Container(
-            color: ColorConstants.inputFieldColor,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.toFont),
+              border: Border.all(
+                color: Colors.red,
+                width: 2,
+              ),
+              color: Colors.white,
+            ),
             child: _ExpansionTileWidget(
               headerText,
               (index) {
