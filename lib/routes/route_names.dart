@@ -13,4 +13,5 @@ class Routes {
   static const String EMPTY_TRUSTED_CONTACTS = 'emptyTrustedContacts';
   static const String MY_FILES = 'myFiles';
   static const String GROUPS = 'groups';
+  static const String TERMS_SCREEN="termsScreen";
 }
