@@ -34,6 +34,8 @@ class ColorConstants {
   static const Color lightBlueBg = Color(0xFFF8FBFF);
   static const Color buttonBorderColor = Color(0xFF939393);
   static const Color buttonBackgroundColor = Color(0xFFF1F1F1);
+  static const Color greyTextColor = Color(0xffA4A4A5);
+  static const Color lightGrey = Color(0xffF2F2F2);
 }
 
 class ContactInitialsColors {
