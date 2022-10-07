@@ -195,7 +195,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               bottomNavigationItem("assets/svg/contacts.svg", "Contacts", 1),
               bottomNavigationItem("assets/svg/my_files.svg", "My Files", 2),
               SizedBox(
-                width: 20,
+                width: 1,
               ),
               bottomNavigationItem("assets/svg/history.svg", "History", 3),
               bottomNavigationItem("assets/svg/settings.svg", "Settings", 4),
