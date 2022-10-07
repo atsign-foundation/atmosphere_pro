@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -82,25 +83,52 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await widget.onConfirmation();
-                    await Future.forEach(
-                      widget.receivedHistory!.files!,
-                      (FileData element) async {
-                        String filePath = BackendService.getInstance()
-                                .downloadDirectory!
-                                .path +
-                            Platform.pathSeparator +
-                            element.name!;
-                        if (await CommonUtilityFunctions()
-                            .isFilePresent(filePath)) {
-                          var file = File(filePath);
-                          file.deleteSync();
-                        }
-                      },
-                    );
-                    await Provider.of<MyFilesProvider>(
-                            NavService.navKey.currentContext!,
-                            listen: false)
-                        .deletMyFileRecord(widget.receivedHistory!.key);
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      await Future.forEach(
+                        widget.receivedHistory!.files!,
+                        (FileData element) async {
+                          String filePath = BackendService.getInstance()
+                                  .downloadDirectory!
+                                  .path +
+                              Platform.pathSeparator +
+                              element.name!;
+                          if (await CommonUtilityFunctions()
+                              .isFilePresent(filePath)) {
+                            var file = File(filePath);
+                            file.deleteSync();
+                          }
+                        },
+                      );
+                      await Provider.of<MyFilesProvider>(
+                              NavService.navKey.currentContext!,
+                              listen: false)
+                          .deletMyFileRecord(widget.receivedHistory!.key);
+                    } else {
+                      await Future.forEach(
+                        widget.receivedHistory!.files!,
+                        (FileData element) async {
+                          String filePath =
+                              MixedConstants.RECEIVED_FILE_DIRECTORY +
+                                  Platform.pathSeparator +
+                                  (widget.receivedHistory!.sender ?? '') +
+                                  Platform.pathSeparator +
+                                  (element.name ?? '');
+
+                          if (await CommonUtilityFunctions()
+                              .isFilePresent(filePath)) {
+                            var file = File(filePath);
+                            if (await file.existsSync()) {
+                              file.deleteSync();
+                            }
+                          }
+                        },
+                      );
+
+                      await Provider.of<MyFilesProvider>(
+                              NavService.navKey.currentContext!,
+                              listen: false)
+                          .deletMyFileRecord(widget.receivedHistory!.key);
+                    }
                   },
                   child: Text(
                     'Yes, delete Transfer History and My Files ',
