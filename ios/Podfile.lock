@@ -57,8 +57,6 @@ PODS:
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_qr_reader (0.0.1):
-    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
@@ -123,7 +121,6 @@ DEPENDENCIES:
   - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_keychain (from `.symlinks/plugins/flutter_keychain/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_qr_reader (from `.symlinks/plugins/flutter_qr_reader/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -175,8 +172,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keychain/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_qr_reader:
-    :path: ".symlinks/plugins/flutter_qr_reader/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   open_file:
@@ -215,11 +210,10 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   emoji_picker_flutter: df19dac03a2b39ac667dc8d1da939ef3a9e21347
   file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_image_compress: 5a5e9aee05b6553048b8df1c3bc456d0afaac433
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  flutter_qr_reader: d930dde3b2cfe2b3d0bb7d66e5ff3e514300a5e5
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
@@ -241,6 +235,6 @@ SPEC CHECKSUMS:
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
 
-PODFILE CHECKSUM: db8a7794fb1b0bee1e3803fed876c7cf9577099b
+PODFILE CHECKSUM: db1b3d34103b9bca35e1d0bca266af8024bec0bc
 
 COCOAPODS: 1.11.3
