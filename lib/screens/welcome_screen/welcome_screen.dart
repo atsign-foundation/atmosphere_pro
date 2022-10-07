@@ -1,6 +1,7 @@
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/trusted_senders_screen/trusted_senders_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_screen_received_files.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
@@ -106,6 +107,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: ColorConstants.scaffoldColor,
       child: SafeArea(
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: const Color(0xFFF05E37),
+            child: const ImageIcon(
+              AssetImage("assets/images/add_icon.png"),
+              color: Colors.white,
+              size: 16.0,
+            ),
+            onPressed: () {
+              showModalBottomSheet<dynamic>(
+                isScrollControlled: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                context: context,
+                builder: (BuildContext context) {
+                  return TrustedSendersScreen();
+                },
+              );
+            },
+          ),
           bottomNavigationBar: BottomNavigationBar(
             elevation: 0,
             selectedLabelStyle: TextStyle(
