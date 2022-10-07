@@ -1,3 +1,4 @@
+import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
@@ -20,8 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../utils/text_strings.dart';
-import '../common_widgets/side_bar.dart';
-import '../../view_models/file_transfer_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -100,6 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
     WelcomeScreenHome(),
+    ContactsScreen(),
     MyFiles(),
     HistoryScreen(),
     WelcomeScreenReceivedFiles(),
@@ -130,7 +130,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: FloatingActionButton(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  _selectedBottomNavigationIndex = 0;
+                });
+              },
               child: _selectedBottomNavigationIndex == 3 ? SvgPicture.asset("assets/svg/plus.svg",) : SvgPicture.asset("assets/svg/home.svg",) ,
             ),
           ),
@@ -184,17 +188,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           topRight: Radius.circular(30.0),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              bottomNavigationItem("assets/svg/contacts.svg", "Contacts", 0),
-              bottomNavigationItem("assets/svg/my_files.svg", "My Files", 1),
+              bottomNavigationItem("assets/svg/contacts.svg", "Contacts", 1),
+              bottomNavigationItem("assets/svg/my_files.svg", "My Files", 2),
               SizedBox(
                 width: 20,
               ),
-              bottomNavigationItem("assets/svg/history.svg", "History", 2),
-              bottomNavigationItem("assets/svg/settings.svg", "Settings", 3),
+              bottomNavigationItem("assets/svg/history.svg", "History", 3),
+              bottomNavigationItem("assets/svg/settings.svg", "Settings", 4),
             ],
           ),
         ),
@@ -216,7 +220,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: _selectedBottomNavigationIndex == index
                 ? Color(0xffEAA743)
                 : Colors.black,
-            // height: 29,
+            height: 25,
           ),
           SizedBox(
             height: 3,
@@ -227,17 +231,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   color: _selectedBottomNavigationIndex == index
                       ? Color(0xffEAA743)
                       : Colors.black)),
-          Spacer(),
+          // Spacer(),
+          SizedBox(height: 10,),
           if (_selectedBottomNavigationIndex == index)
             Container(
               height: 2,
-              width: 50,
+              width: 40,
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Color(0xffEAA743).withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
+                    spreadRadius: 3,
+                    blurRadius: 5,
                     offset: Offset(0, -1), // changes position of shadow
                   ),
                 ],
@@ -245,8 +250,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           if (_selectedBottomNavigationIndex == index)
             SizedBox(
-              height: 5,
-              width: 60,
+              height: 4,
+              width: 50,
               child: CustomPaint(
                 painter: PainterOne(),
               ),
