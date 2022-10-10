@@ -32,17 +32,16 @@ class SetupRoutes {
       Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
-        return ContactsScreen();
-        //   Map<String, dynamic> args =
-        //       ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-        //   return GroupContactView(
-        //     asSelectionScreen: args['asSelectionScreen'],
-        //     singleSelection: args['singleSelection'],
-        //     showGroups: args['showGroups'],
-        //     showContacts: args['showContacts'],
-        //     selectedList: args['selectedList'],
-        //     contactSelectedHistory: args['showSelectedData'],
-        //   );
+        Map<String, dynamic> args =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        return GroupContactView(
+          asSelectionScreen: args['asSelectionScreen'],
+          singleSelection: args['singleSelection'],
+          showGroups: args['showGroups'],
+          showContacts: args['showContacts'],
+          selectedList: args['selectedList'],
+          contactSelectedHistory: args['showSelectedData'],
+        );
       },
       Routes.GROUPS: (context) {
         Map<String, dynamic>? args =
