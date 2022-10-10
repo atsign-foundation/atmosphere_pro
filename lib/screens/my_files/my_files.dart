@@ -19,7 +19,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 
 import '../common_widgets/app_bar.dart';
-import '../contacts/widgets/files_list_view.dart';
+import 'widgets/files_list_view.dart';
 import 'widgets/my_files_toolbox.dart';
 
 class MyFiles extends StatefulWidget {
@@ -150,6 +150,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
         padding: EdgeInsets.symmetric(horizontal: 26.toWidth),
         child: Column(
           children: [
+            SizedBox(height: 32.toHeight),
             MyFilesToolbox(),
             SizedBox(height: 8.toHeight),
             Expanded(child: FilesListView()),
