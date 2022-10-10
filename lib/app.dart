@@ -14,6 +14,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'dart:io';
 import 'routes/routes.dart';
+import 'utils/colors.dart';
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
@@ -79,17 +80,26 @@ class _MyAppState extends State<MyApp> {
         initialRoute: initialRoute,
         navigatorKey: NavService.navKey,
         theme: ThemeData(
-            fontFamily: 'HelveticaNeu',
-            scaffoldBackgroundColor: Colors.white,
-            primaryColor: Color.fromARGB(255, 240, 94, 62),
-            appBarTheme: AppBarTheme(
-              color: Colors.white,
-              elevation: 0,
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
-            buttonBarTheme: ButtonBarThemeData(
-              alignment: MainAxisAlignment.center,
-            )),
+          fontFamily: 'Inter',
+          scaffoldBackgroundColor: Colors.white,
+          primaryColor: Color.fromARGB(255, 240, 94, 62),
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+          ),
+          buttonBarTheme: ButtonBarThemeData(
+            alignment: MainAxisAlignment.center,
+          ),
+          scrollbarTheme: ScrollbarThemeData(
+            minThumbLength: 330,
+            radius: Radius.circular(11),
+            thumbColor: MaterialStateProperty.all(ColorConstants.mildGrey),
+            trackColor: MaterialStateProperty.all(ColorConstants.textBoxBg),
+            mainAxisMargin: 18,
+            trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+          ),
+        ),
         routes: routes,
       ),
     );
