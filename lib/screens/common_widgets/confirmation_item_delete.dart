@@ -57,29 +57,33 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
                 TextButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).primaryColor)),
+                  // style: ButtonStyle(
+                  //     backgroundColor: MaterialStateProperty.all(
+                  //         Theme.of(context).primaryColor)),
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await widget.onConfirmation();
                   },
                   child: Text(
-                    'Yes, delete only Transfer History',
+                    'Delete only transfer history',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 16.toFont,
+                        fontSize: 15.toFont,
                         fontWeight: FontWeight.normal,
-                        color: Colors.white),
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
                 SizedBox(
-                  height: 20.toHeight,
+                  height: 10.toHeight,
                 ),
                 TextButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).primaryColor)),
+                  // style: ButtonStyle(
+                  //     backgroundColor: MaterialStateProperty.all(
+                  //         Theme.of(context).primaryColor)),
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await widget.onConfirmation();
@@ -131,11 +135,12 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
                     }
                   },
                   child: Text(
-                    'Yes, delete Transfer History and My Files ',
+                    'Delete transfer history and files',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 16.toFont,
+                        fontSize: 15.toFont,
                         fontWeight: FontWeight.normal,
-                        color: Colors.white),
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
               ],
