@@ -67,8 +67,7 @@ class _DocumentsState extends State<Documents> {
                           height: 50.toHeight,
                           width: 50.toWidth,
                           child: Image.asset(
-                            FileTypes.PDF_TYPES.contains(provider
-                                    .receivedDocument[index].fileName!
+                            FileTypes.PDF_TYPES.contains(provider.receivedDocument[index].fileName!
                                     .split('.')
                                     .last)
                                 ? ImageConstants.pdfLogo
@@ -83,12 +82,20 @@ class _DocumentsState extends State<Documents> {
                                             .last)
                                         ? ImageConstants.exelLogo
                                         : FileTypes.TEXT_TYPES.contains(provider
-                                                .receivedDocument[index]
+                                                .receivedUnknown[index]
                                                 .fileName!
                                                 .split('.')
                                                 .last)
                                             ? ImageConstants.txtLogo
-                                            : ImageConstants.unknownLogo,
+                                            : FileTypes.ARCHIVE_TYPES.contains(provider
+                                                    .receivedUnknown[index]
+                                                    .fileName!
+                                                    .split('.')
+                                                    .last)
+                                                ? ImageConstants.archiveLogo
+                                                : FileTypes.WEB_IMAGE_TYPES.contains(provider.receivedUnknown[index].fileName!.split('.').last)
+                                                    ? ImageConstants.svgLogo
+                                                    : ImageConstants.otherFileLogo,
                             fit: BoxFit.cover,
                           ),
                         ),

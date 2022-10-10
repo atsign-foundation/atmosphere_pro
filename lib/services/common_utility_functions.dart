@@ -386,7 +386,13 @@ class CommonUtilityFunctions {
                                     ? ImageConstants.exelLogo
                                     : FileTypes.TEXT_TYPES.contains(extension)
                                         ? ImageConstants.txtLogo
-                                        : ImageConstants.unknownLogo,
+                                        : FileTypes.ARCHIVE_TYPES
+                                                .contains(extension)
+                                            ? ImageConstants.archiveLogo
+                                            : FileTypes.WEB_IMAGE_TYPES
+                                                    .contains(extension)
+                                                ? ImageConstants.svgLogo
+                                                : ImageConstants.otherFileLogo,
                     fit: BoxFit.cover,
                   ),
                 ),
