@@ -39,9 +39,8 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isHistory;
   final onActionpressed;
   final bool isTrustedContactScreen;
-  final bool isContactScreen;
   final double elevation;
-  final int? numberOfContacts;
+  final int? badgeNumber;
   const CustomAppBar(
       {Key? key,
       this.title,
@@ -56,8 +55,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.elevation = 0,
       this.onActionpressed,
       this.isTrustedContactScreen = false,
-      this.isContactScreen = false,
-      this.numberOfContacts})
+      this.badgeNumber})
       : super(key: key);
 
   @override
@@ -123,11 +121,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     style: CustomTextStyles.primaryBold25,
                   )
                 : Container(),
-            widget.isContactScreen
+            widget.badgeNumber != null
                 ? Padding(
                     padding: EdgeInsets.only(left: 12.toWidth),
                     child: Text(
-                      '${widget.numberOfContacts ?? 0}',
+                      '${widget.badgeNumber ?? 0}',
                       style: CustomTextStyles.primaryBold15,
                     ),
                   )
@@ -144,24 +142,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     ? widget.showMenu
                         ? menuBar(context)
                         : Container(
-                            decoration: widget.isContactScreen
-                                ? BoxDecoration(
-                                    color: ColorConstants.addButtonBg,
-                                    borderRadius:
-                                        BorderRadius.circular(10.toFont),
-                                  )
-                                : BoxDecoration(),
                             child: IconButton(
-                                padding: EdgeInsets.all(
-                                    widget.isContactScreen ? 12.5.toFont : 0),
                                 icon: Icon(
                                   widget.trailingIcon,
-                                  size: widget.isContactScreen
-                                      ? 12.5.toFont
-                                      : 25.toFont,
-                                  color: widget.isContactScreen
-                                      ? Colors.white
-                                      : ColorConstants.blueText,
+                                  size: 25.toFont,
+                                  color: ColorConstants.blueText,
                                 ),
                                 onPressed: () async {
                                   if (widget.isHistory) {
