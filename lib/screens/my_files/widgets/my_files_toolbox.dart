@@ -46,10 +46,13 @@ class RefreshButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          TextStrings().refresh,
-          style: CustomTextStyles.primaryBold14
-              .copyWith(color: ColorConstants.myFilesBtn),
+        FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            TextStrings().refresh,
+            style: CustomTextStyles.primaryBold14
+                .copyWith(color: ColorConstants.myFilesBtn),
+          ),
         ),
         const SizedBox(height: 5),
         SquareRoundedIconButton(
@@ -72,10 +75,13 @@ class SearchButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          TextStrings().searchFile,
-          style: CustomTextStyles.primaryBold14
-              .copyWith(color: ColorConstants.myFilesBtn),
+        FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            TextStrings().searchFile,
+            style: CustomTextStyles.primaryBold14
+                .copyWith(color: ColorConstants.myFilesBtn),
+          ),
         ),
         const SizedBox(height: 5),
         SquareRoundedIconButton(
