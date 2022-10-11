@@ -30,14 +30,16 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300.toWidth,
-      height: 300.toHeight,
+      width: Platform.isAndroid || Platform.isIOS ? 300.toWidth : 250.toWidth,
+      height:
+          Platform.isAndroid || Platform.isIOS ? 300.toHeight : 220.toHeight,
       padding: EdgeInsets.all(15.toFont),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title, style: CustomTextStyles.grey15),
+            Text(widget.title,
+                style: CustomTextStyles.grey15, textAlign: TextAlign.justify),
             SizedBox(
               height: 20.toHeight,
             ),
