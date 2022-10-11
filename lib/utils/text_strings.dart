@@ -34,7 +34,7 @@ class TextStrings {
   String welcomeFilePlaceholder = 'Select file(s) to transfer';
   String selectFilesTransfer = 'Select file(s) to\ntransfer';
   String welcomeAddFilePlaceholder = 'Add file(s) to transfer';
-  String welcomeAddTranscripts = 'Add a note (Optional)';
+  String welcomeAddTranscripts = 'SEND MESSAGE (Optional)';
   String sendingFiles = 'Sending file ...';
   String oopsSomethingWentWrong = 'Oops! something went wrong';
   String hello = 'hello';

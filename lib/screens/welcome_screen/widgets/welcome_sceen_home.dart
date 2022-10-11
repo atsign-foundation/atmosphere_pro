@@ -58,6 +58,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
     return Container(
         width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/main_background.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
         height: SizeConfig().screenHeight,
         child: Container(
           width: double.infinity,
@@ -181,20 +187,24 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           .selectedContacts.isNotEmpty &&
                                       filePickerModel.selectedFiles.isNotEmpty)
                                   ? 20.toHeight
-                                  : 60.toHeight,
+                                  : 20.toHeight,
                             ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
-                                        .selectedContacts.isNotEmpty &&
-                                    filePickerModel.selectedFiles.isNotEmpty)
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: ColorConstants.inputFieldColor,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
+                            // (_welcomeScreenProvider.selectedContacts != null &&
+                            //         _welcomeScreenProvider
+                            //             .selectedContacts.isNotEmpty &&
+                            //         filePickerModel.selectedFiles.isNotEmpty)
+                                 Container(
+                                   height: 90,
+                                   decoration: BoxDecoration(
+                                     borderRadius: BorderRadius.circular(15.toFont),
+                                     border: Border.all(
+                                       color: ColorConstants.greyText,
+                                       width: 1,
+                                     ),
+                                     color: Colors.white,
+                                   ),
                                     child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: 10.toWidth,
@@ -232,33 +242,33 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                             },
                                           ),
                                         ),
-                                        notes != null
-                                            ? InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    notes = null;
-                                                  });
-                                                  _notesController.clear();
-                                                },
-                                                child: Icon(Icons.clear,
-                                                    color: Colors.black),
-                                              )
-                                            : InkWell(
-                                                onTap: () {
-                                                  FocusScope.of(context)
-                                                      .requestFocus(
-                                                          _notesFocusNode);
-                                                },
-                                                child: Icon(Icons.edit,
-                                                    color: Colors.black),
-                                              ),
+                                        // notes != null
+                                        //     ? InkWell(
+                                        //         onTap: () {
+                                        //           setState(() {
+                                        //             notes = null;
+                                        //           });
+                                        //           _notesController.clear();
+                                        //         },
+                                        //         child: Icon(Icons.clear,
+                                        //             color: Colors.black),
+                                        //       )
+                                        //     : InkWell(
+                                        //         onTap: () {
+                                        //           FocusScope.of(context)
+                                        //               .requestFocus(
+                                        //                   _notesFocusNode);
+                                        //         },
+                                        //         child: Icon(Icons.edit,
+                                        //             color: Colors.black),
+                                        //       ),
                                         SizedBox(
                                           width: 15,
                                         ),
                                       ],
                                     ),
-                                  )
-                                : SizedBox(),
+                                  ),
+                                // : SizedBox(),
                             SizedBox(
                               height: 30.toHeight,
                             ),

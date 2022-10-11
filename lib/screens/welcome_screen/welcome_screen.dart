@@ -150,24 +150,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         endDrawer: SideBarWidget(
           isExpanded: true,
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/main_background.png"),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Consumer<InternetConnectivityChecker>(
-              builder: (_c, provider, widget) {
-            if (provider.isInternetAvailable) {
-              return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
-            } else {
-              return ErrorScreen(
-                TextStrings.noInternet,
-              );
-            }
-          }),
-        ),
+        body: Consumer<InternetConnectivityChecker>(
+            builder: (_c, provider, widget) {
+          if (provider.isInternetAvailable) {
+            return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
+          } else {
+            return ErrorScreen(
+              TextStrings.noInternet,
+            );
+          }
+        }),
       ),
     );
   }
