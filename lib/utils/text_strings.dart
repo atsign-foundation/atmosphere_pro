@@ -79,6 +79,7 @@ class TextStrings {
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
+  String buttonTransfer = 'Transfer Now';
   String buttonClose = 'Close';
   String buttonResend = 'Resend';
 

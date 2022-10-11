@@ -83,9 +83,15 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 30,),
-                            SizedBox(height: 50, child: Image.asset(ImageConstants.logoIcon)),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            SizedBox(
+                                height: 50,
+                                child: Image.asset(ImageConstants.logoIcon)),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               TextStrings().hi,
                               semanticsLabel: TextStrings().hi,
@@ -146,7 +152,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               height: 20.toHeight,
                             ),
                             SelectContactWidget(
-                                  (b) {
+                              (b) {
                                 setState(() {
                                   isContactSelected = b;
                                 });
@@ -157,11 +163,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             ),
                             Consumer<FileTransferProvider>(
                                 builder: (context, provider, _) {
-                                  if (filePickerModel.scrollToBottom) {
-                                    scrollToBottom();
-                                  }
-                                  return SizedBox();
-                                }),
+                              if (filePickerModel.scrollToBottom) {
+                                scrollToBottom();
+                              }
+                              return SizedBox();
+                            }),
                             Consumer<WelcomeScreenProvider>(
                               builder: (context, provider, _) {
                                 if (provider.scrollToBottom) {
@@ -187,88 +193,90 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           .selectedContacts.isNotEmpty &&
                                       filePickerModel.selectedFiles.isNotEmpty)
                                   ? 20.toHeight
-                                  : 20.toHeight,
+                                  : 10.toHeight,
                             ),
                             // (_welcomeScreenProvider.selectedContacts != null &&
                             //         _welcomeScreenProvider
                             //             .selectedContacts.isNotEmpty &&
                             //         filePickerModel.selectedFiles.isNotEmpty)
-                                 Container(
-                                   height: 90,
-                                   decoration: BoxDecoration(
-                                     borderRadius: BorderRadius.circular(15.toFont),
-                                     border: Border.all(
-                                       color: ColorConstants.greyText,
-                                       width: 1,
-                                     ),
-                                     color: Colors.white,
-                                   ),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 10.toWidth,
+                            Container(
+                              height: 90,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.toFont),
+                                border: Border.all(
+                                  color: ColorConstants.greyText,
+                                  width: 1,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 10.toWidth,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      focusNode: _notesFocusNode,
+                                      controller: _notesController,
+                                      // initialValue: notes,
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            TextStrings().welcomeAddTranscripts,
+                                        hintStyle: TextStyle(
+                                          color: ColorConstants.fadedText,
+                                          fontSize: 14.toFont,
+                                          fontWeight: FontWeight.normal,
                                         ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            focusNode: _notesFocusNode,
-                                            controller: _notesController,
-                                            // initialValue: notes,
-                                            decoration: InputDecoration(
-                                              hintText: TextStrings()
-                                                  .welcomeAddTranscripts,
-                                              hintStyle: TextStyle(
-                                                color: ColorConstants.fadedText,
-                                                fontSize: 14.toFont,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              border: InputBorder.none,
-                                              fillColor: ColorConstants
-                                                  .inputFieldColor,
-                                              focusColor: ColorConstants
-                                                  .inputFieldColor,
-                                              hoverColor: ColorConstants
-                                                  .inputFieldColor,
-                                            ),
-                                            style: TextStyle(
-                                              color: ColorConstants.fadedText,
-                                              fontSize: 14.toFont,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            onChanged: (String txt) {
-                                              setState(() {
-                                                notes = txt;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        // notes != null
-                                        //     ? InkWell(
-                                        //         onTap: () {
-                                        //           setState(() {
-                                        //             notes = null;
-                                        //           });
-                                        //           _notesController.clear();
-                                        //         },
-                                        //         child: Icon(Icons.clear,
-                                        //             color: Colors.black),
-                                        //       )
-                                        //     : InkWell(
-                                        //         onTap: () {
-                                        //           FocusScope.of(context)
-                                        //               .requestFocus(
-                                        //                   _notesFocusNode);
-                                        //         },
-                                        //         child: Icon(Icons.edit,
-                                        //             color: Colors.black),
-                                        //       ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                      ],
+                                        border: InputBorder.none,
+                                        fillColor:
+                                            ColorConstants.inputFieldColor,
+                                        focusColor:
+                                            ColorConstants.inputFieldColor,
+                                        hoverColor:
+                                            ColorConstants.inputFieldColor,
+                                      ),
+                                      style: TextStyle(
+                                        color: ColorConstants.fadedText,
+                                        fontSize: 14.toFont,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      onChanged: (String txt) {
+                                        setState(() {
+                                          notes = txt;
+                                        });
+                                      },
                                     ),
                                   ),
-                                // : SizedBox(),
+                                  // notes != null
+                                  //     ? InkWell(
+                                  //         onTap: () {
+                                  //           setState(() {
+                                  //             notes = null;
+                                  //           });
+                                  //           _notesController.clear();
+                                  //         },
+                                  //         child: Icon(Icons.clear,
+                                  //             color: Colors.black),
+                                  //       )
+                                  //     : InkWell(
+                                  //         onTap: () {
+                                  //           FocusScope.of(context)
+                                  //               .requestFocus(
+                                  //                   _notesFocusNode);
+                                  //         },
+                                  //         child: Icon(Icons.edit,
+                                  //             color: Colors.black),
+                                  //       ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 20,),
+                            // : SizedBox(),
                             SizedBox(
                               height: 30.toHeight,
                             ),
@@ -312,10 +320,38 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           filePickerModel
                                                   .hasSelectedFilesChanged &&
                                               !isFileShareFailed)
-                                      ? CommonButton(
-                                          TextStrings().buttonSend,
-                                          sendFileWithFileBin,
-                                        )
+                                      ? Container(
+                                    height: 63,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [
+                                          Color(0xffF05E3F),
+                                          Color(0xffEAA743).withAlpha(150)
+                                        ]),
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          sendFileWithFileBin();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              TextStrings().buttonTransfer,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(width: 30,),
+                                            Icon(Icons.arrow_forward)
+                                          ],
+                                        )),
+                                  )
                                       : SizedBox(),
                                 ],
                               ),
