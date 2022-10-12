@@ -318,7 +318,7 @@ class _HomeState extends State<Home> {
                         children: [
                           CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                  ColorConstants.redText)),
+                                  Color.fromARGB(255, 49, 44, 43))),
                           SizedBox(
                             height: 20,
                           ),

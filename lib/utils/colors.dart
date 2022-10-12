@@ -36,6 +36,10 @@ class ColorConstants {
   static const Color buttonBackgroundColor = Color(0xFFF1F1F1);
   static const Color greyTextColor = Color(0xffA4A4A5);
   static const Color lightGrey = Color(0xffF2F2F2);
+  //NEW UI COLORS
+  static const Color fadedGreyN = Color(0xFFF1F1F1);
+  static const Color dividerGrey = Color(0xFFD9D9D9);
+  static const Color grey = Color(0xFF939393);
 }
 
 class ContactInitialsColors {
