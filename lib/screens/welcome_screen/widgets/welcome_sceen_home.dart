@@ -51,6 +51,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     filePickerModel = Provider.of<FileTransferProvider>(context);
     _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
       context,
