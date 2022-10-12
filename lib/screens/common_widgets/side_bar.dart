@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
@@ -8,21 +9,25 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_backup_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideBarWidget extends StatefulWidget {
@@ -43,7 +48,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarPrivacyPolicy,
     TextStrings().sidebarFaqs,
-    TextStrings().sidebarTrustedSenders
+    TextStrings().sidebarTrustedSenders,
+    TextStrings().sidebarSettings,
   ];
 
   final List<String> menuItemsIcons = [
@@ -57,6 +63,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     ImageConstants.faqsIcon,
     ImageConstants.trustedSendersIcon,
     ImageConstants.trustedSender,
+    ImageConstants.settings,
   ];
 
   final List<String> targetScreens = [
@@ -68,7 +75,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.TERMS_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
-    Routes.TRUSTED_CONTACTS
+    Routes.TRUSTED_CONTACTS,
+    Routes.SETTINGS,
   ];
   String? activeAtSign;
   Uint8List? image;
@@ -350,6 +358,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     image: menuItemsIcons[8],
                     title: menuItemsTitle[8],
                     routeName: targetScreens[8],
+                    showIconOnly: !isExpanded,
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SideBarItem(
+                    isScale: true,
+                    image: menuItemsIcons[10],
+                    title: menuItemsTitle[9],
+                    routeName: targetScreens[9],
                     showIconOnly: !isExpanded,
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),

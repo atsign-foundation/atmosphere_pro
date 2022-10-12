@@ -32,8 +32,14 @@ class ColorConstants {
   static const Color light_border_color = Color(0xFFEEF1F4);
   static const Color textBoxBg = Color(0xFFF2F2F2);
   static const Color lightBlueBg = Color(0xFFF8FBFF);
+
   static const Color buttonBorderColor = Color(0xFF939393);
   static const Color buttonBackgroundColor = Color(0xFFF1F1F1);
+
+  //NEW UI COLORS
+  static const Color fadedGreyN = Color(0xFFF1F1F1);
+  static const Color dividerGrey = Color(0xFFD9D9D9);
+  static const Color grey = Color(0xFF939393);
 }
 
 class ContactInitialsColors {
