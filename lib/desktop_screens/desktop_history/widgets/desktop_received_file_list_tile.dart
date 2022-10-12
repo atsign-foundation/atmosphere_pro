@@ -705,53 +705,12 @@ class _DesktopReceivedFilesListTileState
               SnackbarService().showSnackbar(NavService.navKey.currentContext!,
                   'Removed from received items list',
                   bgColor: ColorConstants.successGreen);
-              // await deleteFileWhenRecevedItemRemoved();
             } else {
               SnackbarService().showSnackbar(
                   NavService.navKey.currentContext!, 'Failed',
                   bgColor: ColorConstants.redAlert);
             }
           }, widget.receivedHistory),
-        );
-      },
-    );
-  }
-
-  deleteFileWhenRecevedItemRemoved() async {
-    await showDialog(
-      context: NavService.navKey.currentContext!,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.toWidth),
-          ),
-          content: ConfirmationDialog(
-            TextStrings.deleteDownloadedFileMessage,
-            () async {
-              await Future.forEach(
-                widget.receivedHistory!.files!,
-                (FileData element) async {
-                  String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
-                      Platform.pathSeparator +
-                      (widget.receivedHistory!.sender ?? '') +
-                      Platform.pathSeparator +
-                      (element.name ?? '');
-
-                  if (await CommonUtilityFunctions().isFilePresent(filePath)) {
-                    var file = File(filePath);
-                    if (await file.existsSync()) {
-                      file.deleteSync();
-                    }
-                  }
-                },
-              );
-
-              await Provider.of<MyFilesProvider>(
-                      NavService.navKey.currentContext!,
-                      listen: false)
-                  .deletMyFileRecord(widget.receivedHistory!.key);
-            },
-          ),
         );
       },
     );
