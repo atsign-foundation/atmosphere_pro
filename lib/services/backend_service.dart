@@ -414,6 +414,7 @@ class BackendService {
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
+          showPopupSharedStorage: true,
         ),
       );
       switch (result.status) {
@@ -472,6 +473,7 @@ class BackendService {
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
+          showPopupSharedStorage: true,
         ),
         isSwitchingAtsign: isSwitchAccount,
       );

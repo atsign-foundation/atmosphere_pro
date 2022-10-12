@@ -67,9 +67,11 @@ packages:
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: "../at_client_sdk/at_client_mobile"
-      relative: true
-    source: path
+      path: at_client_mobile
+      ref: "feature/enable-user-sharing"
+      resolved-ref: "59064e87557766f2db0cc85f3328fb8962f595c2"
+      url: "https://github.com/atsign-foundation/at_client_sdk"
+    source: git
     version: "3.2.7"
   at_common_flutter:
     dependency: "direct main"
@@ -125,9 +127,11 @@ packages:
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: "../at_widgets/at_onboarding_flutter"
-      relative: true
-    source: path
+      path: at_onboarding_flutter
+      ref: "feature/enable-user-sharing"
+      resolved-ref: f7b7d1aaf7630558def5637c1bb26b787617c14c
+      url: "https://github.com/atsign-foundation/at_widgets.git"
+    source: git
     version: "5.0.0"
   at_persistence_secondary_server:
     dependency: transitive
