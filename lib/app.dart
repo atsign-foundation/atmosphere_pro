@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
         initialRoute: initialRoute,
         navigatorKey: NavService.navKey,
         theme: ThemeData(
-            fontFamily: 'HelveticaNeu',
+            fontFamily: 'Inter',
             scaffoldBackgroundColor: Colors.white,
             primaryColor: Color.fromARGB(255, 240, 94, 62),
             appBarTheme: AppBarTheme(

@@ -34,6 +34,11 @@ class ColorConstants {
   static const Color textBoxBg = Color(0xFFF2F2F2);
   static const Color lightBlueBg = Color(0xFFF8FBFF);
   static const Color outlineGrey = Color(0xFF939393);
+
+  //NEW UI COLORS
+  static const Color fadedGreyN = Color(0xFFF1F1F1);
+  static const Color dividerGrey = Color(0xFFD9D9D9);
+  static const Color grey = Color(0xFF939393);
 }
 
 class ContactInitialsColors {
