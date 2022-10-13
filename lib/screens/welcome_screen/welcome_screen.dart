@@ -17,8 +17,6 @@ import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/text_strings.dart';
-import '../common_widgets/side_bar.dart';
-import '../../view_models/file_transfer_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -75,7 +73,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ? _fileTransferProvider.error[_fileTransferProvider.SEND_FILES]
             : null,
       );
-      });
+    });
   }
 
   setAtSign() async {
