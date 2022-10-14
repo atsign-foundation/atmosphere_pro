@@ -34,6 +34,11 @@ class ColorConstants {
   static const Color textBoxBg = Color(0xFFF2F2F2);
   static const Color lightBlueBg = Color(0xFFF8FBFF);
 
+  //NEW UI COLORS
+  static const Color fadedGreyN = Color(0xFFF1F1F1);
+  static const Color dividerGrey = Color(0xFFD9D9D9);
+  static const Color grey = Color(0xFF939393);
+
   static const Color sidebarTextUnselected = Color(0xFFA4A4A5);
   static const Color sidebarTextSelected = Color(0xFF000000);
   static const Color sidebarTextHeading = Color(0xFFE7E7E7);

@@ -5,21 +5,17 @@
 ///[title] is a [String] to display the title of the appbar
 ///[showTrailingButton] toggles the visibility of trailing button, default add icon
 ///therefore it has it's navigation embedded in the widget itself.
-
 import 'dart:io';
-import 'package:at_contact/at_contact.dart';
+
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +64,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: widget.elevation,
-      centerTitle: true,
+      centerTitle: false,
       leading: (widget.showLeadingicon)
           ? Image.asset(ImageConstants.logoIcon)
           : (widget.showBackButton)
@@ -109,11 +105,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
           Expanded(
             child: (widget.showTitle)
-                ? Center(
-                    child: Text(
-                      widget.title!,
-                      style: CustomTextStyles.primaryBold18,
-                    ),
+                ? Text(
+                    widget.title!,
+                    style: CustomTextStyles.blackBold25,
                   )
                 : Container(),
           ),
@@ -172,12 +166,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                     asSelectionScreen: true,
                                     selectedContactsHistory: [],
                                     selectedList: (s) async {
-                                      for(var element in s){
+                                      for (var element in s) {
                                         await Provider.of<
-                                            TrustedContactProvider>(
-                                            context,
-                                            listen: false)
-                                        .addTrustedContacts(element!);
+                                                    TrustedContactProvider>(
+                                                context,
+                                                listen: false)
+                                            .addTrustedContacts(element!);
                                       }
                                     },
                                   ),
@@ -200,7 +194,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         )
       ],
       automaticallyImplyLeading: false,
-      backgroundColor: ColorConstants.appBarColor,
+      backgroundColor: Colors.transparent,
     );
   }
 

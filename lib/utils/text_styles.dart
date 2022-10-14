@@ -1,6 +1,6 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomTextStyles {
 //REGULAR FONTS
@@ -31,6 +31,12 @@ class CustomTextStyles {
   static TextStyle black16 = TextStyle(
       color: Colors.black,
       fontSize: 16.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle black12 = TextStyle(
+      color: Colors.black,
+      fontSize: 12.toFont,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
@@ -95,6 +101,12 @@ class CustomTextStyles {
       fontWeight: FontWeight.normal);
 
 //BOLD FONTS
+  static TextStyle blackBold25 = TextStyle(
+    color: Colors.black,
+    fontSize: 25.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
   static TextStyle whiteBold16 = TextStyle(
     color: Colors.white,
     fontSize: 16.toFont,
@@ -141,6 +153,14 @@ class CustomTextStyles {
     fontSize: 14.toFont,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w700,
+  );
+
+  //SEMIBOLD FONTS
+  static TextStyle greySemiBold18 = TextStyle(
+    color: Color(0xFF939393),
+    fontSize: 18.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w600,
   );
 
   //MEDIUM FONTS
