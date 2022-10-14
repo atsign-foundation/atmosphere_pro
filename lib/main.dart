@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:at_utils/at_logger.dart';
-import 'package:desktop_window/desktop_window.dart';
-import 'app.dart';
 import 'dart:io';
+
+import 'package:desktop_window/desktop_window.dart';
+import 'package:flutter/material.dart';
+
+import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

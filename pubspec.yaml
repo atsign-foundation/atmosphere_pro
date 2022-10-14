@@ -80,13 +80,23 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   msix: ^3.3.1
-dependency_overrides: 
+dependency_overrides:
   biometric_storage: ^4.1.3
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: at_contacts_group_flutter
       ref: trunk
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_backupkey_flutter
+      ref: fix_flutter_qr_reader
+  at_onboarding_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_onboarding_flutter
+      ref: fix_flutter_qr_reader
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
