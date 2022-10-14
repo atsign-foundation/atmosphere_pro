@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
 
 Future<dynamic> blockedAtSignsSheet(BuildContext context) {
+  SizeConfig().init(context);
   return showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
