@@ -188,7 +188,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           topRight: Radius.circular(30.0),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.only(left: 15, right: 15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -212,7 +212,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         _onBottomNavigationSelect(index);
       },
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Spacer(),
           SvgPicture.asset(
@@ -247,7 +247,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ],
               ),
-            ),
+            )
+          else SizedBox(height: 2, width: 40,),
           if (_selectedBottomNavigationIndex == index)
             SizedBox(
               height: 4,
@@ -255,7 +256,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: CustomPaint(
                 painter: PainterOne(),
               ),
-            ),
+            )
+          else SizedBox(height: 4, width: 50,)
         ],
       ),
     );
