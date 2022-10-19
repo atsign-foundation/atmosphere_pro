@@ -51,7 +51,7 @@ class RefreshButton extends StatelessWidget {
           child: Text(
             TextStrings().refresh,
             style: CustomTextStyles.primaryBold14
-                .copyWith(color: ColorConstants.myFilesBtn),
+                .copyWith(color: ColorConstants.checkboxBorder),
           ),
         ),
         const SizedBox(height: 5),
@@ -80,7 +80,7 @@ class SearchButton extends StatelessWidget {
           child: Text(
             TextStrings().searchFile,
             style: CustomTextStyles.primaryBold14
-                .copyWith(color: ColorConstants.myFilesBtn),
+                .copyWith(color: ColorConstants.checkboxBorder),
           ),
         ),
         const SizedBox(height: 5),

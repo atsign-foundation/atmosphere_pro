@@ -103,7 +103,7 @@ class _FileFormatDropDownButtonState extends State<FileFormatDropDownButton>
         Text(
           TextStrings().deliveryType,
           style: CustomTextStyles.primaryBold14
-              .copyWith(color: ColorConstants.myFilesBtn),
+              .copyWith(color: ColorConstants.checkboxBorder),
         ),
         const SizedBox(height: 5),
         InkWell(

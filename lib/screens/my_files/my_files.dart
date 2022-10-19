@@ -54,154 +54,171 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     getTabsInformation();
     SizeConfig().init(context);
-    return Scaffold(
-      appBar: CustomAppBar(
-        // showBackButton: true,
-        showTitle: true,
-        showLeadingicon: true,
-        badgeNumber: 2,
-        title: TextStrings().myFiles,
-        // trailingIcon: (tabs.length > 1 &&
-        //         (runtimeType == Videos ||
-        //             runtimeType == Documents ||
-        //             runtimeType == APK ||
-        //             runtimeType == Audios))
-        //     ? PopupMenuButton(
-        //         icon: Icon(Icons.more_vert),
-        //         onSelected: (dynamic s) {
-        //           switch (s) {
-        //             case TextStrings.SORT_NAME:
-        //               providerCallback<MyFilesProvider>(context,
-        //                   task: (provider) {
-        //                     if (runtimeType == Photos) {
-        //                       provider.sortByName(provider.receivedPhotos);
-        //                     } else if (runtimeType == Videos) {
-        //                       provider.sortByName(provider.receivedVideos);
-        //                     } else if (runtimeType == APK) {
-        //                       provider.sortByName(provider.receivedApk);
-        //                     } else if (runtimeType == Audios) {
-        //                       provider.sortByName(provider.receivedAudio);
-        //                     } else if (runtimeType == Documents) {
-        //                       provider.sortByName(provider.receivedDocument);
-        //                     }
-        //                   },
-        //                   taskName: (provider) => provider.SORT_LIST,
-        //                   onSuccess: (provider) {});
-        //               break;
-        //             case TextStrings.SORT_SIZE:
-        //               providerCallback<MyFilesProvider>(context,
-        //                   task: (provider) {
-        //                     if (runtimeType == Photos) {
-        //                       provider.sortBySize(provider.receivedPhotos);
-        //                     } else if (runtimeType == Videos) {
-        //                       provider.sortBySize(provider.receivedVideos);
-        //                     } else if (runtimeType == APK) {
-        //                       provider.sortBySize(provider.receivedApk);
-        //                     } else if (runtimeType == Audios) {
-        //                       provider.sortBySize(provider.receivedAudio);
-        //                     } else if (runtimeType == Documents) {
-        //                       provider.sortBySize(provider.receivedDocument);
-        //                     }
-        //                   },
-        //                   taskName: (provider) => provider.SORT_LIST,
-        //                   onSuccess: (provider) {});
-        //               break;
-        //             case TextStrings.SORT_DATE:
-        //               providerCallback<MyFilesProvider>(context,
-        //                   task: (provider) {
-        //                     if (runtimeType == Photos) {
-        //                       provider.sortByDate(provider.receivedPhotos);
-        //                     } else if (runtimeType == Videos) {
-        //                       provider.sortByDate(provider.receivedVideos);
-        //                     } else if (runtimeType == APK) {
-        //                       provider.sortByDate(provider.receivedApk);
-        //                     } else if (runtimeType == Audios) {
-        //                       provider.sortByDate(provider.receivedAudio);
-        //                     } else if (runtimeType == Documents) {
-        //                       provider.sortByDate(provider.receivedDocument);
-        //                     }
-        //                   },
-        //                   taskName: (provider) => provider.SORT_LIST,
-        //                   onSuccess: (provider) {});
-        //               break;
-        //             default:
-        //           }
-        //         },
-        //         itemBuilder: (context) {
-        //           return {
-        //             TextStrings.SORT_NAME,
-        //             TextStrings.SORT_SIZE,
-        //             TextStrings.SORT_DATE
-        //           }.map((String choice) {
-        //             return PopupMenuItem<String>(
-        //               value: choice,
-        //               child: Text(choice),
-        //             );
-        //           }).toList();
-        //         })
-        //     : Container(),
-        // onTrailingIconPressed: () {
-        //   setState(() {
-        //     isOpen != isOpen;
-        //   });
-        // },
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 26.toWidth),
-        child: Column(
-          children: [
-            SizedBox(height: 32.toHeight),
-            MyFilesToolbox(),
-            SizedBox(height: 8.toHeight),
-            Expanded(child: FilesListView()),
-          ],
+    return Stack(
+      children: [
+        Container(
+          width: SizeConfig().screenWidth,
+          height: SizeConfig().screenHeight,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage(
+                ImageConstants.appBackground,
+              ),
+            ),
+          ),
         ),
-      ),
-      //  SingleChildScrollView(
-      //   child: (isLoading)
-      //       ? Center(child: CircularProgressIndicator())
-      //       : Consumer<MyFilesProvider>(
-      //           builder: (BuildContext _context, _provider, _) {
-      //             if (_provider.tabs.length != tabs.length) {
-      //               getTabsInformation();
-      //             }
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: CustomAppBar(
+            // showBackButton: true,
+            showTitle: true,
+            showLeadingicon: true,
+            badgeNumber: 2,
+            title: TextStrings().myFiles,
+            // trailingIcon: (tabs.length > 1 &&
+            //         (runtimeType == Videos ||
+            //             runtimeType == Documents ||
+            //             runtimeType == APK ||
+            //             runtimeType == Audios))
+            //     ? PopupMenuButton(
+            //         icon: Icon(Icons.more_vert),
+            //         onSelected: (dynamic s) {
+            //           switch (s) {
+            //             case TextStrings.SORT_NAME:
+            //               providerCallback<MyFilesProvider>(context,
+            //                   task: (provider) {
+            //                     if (runtimeType == Photos) {
+            //                       provider.sortByName(provider.receivedPhotos);
+            //                     } else if (runtimeType == Videos) {
+            //                       provider.sortByName(provider.receivedVideos);
+            //                     } else if (runtimeType == APK) {
+            //                       provider.sortByName(provider.receivedApk);
+            //                     } else if (runtimeType == Audios) {
+            //                       provider.sortByName(provider.receivedAudio);
+            //                     } else if (runtimeType == Documents) {
+            //                       provider.sortByName(provider.receivedDocument);
+            //                     }
+            //                   },
+            //                   taskName: (provider) => provider.SORT_LIST,
+            //                   onSuccess: (provider) {});
+            //               break;
+            //             case TextStrings.SORT_SIZE:
+            //               providerCallback<MyFilesProvider>(context,
+            //                   task: (provider) {
+            //                     if (runtimeType == Photos) {
+            //                       provider.sortBySize(provider.receivedPhotos);
+            //                     } else if (runtimeType == Videos) {
+            //                       provider.sortBySize(provider.receivedVideos);
+            //                     } else if (runtimeType == APK) {
+            //                       provider.sortBySize(provider.receivedApk);
+            //                     } else if (runtimeType == Audios) {
+            //                       provider.sortBySize(provider.receivedAudio);
+            //                     } else if (runtimeType == Documents) {
+            //                       provider.sortBySize(provider.receivedDocument);
+            //                     }
+            //                   },
+            //                   taskName: (provider) => provider.SORT_LIST,
+            //                   onSuccess: (provider) {});
+            //               break;
+            //             case TextStrings.SORT_DATE:
+            //               providerCallback<MyFilesProvider>(context,
+            //                   task: (provider) {
+            //                     if (runtimeType == Photos) {
+            //                       provider.sortByDate(provider.receivedPhotos);
+            //                     } else if (runtimeType == Videos) {
+            //                       provider.sortByDate(provider.receivedVideos);
+            //                     } else if (runtimeType == APK) {
+            //                       provider.sortByDate(provider.receivedApk);
+            //                     } else if (runtimeType == Audios) {
+            //                       provider.sortByDate(provider.receivedAudio);
+            //                     } else if (runtimeType == Documents) {
+            //                       provider.sortByDate(provider.receivedDocument);
+            //                     }
+            //                   },
+            //                   taskName: (provider) => provider.SORT_LIST,
+            //                   onSuccess: (provider) {});
+            //               break;
+            //             default:
+            //           }
+            //         },
+            //         itemBuilder: (context) {
+            //           return {
+            //             TextStrings.SORT_NAME,
+            //             TextStrings.SORT_SIZE,
+            //             TextStrings.SORT_DATE
+            //           }.map((String choice) {
+            //             return PopupMenuItem<String>(
+            //               value: choice,
+            //               child: Text(choice),
+            //             );
+            //           }).toList();
+            //         })
+            //     : Container(),
+            // onTrailingIconPressed: () {
+            //   setState(() {
+            //     isOpen != isOpen;
+            //   });
+            // },
+          ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 26.toWidth),
+            child: Column(
+              children: [
+                SizedBox(height: 32.toHeight),
+                MyFilesToolbox(),
+                SizedBox(height: 8.toHeight),
+                Expanded(child: FilesListView()),
+              ],
+            ),
+          ),
+          //  SingleChildScrollView(
+          //   child: (isLoading)
+          //       ? Center(child: CircularProgressIndicator())
+          //       : Consumer<MyFilesProvider>(
+          //           builder: (BuildContext _context, _provider, _) {
+          //             if (_provider.tabs.length != tabs.length) {
+          //               getTabsInformation();
+          //             }
 
-      //             return Container(
-      //               // reducing size by 120 , so that last list item will be shown
-      //               height: SizeConfig().screenHeight - 120.toHeight,
-      //               child: Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 children: [
-      //                   Container(
-      //                     height: 40,
-      //                     child: TabBar(
-      //                       onTap: (index) async {},
-      //                       isScrollable: true,
-      //                       labelColor: ColorConstants.fontPrimary,
-      //                       indicatorWeight: 5.toHeight,
-      //                       indicatorColor: Colors.black,
-      //                       indicatorSize: TabBarIndicatorSize.tab,
-      //                       labelStyle: CustomTextStyles.primaryBold14,
-      //                       unselectedLabelStyle:
-      //                           CustomTextStyles.secondaryRegular14,
-      //                       controller: _controller,
-      //                       tabs: List<Text>.generate(_provider.tabNames.length,
-      //                           (index) => Text(_provider.tabNames[index])),
-      //                     ),
-      //                   ),
-      //                   Expanded(
-      //                     child: TabBarView(
-      //                       controller: _controller,
-      //                       physics: AlwaysScrollableScrollPhysics(),
-      //                       children: _provider.tabs,
-      //                     ),
-      //                   )
-      //                 ],
-      //               ),
-      //             );
-      //           },
-      //         ),
-      // ),
+          //             return Container(
+          //               // reducing size by 120 , so that last list item will be shown
+          //               height: SizeConfig().screenHeight - 120.toHeight,
+          //               child: Column(
+          //                 crossAxisAlignment: CrossAxisAlignment.start,
+          //                 children: [
+          //                   Container(
+          //                     height: 40,
+          //                     child: TabBar(
+          //                       onTap: (index) async {},
+          //                       isScrollable: true,
+          //                       labelColor: ColorConstants.fontPrimary,
+          //                       indicatorWeight: 5.toHeight,
+          //                       indicatorColor: Colors.black,
+          //                       indicatorSize: TabBarIndicatorSize.tab,
+          //                       labelStyle: CustomTextStyles.primaryBold14,
+          //                       unselectedLabelStyle:
+          //                           CustomTextStyles.secondaryRegular14,
+          //                       controller: _controller,
+          //                       tabs: List<Text>.generate(_provider.tabNames.length,
+          //                           (index) => Text(_provider.tabNames[index])),
+          //                     ),
+          //                   ),
+          //                   Expanded(
+          //                     child: TabBarView(
+          //                       controller: _controller,
+          //                       physics: AlwaysScrollableScrollPhysics(),
+          //                       children: _provider.tabs,
+          //                     ),
+          //                   )
+          //                 ],
+          //               ),
+          //             );
+          //           },
+          //         ),
+          // ),
+        ),
+      ],
     );
   }
 }
