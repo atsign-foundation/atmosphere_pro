@@ -2,7 +2,6 @@ import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
@@ -79,11 +78,6 @@ class _DesktopSettingsState extends State<DesktopSettings> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      extendBody: true,
-      drawerScrimColor: Colors.transparent,
-      endDrawer: SideBarWidget(
-        isExpanded: true,
-      ),
       body: Stack(
         children: [
           Container(
