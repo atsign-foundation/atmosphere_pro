@@ -134,9 +134,6 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         height: 58,
                         color: ColorConstants.dividerGrey,
                       ),
-                      SizedBox(
-                        height: 12,
-                      ),
                       SettingsButton(
                         buttonText: optionTitle[3],
                         onPressed: () async {
