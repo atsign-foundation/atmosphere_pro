@@ -1,5 +1,6 @@
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_switch_atsign.dart';
@@ -7,9 +8,12 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/loading_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -17,14 +21,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
@@ -229,6 +226,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.faqsIcon,
     ImageConstants.trustedSendersIcon,
     ImageConstants.contactUs,
+    ImageConstants.settings,
   ];
 
   final List<String> menuItemsTitle = [
@@ -243,6 +241,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarFaqs,
     TextStrings().sidebarContactUs,
+    TextStrings().sidebarSettings,
   ];
 
   final List<String> routes = [
@@ -257,6 +256,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     '',
     '',
     '',
+    DesktopRoutes.DESKTOP_SETTINGS,
   ];
 
   bool showContent = false;
@@ -353,6 +353,14 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                           menuItemsIcons[6],
                           routes[6],
                           title: menuItemsTitle[6],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        //todo
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[11],
+                          routes[10],
+                          title: menuItemsTitle[10],
                           isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
                         ),
                         SizedBox(height: 40.toHeight),
