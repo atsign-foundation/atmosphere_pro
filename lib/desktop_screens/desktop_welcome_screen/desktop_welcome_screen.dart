@@ -270,7 +270,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
           Consumer<SideBarProvider>(
             builder: (_context, _sideBarProvider, _) {
               if (_sideBarProvider.isSidebarExpanded) {
-                MixedConstants.SIDEBAR_WIDTH = 180;
+                MixedConstants.SIDEBAR_WIDTH = 250;
               } else {
                 MixedConstants.SIDEBAR_WIDTH = 70;
               }
@@ -428,18 +428,31 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                   Provider.of<SideBarProvider>(context, listen: false)
                       .updateSidebarWidth();
                 },
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.toWidth),
-                      color: Colors.black),
-                  child: Icon(
-                      _provider.isSidebarExpanded
-                          ? Icons.arrow_back_ios
-                          : Icons.arrow_forward_ios_sharp,
-                      size: 20,
-                      color: Colors.white),
+                // child: Container(
+                //   width: 40,
+                //   height: 40,
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(30.toWidth),
+                //       color: Colors.black),
+                //   child: Icon(
+                //       _provider.isSidebarExpanded
+                //           ? Icons.arrow_back_ios
+                //           : Icons.arrow_forward_ios_sharp,
+                //       size: 20,
+                //       color: Colors.white),
+                // ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Icon(
+                          _provider.isSidebarExpanded
+                              ? Icons.arrow_back_ios
+                              : Icons.arrow_forward_ios_sharp,
+                          size: 20,
+                          color: Colors.white),
+                    ),
                 ),
               );
             },
