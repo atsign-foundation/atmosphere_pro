@@ -4,6 +4,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
+import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_screen_received_files.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
@@ -102,7 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ContactsScreen(),
     MyFiles(),
     HistoryScreen(),
-    WelcomeScreenReceivedFiles(),
+    SettingsScreen()
   ];
 
   @override
@@ -135,7 +136,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   _selectedBottomNavigationIndex = 0;
                 });
               },
-              child: _selectedBottomNavigationIndex == 3 ? SvgPicture.asset("assets/svg/plus.svg",) : SvgPicture.asset("assets/svg/home.svg",) ,
+              child: _selectedBottomNavigationIndex == 4 || _selectedBottomNavigationIndex == 0?
+              SvgPicture.asset("assets/svg/plus.svg",) :
+              SvgPicture.asset("assets/svg/home.svg",) ,
             ),
           ),
           appBar: _selectedBottomNavigationIndex == 0
