@@ -19,9 +19,8 @@ import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -229,6 +228,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     ImageConstants.faqsIcon,
     ImageConstants.trustedSendersIcon,
     ImageConstants.contactUs,
+    ImageConstants.settings,
   ];
 
   final List<String> menuItemsTitle = [
@@ -243,6 +243,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     TextStrings().sidebarTermsAndConditions,
     TextStrings().sidebarFaqs,
     TextStrings().sidebarContactUs,
+    TextStrings().sidebarSettings,
   ];
 
   final List<String> routes = [
@@ -254,6 +255,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
     DesktopRoutes.DESKTOP_GROUP,
     // DesktopRoutes.DESKTOP_DOWNLOAD_ALL,
     DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER,
+    DesktopRoutes.DESKTOP_SETTINGS,
     '',
     '',
     '',
@@ -298,15 +300,32 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     successBuilder: (provider) => Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: _sideBarProvider.isSidebarExpanded
-                          ? CrossAxisAlignment.center
+                          ? CrossAxisAlignment.start
                           : CrossAxisAlignment.center,
                       children: [
-                        SideBarIcon(
-                          menuItemsIcons[0],
-                          routes[0],
-                          title: menuItemsTitle[0],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        if(_sideBarProvider.isSidebarExpanded)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0, top: 20),
+                          child: Text(
+                            TextStrings().general,
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                fontSize: 12.toFont,
+                                fontWeight: FontWeight.w700,
+                                // height: 1.3,
+                                color: Color(0xffE7E7E7)
+                              ),
+                            ),
+                          ),
                         ),
+                        SizedBox(height: 30,),
+                        // SideBarIcon(
+                        //   menuItemsIcons[0],
+                        //   routes[0],
+                        //   title: menuItemsTitle[0],
+                        //   isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        // ),
                         SizedBox(height: 40.toHeight),
                         SideBarIcon(
                           menuItemsIcons[1],
@@ -366,7 +385,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         // SizedBox(height: 40.toHeight),
                         SideBarIcon(
                           menuItemsIcons[7],
-                          routes[7],
+                          routes[9],
                           isUrlLauncher: true,
                           arguments: {"url": MixedConstants.TERMS_CONDITIONS},
                           title: menuItemsTitle[7],
@@ -384,12 +403,20 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         SizedBox(height: 40.toHeight),
                         SideBarIcon(
                           menuItemsIcons[10],
-                          routes[7],
+                          routes[10],
                           isEmailLauncher: true,
                           arguments: {"email": 'atmospherepro@atsign.com'},
                           title: menuItemsTitle[9],
                           isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
                         ),
+                        SizedBox(height: 40.toHeight),
+                        SideBarIcon(
+                          menuItemsIcons[11],
+                          routes[7],
+                          title: menuItemsTitle[10],
+                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                        ),
+                        SizedBox(height: 40.toHeight),
                       ],
                     ),
                     errorBuilder: (provider) => Center(
@@ -420,7 +447,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
       Consumer<SideBarProvider>(builder: (_context, _provider, _) {
         return Positioned(
           top: 40,
-          left: _provider.isSidebarExpanded ? 160 : 50,
+          left: _provider.isSidebarExpanded ? 230 : 50,
           child: Builder(
             builder: (context) {
               return InkWell(
@@ -564,20 +591,31 @@ class SideBarIcon extends StatelessWidget {
                           height: 22,
                           color: isCurrentRoute
                               ? ColorConstants.orangeColor
-                              : ColorConstants.fadedText,
+                              : Color(0xffA4A4A5),
                         ),
                         SizedBox(width: isSidebarExpanded ? 10 : 0),
                         isSidebarExpanded
                             ? Text(
                                 title!,
                                 softWrap: true,
-                                style: TextStyle(
-                                  color: isCurrentRoute
-                                      ? ColorConstants.orangeColor
-                                      : ColorConstants.fadedText,
-                                  letterSpacing: 0.1,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
+                                // style: TextStyle(
+                                //   color: isCurrentRoute
+                                //       ? ColorConstants.orangeColor
+                                //       : ColorConstants.fadedText,
+                                //   letterSpacing: 0.1,
+                                //   fontSize: 12,
+                                //   fontWeight: FontWeight.normal,
+                                // ),
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      color: isCurrentRoute
+                                          ? ColorConstants.orangeColor
+                                          : Color(0xffA4A4A5),
+                                      fontSize: 12.toFont,
+                                      fontWeight: FontWeight.w500,
+                                      // height: 1.3,
+                                      // color: Color(0xffE7E7E7)
+                                  ),
                                 ),
                               )
                             : SizedBox()
@@ -613,21 +651,32 @@ class SideBarIcon extends StatelessWidget {
                       height: 22,
                       color: isCurrentRoute
                           ? ColorConstants.orangeColor
-                          : ColorConstants.fadedText,
+                          : Color(0xffA4A4A5),
                     ),
                     SizedBox(width: isSidebarExpanded ? 10 : 0),
                     isSidebarExpanded
                         ? Text(
                             title!,
                             softWrap: true,
-                            style: TextStyle(
-                              color: isCurrentRoute
-                                  ? ColorConstants.orangeColor
-                                  : ColorConstants.fadedText,
-                              letterSpacing: 0.1,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
+                            // style: TextStyle(
+                            //   color: isCurrentRoute
+                            //       ? ColorConstants.orangeColor
+                            //       : ColorConstants.fadedText,
+                            //   letterSpacing: 0.1,
+                            //   fontSize: 12,
+                            //   fontWeight: FontWeight.normal,
+                            // ),
+                            style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                color: isCurrentRoute
+                                    ? ColorConstants.orangeColor
+                                    : Color(0xffA4A4A5),
+                                fontSize: 12.toFont,
+                                fontWeight: FontWeight.w500,
+                                // height: 1.3,
+                                // color: Color(0xffE7E7E7)
+                              ),
+                            )
                           )
                         : SizedBox()
                   ],

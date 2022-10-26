@@ -59,6 +59,8 @@ class TextStrings {
   String sidebarContactUs = 'Contact us';
   String sidebarSettings = 'Settings';
 
+  String general = 'General';
+
   String atSign = 'atSign';
   String switchingAtSign = 'Switching atsign...';
   String deleteDataMessage =

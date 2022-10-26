@@ -3,7 +3,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
-// import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
+import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -23,12 +23,12 @@ class DesktopSettings extends StatefulWidget {
 
 class _DesktopSettingsState extends State<DesktopSettings> {
   final List<String> optionTitle = [
-    TextStrings().sidebarSwitchOut,
-    TextStrings().sidebarBackupKey,
+    TextStrings().switchatSign,
+    TextStrings().backUpKeys,
     TextStrings().faqs,
-    TextStrings().sidebarContactUs,
+    TextStrings().contactUs,
     TextStrings().termsAppBar,
-    TextStrings().sidebarDeleteAtsign,
+    TextStrings().deleteAtsigns,
   ];
 
   final List<String> optionIcons = [
@@ -144,10 +144,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         image: optionIcons[3],
                       ),
                       SizedBox(
-                        height: 12,
-                      ),
-                      SizedBox(
-                        height: 12,
+                        height: 24,
                       ),
                       SettingsButton(
                         buttonText: optionTitle[5],
