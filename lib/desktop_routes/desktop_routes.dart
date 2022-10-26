@@ -88,6 +88,8 @@ class DesktopSetupRoutes {
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
           )
+
+      DesktopRoutes.DESKTOP_SETTINGS: (context) => DesktopSettings(),
     };
   }
 
