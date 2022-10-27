@@ -47,25 +47,15 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    TextStrings().buttonCancel,
-                    style: TextStyle(
-                      fontSize: 16.toFont,
-                      fontWeight: FontWeight.normal,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.toHeight,
-                ),
-                TextButton(
-                  // style: ButtonStyle(
-                  //     backgroundColor: MaterialStateProperty.all(
-                  //         Theme.of(context).primaryColor)),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                      padding: MaterialStateProperty.all(
+                          EdgeInsets.only(left: 22, right: 22)),
+                      backgroundColor: MaterialStateProperty.all(Colors.black)),
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await widget.onConfirmation();
@@ -76,16 +66,22 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
                     style: TextStyle(
                         fontSize: 15.toFont,
                         fontWeight: FontWeight.normal,
-                        color: Theme.of(context).primaryColor),
+                        color: Colors.white),
                   ),
                 ),
                 SizedBox(
                   height: 10.toHeight,
                 ),
                 TextButton(
-                  // style: ButtonStyle(
-                  //     backgroundColor: MaterialStateProperty.all(
-                  //         Theme.of(context).primaryColor)),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                      padding: MaterialStateProperty.all(
+                          EdgeInsets.only(left: 10, right: 10)),
+                      backgroundColor: MaterialStateProperty.all(Colors.black)),
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await widget.onConfirmation();
@@ -142,7 +138,32 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
                     style: TextStyle(
                         fontSize: 15.toFont,
                         fontWeight: FontWeight.normal,
-                        color: Theme.of(context).primaryColor),
+                        color: Colors.white),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                    ),
+                    padding: MaterialStateProperty.all(
+                        EdgeInsets.only(left: 85, right: 85)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    TextStrings().buttonCancel,
+                    style: TextStyle(
+                      fontSize: 16.toFont,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
