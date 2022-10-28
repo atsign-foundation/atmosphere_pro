@@ -83,54 +83,7 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
                           EdgeInsets.only(left: 10, right: 10)),
                       backgroundColor: MaterialStateProperty.all(Colors.black)),
                   onPressed: () async {
-                    Navigator.of(context).pop();
-                    await widget.onConfirmation();
-                    if (Platform.isAndroid || Platform.isIOS) {
-                      await Future.forEach(
-                        widget.receivedHistory!.files!,
-                        (FileData element) async {
-                          String filePath = BackendService.getInstance()
-                                  .downloadDirectory!
-                                  .path +
-                              Platform.pathSeparator +
-                              element.name!;
-                          if (await CommonUtilityFunctions()
-                              .isFilePresent(filePath)) {
-                            var file = File(filePath);
-                            file.deleteSync();
-                          }
-                        },
-                      );
-                      await Provider.of<MyFilesProvider>(
-                              NavService.navKey.currentContext!,
-                              listen: false)
-                          .deletMyFileRecord(widget.receivedHistory!.key);
-                    } else {
-                      await Future.forEach(
-                        widget.receivedHistory!.files!,
-                        (FileData element) async {
-                          String filePath =
-                              MixedConstants.RECEIVED_FILE_DIRECTORY +
-                                  Platform.pathSeparator +
-                                  (widget.receivedHistory!.sender ?? '') +
-                                  Platform.pathSeparator +
-                                  (element.name ?? '');
-
-                          if (await CommonUtilityFunctions()
-                              .isFilePresent(filePath)) {
-                            var file = File(filePath);
-                            if (await file.existsSync()) {
-                              file.deleteSync();
-                            }
-                          }
-                        },
-                      );
-
-                      await Provider.of<MyFilesProvider>(
-                              NavService.navKey.currentContext!,
-                              listen: false)
-                          .deletMyFileRecord(widget.receivedHistory!.key);
-                    }
+                    deleteTransferHistoryAndFiles();
                   },
                   child: Text(
                     'Delete transfer history and files',
@@ -172,5 +125,50 @@ class _ConfirmationItemDeleteState extends State<ConfirmationItemDelete> {
         ),
       ),
     );
+  }
+
+  Future<void> deleteTransferHistoryAndFiles() async {
+    Navigator.of(context).pop();
+    await widget.onConfirmation();
+    if (Platform.isAndroid || Platform.isIOS) {
+      await Future.forEach(
+        widget.receivedHistory!.files!,
+        (FileData element) async {
+          String filePath =
+              BackendService.getInstance().downloadDirectory!.path +
+                  Platform.pathSeparator +
+                  element.name!;
+          if (await CommonUtilityFunctions().isFilePresent(filePath)) {
+            var file = File(filePath);
+            file.deleteSync();
+          }
+        },
+      );
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .deletMyFileRecord(widget.receivedHistory!.key);
+    } else {
+      await Future.forEach(
+        widget.receivedHistory!.files!,
+        (FileData element) async {
+          String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+              Platform.pathSeparator +
+              (widget.receivedHistory!.sender ?? '') +
+              Platform.pathSeparator +
+              (element.name ?? '');
+
+          if (await CommonUtilityFunctions().isFilePresent(filePath)) {
+            var file = File(filePath);
+            if (await file.existsSync()) {
+              file.deleteSync();
+            }
+          }
+        },
+      );
+
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .deletMyFileRecord(widget.receivedHistory!.key);
+    }
   }
 }
