@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/delete_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
@@ -983,7 +984,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     await showModalBottomSheet(
         context: NavService.navKey.currentContext!,
         backgroundColor: Colors.white,
-        builder: (context) => EditBottomSheet(
+        builder: (context) => DeleteBottomSheet(
               onConfirmation: () async {
                 var res =
                     await Provider.of<HistoryProvider>(context, listen: false)
@@ -994,7 +995,6 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                       NavService.navKey.currentContext!,
                       'Removed from received items list',
                       bgColor: ColorConstants.successGreen);
-                  await deleteFileWhenRecevedItemRemoved();
                 } else {
                   SnackbarService().showSnackbar(
                       NavService.navKey.currentContext!, 'Failed',
@@ -1002,37 +1002,8 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 }
               },
               deleteMessage: TextStrings.deleteFileConfirmationMsg,
+              receivedHistory: widget.receivedHistory,
             ));
-  }
-
-  deleteFileWhenRecevedItemRemoved() async {
-    await showDialog(
-        context: NavService.navKey.currentContext!,
-        builder: (context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.toWidth),
-              ),
-              content: ConfirmationDialog(
-                  TextStrings.deleteDownloadedFileMessage, () async {
-                await Future.forEach(widget.receivedHistory!.files!,
-                    (FileData element) async {
-                  String filePath =
-                      BackendService.getInstance().downloadDirectory!.path +
-                          Platform.pathSeparator +
-                          element.name!;
-                  if (await CommonUtilityFunctions().isFilePresent(filePath)) {
-                    var file = File(filePath);
-                    file.deleteSync();
-                  }
-                });
-
-                await Provider.of<MyFilesProvider>(
-                        NavService.navKey.currentContext!,
-                        listen: false)
-                    .deletMyFileRecord(widget.receivedHistory!.key);
-              }));
-        });
   }
 
   String getSingleFileDownloadMessage(

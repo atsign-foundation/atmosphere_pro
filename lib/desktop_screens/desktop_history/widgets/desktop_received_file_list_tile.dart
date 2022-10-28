@@ -6,6 +6,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/add_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_item_delete.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
@@ -695,64 +696,29 @@ class _DesktopReceivedFilesListTileState
 
   deleteReceivedItem() async {
     await showDialog(
-        context: NavService.navKey.currentContext!,
-        builder: (context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.toWidth),
-              ),
-              content: ConfirmationDialog(TextStrings.deleteFileConfirmationMsg,
-                  () async {
-                var res =
-                    await Provider.of<HistoryProvider>(context, listen: false)
-                        .deleteReceivedItem(widget.receivedHistory!);
+      context: NavService.navKey.currentContext!,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.toWidth),
+          ),
+          content: ConfirmationItemDelete(TextStrings.deleteFileConfirmationMsg,
+              () async {
+            var res = await Provider.of<HistoryProvider>(context, listen: false)
+                .deleteReceivedItem(widget.receivedHistory!);
 
-                if (res) {
-                  SnackbarService().showSnackbar(
-                      NavService.navKey.currentContext!,
-                      'Removed from received items list',
-                      bgColor: ColorConstants.successGreen);
-                  await deleteFileWhenRecevedItemRemoved();
-                } else {
-                  SnackbarService().showSnackbar(
-                      NavService.navKey.currentContext!, 'Failed',
-                      bgColor: ColorConstants.redAlert);
-                }
-              }));
-        });
-  }
-
-  deleteFileWhenRecevedItemRemoved() async {
-    await showDialog(
-        context: NavService.navKey.currentContext!,
-        builder: (context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.toWidth),
-              ),
-              content: ConfirmationDialog(
-                  TextStrings.deleteDownloadedFileMessage, () async {
-                await Future.forEach(widget.receivedHistory!.files!,
-                    (FileData element) async {
-                  String filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
-                      Platform.pathSeparator +
-                      (widget.receivedHistory!.sender ?? '') +
-                      Platform.pathSeparator +
-                      (element.name ?? '');
-
-                  if (await CommonUtilityFunctions().isFilePresent(filePath)) {
-                    var file = File(filePath);
-                    if (await file.existsSync()) {
-                      file.deleteSync();
-                    }
-                  }
-                });
-
-                await Provider.of<MyFilesProvider>(
-                        NavService.navKey.currentContext!,
-                        listen: false)
-                    .deletMyFileRecord(widget.receivedHistory!.key);
-              }));
-        });
+            if (res) {
+              SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+                  'Removed from received items list',
+                  bgColor: ColorConstants.successGreen);
+            } else {
+              SnackbarService().showSnackbar(
+                  NavService.navKey.currentContext!, 'Failed',
+                  bgColor: ColorConstants.redAlert);
+            }
+          }, widget.receivedHistory),
+        );
+      },
+    );
   }
 }
