@@ -1,8 +1,11 @@
+import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
+import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
-import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_screen_received_files.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
@@ -15,6 +18,7 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../utils/text_strings.dart';
 
@@ -95,7 +99,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
     WelcomeScreenHome(),
-    WelcomeScreenReceivedFiles()
+    ContactsScreen(),
+    MyFiles(),
+    HistoryScreen(),
+    SettingsScreen()
   ];
 
   @override
@@ -104,45 +111,48 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: ColorConstants.scaffoldColor,
       child: SafeArea(
         child: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-            elevation: 0,
-            selectedLabelStyle: TextStyle(
-              fontSize: 12.toFont,
-              fontWeight: FontWeight.normal,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 12.toFont,
-              fontWeight: FontWeight.normal,
-            ),
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home, size: 20.toFont),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.import_export, size: 20.toFont),
-                label: 'Received',
-              ),
-            ],
-            currentIndex: _selectedBottomNavigationIndex,
-            selectedItemColor: Colors.amber[800],
-            onTap: _onBottomNavigationSelect,
-          ),
+          bottomNavigationBar: customBottomNavigationBar(),
           key: _scaffoldKey,
           backgroundColor: ColorConstants.scaffoldColor,
+          floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Container(
+            width: 79,
+            height: 79,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient:
+                LinearGradient(
+                  colors: [Color(0xffF05E3F), Color(0xffe9a642)],
+                  stops: [0.1, 0.8],
+                )
+            ),
+            child: FloatingActionButton(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              onPressed: () {
+                setState(() {
+                  _selectedBottomNavigationIndex = 0;
+                });
+              },
+              child: _selectedBottomNavigationIndex == 4 || _selectedBottomNavigationIndex == 0?
+              SvgPicture.asset("assets/svg/plus.svg",) :
+              SvgPicture.asset("assets/svg/home.svg",) ,
+            ),
+          ),
           appBar: _selectedBottomNavigationIndex == 0
               ? (SizeConfig().isTablet(context)
-                  ? null
-                  : CustomAppBar(
-                      showLeadingicon: true,
-                    ))
+              ? null
               : CustomAppBar(
-                  showMenu: true,
-                  showBackButton: false,
-                  showTrailingButton: true,
-                  showTitle: true,
-                  showClosedBtnText: false,
-                  title: 'Received Files'),
+            showLeadingicon: true,
+          ))
+              : CustomAppBar(
+              showMenu: true,
+              showBackButton: false,
+              showTrailingButton: true,
+              showTitle: true,
+              showClosedBtnText: false,
+              title: 'Received Files'),
           extendBody: true,
           drawerScrimColor: Colors.transparent,
           endDrawer: SideBarWidget(
@@ -150,16 +160,129 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           body: Consumer<InternetConnectivityChecker>(
               builder: (_c, provider, widget) {
-            if (provider.isInternetAvailable) {
-              return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
-            } else {
-              return ErrorScreen(
-                TextStrings.noInternet,
-              );
-            }
-          }),
+                if (provider.isInternetAvailable) {
+                  return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
+                } else {
+                  return ErrorScreen(
+                    TextStrings.noInternet,
+                  );
+                }
+              }),
         ),
       ),
     );
   }
+
+  Widget customBottomNavigationBar() {
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              bottomNavigationItem("assets/svg/contacts.svg", "Contacts", 1),
+              bottomNavigationItem("assets/svg/my_files.svg", "My Files", 2),
+              SizedBox(
+                width: 1,
+              ),
+              bottomNavigationItem("assets/svg/history.svg", "History", 3),
+              bottomNavigationItem("assets/svg/settings.svg", "Settings", 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget bottomNavigationItem(String assetLocation, String label, int index) {
+    return GestureDetector(
+      onTap: () {
+        _onBottomNavigationSelect(index);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          SvgPicture.asset(
+            assetLocation,
+            color: _selectedBottomNavigationIndex == index
+                ? Color(0xffEAA743)
+                : Colors.black,
+            height: 25,
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          Text(label,
+              style: TextStyle(
+                  fontSize: 11,
+                  color: _selectedBottomNavigationIndex == index
+                      ? Color(0xffEAA743)
+                      : Colors.black)),
+          // Spacer(),
+          SizedBox(height: 10,),
+          if (_selectedBottomNavigationIndex == index)
+            Container(
+              height: 2,
+              width: 40,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xffEAA743).withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 5,
+                    offset: Offset(0, -1), // changes position of shadow
+                  ),
+                ],
+              ),
+            )
+          else SizedBox(height: 2, width: 40,),
+          if (_selectedBottomNavigationIndex == index)
+            SizedBox(
+              height: 4,
+              width: 50,
+              child: CustomPaint(
+                painter: PainterOne(),
+              ),
+            )
+          else SizedBox(height: 4, width: 50,)
+        ],
+      ),
+    );
+  }
+}
+
+class PainterOne extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    double w = size.width;
+    double h = size.height;
+
+    var paint1 = Paint()
+      ..color = Color(0xffEAA743)
+      ..style = PaintingStyle.fill;
+
+    RRect halfRect = RRect.fromRectAndCorners(
+        Rect.fromCenter(center: Offset(w / 2, h / 2), width: w, height: h),
+        bottomLeft: Radius.circular(50),
+        bottomRight: Radius.circular(50));
+    canvas.drawRRect(halfRect, paint1);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
