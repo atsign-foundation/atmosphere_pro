@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 class GradientButton extends StatelessWidget {
   final Widget child;
+  final Function()? onPressed;
   const GradientButton({
     Key? key,
     required this.child,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class GradientButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.toWidth),
           ),
         ),
-        onPressed: () {},
+        onPressed: onPressed,
         child: child,
       ),
     );

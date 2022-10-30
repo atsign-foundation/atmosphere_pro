@@ -4,8 +4,10 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class SearchSender extends StatelessWidget {
+  final Function(String)? onSearch;
   const SearchSender({
     Key? key,
+    required this.onSearch,
   }) : super(key: key);
 
   @override
@@ -14,6 +16,7 @@ class SearchSender extends StatelessWidget {
       height: 44.toHeight,
       child: TextField(
         textAlignVertical: TextAlignVertical.center,
+        onChanged: onSearch,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(
             horizontal: 13.toWidth,
