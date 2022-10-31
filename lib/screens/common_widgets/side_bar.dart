@@ -4,6 +4,11 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -67,7 +72,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     Routes.BLOCKED_USERS,
     Routes.MY_FILES,
     Routes.GROUPS,
-    Routes.WEBSITE_SCREEN,
+    Routes.TERMS_SCREEN,
     Routes.WEBSITE_SCREEN,
     Routes.FAQ_SCREEN,
     Routes.TRUSTED_CONTACTS,
