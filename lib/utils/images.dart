@@ -40,6 +40,9 @@ class ImageConstants {
   static String myFiles = '$_basePath/my_files.png';
   static String groups = '$_basePath/groups.png';
   static String contactUs = '$_basePath/contactUs.png';
+  static String reload = "$_basePath/reload.png";
+  static String downArrow = "$_basePath/down_arrow.png";
+  static String block = "$_basePath/block.png";
   static String settings = '$_basePath/settings.png';
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';

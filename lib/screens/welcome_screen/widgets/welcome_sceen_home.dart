@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/blocked_at_sign_sheet.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file_widget.dart';
@@ -50,6 +51,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     filePickerModel = Provider.of<FileTransferProvider>(context);
     _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
       context,
@@ -76,14 +78,19 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              TextStrings().welcome,
-                              semanticsLabel: TextStrings().welcome,
-                              style: GoogleFonts.playfairDisplay(
-                                textStyle: TextStyle(
-                                  fontSize: 26.toFont,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.3,
+                            InkWell(
+                              onTap: () {
+                                blockedAtSignsSheet(context);
+                              },
+                              child: Text(
+                                TextStrings().welcome,
+                                semanticsLabel: TextStrings().welcome,
+                                style: GoogleFonts.playfairDisplay(
+                                  textStyle: TextStyle(
+                                    fontSize: 26.toFont,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.3,
+                                  ),
                                 ),
                               ),
                             ),
@@ -178,16 +185,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             ),
                             SizedBox(
                               height: (_welcomeScreenProvider
-                                              .selectedContacts !=
-                                          null &&
-                                      _welcomeScreenProvider
                                           .selectedContacts.isNotEmpty &&
                                       filePickerModel.selectedFiles.isNotEmpty)
                                   ? 20.toHeight
                                   : 60.toHeight,
                             ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
+                            (_welcomeScreenProvider
                                         .selectedContacts.isNotEmpty &&
                                     filePickerModel.selectedFiles.isNotEmpty)
                                 ? Container(
@@ -265,9 +268,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             SizedBox(
                               height: 30.toHeight,
                             ),
-                            if (_welcomeScreenProvider.selectedContacts !=
-                                    null &&
-                                _welcomeScreenProvider
+                            if (_welcomeScreenProvider
                                     .selectedContacts.isNotEmpty &&
                                 filePickerModel.selectedFiles.isNotEmpty) ...[
                               Row(
