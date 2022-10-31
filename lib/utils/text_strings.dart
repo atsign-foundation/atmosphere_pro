@@ -74,6 +74,7 @@ class TextStrings {
   String contactSearchResults = 'Search Results';
   String addContact = 'Add Contact';
   String addtoContact = 'Add to Contacts';
+  String searchContactNew = 'Search by atSign or nickname';
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
@@ -135,6 +136,9 @@ class TextStrings {
   String apk = 'APK';
   String documents = 'Documents';
   String openFileLocation = 'Open file location';
+  String refresh = 'Refresh';
+  String searchFile = 'Search';
+  String deliveryType = 'Delivery Type';
 
   // trusted sender screens
   String trustedSenders = 'Trusted Senders';

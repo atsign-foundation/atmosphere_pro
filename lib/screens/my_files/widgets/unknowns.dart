@@ -66,8 +66,7 @@ class _UnknownsState extends State<Unknowns> {
                           height: 50.toHeight,
                           width: 50.toWidth,
                           child: Image.asset(
-                            FileTypes.PDF_TYPES.contains(provider
-                                    .receivedUnknown[index].fileName!
+                            FileTypes.PDF_TYPES.contains(provider.receivedUnknown[index].fileName!
                                     .split('.')
                                     .last)
                                 ? ImageConstants.pdfLogo
@@ -87,7 +86,15 @@ class _UnknownsState extends State<Unknowns> {
                                                 .split('.')
                                                 .last)
                                             ? ImageConstants.txtLogo
-                                            : ImageConstants.unknownLogo,
+                                            : FileTypes.ARCHIVE_TYPES.contains(provider
+                                                    .receivedUnknown[index]
+                                                    .fileName!
+                                                    .split('.')
+                                                    .last)
+                                                ? ImageConstants.archiveLogo
+                                                : FileTypes.WEB_IMAGE_TYPES.contains(provider.receivedUnknown[index].fileName!.split('.').last)
+                                                    ? ImageConstants.svgLogo
+                                                    : ImageConstants.otherFileLogo,
                             fit: BoxFit.cover,
                           ),
                         ),

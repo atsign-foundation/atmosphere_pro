@@ -100,6 +100,28 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
+  static TextStyle greyRegularItalic14 = TextStyle(
+    color: ColorConstants.light_grey2,
+    fontSize: 14.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.italic,
+  );
+
+  static TextStyle fileTitle = TextStyle(
+    color: ColorConstants.fileTitle,
+    fontSize: 8.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle fileSubtitle = TextStyle(
+    color: ColorConstants.checkboxBorder,
+    fontSize: 7.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
+
 //BOLD FONTS
   static TextStyle blackBold25 = TextStyle(
     color: Colors.black,
@@ -126,6 +148,13 @@ class CustomTextStyles {
         letterSpacing: 0.1,
         fontWeight: FontWeight.w700,
       );
+
+  static TextStyle primaryBold25 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontWeight: FontWeight.w700,
+    fontSize: 25.toFont,
+    letterSpacing: 0.1,
+  );
 
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
@@ -155,7 +184,13 @@ class CustomTextStyles {
     fontWeight: FontWeight.w700,
   );
 
-  //SEMIBOLD FONTS
+  static TextStyle fileTypeDropdown = TextStyle(
+    color: ColorConstants.light_grey2,
+    fontSize: 12.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w600,
+  );
+
   static TextStyle greySemiBold18 = TextStyle(
     color: Color(0xFF939393),
     fontSize: 18.toFont,
@@ -164,10 +199,23 @@ class CustomTextStyles {
   );
 
   //MEDIUM FONTS
+  static TextStyle primaryBold15 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontSize: 16.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
 
   static TextStyle primaryMedium14 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontSize: 14.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle greyMedium13 = TextStyle(
+    color: ColorConstants.light_grey2,
+    fontSize: 13.toFont,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w500,
   );

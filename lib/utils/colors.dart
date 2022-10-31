@@ -29,9 +29,15 @@ class ColorConstants {
   static const Color dark_red = Color(0xFFB00021);
   static const Color receivedSelectedTileColor = Color(0xFFF0EFFF);
   static const Color light_grey = Color(0xFFBFBFBF);
+  static const Color light_grey2 = Color(0xFF939393);
   static const Color light_border_color = Color(0xFFEEF1F4);
   static const Color textBoxBg = Color(0xFFF2F2F2);
   static const Color lightBlueBg = Color(0xFFF8FBFF);
+  static const Color addButtonBg = Color(0xff212121);
+  static const Color myFilesBtn = Color(0xffd9d9d9);
+  static const Color checkboxBorder = Color(0xffA4A4A5);
+  static const Color checkboxFill = Color(0xFFF5F5F5);
+  static const Color fileTitle = Color(0xFF424242);
 
   //NEW UI COLORS
   static const Color fadedGreyN = Color(0xFFF1F1F1);
