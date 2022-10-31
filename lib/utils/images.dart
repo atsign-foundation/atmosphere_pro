@@ -14,7 +14,7 @@ class ImageConstants {
   static String transferHistoryIcon = '$_basePath/transferHistory.png';
   static String trustedSendersIcon = '$_basePath/trustedSendersIcon.png';
   static String logoutIcon = '$_basePath/logout.png';
-  static String sendIcon = '$_basePath/send.png';
+  static String sendIcon = '$_basePath/send_icon.png';
   static String imagePlaceholder = '$_basePath/imagePlaceholder.png';
   static String pdfLogo = '$_basePath/pdf.jpeg';
   static String musicLogo = '$_basePath/music.png';
@@ -67,4 +67,7 @@ class ImageConstants {
   static String homeCaraousel1 = '$_basePath/home_caraousel_2.png';
   static String homeCaraousel2 = '$_basePath/home_caraousel_1.png';
   static String homeCaraousel3 = '$_basePath/home_caraousel_3.png';
+
+  static String sidebarSelectedTile = '$_basePath/selected_sidebar.png';
+  static String sidebarSettings = '$_basePath/settings.png';
 }
