@@ -73,6 +73,7 @@ class DesktopSetupRoutes {
         );
       },
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
+      DesktopRoutes.DESKTOP_SETTINGS: (context) => DesktopSettings(),
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) {
@@ -84,8 +85,6 @@ class DesktopSetupRoutes {
         return DesktopGroupInitialScreen(showBackButton: false);
       },
       // =>  DesktopEmptyGroup(),
-
-      DesktopRoutes.DESKTOP_SETTINGS: (context) => DesktopSettings(),
 
       DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
             title: 'FAQ',

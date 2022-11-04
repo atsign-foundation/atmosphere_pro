@@ -19,6 +19,7 @@ class ColorConstants {
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
+  static const Color yellow = Color(0xFFEAA743);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
@@ -37,6 +38,11 @@ class ColorConstants {
   static const Color fadedGreyN = Color(0xFFF1F1F1);
   static const Color dividerGrey = Color(0xFFD9D9D9);
   static const Color grey = Color(0xFF939393);
+
+  static const Color sidebarTextUnselected = Color(0xFFA4A4A5);
+  static const Color sidebarTextSelected = Color(0xFF000000);
+  static const Color sidebarTextHeading = Color(0xFFE7E7E7);
+  static const Color sidebarTileSelected = Color(0xFFF5F5F5);
 }
 
 class ContactInitialsColors {
