@@ -61,6 +61,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
     popupMenuList.add(TextStrings()
         .addNewAtsign); //to show add option in switch atsign drop down menu.
     popupMenuList.add(TextStrings().saveBackupKey);
+    popupMenuList.add(TextStrings().sharingAtSign);
     return popupMenuList;
   }
 
@@ -172,10 +173,15 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
   getPopupMenuItem(List<String> list) {
     List<PopupMenuItem<String>> menuItems = [];
     list.forEach((element) {
-      menuItems.add(PopupMenuItem(
-        value: element,
-        child: DesktopSwitchAtsign(key: Key(element), atsign: element),
-      ));
+      menuItems.add(
+        PopupMenuItem(
+          value: element,
+          child: DesktopSwitchAtsign(
+            key: Key(element),
+            atsign: element,
+          ),
+        ),
+      );
     });
 
     return menuItems;
@@ -198,6 +204,8 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
       BackupKeyWidget(
         atsign: AtClientManager.getInstance().atClient.getCurrentAtSign()!,
       ).showBackupDialog(context);
+    } else if (selectedOption == TextStrings().sharingAtSign) {
+      return;
     } else if (selectedOption !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
       await CustomOnboarding.onboard(
