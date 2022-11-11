@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
@@ -259,7 +260,7 @@ class CommonUtilityFunctions {
                               showConfirmationDialog(() async {
                                 isSelectAtsign = false;
                                 await _resetDevice(tempAtsignMap.keys.toList());
-                                await _onboardNextAtsign();
+                                await onboardNextAtsign();
                               }, 'Remove ${atsignsListLength} atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
                             }
                           },
@@ -291,10 +292,14 @@ class CommonUtilityFunctions {
     });
   }
 
-  _onboardNextAtsign() async {
+  onboardNextAtsign() async {
     var _backendService = BackendService.getInstance();
     var atSignList = await KeychainUtil.getAtsignList();
-    if (atSignList != null &&
+
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          DesktopRoutes.DESKTOP_HOME, (Route<dynamic> route) => false);
+    } else if (atSignList != null &&
         atSignList.isNotEmpty &&
         _backendService.currentAtSign != atSignList.first) {
       // _backendService.checkToOnboard(atSign: atSignList.first);
