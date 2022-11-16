@@ -19,7 +19,7 @@ class GradientButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
           ColorConstants.orangeColor,
-          ColorConstants.yellowColor,
+          ColorConstants.yellow,
         ]),
         borderRadius: BorderRadius.circular(10.toWidth),
       ),

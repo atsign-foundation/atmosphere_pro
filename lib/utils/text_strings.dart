@@ -40,6 +40,9 @@ class TextStrings {
   String reset = 'Reset';
 
   //sidebar menu texts
+  String sidebarGeneral = 'GENERAL';
+  String sidebarHelpCenter = 'HELPCENTER';
+  String sidebarSendFiles = 'Send Files';
   String sidebarHome = 'Home';
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
