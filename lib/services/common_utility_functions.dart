@@ -99,6 +99,7 @@ class CommonUtilityFunctions {
                   child: SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.all(20),
+                  width: 600,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

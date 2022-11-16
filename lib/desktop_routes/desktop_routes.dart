@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens/desktop_settings/desktop_settings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
@@ -72,6 +73,7 @@ class DesktopSetupRoutes {
         );
       },
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
+      DesktopRoutes.DESKTOP_SETTINGS: (context) => DesktopSettings(),
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) {
@@ -87,7 +89,7 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
-          )
+          ),
     };
   }
 
