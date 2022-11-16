@@ -1,24 +1,26 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_senders.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_backup_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar_list_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -354,6 +356,24 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     title: menuItemsTitle[8],
                     routeName: targetScreens[8],
                     showIconOnly: !isExpanded,
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          elevation: 10,
+                          isScrollControlled: true,
+                          //color with gradient
+                          barrierColor:
+                              Colors.white.withOpacity(0.25).withOpacity(0.6),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.toWidth),
+                                  topRight: Radius.circular(20.toWidth))),
+                          builder: (context) => BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaY: -2,
+                              ),
+                              child: TrustedSenders()));
+                    },
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   SideBarItem(

@@ -12,6 +12,7 @@ class SideBarItem extends StatelessWidget {
   final bool showIconOnly, isDesktop;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
+  final Function()? onTap;
   bool isScale;
   final bool showNotificationDot;
   SideBarItem(
@@ -20,6 +21,7 @@ class SideBarItem extends StatelessWidget {
       this.title,
       this.routeName,
       this.arguments,
+      this.onTap,
       this.showIconOnly = false,
       this.isScale = false,
       this.displayColor = ColorConstants.fadedText,
@@ -33,13 +35,15 @@ class SideBarItem extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {
-        if (SizeConfig().isMobile(context) ||
-            _welcomeScreenProvider.isExpanded) {
-          Navigator.pop(context);
-        }
-        Navigator.pushNamed(context, routeName!, arguments: arguments ?? {});
-      },
+      onTap: onTap ??
+          () {
+            if (SizeConfig().isMobile(context) ||
+                _welcomeScreenProvider.isExpanded) {
+              Navigator.pop(context);
+            }
+            Navigator.pushNamed(context, routeName!,
+                arguments: arguments ?? {});
+          },
       child: Container(
         height: 50,
         child: Row(
