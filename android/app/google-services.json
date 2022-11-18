@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1097565861362",
+    "project_id": "atmostpherepro",
+    "storage_bucket": "atmostpherepro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097565861362:android:909d36246ea00183ad276b",
+        "android_client_info": {
+          "package_name": "com.atsign.atsign_atmosphere_pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097565861362-6mfph6hicq5dq10700hlmagjpnn6n7ir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVdqSb7dwSshdok_-oWdaCWEeKOZk2t7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097565861362-6mfph6hicq5dq10700hlmagjpnn6n7ir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

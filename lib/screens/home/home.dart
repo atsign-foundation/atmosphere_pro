@@ -14,6 +14,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart' show basename;
@@ -58,7 +59,7 @@ class _HomeState extends State<Home> {
         Provider.of<FileTransferProvider>(context, listen: false);
     _backendService = BackendService.getInstance();
     _checkToOnboard();
-
+    _initFirebase();
     acceptFiles();
     _checkForPermissionStatus();
     BackendService.getInstance()
@@ -69,6 +70,17 @@ class _HomeState extends State<Home> {
           authenticating = isAuthenticating;
         });
       }
+    });
+  }
+
+  Future<void> _initFirebase() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (Platform.isIOS) {
+        await FirebaseMessaging.instance.requestPermission();
+      }
+
+      final deviceToken = await FirebaseMessaging.instance.getToken();
+      print('Firebase Device TOKEN:\n$deviceToken');
     });
   }
 

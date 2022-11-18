@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:desktop_window/desktop_window.dart';
@@ -12,6 +13,8 @@ void main() async {
     await DesktopWindow.setMinWindowSize(Size(1200, 700));
   } else if (Platform.isWindows) {
     await DesktopWindow.setMinWindowSize(Size(1200, 700));
+  } else {
+    await Firebase.initializeApp();
   }
   runApp(MyApp());
 }

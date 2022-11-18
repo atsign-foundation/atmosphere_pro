@@ -62,6 +62,11 @@ dependencies:
   video_compress: ^3.1.0
   new_version: ^0.3.0
 
+  #Firebase
+  firebase_core: ^2.1.1
+  firebase_messaging: ^14.0.4
+  another_flushbar: ^1.12.29
+
   at_commons: ^3.0.25
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.10
