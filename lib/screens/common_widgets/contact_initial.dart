@@ -44,3 +44,48 @@ class ContactInitial extends StatelessWidget {
     );
   }
 }
+
+class ContactInitialV2 extends StatelessWidget {
+  final double? size, maxSize, minSize;
+  final String? initials;
+  final int? index;
+  final Color? background;
+
+  ContactInitialV2({
+    Key? key,
+    this.size = 40,
+    required this.initials,
+    this.index,
+    this.background,
+    this.maxSize,
+    this.minSize,
+  }) : super(key: key);
+
+  int get startIndex => (index == 1) ? 0 : 1;
+  int get endIndex => (initials!.length < 3) ? initials!.length : 3;
+
+  Widget build(BuildContext context) {
+    return Container(
+      height: size!.toFont,
+      width: size!.toFont,
+      decoration: BoxDecoration(
+        color: background ?? ContactInitialsColors.getColor(initials!),
+        borderRadius: BorderRadius.circular((size!.toFont * 0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: ColorConstants.light_grey,
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: Offset(0, 4), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          initials!.substring(startIndex, endIndex).toUpperCase(),
+          style: CustomTextStyles.whiteBold(size: (size! ~/ 3)),
+        ),
+      ),
+    );
+  }
+}

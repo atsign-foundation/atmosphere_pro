@@ -43,6 +43,9 @@ class TextStrings {
   String selectFiles = 'SELECT FILES';
 
   //sidebar menu texts
+  String sidebarGeneral = 'GENERAL';
+  String sidebarHelpCenter = 'HELPCENTER';
+  String sidebarSendFiles = 'Send Files';
   String sidebarHome = 'Home';
   String sidebarContact = 'Contacts';
   String sidebarTransferHistory = 'Transfer History';
@@ -60,6 +63,9 @@ class TextStrings {
   String sidebarSwitchOut = 'Switch atSign';
   String sidebarDeleteAtsign = 'Delete atSign(s)';
   String sidebarContactUs = 'Contact us';
+  String sidebarSettings = 'Settings';
+
+  String general = 'General';
 
   String atSign = 'atSign';
   String switchingAtSign = 'Switching atsign...';
@@ -167,7 +173,7 @@ class TextStrings {
   String removeGroupPhoto = 'Remove Group Photo';
 
   // terms and conditions texts
-  String termsAppBar = 'Terms and Conditions';
+  String termsAppBar = 'Terms & Conditions';
   String termsAndConditions =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\n Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \n\n Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
@@ -327,6 +333,12 @@ class TextStrings {
   String update = 'Update';
   String mayBeLater = 'Maybe later';
   String to = 'to';
+
+  //New UI Setting Screen
+  String switchatSign = 'Switch atSign';
+  String backUpKeys = 'Backup Your Keys';
+  String contactUs = 'Contact Us';
+  String deleteAtsigns = 'Delete atSign(s)';
 
   static final String resetButton = 'Reset';
   static const String resetDescription =

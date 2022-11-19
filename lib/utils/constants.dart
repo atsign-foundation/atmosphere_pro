@@ -58,7 +58,8 @@ class MixedConstants {
   static String? ApplicationDocumentsDirectory = '';
 
   /// Sibebar width
-  static double SIDEBAR_WIDTH = 70;
+  static double SIDEBAR_WIDTH_COLLAPSED = 180;
+  static double SIDEBAR_WIDTH_EXPANDED = 280;
 
   /// Appbar height
   static const double APPBAR_HEIGHT = 80;
