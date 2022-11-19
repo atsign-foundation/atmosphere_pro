@@ -41,7 +41,14 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15.toFont),
         child: Container(
-            color: ColorConstants.inputFieldColor,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.toFont),
+              border: Border.all(
+                color: ColorConstants.greyText,
+                width: 1,
+              ),
+              color: Colors.white,
+            ),
             child: _ExpansionTileWidget(
               headerText,
               (index) {
@@ -68,21 +75,22 @@ class _ExpansionTileWidget extends StatelessWidget {
       // backgroundColor: ColorConstants.inputFieldColor,
       title: Text(
         headerText!,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: ColorConstants.fadedText,
-          fontSize: 14.toFont,
+          fontSize: 18.toFont,
           fontWeight: FontWeight.normal,
         ),
         semanticsLabel: 'Select atSign from contacts button',
       ),
-      trailing: Container(
-        padding: EdgeInsets.symmetric(vertical: 15),
-        child: Image.asset(
-          ImageConstants.contactsIcon,
-          color: Colors.black,
-          semanticLabel: '',
-        ),
-      ),
+      // trailing: Container(
+      //   padding: EdgeInsets.symmetric(vertical: 15),
+      //   child: Image.asset(
+      //     ImageConstants.contactsIcon,
+      //     color: Colors.black,
+      //     semanticLabel: '',
+      //   ),
+      // ),
       onTap: () {
         selectContact(context);
       },

@@ -110,66 +110,66 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Container(
       color: ColorConstants.scaffoldColor,
       child: SafeArea(
-        child: Scaffold(
-          bottomNavigationBar: customBottomNavigationBar(),
-          key: _scaffoldKey,
-          backgroundColor: ColorConstants.scaffoldColor,
-          floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: Container(
-            width: 79,
-            height: 79,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient:
-                LinearGradient(
-                  colors: [Color(0xffF05E3F), Color(0xffe9a642)],
-                  stops: [0.1, 0.8],
-                )
+          child: Scaffold(
+            bottomNavigationBar: customBottomNavigationBar(),
+            key: _scaffoldKey,
+            backgroundColor: ColorConstants.scaffoldColor,
+            floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: Container(
+              width: 79,
+              height: 79,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient:
+                  LinearGradient(
+                    colors: [Color(0xffF05E3F), Color(0xffe9a642)],
+                    stops: [0.1, 0.8],
+                  )
+              ),
+              child: FloatingActionButton(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                onPressed: () {
+                  setState(() {
+                    _selectedBottomNavigationIndex = 0;
+                  });
+                },
+                child: _selectedBottomNavigationIndex == 4 || _selectedBottomNavigationIndex == 0?
+                SvgPicture.asset("assets/svg/plus.svg",) :
+                SvgPicture.asset("assets/svg/home.svg",) ,
+              ),
             ),
-            child: FloatingActionButton(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              onPressed: () {
-                setState(() {
-                  _selectedBottomNavigationIndex = 0;
-                });
-              },
-              child: _selectedBottomNavigationIndex == 4 || _selectedBottomNavigationIndex == 0?
-              SvgPicture.asset("assets/svg/plus.svg",) :
-              SvgPicture.asset("assets/svg/home.svg",) ,
+            appBar: _selectedBottomNavigationIndex == 0
+                ? (SizeConfig().isTablet(context)
+                ? null
+                : CustomAppBar(
+              showLeadingicon: true,
+            ))
+                : CustomAppBar(
+                showMenu: true,
+                showBackButton: false,
+                showTrailingButton: true,
+                showTitle: true,
+                showClosedBtnText: false,
+                title: 'Received Files'),
+            extendBody: true,
+            drawerScrimColor: Colors.transparent,
+            endDrawer: SideBarWidget(
+              isExpanded: true,
             ),
+            body: Consumer<InternetConnectivityChecker>(
+                builder: (_c, provider, widget) {
+                  if (provider.isInternetAvailable) {
+                    return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
+                  } else {
+                    return ErrorScreen(
+                      TextStrings.noInternet,
+                    );
+                  }
+                }),
           ),
-          appBar: _selectedBottomNavigationIndex == 0
-              ? (SizeConfig().isTablet(context)
-              ? null
-              : CustomAppBar(
-            showLeadingicon: true,
-          ))
-              : CustomAppBar(
-              showMenu: true,
-              showBackButton: false,
-              showTrailingButton: true,
-              showTitle: true,
-              showClosedBtnText: false,
-              title: 'Received Files'),
-          extendBody: true,
-          drawerScrimColor: Colors.transparent,
-          endDrawer: SideBarWidget(
-            isExpanded: true,
           ),
-          body: Consumer<InternetConnectivityChecker>(
-              builder: (_c, provider, widget) {
-                if (provider.isInternetAvailable) {
-                  return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
-                } else {
-                  return ErrorScreen(
-                    TextStrings.noInternet,
-                  );
-                }
-              }),
-        ),
-      ),
     );
   }
 
@@ -234,7 +234,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ? Color(0xffEAA743)
                       : Colors.black)),
           // Spacer(),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           if (_selectedBottomNavigationIndex == index)
             Container(
               height: 2,
@@ -250,7 +252,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
             )
-          else SizedBox(height: 2, width: 40,),
+          else
+            SizedBox(
+              height: 2,
+              width: 40,
+            ),
           if (_selectedBottomNavigationIndex == index)
             SizedBox(
               height: 4,
@@ -259,7 +265,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 painter: PainterOne(),
               ),
             )
-          else SizedBox(height: 4, width: 50,)
+          else
+            SizedBox(
+              height: 4,
+              width: 50,
+            )
         ],
       ),
     );

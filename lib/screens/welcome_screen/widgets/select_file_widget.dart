@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SelectFileWidget extends StatefulWidget {
@@ -130,23 +131,30 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
         // padding: SizeConfig().isTablet(context)
         //     ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
         //     : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
+        height: 142,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.toFont),
-          color: ColorConstants.inputFieldColor,
+          border: Border.all(
+            color: Colors.red,
+            width: 2,
+          ),
+          color: Colors.white,
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ListTile(
               // contentPadding: EdgeInsets.all(0),
               title: Text(
                   filePickerProvider!.selectedFiles.isEmpty
-                      ? TextStrings().welcomeFilePlaceholder
+                      ? TextStrings().selectFilesTransfer
                       : TextStrings().welcomeAddFilePlaceholder,
+                  textAlign: TextAlign.center,
                   semanticsLabel: 'Select file to transfer button',
-                  style: TextStyle(
-                    color: ColorConstants.fadedText,
-                    fontSize: 14.toFont,
-                    fontWeight: FontWeight.normal,
+                  style: GoogleFonts.inter(
+                    color: ColorConstants.orangeColor,
+                    fontSize: 18.toFont,
+                    fontWeight: FontWeight.w500,
                   )),
               subtitle: filePickerProvider!.selectedFiles.isEmpty
                   ? null
@@ -164,13 +172,13 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               onTap: () {
                 _showFileChoice();
               },
-              trailing: Container(
-                padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                child: Icon(
-                  Icons.add_circle,
-                  color: Colors.black,
-                ),
-              ),
+              // trailing: Container(
+              //   padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+              //   child: Icon(
+              //     Icons.add_circle,
+              //     color: Colors.black,
+              //   ),
+              // ),
             ),
             filePickerProvider!.selectedFiles.isNotEmpty
                 ? ListView.builder(

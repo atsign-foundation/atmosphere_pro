@@ -30,14 +30,17 @@ class TextStrings {
   String welcome = 'Welcome';
   String welcomeRecipient = 'Select a recipient and start sending them files.';
   String welcomeSendFilesTo = 'Send file(s) to';
-  String welcomeContactPlaceholder = 'atSign(s)';
+  String welcomeContactPlaceholder = 'Select atSign';
   String welcomeFilePlaceholder = 'Select file(s) to transfer';
+  String selectFilesTransfer = 'Select file(s) to\ntransfer';
   String welcomeAddFilePlaceholder = 'Add file(s) to transfer';
-  String welcomeAddTranscripts = 'Add a note (Optional)';
+  String welcomeAddTranscripts = 'SEND MESSAGE (Optional)';
   String sendingFiles = 'Sending file ...';
   String oopsSomethingWentWrong = 'Oops! something went wrong';
   String hello = 'hello';
+  String hi = 'Hi,';
   String reset = 'Reset';
+  String selectFiles = 'SELECT FILES';
 
   //sidebar menu texts
   String sidebarGeneral = 'GENERAL';
@@ -82,6 +85,7 @@ class TextStrings {
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
+  String buttonTransfer = 'Transfer Now';
   String buttonClose = 'Close';
   String buttonResend = 'Resend';
 

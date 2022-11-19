@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -57,6 +58,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
     return Container(
         width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/main_background.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
         height: SizeConfig().screenHeight,
         child: Container(
           width: double.infinity,
@@ -76,13 +83,21 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(
+                              height: 30,
+                            ),
+                            SizedBox(
+                                height: 50,
+                                child: Image.asset(ImageConstants.logoIcon)),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
-                              TextStrings().welcome,
-                              semanticsLabel: TextStrings().welcome,
-                              style: GoogleFonts.playfairDisplay(
+                              TextStrings().hi,
+                              semanticsLabel: TextStrings().hi,
+                              style: GoogleFonts.inter(
                                 textStyle: TextStyle(
-                                  fontSize: 26.toFont,
-                                  fontWeight: FontWeight.w800,
+                                  fontSize: 40.toFont,
                                   height: 1.3,
                                 ),
                               ),
@@ -91,38 +106,48 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               onTap: switchAtsign,
                               child: Text(
                                 BackendService.getInstance().currentAtSign!,
-                                style: GoogleFonts.playfairDisplay(
+                                style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                    fontSize: 26.toFont,
+                                    fontSize: 40.toFont,
                                     fontWeight: FontWeight.w800,
                                     height: 1.3,
-                                    color: ColorConstants.orangeColor,
+                                    color: ColorConstants.fontPrimary,
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(
-                              height: 10.toHeight,
+                              height: 20.toHeight,
                             ),
                             Text(
-                              TextStrings().welcomeRecipient,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 13.toFont,
-                                fontWeight: FontWeight.normal,
+                              TextStrings().selectedFiles,
+                              style: GoogleFonts.inter(
+                                color: ColorConstants.fontPrimary,
+                                fontSize: 20.toFont,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             SizedBox(
-                              height: 67.toHeight,
+                              height: 10.toHeight,
                             ),
-                            Text(
-                              TextStrings().welcomeSendFilesTo,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 12.toFont,
-                                fontWeight: FontWeight.normal,
-                              ),
+                            SelectFileWidget(
+                              (b) {
+                                setState(() {
+                                  isFileSelected = b;
+                                });
+                              },
+                              (_str) {
+                                setState(() {
+                                  notes = _str;
+                                });
+                              },
+                              initialValue: notes,
                             ),
+
+                            SizedBox(
+                              height: 20.toHeight,
+                            ),
+                            Text("Select Contacts"),
                             SizedBox(
                               height: 20.toHeight,
                             ),
@@ -161,22 +186,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               },
                             ),
                             SizedBox(
-                              height: 20.toHeight,
-                            ),
-                            SelectFileWidget(
-                              (b) {
-                                setState(() {
-                                  isFileSelected = b;
-                                });
-                              },
-                              (_str) {
-                                setState(() {
-                                  notes = _str;
-                                });
-                              },
-                              initialValue: notes,
-                            ),
-                            SizedBox(
                               height: (_welcomeScreenProvider
                                               .selectedContacts !=
                                           null &&
@@ -184,84 +193,90 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           .selectedContacts.isNotEmpty &&
                                       filePickerModel.selectedFiles.isNotEmpty)
                                   ? 20.toHeight
-                                  : 60.toHeight,
+                                  : 10.toHeight,
                             ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
-                                        .selectedContacts.isNotEmpty &&
-                                    filePickerModel.selectedFiles.isNotEmpty)
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: ColorConstants.inputFieldColor,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
+                            // (_welcomeScreenProvider.selectedContacts != null &&
+                            //         _welcomeScreenProvider
+                            //             .selectedContacts.isNotEmpty &&
+                            //         filePickerModel.selectedFiles.isNotEmpty)
+                            Container(
+                              height: 90,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.toFont),
+                                border: Border.all(
+                                  color: ColorConstants.greyText,
+                                  width: 1,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 10.toWidth,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      focusNode: _notesFocusNode,
+                                      controller: _notesController,
+                                      // initialValue: notes,
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            TextStrings().welcomeAddTranscripts,
+                                        hintStyle: TextStyle(
+                                          color: ColorConstants.fadedText,
+                                          fontSize: 14.toFont,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        border: InputBorder.none,
+                                        fillColor:
+                                            ColorConstants.inputFieldColor,
+                                        focusColor:
+                                            ColorConstants.inputFieldColor,
+                                        hoverColor:
+                                            ColorConstants.inputFieldColor,
                                       ),
+                                      style: TextStyle(
+                                        color: ColorConstants.fadedText,
+                                        fontSize: 14.toFont,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      onChanged: (String txt) {
+                                        setState(() {
+                                          notes = txt;
+                                        });
+                                      },
                                     ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10.toWidth,
-                                        ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            focusNode: _notesFocusNode,
-                                            controller: _notesController,
-                                            // initialValue: notes,
-                                            decoration: InputDecoration(
-                                              hintText: TextStrings()
-                                                  .welcomeAddTranscripts,
-                                              hintStyle: TextStyle(
-                                                color: ColorConstants.fadedText,
-                                                fontSize: 14.toFont,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              border: InputBorder.none,
-                                              fillColor: ColorConstants
-                                                  .inputFieldColor,
-                                              focusColor: ColorConstants
-                                                  .inputFieldColor,
-                                              hoverColor: ColorConstants
-                                                  .inputFieldColor,
-                                            ),
-                                            style: TextStyle(
-                                              color: ColorConstants.fadedText,
-                                              fontSize: 14.toFont,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            onChanged: (String txt) {
-                                              setState(() {
-                                                notes = txt;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        notes != null
-                                            ? InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    notes = null;
-                                                  });
-                                                  _notesController.clear();
-                                                },
-                                                child: Icon(Icons.clear,
-                                                    color: Colors.black),
-                                              )
-                                            : InkWell(
-                                                onTap: () {
-                                                  FocusScope.of(context)
-                                                      .requestFocus(
-                                                          _notesFocusNode);
-                                                },
-                                                child: Icon(Icons.edit,
-                                                    color: Colors.black),
-                                              ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
+                                  ),
+                                  // notes != null
+                                  //     ? InkWell(
+                                  //         onTap: () {
+                                  //           setState(() {
+                                  //             notes = null;
+                                  //           });
+                                  //           _notesController.clear();
+                                  //         },
+                                  //         child: Icon(Icons.clear,
+                                  //             color: Colors.black),
+                                  //       )
+                                  //     : InkWell(
+                                  //         onTap: () {
+                                  //           FocusScope.of(context)
+                                  //               .requestFocus(
+                                  //                   _notesFocusNode);
+                                  //         },
+                                  //         child: Icon(Icons.edit,
+                                  //             color: Colors.black),
+                                  //       ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 20,),
+                            // : SizedBox(),
                             SizedBox(
                               height: 30.toHeight,
                             ),
@@ -305,10 +320,38 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                           filePickerModel
                                                   .hasSelectedFilesChanged &&
                                               !isFileShareFailed)
-                                      ? CommonButton(
-                                          TextStrings().buttonSend,
-                                          sendFileWithFileBin,
-                                        )
+                                      ? Container(
+                                    height: 63,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [
+                                          Color(0xffF05E3F),
+                                          Color(0xffEAA743).withAlpha(150)
+                                        ]),
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          sendFileWithFileBin();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              TextStrings().buttonTransfer,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(width: 30,),
+                                            Icon(Icons.arrow_forward)
+                                          ],
+                                        )),
+                                  )
                                       : SizedBox(),
                                 ],
                               ),
