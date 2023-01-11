@@ -69,7 +69,7 @@ packages:
     description:
       path: at_client_mobile
       ref: "feature/enable-user-sharing"
-      resolved-ref: "59064e87557766f2db0cc85f3328fb8962f595c2"
+      resolved-ref: "25464e371a6f8c9e8b757d69d3685553df11347f"
       url: "https://github.com/atsign-foundation/at_client_sdk"
     source: git
     version: "3.2.7"
@@ -129,7 +129,7 @@ packages:
     description:
       path: at_onboarding_flutter
       ref: "feature/enable-user-sharing"
-      resolved-ref: f7b7d1aaf7630558def5637c1bb26b787617c14c
+      resolved-ref: f613cd9760f8af0bd032f12553ce1e2534746100
       url: "https://github.com/atsign-foundation/at_widgets.git"
     source: git
     version: "5.0.0"
