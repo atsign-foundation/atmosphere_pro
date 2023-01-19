@@ -43,6 +43,7 @@ class ColorConstants {
   static const Color sidebarTextSelected = Color(0xFF000000);
   static const Color sidebarTextHeading = Color(0xFFE7E7E7);
   static const Color sidebarTileSelected = Color(0xFFF5F5F5);
+  static const Color grayText = Color(0xFF424242);
 }
 
 class ContactInitialsColors {

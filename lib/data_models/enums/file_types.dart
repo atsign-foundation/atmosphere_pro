@@ -1,26 +1,22 @@
-enum FileTypes { all, docx, ppt, pdf, excel, txtFile, psd, html, png }
+enum FileType { all, photo, video, audio, apk, document, unknown }
 
-extension GenderTypeExtension on FileTypes {
+extension GenderTypeExtension on FileType {
   String get text {
     switch (this) {
-      case FileTypes.all:
+      case FileType.all:
         return 'All';
-      case FileTypes.docx:
-        return 'Docx';
-      case FileTypes.ppt:
-        return 'PPT';
-      case FileTypes.pdf:
-        return 'PDF';
-      case FileTypes.excel:
-        return 'Excel';
-      case FileTypes.txtFile:
-        return 'Txt File';
-      case FileTypes.psd:
-        return 'PSD';
-      case FileTypes.html:
-        return 'HTML';
-      case FileTypes.png:
-        return 'PNG';
+      case FileType.photo:
+        return 'Photo';
+      case FileType.video:
+        return 'Video';
+      case FileType.audio:
+        return 'Audio';
+      case FileType.apk:
+        return 'APK';
+      case FileType.document:
+        return 'Document';
+      case FileType.unknown:
+        return 'Unknown';
       default:
         return '';
     }

@@ -6,4 +6,5 @@ class AppVectors {
   static String icArrowDown = '$_basePath/ic_arrow_down.svg';
   static String icCheck = '$_basePath/ic_check.svg';
   static String icUnCheck = '$_basePath/ic_unchecked.svg';
+  static String icCancel = '$_basePath/ic_cancel.svg';
 }

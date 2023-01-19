@@ -1,21 +1,24 @@
-import 'package:atsign_atmosphere_pro/data_models/enums/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OptionHeaderWidget extends StatefulWidget {
-  final Function? onReloadCallback;
-  final Function? onSearchCallback;
+  final Function()? onReloadCallback;
+  final Function()? onSearchCallback;
   final bool hideReloadIcon;
-  final Function? selectTypeCallback;
+  final Widget? filterWidget;
+  final TextEditingController? controller;
+  final Function(String)? onSearch;
 
   OptionHeaderWidget({
     Key? key,
     this.onReloadCallback,
     this.onSearchCallback,
     this.hideReloadIcon = true,
-    this.selectTypeCallback,
+    this.filterWidget,
+    this.controller,
+    this.onSearch,
   }) : super(key: key);
 
   @override
@@ -23,7 +26,7 @@ class OptionHeaderWidget extends StatefulWidget {
 }
 
 class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
-  FileTypes? typeSelected = FileTypes.all;
+  bool isSearch = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,172 +37,73 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
         borderRadius: BorderRadius.circular(8),
         color: ColorConstants.textBoxBg,
       ),
-      child: Row(
-        children: <Widget>[
-          Visibility(
-            visible: widget.hideReloadIcon,
-            child: _buildButton(
-                title: "Refresh",
-                icon: AppVectors.icReload,
-                onTap: widget.onReloadCallback),
-          ),
-          SizedBox(width: 12),
-          _buildButton(
-            title: "Search",
-            icon: AppVectors.icSearch,
-            onTap: widget.onSearchCallback,
-          ),
-          SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Delivery Type",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ColorConstants.sidebarTextUnselected,
+      child: isSearch
+          ? _buildSearchWidget()
+          : Row(
+              children: <Widget>[
+                Visibility(
+                  visible: widget.hideReloadIcon,
+                  child: _buildButton(
+                    title: "Refresh",
+                    icon: AppVectors.icReload,
+                    onTap: widget.onReloadCallback,
                   ),
                 ),
-                SizedBox(height: 5),
-                Container(
-                  height: 48,
-                  margin: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: ColorConstants.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: DropdownButtonHideUnderline(
-                    child: Padding(
-                      padding: EdgeInsets.zero,
-                      child: DropdownButton<FileTypes>(
-                        value: typeSelected,
-                        icon: SvgPicture.asset(
-                          AppVectors.icArrowDown,
+                SizedBox(width: 12),
+                _buildButton(
+                  title: "Search",
+                  icon: AppVectors.icSearch,
+                  onTap: () {
+                    setState(() {
+                      isSearch = true;
+                    });
+                    widget.onSearchCallback?.call();
+                  },
+                ),
+                SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Delivery Type",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: ColorConstants.sidebarTextUnselected,
                         ),
-                        isExpanded: true,
-                        underline: null,
-                        alignment: AlignmentDirectional.bottomEnd,
-                        hint: Text(
-                          "All",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        height: 48,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(
                             color: ColorConstants.grey,
                           ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        items: FileTypes.values.map(
-                          (key) {
-                            return DropdownMenuItem<FileTypes>(
-                              value: key,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            key.text,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: ColorConstants.grey,
-                                            ),
-                                          ),
-                                        ),
-                                        typeSelected == key
-                                            ? SvgPicture.asset(
-                                                AppVectors.icCheck,
-                                                // color: Colors.green,
-                                              )
-                                            : SvgPicture.asset(
-                                                AppVectors.icUnCheck,
-                                                // color: Colors.green,
-                                              ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    color: ColorConstants.sidebarTileSelected,
-                                    height: 2,
-                                    width: double.infinity,
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        ).toList(),
-                        selectedItemBuilder: (BuildContext context) {
-                          return FileTypes.values.map(
-                            (key) {
-                              return DropdownMenuItem<FileTypes>(
-                                value: key,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                      ),
-                                      child: Text(
-                                        key.text,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: ColorConstants.grey,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: ColorConstants.sidebarTileSelected,
-                                      height: 1,
-                                      width: double.infinity,
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          ).toList();
-                        },
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              typeSelected = value;
-                            },
-                          );
-                          widget.selectTypeCallback?.call();
-                        },
-                        borderRadius: BorderRadius.circular(10),
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: widget.filterWidget,
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
   Widget _buildButton({
     String? title,
     required String icon,
-    Function? onTap,
+    Function()? onTap,
   }) {
     return InkWell(
-      onTap: onTap?.call(),
+      onTap: () {
+        onTap?.call();
+      },
       child: Column(
         children: <Widget>[
           Text(
@@ -221,11 +125,84 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
               ),
             ),
             child: Center(
-              child: SvgPicture.asset(icon),
+              child: SvgPicture.asset(
+                icon,
+                color: ColorConstants.grey,
+              ),
             ),
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildSearchWidget() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Search",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: ColorConstants.sidebarTextUnselected,
+                ),
+              ),
+              SizedBox(height: 5),
+              Container(
+                height: 48,
+                margin: const EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: ColorConstants.grey,
+                  ),
+                  // color: Colors.green,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.only(left: 6, right: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: widget.controller,
+                        decoration: InputDecoration.collapsed(
+                          hintText: 'Search History by atSign',
+                          hintStyle: TextStyle(
+                            color: ColorConstants.sidebarTextUnselected,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        onChanged: widget.onSearch,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: SvgPicture.asset(
+                        AppVectors.icSearch,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        _buildButton(
+          onTap: () {
+            setState(() {
+              isSearch = false;
+            });
+          },
+          icon: AppVectors.icCancel,
+        )
+      ],
     );
   }
 }
