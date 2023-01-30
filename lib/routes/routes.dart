@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dar
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/home/home.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/trusted_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
@@ -29,6 +30,7 @@ class SetupRoutes {
             url: '${MixedConstants.WEBSITE_URL}/faqs',
           ),
       Routes.MY_FILES: (context) => MyFiles(),
+      Routes.MY_FILES_SCREEN: (context) => MyFilesScreen(),
       Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {

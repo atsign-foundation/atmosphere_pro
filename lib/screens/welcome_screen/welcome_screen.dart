@@ -3,12 +3,11 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -34,6 +33,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isExpanded = true;
   int _selectedBottomNavigationIndex = 0;
   late FileTransferProvider _fileTransferProvider;
+
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
     SizedBox(),
@@ -49,6 +49,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     )
   ];
   String? currentAtSign;
+
   @override
   void initState() {
     _fileTransferProvider =
@@ -100,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
     WelcomeScreenHome(),
     ContactsScreen(),
-    MyFiles(),
+    MyFilesScreen(),
     HistoryScreen(),
     SettingsScreen()
   ];
@@ -115,18 +116,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           key: _scaffoldKey,
           backgroundColor: ColorConstants.scaffoldColor,
           floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: Container(
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Container (
             width: 79,
             height: 79,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient:
-                LinearGradient(
+                gradient: LinearGradient(
                   colors: [Color(0xffF05E3F), Color(0xffe9a642)],
                   stops: [0.1, 0.8],
-                )
-            ),
+                )),
             child: FloatingActionButton(
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -135,24 +134,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   _selectedBottomNavigationIndex = 0;
                 });
               },
-              child: _selectedBottomNavigationIndex == 4 || _selectedBottomNavigationIndex == 0?
-              SvgPicture.asset("assets/svg/plus.svg",) :
-              SvgPicture.asset("assets/svg/home.svg",) ,
+              child: _selectedBottomNavigationIndex == 0
+                  ? SvgPicture.asset(
+                      "assets/svg/plus.svg",
+                    )
+                  : SvgPicture.asset(
+                      "assets/svg/home.svg",
+                    ),
             ),
           ),
-          appBar: _selectedBottomNavigationIndex == 0
-              ? (SizeConfig().isTablet(context)
-              ? null
-              : CustomAppBar(
-            showLeadingicon: true,
-          ))
-              : CustomAppBar(
-              showMenu: true,
-              showBackButton: false,
-              showTrailingButton: true,
-              showTitle: true,
-              showClosedBtnText: false,
-              title: 'Received Files'),
+          // appBar: _selectedBottomNavigationIndex == 0
+          //     ? (SizeConfig().isTablet(context)
+          //         ? null
+          //         : CustomAppBar(
+          //             showLeadingicon: true,
+          //           ))
+          //     : CustomAppBar(
+          //         showMenu: true,
+          //         showBackButton: false,
+          //         showTrailingButton: true,
+          //         showTitle: true,
+          //         showClosedBtnText: false,
+          //         title: 'Received Files',
+          //       ),
           extendBody: true,
           drawerScrimColor: Colors.transparent,
           endDrawer: SideBarWidget(
@@ -160,14 +164,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           body: Consumer<InternetConnectivityChecker>(
               builder: (_c, provider, widget) {
-                if (provider.isInternetAvailable) {
-                  return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
-                } else {
-                  return ErrorScreen(
-                    TextStrings.noInternet,
-                  );
-                }
-              }),
+            if (provider.isInternetAvailable) {
+              return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
+            } else {
+              return ErrorScreen(
+                TextStrings.noInternet,
+              );
+            }
+          }),
         ),
       ),
     );
@@ -234,7 +238,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ? Color(0xffEAA743)
                       : Colors.black)),
           // Spacer(),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           if (_selectedBottomNavigationIndex == index)
             Container(
               height: 2,
@@ -250,7 +256,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
             )
-          else SizedBox(height: 2, width: 40,),
+          else
+            SizedBox(
+              height: 2,
+              width: 40,
+            ),
           if (_selectedBottomNavigationIndex == index)
             SizedBox(
               height: 4,
@@ -259,7 +269,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 painter: PainterOne(),
               ),
             )
-          else SizedBox(height: 4, width: 50,)
+          else
+            SizedBox(
+              height: 4,
+              width: 50,
+            )
         ],
       ),
     );

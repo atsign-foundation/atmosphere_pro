@@ -21,6 +21,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 
@@ -34,16 +35,23 @@ class MyFilesProvider extends BaseModel {
       receivedApk = [],
       receivedDocument = [],
       recentFile = [],
+      allFiles = [],
+      displayFiles = [],
       receivedUnknown = [];
+
   List<String> tabNames = ['Recents'];
   String SORT_FILES = 'sort_files';
   String POPULATE_TABS = 'populate_tabs';
   String SORT_LIST = 'sort_list';
   String RECENT_HISTORY = 'recent_history';
+  String ALL_FILES = 'all_files';
   String MY_FILES = 'my_files';
   String fileSearchText = '';
 
   List<Widget> tabs = [Recents()];
+
+  Map<String, List<FilesDetail>> filesByAlpha = {};
+  FileType typeSelected = FileType.all;
 
   init() async {
     await getMyFilesRecords();
@@ -63,7 +71,34 @@ class MyFilesProvider extends BaseModel {
     tabNames = ['Recents'];
   }
 
-  getMyFilesRecords() async {
+  void changeTypeSelected(FileType type) {
+    typeSelected = type;
+    displayFiles = filterFiles(type);
+    notifyListeners();
+  }
+
+  List<FilesDetail> filterFiles(FileType type) {
+    switch (type) {
+      case FileType.all:
+        return allFiles;
+      case FileType.photo:
+        return receivedPhotos;
+      case FileType.video:
+        return receivedVideos;
+      case FileType.audio:
+        return receivedAudio;
+      case FileType.apk:
+        return receivedApk;
+      case FileType.document:
+        return receivedDocument;
+      case FileType.unknown:
+        return receivedUnknown;
+      default:
+        return [];
+    }
+  }
+
+  Future<void> getMyFilesRecords() async {
     var atClient = AtClientManager.getInstance().atClient;
 
     setStatus(MY_FILES, Status.Loading);
@@ -342,6 +377,79 @@ class MyFilesProvider extends BaseModel {
     } catch (e) {
       setStatus(RECENT_HISTORY, Status.Error);
     }
+  }
+
+  Future<void> getAllFiles() async {
+    setStatus(ALL_FILES, Status.Loading);
+    allFiles = [];
+    try {
+      await Future.forEach(myFiles, (FileTransfer fileData) async {
+        await Future.forEach(fileData.files!, (FileData file) async {
+          String filePath;
+
+          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                Platform.pathSeparator +
+                fileData.sender! +
+                Platform.pathSeparator +
+                (file.name ?? '');
+          } else {
+            filePath = BackendService.getInstance().downloadDirectory!.path +
+                Platform.pathSeparator +
+                (file.name ?? '');
+          }
+
+          FilesDetail fileDetail = FilesDetail(
+            fileName: file.name,
+            filePath: filePath,
+            size: double.parse(file.size.toString()),
+            date: fileData.date?.toLocal().toString(),
+            type: file.name!.split('.').last,
+            contactName: fileData.sender,
+            fileTransferId: fileData.key,
+          );
+
+          allFiles.add(fileDetail);
+        });
+      });
+      displayFiles = filterFiles(typeSelected);
+      // await sortFilesByAlpha(allFiles);
+      setStatus(ALL_FILES, Status.Done);
+    } catch (e) {
+      setStatus(ALL_FILES, Status.Error);
+    }
+  }
+
+  Future<void> sortFilesByAlpha(List<FilesDetail> files) async {
+    for (int i = 0; i < files.length; i++) {
+      String fileName = (files[i].fileName ?? '').trim();
+      bool isExist = false;
+      final firstName = fileName.split('').first.toUpperCase();
+
+      if (filesByAlpha.isNotEmpty) {
+        for (int i = 0; i < filesByAlpha.length; i++) {
+          if (firstName.contains(filesByAlpha.keys.toString())) {
+            isExist = true;
+            break;
+          }
+        }
+      }
+
+      if (filesByAlpha.isEmpty || !isExist) {
+        filesByAlpha.addAll(
+          {
+            firstName: [files[i]],
+          },
+        );
+      } else {
+        filesByAlpha.update(firstName, (value) {
+          value.add(files[i]);
+          return value;
+        });
+      }
+    }
+    filesByAlpha.keys.toList().sort();
+    print(filesByAlpha);
   }
 
   setFileSearchText(String str) {
