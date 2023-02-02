@@ -10,6 +10,8 @@ class OptionHeaderWidget extends StatefulWidget {
   final Widget? filterWidget;
   final TextEditingController? controller;
   final Function(String)? onSearch;
+  final Function()? searchOffCallBack;
+  final EdgeInsetsGeometry? margin;
 
   OptionHeaderWidget({
     Key? key,
@@ -19,6 +21,8 @@ class OptionHeaderWidget extends StatefulWidget {
     this.filterWidget,
     this.controller,
     this.onSearch,
+    this.margin,
+    this.searchOffCallBack,
   }) : super(key: key);
 
   @override
@@ -31,7 +35,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 28),
+      margin: widget.margin ?? EdgeInsets.symmetric(horizontal: 28),
       padding: EdgeInsets.fromLTRB(14, 11, 15, 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -199,6 +203,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
             setState(() {
               isSearch = false;
             });
+            widget.searchOffCallBack?.call();
           },
           icon: AppVectors.icCancel,
         )

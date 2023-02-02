@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
@@ -32,6 +33,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:flutter/cupertino.dart';
+
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:flutter/services.dart';
 import 'package:at_client/src/service/notification_service.dart';
@@ -50,6 +52,7 @@ class HistoryProvider extends BaseModel {
   String SET_FILE_HISTORY = 'set_flie_history';
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
+  String GET_FILE_STATUS = 'get_file_status';
   String DOWNLOAD_FILE = 'download_file';
   String DOWNLOAD_ACK = 'download_ack';
   List<FileHistory> sentHistory = [], tempSentHistory = [];
@@ -58,6 +61,11 @@ class HistoryProvider extends BaseModel {
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
   String _historySearchText = '';
+
+  List<FileEntity> receivedFiles = [],
+      sentFiles = [],
+      allFiles = [],
+      displayFiles = [];
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
@@ -87,6 +95,8 @@ class HistoryProvider extends BaseModel {
   BackendService backendService = BackendService.getInstance();
   String? app_lifecycle_state;
 
+  HistoryType typeSelected = HistoryType.all;
+
   resetData() {
     isSyncedDataFetched = false;
     sentHistory = [];
@@ -109,6 +119,144 @@ class HistoryProvider extends BaseModel {
   set setHistorySearchText(String txt) {
     _historySearchText = txt.trim().toLowerCase();
     notifyListeners();
+  }
+
+  Future<void> getAllFiles() async {
+    setStatus(GET_FILE_STATUS, Status.Loading);
+    try {
+      allFiles = [];
+
+      await Future.wait([
+        getReceivedFiles(),
+        getSentFiles(),
+      ]);
+
+      allFiles.addAll(sentFiles);
+      allFiles.addAll(receivedFiles);
+
+      allFiles.sort((a, b) => (b.date ?? '').compareTo(a.date ?? ''));
+      displayFiles = allFiles;
+
+      setStatus(GET_FILE_STATUS, Status.Done);
+    } catch (e) {
+      setStatus(GET_FILE_STATUS, Status.Error);
+    }
+  }
+
+  Future<void> getReceivedFiles() async {
+    List<FileEntity> listReceivedFile = [];
+    await getAllFileTransferData();
+    if (receivedHistoryLogs.isNotEmpty) {
+      for (int i = 0; i < receivedHistoryLogs.length; i++) {
+        FileTransfer? fileTransfer = receivedHistoryLogs[i];
+        if ((fileTransfer.files?.length ?? 0) > 0) {
+          for (int j = 0; j < fileTransfer.files!.length; j++) {
+            listReceivedFile.add(
+              FileEntity(
+                file: fileTransfer.files![j],
+                date: fileTransfer.date != null
+                    ? fileTransfer.date.toString()
+                    : '',
+                atSign: fileTransfer.sender,
+                historyType: HistoryType.received,
+                note: fileTransfer.notes,
+              ),
+            );
+          }
+        }
+      }
+      receivedFiles = listReceivedFile;
+    }
+  }
+
+  Future<void> getSentFiles() async {
+    List<FileEntity> listSentFile = [];
+    await getSentHistory();
+    if (sentHistory.isNotEmpty) {
+      for (int i = 0; i < sentHistory.length; i++) {
+        FileTransfer? fileTransfer = sentHistory[i].fileDetails;
+        if ((fileTransfer?.files?.length ?? 0) > 0) {
+          for (int j = 0; j < fileTransfer!.files!.length; j++) {
+            listSentFile.add(
+              FileEntity(
+                file: fileTransfer.files![j],
+                date: fileTransfer.date != null
+                    ? fileTransfer.date.toString()
+                    : '',
+                atSign: sentHistory[i].fileTransferObject?.sharedWith,
+                historyType: HistoryType.send,
+                note: fileTransfer.notes,
+              ),
+            );
+          }
+        }
+      }
+      sentFiles = listSentFile;
+    }
+  }
+
+  void changeTypeSelected(HistoryType type) {
+    typeSelected = type;
+    displayFiles = filterFiles(type);
+    notifyListeners();
+  }
+
+  void refreshData() async {
+    try {
+      if (typeSelected != HistoryType.all) {
+        setStatus(GET_FILE_STATUS, Status.Loading);
+        typeSelected == HistoryType.send
+            ? await getSentFiles()
+            : await getReceivedFiles();
+        setStatus(GET_FILE_STATUS, Status.Done);
+      } else {
+        await getAllFiles();
+      }
+    } catch (e) {
+      setStatus(GET_FILE_STATUS, Status.Error);
+    }
+  }
+
+  void searchFiles() {
+    List<FileEntity> resultsFilter = [];
+    List<FileEntity> listFiles = [];
+
+    if (typeSelected == HistoryType.received) {
+      listFiles = receivedFiles;
+    } else if (typeSelected == HistoryType.send) {
+      listFiles = sentFiles;
+    } else {
+      listFiles = allFiles;
+    }
+
+    if (_historySearchText.isNotEmpty) {
+      listFiles.forEach(
+        (element) {
+          if ((element.atSign ?? '').contains(_historySearchText)) {
+            resultsFilter.add(element);
+          }
+        },
+      );
+
+      displayFiles = resultsFilter;
+    } else {
+      displayFiles = listFiles;
+    }
+
+    notifyListeners();
+  }
+
+  List<FileEntity> filterFiles(HistoryType type) {
+    switch (type) {
+      case HistoryType.all:
+        return allFiles;
+      case HistoryType.received:
+        return receivedFiles;
+      case HistoryType.send:
+        return sentFiles;
+      default:
+        return [];
+    }
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {

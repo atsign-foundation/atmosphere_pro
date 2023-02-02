@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.da
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -21,8 +22,7 @@ class MyFilesScreen extends StatefulWidget {
   _MyFilesScreenState createState() => _MyFilesScreenState();
 }
 
-class _MyFilesScreenState extends State<MyFilesScreen>
-    with TickerProviderStateMixin {
+class _MyFilesScreenState extends State<MyFilesScreen> {
   bool isOpen = false;
   List<Widget> tabs = [];
   List<String> tabNames = [];
@@ -41,7 +41,6 @@ class _MyFilesScreenState extends State<MyFilesScreen>
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBarCustom(
         height: 130,
@@ -51,15 +50,6 @@ class _MyFilesScreenState extends State<MyFilesScreen>
       body: buildBody(),
     );
   }
-
-  // Widget get buildLoading {
-  //   return SafeArea(
-  //     top: false,
-  //     child: Center(
-  //       child: CircularProgressIndicator(),
-  //     ),
-  //   );
-  // }
 
   Widget buildBody() {
     return Column(
@@ -245,7 +235,7 @@ class _MyFilesScreenState extends State<MyFilesScreen>
                                         ),
                                         SizedBox(height: 2),
                                         Text(
-                                          getFileSizeString(
+                                          AppUtils.getFileSizeString(
                                             bytes: provider
                                                     .displayFiles[index].size ??
                                                 0,
@@ -323,13 +313,5 @@ class _MyFilesScreenState extends State<MyFilesScreen>
         ],
       ),
     );
-  }
-
-  static String getFileSizeString({required double bytes, int decimals = 0}) {
-    const suffixes = ["b", "Kb", "Mb", "Gb", "Tb"];
-    var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) +
-        ' ' +
-        suffixes[i];
   }
 }
