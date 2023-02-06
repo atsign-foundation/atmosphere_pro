@@ -38,6 +38,8 @@ class TextStrings {
   String oopsSomethingWentWrong = 'Oops! something went wrong';
   String hello = 'hello';
   String reset = 'Reset';
+  String selectFiles = 'SELECT FILES';
+  String selectContacts = 'SELECT CONTACT(S)';
 
   //sidebar menu texts
   String sidebarGeneral = 'GENERAL';

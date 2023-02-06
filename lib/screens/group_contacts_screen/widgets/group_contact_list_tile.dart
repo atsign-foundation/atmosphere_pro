@@ -7,6 +7,8 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
+import '../../../utils/images.dart';
+
 class ContactListTile extends StatefulWidget {
   final String? name;
   final String? atSign;
@@ -53,7 +55,7 @@ class _ContactListTileState extends State<ContactListTile> {
                 });
               },
         title: Text(
-          widget.name!,
+          widget.atSign!,
           style: TextStyle(
             color: Colors.black,
             fontSize: 14.toFont,
@@ -62,7 +64,7 @@ class _ContactListTileState extends State<ContactListTile> {
           ),
         ),
         subtitle: Text(
-          widget.atSign!,
+          widget.name!,
           style: TextStyle(
             color: ColorConstants.fadedText,
             fontSize: 14.toFont,
@@ -80,9 +82,13 @@ class _ContactListTileState extends State<ContactListTile> {
                     onTap: () {
                       widget.onRemove();
                     },
-                    child: Icon(
-                      Icons.close,
-                      color: Color(0xffA8A8A8),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Image.asset(ImageConstants.closeIcon),
+                      ),
                     ),
                   )
                 : Icon(
@@ -100,28 +106,6 @@ class _ContactListTileState extends State<ContactListTile> {
               ),
               child: widget.image,
             ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: (widget.onlyRemoveMethod)
-                  ? Container()
-                  : Container(
-                      height: 15.toHeight,
-                      width: 15.toHeight,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: (widget.isSelected)
-                              ? Colors.black
-                              : Colors.transparent),
-                      child: (widget.isSelected)
-                          ? Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 10.toHeight,
-                            )
-                          : Container(),
-                    ),
-            )
           ],
         ),
       ),

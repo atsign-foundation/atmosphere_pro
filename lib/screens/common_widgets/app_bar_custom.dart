@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -41,15 +42,17 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  title ?? '',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    title ?? '',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20.toFont,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(width: 12),
                 Text(

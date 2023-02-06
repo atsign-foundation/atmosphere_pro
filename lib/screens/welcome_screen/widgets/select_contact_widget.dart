@@ -38,18 +38,14 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
           ),
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15.toFont),
-        child: Container(
-            color: ColorConstants.inputFieldColor,
-            child: _ExpansionTileWidget(
-              headerText,
-              (index) {
-                widget.onUpdate(true);
-                setState(() {});
-              },
-            )),
-      ),
+      child: Container(
+          child: _ExpansionTileWidget(
+        headerText,
+        (index) {
+          widget.onUpdate(true);
+          setState(() {});
+        },
+      )),
     );
   }
 }
@@ -61,31 +57,25 @@ class _ExpansionTileWidget extends StatelessWidget {
   _ExpansionTileWidget(this.headerText, this.onSelected);
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      // tilePadding: SizeConfig().isTablet(context)
-      //     ? EdgeInsets.symmetric(vertical: 10.toFont, horizontal: 10.toFont)
-      //     : EdgeInsets.only(left: 10.toFont, right: 10.toFont),
-      // backgroundColor: ColorConstants.inputFieldColor,
-      title: Text(
-        headerText!,
-        style: TextStyle(
-          color: ColorConstants.fadedText,
-          fontSize: 14.toFont,
-          fontWeight: FontWeight.normal,
-        ),
-        semanticsLabel: 'Select atSign from contacts button',
-      ),
-      trailing: Container(
-        padding: EdgeInsets.symmetric(vertical: 15),
-        child: Image.asset(
-          ImageConstants.contactsIcon,
-          color: Colors.black,
-          semanticLabel: '',
-        ),
-      ),
+    return InkWell(
       onTap: () {
         selectContact(context);
       },
+      child: Container(
+        height: 62.toHeight > 62 ? 62 : 62.toHeight,
+        width: 350.toWidth > 350 ? 350 : 350.toWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: ColorConstants.grey),
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(20.toWidth, 20.toHeight, 0, 20.toHeight),
+          child: Text(
+            'Select atSign',
+            style: TextStyle(color: ColorConstants.grey),
+          ),
+        ),
+      ),
     );
   }
 

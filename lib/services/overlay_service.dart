@@ -2,6 +2,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -42,7 +43,9 @@ class OverlayService {
     FLUSHBAR_STATUS flushbarStatus, {
     String? errorMessage,
   }) {
-    Color bgColor = _getColor(flushbarStatus);
+    // Color bgColor = _getColor(flushbarStatus);
+    Color bgColor = Colors.white;
+
     String text = errorMessage ?? _getText(flushbarStatus);
 
     return OverlayEntry(builder: (context) {
@@ -50,107 +53,90 @@ class OverlayService {
       return Consumer<FileProgressProvider>(
         builder: (_context, provider, _) {
           text = errorMessage ??
-              _getText(flushbarStatus,
-                  fileTransferProgress: provider.sentFileTransferProgress);
-          return Positioned(
-            width: size.width,
-            height: 100,
-            bottom: 0,
-            child: Material(
+              _getText(
+                flushbarStatus,
+                fileTransferProgress: provider.sentFileTransferProgress,
+              );
+          return Scaffold(
+            backgroundColor: bgColor.withOpacity(0.7),
+            body: SafeArea(
               child: Container(
-                alignment: Alignment.center,
-                color: bgColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    flushbarStatus == FLUSHBAR_STATUS.SENDING
-                        ? provider.sentFileTransferProgress != null
-                            ? getProgressBar(provider.sentFileTransferProgress!)
-                            : LinearProgressIndicator()
-                        : SizedBox(),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 3, horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  text,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: flushbarStatus ==
-                                            FLUSHBAR_STATUS.SENDING
-                                        ? Colors.black
-                                        : Colors.white,
-                                    fontSize: 16.toFont,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                //// Not showing estimated file upload time.
-                                // SizedBox(height: 5),
-                                // Text(
-                                //   getFileUploadMessage(
-                                //     provider.sentFileTransferProgress,
-                                //   ),
-                                //   style: TextStyle(fontSize: 12.toFont),
-                                // ),
-                              ],
+                width: size.width,
+                height: SizeConfig().screenHeight,
+                child: Material(
+                  color: bgColor.withOpacity(0.7),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: hideOverlay,
+                          child: Container(
+                            width: 105.toWidth,
+                            height: 35,
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: ColorConstants.grey),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Close',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                           ),
-                          flushbarStatus == FLUSHBAR_STATUS.FAILED
-                              ? TextButton(
-                                  onPressed: () {
-                                    openFileReceiptBottomSheet(context);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 7, horizontal: 7),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Text(
-                                      TextStrings.buttonShowMore,
-                                      style: TextStyle(
-                                        color: ColorConstants.fontPrimary,
-                                        fontSize: 15.toFont,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : TextButton(
-                                  onPressed: () {
-                                    hideOverlay();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 7, horizontal: 7),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: Text(
-                                      TextStrings.buttonDismiss,
-                                      style: TextStyle(
-                                        color: ColorConstants.fontPrimary,
-                                        fontSize: 15.toFont,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(ImageConstants.sendFileIcon),
+                            SizedBox(height: 40),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 3, horizontal: 15),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          text,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 25.toFont,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 30),
+                            flushbarStatus == FLUSHBAR_STATUS.SENDING
+                                ? provider.sentFileTransferProgress != null
+                                    ? getProgressBar()
+                                    : getProgressBar()
+                                : SizedBox(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -210,14 +196,25 @@ class OverlayService {
     return uploadMessage;
   }
 
-  Widget getProgressBar(FileTransferProgress fileTransferProgress) {
+  Widget getProgressBar() {
     /// Not showing upload percent
     // if (fileTransferProgress.fileState == FileState.upload &&
     // fileTransferProgress.percent != null) {
     // var percent = fileTransferProgress.percent! / 100;
     // return LinearProgressIndicator();
     // }
-    return LinearProgressIndicator();
+    return SizedBox(
+      width: 300.toWidth,
+      height: 40,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+        child: LinearProgressIndicator(
+          color: ColorConstants.yellow,
+          minHeight: 45,
+          backgroundColor: Color(0xFFE2E2E2),
+        ),
+      ),
+    );
   }
 
   Color _getColor(FLUSHBAR_STATUS flushbarStatus) {
@@ -234,9 +231,9 @@ class OverlayService {
   }
 
   List<String> transferMessages = [
-    'Sending file(s) ...',
-    'File(s) sent',
-    'Oops! something went wrong'
+    'Sending your files',
+    'Success!🎉 ',
+    'Something went wrong! ⚠️',
   ];
 
   openFileReceiptBottomSheet(context,

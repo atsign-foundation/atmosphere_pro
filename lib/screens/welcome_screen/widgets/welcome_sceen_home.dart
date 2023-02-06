@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_heading.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/file_card.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
@@ -12,6 +16,7 @@ import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/select_file
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -21,13 +26,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/images.dart';
+import '../../common_widgets/app_bar_custom.dart';
+
 class WelcomeScreenHome extends StatefulWidget {
   @override
   _WelcomeScreenHomeState createState() => _WelcomeScreenHomeState();
 }
 
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
-  bool? isContactSelected;
+  bool isContactSelected = false;
   bool? isFileSelected;
   late WelcomeScreenProvider _welcomeScreenProvider;
   HistoryProvider? historyProvider;
@@ -55,99 +63,173 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       context,
     );
 
-    return Container(
+    return Scaffold(
+      appBar: AppBarCustom(
+        height: 130,
+        title: "${BackendService.getInstance().currentAtSign ?? ''} ",
+        description: '',
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              ImageConstants.welcomeBackground,
+            ),
+            fit: BoxFit.fill,
+          ),
+          // shape: BoxShape.circle,
+          // gradient: LinearGradient(
+          //   colors: [Color(0xffF05E3F), Color(0xffe9a642)],
+          //   stops: [0.1, 0.8],
+          // ),
+        ),
         width: double.infinity,
         height: SizeConfig().screenHeight,
-        child: Container(
-          width: double.infinity,
-          height: SizeConfig().screenHeight,
-          child: Stack(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.toWidth, vertical: 20.toHeight),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              TextStrings().welcome,
-                              semanticsLabel: TextStrings().welcome,
-                              style: GoogleFonts.playfairDisplay(
-                                textStyle: TextStyle(
-                                  fontSize: 26.toFont,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.3,
-                                ),
-                              ),
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.toWidth, vertical: 20.toHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            TextStrings().selectFiles,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            InkWell(
-                              onTap: switchAtsign,
-                              child: Text(
-                                BackendService.getInstance().currentAtSign!,
-                                style: GoogleFonts.playfairDisplay(
-                                  textStyle: TextStyle(
-                                    fontSize: 26.toFont,
-                                    fontWeight: FontWeight.w800,
-                                    height: 1.3,
-                                    color: ColorConstants.orangeColor,
+                          ),
+                          SizedBox(height: 16),
+                          Consumer<FileTransferProvider>(
+                              builder: (context, provider, _) {
+                            if (provider.selectedFiles.isEmpty) {
+                              return InkWell(
+                                onTap: () {
+                                  providerCallback<FileTransferProvider>(
+                                      context,
+                                      task: (provider) =>
+                                          provider.pickFiles(provider.MEDIA),
+                                      taskName: (provider) =>
+                                          provider.PICK_FILES,
+                                      onSuccess: (provider) {},
+                                      onError: (err) => ErrorDialog().show(
+                                          err.toString(),
+                                          context: context));
+                                },
+                                child: Container(
+                                  height:
+                                      142.toHeight > 142 ? 142 : 142.toHeight,
+                                  width: 350.toWidth > 350 ? 350 : 350.toWidth,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: ColorConstants.orangeColor),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Select file(s) to transfer',
+                                      style: TextStyle(
+                                          color: ColorConstants.orangeColor,
+                                          fontSize: 16),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              );
+                            } else {
+                              return SizedBox();
+                            }
+                          }),
+                          SizedBox(height: 16),
+                          Consumer<FileTransferProvider>(
+                              builder: (context, provider, _) {
+                            if (provider.selectedFiles.isNotEmpty) {
+                              return Wrap(
+                                alignment: WrapAlignment.start,
+                                runAlignment: WrapAlignment.start,
+                                runSpacing: 5.0.toWidth,
+                                spacing: 10.0.toHeight,
+                                children: List.generate(
+                                    provider.selectedFiles.length, (index) {
+                                  return SizedBox(
+                                    width: (320) / 2,
+                                    child: Stack(
+                                      children: [
+                                        FileCard(
+                                          fileDetail:
+                                              provider.selectedFiles[index],
+                                        ),
+                                        Positioned(
+                                          top: -10,
+                                          right: -10,
+                                          child: InkWell(
+                                            onTap: () {
+                                              provider.selectedFiles
+                                                  .removeAt(index);
+                                              provider.calculateSize();
+                                              provider.notifyListeners();
+                                            },
+                                            child: Container(
+                                              width: 40,
+                                              height: 40,
+                                              child: FittedBox(
+                                                fit: BoxFit.fill,
+                                                child: Image.asset(
+                                                    ImageConstants.closeIcon),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                              );
+                            } else {
+                              return SizedBox();
+                            }
+                          }),
+                          SizedBox(height: 16),
+                          Text(
+                            TextStrings().selectContacts,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            SizedBox(
-                              height: 10.toHeight,
-                            ),
-                            Text(
-                              TextStrings().welcomeRecipient,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 13.toFont,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 67.toHeight,
-                            ),
-                            Text(
-                              TextStrings().welcomeSendFilesTo,
-                              style: TextStyle(
-                                color: ColorConstants.fadedText,
-                                fontSize: 12.toFont,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.toHeight,
-                            ),
-                            SelectContactWidget(
-                              (b) {
-                                setState(() {
-                                  isContactSelected = b;
-                                });
-                              },
-                            ),
-                            SizedBox(
-                              height: 10.toHeight,
-                            ),
-                            Consumer<FileTransferProvider>(
-                                builder: (context, provider, _) {
-                              if (filePickerModel.scrollToBottom) {
+                          ),
+                          SizedBox(height: 16),
+                          Consumer<FileTransferProvider>(
+                              builder: (context, provider, _) {
+                            if (filePickerModel.scrollToBottom) {
+                              scrollToBottom();
+                            }
+                            return SizedBox();
+                          }),
+                          Consumer<WelcomeScreenProvider>(
+                            builder: (context, provider, _) {
+                              if (provider.scrollToBottom) {
                                 scrollToBottom();
                               }
-                              return SizedBox();
-                            }),
-                            Consumer<WelcomeScreenProvider>(
-                              builder: (context, provider, _) {
-                                if (provider.scrollToBottom) {
-                                  scrollToBottom();
-                                }
+                              if ((provider.selectedContacts.isEmpty)) {
+                                return Visibility(
+                                  visible: true,
+                                  child: SelectContactWidget(
+                                    (b) {
+                                      print(b);
+                                      setState(() {
+                                        isContactSelected = b;
+                                      });
+                                    },
+                                  ),
+                                );
+                              } else {
                                 if ((provider.selectedContacts.isEmpty)) {
                                   return Container();
                                 } else {
@@ -158,222 +240,132 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                     },
                                   );
                                 }
-                              },
+                              }
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: ColorConstants.grey),
                             ),
-                            SizedBox(
-                              height: 20.toHeight,
-                            ),
-                            SelectFileWidget(
-                              (b) {
+                            child: TextField(
+                              onChanged: (String txt) {
                                 setState(() {
-                                  isFileSelected = b;
+                                  notes = txt;
                                 });
                               },
-                              (_str) {
-                                setState(() {
-                                  notes = _str;
-                                });
-                              },
-                              initialValue: notes,
-                            ),
-                            SizedBox(
-                              height: (_welcomeScreenProvider
-                                              .selectedContacts !=
-                                          null &&
-                                      _welcomeScreenProvider
-                                          .selectedContacts.isNotEmpty &&
-                                      filePickerModel.selectedFiles.isNotEmpty)
-                                  ? 20.toHeight
-                                  : 60.toHeight,
-                            ),
-                            (_welcomeScreenProvider.selectedContacts != null &&
-                                    _welcomeScreenProvider
-                                        .selectedContacts.isNotEmpty &&
-                                    filePickerModel.selectedFiles.isNotEmpty)
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: ColorConstants.inputFieldColor,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10.toWidth,
-                                        ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            focusNode: _notesFocusNode,
-                                            controller: _notesController,
-                                            // initialValue: notes,
-                                            decoration: InputDecoration(
-                                              hintText: TextStrings()
-                                                  .welcomeAddTranscripts,
-                                              hintStyle: TextStyle(
-                                                color: ColorConstants.fadedText,
-                                                fontSize: 14.toFont,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              border: InputBorder.none,
-                                              fillColor: ColorConstants
-                                                  .inputFieldColor,
-                                              focusColor: ColorConstants
-                                                  .inputFieldColor,
-                                              hoverColor: ColorConstants
-                                                  .inputFieldColor,
-                                            ),
-                                            style: TextStyle(
-                                              color: ColorConstants.fadedText,
-                                              fontSize: 14.toFont,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            onChanged: (String txt) {
-                                              setState(() {
-                                                notes = txt;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        notes != null
-                                            ? InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    notes = null;
-                                                  });
-                                                  _notesController.clear();
-                                                },
-                                                child: Icon(Icons.clear,
-                                                    color: Colors.black),
-                                              )
-                                            : InkWell(
-                                                onTap: () {
-                                                  FocusScope.of(context)
-                                                      .requestFocus(
-                                                          _notesFocusNode);
-                                                },
-                                                child: Icon(Icons.edit,
-                                                    color: Colors.black),
-                                              ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 30.toHeight,
-                            ),
-                            if (_welcomeScreenProvider.selectedContacts !=
-                                    null &&
-                                _welcomeScreenProvider
-                                    .selectedContacts.isNotEmpty &&
-                                filePickerModel.selectedFiles.isNotEmpty) ...[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CommonButton('Clear', () {
-                                    setState(() {
-                                      isFileShareFailed = false;
-                                      _welcomeScreenProvider.selectedContacts
-                                          .clear();
-                                      _welcomeScreenProvider
-                                          .resetSelectedContactsStatus();
-                                      filePickerModel.selectedFiles.clear();
-                                      filePickerModel
-                                          .resetSelectedFilesStatus();
-                                      notes = null;
-                                      _notesController.clear();
-                                    });
-                                  }),
-                                  Expanded(child: SizedBox()),
-                                  Visibility(
-                                      visible: ((!_welcomeScreenProvider
-                                                  .hasSelectedContactsChanged &&
-                                              !filePickerModel
-                                                  .hasSelectedFilesChanged) &&
-                                          isFileShareFailed),
-                                      child: CommonButton(
-                                        TextStrings().buttonResend,
-                                        reAttemptSendingFiles,
-                                        color: Colors.amber[800],
-                                      )),
-                                  (_welcomeScreenProvider
-                                              .hasSelectedContactsChanged ||
-                                          filePickerModel
-                                                  .hasSelectedFilesChanged &&
-                                              !isFileShareFailed)
-                                      ? CommonButton(
-                                          TextStrings().buttonSend,
-                                          sendFileWithFileBin,
-                                        )
-                                      : SizedBox(),
-                                ],
+                              decoration: InputDecoration(
+                                labelText: 'Send Message (Optional)',
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: ColorConstants.grey,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                ),
                               ),
-                              SizedBox(
-                                height: 60.toHeight,
+                              keyboardType: TextInputType.multiline,
+                            ),
+                          ),
+                          SizedBox(height: 40),
+                          InkWell(
+                            onTap: sendFileWithFileBin,
+                            child: Container(
+                              height: 67.toHeight > 67 ? 67 : 67.toHeight,
+                              width: 350.toWidth > 350 ? 350 : 350.toWidth,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xffF05E3F),
+                                    Color(0xffe9a642)
+                                  ],
+                                  stops: [0.1, 0.8],
+                                ),
                               ),
-                            ],
-                          ],
-                        ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Transfer Now',
+                                      style: TextStyle(
+                                          fontSize: 20.toFont,
+                                          color: Colors.white),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Icon(Icons.arrow_forward,
+                                        color: Colors.white, size: 20.toFont)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 100)
+                        ],
                       ),
                     ),
                   ),
-                  SizeConfig().isTablet(context)
-                      ? Container(
-                          height: SizeConfig().screenHeight,
-                          width: 100,
-                          child: SideBarWidget(
-                            isExpanded: false,
-                          ),
-                        )
-                      : SizedBox(),
-                ],
-              ),
-              SizeConfig().isTablet(context)
-                  ? Container(
-                      height: 100,
-                      width: SizeConfig().screenWidth - 100,
-                      child: Customheading(),
-                    )
-                  : SizedBox(),
-              SizeConfig().isTablet(context)
-                  ? Positioned(
-                      right: 80,
-                      top: 100,
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Colors.black,
+                ),
+                SizeConfig().isTablet(context)
+                    ? Container(
+                        height: SizeConfig().screenHeight,
+                        width: 100,
+                        child: SideBarWidget(
+                          isExpanded: false,
                         ),
-                        child: Builder(
-                          builder: (context) {
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isExpanded = !isExpanded;
-                                  WelcomeScreenProvider().isExpanded = true;
-                                });
-
-                                Scaffold.of(context).openEndDrawer();
-                              },
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.white,
-                              ),
-                            );
-                          },
-                        ),
+                      )
+                    : SizedBox(),
+              ],
+            ),
+            SizeConfig().isTablet(context)
+                ? Container(
+                    height: 100,
+                    width: SizeConfig().screenWidth - 100,
+                    child: Customheading(),
+                  )
+                : SizedBox(),
+            SizeConfig().isTablet(context)
+                ? Positioned(
+                    right: 80,
+                    top: 100,
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.black,
                       ),
-                    )
-                  : SizedBox(),
-            ],
-          ),
-        ));
+                      child: Builder(
+                        builder: (context) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                isExpanded = !isExpanded;
+                                WelcomeScreenProvider().isExpanded = true;
+                              });
+
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+          ],
+        ),
+      ),
+    );
   }
 
   scrollToBottom() {
@@ -417,6 +409,24 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   }
 
   sendFileWithFileBin() async {
+    if (filePickerModel.selectedFiles.isEmpty) {
+      SnackbarService().showSnackbar(
+        context,
+        'No files selected',
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+
+    if (_welcomeScreenProvider.selectedContacts.isEmpty) {
+      SnackbarService().showSnackbar(
+        context,
+        'No atSign selected',
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+
     if (mounted) {
       setState(() {
         // assuming file share record will be saved in sent history.
