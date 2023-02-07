@@ -25,7 +25,7 @@ class _FileCardState extends State<FileCard> {
       padding: EdgeInsets.fromLTRB(13, 8, 8, 13),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -35,15 +35,16 @@ class _FileCardState extends State<FileCard> {
                 width: 100.toWidth,
                 child: Text(
                   widget.fileDetail.name,
-                  style: TextStyle(color: Colors.black, fontSize: 12),
+                  style: TextStyle(color: Colors.black, fontSize: 12.toFont),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Text(widget.fileDetail.size.toString()),
+              Text(widget.fileDetail.size.toString(),
+                  style: TextStyle(fontSize: 15.toFont)),
             ],
           ),
-          Icon(Icons.remove_red_eye)
+          Icon(Icons.remove_red_eye, size: 15.toFont)
         ],
       ),
     );

@@ -55,7 +55,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
       builder: (context, provider, _) {
         return Container(
           height: 80.toHeight * widget.selectedList.length,
-          width: 350.toWidth > 350 ? 350 : 350.toWidth,
+          width: 350.toWidth,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),

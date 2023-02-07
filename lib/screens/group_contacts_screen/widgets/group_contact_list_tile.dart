@@ -73,18 +73,15 @@ class _ContactListTileState extends State<ContactListTile> {
           ),
         ),
         trailing: (widget.plainView)
-            ? Container(
-                height: 0,
-                width: 0,
-              )
+            ? SizedBox()
             : (widget.isSelected)
                 ? GestureDetector(
                     onTap: () {
                       widget.onRemove();
                     },
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      width: 40.toHeight,
+                      height: 40.toHeight,
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Image.asset(ImageConstants.closeIcon),

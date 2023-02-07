@@ -62,8 +62,8 @@ class _ExpansionTileWidget extends StatelessWidget {
         selectContact(context);
       },
       child: Container(
-        height: 62.toHeight > 62 ? 62 : 62.toHeight,
-        width: 350.toWidth > 350 ? 350 : 350.toWidth,
+        height: 62.toHeight,
+        width: 350.toWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: ColorConstants.grey),
@@ -72,7 +72,7 @@ class _ExpansionTileWidget extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(20.toWidth, 20.toHeight, 0, 20.toHeight),
           child: Text(
             'Select atSign',
-            style: TextStyle(color: ColorConstants.grey),
+            style: TextStyle(color: ColorConstants.grey, fontSize: 15.toFont),
           ),
         ),
       ),
