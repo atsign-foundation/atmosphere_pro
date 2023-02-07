@@ -2,7 +2,22 @@ import 'dart:convert';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 
-enum HistoryType { send, received }
+enum HistoryType { all, received, send }
+
+extension HistoryTypeExtension on HistoryType {
+  String get text {
+    switch (this) {
+      case HistoryType.all:
+        return 'All';
+      case HistoryType.received:
+        return 'Received';
+      case HistoryType.send:
+        return 'Send';
+      default:
+        return '';
+    }
+  }
+}
 
 class FilesDetail {
   String? fileName;
@@ -14,6 +29,7 @@ class FilesDetail {
   String? date;
   String? fileTransferId;
   FileTransferStatus? status;
+
   FilesDetail(
       {this.fileName,
       this.filePath,

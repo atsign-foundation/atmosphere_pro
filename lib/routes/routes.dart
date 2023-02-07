@@ -4,6 +4,7 @@ import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/home/home.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
@@ -32,6 +33,7 @@ class SetupRoutes {
       Routes.MY_FILES: (context) => MyFiles(),
       Routes.MY_FILES_SCREEN: (context) => MyFilesScreen(),
       Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
+      Routes.HISTORY_SCREEN: (context) => TransferHistoryScreen(),
       Routes.BLOCKED_USERS: (context) => BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =

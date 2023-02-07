@@ -7,4 +7,10 @@ class AppVectors {
   static String icCheck = '$_basePath/ic_check.svg';
   static String icUnCheck = '$_basePath/ic_unchecked.svg';
   static String icCancel = '$_basePath/ic_cancel.svg';
+  static String icReceive = '$_basePath/ic_receive.svg';
+  static String icSend = '$_basePath/ic_send.svg';
+  static String icSort = '$_basePath/ic_sort.svg';
+  static String icReceiveBorder = '$_basePath/ic_receive_border.svg';
+  static String icSendBorder = '$_basePath/ic_send_border.svg';
+  static String icNote = '$_basePath/ic_note.svg';
 }

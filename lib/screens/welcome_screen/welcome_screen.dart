@@ -3,6 +3,7 @@ import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
@@ -102,7 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     WelcomeScreenHome(),
     ContactsScreen(),
     MyFilesScreen(),
-    HistoryScreen(),
+    TransferHistoryScreen(),
     SettingsScreen()
   ];
 
