@@ -106,7 +106,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             children: [
                               Container(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 30.toWidth),
+                                    horizontal: SizeConfig().isTablet(context)
+                                        ? 30.toWidth
+                                        : 0),
                                 child: Text(
                                   TextStrings().selectFiles,
                                   style: TextStyle(
@@ -220,7 +222,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(left: 30.toWidth),
+                                padding: EdgeInsets.only(
+                                    left: SizeConfig().isTablet(context)
+                                        ? 30.toWidth
+                                        : 0),
                                 child: Text(
                                   TextStrings().selectContacts,
                                   style: TextStyle(
@@ -360,56 +365,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     ),
                   ),
                 ),
-                // SizeConfig().isTablet(context)
-                //     ? Container(
-                //         height: SizeConfig().screenHeight,
-                //         width: 100,
-                //         child: SideBarWidget(
-                //           isExpanded: false,
-                //         ),
-                //       )
-                //     : SizedBox(),
               ],
             ),
-            // SizeConfig().isTablet(context)
-            //     ? Container(
-            //         height: 100,
-            //         width: SizeConfig().screenWidth - 100,
-            //         child: Customheading(),
-            //       )
-            //     : SizedBox(),
-            // SizeConfig().isTablet(context)
-            //     ? Positioned(
-            //         right: 80,
-            //         top: 100,
-            //         child: Container(
-            //           height: 50,
-            //           width: 50,
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(25),
-            //             color: Colors.black,
-            //           ),
-            //           child: Builder(
-            //             builder: (context) {
-            //               return InkWell(
-            //                 onTap: () {
-            //                   setState(() {
-            //                     isExpanded = !isExpanded;
-            //                     WelcomeScreenProvider().isExpanded = true;
-            //                   });
-
-            //                   Scaffold.of(context).openEndDrawer();
-            //                 },
-            //                 child: Icon(
-            //                   Icons.arrow_back_ios,
-            //                   color: Colors.white,
-            //                 ),
-            //               );
-            //             },
-            //           ),
-            //         ),
-            //       )
-            //     : SizedBox(),
           ],
         ),
       ),
