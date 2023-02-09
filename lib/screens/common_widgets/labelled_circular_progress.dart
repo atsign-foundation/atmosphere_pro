@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/colors.dart';
@@ -18,7 +19,7 @@ class LabelledCircularProgressIndicator extends StatelessWidget {
                     padding: EdgeInsets.only(left: 7),
                     child: Text((value! * 100).toStringAsFixed(0) + '%',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 8.toFont,
                           fontWeight: FontWeight.bold,
                           color: ColorConstants.blueText,
                         )),

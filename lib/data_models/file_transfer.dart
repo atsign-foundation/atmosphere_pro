@@ -12,17 +12,18 @@ class FileTransfer {
   bool? isUpdate;
   bool? isWidgetOpen;
   String? notes;
-  FileTransfer({
-    required this.url,
-    this.files,
-    this.expiry,
-    this.platformFiles,
-    this.date,
-    required this.key,
-    this.isUpdate = false,
-    this.isWidgetOpen = false,
-    this.notes,
-  }) {
+  String? fileEncryptionKey;
+  FileTransfer(
+      {required this.url,
+      this.files,
+      this.expiry,
+      this.platformFiles,
+      this.date,
+      required this.key,
+      this.isUpdate = false,
+      this.isWidgetOpen = false,
+      this.notes,
+      required this.fileEncryptionKey}) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
 
@@ -46,6 +47,7 @@ class FileTransfer {
       FileData file = FileData.fromJson(jsonDecode(element));
       files!.add(file);
     });
+    fileEncryptionKey = json['fileEncryptionKey'];
     notes = json['notes'];
   }
 
@@ -63,6 +65,7 @@ class FileTransfer {
     });
     data['expiry'] = this.expiry!.toUtc().toString();
     data['date'] = this.date!.toUtc().toString();
+    data['fileEncryptionKey'] = this.fileEncryptionKey;
     return data;
   }
 
