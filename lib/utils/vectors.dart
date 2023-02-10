@@ -13,4 +13,14 @@ class AppVectors {
   static String icReceiveBorder = '$_basePath/ic_receive_border.svg';
   static String icSendBorder = '$_basePath/ic_send_border.svg';
   static String icNote = '$_basePath/ic_note.svg';
+  static String icActivate = '$_basePath/ic_activate.svg';
+  static String icAdd = '$_basePath/ic_add.svg';
+  static String icBlock = '$_basePath/ic_block.svg';
+  static String icContactGroup = '$_basePath/ic_contact_group.svg';
+  static String icTrust = '$_basePath/ic_trust.svg';
+  static String icBigTrust = '$_basePath/ic_big_trust.svg';
+  static String icBigTrustActivated = '$_basePath/ic_big_trust_activated.svg';
+  static String icTrash = '$_basePath/ic_trash.svg';
+  static String icArrow = '$_basePath/ic_arrow.svg';
+  static String icImage = '$_basePath/ic_image.svg';
 }

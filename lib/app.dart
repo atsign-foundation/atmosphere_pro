@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -50,6 +51,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<SideBarProvider>(
             create: (context) => SideBarProvider()),
         ChangeNotifierProvider(create: (context) => TrustedContactProvider()),
+        ChangeNotifierProvider(create: (context) => AddContactProvider()),
         ChangeNotifierProvider(create: (context) => NestedRouteProvider()),
         ChangeNotifierProvider(create: (context) => SwitchAtsignProvider()),
         ChangeNotifierProvider(create: (context) => FileDownloadChecker()),

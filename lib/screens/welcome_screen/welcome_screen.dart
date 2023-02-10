@@ -1,7 +1,7 @@
-import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
@@ -101,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
     WelcomeScreenHome(),
-    ContactsScreen(),
+    ContactScreen(),
     MyFilesScreen(),
     TransferHistoryScreen(),
     SettingsScreen()
