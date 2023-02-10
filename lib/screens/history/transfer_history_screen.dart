@@ -1,16 +1,31 @@
+import 'dart:io';
+
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/option_header_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_item_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+
+import '../../data_models/file_entity.dart';
+import '../../services/backend_service.dart';
+import '../../services/navigation_service.dart';
+import '../../utils/text_strings.dart';
+import '../../view_models/file_progress_provider.dart';
+import '../../view_models/file_transfer_provider.dart';
+import '../common_widgets/confirmation_dialog.dart';
 
 class TransferHistoryScreen extends StatefulWidget {
   const TransferHistoryScreen({Key? key}) : super(key: key);
@@ -168,6 +183,11 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
         ),
         Expanded(
           child: ProviderHandler<HistoryProvider>(
+            errorBuilder: (provider) {
+              return Center(
+                child: Text('Something went wrong'),
+              );
+            },
             load: (provider) async {
               await provider.getAllFiles();
             },
@@ -265,6 +285,8 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                           files[index].date!,
                         ))
                       : '';
+                  bool isDownloadExpired =
+                      AppUtils.isFilesAvailableToDownload(files[index].date!);
 
                   GlobalKey key = GlobalKey();
 
@@ -279,96 +301,154 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                             top: 7,
                             bottom: 6,
                           ),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  files[index].file?.name ?? '',
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorConstants.textBlack,
+                          child: InkWell(
+                            onTap: () {
+                              openFile(files[index]);
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    files[index].file?.name ?? '',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorConstants.textBlack,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  AppUtils.getFileSizeString(
-                                    bytes: (files[index].file?.size ?? 0)
-                                        .toDouble(),
-                                    decimals: 2,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorConstants.textGray,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  date,
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorConstants.textGrey,
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    AppUtils.getFileSizeString(
+                                      bytes: (files[index].file?.size ?? 0)
+                                          .toDouble(),
+                                      decimals: 2,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorConstants.textGray,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: SvgPicture.asset(
-                                    files[index].historyType ==
-                                            HistoryType.received
-                                        ? AppVectors.icReceiveBorder
-                                        : AppVectors.icSendBorder,
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    date,
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorConstants.textGrey,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  files[index].atSign ?? '',
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorConstants.textBlack,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              (files[index].note ?? '').isNotEmpty
-                                  ? InkWell(
-                                      onTap: () {
-                                        _onTapNoteIcon(
-                                          key: key,
-                                          note: files[index].note!,
-                                        );
-                                      },
-                                      child: SvgPicture.asset(
-                                        AppVectors.icNote,
+                                files[index].historyType == HistoryType.received
+                                    ? Expanded(
+                                        flex: 1,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: FutureBuilder(
+                                            future: isFilesAlreadyDownloaded(
+                                                files[index]),
+                                            builder: (_context,
+                                                AsyncSnapshot<bool> snapsot) {
+                                              if (snapsot.hasData) {
+                                                return SvgPicture.asset(
+                                                  files[index].historyType ==
+                                                          HistoryType.received
+                                                      ? AppVectors
+                                                          .icReceiveBorder
+                                                      : AppVectors.icSendBorder,
+                                                  color: snapsot.data == true
+                                                      ? Colors.green
+                                                      : Color(0xFFEAA743),
+                                                );
+                                              } else {
+                                                return SizedBox();
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        flex: 1,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: SvgPicture.asset(
+                                            AppVectors.icSendBorder,
+                                            color: files[index].isUploaded
+                                                ? Colors.blue[200]
+                                                : Color(0xFFEAA743),
+                                          ),
+                                        ),
                                       ),
-                                    )
-                                  : SizedBox(width: 16),
-                              InkWell(
-                                onTap: () {
-                                  _onTapMoreIcon(key);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 8),
-                                  child: Icon(
-                                    Icons.more_vert_outlined,
-                                    size: 16,
-                                    color: ColorConstants.grey,
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    files[index].atSign ?? '',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorConstants.textBlack,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 8),
+                                (files[index].note ?? '').isNotEmpty
+                                    ? InkWell(
+                                        onTap: () {
+                                          _onTapNoteIcon(
+                                            key: key,
+                                            note: files[index].note!,
+                                          );
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppVectors.icNote,
+                                        ),
+                                      )
+                                    : SizedBox(width: 16),
+                                isDownloadExpired
+                                    ? Consumer<FileProgressProvider>(
+                                        builder: (_c, provider, _) {
+                                        var fileTransferProgress =
+                                            provider.receivedFileProgress[
+                                                files[index].transferId];
+
+                                        if (fileTransferProgress != null &&
+                                            fileTransferProgress.percent !=
+                                                null) {
+                                          return Container(
+                                            width: 30,
+                                            height: 30,
+                                            margin: EdgeInsets.all(6),
+                                            child:
+                                                LabelledCircularProgressIndicator(
+                                              value: (fileTransferProgress
+                                                      .percent! /
+                                                  100),
+                                            ),
+                                          );
+                                        } else {
+                                          return InkWell(
+                                            onTap: () {
+                                              _onTapMoreIcon(key, files[index]);
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 8),
+                                              child: Icon(
+                                                Icons.more_vert_outlined,
+                                                size: 16,
+                                                color: ColorConstants.grey,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      })
+                                    : SizedBox(),
+                              ],
+                            ),
                           ),
                         ),
                         Container(
@@ -387,12 +467,12 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
     );
   }
 
-  void _onTapMoreIcon(GlobalKey key) {
+  void _onTapMoreIcon(GlobalKey key, FileEntity fileEntity) async {
     RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
     final size = box.size;
 
-    showDialog(
+    await showDialog(
       barrierDismissible: true,
       useRootNavigator: true,
       context: context,
@@ -433,35 +513,58 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                     ),
                     child: Row(
                       children: <Widget>[
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              "Resend",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: ColorConstants.textLightGrey,
-                              ),
-                            ),
-                          ),
-                        ),
+                        fileEntity.historyType == HistoryType.send
+                            ? Expanded(
+                                child: Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      reuploadFileConfirmation(fileEntity);
+                                    },
+                                    child: Text(
+                                      "Resend",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: ColorConstants.textLightGrey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
                         Container(
                           color: ColorConstants.sidebarTextUnselected,
                           height: double.infinity,
                           width: 1,
                         ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              "Download",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: ColorConstants.textLightGrey,
-                              ),
-                            ),
-                          ),
-                        ),
+                        fileEntity.historyType == HistoryType.received
+                            ? Expanded(
+                                child: Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (Navigator.of(context).canPop()) {
+                                        Navigator.of(context).pop();
+                                      }
+
+                                      provider.downloadSingleFile(
+                                        fileEntity.transferId,
+                                        fileEntity.atSign,
+                                        false,
+                                        fileEntity.file!.name ?? '',
+                                      );
+                                    },
+                                    child: Text(
+                                      "Download",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: ColorConstants.textLightGrey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
                       ],
                     ),
                   ),
@@ -550,5 +653,66 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
         );
       },
     );
+  }
+
+  reuploadFileConfirmation(FileEntity fileEntity) async {
+    await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.toWidth),
+              ),
+              content:
+                  ConfirmationDialog(TextStrings.reUploadFileMsg, () async {
+                FileData fileData = FileData(
+                    name: fileEntity.file!.name,
+                    size: fileEntity.file!.size,
+                    url: fileEntity.fileTransferObject.fileUrl);
+
+                var sentItemIndex =
+                    Provider.of<HistoryProvider>(context, listen: false)
+                        .sentHistory
+                        .indexWhere((element) =>
+                            element.fileTransferObject?.transferId ==
+                            fileEntity.transferId);
+                FileHistory? sentHistory;
+
+                if (sentItemIndex != -1) {
+                  sentHistory =
+                      Provider.of<HistoryProvider>(context, listen: false)
+                          .sentHistory[sentItemIndex];
+                } else {
+                  throw ('sent history not found');
+                }
+
+                await Provider.of<FileTransferProvider>(context, listen: false)
+                    .reuploadFiles([fileData], 0, sentHistory);
+              }));
+        });
+  }
+
+  Future<bool> isFilesAlreadyDownloaded(FileEntity fileEntity) async {
+    bool isFilesAvailableOfline = false;
+    String path = BackendService.getInstance().downloadDirectory!.path +
+        Platform.pathSeparator +
+        (fileEntity.file!.name ?? '');
+    File test = File(path);
+    bool fileExists = await test.exists();
+
+    isFilesAvailableOfline = fileExists;
+    return isFilesAvailableOfline;
+  }
+
+  openFile(FileEntity fileEntity) async {
+    String path = MixedConstants.RECEIVED_FILE_DIRECTORY +
+        Platform.pathSeparator +
+        (fileEntity.file!.name ?? '');
+
+    File test = File(path);
+    bool fileExists = await test.exists();
+    if (fileExists) {
+      await OpenFile.open(path);
+    }
   }
 }

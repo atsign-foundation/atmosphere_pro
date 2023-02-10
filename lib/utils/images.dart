@@ -36,6 +36,7 @@ class ImageConstants {
   static String documentFile = '$_basePath/documentFile.png';
   static String exclamation = '$_basePath/exclamation.png';
   static String close = '$_basePath/close.png';
+  static String closeIcon = '$_basePath/close_icon.png';
   static String trustedSender = '$_basePath/trustedSendersIcon.png';
   static String myFiles = '$_basePath/my_files.png';
   static String groups = '$_basePath/groups.png';
@@ -59,6 +60,7 @@ class ImageConstants {
   static String filePreview = '$_basePath/filePreview.jpg';
 
   // Desktop
+  static String sendFileIcon = '$_basePath/send_file_icon.png';
   static String welcomeDesktop = '$_basePath/welcome_screen.png';
   static String groupPhotoDesktop = '$_basePath/group_photo.png';
   static String homeBgDesktop = '$_basePath/home_bg.png';

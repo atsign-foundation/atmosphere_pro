@@ -1,26 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_audios.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_documents.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_photos.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_unknowns.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_videos.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
@@ -36,10 +23,8 @@ import 'package:flutter/cupertino.dart';
 
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:flutter/services.dart';
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
-import 'file_download_checker.dart';
 import 'trusted_sender_view_model.dart';
 
 class HistoryProvider extends BaseModel {
@@ -151,6 +136,13 @@ class HistoryProvider extends BaseModel {
         FileTransfer? fileTransfer = receivedHistoryLogs[i];
         if ((fileTransfer.files?.length ?? 0) > 0) {
           for (int j = 0; j < fileTransfer.files!.length; j++) {
+            var fileTransferObject = FileTransferObject(
+              fileTransfer.key,
+              fileTransfer.fileEncryptionKey!,
+              fileTransfer.url,
+              '',
+              [],
+            );
             listReceivedFile.add(
               FileEntity(
                 file: fileTransfer.files![j],
@@ -160,6 +152,9 @@ class HistoryProvider extends BaseModel {
                 atSign: fileTransfer.sender,
                 historyType: HistoryType.received,
                 note: fileTransfer.notes,
+                transferId: fileTransfer.key,
+                isUploaded: fileTransfer.files?[j].isUploaded ?? false,
+                fileTransferObject: fileTransferObject,
               ),
             );
           }
@@ -179,14 +174,16 @@ class HistoryProvider extends BaseModel {
           for (int j = 0; j < fileTransfer!.files!.length; j++) {
             listSentFile.add(
               FileEntity(
-                file: fileTransfer.files![j],
-                date: fileTransfer.date != null
-                    ? fileTransfer.date.toString()
-                    : '',
-                atSign: sentHistory[i].fileTransferObject?.sharedWith,
-                historyType: HistoryType.send,
-                note: fileTransfer.notes,
-              ),
+                  file: fileTransfer.files![j],
+                  date: fileTransfer.date != null
+                      ? fileTransfer.date.toString()
+                      : '',
+                  atSign: sentHistory[i].fileTransferObject?.sharedWith,
+                  historyType: HistoryType.send,
+                  note: fileTransfer.notes,
+                  transferId: fileTransfer.key,
+                  isUploaded: fileTransfer.files?[j].isUploaded ?? false,
+                  fileTransferObject: sentHistory[i].fileTransferObject!),
             );
           }
         }
@@ -231,9 +228,17 @@ class HistoryProvider extends BaseModel {
 
     if (_historySearchText.isNotEmpty) {
       listFiles.forEach(
-        (element) {
+        //filter by atSign
+        (FileEntity element) {
           if ((element.atSign ?? '').contains(_historySearchText)) {
             resultsFilter.add(element);
+          } else {
+            // filter by file name
+            if (element.file!.name!
+                .toLowerCase()
+                .contains(_historySearchText)) {
+              resultsFilter.add(element);
+            }
           }
         },
       );
@@ -771,10 +776,11 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue =
-            await AtClientManager.getInstance().atClient.get(atKey)
-                // ignore: return_of_invalid_type_from_catch_error
-                .catchError((e) {
+        AtValue atvalue = await AtClientManager.getInstance()
+            .atClient
+            .get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);
@@ -877,12 +883,12 @@ class HistoryProvider extends BaseModel {
     });
 
     return FileTransfer(
-      url: fileTransferObject.fileUrl,
-      files: files,
-      date: fileTransferObject.date,
-      key: fileTransferObject.transferId,
-      notes: fileTransferObject.notes,
-    );
+        url: fileTransferObject.fileUrl,
+        files: files,
+        date: fileTransferObject.date,
+        key: fileTransferObject.transferId,
+        notes: fileTransferObject.notes,
+        fileEncryptionKey: fileTransferObject.fileEncryptionKey);
   }
 
   updateFileSendingStatus(
@@ -925,11 +931,11 @@ class HistoryProvider extends BaseModel {
     });
 
     FileTransfer fileTransfer = FileTransfer(
-      key: fileTransferObject.transferId,
-      date: fileTransferObject.date,
-      files: files,
-      url: fileTransferObject.fileUrl,
-    );
+        key: fileTransferObject.transferId,
+        date: fileTransferObject.date,
+        files: files,
+        url: fileTransferObject.fileUrl,
+        fileEncryptionKey: fileTransferObject.fileEncryptionKey);
 
     sharedWithAtsigns.forEach((atsign) {
       sthareStatus
@@ -1058,38 +1064,40 @@ class HistoryProvider extends BaseModel {
     if (downloadPath == null) {
       throw Exception('downloadPath not found');
     }
-    var atKey = AtKey()
-      ..key = transferId
-      ..sharedBy = sharedByAtSign;
-    var result =
-        await AtClientManager.getInstance().atClient.get(atKey).catchError((e) {
-      print('error in _downloadSingleFileFromWeb : $e');
-      ExceptionService.instance.showGetExceptionOverlay(e);
-      return AtValue();
-    });
 
-    if (result == null) {
-      return [];
-    }
     FileTransferObject? fileTransferObject;
-    try {
-      var _jsonData = jsonDecode(result.value);
-      _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/archive', '');
-      _jsonData['fileUrl'] = _jsonData['fileUrl'].replaceFirst('/zip', '');
-      _jsonData['fileUrl'] = _jsonData['fileUrl'] + '/$fileName';
 
-      fileTransferObject = FileTransferObject.fromJson(_jsonData);
-      print('fileTransferObject.fileUrl ${fileTransferObject!.fileUrl}');
+    var fileEntityIndex = allFiles
+        .indexWhere((FileEntity element) => element.transferId == transferId);
+    if (fileEntityIndex == -1) {
+      throw Exception('file object not found.');
+    }
+    fileTransferObject = allFiles[fileEntityIndex].fileTransferObject;
+    String formattedFileUrl = fileTransferObject.fileUrl;
+
+    try {
+      formattedFileUrl = formattedFileUrl.replaceFirst('/archive', '');
+      formattedFileUrl = formattedFileUrl.replaceFirst('/zip', '');
+      formattedFileUrl = formattedFileUrl + '/$fileName';
+
+      print('fileTransferObject.fileUrl ${fileTransferObject.fileUrl}');
     } on Exception catch (e) {
       throw Exception('json decode exception in download file ${e.toString()}');
     }
+    updateFileTransferState(
+        transferId!, FileTransferProgress(FileState.download, 0, fileName, 0));
+
     var downloadedFiles = <File>[];
 
     var tempDirectory =
         await Directory(downloadPath).createTemp('encrypted-files');
-    var fileDownloadReponse = await FileTransferService.getInstance()
-        .downloadIndividualFile(fileTransferObject.fileUrl, tempDirectory.path,
-            fileName, transferId!);
+    var fileDownloadReponse =
+        await FileTransferService.getInstance().downloadIndividualFile(
+      formattedFileUrl,
+      tempDirectory.path,
+      fileName,
+      transferId,
+    );
 
     if (fileDownloadReponse.isError) {
       throw Exception('download fail');
@@ -1294,10 +1302,11 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue =
-            await AtClientManager.getInstance().atClient.get(atKey)
-                // ignore: return_of_invalid_type_from_catch_error
-                .catchError((e) {
+        AtValue atvalue = await AtClientManager.getInstance()
+            .atClient
+            .get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);

@@ -118,7 +118,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           backgroundColor: ColorConstants.scaffoldColor,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: Container (
+          floatingActionButton: Container(
             width: 79,
             height: 79,
             decoration: BoxDecoration(

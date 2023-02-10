@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 
 class FileEntity {
   final FileData? file;
@@ -7,6 +8,12 @@ class FileEntity {
   final HistoryType? historyType;
   final String? atSign;
   final String? note;
+  final String transferId;
+  final FileTransferObject fileTransferObject;
+
+  // to manage file upload
+  bool isUploading;
+  bool isUploaded;
 
   FileEntity({
     this.file,
@@ -14,5 +21,9 @@ class FileEntity {
     this.historyType,
     this.atSign,
     this.note,
+    required this.transferId,
+    required this.fileTransferObject,
+    this.isUploading = false,
+    this.isUploaded = false,
   });
 }

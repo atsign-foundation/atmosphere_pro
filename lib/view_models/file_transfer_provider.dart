@@ -362,36 +362,43 @@ class FileTransferProvider extends BaseModel {
       var uploadStatus = await FileTransferService.getInstance()
           .reuploadFiles([file], _sentHistory.fileTransferObject!);
 
-      if (uploadStatus is List<FileStatus> && uploadStatus.isNotEmpty) {
-        if (uploadStatus[0].isUploaded!) {
-          var index = _sentHistory.fileDetails!.files!
-              .indexWhere((element) => element.name == _filesList[_index].name);
+      if (uploadStatus.isNotEmpty && uploadStatus[0].isUploaded!) {
+        var index = _sentHistory.fileDetails!.files!
+            .indexWhere((element) => element.name == _filesList[_index].name);
 
-          if (index > -1) {
-            _sentHistory.fileDetails!.files![index].isUploaded = true;
-          }
-
-          var i = _sentHistory.fileTransferObject!.fileStatus.indexWhere(
-              (element) => element.fileName == _filesList[_index].name);
-          if (i > -1) {
-            _sentHistory.fileTransferObject!.fileStatus[i].isUploaded = true;
-          }
-
-          // sending file upload notification to every atsign
-          await Future.forEach(_sentHistory.sharedWith!,
-              (ShareStatus sharedWith) async {
-            await reSendFileNotification(_sentHistory, sharedWith.atsign!);
-          });
-
-          Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                  listen: false)
-              .updateFileSendingStatus(
-            isUploading: false,
-            isUploaded: true,
-            id: _sentHistory.fileDetails!.key,
-            filename: _filesList[_index].name,
-          );
+        if (index > -1) {
+          _sentHistory.fileDetails!.files![index].isUploaded = true;
         }
+
+        var i = _sentHistory.fileTransferObject!.fileStatus.indexWhere(
+            (element) => element.fileName == _filesList[_index].name);
+        if (i > -1) {
+          _sentHistory.fileTransferObject!.fileStatus[i].isUploaded = true;
+        }
+
+        // sending file upload notification to every atsign
+        await Future.forEach(_sentHistory.sharedWith!,
+            (ShareStatus sharedWith) async {
+          await reSendFileNotification(_sentHistory, sharedWith.atsign!);
+        });
+
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .updateFileSendingStatus(
+          isUploading: false,
+          isUploaded: true,
+          id: _sentHistory.fileDetails!.key,
+          filename: _filesList[_index].name,
+        );
+      } else {
+        Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .updateFileSendingStatus(
+          isUploading: false,
+          isUploaded: false,
+          id: _sentHistory.fileDetails!.key,
+          filename: _filesList[_index].name,
+        );
       }
       setStatus(RETRY_NOTIFICATION, Status.Done);
     } catch (e) {
