@@ -42,7 +42,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
+                Flexible(
                   child: Text(
                     title ?? '',
                     textAlign: TextAlign.left,

@@ -42,6 +42,11 @@ class ColorConstants {
   static const Color fadedGreyN = Color(0xFFF1F1F1);
   static const Color dividerGrey = Color(0xFFD9D9D9);
   static const Color grey = Color(0xFF939393);
+  static const Color orange = Color(0xFFF07C50);
+  static const Color lightGrey = Color(0xFFF1F1F1);
+  static const Color boxGrey = Color(0xFFEFEFEF);
+  static const Color darkGray = Color(0xFFC0C0C0);
+  static const Color buttonGrey = Color(0xFFC7C7C7);
 
   static const Color sidebarTextUnselected = Color(0xFFA4A4A5);
   static const Color sidebarTextSelected = Color(0xFF000000);
