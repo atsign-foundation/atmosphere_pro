@@ -214,7 +214,7 @@ SPEC CHECKSUMS:
   flutter_image_compress: 5a5e9aee05b6553048b8df1c3bc456d0afaac433
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
+  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb

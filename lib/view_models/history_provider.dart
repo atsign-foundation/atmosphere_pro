@@ -322,9 +322,32 @@ class HistoryProvider extends BaseModel {
           ));
       if (res) {
         individualSentFileId[fileHistory.fileDetails!.key] = true;
-        isEdit
-            ? updateFileEntryInSentHistory(fileHistory)
-            : sentHistory.insert(0, fileHistory);
+        if (isEdit) {
+          updateFileEntryInSentHistory(fileHistory);
+        } else {
+          sentHistory.insert(0, fileHistory);
+
+          //
+          FileTransfer? fileTransfer = fileHistory.fileDetails;
+          if ((fileTransfer?.files?.length ?? 0) > 0) {
+            for (int j = 0; j < fileTransfer!.files!.length; j++) {
+              allFiles.insert(
+                0,
+                FileEntity(
+                    file: fileTransfer.files![j],
+                    date: fileTransfer.date != null
+                        ? fileTransfer.date.toString()
+                        : '',
+                    atSign: fileHistory.fileTransferObject?.sharedWith,
+                    historyType: HistoryType.send,
+                    note: fileTransfer.notes,
+                    transferId: fileTransfer.key,
+                    isUploaded: fileTransfer.files?[j].isUploaded ?? false,
+                    fileTransferObject: fileHistory.fileTransferObject!),
+              );
+            }
+          }
+        }
       }
       notifyListeners();
       return res;
@@ -681,6 +704,25 @@ class HistoryProvider extends BaseModel {
     _initBackendService();
     if (index > -1) {
       receivedHistoryLogs[index] = filesModel;
+
+      // converting received files into single entries before displaying in transfer history
+      if ((filesModel.files?.length ?? 0) > 0) {
+        for (int j = 0; j < filesModel.files!.length; j++) {
+          allFiles.insert(
+            0,
+            FileEntity(
+              file: filesModel.files![j],
+              date: filesModel.date != null ? filesModel.date.toString() : '',
+              atSign: filesModel.sender,
+              historyType: HistoryType.received,
+              note: filesModel.notes,
+              transferId: filesModel.key,
+              isUploaded: filesModel.files?[j].isUploaded ?? false,
+              fileTransferObject: fileTransferObject,
+            ),
+          );
+        }
+      }
     } else {
       // showing notification for new recieved file
       switch (app_lifecycle_state) {
@@ -698,7 +740,11 @@ class HistoryProvider extends BaseModel {
           await LocalNotificationService()
               .showNotification(sharedBy, 'Download and view the file(s).');
       }
-      await addToReceiveFileHistory(sharedBy, filesModel);
+      await addToReceiveFileHistory(
+        sharedBy,
+        filesModel,
+        fileTransferObject: fileTransferObject,
+      );
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
   }
@@ -714,8 +760,12 @@ class HistoryProvider extends BaseModel {
     });
   }
 
-  addToReceiveFileHistory(String sharedBy, FileTransfer filesModel,
-      {bool isUpdate = false}) async {
+  addToReceiveFileHistory(
+    String sharedBy,
+    FileTransfer filesModel, {
+    bool isUpdate = false,
+    required FileTransferObject fileTransferObject,
+  }) async {
     setStatus(ADD_RECEIVED_FILE, Status.Loading);
     filesModel.sender = sharedBy;
 
@@ -728,6 +778,24 @@ class HistoryProvider extends BaseModel {
     } else {
       receivedHistoryLogs.insert(0, filesModel);
       receivedItemsId[filesModel.key] = true;
+
+      if ((filesModel.files?.length ?? 0) > 0) {
+        for (int j = 0; j < filesModel.files!.length; j++) {
+          allFiles.insert(
+            0,
+            FileEntity(
+              file: filesModel.files![j],
+              date: filesModel.date != null ? filesModel.date.toString() : '',
+              atSign: filesModel.sender,
+              historyType: HistoryType.received,
+              note: filesModel.notes,
+              transferId: filesModel.key,
+              isUploaded: filesModel.files?[j].isUploaded ?? false,
+              fileTransferObject: fileTransferObject,
+            ),
+          );
+        }
+      }
     }
 
     setStatus(ADD_RECEIVED_FILE, Status.Done);
@@ -1233,6 +1301,30 @@ class HistoryProvider extends BaseModel {
         sentHistory.removeAt(index);
       } else {
         sentHistory[index] = fileHistory;
+
+        FileTransfer? fileTransfer = fileHistory.fileDetails;
+        if ((fileTransfer?.files?.length ?? 0) > 0) {
+          for (int j = 0; j < fileTransfer!.files!.length; j++) {
+            var fileEntity = FileEntity(
+              file: fileTransfer.files![j],
+              date:
+                  fileTransfer.date != null ? fileTransfer.date.toString() : '',
+              atSign: fileHistory.fileTransferObject?.sharedWith,
+              historyType: HistoryType.send,
+              note: fileTransfer.notes,
+              transferId: fileTransfer.key,
+              isUploaded: fileTransfer.files?[j].isUploaded ?? false,
+              fileTransferObject: fileHistory.fileTransferObject!,
+            );
+
+            var index = allFiles.indexWhere((element) =>
+                element.transferId ==
+                fileHistory.fileTransferObject?.transferId);
+            if (index != -1) {
+              allFiles[index] = fileEntity;
+            }
+          }
+        }
       }
     }
   }

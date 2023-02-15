@@ -302,7 +302,7 @@ class CommonUtilityFunctions {
       await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
           Routes.HOME, (Route<dynamic> route) => false);
     } else if (atSignList == null || atSignList.isEmpty) {
-      BackendService.getInstance().periodicHistoryRefresh?.cancel();
+      // BackendService.getInstance().periodicHistoryRefresh?.cancel();
       await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
           Routes.HOME, (Route<dynamic> route) => false);
     }

@@ -56,7 +56,7 @@ class BackendService {
   late AtClientPreference atClientPreference;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
-  Timer? periodicHistoryRefresh;
+  // Timer? periodicHistoryRefresh;
   String? get currentAtsign => currentAtSign;
   Directory? downloadDirectory;
   AnimationController? controller;
@@ -158,12 +158,12 @@ class BackendService {
     });
   }
 
-  setPeriodicFileHistoryRefresh() {
-    periodicHistoryRefresh?.cancel();
-    periodicHistoryRefresh = Timer.periodic(Duration(minutes: 1), (timer) {
-      refreshHistoryScreen();
-    });
-  }
+  // setPeriodicFileHistoryRefresh() {
+  //   periodicHistoryRefresh?.cancel();
+  //   periodicHistoryRefresh = Timer.periodic(Duration(minutes: 1), (timer) {
+  //     refreshHistoryScreen();
+  //   });
+  // }
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
@@ -198,9 +198,6 @@ class BackendService {
             .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var atKey = notificationKey.split(':')[1];
       var decryptedMessage = response.value!;
-
-      //TODO: only for testing
-      // await sendNotificationAck(notificationKey, fromAtSign);
 
       if (decryptedMessage != null && decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -334,7 +331,7 @@ class BackendService {
               listen: false)
           .checkForUndownloadedFiles();
 
-      setPeriodicFileHistoryRefresh();
+      // setPeriodicFileHistoryRefresh();
     }
   }
 
