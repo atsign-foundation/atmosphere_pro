@@ -73,7 +73,7 @@ class CustomOnboarding {
         await initServices();
         getTransferData();
         await _backendService.startMonitor();
-        _backendService.setPeriodicFileHistoryRefresh();
+        // _backendService.setPeriodicFileHistoryRefresh();
 
         if (showLoader != null) {
           showLoader(false, '');

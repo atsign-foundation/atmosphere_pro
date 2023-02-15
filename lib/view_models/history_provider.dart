@@ -980,6 +980,14 @@ class HistoryProvider extends BaseModel {
             isUploaded;
       }
     }
+
+    /// updating file entity list, allFiles
+    index = allFiles.indexWhere((el) => el.transferId == id);
+    if (index != -1) {
+      allFiles[index].isUploading = isUploading ?? false;
+      allFiles[index].isUploaded = isUploaded ?? false;
+    }
+
     notifyListeners();
   }
 

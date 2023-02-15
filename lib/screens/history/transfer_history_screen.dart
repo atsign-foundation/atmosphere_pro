@@ -416,34 +416,40 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                             provider.receivedFileProgress[
                                                 files[index].transferId];
 
-                                        if (fileTransferProgress != null &&
-                                            fileTransferProgress.percent !=
-                                                null) {
-                                          return Container(
-                                            width: 30,
-                                            height: 30,
-                                            margin: EdgeInsets.all(6),
-                                            child:
-                                                LabelledCircularProgressIndicator(
-                                              value: (fileTransferProgress
-                                                      .percent! /
-                                                  100),
-                                            ),
-                                          );
+                                        if (fileTransferProgress != null) {
+                                          return fileTransferProgress.percent !=
+                                                  null
+                                              ? Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  margin: EdgeInsets.all(6),
+                                                  child:
+                                                      LabelledCircularProgressIndicator(
+                                                    value: (fileTransferProgress
+                                                            .percent! /
+                                                        100),
+                                                  ),
+                                                )
+                                              : InfiniteSpinner();
                                         } else {
-                                          return InkWell(
-                                            onTap: () {
-                                              _onTapMoreIcon(key, files[index]);
-                                            },
-                                            child: Padding(
-                                              padding: EdgeInsets.only(left: 8),
-                                              child: Icon(
-                                                Icons.more_vert_outlined,
-                                                size: 16,
-                                                color: ColorConstants.grey,
-                                              ),
-                                            ),
-                                          );
+                                          return files[index].isUploading
+                                              ? InfiniteSpinner()
+                                              : InkWell(
+                                                  onTap: () {
+                                                    _onTapMoreIcon(
+                                                        key, files[index]);
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 8),
+                                                    child: Icon(
+                                                      Icons.more_vert_outlined,
+                                                      size: 16,
+                                                      color:
+                                                          ColorConstants.grey,
+                                                    ),
+                                                  ),
+                                                );
                                         }
                                       })
                                     : SizedBox(),
@@ -518,6 +524,9 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                 child: Center(
                                   child: InkWell(
                                     onTap: () {
+                                      if (Navigator.of(context).canPop()) {
+                                        Navigator.of(context).pop();
+                                      }
                                       reuploadFileConfirmation(fileEntity);
                                     },
                                     child: Text(
@@ -532,11 +541,11 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                 ),
                               )
                             : SizedBox(),
-                        Container(
+                        /*Container(
                           color: ColorConstants.sidebarTextUnselected,
                           height: double.infinity,
                           width: 1,
-                        ),
+                        ),*/
                         fileEntity.historyType == HistoryType.received
                             ? Expanded(
                                 child: Center(
@@ -714,5 +723,14 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
     if (fileExists) {
       await OpenFile.open(path);
     }
+  }
+
+  Widget InfiniteSpinner() {
+    return Container(
+      width: 30,
+      height: 30,
+      margin: EdgeInsets.all(6),
+      child: CircularProgressIndicator(),
+    );
   }
 }
