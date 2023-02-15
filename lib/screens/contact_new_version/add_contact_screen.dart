@@ -129,11 +129,10 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   const Text(
-                                    "atSign verified",
+                                    "atSign valid",
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: Color(0xffCACACA),
                                     ),
                                   ),
                                   const SizedBox(width: 10),
@@ -181,7 +180,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           height: 60,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: !state.isVerify
+                                ? ColorConstants.buttonGrey
+                                : Colors.black,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Center(
@@ -208,8 +209,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
   }
 
   void _checkValid() {
-    if (atSignController.text.isNotEmpty &&
-        nicknameController.text.isNotEmpty) {
+    if (atSignController.text.isNotEmpty) {
       addContactProvider.changeVerifyStatus(true);
     } else {
       addContactProvider.changeVerifyStatus(false);

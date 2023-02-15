@@ -11,6 +11,7 @@ import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_item_widget
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,21 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
         height: 130,
         title: "Transfer History",
       ),
-      body: buildBody(),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  ImageConstants.welcomeBackground,
+                ),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          buildBody(),
+        ],
+      ),
     );
   }
 

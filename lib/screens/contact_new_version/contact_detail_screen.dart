@@ -1,10 +1,12 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/avatar_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/card_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -23,12 +25,14 @@ class ContactDetailScreen extends StatefulWidget {
 class _ContactDetailScreenState extends State<ContactDetailScreen> {
   late TrustedContactProvider _trustedContactProvider;
   late ContactService _contactService;
+  late WelcomeScreenProvider _welcomeScreenProvider;
 
   bool isTrusted = false;
 
   @override
   void initState() {
     _trustedContactProvider = TrustedContactProvider();
+    _welcomeScreenProvider = WelcomeScreenProvider();
     _contactService = ContactService();
     checkTrustedContact();
     super.initState();
@@ -158,36 +162,48 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Container(
-                        height: 63,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: <Color>[
-                              Color(0xfff05e3f),
-                              Color(0xffeaa743),
-                            ],
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop(false);
+                          _welcomeScreenProvider.selectedContacts = [
+                            GroupContactsModel(
+                              contactType: ContactsType.CONTACT,
+                              contact: widget.contact,
+                            ),
+                          ];
+                          _welcomeScreenProvider.changeBottomNavigationIndex(0);
+                        },
+                        child: Container(
+                          height: 63,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: <Color>[
+                                ColorConstants.orangeColor,
+                                ColorConstants.yellow,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const Text(
-                                "Transfer Now",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const Text(
+                                  "Transfer Now",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 24),
-                              SvgPicture.asset(
-                                AppVectors.icArrow,
-                              ),
-                            ],
+                                const SizedBox(width: 24),
+                                SvgPicture.asset(
+                                  AppVectors.icArrow,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -231,7 +247,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                           await _contactService.deleteAtSign(
                             atSign: widget.contact.atSign!,
                           );
-                          Navigator.of(context).pop(true);
+                          Navigator.of(context).pop();
                         },
                       ),
                       const SizedBox(height: 25),
@@ -243,7 +259,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                             contact: widget.contact,
                             blockAction: true,
                           );
-                          Navigator.of(context).pop(true);
+                          Navigator.of(context).pop();
                         },
                       ),
                       const SizedBox(height: 25),
