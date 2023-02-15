@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/group_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/trusted_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,21 @@ class _ContactScreenState extends State<ContactScreen> {
           ),
         ),
       ),
-      body: buildBody(),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  ImageConstants.welcomeBackground,
+                ),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          buildBody(),
+        ],
+      ),
     );
   }
 
@@ -126,7 +141,7 @@ class _ContactScreenState extends State<ContactScreen> {
           child: ListContactScreen(
             contactsTrusted: trustedProvider.trustedContacts,
             onTapContact: (contact) async {
-              await showModalBottomSheet<bool?>(
+              final result = await showModalBottomSheet<bool?>(
                 context: context,
                 isScrollControlled: true,
                 useRootNavigator: true,
@@ -137,8 +152,9 @@ class _ContactScreenState extends State<ContactScreen> {
                   );
                 },
               );
-
-              reloadPage();
+              if (result != false) {
+                reloadPage();
+              }
             },
           ),
         ),

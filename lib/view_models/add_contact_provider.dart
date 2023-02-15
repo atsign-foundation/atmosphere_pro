@@ -10,6 +10,7 @@ class AddContactProvider extends BaseModel {
   void initData() {
     contactService.resetData();
     isVerify = false;
+    atSignError = '';
   }
 
   void changeVerifyStatus(bool verify) {

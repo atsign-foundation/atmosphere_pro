@@ -37,9 +37,7 @@ class SettingsButton extends StatelessWidget {
               height: 27,
               width: 27,
             ),
-            SizedBox(
-              width: 12,
-            ),
+            SizedBox(width: 12),
             Text(
               buttonText.toString(),
               style: CustomTextStyles.greySemiBold18,

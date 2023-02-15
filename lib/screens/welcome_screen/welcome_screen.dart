@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/bottom_navigation_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -32,8 +33,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   BackendService backendService = BackendService.getInstance();
   HistoryProvider? historyProvider;
   bool isExpanded = true;
-  int _selectedBottomNavigationIndex = 0;
+
+  // int _selectedBottomNavigationIndex = 0;
   late FileTransferProvider _fileTransferProvider;
+  late WelcomeScreenProvider welcomeScreenProvider;
 
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
@@ -55,6 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     _fileTransferProvider =
         Provider.of<FileTransferProvider>(context, listen: false);
+    welcomeScreenProvider = context.read<WelcomeScreenProvider>();
     setAtSign();
 
     listenForFlushBarStatus();
@@ -93,12 +97,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await GroupService().fetchGroupsAndContacts();
   }
 
-  void _onBottomNavigationSelect(int index) {
-    setState(() {
-      _selectedBottomNavigationIndex = index;
-    });
-  }
-
   static List<Widget> _bottomSheetWidgetOptions = <Widget>[
     WelcomeScreenHome(),
     ContactScreen(),
@@ -131,11 +129,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               elevation: 0,
               backgroundColor: Colors.transparent,
               onPressed: () {
-                setState(() {
-                  _selectedBottomNavigationIndex = 0;
-                });
+                welcomeScreenProvider.changeBottomNavigationIndex(0);
               },
-              child: _selectedBottomNavigationIndex == 0
+              child: context
+                          .watch<WelcomeScreenProvider>()
+                          .selectedBottomNavigationIndex ==
+                      0
                   ? SvgPicture.asset(
                       "assets/svg/plus.svg",
                     )
@@ -166,7 +165,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           body: Consumer<InternetConnectivityChecker>(
               builder: (_c, provider, widget) {
             if (provider.isInternetAvailable) {
-              return _bottomSheetWidgetOptions[_selectedBottomNavigationIndex];
+              return _bottomSheetWidgetOptions[context
+                  .watch<WelcomeScreenProvider>()
+                  .selectedBottomNavigationIndex];
             } else {
               return ErrorScreen(
                 TextStrings.noInternet,
@@ -179,105 +180,83 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget customBottomNavigationBar() {
-    return Container(
-      height: 70,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-        boxShadow: [
-          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              bottomNavigationItem("assets/svg/contacts.svg", "Contacts", 1),
-              bottomNavigationItem("assets/svg/my_files.svg", "My Files", 2),
-              SizedBox(
-                width: 1,
-              ),
-              bottomNavigationItem("assets/svg/history.svg", "History", 3),
-              bottomNavigationItem("assets/svg/settings.svg", "Settings", 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget bottomNavigationItem(String assetLocation, String label, int index) {
-    return GestureDetector(
-      onTap: () {
-        _onBottomNavigationSelect(index);
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Spacer(),
-          SvgPicture.asset(
-            assetLocation,
-            color: _selectedBottomNavigationIndex == index
-                ? Color(0xffEAA743)
-                : Colors.black,
-            height: 25,
-          ),
-          SizedBox(
-            height: 3,
-          ),
-          Text(label,
-              style: TextStyle(
-                  fontSize: 11,
-                  color: _selectedBottomNavigationIndex == index
-                      ? Color(0xffEAA743)
-                      : Colors.black)),
-          // Spacer(),
-          SizedBox(
-            height: 10,
-          ),
-          if (_selectedBottomNavigationIndex == index)
-            Container(
-              height: 2,
-              width: 40,
+    return Consumer<WelcomeScreenProvider>(builder: (context, provider, _) {
+      return Selector<WelcomeScreenProvider, int>(
+          selector: (context, provider) =>
+              provider.selectedBottomNavigationIndex,
+          builder: (context, selectedBottomNavigationIndex, _) {
+            return Container(
+              height: 70,
               decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xffEAA743).withOpacity(0.5),
-                    spreadRadius: 3,
-                    blurRadius: 5,
-                    offset: Offset(0, -1), // changes position of shadow
-                  ),
+                      color: Colors.black26, spreadRadius: 0, blurRadius: 10),
                 ],
               ),
-            )
-          else
-            SizedBox(
-              height: 2,
-              width: 40,
-            ),
-          if (_selectedBottomNavigationIndex == index)
-            SizedBox(
-              height: 4,
-              width: 50,
-              child: CustomPaint(
-                painter: PainterOne(),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.0),
+                  topRight: Radius.circular(30.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BottomNavigationWidget(
+                        icon: "assets/svg/contacts.svg",
+                        title: "Contacts",
+                        index: 1,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                      BottomNavigationWidget(
+                        icon: "assets/svg/my_files.svg",
+                        title: "My Files",
+                        index: 2,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                      SizedBox(
+                        width: 1,
+                      ),
+                      BottomNavigationWidget(
+                        icon: "assets/svg/history.svg",
+                        title: "History",
+                        index: 3,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                      BottomNavigationWidget(
+                        icon: "assets/svg/settings.svg",
+                        title: "Settings",
+                        index: 4,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )
-          else
-            SizedBox(
-              height: 4,
-              width: 50,
-            )
-        ],
-      ),
-    );
+            );
+          });
+    });
   }
 }
 

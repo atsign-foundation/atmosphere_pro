@@ -1,12 +1,14 @@
-import 'dart:math';
+import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/enums/file_types.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/option_header_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -47,7 +49,21 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
         title: "My Files",
         description: '${provider.allFiles.length}',
       ),
-      body: buildBody(),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  ImageConstants.welcomeBackground,
+                ),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          buildBody(),
+        ],
+      ),
     );
   }
 
@@ -56,12 +72,16 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
       children: [
         OptionHeaderWidget(
           controller: searchController,
-          onSearch: (content){
-
+          onSearch: (content) {
+            provider.setFileSearchText(content);
           },
           onReloadCallback: () async {
             await provider.getMyFilesRecords();
             await provider.getAllFiles();
+          },
+          searchOffCallBack: () {
+            searchController.clear();
+            provider.setFileSearchText('');
           },
           filterWidget: Consumer<MyFilesProvider>(
             builder: (context, provider, _) {
@@ -179,7 +199,15 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
             functionName: 'all_files',
             showError: false,
             successBuilder: (provider) {
-              return (provider.displayFiles.isEmpty)
+              final listFile = provider.displayFiles
+                  .where(
+                    (element) => (element.fileName ?? '').contains(
+                      provider.fileSearchText,
+                    ),
+                  )
+                  .toList();
+
+              return (listFile.isEmpty)
                   ? Center(
                       child: Text(
                         TextStrings().noFilesRecieved,
@@ -191,15 +219,24 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                     )
                   : Scrollbar(
                       child: ListView.builder(
-                        itemCount: provider.displayFiles.length,
-                        physics: ClampingScrollPhysics(),
+                        itemCount: listFile.length,
+                        physics: AlwaysScrollableScrollPhysics(),
                         padding: EdgeInsets.only(
-                            top: 24.toHeight, left: 28, right: 28),
+                          top: 24.toHeight,
+                          left: 28,
+                          right: 28,
+                        ),
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () async {
                               await openFilePath(
-                                provider.displayFiles[index].filePath!,
+                                listFile[index].filePath!,
+                              );
+                            },
+                            onLongPress: () {
+                              deleteFile(
+                                listFile[index].filePath!,
+                                fileTransferId: listFile[index].fileTransferId,
                               );
                             },
                             child: Container(
@@ -224,7 +261,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                       children: <Widget>[
                                         Flexible(
                                           child: Text(
-                                            "${provider.displayFiles[index].fileName}",
+                                            "${listFile[index].fileName}",
                                             maxLines: 2,
                                             style: TextStyle(
                                               color: ColorConstants.grayText,
@@ -236,9 +273,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                         SizedBox(height: 2),
                                         Text(
                                           AppUtils.getFileSizeString(
-                                            bytes: provider
-                                                    .displayFiles[index].size ??
-                                                0,
+                                            bytes: listFile[index].size ?? 0,
                                             decimals: 2,
                                           ),
                                           style: TextStyle(
@@ -266,51 +301,26 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
     );
   }
 
-  Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
-    return InkWell(
-      onLongPress: () {
-        // deleteFile(filePath!, fileTransferId: fileTransferId);
-      },
-      child: Column(
-        children: <Widget>[
-          filePath != null
-              ? Container(
-                  width: 80.toHeight,
-                  height: 80.toHeight,
-                  color: Colors.purple,
-                  // child: thumbnail(filePath.split('.').last, filePath),
-                )
-              : Container(
-                  width: 80.toHeight,
-                  height: 80.toHeight,
-                  child: ClipRect(
-                    child: Image.asset(
-                      ImageConstants.emptyTrustedSenders,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-          title != null
-              ? Container(
-                  width: 100.toHeight,
-                  height: 30.toHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        color: Color(0xFF8A8E95),
-                        fontSize: 12.toFont,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                )
-              : SizedBox()
-        ],
+  deleteFile(String filePath, {String? fileTransferId}) async {
+    await showModalBottomSheet(
+      context: NavService.navKey.currentContext!,
+      backgroundColor: Colors.white,
+      builder: (context) => EditBottomSheet(
+        onConfirmation: () async {
+          var file = File(filePath);
+          if (await file.exists()) {
+            file.deleteSync();
+          }
+          if (fileTransferId != null) {
+            await Provider.of<MyFilesProvider>(
+                    NavService.navKey.currentContext!,
+                    listen: false)
+                .removeParticularFile(fileTransferId,
+                    filePath.split(Platform.pathSeparator).last);
+          }
+          await provider.getAllFiles();
+        },
+        deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
       ),
     );
   }

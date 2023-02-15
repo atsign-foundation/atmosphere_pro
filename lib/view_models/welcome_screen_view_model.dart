@@ -15,10 +15,16 @@ class WelcomeScreenProvider extends BaseModel {
   bool hasSelectedContactsChanged = false, authenticating = false;
   bool isSelectionItemChanged = false;
   String? groupName;
+  int selectedBottomNavigationIndex = 0;
 
   void resetData() {
     selectedContacts = [];
     setStatus(updateContacts, Status.Done);
+  }
+
+  void changeBottomNavigationIndex(int index){
+    selectedBottomNavigationIndex = index;
+    notifyListeners();
   }
 
   void _addtoContactsList(GroupContactsModel _obj) {
