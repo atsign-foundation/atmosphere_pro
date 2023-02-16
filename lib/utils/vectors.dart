@@ -23,4 +23,6 @@ class AppVectors {
   static String icTrash = '$_basePath/ic_trash.svg';
   static String icArrow = '$_basePath/ic_arrow.svg';
   static String icImage = '$_basePath/ic_image.svg';
+  static String icClose = '$_basePath/ic_close.svg';
+  static String icTrustActivated = '$_basePath/ic_trust_activated.svg';
 }

@@ -4,8 +4,10 @@
 /// all [isSelected] functionalities are disabled
 
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../utils/images.dart';
 
@@ -32,6 +34,7 @@ class ContactListTile extends StatefulWidget {
       this.plainView = false,
       this.onTileTap})
       : super(key: key);
+
   @override
   _ContactListTileState createState() => _ContactListTileState();
 }
@@ -79,13 +82,8 @@ class _ContactListTileState extends State<ContactListTile> {
                     onTap: () {
                       widget.onRemove();
                     },
-                    child: Container(
-                      width: 40.toHeight,
-                      height: 40.toHeight,
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Image.asset(ImageConstants.closeIcon),
-                      ),
+                    child: SvgPicture.asset(
+                      AppVectors.icClose,
                     ),
                   )
                 : Icon(
