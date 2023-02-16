@@ -70,34 +70,34 @@ packages:
     dependency: transitive
     description:
       name: at_client
-      sha256: b0c3861b2e73eada14403328af980be43060fe14ac6ca0a7a0295e1dfb91e6b0
+      sha256: "06f52fc2eb49124be6572b44cda487a418fd19b2c6a3da7671a1e6d0d9e06a96"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.38"
+    version: "3.0.49"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
-      sha256: "082c4dcbaa72903338301721d7582634be30767998eb22f0c96fa2ab764b5e19"
+      sha256: "1a1c6ef8ebc3b29b81915a2c866efa2a877c041df3f212c53246377b74d16e61"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.5"
+    version: "3.2.7"
   at_common_flutter:
     dependency: "direct main"
     description:
       name: at_common_flutter
-      sha256: "6336655030a65d2ac69bc6442254facced2f45d04a98921f3cb17b39b71920be"
+      sha256: "75f7b1070d9aa5d42f9878859995f2a24654733a118012b83eb552baaba8ce13"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.10"
+    version: "2.0.11"
   at_commons:
     dependency: "direct main"
     description:
       name: at_commons
-      sha256: "739d2a4663cc3af03b93c5489d86a9f3c88c779dfe2b5c81a9c9a10841bb2f05"
+      sha256: b9547bf2352f8e064d92539690af4b6c8d1e2ee5ef6313d45b860b90b06a9d31
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.25"
+    version: "3.0.35"
   at_contact:
     dependency: "direct main"
     description:
@@ -110,19 +110,19 @@ packages:
     dependency: "direct main"
     description:
       name: at_contacts_flutter
-      sha256: f19d6ebff6b14aafd5bdc9fdcd654382a82526345a1c488f673230e32a6e7a42
+      sha256: "2f826c3943cb5ae3bf6af1f70d950fb1ec2b98d66ea0342c86b6175162f29c89"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.7"
+    version: "4.0.8"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      path: at_contacts_group_flutter
-      ref: trunk
-      resolved-ref: "81f9827f7921386ed2fd5623008a13ac744b25a1"
-      url: "https://github.com/atsign-foundation/at_widgets.git"
+      path: "packages/at_contacts_group_flutter"
+      ref: "feature/new-version-contacts-group"
+      resolved-ref: "8f14684d7dbd804e79ff45451502546e2280b0b2"
+      url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.9"
+    version: "4.0.10"
   at_file_saver:
     dependency: transitive
     description:
@@ -135,10 +135,10 @@ packages:
     dependency: transitive
     description:
       name: at_lookup
-      sha256: "6ea09b17be9c66c5262f307c36e2fa325d4b292df9664e4ed18109dee86925da"
+      sha256: "8e9b21f8b7b39ff0c0f8361a3273e36614f5e9f824f00b8b25097c20bc434bb2"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.30"
+    version: "3.0.33"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
@@ -152,18 +152,18 @@ packages:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
-      sha256: "256528bd491760dd4eabeea858be09612495c76e0996c603c071c24a84e734bd"
+      sha256: f4263138e22ab68a2bbb988e85c2c70a98171f1d9a55714fedde79bae8fbda19
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.35"
+    version: "3.0.46"
   at_persistence_spec:
     dependency: transitive
     description:
       name: at_persistence_spec
-      sha256: "0ab5ca23353a696badc86972aba5495aa776489b9b8d0a26a6392d800d319dfa"
+      sha256: "7664d3e576936f0edef642821486594c4ab86fb2678c68998d97f778d5c2a63e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.10"
   at_server_status:
     dependency: transitive
     description:
@@ -288,10 +288,10 @@ packages:
     dependency: transitive
     description:
       name: cron
-      sha256: f1b69bc71bdb6a4d0efeb0fe49a12bcb41119df4db8120dd5931c8abb2846434
+      sha256: d98aa8cdad0cccdb6b098e6a1fb89339c180d8a229145fa4cd8c6fc538f0e35f
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2"
+    version: "0.5.1"
   cross_file:
     dependency: transitive
     description:
@@ -559,10 +559,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluttertoast
-      sha256: b528e78a4e69957bb8a33d9e8ceaa728801bb7c6ce599e811e49cf6d94d17fef
+      sha256: "7cc92eabe01e3f1babe1571c5560b135dfc762a34e41e9056881e2196b178ec1"
       url: "https://pub.dev"
     source: hosted
-    version: "8.0.9"
+    version: "8.1.2"
   frontend_server_client:
     dependency: transitive
     description:
