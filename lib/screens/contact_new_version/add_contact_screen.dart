@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
@@ -74,10 +75,10 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 "Add Contact",
                                 style: TextStyle(
-                                  fontSize: 25,
+                                  fontSize: 25.toFont,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -88,7 +89,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                 controller: atSignController,
                                 prefixText: "@",
                                 prefixStyle: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 14.toFont,
                                   color: Colors.black,
                                 ),
                                 onSubmitted: (value) {
@@ -101,9 +102,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                   padding: const EdgeInsets.only(top: 6),
                                   child: Text(
                                     state.atSignError,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.red,
-                                      fontSize: 12,
+                                      fontSize: 12.toFont,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
@@ -128,10 +129,10 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  const Text(
+                                  Text(
                                     "atSign valid",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14.toFont,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -177,7 +178,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           }
                         },
                         child: Container(
-                          height: 60,
+                          height: 60.toHeight,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: !state.isVerify
@@ -185,12 +186,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                 : Colors.black,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               "Create New Contact",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: 16.toFont,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

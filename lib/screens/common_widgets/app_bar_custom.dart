@@ -59,7 +59,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                   description ?? '',
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 15.toFont,
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,

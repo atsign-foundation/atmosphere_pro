@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_outline_input_border.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,9 @@ class GradientTextFieldWidget extends StatefulWidget {
 class _GradientTextFieldWidgetState extends State<GradientTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 44,
+    return Container(
+      height: 52,
+      alignment: Alignment.centerLeft,
       child: TextFormField(
         controller: widget.controller,
         onChanged: (value) {
@@ -40,6 +42,9 @@ class _GradientTextFieldWidgetState extends State<GradientTextFieldWidget> {
         onFieldSubmitted: (value) {
           widget.onSubmitted?.call(value);
         },
+        style: TextStyle(
+          fontSize: 14.toFont,
+        ),
         decoration: InputDecoration(
           prefixText: widget.prefixText,
           prefixStyle: widget.prefixStyle,
@@ -66,7 +71,7 @@ class _GradientTextFieldWidgetState extends State<GradientTextFieldWidget> {
           hintText: widget.hintText,
           hintStyle: widget.hintTextStyle ??
               TextStyle(
-                fontSize: 12,
+                fontSize: 12.toFont,
                 fontWeight: FontWeight.w400,
                 color: ColorConstants.grey,
               ),

@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/screens/group_view/group_view.dart';
 import 'package:at_contacts_group_flutter/screens/new_group/create_group.dart';
 import 'package:at_contacts_group_flutter/screens/new_version/contact_screen.dart';
@@ -71,7 +72,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                           Navigator.of(context).pop();
                         },
                         child: Container(
-                          height: 31,
+                          height: 31.toHeight,
                           alignment: Alignment.topRight,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 30,
@@ -86,7 +87,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                             child: Text(
                               "Close",
                               style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 17.toFont,
                                 fontWeight: FontWeight.w600,
                                 color: ColorConstants.grey,
                               ),
@@ -103,12 +104,12 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(left: 27),
                       child: Text(
                         "My Groups",
                         style: TextStyle(
-                          fontSize: 25,
+                          fontSize: 25.toFont,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -158,7 +159,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                             }
                           },
                           child: Container(
-                            height: 67,
+                            height: 67.toHeight,
                             margin: const EdgeInsets.symmetric(horizontal: 27),
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -170,12 +171,12 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                                 ],
                               ),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 "Create Group",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 20,
+                                  fontSize: 20.toFont,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
