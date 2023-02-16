@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,12 +37,13 @@ class BottomNavigationWidget extends StatelessWidget {
           SizedBox(
             height: 3,
           ),
-          Text(title,
-              style: TextStyle(
-                  fontSize: 11,
-                  color: indexSelected == index
-                      ? Color(0xffEAA743)
-                      : Colors.black)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 11.toFont,
+              color: indexSelected == index ? Color(0xffEAA743) : Colors.black,
+            ),
+          ),
           // Spacer(),
           SizedBox(
             height: 10,

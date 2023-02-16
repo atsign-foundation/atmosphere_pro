@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
           Text(
             title ?? '',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.toFont,
               fontWeight: FontWeight.w600,
               color: ColorConstants.sidebarTextUnselected,
             ),
@@ -99,7 +100,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
         Text(
           "Search",
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 14.toFont,
             fontWeight: FontWeight.w600,
             color: ColorConstants.sidebarTextUnselected,
           ),
@@ -121,11 +122,14 @@ class _HeaderWidgetState extends State<HeaderWidget> {
               Expanded(
                 child: TextField(
                   controller: widget.controller,
+                  style: TextStyle(
+                    fontSize: 14.toFont,
+                  ),
                   decoration: InputDecoration.collapsed(
                     hintText: 'Search History by atSign',
                     hintStyle: TextStyle(
                       color: ColorConstants.grey,
-                      fontSize: 14,
+                      fontSize: 14.toFont,
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                     ),

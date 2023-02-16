@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/screens/new_version/contact_screen.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
@@ -192,7 +193,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 13.toFont,
                     fontWeight: FontWeight.w500,
                     color: ColorConstants.grey,
                   ),

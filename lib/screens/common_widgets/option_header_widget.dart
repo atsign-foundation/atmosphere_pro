@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
                       Text(
                         "Delivery Type",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.toFont,
                           fontWeight: FontWeight.w600,
                           color: ColorConstants.sidebarTextUnselected,
                         ),
@@ -113,7 +114,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
           Text(
             title ?? '',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.toFont,
               fontWeight: FontWeight.w600,
               color: ColorConstants.sidebarTextUnselected,
             ),
@@ -151,7 +152,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
               Text(
                 "Search",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14.toFont,
                   fontWeight: FontWeight.w600,
                   color: ColorConstants.sidebarTextUnselected,
                 ),
@@ -173,11 +174,15 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
                     Expanded(
                       child: TextField(
                         controller: widget.controller,
+                        style: TextStyle(
+                          fontSize: 14.toFont,
+                          color: Colors.black,
+                        ),
                         decoration: InputDecoration.collapsed(
                           hintText: 'Search History by atSign',
                           hintStyle: TextStyle(
                             color: ColorConstants.sidebarTextUnselected,
-                            fontSize: 14,
+                            fontSize: 14.toFont,
                             fontWeight: FontWeight.w500,
                             fontStyle: FontStyle.italic,
                           ),

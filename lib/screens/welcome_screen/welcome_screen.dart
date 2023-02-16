@@ -186,7 +186,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               provider.selectedBottomNavigationIndex,
           builder: (context, selectedBottomNavigationIndex, _) {
             return Container(
-              height: 70,
+              height: 70.toHeight,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(

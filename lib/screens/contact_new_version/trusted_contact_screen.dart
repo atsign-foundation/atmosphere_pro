@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/screens/new_version/widget/single_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail_screen.dart';
@@ -62,10 +63,10 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Trusted Senders",
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 25.toFont,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -87,6 +88,9 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                           Expanded(
                             child: TextField(
                               controller: searchController,
+                              style: TextStyle(
+                                fontSize: 14.toFont,
+                              ),
                               onChanged: (value) {
                                 setState(() {
                                   trustedContacts = provider.trustedContacts
@@ -99,7 +103,7 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                                 hintText: 'Search by atSign or nickname',
                                 hintStyle: TextStyle(
                                   color: ColorConstants.grey,
-                                  fontSize: 14,
+                                  fontSize: 14.toFont,
                                   fontWeight: FontWeight.w500,
                                   fontStyle: FontStyle.italic,
                                 ),
@@ -177,7 +181,7 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                 Navigator.of(context).pop();
               },
               child: Container(
-                height: 31,
+                height: 31.toHeight,
                 alignment: Alignment.topRight,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30,
@@ -192,7 +196,7 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                   child: Text(
                     "Close",
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 17.toFont,
                       fontWeight: FontWeight.w600,
                       color: ColorConstants.grey,
                     ),

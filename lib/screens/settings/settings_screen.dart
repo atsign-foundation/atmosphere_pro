@@ -83,10 +83,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     SizeConfig().init(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: SizeConfig().isTablet(context)
-          ? null
-          : AppBarCustom(
-              height: 130,
+      appBar: AppBarCustom(
+              height: 330,
               title: "Settings",
             ),
       /*CustomAppBar(

@@ -108,7 +108,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                     hint: Text(
                       "All",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16.toFont,
                         fontWeight: FontWeight.w700,
                         color: ColorConstants.grey,
                       ),
@@ -122,7 +122,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                   child: Text(
                                     "All",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14.toFont,
                                       fontWeight: FontWeight.bold,
                                       color:
                                           ColorConstants.sidebarTextUnselected,
@@ -177,7 +177,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                             child: Text(
                               key.text,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 16.toFont,
                                 fontWeight: FontWeight.bold,
                                 color: ColorConstants.grey,
                               ),
@@ -263,7 +263,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
             child: Text(
               title,
               style: TextStyle(
-                fontSize: 9,
+                fontSize: 9.toFont,
                 fontWeight: FontWeight.w600,
                 color: ColorConstants.sidebarTextUnselected,
               ),

@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/header_widget.dart';
@@ -59,10 +60,10 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Blocked atSigns",
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 25.toFont,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -80,7 +81,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                       },
                     ),
                     Container(
-                      height: 37,
+                      height: 37.toHeight,
                       padding: const EdgeInsets.only(left: 24),
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(
@@ -95,7 +96,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                           Text(
                             "atSign",
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 15.toFont,
                               fontWeight: FontWeight.w500,
                               color: ColorConstants.sidebarTextUnselected,
                             ),
@@ -144,7 +145,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                 Navigator.of(context).pop();
               },
               child: Container(
-                height: 31,
+                height: 31.toHeight,
                 alignment: Alignment.topRight,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30,
@@ -159,7 +160,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                   child: Text(
                     "Close",
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 17.toFont,
                       fontWeight: FontWeight.w600,
                       color: ColorConstants.grey,
                     ),
@@ -192,7 +193,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               return Container(
-                height: 58,
+                height: 58.toHeight,
                 color: Colors.white,
                 child: Column(
                   children: [
@@ -205,7 +206,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                               child: Text(
                                 listContact[index]?.contact?.atSign ?? '',
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 13.toFont,
                                   fontWeight: FontWeight.w500,
                                   color: ColorConstants.textBlack,
                                 ),
@@ -222,7 +223,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                                 );
                               },
                               child: Container(
-                                height: 31,
+                                height: 31.toHeight,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 14,
                                   vertical: 7,
@@ -240,7 +241,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                                     Text(
                                       "Unblock?",
                                       style: TextStyle(
-                                        fontSize: 13,
+                                        fontSize: 13.toFont,
                                         fontWeight: FontWeight.w600,
                                         color: ColorConstants.grey,
                                       ),
@@ -261,7 +262,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                     ),
                     Container(
                       color: ColorConstants.textBoxBg,
-                      height: 1,
+                      height: 1.toHeight,
                       width: double.infinity,
                     )
                   ],

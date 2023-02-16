@@ -157,24 +157,14 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                  child: Text(
-                                    key.text,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: ColorConstants.grey,
-                                    ),
+                                Text(
+                                  key.text,
+                                  style: TextStyle(
+                                    fontSize: 12.toFont,
+                                    fontWeight: FontWeight.w600,
+                                    color: ColorConstants.grey,
                                   ),
                                 ),
-                                Container(
-                                  color: ColorConstants.sidebarTileSelected,
-                                  height: 1,
-                                  width: double.infinity,
-                                )
                               ],
                             ),
                           );
@@ -265,7 +255,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                             maxLines: 2,
                                             style: TextStyle(
                                               color: ColorConstants.grayText,
-                                              fontSize: 12,
+                                              fontSize: 12.toFont,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -279,7 +269,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                           style: TextStyle(
                                             color: ColorConstants
                                                 .sidebarTextUnselected,
-                                            fontSize: 9,
+                                            fontSize: 9.toFont,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         )
