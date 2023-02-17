@@ -14,11 +14,16 @@ import '../data_models/file_transfer_status.dart';
 
 class OverlayService {
   OverlayService._();
+
   static final OverlayService _instance = OverlayService._();
+
   static OverlayService get instance => _instance;
   OverlayEntry? snackBarOverlayEntry;
 
-  showOverlay(FLUSHBAR_STATUS flushbarStatus, {String? errorMessage}) async {
+  Future<bool?> showOverlay(
+    FLUSHBAR_STATUS flushbarStatus, {
+    String? errorMessage,
+  }) async {
     hideOverlay();
 
     snackBarOverlayEntry =
@@ -28,10 +33,12 @@ class OverlayService {
     if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
       await Future.delayed(Duration(seconds: 3));
       hideOverlay();
+      return true;
     } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
       await Future.delayed(Duration(seconds: 5));
       hideOverlay();
     }
+    return null;
   }
 
   hideOverlay() {

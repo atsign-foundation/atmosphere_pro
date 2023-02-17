@@ -134,6 +134,11 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
+  void deleteFiles(int fileIndex) {
+    selectedFiles.removeAt(fileIndex);
+    notifyListeners();
+  }
+
   showNoPermissionDialog() async {
     await showDialog(
         context: NavService.navKey.currentContext!,

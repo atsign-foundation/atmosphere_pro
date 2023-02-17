@@ -378,7 +378,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                                       : AppVectors.icSendBorder,
                                                   color: snapsot.data == true
                                                       ? Colors.green
-                                                      : Color(0xFFEAA743),
+                                                      : Color(0xFF939393),
                                                 );
                                               } else {
                                                 return SizedBox();
@@ -395,7 +395,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                             AppVectors.icSendBorder,
                                             color: files[index].isUploaded
                                                 ? Colors.blue[200]
-                                                : Color(0xFFEAA743),
+                                                : Color(0xFF939393),
                                           ),
                                         ),
                                       ),
@@ -431,7 +431,19 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                             provider.receivedFileProgress[
                                                 files[index].transferId];
 
-                                        if (fileTransferProgress != null) {
+                                        bool _showDownloadProgress = false;
+                                        if (fileTransferProgress != null &&
+                                            files[index]
+                                                    .file
+                                                    ?.name
+                                                    ?.toLowerCase() ==
+                                                fileTransferProgress.fileName
+                                                    ?.toLowerCase()) {
+                                          _showDownloadProgress = true;
+                                        }
+
+                                        if (_showDownloadProgress &&
+                                            fileTransferProgress != null) {
                                           return fileTransferProgress.percent !=
                                                   null
                                               ? Container(

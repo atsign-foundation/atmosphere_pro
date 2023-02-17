@@ -76,14 +76,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   listenForFlushBarStatus() {
-    FileTransferProvider().flushBarStatusStream.listen((flushbarStatus) async {
-      OverlayService.instance.showOverlay(
-        flushbarStatus,
-        errorMessage: flushbarStatus == FLUSHBAR_STATUS.FAILED
-            ? _fileTransferProvider.error[_fileTransferProvider.SEND_FILES]
-            : null,
-      );
-    });
+    FileTransferProvider().flushBarStatusStream.listen(
+      (flushbarStatus) async {
+        final isSuccess = await OverlayService.instance.showOverlay(
+          flushbarStatus,
+          errorMessage: flushbarStatus == FLUSHBAR_STATUS.FAILED
+              ? _fileTransferProvider.error[_fileTransferProvider.SEND_FILES]
+              : null,
+        );
+
+        if (isSuccess == true) {
+          _fileTransferProvider.resetData();
+          welcomeScreenProvider.resetData();
+        }
+      },
+    );
   }
 
   setAtSign() async {

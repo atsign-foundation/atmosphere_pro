@@ -12,10 +12,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   final AtContact contact;
+  final Function()? onTrustFunc;
 
   const ContactDetailScreen({
     Key? key,
     required this.contact,
+    this.onTrustFunc,
   }) : super(key: key);
 
   @override
@@ -165,6 +167,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                       InkWell(
                         onTap: () {
                           Navigator.of(context).pop(false);
+                          widget.onTrustFunc?.call();
                           _welcomeScreenProvider.selectedContacts = [
                             GroupContactsModel(
                               contactType: ContactsType.CONTACT,

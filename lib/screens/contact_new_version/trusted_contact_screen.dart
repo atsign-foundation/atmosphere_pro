@@ -143,6 +143,9 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                                 padding: const EdgeInsets.only(top: 120),
                                 child: ContactDetailScreen(
                                   contact: contact,
+                                  onTrustFunc: () {
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
                               );
                             },
