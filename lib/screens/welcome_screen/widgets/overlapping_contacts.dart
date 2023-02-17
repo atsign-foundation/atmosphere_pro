@@ -71,6 +71,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       Padding(
                         padding: const EdgeInsets.only(right: 8, top: 4),
                         child: ContactCard(
+                          key: Key(
+                              widget.selectedList[index]!.contact!.atSign ??
+                                  ''),
                           contact: widget.selectedList[index]!.contact!,
                           isTrusted: _checkTrustedContact(
                               widget.selectedList[index]!.contact!),

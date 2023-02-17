@@ -337,7 +337,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   Widget _buildChoiceContact() {
     return InkWell(
-      onTap: _choiceContact,
+      onTap: () {
+        _choiceContact(clearSelectdContact: true);
+      },
       child: Container(
         height: 62.toHeight,
         width: double.infinity,
@@ -361,7 +363,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     );
   }
 
-  void _choiceContact() async {
+  void _choiceContact({bool clearSelectdContact = false}) async {
+    if (clearSelectdContact) {
+      listContacts.clear();
+    }
+
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
