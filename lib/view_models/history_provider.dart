@@ -19,6 +19,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/cupertino.dart';
 
 // import 'package:at_client/src/stream/file_transfer_object.dart';
@@ -172,19 +173,21 @@ class HistoryProvider extends BaseModel {
         FileTransfer? fileTransfer = sentHistory[i].fileDetails;
         if ((fileTransfer?.files?.length ?? 0) > 0) {
           for (int j = 0; j < fileTransfer!.files!.length; j++) {
-            listSentFile.add(
-              FileEntity(
-                  file: fileTransfer.files![j],
-                  date: fileTransfer.date != null
-                      ? fileTransfer.date.toString()
-                      : '',
-                  atSign: sentHistory[i].fileTransferObject?.sharedWith,
-                  historyType: HistoryType.send,
-                  note: fileTransfer.notes,
-                  transferId: fileTransfer.key,
-                  isUploaded: fileTransfer.files?[j].isUploaded ?? false,
-                  fileTransferObject: sentHistory[i].fileTransferObject!),
-            );
+            for (int k = 0; k < sentHistory[i].sharedWith!.length; k++) {
+              listSentFile.add(
+                FileEntity(
+                    file: fileTransfer.files![j],
+                    date: fileTransfer.date != null
+                        ? fileTransfer.date.toString()
+                        : '',
+                    atSign: sentHistory[i].sharedWith![k].atsign,
+                    historyType: HistoryType.send,
+                    note: fileTransfer.notes,
+                    transferId: fileTransfer.key,
+                    isUploaded: fileTransfer.files?[j].isUploaded ?? false,
+                    fileTransferObject: sentHistory[i].fileTransferObject!),
+              );
+            }
           }
         }
       }
@@ -331,20 +334,22 @@ class HistoryProvider extends BaseModel {
           FileTransfer? fileTransfer = fileHistory.fileDetails;
           if ((fileTransfer?.files?.length ?? 0) > 0) {
             for (int j = 0; j < fileTransfer!.files!.length; j++) {
-              allFiles.insert(
-                0,
-                FileEntity(
-                    file: fileTransfer.files![j],
-                    date: fileTransfer.date != null
-                        ? fileTransfer.date.toString()
-                        : '',
-                    atSign: fileHistory.fileTransferObject?.sharedWith,
-                    historyType: HistoryType.send,
-                    note: fileTransfer.notes,
-                    transferId: fileTransfer.key,
-                    isUploaded: fileTransfer.files?[j].isUploaded ?? false,
-                    fileTransferObject: fileHistory.fileTransferObject!),
-              );
+              for (int k = 0; k < fileHistory.sharedWith!.length; k++) {
+                allFiles.insert(
+                  0,
+                  FileEntity(
+                      file: fileTransfer.files![j],
+                      date: fileTransfer.date != null
+                          ? fileTransfer.date.toString()
+                          : '',
+                      atSign: fileHistory.sharedWith![k].atsign,
+                      historyType: HistoryType.send,
+                      note: fileTransfer.notes,
+                      transferId: fileTransfer.key,
+                      isUploaded: fileTransfer.files?[j].isUploaded ?? false,
+                      fileTransferObject: fileHistory.fileTransferObject!),
+                );
+              }
             }
           }
         }
@@ -1115,6 +1120,9 @@ class HistoryProvider extends BaseModel {
           .checkForUndownloadedFiles();
 
       if (files is List<File>) {
+        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .saveNewDataInMyFiles(receivedHistoryLogs[index]);
         setStatus(DOWNLOAD_FILE, Status.Done);
         return true;
       } else {

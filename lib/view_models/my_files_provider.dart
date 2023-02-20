@@ -505,6 +505,34 @@ class MyFilesProvider extends BaseModel {
       );
 
       if (res) {
+        await Future.forEach(fileTransfer.files!, (FileData file) async {
+          String filePath;
+
+          if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+            filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
+                Platform.pathSeparator +
+                fileTransfer.sender! +
+                Platform.pathSeparator +
+                (file.name ?? '');
+          } else {
+            filePath = BackendService.getInstance().downloadDirectory!.path +
+                Platform.pathSeparator +
+                (file.name ?? '');
+          }
+
+          FilesDetail fileDetail = FilesDetail(
+            fileName: file.name,
+            filePath: filePath,
+            size: double.parse(file.size.toString()),
+            date: fileTransfer.date?.toLocal().toString(),
+            type: file.name!.split('.').last,
+            contactName: fileTransfer.sender,
+            fileTransferId: fileTransfer.key,
+          );
+
+          allFiles.insert(0, fileDetail);
+        });
+
         myFiles.insert(
           0,
           FileTransfer.fromJson(
