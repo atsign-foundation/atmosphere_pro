@@ -190,13 +190,13 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
             functionName: 'all_files',
             showError: false,
             successBuilder: (provider) {
-              final listFile = provider.displayFiles
-                  .where(
-                    (element) => (element.fileName ?? '').contains(
-                      provider.fileSearchText,
-                    ),
-                  )
-                  .toList();
+              final listFile = provider.displayFiles.where(
+                (element) {
+                  return (element.fileName?.toLowerCase() ?? '').contains(
+                    provider.fileSearchText.toLowerCase(),
+                  );
+                },
+              ).toList();
 
               return (listFile.isEmpty)
                   ? Center(
