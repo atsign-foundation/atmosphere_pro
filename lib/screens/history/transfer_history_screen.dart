@@ -745,6 +745,12 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
         Platform.pathSeparator +
         (fileEntity.file!.name ?? '');
 
+    if (fileEntity.historyType == HistoryType.send) {
+      path = MixedConstants.SENT_FILE_DIRECTORY +
+          Platform.pathSeparator +
+          (fileEntity.file!.name ?? '');
+    }
+
     File test = File(path);
     bool fileExists = await test.exists();
     if (fileExists) {
