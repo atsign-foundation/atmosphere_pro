@@ -184,6 +184,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
         Expanded(
           child: ProviderHandler<MyFilesProvider>(
             load: (provider) async {
+              await provider.getMyFilesRecords();
               await provider.getAllFiles();
             },
             functionName: 'all_files',
