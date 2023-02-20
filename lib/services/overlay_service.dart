@@ -1,9 +1,9 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -215,9 +215,14 @@ class OverlayService {
       height: 40,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        child: LinearProgressIndicator(
-          color: ColorConstants.yellow,
-          minHeight: 45,
+        child: ProgressBarAnimation(
+          height: 45,
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFFF05E3F),
+              Color(0xFFEAA743),
+            ],
+          ),
           backgroundColor: Color(0xFFE2E2E2),
         ),
       ),
