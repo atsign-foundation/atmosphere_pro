@@ -52,12 +52,11 @@ packages:
   at_backupkey_flutter:
     dependency: "direct main"
     description:
-      path: at_backupkey_flutter
-      ref: fix_flutter_qr_reader
-      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
-      url: "https://github.com/atsign-foundation/at_widgets.git"
-    source: git
-    version: "4.0.5"
+      name: at_backupkey_flutter
+      sha256: "63a8fb9ba7b091aa8ff1a300509eb6933aeff02621bfbdabd738f42230f7b306"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.8"
   at_base2e15:
     dependency: transitive
     description:
@@ -75,13 +74,13 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: at_client
-      sha256: ef5574cbc0dbc575e6a655993aa4c9ab8edea2f81b889120801dd08d04b4bba6
+      sha256: "179bea8c4ecb5cf719887f2f5b806719dd6458736cbb824c29cf928129203bf5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.55"
+    version: "3.0.56"
   at_client_mobile:
     dependency: "direct main"
     description:
@@ -150,12 +149,11 @@ packages:
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: at_onboarding_flutter
-      ref: fix_flutter_qr_reader
-      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
-      url: "https://github.com/atsign-foundation/at_widgets.git"
-    source: git
-    version: "5.0.2"
+      name: at_onboarding_flutter
+      sha256: "57f5753460487129a306ffb523f4800146bae885968e9f3f1ec52598867998e9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.5"
   at_persistence_secondary_server:
     dependency: transitive
     description:
