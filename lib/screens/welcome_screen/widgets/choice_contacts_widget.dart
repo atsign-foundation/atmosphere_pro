@@ -1,20 +1,16 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChoiceContactsWidget extends StatefulWidget {
   final List<GroupContactsModel>? selectedContacts;
-  final Function(List<GroupContactsModel> contacts)? choiceContacts;
 
   const ChoiceContactsWidget({
     Key? key,
     this.selectedContacts,
-    this.choiceContacts,
   }) : super(key: key);
 
   @override
@@ -23,10 +19,12 @@ class ChoiceContactsWidget extends StatefulWidget {
 
 class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
   late TrustedContactProvider trustedProvider;
+  late List<GroupContactsModel> listContact;
 
   @override
   void initState() {
     trustedProvider = context.read<TrustedContactProvider>();
+    listContact = widget.selectedContacts ?? [];
     super.initState();
   }
 
@@ -74,16 +72,46 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                   contactsTrusted: trustedProvider.trustedContacts,
                   isChoiceMultiTypeContact: true,
                   showGroups: true,
-                  selectedContacts: widget.selectedContacts,
+                  selectedContacts: listContact,
                   choiceMultiTypeContact: (contacts) {
-                    widget.choiceContacts?.call(contacts);
-                    Provider.of<WelcomeScreenProvider>(
-                            NavService.navKey.currentContext!,
-                            listen: false)
-                        .updateSelectedContacts(contacts);
+                    setState(() {
+                      listContact = contacts;
+                    });
                   },
                 ),
               ),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 44,
+                    vertical: 24,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop(listContact);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.black,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Select (${listContact.length})",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),

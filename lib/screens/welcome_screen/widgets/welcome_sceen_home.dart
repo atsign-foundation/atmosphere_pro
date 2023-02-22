@@ -82,7 +82,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
           controller: scrollController,
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 30.toWidth, vertical: 20.toHeight),
+              horizontal: 30.toWidth,
+              vertical: 20.toHeight,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -134,41 +136,50 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 const SizedBox(height: 16),
                 Consumer<FileTransferProvider>(builder: (context, provider, _) {
                   if (provider.selectedFiles.isNotEmpty) {
-                    return Wrap(
-                      alignment: WrapAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      runSpacing: 5.0.toWidth,
-                      spacing: 10.0.toHeight,
-                      children: List.generate(
-                        provider.selectedFiles.length,
-                        (index) {
-                          return SizedBox(
-                            width: (MediaQuery.of(context).size.width -
-                                    50.toWidth) /
-                                2,
-                            child: Stack(
-                              children: [
-                                FileCard(
-                                  fileDetail: provider.selectedFiles[index],
-                                ),
-                                Positioned(
-                                  top: 0,
-                                  right: -5,
-                                  child: InkWell(
-                                    onTap: () {
-                                      provider.deleteFiles(index);
-                                      provider.calculateSize();
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppVectors.icClose,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Wrap(
+                          alignment: WrapAlignment.start,
+                          runAlignment: WrapAlignment.start,
+                          children: List.generate(
+                            provider.selectedFiles.length,
+                            (index) {
+                              return SizedBox(
+                                width: (MediaQuery.of(context).size.width -
+                                        60.toWidth) /
+                                    2,
+                                child: Stack(
+                                  children: [
+                                    FileCard(
+                                      fileDetail: provider.selectedFiles[index],
                                     ),
-                                  ),
+                                    Positioned(
+                                      top: 0,
+                                      right: -5,
+                                      child: InkWell(
+                                        onTap: () {
+                                          provider.deleteFiles(index);
+                                          provider.calculateSize();
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppVectors.icClose,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: provider.selectedFiles.length < 3
+                              ? 71.toHeight
+                              : 0,
+                        )
+                      ],
                     );
                   } else {
                     return InkWell(
@@ -178,16 +189,26 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         width: 350.toWidth,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: ColorConstants.orangeColor,
+                          gradient: LinearGradient(
+                            colors: [
+                              ColorConstants.orangeColor,
+                              ColorConstants.yellow.withOpacity(0.65),
+                            ],
                           ),
                         ),
-                        child: Center(
-                          child: Text(
-                            'Select file(s) to transfer',
-                            style: TextStyle(
-                              color: ColorConstants.orangeColor,
-                              fontSize: 16.toFont,
+                        padding: EdgeInsets.all(2),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Select file(s) to transfer',
+                              style: TextStyle(
+                                color: ColorConstants.orangeColor,
+                                fontSize: 16.toFont,
+                              ),
                             ),
                           ),
                         ),
@@ -242,12 +263,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   ],
                 ),
                 SizedBox(height: 16.toHeight),
-                // Consumer<FileTransferProvider>(builder: (context, provider, _) {
-                //   if (filePickerModel.scrollToBottom) {
-                //     scrollToBottom();
-                //   }
-                //   return SizedBox();
-                // }),
                 Consumer<WelcomeScreenProvider>(
                   builder: (context, provider, _) {
                     if (provider.scrollToBottom) {
@@ -338,10 +353,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   Widget _buildChoiceContact() {
     return InkWell(
       onTap: () {
-        _choiceContact(clearSelectdContact: true);
+        _choiceContact(clearSelectedContact: true);
       },
       child: Container(
-        height: 62.toHeight,
+        height: 61.toHeight,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -363,12 +378,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     );
   }
 
-  void _choiceContact({bool clearSelectdContact = false}) async {
-    if (clearSelectdContact) {
+  void _choiceContact({bool clearSelectedContact = false}) async {
+    if (clearSelectedContact) {
       listContacts.clear();
     }
 
-    await showModalBottomSheet<void>(
+    final result = await showModalBottomSheet<List<GroupContactsModel>?>(
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
@@ -376,14 +391,14 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       builder: (BuildContext context) {
         return ChoiceContactsWidget(
           selectedContacts: listContacts,
-          choiceContacts: (contacts) {
-            setState(() {
-              listContacts = contacts;
-            });
-          },
         );
       },
     );
+
+    if (result != null) {
+      listContacts = result;
+      _welcomeScreenProvider.updateSelectedContacts(result);
+    }
   }
 
   selectFiles() async {

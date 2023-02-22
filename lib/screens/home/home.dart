@@ -267,7 +267,7 @@ class _HomeState extends State<Home> {
                                               await _backendService
                                                   .checkToOnboard();
                                             }),
-                                  // SizedBox(height: 15.toHeight),
+                                  SizedBox(height: 24.toHeight),
                                   CustomButton(
                                     onPressed: () {
                                       CommonUtilityFunctions()
