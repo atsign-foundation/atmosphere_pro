@@ -68,12 +68,13 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                 ),
               ),
               Expanded(
-                child: ChoiceContactWidget(
-                  contactsTrusted: trustedProvider.trustedContacts,
-                  isChoiceMultiTypeContact: true,
+                child: GroupListContact(
+                  trustedContacts: trustedProvider.trustedContacts,
+                  isSelectMultiContacts: true,
                   showGroups: true,
+                  isShowFilterBar: true,
                   selectedContacts: listContact,
-                  choiceMultiTypeContact: (contacts) {
+                  onSelectContacts: (contacts) {
                     setState(() {
                       listContact = contacts;
                     });

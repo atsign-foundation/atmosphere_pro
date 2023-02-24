@@ -1,6 +1,6 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_group_flutter/screens/new_version/widget/single_contact_widget.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact/group_list_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -59,79 +59,23 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 27),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Trusted Senders",
-                      style: TextStyle(
-                        fontSize: 25.toFont,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      height: 48,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: ColorConstants.grey,
-                        ),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: searchController,
-                              style: TextStyle(
-                                fontSize: 14.toFont,
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  trustedContacts = provider.trustedContacts
-                                      .where((element) => (element.atSign ?? '')
-                                          .contains(value))
-                                      .toList();
-                                });
-                              },
-                              decoration: InputDecoration.collapsed(
-                                hintText: 'Search by atSign or nickname',
-                                hintStyle: TextStyle(
-                                  color: ColorConstants.grey,
-                                  fontSize: 14.toFont,
-                                  fontWeight: FontWeight.w500,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // onChanged: widget.onSearch,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: Icon(
-                              Icons.search,
-                              color: ColorConstants.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                child: Text(
+                  "Trusted Senders",
+                  style: TextStyle(
+                    fontSize: 25.toFont,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
+              const SizedBox(height: 30),
               Expanded(
                 child: Consumer<TrustedContactProvider>(
                   builder: (context, myProvider, child) {
                     return Scrollbar(
-                      child: SingleContactWidget(
-                        contacts: trustedContacts,
+                      child: GroupListContact(
+                        isOnlyShowContactTrusted: true,
+                        trustedContacts: trustedContacts,
                         onTapContact: (contact) async {
                           await showModalBottomSheet<void>(
                             context: context,

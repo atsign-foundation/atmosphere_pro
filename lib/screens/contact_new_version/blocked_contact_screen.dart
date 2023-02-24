@@ -223,10 +223,9 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                                 );
                               },
                               child: Container(
-                                height: 31.toHeight,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 7,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.toWidth,
+                                  vertical: 7.toHeight,
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
