@@ -388,7 +388,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   selectFiles() async {
     await providerCallback<FileTransferProvider>(context,
-        task: (provider) => provider.pickFiles(provider.MEDIA),
+        task: (provider) => provider.pickFiles(provider.FILES),
         taskName: (provider) => provider.PICK_FILES,
         onSuccess: (provider) {},
         onError: (err) => ErrorDialog().show(err.toString(), context: context));
