@@ -47,7 +47,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
       appBar: AppBarCustom(
         height: 130,
         title: "My Files",
-        description: '${provider.allFiles.length}',
+        description: "${context.watch<MyFilesProvider>().allFiles.length}",
       ),
       body: Stack(
         children: [
@@ -216,6 +216,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                           top: 24.toHeight,
                           left: 28,
                           right: 28,
+                          bottom: 100,
                         ),
                         itemBuilder: (context, index) {
                           return InkWell(
