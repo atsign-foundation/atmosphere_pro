@@ -580,9 +580,13 @@ class BackendService {
 
   onNotificationClick(String payload) async {
     if (Platform.isAndroid || Platform.isIOS) {
-      await Navigator.push(
+      await Navigator.pushNamedAndRemoveUntil(
         NavService.navKey.currentContext!,
-        MaterialPageRoute(builder: (context) => HistoryScreen(tabIndex: 1)),
+        Routes.WELCOME_SCREEN,
+        (route) => false,
+        arguments: {
+          "indexBottomBarSelected": 3,
+        },
       );
     } else if (Platform.isMacOS) {
       DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);

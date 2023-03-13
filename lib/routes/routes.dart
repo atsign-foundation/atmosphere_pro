@@ -25,7 +25,15 @@ class SetupRoutes {
             ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
         return WebsiteScreen(title: args["title"], url: args["url"]);
       },
-      Routes.WELCOME_SCREEN: (context) => WelcomeScreen(),
+      Routes.WELCOME_SCREEN: (context) {
+        Map<String, dynamic> args =
+            (ModalRoute.of(context)!.settings.arguments ?? <String, dynamic>{})
+                as Map<String, dynamic>;
+
+        return WelcomeScreen(
+          indexBottomBarSelected: args['indexBottomBarSelected'],
+        );
+      },
       Routes.FAQ_SCREEN: (context) => WebsiteScreen(
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
