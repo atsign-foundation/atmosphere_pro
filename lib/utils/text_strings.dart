@@ -368,4 +368,9 @@ class TextStrings {
   static const noInternetMsg = 'No internet available';
   static const permissionRequireMessage =
       'This action cannot be completed because the app does not have permission to access the required items. Please change the app permission settings to continue.';
+  String noContactsFound = 'No results';
+  String contactEmpty = 'Empty contact';
+  String serviceError = 'Something went wrong, please try again.';
+  String groupAlreadyExists = 'Group with this name already exists.';
+  String groupEmptyName = 'Add a group name';
 }

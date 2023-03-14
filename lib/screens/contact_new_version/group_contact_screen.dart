@@ -1,8 +1,8 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_contacts_group_flutter/screens/group_contact/group_list_contact.dart';
 import 'package:at_contacts_group_flutter/screens/group_view/group_view.dart';
-import 'package:at_contacts_group_flutter/screens/new_group/create_group.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +117,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                     ),
                     const SizedBox(height: 30),
                     Expanded(
-                      child: GroupListContact(
+                      child: ListContactWidget(
                         showGroups: true,
                         showContacts: false,
                         isShowAlpha: false,

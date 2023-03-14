@@ -76,7 +76,7 @@ dependencies:
   showcaseview: ^1.1.5
   biometric_storage: ^4.1.3
   flutter_svg: ^1.1.5
-
+  image_picker: 0.8.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -89,7 +89,7 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       path: packages/at_contacts_group_flutter
-      ref: feature/new-version-contacts-group
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

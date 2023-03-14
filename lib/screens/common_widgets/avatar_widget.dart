@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
-import 'package:at_contacts_group_flutter/widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:flutter/material.dart';
 
 class AvatarWidget extends StatefulWidget {

@@ -1,0 +1,1 @@
+enum ContactsType { CONTACT, GROUP }

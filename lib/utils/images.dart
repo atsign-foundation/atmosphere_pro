@@ -73,4 +73,6 @@ class ImageConstants {
 
   static String sidebarSelectedTile = '$_basePath/selected_sidebar.png';
   static String sidebarSettings = '$_basePath/settings.png';
+
+  static String emptyBox = '$_basePath/img_empty_box.png';
 }

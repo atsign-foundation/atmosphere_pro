@@ -1,5 +1,6 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                 ),
               ),
               Expanded(
-                child: GroupListContact(
+                child: ListContactWidget(
                   trustedContacts: trustedProvider.trustedContacts,
                   isSelectMultiContacts: true,
                   showGroups: true,
