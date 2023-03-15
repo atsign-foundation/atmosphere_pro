@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -17,18 +15,42 @@ class WebsiteScreen extends StatefulWidget {
   final String? title;
   final String? url;
 
-  const WebsiteScreen({Key? key, this.title, this.url}) : super(key: key);
+  const WebsiteScreen({
+    Key? key,
+    this.title,
+    this.url,
+  }) : super(key: key);
+
   @override
   _WebsiteScreenState createState() => _WebsiteScreenState();
 }
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
-  late bool loading;
+  late bool isLoading;
+  late WebViewController webViewController;
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
+    Factory(() => EagerGestureRecognizer())
+  };
+
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    loading = true;
+
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url ?? ''));
+    isLoading = true;
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForNetwork();
     });
@@ -70,30 +92,22 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
           style: CustomTextStyles.primaryBold18,
         ),
       ),
-      body: Stack(children: [
-        WebView(
-          initialUrl: widget.url,
-          javascriptMode: JavascriptMode.unrestricted,
-          gestureRecognizers: {
-            Factory<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer()..onUpdate = (_) {},
-            )
-          },
-          onPageFinished: (test1) {
-            this.setState(() {
-              loading = false;
-            });
-          },
-        ),
-        loading
-            ? Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                  ColorConstants.blueText,
-                )),
-              )
-            : SizedBox()
-      ]),
+      body: Stack(
+        children: [
+          WebViewWidget(
+            controller: webViewController,
+            gestureRecognizers: gestureRecognizers,
+          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                    ColorConstants.blueText,
+                  )),
+                )
+              : SizedBox()
+        ],
+      ),
     );
   }
 }
