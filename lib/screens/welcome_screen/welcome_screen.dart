@@ -24,6 +24,13 @@ import 'package:provider/provider.dart';
 import '../../utils/text_strings.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  final int? indexBottomBarSelected;
+
+  const WelcomeScreen({
+    Key? key,
+    this.indexBottomBarSelected,
+  }) : super(key: key);
+
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
@@ -67,6 +74,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await initPackages();
     });
 
+    if (widget.indexBottomBarSelected != null) {
+      welcomeScreenProvider
+          .changeBottomNavigationIndex(widget.indexBottomBarSelected!);
+    }
     super.initState();
   }
 
