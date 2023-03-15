@@ -51,7 +51,7 @@ dependencies:
   share_plus: ^4.0.1
   url_launcher: ^6.0.20
   video_thumbnail: ^0.4.6
-  webview_flutter: ^3.0.4
+  webview_flutter: ^4.0.1
   http: ^0.13.4
   package_info_plus: ^1.4.2
   fluttertoast: ^8.0.9
@@ -67,7 +67,7 @@ dependencies:
   at_common_flutter: ^2.0.10
 
   at_client_mobile: ^3.2.7
-  at_onboarding_flutter: ^5.0.5
+  at_onboarding_flutter: ^6.0.2
   at_backupkey_flutter: ^4.0.6
   at_contacts_flutter: ^4.0.7
   at_contacts_group_flutter: ^4.0.9
@@ -84,6 +84,8 @@ dev_dependencies:
 dependency_overrides:
   emoji_picker_flutter: 1.2.1
   at_client: ^3.0.41
+  file_picker: ^5.2.4
+  ffi: ^2.0.1
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
