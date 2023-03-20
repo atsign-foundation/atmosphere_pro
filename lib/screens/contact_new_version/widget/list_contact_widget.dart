@@ -235,7 +235,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
                               ),
                               const SizedBox(height: 32),
                               Text(
-                                "No Groups Created",
+                                "No Result",
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,

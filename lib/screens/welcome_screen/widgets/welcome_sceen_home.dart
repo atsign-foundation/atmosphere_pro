@@ -11,6 +11,7 @@ import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -47,6 +48,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   void initState() {
+    _welcomeScreenProvider = context.read<WelcomeScreenProvider>();
+    filePickerModel = context.read<FileTransferProvider>();
     noteController = TextEditingController();
     isContactSelected = false;
     isFileSelected = false;
@@ -55,11 +58,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   Widget build(BuildContext context) {
-    filePickerModel = Provider.of<FileTransferProvider>(context);
-    _welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
-      context,
-    );
-
     return Scaffold(
       appBar: AppBarCustom(
         height: 130,
@@ -95,8 +93,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal:
-                              SizeConfig().isTablet(context) ? 33.toWidth : 0,
+                          horizontal: SizeConfig().isTablet(context)
+                              ? 33.toWidth
+                              : 0,
                         ),
                         child: Text(
                           TextStrings().selectFiles,
@@ -134,7 +133,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Consumer<FileTransferProvider>(builder: (context, provider, _) {
+                Consumer<FileTransferProvider>(
+                    builder: (context, provider, _) {
                   if (provider.selectedFiles.isNotEmpty) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +153,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 child: Stack(
                                   children: [
                                     FileCard(
-                                      fileDetail: provider.selectedFiles[index],
+                                      fileDetail:
+                                          provider.selectedFiles[index],
                                     ),
                                     Positioned(
                                       top: 0,
@@ -477,6 +478,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
     _welcomeScreenProvider.resetSelectedContactsStatus();
     filePickerModel.resetSelectedFilesStatus();
+    OverlayService.instance.showOverlay();
+
     var res = await filePickerModel.sendFileWithFileBin(
       filePickerModel.selectedFiles,
       _welcomeScreenProvider.selectedContacts,
@@ -485,6 +488,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     );
 
     if (mounted && res is bool) {
+      filePickerModel.resetData();
+      _welcomeScreenProvider.resetData();
+
       setState(() {
         isFileShareFailed = !res;
         listContacts.clear();

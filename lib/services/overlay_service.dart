@@ -1,5 +1,6 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -7,6 +8,7 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
@@ -20,137 +22,157 @@ class OverlayService {
   static OverlayService get instance => _instance;
   OverlayEntry? snackBarOverlayEntry;
 
-  Future<bool?> showOverlay(
-    FLUSHBAR_STATUS flushbarStatus, {
-    String? errorMessage,
-  }) async {
+  void showOverlay() {
     hideOverlay();
-
-    snackBarOverlayEntry =
-        _buildSnackBarOverlayEntry(flushbarStatus, errorMessage: errorMessage);
+    snackBarOverlayEntry = _buildSnackBarOverlayEntry();
     NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry!);
-
-    if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
-      await Future.delayed(Duration(seconds: 3));
-      hideOverlay();
-      return true;
-    } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
-      await Future.delayed(Duration(seconds: 5));
-      hideOverlay();
-    }
     return null;
   }
 
-  hideOverlay() {
+  void hideOverlay() {
     snackBarOverlayEntry?.remove();
     snackBarOverlayEntry = null;
   }
 
-  OverlayEntry _buildSnackBarOverlayEntry(
-    FLUSHBAR_STATUS flushbarStatus, {
-    String? errorMessage,
-  }) {
-    // Color bgColor = _getColor(flushbarStatus);
+  OverlayEntry _buildSnackBarOverlayEntry() {
     Color bgColor = Colors.white;
 
-    String text = errorMessage ?? _getText(flushbarStatus);
+    return OverlayEntry(
+      builder: (context) {
+        return StreamBuilder<FLUSHBAR_STATUS>(
+          stream: FileTransferProvider().flushBarStatusStream,
+          builder: (context, snapshot) {
+            final flushbarStatus = snapshot.data ?? FLUSHBAR_STATUS.SENDING;
+            return Consumer<FileProgressProvider>(
+              builder: (_context, provider, _) {
+                String text = _getText(
+                  flushbarStatus,
+                  fileTransferProgress: provider.sentFileTransferProgress,
+                );
 
-    return OverlayEntry(builder: (context) {
-      final size = MediaQuery.of(context).size;
-      return Consumer<FileProgressProvider>(
-        builder: (_context, provider, _) {
-          text = errorMessage ??
-              _getText(
-                flushbarStatus,
-                fileTransferProgress: provider.sentFileTransferProgress,
-              );
-          return Scaffold(
-            backgroundColor: bgColor.withOpacity(0.7),
-            body: SafeArea(
-              child: Container(
-                width: size.width,
-                height: SizeConfig().screenHeight,
-                child: Material(
-                  color: bgColor.withOpacity(0.7),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: InkWell(
-                          onTap: hideOverlay,
-                          child: Container(
-                            width: 105.toWidth,
-                            height: 35,
-                            margin: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: ColorConstants.grey),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Close',
-                                style: TextStyle(color: Colors.black),
+                String icon = getImage(flushbarStatus);
+                return Scaffold(
+                  backgroundColor: bgColor.withOpacity(0.7),
+                  body: SafeArea(
+                    child: Material(
+                      color: bgColor.withOpacity(0.7),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 24, right: 14),
+                              child: InkWell(
+                                onTap: () {
+                                  hideOverlay();
+                                  WelcomeScreenProvider()
+                                      .changeOverlayStatus(false);
+                                },
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  width: 105.toWidth,
+                                  height: 35,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border:
+                                        Border.all(color: ColorConstants.grey),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Close',
+                                      style: TextStyle(
+                                        color: ColorConstants.grey,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(ImageConstants.sendFileIcon),
-                            SizedBox(height: 40),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 3, horizontal: 15),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          text,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 25.toFont,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(icon),
+                                SizedBox(height: 40),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 3,
+                                    horizontal: 15,
+                                  ),
+                                  child: Text(
+                                    text,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 25.toFont,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 30),
-                            flushbarStatus == FLUSHBAR_STATUS.SENDING
-                                ? provider.sentFileTransferProgress != null
+                                ),
+                                SizedBox(height: 30),
+                                flushbarStatus == FLUSHBAR_STATUS.SENDING
                                     ? getProgressBar()
-                                    : getProgressBar()
-                                : SizedBox(),
-                          ],
-                        ),
+                                    : _buildHistoryButton(),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildHistoryButton() {
+    return Padding(
+      padding: EdgeInsets.only(top: 80),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () {
+          hideOverlay();
+          Navigator.pushNamedAndRemoveUntil(
+            NavService.navKey.currentContext!,
+            Routes.WELCOME_SCREEN,
+            (route) => false,
+            arguments: {
+              "indexBottomBarSelected": 3,
+            },
           );
         },
-      );
-    });
+        child: Container(
+          width: 160.toWidth,
+          height: 36.toHeight,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: ColorConstants.grey),
+          ),
+          child: Center(
+            child: Text(
+              'See History',
+              style: TextStyle(
+                color: ColorConstants.grey,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   String _getText(FLUSHBAR_STATUS flushbarStatus,
@@ -160,11 +182,11 @@ class OverlayService {
         String sendingMessage = transferMessages[0];
         if (fileTransferProgress != null) {
           if (fileTransferProgress.fileState == FileState.encrypt) {
-            sendingMessage = 'Encrypting ${fileTransferProgress.fileName}';
+            sendingMessage = 'Encrypting your files';
           } else if (fileTransferProgress.fileState == FileState.upload) {
-            sendingMessage = 'Uploading ${fileTransferProgress.fileName}';
+            sendingMessage = 'Sending your files';
           } else if (fileTransferProgress.fileState == FileState.processing) {
-            sendingMessage = 'Uploading ${fileTransferProgress.fileName}';
+            sendingMessage = 'Sending your files';
           }
         }
         return sendingMessage;
@@ -174,6 +196,19 @@ class OverlayService {
         return transferMessages[2];
       default:
         return '';
+    }
+  }
+
+  String getImage(FLUSHBAR_STATUS flushbarStatus) {
+    switch (flushbarStatus) {
+      case FLUSHBAR_STATUS.SENDING:
+        return ImageConstants.sendFileIcon;
+      case FLUSHBAR_STATUS.DONE:
+        return ImageConstants.iconSuccess;
+      case FLUSHBAR_STATUS.FAILED:
+        return ImageConstants.iconWarning;
+      default:
+        return ImageConstants.sendFileIcon;
     }
   }
 
@@ -204,12 +239,6 @@ class OverlayService {
   }
 
   Widget getProgressBar() {
-    /// Not showing upload percent
-    // if (fileTransferProgress.fileState == FileState.upload &&
-    // fileTransferProgress.percent != null) {
-    // var percent = fileTransferProgress.percent! / 100;
-    // return LinearProgressIndicator();
-    // }
     return SizedBox(
       width: 300.toWidth,
       height: 40,
@@ -229,7 +258,7 @@ class OverlayService {
     );
   }
 
-  Color _getColor(FLUSHBAR_STATUS flushbarStatus) {
+/*  Color _getColor(FLUSHBAR_STATUS flushbarStatus) {
     switch (flushbarStatus) {
       case FLUSHBAR_STATUS.SENDING:
         return Colors.amber;
@@ -240,12 +269,12 @@ class OverlayService {
       default:
         return Colors.amber;
     }
-  }
+  }*/
 
   List<String> transferMessages = [
     'Sending your files',
-    'Success!🎉 ',
-    'Something went wrong! ⚠️',
+    'Success!',
+    'Something went wrong,\nplease try again!',
   ];
 
   openFileReceiptBottomSheet(context,

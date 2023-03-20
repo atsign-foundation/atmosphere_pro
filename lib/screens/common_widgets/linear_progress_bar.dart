@@ -49,7 +49,6 @@ class ProgressBarAnimation extends StatefulWidget {
 class _ProgressBarAnimationState extends State<ProgressBarAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation _progressAnimation;
 
   @override
   void initState() {
@@ -58,9 +57,6 @@ class _ProgressBarAnimationState extends State<ProgressBarAnimation>
       vsync: this,
       duration: Duration(seconds: 3),
     );
-
-    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     _controller.repeat();
   }
@@ -168,24 +164,40 @@ class ProgressPainter extends CustomPainter {
         return;
       }
 
-      canvas.drawRRect(
+      if (value != null) {
+        canvas.drawRRect(
+          RRect.fromRectAndCorners(
+            Offset(x, 0.0) & Size(width, size.height),
+            topRight: Radius.circular(16),
+            bottomRight: Radius.circular(16),
+          ),
+          paint,
+        );
+      } else {
+        canvas.drawRRect(
           RRect.fromRectAndRadius(
             Offset(x, 0.0) & Size(width, size.height),
             Radius.circular(size.height / 2),
           ),
-          paint);
-
-      // canvas.drawRect(Offset(x, 0.0) & Size(width, size.height), paint);
+          paint,
+        );
+      }
     }
 
-    final double x1 = size.width * line1Tail.transform(animationValue);
-    final double width1 = size.width * line1Head.transform(animationValue) - x1;
+    if (value != null) {
+      drawBar(0.0, value!.clamp(0.0, 1.0) * size.width);
+    } else {
+      final double x1 = size.width * line1Tail.transform(animationValue);
+      final double width1 =
+          size.width * line1Head.transform(animationValue) - x1;
 
-    final double x2 = size.width * line2Tail.transform(animationValue);
-    final double width2 = size.width * line2Head.transform(animationValue) - x2;
+      final double x2 = size.width * line2Tail.transform(animationValue);
+      final double width2 =
+          size.width * line2Head.transform(animationValue) - x2;
 
-    drawBar(x1, width1);
-    drawBar(x2, width2);
+      drawBar(x1, width1);
+      drawBar(x2, width2);
+    }
   }
 
   @override
