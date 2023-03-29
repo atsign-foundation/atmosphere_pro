@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_contacts_group_flutter/screens/new_version/contact_screen.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
@@ -7,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/contact_new_version/blocked_contac
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/group_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/trusted_contact_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -139,8 +139,8 @@ class _ContactScreenState extends State<ContactScreen> {
           ),
         ),
         Expanded(
-          child: ListContactScreen(
-            contactsTrusted: trustedProvider.trustedContacts,
+          child: ListContactWidget(
+            trustedContacts: trustedProvider.trustedContacts,
             onTapContact: (contact) async {
               final result = await showModalBottomSheet<bool?>(
                 context: context,

@@ -44,6 +44,8 @@ class ImageConstants {
   static String settings = '$_basePath/settings.png';
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';
+  static String iconSuccess = '$_basePath/icon_success.png';
+  static String iconWarning = '$_basePath/icon_warning.png';
 
   // New UI Settings Screen
   static String switchAtSign = '$_basePath/switch_atsign.png';
@@ -73,4 +75,6 @@ class ImageConstants {
 
   static String sidebarSelectedTile = '$_basePath/selected_sidebar.png';
   static String sidebarSettings = '$_basePath/settings.png';
+
+  static String emptyBox = '$_basePath/img_empty_box.png';
 }

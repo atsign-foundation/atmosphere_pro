@@ -4,7 +4,9 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class WelcomeScreenProvider extends BaseModel {
   WelcomeScreenProvider._();
+
   static WelcomeScreenProvider _instance = WelcomeScreenProvider._();
+
   factory WelcomeScreenProvider() => _instance;
   List<GroupContactsModel> selectedContacts = [];
   String updateContacts = 'update_contacts';
@@ -16,6 +18,7 @@ class WelcomeScreenProvider extends BaseModel {
   bool isSelectionItemChanged = false;
   String? groupName;
   int selectedBottomNavigationIndex = 0;
+  bool isShowOverlay = true;
 
   void resetData() {
     selectedContacts = [];
@@ -106,6 +109,11 @@ class WelcomeScreenProvider extends BaseModel {
       authenticating = false;
       setError(onboard, error.toString());
     }
+  }
+
+  void changeOverlayStatus(bool overlayStatus) {
+    isShowOverlay = overlayStatus;
+    notifyListeners();
   }
 
   void resetSelectedContactsStatus() {
