@@ -60,6 +60,8 @@
 	<string>Enable atmospherePro to save images and videos in photos after being downloaded. </string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Enable atmospherePro to access your photos to upload the ones you choose in file transfer.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
