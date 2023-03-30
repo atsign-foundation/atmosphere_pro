@@ -5,14 +5,17 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.d
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class DesktopHome extends StatefulWidget {
   const DesktopHome({Key? key}) : super(key: key);
@@ -51,6 +54,12 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Provider.of<InternetConnectivityChecker>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .checkConnectivity();
+    });
     storeApplicationDocumentsDirectory();
     super.initState();
   }
