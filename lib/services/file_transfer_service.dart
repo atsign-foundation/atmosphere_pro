@@ -445,7 +445,9 @@ class FileTransferService {
 }
 
 void encryptFileInIsolate(Map params) async {
-  final encryptedFile = await EncryptionService().encryptFileInChunks(
+  final encryptedFile =
+      await EncryptionService(BackendService.getInstance().currentAtSign ?? '')
+          .encryptFileInChunks(
     params['file'],
     params['encryptionKey'],
     params['fileEncryptionChunkSize'],
@@ -455,7 +457,9 @@ void encryptFileInIsolate(Map params) async {
 }
 
 void decryptFileInIsolate(Map params) async {
-  final decryptedFile = await EncryptionService().decryptFileInChunks(
+  final decryptedFile =
+      await EncryptionService(BackendService.getInstance().currentAtSign ?? '')
+          .decryptFileInChunks(
     params['file'],
     params['encryptionKey'],
     params['fileEncryptionChunkSize'],
