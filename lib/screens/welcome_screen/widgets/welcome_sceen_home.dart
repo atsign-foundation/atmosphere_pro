@@ -66,13 +66,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              ImageConstants.welcomeBackground,
-            ),
-            fit: BoxFit.fill,
-          ),
-          color: Colors.white,
+          color: ColorConstants.welcomeScreenBG,
         ),
         width: double.infinity,
         height: SizeConfig().screenHeight,
@@ -93,9 +87,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig().isTablet(context)
-                              ? 33.toWidth
-                              : 0,
+                          horizontal:
+                              SizeConfig().isTablet(context) ? 33.toWidth : 0,
                         ),
                         child: Text(
                           TextStrings().selectFiles,
@@ -106,35 +99,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         ),
                       ),
                     ),
-                    Consumer<FileTransferProvider>(
-                        builder: (context, provider, _) {
-                      if (provider.selectedFiles.isNotEmpty) {
-                        return InkWell(
-                          onTap: selectFiles,
-                          child: Container(
-                            height: 40.toHeight,
-                            width: 40.toHeight,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.all(10),
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.white,
-                              size: 15.toFont,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return SizedBox();
-                      }
-                    }),
                   ],
                 ),
                 const SizedBox(height: 16),
-                Consumer<FileTransferProvider>(
-                    builder: (context, provider, _) {
+                Consumer<FileTransferProvider>(builder: (context, provider, _) {
                   if (provider.selectedFiles.isNotEmpty) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,40 +114,31 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           children: List.generate(
                             provider.selectedFiles.length,
                             (index) {
-                              return SizedBox(
-                                width: (MediaQuery.of(context).size.width -
-                                        60.toWidth) /
-                                    2,
-                                child: Stack(
-                                  children: [
-                                    FileCard(
-                                      fileDetail:
-                                          provider.selectedFiles[index],
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: -5,
-                                      child: InkWell(
-                                        onTap: () {
-                                          provider.deleteFiles(index);
-                                          provider.calculateSize();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppVectors.icClose,
-                                        ),
+                              return Stack(
+                                children: [
+                                  FileCard(
+                                    fileDetail: provider.selectedFiles[index],
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    right: -5,
+                                    child: InkWell(
+                                      onTap: () {
+                                        provider.deleteFiles(index);
+                                        provider.calculateSize();
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppVectors.icClose,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               );
                             },
                           ),
                         ),
-                        SizedBox(
-                          height: provider.selectedFiles.length < 3
-                              ? 71.toHeight
-                              : 0,
-                        )
+                        SizedBox(height: 10.toHeight),
+                        _buildAddFilesOption()
                       ],
                     );
                   } else {
@@ -187,15 +146,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       onTap: selectFiles,
                       child: Container(
                         height: 142.toHeight,
-                        width: 350.toWidth,
+                        width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            colors: [
-                              ColorConstants.orangeColor,
-                              ColorConstants.yellow.withOpacity(0.65),
-                            ],
-                          ),
                         ),
                         padding: EdgeInsets.all(2),
                         child: Container(
@@ -204,12 +157,23 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             color: Colors.white,
                           ),
                           child: Center(
-                            child: Text(
-                              'Select file(s) to transfer',
-                              style: TextStyle(
-                                color: ColorConstants.orangeColor,
-                                fontSize: 16.toFont,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  ImageConstants.uploadIcon,
+                                  width: 77.toWidth,
+                                  height: 57.toHeight,
+                                ),
+                                SizedBox(height: 10.toHeight),
+                                Text(
+                                  'Upload your file(s)',
+                                  style: TextStyle(
+                                    color: ColorConstants.textLightGrey,
+                                    fontSize: 16.toFont,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -236,31 +200,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: context
-                          .watch<WelcomeScreenProvider>()
-                          .selectedContacts
-                          .isNotEmpty,
-                      child: InkWell(
-                        onTap: () {
-                          _choiceContact();
-                        },
-                        child: Container(
-                          height: 40.toHeight,
-                          width: 40.toHeight,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.white,
-                            size: 15.toFont,
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
                 SizedBox(height: 16.toHeight),
@@ -270,16 +209,17 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       scrollToBottom();
                     }
 
-                    return provider.selectedContacts.isEmpty
-                        ? _buildChoiceContact()
-                        : OverlappingContacts(
+                    return provider.selectedContacts.isNotEmpty
+                        ? OverlappingContacts(
                             selectedList: provider.selectedContacts,
                             onchange: (isUpdate) {
                               setState(() {});
                             },
-                          );
+                          )
+                        : SizedBox();
                   },
                 ),
+                _buildChoiceContact(),
                 SizedBox(height: 16.toHeight),
                 Container(
                   height: 94.toHeight,
@@ -287,7 +227,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: ColorConstants.grey),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: TextField(
@@ -302,7 +241,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       hintStyle: TextStyle(
                         fontSize: 15.toFont,
                         fontWeight: FontWeight.w500,
-                        color: ColorConstants.grey,
+                        color: ColorConstants.textBlack,
                       ),
                       border: InputBorder.none,
                       labelStyle: TextStyle(fontSize: 15.toFont),
@@ -317,9 +256,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   onTap: sendFileWithFileBin,
                   child: Container(
                     height: 67.toHeight,
-                    width: 350.toWidth,
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(247)),
                       gradient: LinearGradient(
                         colors: [Color(0xffF05E3F), Color(0xffe9a642)],
                         stops: [0.1, 0.8],
@@ -334,9 +273,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             style: TextStyle(
                                 fontSize: 20.toFont, color: Colors.white),
                           ),
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 20.toFont)
                         ],
                       ),
                     ),
@@ -360,19 +296,65 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 61.toHeight,
         width: double.infinity,
         decoration: BoxDecoration(
+          color: Color(0xFFF6DED5),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: ColorConstants.grey),
         ),
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: 20.toWidth),
-          child: Text(
-            'Select atSign',
-            style: TextStyle(
-              color: ColorConstants.grey,
-              fontSize: 15.toFont,
-              fontWeight: FontWeight.w500,
-            ),
+          padding: EdgeInsets.only(left: 20.toWidth, right: 20.toWidth),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Add atSigns',
+                style: TextStyle(
+                  color: ColorConstants.orange,
+                  fontSize: 18.toFont,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Icon(
+                Icons.add_circle_outline,
+                size: 27,
+                color: ColorConstants.orange,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddFilesOption() {
+    return InkWell(
+      onTap: selectFiles,
+      child: Container(
+        height: 61.toHeight,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: ColorConstants.yellow.withOpacity(0.19),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20.toWidth, right: 20.toWidth),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Add Files',
+                style: TextStyle(
+                  color: ColorConstants.yellow,
+                  fontSize: 18.toFont,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Icon(
+                Icons.add_circle_outline,
+                size: 27,
+                color: ColorConstants.yellow,
+              )
+            ],
           ),
         ),
       ),

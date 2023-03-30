@@ -77,4 +77,5 @@ class ImageConstants {
   static String sidebarSettings = '$_basePath/settings.png';
 
   static String emptyBox = '$_basePath/img_empty_box.png';
+  static String uploadIcon = '$_basePath/upload_image.png';
 }

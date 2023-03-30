@@ -85,10 +85,10 @@ packages:
     dependency: "direct main"
     description:
       name: at_client_mobile
-      sha256: "1a1c6ef8ebc3b29b81915a2c866efa2a877c041df3f212c53246377b74d16e61"
+      sha256: f056674b02bdf13e5442725934e834f7757abcd7062d302ec2e65e46432ca134
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.7"
+    version: "3.2.9"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: at_commons
-      sha256: c5b2931c024b62df9f9f45e083629e23e1efdc88544412c1e09869c1122e062e
+      sha256: "3361a1114d8f7263e7a0e6f299247bceed7e6c9e81e9cde01525cd10085eee60"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.37"
+    version: "3.0.43"
   at_contact:
     dependency: "direct main"
     description:
@@ -117,19 +117,19 @@ packages:
     dependency: "direct main"
     description:
       name: at_contacts_flutter
-      sha256: "2f826c3943cb5ae3bf6af1f70d950fb1ec2b98d66ea0342c86b6175162f29c89"
+      sha256: "159656f0387d17471dfe90337d767a989f067de3da0bf74af0894191a4460cea"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.8"
+    version: "4.0.9"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
       path: "packages/at_contacts_group_flutter"
-      ref: "feature/new-version-contacts-group"
-      resolved-ref: f797503917abe50b35c3588dcfd2501ad8728a99
+      ref: trunk
+      resolved-ref: "8bed2c021e1f8d0884ec86fe7ea5283c34530185"
       url: "https://github.com/atsign-foundation/at_widgets"
     source: git
-    version: "4.0.10"
+    version: "4.0.11"
   at_file_saver:
     dependency: transitive
     description:
@@ -198,10 +198,10 @@ packages:
     dependency: transitive
     description:
       name: at_utils
-      sha256: "57ce4684d59b58c58ee72e945a11de2c6bfdb5e0bb4011763d9ca786d0881387"
+      sha256: a244ea7f6411b177ba2f011d36d23ec786b0d41b0e62b58bb0e8bf9ad61cf530
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.11"
+    version: "3.0.12"
   biometric_storage:
     dependency: "direct main"
     description:
@@ -649,6 +649,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      sha256: a8f2f0aed50c03230ab37e93ca2905c50b6c4097245345956eb24a88f45328cd
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.6"
+  image_picker_android:
+    dependency: transitive
+    description:
+      name: image_picker_android
+      sha256: dfb5b0f28b8786fcc662b7ed42bfb4b82a6cbbd74da1958384b10d40bdf212a7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.6+6"
+  image_picker_for_web:
+    dependency: transitive
+    description:
+      name: image_picker_for_web
+      sha256: "98f50d6b9f294c8ba35e25cc0d13b04bfddd25dbc8d32fa9d566a6572f2c081c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.12"
+  image_picker_ios:
+    dependency: transitive
+    description:
+      name: image_picker_ios
+      sha256: d4cb8ab04f770dab9d04c7959e5f6d22e8c5280343d425f9344f93832cf58445
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.7+2"
+  image_picker_platform_interface:
+    dependency: transitive
+    description:
+      name: image_picker_platform_interface
+      sha256: "1991219d9dbc42a99aff77e663af8ca51ced592cd6685c9485e3458302d3d4f8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.3"
   internet_connection_checker:
     dependency: transitive
     description:
