@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -103,12 +104,16 @@ class CustomOnboarding {
         }
         break;
       case AtOnboardingResultStatus.error:
+        bool isInternet = Provider.of<InternetConnectivityChecker>(
+                NavService.navKey.currentContext!,
+                listen: false)
+            .isInternetAvailable;
         ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
           SnackBar(
             content: Text(
-              (result.message ?? '').isNotEmpty
-                  ? result.message!
-                  : 'Error in onboarding',
+              isInternet
+                  ? 'Error in onboarding'
+                  : 'Onboarding failed, please check your network',
             ),
             backgroundColor: ColorConstants.red,
           ),
