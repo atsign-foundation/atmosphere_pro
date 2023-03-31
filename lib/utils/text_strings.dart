@@ -39,7 +39,7 @@ class TextStrings {
   String hello = 'hello';
   String reset = 'Reset';
   String selectFiles = 'SELECT FILES';
-  String selectContacts = 'SELECT CONTACT(S)';
+  String selectContacts = 'SELECT CONTACTS';
 
   //sidebar menu texts
   String sidebarGeneral = 'GENERAL';

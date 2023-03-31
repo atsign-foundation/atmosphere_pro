@@ -24,6 +24,8 @@ class ListContactWidget extends StatefulWidget {
   final Function(List<GroupContactsModel> contacts)? onSelectContacts;
   final List<AtContact>? trustedContacts;
   final List<GroupContactsModel>? selectedContacts;
+  final Color? searchBackgroundColor, searchBorderColor;
+  final String? hintText;
 
   const ListContactWidget({
     Key? key,
@@ -40,6 +42,9 @@ class ListContactWidget extends StatefulWidget {
     this.onSelectContacts,
     this.trustedContacts,
     this.selectedContacts,
+    this.searchBackgroundColor,
+    this.searchBorderColor,
+    this.hintText,
   }) : super(key: key);
 
   @override
@@ -88,6 +93,10 @@ class _ListContactWidgetState extends State<ListContactWidget> {
                 )
               : Container(
                   height: 44.toHeight,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: widget.searchBackgroundColor,
+                  ),
                   margin: EdgeInsets.symmetric(
                     horizontal: 32.toWidth,
                     vertical: 18.toHeight,
@@ -99,16 +108,18 @@ class _ListContactWidgetState extends State<ListContactWidget> {
                     },
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
+                        borderSide: BorderSide(
                           width: 1,
-                          color: Color(0xFF939393),
+                          color:
+                              widget.searchBorderColor ?? ColorConstants.grey,
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
+                        borderSide: BorderSide(
                           width: 1,
-                          color: Color(0xFF939393),
+                          color:
+                              widget.searchBorderColor ?? ColorConstants.grey,
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -122,13 +133,14 @@ class _ListContactWidgetState extends State<ListContactWidget> {
                         Icons.search,
                         color: Colors.grey,
                       ),
-                      hintText: 'Search by atSign or nickname',
+                      hintText:
+                          widget.hintText ?? 'Search by atSign or nickname',
                     ),
                     textInputAction: TextInputAction.search,
                     style: TextStyle(
                       fontSize: 14.toFont,
                       color: ColorConstants.fontPrimary,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),

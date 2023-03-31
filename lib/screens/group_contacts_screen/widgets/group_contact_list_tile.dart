@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../utils/images.dart';
-
 class ContactListTile extends StatefulWidget {
   final String? name;
   final String? atSign;

@@ -10,11 +10,9 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/contact_card.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class OverlappingContacts extends StatefulWidget {
@@ -66,33 +64,19 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                 _atsignImages[widget.selectedList[index]?.contact?.atSign];
 
             return widget.selectedList[index]?.contact != null
-                ? Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8, top: 4),
-                        child: ContactCard(
-                          key: Key(
-                              widget.selectedList[index]!.contact!.atSign ??
-                                  ''),
-                          contact: widget.selectedList[index]!.contact!,
-                          isTrusted: _checkTrustedContact(
-                              widget.selectedList[index]!.contact!),
-                        ),
-                      ),
-                      Positioned(
-                        top: -5,
-                        right: -5,
-                        child: InkWell(
-                          onTap: () {
-                            provider.removeContacts(
-                                provider.selectedContacts[index]);
-                          },
-                          child: SvgPicture.asset(
-                            AppVectors.icClose,
-                          ),
-                        ),
-                      )
-                    ],
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 8, top: 4),
+                    child: ContactCard(
+                      key: Key(
+                          widget.selectedList[index]!.contact!.atSign ?? ''),
+                      contact: widget.selectedList[index]!.contact!,
+                      isTrusted: _checkTrustedContact(
+                          widget.selectedList[index]!.contact!),
+                      deleteFunc: () {
+                        provider
+                            .removeContacts(provider.selectedContacts[index]);
+                      },
+                    ),
                   )
                 : ContactListTile(
                     isSelected: provider.selectedContacts

@@ -77,5 +77,16 @@ class ImageConstants {
   static String sidebarSettings = '$_basePath/settings.png';
 
   static String emptyBox = '$_basePath/img_empty_box.png';
-  static String uploadIcon = '$_basePath/upload_image.png';
+  static String uploadIcon = '$_basePath/img_upload.png';
+
+  static String icFileActivate = '$_basePath/ic_attach_activate.png';
+  static String icFileInactivate = '$_basePath/ic_attach_inactivate.png';
+  static String icHistoryActivate = '$_basePath/ic_history_activate.png';
+  static String icHistoryInactivate = '$_basePath/ic_history_inactivate.png';
+  static String icSendActivate = '$_basePath/ic_send_activate.png';
+  static String icSendInactivate = '$_basePath/ic_send_inactivate.png';
+  static String icSettingActivate = '$_basePath/ic_setting_activate.png';
+  static String icSettingInactivate = '$_basePath/ic_setting_inactivate.png';
+  static String icUserActivate = '$_basePath/ic_user_activate.png';
+  static String icUserInactivate = '$_basePath/ic_user_inactivate.png';
 }

@@ -125,9 +125,12 @@ class _ContactCardWidgetState extends State<ContactCardWidget> {
               ),
             ),
             widget.isTrusted
-                ? SvgPicture.asset(
-                    AppVectors.icTrustActivated,
-                  )
+                ? Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: SvgPicture.asset(
+                      AppVectors.icTrustActivated,
+                    ),
+                )
                 : const SizedBox(),
           ],
         ),

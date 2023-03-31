@@ -15,12 +15,10 @@ import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/images.dart';
@@ -72,6 +70,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: SizeConfig().screenHeight,
         child: SingleChildScrollView(
           controller: scrollController,
+          padding: EdgeInsets.only(bottom: 100.toHeight),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 30.toWidth,
@@ -81,27 +80,19 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal:
-                              SizeConfig().isTablet(context) ? 33.toWidth : 0,
-                        ),
-                        child: Text(
-                          TextStrings().selectFiles,
-                          style: TextStyle(
-                            fontSize: 20.toFont,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig().isTablet(context) ? 33.toWidth : 0,
+                  ),
+                  child: Text(
+                    TextStrings().selectFiles,
+                    style: TextStyle(
+                      fontSize: 15.toFont,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Consumer<FileTransferProvider>(builder: (context, provider, _) {
                   if (provider.selectedFiles.isNotEmpty) {
                     return Column(
@@ -114,25 +105,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           children: List.generate(
                             provider.selectedFiles.length,
                             (index) {
-                              return Stack(
-                                children: [
-                                  FileCard(
-                                    fileDetail: provider.selectedFiles[index],
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    right: -5,
-                                    child: InkWell(
-                                      onTap: () {
-                                        provider.deleteFiles(index);
-                                        provider.calculateSize();
-                                      },
-                                      child: SvgPicture.asset(
-                                        AppVectors.icClose,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              return FileCard(
+                                fileDetail: provider.selectedFiles[index],
+                                deleteFunc: () {
+                                  provider.deleteFiles(index);
+                                  provider.calculateSize();
+                                },
                               );
                             },
                           ),
@@ -162,15 +140,14 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               children: [
                                 Image.asset(
                                   ImageConstants.uploadIcon,
-                                  width: 77.toWidth,
-                                  height: 57.toHeight,
                                 ),
                                 SizedBox(height: 10.toHeight),
                                 Text(
                                   'Upload your file(s)',
                                   style: TextStyle(
-                                    color: ColorConstants.textLightGrey,
-                                    fontSize: 16.toFont,
+                                    color: ColorConstants.gray,
+                                    fontSize: 15.toFont,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ],
@@ -181,28 +158,27 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     );
                   }
                 }),
-                SizedBox(height: 16.toHeight),
+                SizedBox(height: 27.toHeight),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
-                            left: SizeConfig().isTablet(context)
-                                ? 30.toWidth
-                                : 0),
+                          left: SizeConfig().isTablet(context) ? 30.toWidth : 0,
+                        ),
                         child: Text(
                           TextStrings().selectContacts,
                           style: TextStyle(
-                            fontSize: 20.toFont,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15.toFont,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 16.toHeight),
+                SizedBox(height: 10.toHeight),
                 Consumer<WelcomeScreenProvider>(
                   builder: (context, provider, _) {
                     if (provider.scrollToBottom) {
@@ -220,7 +196,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   },
                 ),
                 _buildChoiceContact(),
-                SizedBox(height: 16.toHeight),
+                SizedBox(height: 27.toHeight),
                 Container(
                   height: 94.toHeight,
                   width: double.infinity,
@@ -228,7 +204,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
                   child: TextField(
                     controller: noteController,
                     maxLines: 5,
@@ -258,7 +234,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     height: 67.toHeight,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(247)),
+                      borderRadius: BorderRadius.circular(247),
                       gradient: LinearGradient(
                         colors: [Color(0xffF05E3F), Color(0xffe9a642)],
                         stops: [0.1, 0.8],
@@ -271,14 +247,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           Text(
                             'Transfer Now',
                             style: TextStyle(
-                                fontSize: 20.toFont, color: Colors.white),
+                              fontSize: 20.toFont,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 100)
               ],
             ),
           ),
@@ -293,7 +271,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         _choiceContact(clearSelectedContact: true);
       },
       child: Container(
-        height: 61.toHeight,
+        height: 56.toHeight,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Color(0xFFF6DED5),
@@ -309,7 +287,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 'Add atSigns',
                 style: TextStyle(
                   color: ColorConstants.orange,
-                  fontSize: 18.toFont,
+                  fontSize: 15.toFont,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -345,7 +323,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 'Add Files',
                 style: TextStyle(
                   color: ColorConstants.yellow,
-                  fontSize: 18.toFont,
+                  fontSize: 15.toFont,
                   fontWeight: FontWeight.w500,
                 ),
               ),

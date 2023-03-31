@@ -1,9 +1,10 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class ChoiceContactsWidget extends StatefulWidget {
@@ -36,10 +37,10 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
       body: Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-          height: MediaQuery.of(context).size.height - 120,
+          height: MediaQuery.of(context).size.height - 60,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFF4F4F4),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -56,14 +57,13 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               _buildHeaderWidget(),
-              const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.only(left: 27),
                 child: Text(
                   "Send To:",
                   style: TextStyle(
-                    fontSize: 25.toFont,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 20.toFont,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
@@ -73,8 +73,11 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                   trustedContacts: trustedProvider.trustedContacts,
                   isSelectMultiContacts: true,
                   showGroups: true,
-                  isShowFilterBar: true,
+                  isShowFilterBar: false,
                   selectedContacts: listContact,
+                  searchBackgroundColor: Colors.white,
+                  searchBorderColor: Colors.white,
+                  hintText: "Search",
                   onSelectContacts: (contacts) {
                     setState(() {
                       listContact = contacts;
@@ -95,7 +98,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                     },
                     child: Container(
                       width: double.infinity,
-                      height: 44,
+                      height: 51.toHeight,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.black,
@@ -105,8 +108,8 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                           "Select (${listContact.length})",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 16.toFont,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -141,28 +144,8 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              child: Container(
-                height: 31.toHeight,
-                alignment: Alignment.topRight,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: ColorConstants.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: Center(
-                  child: Text(
-                    "Close",
-                    style: TextStyle(
-                      fontSize: 17.toFont,
-                      fontWeight: FontWeight.w600,
-                      color: ColorConstants.grey,
-                    ),
-                  ),
-                ),
+              child: SvgPicture.asset(
+                AppVectors.icClose,
               ),
             ),
           ),

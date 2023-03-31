@@ -14,6 +14,7 @@ class ContactCard extends StatefulWidget {
   final double avatarSize, borderRadius;
   final Function()? onTap;
   final bool isSelected, isTrusted;
+  final Function? deleteFunc;
 
   const ContactCard({
     Key? key,
@@ -23,6 +24,7 @@ class ContactCard extends StatefulWidget {
     this.onTap,
     this.isSelected = false,
     this.isTrusted = false,
+    this.deleteFunc,
   }) : super(key: key);
 
   @override
@@ -126,6 +128,17 @@ class _ContactCardState extends State<ContactCard> {
                     AppVectors.icTrustActivated,
                   )
                 : const SizedBox(),
+            InkWell(
+              onTap: () {
+                widget.deleteFunc?.call();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: SvgPicture.asset(
+                  AppVectors.icClose,
+                ),
+              ),
+            ),
           ],
         ),
       ),
