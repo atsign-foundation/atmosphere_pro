@@ -18,7 +18,9 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/images.dart';
@@ -110,6 +112,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                                 deleteFunc: () {
                                   provider.deleteFiles(index);
                                   provider.calculateSize();
+                                },
+                                onTap: () {
+                                  openFile(
+                                    provider.selectedFiles[index],
+                                  );
                                 },
                               );
                             },
@@ -475,5 +482,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         atSignList: atSignList,
       ),
     );
+  }
+
+  openFile(PlatformFile file) async {
+    final result = await OpenFile.open(file.path);
+
+    if (result.type != ResultType.done) {
+      SnackbarService().showSnackbar(
+        context,
+        result.message,
+      );
+    }
   }
 }
