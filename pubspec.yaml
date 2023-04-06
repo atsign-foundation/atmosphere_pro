@@ -80,6 +80,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   msix: ^3.3.1
+  build_runner: ^2.1.10
 
 dependency_overrides:
   emoji_picker_flutter: 1.2.1
