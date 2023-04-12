@@ -12,6 +12,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final double? height;
   final bool isContent;
   final Widget? suffixIcon;
+  final TextStyle? titleStyle;
 
   const AppBarCustom({
     Key? key,
@@ -22,6 +23,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     this.description,
     this.isContent = false,
     this.suffixIcon,
+    this.titleStyle,
   }) : super(key: key);
 
   @override
@@ -48,10 +50,11 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                   child: Text(
                     title ?? '',
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20.toFont,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: titleStyle ??
+                        TextStyle(
+                          fontSize: 20.toFont,
+                          fontWeight: FontWeight.bold,
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

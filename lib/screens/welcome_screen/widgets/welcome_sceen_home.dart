@@ -63,6 +63,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 130,
         title: "${BackendService.getInstance().currentAtSign ?? ''} ",
         description: '',
+        titleStyle: TextStyle(
+          fontSize: 25.toFont,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -122,7 +126,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             },
                           ),
                         ),
-                        SizedBox(height: 10.toHeight),
                         _buildAddFilesOption()
                       ],
                     );
@@ -195,9 +198,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     return provider.selectedContacts.isNotEmpty
                         ? OverlappingContacts(
                             selectedList: provider.selectedContacts,
-                            onchange: (isUpdate) {
-                              setState(() {});
-                            },
                           )
                         : SizedBox();
                   },
@@ -322,7 +322,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         ),
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: 20.toWidth, right: 20.toWidth),
+          padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

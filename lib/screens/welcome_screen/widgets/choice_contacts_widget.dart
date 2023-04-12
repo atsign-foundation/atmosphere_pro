@@ -1,5 +1,7 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
@@ -22,9 +24,11 @@ class ChoiceContactsWidget extends StatefulWidget {
 class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
   late TrustedContactProvider trustedProvider;
   late List<GroupContactsModel> listContact;
+  late GroupService _groupService;
 
   @override
   void initState() {
+    _groupService = GroupService();
     trustedProvider = context.read<TrustedContactProvider>();
     listContact = widget.selectedContacts ?? [];
     super.initState();
@@ -126,26 +130,61 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
 
   Widget _buildHeaderWidget() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(27, 24, 27, 0),
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 0),
       child: Row(
         children: [
-          Container(
-            height: 2,
-            width: 45,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+              child: SvgPicture.asset(
+                AppVectors.icBack,
+              ),
             ),
           ),
           const Spacer(),
           Align(
             alignment: Alignment.topRight,
             child: InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
+              onTap: () async {
+                final result = await showModalBottomSheet<bool?>(
+                  context: context,
+                  isScrollControlled: true,
+                  useRootNavigator: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (BuildContext context) {
+                    return AddContactScreen();
+                  },
+                );
+                if (result == true) {
+                  _groupService.fetchGroupsAndContacts();
+                }
               },
-              child: SvgPicture.asset(
-                AppVectors.icClose,
+              child: Container(
+                height: 34,
+                margin: EdgeInsets.only(top: 10, right: 8),
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      "Add New",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(width: 9),
+                    SvgPicture.asset(
+                      AppVectors.icPlus11px,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

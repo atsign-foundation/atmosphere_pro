@@ -67,8 +67,13 @@ class _ContactCardState extends State<ContactCard> {
         widget.onTap?.call();
       },
       child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 13, 12, 13),
-        margin: const EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.fromLTRB(
+          20.toWidth,
+          12.toHeight,
+          14.toWidth,
+          12.toHeight,
+        ),
+        margin: EdgeInsets.only(bottom: 10.toHeight),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(

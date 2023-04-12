@@ -29,17 +29,20 @@ class BottomNavigationWidget extends StatelessWidget {
         children: [
           Image.asset(
             indexSelected == index ? iconActivate : iconInactivate,
-            height: 25,
+            height: title.isNotEmpty ? 25 : null,
           ),
-          SizedBox(height: 3),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 10.toFont,
-              color: indexSelected == index ? Colors.black : Color(0xFFAEAEAE),
-              fontWeight: FontWeight.w500,
+          if (title.isNotEmpty) ...[
+            SizedBox(height: 3),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 10.toFont,
+                color:
+                    indexSelected == index ? Colors.black : Color(0xFFAEAEAE),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );

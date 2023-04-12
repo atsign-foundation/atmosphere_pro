@@ -62,46 +62,38 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
           itemBuilder: (context, index) {
             Uint8List? image =
                 _atsignImages[widget.selectedList[index]?.contact?.atSign];
+            final contactSelected = provider.selectedContacts[index];
 
             return widget.selectedList[index]?.contact != null
-                ? Padding(
-                    padding: const EdgeInsets.only(right: 8, top: 4),
-                    child: ContactCard(
-                      key: Key(
-                          widget.selectedList[index]!.contact!.atSign ?? ''),
-                      contact: widget.selectedList[index]!.contact!,
-                      isTrusted: _checkTrustedContact(
-                          widget.selectedList[index]!.contact!),
-                      deleteFunc: () {
-                        provider
-                            .removeContacts(provider.selectedContacts[index]);
-                      },
-                    ),
+                ? ContactCard(
+                    key: Key(widget.selectedList[index]!.contact!.atSign ?? ''),
+                    contact: widget.selectedList[index]!.contact!,
+                    isTrusted: _checkTrustedContact(
+                        widget.selectedList[index]!.contact!),
+                    deleteFunc: () {
+                      provider.removeContacts(contactSelected);
+                    },
                   )
                 : ContactListTile(
-                    isSelected: provider.selectedContacts
-                        .contains(provider.selectedContacts[index]),
+                    isSelected:
+                        provider.selectedContacts.contains(contactSelected),
                     onAdd: () {},
                     onRemove: () {
-                      provider.removeContacts(provider.selectedContacts[index]);
+                      provider.removeContacts(contactSelected);
                       widget.onchange!(true);
                     },
-                    name: provider.selectedContacts[index].contact?.atSign
-                            ?.substring(1) ??
-                        provider.selectedContacts[index].group?.groupName
-                            ?.substring(0),
-                    atSign: provider.selectedContacts[index].contact?.atSign ??
-                        '${provider.selectedContacts[index].group?.members?.length.toString()} Members',
+                    name: contactSelected.contact?.atSign?.substring(1) ??
+                        contactSelected.group?.groupName?.substring(0),
+                    atSign: contactSelected.contact?.atSign ??
+                        '${contactSelected.group?.members?.length.toString()} Members',
                     image: (image != null)
                         ? CustomCircleAvatar(
                             byteImage: image,
                             nonAsset: true,
                           )
                         : ContactInitial(
-                            initials: provider
-                                    .selectedContacts[index].contact?.atSign ??
-                                provider
-                                    .selectedContacts[index].group?.groupName,
+                            initials: contactSelected.contact?.atSign ??
+                                contactSelected.group?.groupName,
                           ),
                   );
           },

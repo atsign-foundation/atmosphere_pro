@@ -32,12 +32,19 @@ class FileCard extends StatelessWidget {
             color: ColorConstants.textBoxBg,
           ),
         ),
-        margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-        padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+        margin: EdgeInsets.only(bottom: 10.toHeight),
+        padding: EdgeInsets.fromLTRB(
+          16.toWidth,
+          12.toHeight,
+          14.toWidth,
+          12.toHeight,
+        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SvgPicture.asset(
+              AppVectors.icFile,
+            ),
+            SizedBox(width: 6.toWidth),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
