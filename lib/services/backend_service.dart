@@ -425,9 +425,14 @@ class BackendService {
               value, result.atsign!, atClientPrefernce);
           break;
         case AtOnboardingResultStatus.error:
+          var isConnected = Provider.of<InternetConnectivityChecker>(
+                  NavService.navKey.currentContext!,
+                  listen: false)
+              .isInternetAvailable;
+
           SnackbarService().showSnackbar(
             NavService.navKey.currentContext!,
-            (result.message ?? '').isNotEmpty ? '' : 'Onboarding failed.',
+            isConnected ? "Onboarding failed" : "No internet available",
             bgColor: ColorConstants.redAlert,
           );
           break;
