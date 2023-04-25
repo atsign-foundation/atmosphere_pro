@@ -5,11 +5,13 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/routes/routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
@@ -279,9 +281,21 @@ class BackendService {
       onSuccessCallback: _onSuccessCallback,
       onErrorCallback: _onSyncErrorCallback,
       primaryColor: ColorConstants.orangeColor,
+      showRemoveAtsignOption: true,
+      onAtSignRemoved: _onAtsignRemoved,
     );
 
-    AtSyncUIService().sync();
+    AtSyncUIService().sync(atSyncUIOverlay: AtSyncUIOverlay.dialog);
+  }
+
+  _onAtsignRemoved() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          SetupRoutes.initialRoute, (Route<dynamic> route) => false);
+    } else if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          DesktopSetupRoutes.initialRoute, (Route<dynamic> route) => false);
+    }
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
