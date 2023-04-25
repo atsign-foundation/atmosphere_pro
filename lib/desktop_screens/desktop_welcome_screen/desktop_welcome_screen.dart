@@ -627,7 +627,7 @@ class SideBarIcon extends StatelessWidget {
       await launchUrl(
         Uri(
           scheme: 'https',
-          path: url,
+          path: 'atsign.com/terms-conditions/',
         ),
       );
     } catch (e) {
