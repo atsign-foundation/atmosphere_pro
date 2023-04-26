@@ -29,51 +29,59 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ColorConstants.welcomeScreenBG,
-      padding: EdgeInsets.symmetric(vertical: 24),
+      color: ColorConstants.background,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30, right: 24),
+            padding: const EdgeInsets.only(left: 30, right: 16),
             child: SvgPicture.asset(
               AppVectors.appIcon,
               color: Colors.black,
             ),
           ),
           Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    title ?? '',
-                    textAlign: TextAlign.left,
-                    style: titleStyle ??
-                        TextStyle(
-                          fontSize: 20.toFont,
-                          fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title ?? '',
+                            textAlign: TextAlign.left,
+                            style: titleStyle ??
+                                TextStyle(
+                                  fontSize: 25.toFont,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                        SizedBox(width: 12),
+                        Text(
+                          description ?? '',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 15.toFont,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 12),
-                Text(
-                  description ?? '',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 15.toFont,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                  suffixIcon ?? SizedBox(),
+                ],
+              ),
             ),
           ),
-          suffixIcon ?? SizedBox(),
         ],
       ),
     );

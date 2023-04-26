@@ -21,7 +21,7 @@ class ContactsWidget extends StatefulWidget {
   final List<GroupContactsModel?> contacts;
   final String searchValue;
   final Function? onRefresh;
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? padding, contactPadding;
 
   const ContactsWidget({
     Key? key,
@@ -39,6 +39,7 @@ class ContactsWidget extends StatefulWidget {
     this.selectedContacts,
     this.onRefresh,
     this.padding,
+    this.contactPadding,
   }) : super(key: key);
 
   @override
@@ -64,7 +65,6 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         setState(() {});
       },
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
         physics: const ClampingScrollPhysics(),
         itemCount: 27,
         shrinkWrap: true,
@@ -102,39 +102,40 @@ class _ContactsWidgetState extends State<ContactsWidget> {
             return const SizedBox();
           }
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.isShowAlpha) ...[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 9,
-                    right: 8,
-                    bottom: 10,
-                    top: 14,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        currentChar,
-                        style: TextStyle(
-                          fontSize: 20.toFont,
-                          fontWeight: FontWeight.bold,
+          return Padding(
+            padding: widget.contactPadding ?? EdgeInsets.zero,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.isShowAlpha) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            currentChar,
+                            style: TextStyle(
+                              fontSize: 20.toFont,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 16.toWidth),
-                      Expanded(
-                        child: Divider(
-                          color: ColorConstants.dividerGrey,
-                          height: 1.toHeight,
+                        SizedBox(width: 16.toWidth),
+                        Expanded(
+                          child: Divider(
+                            color: ColorConstants.dividerGrey,
+                            height: 1.toHeight,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
+                contactListBuilder(contactsForAlphabet)
               ],
-              contactListBuilder(contactsForAlphabet)
-            ],
+            ),
           );
         },
       ),
@@ -146,7 +147,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   ) {
     return ListView.builder(
       itemCount: contactsForAlphabet.length,
-      padding: widget.padding ?? EdgeInsets.zero,
+      padding: widget.padding ?? EdgeInsets.only(left: 24),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {

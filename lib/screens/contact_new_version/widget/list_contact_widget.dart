@@ -1,14 +1,18 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart'
+    hide ContactsType;
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_filter_type.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/header_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contacts_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
+
+import 'empty_contact_widget.dart';
 
 class ListContactWidget extends StatefulWidget {
   final bool showGroups,
@@ -26,6 +30,7 @@ class ListContactWidget extends StatefulWidget {
   final List<GroupContactsModel>? selectedContacts;
   final Color? searchBackgroundColor, searchBorderColor;
   final String? hintText;
+  final ContactsType? contactsType;
 
   const ListContactWidget({
     Key? key,
@@ -45,6 +50,7 @@ class ListContactWidget extends StatefulWidget {
     this.searchBackgroundColor,
     this.searchBorderColor,
     this.hintText,
+    this.contactsType,
   }) : super(key: key);
 
   @override
@@ -225,49 +231,20 @@ class _ListContactWidgetState extends State<ListContactWidget> {
             builder: (context, snapshot) {
               if ((snapshot.connectionState == ConnectionState.waiting)) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: ColorConstants.orange,
+                  ),
                 );
               } else {
                 // filtering contacts and groups
                 var _filteredList = <GroupContactsModel?>[];
-                _filteredList = getAllContactList(snapshot.data ?? []);
+                _filteredList = []; // getAllContactList(snapshot.data ?? []);
 
                 if (_filteredList.isEmpty) {
-                  return widget.showGroups
-                      ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 122,
-                                width: 226,
-                                child: Image.asset(
-                                  ImageConstants.emptyBox,
-                                ),
-                              ),
-                              const SizedBox(height: 32),
-                              Text(
-                                "No Result",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: ColorConstants.grey,
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            TextStrings().contactEmpty,
-                            style: TextStyle(
-                              fontSize: 15.toFont,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        );
+                  return EmptyContactsWidget(
+                    contactsType: widget.contactsType,
+                  );
                 }
-
                 // renders contacts according to the initial alphabet
                 return Scrollbar(
                   radius: const Radius.circular(11),
@@ -285,7 +262,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
                     onRefresh: () async {
                       await _groupService.fetchGroupsAndContacts();
                     },
-                    padding: const EdgeInsets.only(left: 24, right: 6),
+                    contactPadding: EdgeInsets.only(left: 18, right: 28),
                     selectedContacts: widget.selectedContacts,
                     trustedContacts: widget.trustedContacts,
                   ),

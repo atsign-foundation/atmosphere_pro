@@ -1,9 +1,12 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class AddContactScreen extends StatefulWidget {
@@ -35,56 +38,61 @@ class _AddContactScreenState extends State<AddContactScreen> {
         return Scaffold(
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
-          body: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.only(top: 120),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    offset: const Offset(0, 4),
-                  )
-                ],
+          body: Container(
+            margin: EdgeInsets.only(top: 60),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: ColorConstants.culturedColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  offset: const Offset(0, 4),
+                )
+              ],
+            ),
+            child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Container(
-                    height: 2,
-                    width: 45,
-                    margin: const EdgeInsets.only(left: 27, top: 38),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 31, top: 36),
+                      child: SvgPicture.asset(
+                        AppVectors.icBack,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 24,
+                      horizontal: 38,
+                    ),
+                    child: Text(
+                      "Add New Contact",
+                      style: TextStyle(
+                        fontSize: 20.toFont,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: Stack(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 27),
+                          padding: const EdgeInsets.symmetric(horizontal: 23),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Add Contact",
-                                style: TextStyle(
-                                  fontSize: 25.toFont,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 53),
-                              GradientTextFieldWidget(
+                              InputWidget(
                                 hintText: 'Enter atSign',
                                 controller: atSignController,
                                 prefixText: "@",
@@ -110,40 +118,44 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 24),
-                              GradientTextFieldWidget(
+                              const SizedBox(height: 16),
+                              InputWidget(
                                 hintText: 'Enter nickname',
                                 controller: nicknameController,
                                 onSubmitted: (value) {
                                   _checkValid();
                                 },
                               ),
-                              const SizedBox(height: 44),
+                              const SizedBox(height: 30),
                               Container(
                                 height: 1,
                                 decoration: BoxDecoration(
-                                  color: ColorConstants.darkGray,
+                                  color: ColorConstants.lightGray,
                                 ),
                               ),
-                              const SizedBox(height: 24),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    "atSign valid",
-                                    style: TextStyle(
-                                      fontSize: 14.toFont,
-                                      fontWeight: FontWeight.w500,
+                              const SizedBox(height: 28),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      "atSign valid",
+                                      style: TextStyle(
+                                        fontSize: 14.toFont,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Icon(
-                                    Icons.check_circle_outlined,
-                                    color: state.isVerify
-                                        ? Colors.green
-                                        : ColorConstants.darkGray,
-                                  )
-                                ],
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.check_circle_outlined,
+                                      size: 23,
+                                      color: state.isVerify
+                                          ? Colors.green
+                                          : Colors.black,
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -160,40 +172,37 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       ],
                     ),
                   ),
-                  SafeArea(
-                    top: false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(27, 0, 27, 40),
-                      child: InkWell(
-                        onTap: () async {
-                          if (addContactProvider.isVerify) {
-                            var response = await addContactProvider.addContact(
-                              atSign: atSignController.text,
-                              nickname: nicknameController.text,
-                            );
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(27, 0, 27, 16),
+                    child: InkWell(
+                      onTap: () async {
+                        if (addContactProvider.isVerify) {
+                          var response = await addContactProvider.addContact(
+                            atSign: atSignController.text,
+                            nickname: nicknameController.text,
+                          );
 
-                            if (response ?? false) {
-                              Navigator.of(context).pop(true);
-                            }
+                          if (response ?? false) {
+                            Navigator.of(context).pop(true);
                           }
-                        },
-                        child: Container(
-                          height: 60.toHeight,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: !state.isVerify
-                                ? ColorConstants.buttonGrey
-                                : Colors.black,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Create New Contact",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.toFont,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        }
+                      },
+                      child: Container(
+                        height: 51.toHeight,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: !state.isVerify
+                              ? ColorConstants.buttonGrey
+                              : Colors.black,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Add Contact",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.toFont,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),

@@ -104,17 +104,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SafeArea(
-          child: Scaffold(
-            bottomNavigationBar: customBottomNavigationBar(),
-            key: _scaffoldKey,
-            backgroundColor: ColorConstants.welcomeScreenBG,
-            extendBody: true,
-            drawerScrimColor: Colors.transparent,
-            endDrawer: SideBarWidget(
-              isExpanded: true,
-            ),
-            body: Consumer<InternetConnectivityChecker>(
+        Scaffold(
+          bottomNavigationBar: customBottomNavigationBar(),
+          key: _scaffoldKey,
+          backgroundColor: ColorConstants.background,
+          extendBody: true,
+          drawerScrimColor: Colors.transparent,
+          endDrawer: SideBarWidget(
+            isExpanded: true,
+          ),
+          body: SafeArea(
+            bottom: false,
+            child: Consumer<InternetConnectivityChecker>(
               builder: (_c, provider, widget) {
                 if (provider.isInternetAvailable) {
                   return _bottomSheetWidgetOptions[context
@@ -147,8 +148,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Future.delayed(
                               const Duration(seconds: 3),
                               () {
-                                welcomeScreenProvider
-                                    .changeOverlayStatus(true);
+                                welcomeScreenProvider.changeOverlayStatus(true);
                               },
                             );
                             return Material(
@@ -168,13 +168,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 ),
                               ),
                             );
-                          } else if (flushbarStatus ==
-                              FLUSHBAR_STATUS.FAILED) {
+                          } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
                             Future.delayed(
                               const Duration(seconds: 3),
                               () {
-                                welcomeScreenProvider
-                                    .changeOverlayStatus(true);
+                                welcomeScreenProvider.changeOverlayStatus(true);
                               },
                             );
                             return Material(
@@ -197,8 +195,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           } else {
                             return Consumer<FileProgressProvider>(
                               builder: (_c, provider, _) {
-                                var percent = (provider
-                                            .sentFileTransferProgress
+                                var percent = (provider.sentFileTransferProgress
                                             ?.percent ??
                                         30) /
                                     100;
@@ -230,11 +227,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Consumer<WelcomeScreenProvider>(
       builder: (context, provider, _) {
         return Selector<WelcomeScreenProvider, int>(
-          selector: (context, provider) => provider.selectedBottomNavigationIndex,
+          selector: (context, provider) =>
+              provider.selectedBottomNavigationIndex,
           builder: (context, selectedBottomNavigationIndex, _) {
             return Container(
               height: 74,
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+              margin: EdgeInsets.fromLTRB(
+                16.toWidth,
+                0,
+                16.toWidth,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.white,

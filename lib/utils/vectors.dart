@@ -28,4 +28,5 @@ class AppVectors {
   static String icFile = '$_basePath/ic_file.svg';
   static String icBack = '$_basePath/ic_back.svg';
   static String icPlus11px = '$_basePath/ic_plus_11px.svg';
+  static String icImageGray = '$_basePath/ic_image_gray.svg';
 }

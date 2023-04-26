@@ -70,7 +70,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: ColorConstants.welcomeScreenBG,
+          color: ColorConstants.background,
         ),
         width: double.infinity,
         height: SizeConfig().screenHeight,
