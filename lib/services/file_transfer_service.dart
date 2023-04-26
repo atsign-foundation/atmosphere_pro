@@ -6,6 +6,7 @@ import 'dart:isolate';
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -445,7 +446,9 @@ class FileTransferService {
 }
 
 void encryptFileInIsolate(Map params) async {
-  final encryptedFile = await EncryptionService().encryptFileInChunks(
+  final encryptedFile = await EncryptionService(
+    OnboardingService.getInstance().currentAtsign ?? '',
+  ).encryptFileInChunks(
     params['file'],
     params['encryptionKey'],
     params['fileEncryptionChunkSize'],
@@ -455,7 +458,9 @@ void encryptFileInIsolate(Map params) async {
 }
 
 void decryptFileInIsolate(Map params) async {
-  final decryptedFile = await EncryptionService().decryptFileInChunks(
+  final decryptedFile = await EncryptionService(
+    OnboardingService.getInstance().currentAtsign ?? '',
+  ).decryptFileInChunks(
     params['file'],
     params['encryptionKey'],
     params['fileEncryptionChunkSize'],

@@ -18,16 +18,37 @@ class WebsiteScreen extends StatefulWidget {
   final String? url;
 
   const WebsiteScreen({Key? key, this.title, this.url}) : super(key: key);
+
   @override
   _WebsiteScreenState createState() => _WebsiteScreenState();
 }
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
   late bool loading;
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
+    Factory(() => EagerGestureRecognizer())
+  };
+  late WebViewController webViewController;
+
   @override
   void initState() {
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              loading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {},
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url ?? ''));
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     loading = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForNetwork();
@@ -71,19 +92,9 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
         ),
       ),
       body: Stack(children: [
-        WebView(
-          initialUrl: widget.url,
-          javascriptMode: JavascriptMode.unrestricted,
-          gestureRecognizers: {
-            Factory<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer()..onUpdate = (_) {},
-            )
-          },
-          onPageFinished: (test1) {
-            this.setState(() {
-              loading = false;
-            });
-          },
+        WebViewWidget(
+          controller: webViewController,
+          gestureRecognizers: gestureRecognizers,
         ),
         loading
             ? Center(
