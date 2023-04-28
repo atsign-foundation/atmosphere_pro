@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   at_file_saver
   desktop_window
+  emoji_picker_flutter
   file_selector_windows
   local_notifier
   permission_handler_windows
