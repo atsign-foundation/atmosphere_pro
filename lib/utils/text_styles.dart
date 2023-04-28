@@ -193,6 +193,13 @@ class CustomTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static TextStyle whiteMedium18 = TextStyle(
+    color: Colors.white,
+    fontSize: 18.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w500,
+  );
+
   /// Desktop
 
   static TextStyle greyText16 = TextStyle(

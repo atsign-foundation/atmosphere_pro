@@ -37,12 +37,15 @@ class ColorConstants {
   static const Color textGray = Color(0xFFA7A7A7);
   static const Color textGrey = Color(0xFF868686);
   static const Color textLightGrey = Color(0xFF868686);
+  static const Color oldSliver = Color(0xFF838383);
 
   //NEW UI COLORS
   static const Color fadedGreyN = Color(0xFFF1F1F1);
   static const Color dividerGrey = Color(0xFFD9D9D9);
   static const Color grey = Color(0xFF939393);
   static const Color orange = Color(0xFFF07C50);
+  static const Color portlandOrange = Color(0xFFFB6232);
+  static const Color unbleachedSilk = Color(0xFFFFDACC);
   static const Color lightGrey = Color(0xFFF1F1F1);
   static const Color boxGrey = Color(0xFFEFEFEF);
   static const Color darkGray = Color(0xFFC0C0C0);
@@ -59,6 +62,7 @@ class ColorConstants {
   static const Color backgroundTab = Color(0xFFF6F0E6);
   static const Color darkSliver = Color(0xFF717171);
   static const Color lightGray = Color(0xFFD3D3D3);
+  static const Color jetColor = Color(0xFF363636);
 }
 
 class ContactInitialsColors {

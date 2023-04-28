@@ -1,8 +1,10 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/header_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_card_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
 
 class BlockedContactScreen extends StatefulWidget {
@@ -30,91 +32,132 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          height: MediaQuery.of(context).size.height - 120,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                offset: const Offset(0, 4),
-              )
-            ],
+      backgroundColor: ColorConstants.background,
+      appBar: AppBar(
+        backgroundColor: ColorConstants.background,
+        title: Text(
+          "Blocked atSigns",
+          style: TextStyle(
+            color: Colors.black,
           ),
+        ),
+        centerTitle: false,
+      ),
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              _buildHeaderWidget(),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 27),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Blocked atSigns",
-                      style: TextStyle(
-                        fontSize: 25.toFont,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    HeaderWidget(
-                      margin: EdgeInsets.only(bottom: 28),
-                      onReloadCallback: () async {
-                        await _contactService.fetchBlockContactList();
-                        searchController.clear();
-                      },
-                      controller: searchController,
-                      onSearch: (value) {
-                        setState(() {});
-                      },
-                    ),
-                    Container(
-                      height: 37.toHeight,
-                      padding: const EdgeInsets.only(left: 24),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10),
-                          ),
-                          color: ColorConstants.textBoxBg),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "atSign",
-                            style: TextStyle(
-                              fontSize: 15.toFont,
-                              fontWeight: FontWeight.w500,
-                              color: ColorConstants.sidebarTextUnselected,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_downward_outlined,
-                            color: ColorConstants.sidebarTextUnselected,
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+            children: [
+              SearchWidget(
+                controller: searchController,
+                borderColor: Colors.white,
+                backgroundColor: Colors.white,
+                hintText: "Search",
+                hintStyle: TextStyle(
+                  color: ColorConstants.darkSliver,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+                margin: EdgeInsets.fromLTRB(
+                  44.toWidth,
+                  14.toHeight,
+                  29.toWidth,
+                  16,
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 27),
-                  child: _buildListBlocked(),
+                child: StreamBuilder<List<BaseContact?>>(
+                  stream: _contactService.blockedContactStream,
+                  initialData: _contactService.baseBlockedList,
+                  builder: (context, snapshot) {
+                    if ((snapshot.connectionState == ConnectionState.waiting)) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorConstants.orange,
+                        ),
+                      );
+                    } else {
+                      var listContact = snapshot.data!;
+                      listContact = listContact
+                          .where(
+                            (element) => (element?.contact?.atSign ?? '')
+                                .contains(searchController.text),
+                          )
+                          .toList();
+
+                      if (listContact.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 122,
+                                width: 226,
+                                child: Image.asset(
+                                  ImageConstants.emptyBox,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 24),
+                                child: Text(
+                                  "Empty Contacts",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorConstants.grey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      // renders contacts according to the initial alphabet
+                      return Scrollbar(
+                        radius: const Radius.circular(11),
+                        child: RefreshIndicator(
+                          onRefresh: () async {},
+                          child: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: 27,
+                            shrinkWrap: true,
+                            itemBuilder: (context, alphabetIndex) {
+                              List<BaseContact> contactsForAlphabet = [];
+
+                              var currentChar =
+                                  String.fromCharCode(alphabetIndex + 65)
+                                      .toUpperCase();
+
+                              if (alphabetIndex == 26) {
+                                currentChar = 'Others';
+                              }
+
+                              contactsForAlphabet = getContactsForAlphabets(
+                                listContact,
+                                currentChar,
+                                alphabetIndex,
+                              );
+
+                              if (contactsForAlphabet.isEmpty) {
+                                return const SizedBox();
+                              }
+
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _buildChar(currentChar),
+                                  _buildBlockContacts(contactsForAlphabet)
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
@@ -124,157 +167,91 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
     );
   }
 
-  Widget _buildHeaderWidget() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(27, 24, 27, 0),
-      child: Row(
-        children: [
-          Container(
-            height: 2,
-            width: 45,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20),
+  Widget _buildBlockContacts(
+    List<BaseContact> contactsForAlphabet,
+  ) {
+    return ListView.builder(
+      itemCount: contactsForAlphabet.length,
+      padding: EdgeInsets.only(left: 44, right: 28),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final contact = contactsForAlphabet[index].contact;
+        return ContactCardWidget(
+          contact: contact!,
+          onTap: () async {
+            print("unblock");
+            await _contactService.blockUnblockContact(
+              contact: contactsForAlphabet[index].contact!,
+              blockAction: false,
+            );
+          },
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Icon(
+              Icons.block,
+              color: Colors.red,
             ),
           ),
-          const Spacer(),
-          Align(
-            alignment: Alignment.topRight,
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                height: 31.toHeight,
-                alignment: Alignment.topRight,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: ColorConstants.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: Center(
-                  child: Text(
-                    "Close",
-                    style: TextStyle(
-                      fontSize: 17.toFont,
-                      fontWeight: FontWeight.w600,
-                      color: ColorConstants.grey,
-                    ),
-                  ),
-                ),
+        );
+      },
+    );
+  }
+
+  Widget _buildChar(String currentChar) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 28),
+            child: Text(
+              currentChar,
+              style: TextStyle(
+                fontSize: 20.toFont,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+          SizedBox(width: 16.toWidth),
+          Expanded(
+            child: Divider(
+              color: ColorConstants.dividerGrey,
+              height: 1.toHeight,
+            ),
+          ),
+          SizedBox(width: 31.toWidth),
         ],
       ),
     );
   }
 
-  _buildListBlocked() {
-    return StreamBuilder<List<BaseContact?>>(
-      stream: _contactService.blockedContactStream,
-      initialData: _contactService.baseBlockedList,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          var listContact = snapshot.data!;
-          listContact = listContact
-              .where(
-                (element) => (element?.contact?.atSign ?? '')
-                    .contains(searchController.text),
-              )
-              .toList();
-          return ListView.builder(
-            itemCount: listContact.length,
-            physics: ClampingScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemBuilder: (context, index) {
-              return Container(
-                height: 58.toHeight,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 18),
-                              child: Text(
-                                listContact[index]?.contact?.atSign ?? '',
-                                style: TextStyle(
-                                  fontSize: 13.toFont,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorConstants.textBlack,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 24),
-                            child: InkWell(
-                              onTap: () async {
-                                await _contactService.blockUnblockContact(
-                                  contact: listContact[index]!.contact!,
-                                  blockAction: false,
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.toWidth,
-                                  vertical: 7.toHeight,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: ColorConstants.boxGrey,
-                                  border: Border.all(
-                                    color: ColorConstants.grey,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
-                                      "Unblock?",
-                                      style: TextStyle(
-                                        fontSize: 13.toFont,
-                                        fontWeight: FontWeight.w600,
-                                        color: ColorConstants.grey,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    const Icon(
-                                      Icons.block,
-                                      color: Colors.red,
-                                      size: 16,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      color: ColorConstants.textBoxBg,
-                      height: 1.toHeight,
-                      width: double.infinity,
-                    )
-                  ],
-                ),
-              );
-            },
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+  List<BaseContact> getContactsForAlphabets(
+    List<BaseContact?> _filteredList,
+    String currentChar,
+    int alphabetIndex,
+  ) {
+    List<BaseContact> contactsForAlphabet = [];
+
+    /// contacts, groups that does not starts with alphabets
+    if (alphabetIndex == 26) {
+      for (var c in _filteredList) {
+        if (!RegExp(r'^[a-z]+$').hasMatch(
+          (c?.contact?.atSign?[1] ?? '').toLowerCase(),
+        )) {
+          contactsForAlphabet.add(c!);
         }
-      },
-    );
+      }
+    } else {
+      for (var c in _filteredList) {
+        if (c?.contact != null) {
+          if (c?.contact?.atSign?[1].toUpperCase() == currentChar) {
+            contactsForAlphabet.add(c!);
+          }
+        }
+      }
+    }
+
+    return contactsForAlphabet;
   }
 }

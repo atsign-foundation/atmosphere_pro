@@ -121,7 +121,6 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                         showGroups: true,
                         showContacts: false,
                         isShowAlpha: false,
-                        isOnlyShowSearchBar: false,
                         onTapGroup: (group) async {
                           WidgetsBinding.instance
                               .addPostFrameCallback((_) async {

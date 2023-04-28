@@ -172,20 +172,17 @@ class _ContactScreenState extends State<ContactScreen>
               children: [
                 ListContactWidget(
                   contactsType: ContactsType.contact,
-                  isShowHeader: false,
                   trustedContacts: trustedProvider.trustedContacts,
                   onTapContact: (contact) async {
-                    final result = await showModalBottomSheet<bool?>(
-                      context: context,
-                      isScrollControlled: true,
-                      useRootNavigator: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (BuildContext context) {
-                        return ContactDetailScreen(
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ContactDetailScreen(
                           contact: contact,
-                        );
-                      },
+                        ),
+                      ),
                     );
+
                     if (result != false) {
                       reloadPage();
                     }
@@ -193,7 +190,6 @@ class _ContactScreenState extends State<ContactScreen>
                 ),
                 ListContactWidget(
                   contactsType: ContactsType.trusted,
-                  isShowHeader: false,
                   isOnlyShowContactTrusted: true,
                   trustedContacts: trustedProvider.trustedContacts,
                   onTapContact: (contact) async {
@@ -215,7 +211,6 @@ class _ContactScreenState extends State<ContactScreen>
                 ),
                 ListContactWidget(
                   contactsType: ContactsType.groups,
-                  isShowHeader: false,
                   showGroups: true,
                   showContacts: false,
                   onTapGroup: (group) async {

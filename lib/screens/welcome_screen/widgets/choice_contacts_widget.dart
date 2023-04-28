@@ -77,11 +77,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                   trustedContacts: trustedProvider.trustedContacts,
                   isSelectMultiContacts: true,
                   showGroups: true,
-                  isShowFilterBar: false,
                   selectedContacts: listContact,
-                  searchBackgroundColor: Colors.white,
-                  searchBorderColor: Colors.white,
-                  hintText: "Search",
                   onSelectContacts: (contacts) {
                     setState(() {
                       listContact = contacts;

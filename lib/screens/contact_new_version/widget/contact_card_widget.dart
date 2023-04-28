@@ -13,6 +13,7 @@ class ContactCardWidget extends StatefulWidget {
   final double avatarSize, borderRadius;
   final Function()? onTap;
   final bool isSelected, isTrusted;
+  final Widget? suffixIcon;
 
   const ContactCardWidget({
     Key? key,
@@ -22,6 +23,7 @@ class ContactCardWidget extends StatefulWidget {
     this.onTap,
     this.isSelected = false,
     this.isTrusted = false,
+    this.suffixIcon,
   }) : super(key: key);
 
   @override
@@ -59,80 +61,82 @@ class _ContactCardWidgetState extends State<ContactCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        widget.onTap?.call();
-      },
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 13, 12, 13),
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () {
+          widget.onTap?.call();
+        },
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(20, 13, 12, 13),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: widget.isSelected
+                  ? ColorConstants.orange
+                  : ColorConstants.textBoxBg,
+            ),
             color: widget.isSelected
-                ? ColorConstants.orange
-                : ColorConstants.textBoxBg,
+                ? ColorConstants.orange.withOpacity(0.2)
+                : Colors.white,
           ),
-          color: widget.isSelected
-              ? ColorConstants.orange.withOpacity(0.2)
-              : Colors.white,
-        ),
-        child: Row(
-          children: <Widget>[
-            Container(
-              height: widget.avatarSize,
-              width: widget.avatarSize,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  widget.borderRadius,
+          child: Row(
+            children: <Widget>[
+              Container(
+                height: widget.avatarSize,
+                width: widget.avatarSize,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    widget.borderRadius,
+                  ),
+                ),
+                child: image != null
+                    ? CustomCircleAvatar(
+                        byteImage: image,
+                        nonAsset: true,
+                      )
+                    : ContactInitial(
+                        borderRadius: widget.borderRadius,
+                        size: widget.avatarSize,
+                        initials: contactName,
+                      ),
+              ),
+              const SizedBox(width: 18),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      widget.contact.atSign ?? '',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      widget.contact.tags?['name'] ??
+                          widget.contact.atSign!.substring(1),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: image != null
-                  ? CustomCircleAvatar(
-                      byteImage: image,
-                      nonAsset: true,
+              widget.isTrusted
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: SvgPicture.asset(
+                        AppVectors.icTrustActivated,
+                      ),
                     )
-                  : ContactInitial(
-                      borderRadius: widget.borderRadius,
-                      size: widget.avatarSize,
-                      initials: contactName,
-                    ),
-            ),
-            const SizedBox(width: 18),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    widget.contact.atSign ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    widget.contact.tags?['name'] ??
-                        widget.contact.atSign!.substring(1),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            widget.isTrusted
-                ? Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: SvgPicture.asset(
-                      AppVectors.icTrustActivated,
-                    ),
-                )
-                : const SizedBox(),
-          ],
+                  : widget.suffixIcon ?? const SizedBox(),
+            ],
+          ),
         ),
       ),
     );

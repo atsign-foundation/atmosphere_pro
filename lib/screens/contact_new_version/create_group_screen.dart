@@ -150,7 +150,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         ),
                         Flexible(
                           child: ListContactWidget(
-                            isShowHeader: false,
                             trustedContacts: widget.trustContacts,
                             isSelectMultiContacts: true,
                             onSelectContacts: (contacts) {
