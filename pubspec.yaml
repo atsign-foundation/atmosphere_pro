@@ -48,7 +48,7 @@ dependencies:
   qr_flutter: ^4.0.0
   receive_sharing_intent: ^1.4.5
   rxdart: ^0.27.3
-  share_plus: ^4.0.1
+  share_plus: ^4.5.3
   url_launcher: ^6.0.20
   video_thumbnail: ^0.4.6
   webview_flutter: ^4.0.1
@@ -82,8 +82,13 @@ dev_dependencies:
   msix: ^3.3.1
 
 dependency_overrides:
-  emoji_picker_flutter: 1.2.1
   ffi: ^2.0.1
+  emoji_picker_flutter: 1.2.1
+  at_onboarding_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_onboarding_flutter
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

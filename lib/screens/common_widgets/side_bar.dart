@@ -88,13 +88,22 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     buildNumber: 'Unknown',
   );
 
+  bool enableShareStSign = false;
+  final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
+
   @override
   void initState() {
+    getShareAtSign();
     super.initState();
 
     isExpanded = widget.isExpanded;
     getAtsignDetails();
     _initPackageInfo();
+  }
+
+  void getShareAtSign() async {
+    enableShareStSign = await _keyChainManager.isUsingSharedStorage() ?? false;
+    setState(() {});
   }
 
   Future<void> _initPackageInfo() async {
@@ -356,6 +365,56 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     title: menuItemsTitle[8],
                     routeName: targetScreens[8],
                     showIconOnly: !isExpanded,
+                  ),
+                  SizedBox(height: isTablet ? 20.toHeight : 0),
+                  SizedBox(
+                    height: 50,
+                    width: SizeConfig().screenWidth,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(
+                            right: 10.toWidth,
+                          ),
+                          child: Icon(
+                            Icons.share_outlined,
+                            size: 25,
+                            color: ColorConstants.fadedText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Sharing atSign',
+                            style: TextStyle(
+                              color: ColorConstants.fadedText,
+                              letterSpacing: 0.1,
+                              fontSize: 13.toFont,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        Transform.scale(
+                          alignment: Alignment.center,
+                          scale: 0.7,
+                          child: CupertinoSwitch(
+                            activeColor: ColorConstants.orangeColor,
+                            value: enableShareStSign,
+                            onChanged: (value) {
+                              if (value) {
+                                _keyChainManager.enableUsingSharedStorage();
+                              } else {
+                                _keyChainManager.disableUsingSharedStorage();
+                              }
+
+                              setState(() {
+                                enableShareStSign = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: isTablet ? 20.toHeight : 0),
                   InkWell(

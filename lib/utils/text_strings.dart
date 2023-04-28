@@ -223,6 +223,7 @@ class TextStrings {
   // desktop text constants
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
+  String sharingAtSign = 'sharing_at_sign';
   String contactSelectionConfirmation =
       'Your contact selection will be cleared if you leave this screen. Would you like to continue with your new action?';
 

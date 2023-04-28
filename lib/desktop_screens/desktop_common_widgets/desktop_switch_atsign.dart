@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -9,10 +10,12 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSwitchAtsign extends StatefulWidget {
   String atsign;
+
   DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
 
   @override
@@ -25,12 +28,15 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   var atClientPrefernce;
   AtClient atClient = AtClientManager.getInstance().atClient;
   String? atsignName = '';
+  bool enableShareStSign = false;
+  final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
 
   @override
   void initState() {
     if (widget.atsign == atClient.getCurrentAtSign()) {
       isCurrentAtsign = true;
     }
+    getShareAtSign();
     getAtsignDetails();
     super.initState();
   }
@@ -40,12 +46,20 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
     setState(() {});
   }
 
+  void getShareAtSign() async {
+    enableShareStSign =
+        await _keyChainManager.isUsingSharedStorage() ?? false;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.atsign == TextStrings().addNewAtsign) {
       return addNewContactRow();
     } else if (widget.atsign == TextStrings().saveBackupKey) {
       return saveBackupKeyRow();
+    } else if (widget.atsign == TextStrings().sharingAtSign) {
+      return sharingAtSignRow();
     } else {
       return _contactRow(widget.atsign, atsignName ?? '',
           isCurrentAtsign: isCurrentAtsign);
@@ -176,6 +190,56 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   ),
                 ),
               )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget sharingAtSignRow() {
+    return Column(
+      children: [
+        Divider(height: 1),
+        SizedBox(
+          height: 50,
+          width: SizeConfig().screenWidth,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.share_outlined, size: 25),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Sharing atSign',
+                  softWrap: true,
+                  style: TextStyle(
+                    color: ColorConstants.fadedText,
+                    letterSpacing: 0.1,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+              Transform.scale(
+                alignment: Alignment.center,
+                scale: 0.7,
+                child: CupertinoSwitch(
+                  activeColor: ColorConstants.orangeColor,
+                  value: enableShareStSign,
+                  onChanged: (value) {
+                    if (value) {
+                      _keyChainManager.enableUsingSharedStorage();
+                    } else {
+                      _keyChainManager.disableUsingSharedStorage();
+                    }
+
+                    setState(() {
+                      enableShareStSign = value;
+                    });
+                  },
+                ),
+              ),
             ],
           ),
         ),

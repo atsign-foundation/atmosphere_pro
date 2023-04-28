@@ -43,6 +43,7 @@ class CustomOnboarding {
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
+          showPopupSharedStorage: true,
         ),
         isSwitchingAtsign: !isInit,
         atsign: atSign);
