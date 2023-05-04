@@ -85,16 +85,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: ColorConstants.background,
-      extendBodyBehindAppBar: true,
+      // extendBodyBehindAppBar: true,
       appBar: AppBarCustom(
         height: 330,
         title: "Settings",
       ),
-      extendBody: true,
-      drawerScrimColor: Colors.transparent,
-      endDrawer: SideBarWidget(
-        isExpanded: true,
-      ),
+      // extendBody: true,
+      // drawerScrimColor: Colors.transparent,
+      // endDrawer: SideBarWidget(
+      //   isExpanded: true,
+      // ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(31, 0, 31, 24),

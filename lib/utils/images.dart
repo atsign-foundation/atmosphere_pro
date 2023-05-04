@@ -90,4 +90,9 @@ class ImageConstants {
   static String icUserActivate = '$_basePath/ic_user_activate.png';
   static String icUserInactivate = '$_basePath/ic_user_inactivate.png';
   static String icImage = '$_basePath/ic_image.png';
+
+  static String icGridTypeActivate = '$_basePath/ic_grid_type_activate.png';
+  static String icGridType = '$_basePath/ic_grid_type.png';
+  static String icListTypeActivate = '$_basePath/ic_list_type_activate.png';
+  static String icListType = '$_basePath/ic_list_type.png';
 }

@@ -108,11 +108,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           bottomNavigationBar: customBottomNavigationBar(),
           key: _scaffoldKey,
           backgroundColor: ColorConstants.background,
-          extendBody: true,
-          drawerScrimColor: Colors.transparent,
-          endDrawer: SideBarWidget(
-            isExpanded: true,
-          ),
+          // extendBody: true,
+          // drawerScrimColor: Colors.transparent,
+          // endDrawer: SideBarWidget(
+          //   isExpanded: true,
+          // ),
           body: SafeArea(
             bottom: false,
             child: Consumer<InternetConnectivityChecker>(

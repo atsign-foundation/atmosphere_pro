@@ -38,5 +38,19 @@ class AppVectors {
   static String icSettingFAQ = '$_basePath/ic_setting_faq.svg';
   static String icSettingContactUs = '$_basePath/ic_setting_contact_us.svg';
   static String icSettingPrivacy = '$_basePath/ic_setting_privacy.svg';
+  static String icFilter = '$_basePath/ic_filter.svg';
+  static String icBannerOverlay = '$_basePath/ic_banner_overlay.svg';
 
+  static String icCategoryVolume = '$_basePath/ic_category_volume.svg';
+  static String icCategoryFolder = '$_basePath/ic_category_folder.svg';
+  static String icCategoryImage = '$_basePath/ic_category_image.svg';
+  static String icCategoryOther = '$_basePath/ic_category_other.svg';
+  static String icCategoryPlay = '$_basePath/ic_category_play.svg';
+  static String icCategoryFiles = '$_basePath/ic_category_files.svg';
+  static String icArrowRight = '$_basePath/ic_arrow_right.svg';
+  static String icGridType = '$_basePath/ic_grid_type.svg';
+  static String icListType = '$_basePath/ic_list_type.svg';
+  static String icDeleteFile = '$_basePath/ic_delete_file.svg';
+  static String icSendFile = '$_basePath/ic_send_file.svg';
+  static String icDownloadFile = '$_basePath/ic_download_file.svg';
 }

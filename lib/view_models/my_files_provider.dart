@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
@@ -21,7 +21,6 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
-import 'package:atsign_atmosphere_pro/data_models/enums/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +50,7 @@ class MyFilesProvider extends BaseModel {
   List<Widget> tabs = [Recents()];
 
   Map<String, List<FilesDetail>> filesByAlpha = {};
-  FileType typeSelected = FileType.all;
+  FileType? typeSelected;
 
   init() async {
     await getMyFilesRecords();
@@ -71,30 +70,27 @@ class MyFilesProvider extends BaseModel {
     tabNames = ['Recents'];
   }
 
-  void changeTypeSelected(FileType type) {
+  void changeTypeSelected(FileType? type) {
     typeSelected = type;
     displayFiles = filterFiles(type);
-    notifyListeners();
   }
 
-  List<FilesDetail> filterFiles(FileType type) {
+  List<FilesDetail> filterFiles(FileType? type) {
     switch (type) {
-      case FileType.all:
-        return allFiles;
       case FileType.photo:
         return receivedPhotos;
       case FileType.video:
         return receivedVideos;
       case FileType.audio:
         return receivedAudio;
-      case FileType.apk:
+      case FileType.zips:
         return receivedApk;
-      case FileType.document:
+      case FileType.file:
         return receivedDocument;
-      case FileType.unknown:
+      case FileType.other:
         return receivedUnknown;
       default:
-        return [];
+        return allFiles;
     }
   }
 
