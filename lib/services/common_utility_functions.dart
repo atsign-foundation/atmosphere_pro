@@ -19,6 +19,9 @@ import 'package:flutter/rendering.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../data_models/file_transfer.dart';
+import '../screens/common_widgets/labelled_circular_progress.dart';
+
 class CommonUtilityFunctions {
   static final CommonUtilityFunctions _singleton =
       CommonUtilityFunctions._internal();
@@ -607,6 +610,50 @@ class CommonUtilityFunctions {
             ),
           );
         });
+  }
+
+  String formatDateTime(DateTime datetime) {
+    return "${datetime.day}/${datetime.month}/${datetime.year} | ${datetime.hour}:${datetime.minute}";
+  }
+
+  Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
+    Widget spinner = CircularProgressIndicator();
+
+    if (fileTransferProgress == null) {
+      return spinner;
+    }
+
+    if (fileTransferProgress.fileState == FileState.download &&
+        fileTransferProgress.percent != null) {
+      spinner = LabelledCircularProgressIndicator(
+          value: (fileTransferProgress.percent! / 100));
+    }
+
+    return spinner;
+  }
+
+  bool checkForDownloadAvailability(FileTransfer file) {
+
+    bool isDownloadAvailable = false;
+
+    var expiryDate = file.date!.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+
+    // if fileList is not having any file then download icon will not be shown
+    var isFileUploaded = false;
+    file.files!.forEach((FileData fileData) {
+      if (fileData.isUploaded!) {
+        isFileUploaded = true;
+      }
+    });
+
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
+
+    return isDownloadAvailable;
   }
 
   void showNoFileDialog({double deviceTextFactor = 1}) {
