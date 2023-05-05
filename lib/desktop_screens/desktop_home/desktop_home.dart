@@ -88,7 +88,6 @@ class _DesktopHomeState extends State<DesktopHome> {
     if (mounted) {
       setState(() {});
     }
-    print('currentatSign $currentatSign, ${(currentatSign != null)}');
     await backendService
         .getAtClientPreference()
         .then((value) => atClientPrefernce = value)
