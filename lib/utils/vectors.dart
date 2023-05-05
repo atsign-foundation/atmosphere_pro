@@ -53,4 +53,8 @@ class AppVectors {
   static String icDeleteFile = '$_basePath/ic_delete_file.svg';
   static String icSendFile = '$_basePath/ic_send_file.svg';
   static String icDownloadFile = '$_basePath/ic_download_file.svg';
+  static String icArrowUpOutline = '$_basePath/ic_arrow_up_outline.svg';
+  static String icArrowDownOutline = '$_basePath/ic_arrow_down_outline.svg';
+  static String icCloudDownloaded = '$_basePath/ic_cloud_downloaded.svg';
+  static String icCloudDownloading = '$_basePath/ic_cloud_downloading.svg';
 }

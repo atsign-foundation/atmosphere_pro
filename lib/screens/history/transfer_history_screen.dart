@@ -152,19 +152,18 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                       padding: EdgeInsets.only(bottom: 170.toHeight),
                       physics: AlwaysScrollableScrollPhysics(),
                       separatorBuilder: (context, index) {
-                        return Divider(
-                          indent: 16.toWidth,
-                        );
+                        return SizedBox(height: 10.toHeight);
                       },
                       itemCount: filteredSentHistory.length,
                       itemBuilder: (context, index) {
-                        return HistoryCardWidget();
+                        return HistoryCardWidget(
+                          fileHistory: filteredSentHistory[index],
+                        );
 
                         //   SentFilesListTile(
                         //   sentHistory: filteredSentHistory[index],
                         //   key: Key(filteredSentHistory[index].fileDetails!.key),
                         // );
-
                       },
                     );
                   } else {
