@@ -4,15 +4,19 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/option_header_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_item_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,11 +41,13 @@ class TransferHistoryScreen extends StatefulWidget {
 
 class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
   bool isLoading = false;
+  late HistoryProvider historyProvider;
   late HistoryProvider provider;
   late TextEditingController searchController;
 
   @override
   void initState() {
+    historyProvider = context.read<HistoryProvider>();
     provider = context.read<HistoryProvider>();
     searchController = TextEditingController();
     super.initState();
@@ -50,25 +56,164 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorConstants.background,
       appBar: AppBarCustom(
         height: 130,
-        title: "Transfer History",
+        title: "History",
       ),
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  ImageConstants.welcomeBackground,
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(
+            top: 18.toHeight,
+            right: 22.toWidth,
+            left: 34.toWidth,
+            bottom: 16.toHeight,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: SearchWidget(
+                  controller: searchController,
+                  borderColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  hintText: "Search",
+                  hintStyle: TextStyle(
+                    color: ColorConstants.darkSliver,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  margin: EdgeInsets.zero,
                 ),
-                fit: BoxFit.fill,
               ),
+              SizedBox(width: 16),
+              SvgPicture.asset(
+                AppVectors.icFilter,
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              if (historyProvider.status[historyProvider.PERIODIC_REFRESH] !=
+                  Status.Loading) {
+                await historyProvider.getSentHistory();
+              }
+            },
+            child: ProviderHandler<HistoryProvider>(
+              functionName: historyProvider.SENT_HISTORY,
+              showError: false,
+              successBuilder: (provider) {
+                if ((provider.sentHistory.isEmpty)) {
+                  return ListView.separated(
+                    padding: EdgeInsets.only(bottom: 170.toHeight),
+                    physics: AlwaysScrollableScrollPhysics(),
+                    separatorBuilder: (context, index) =>
+                        Divider(indent: 16.toWidth),
+                    itemCount: 1,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: SizeConfig().screenHeight - 120.toHeight,
+                        child: Center(
+                          child: Text(
+                            'No files sent',
+                            style: TextStyle(
+                              fontSize: 15.toFont,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  List<FileHistory> filteredSentHistory = [];
+                  provider.sentHistory.forEach((element) {
+                    if (element.sharedWith!.any(
+                          (ShareStatus sharedStatus) => sharedStatus.atsign!
+                              .contains(provider.getSearchText),
+                        ) ||
+                        (element.groupName != null &&
+                            element.groupName!.toLowerCase().contains(
+                                provider.getSearchText.toLowerCase()))) {
+                      filteredSentHistory.add(element);
+                    }
+                  });
+
+                  if (filteredSentHistory.isNotEmpty) {
+                    return ListView.separated(
+                      padding: EdgeInsets.only(bottom: 170.toHeight),
+                      physics: AlwaysScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          indent: 16.toWidth,
+                        );
+                      },
+                      itemCount: filteredSentHistory.length,
+                      itemBuilder: (context, index) {
+                        return HistoryCardWidget();
+
+                        //   SentFilesListTile(
+                        //   sentHistory: filteredSentHistory[index],
+                        //   key: Key(filteredSentHistory[index].fileDetails!.key),
+                        // );
+
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: Text('No results found'),
+                    );
+                  }
+                }
+              },
+              errorBuilder: (provider) => ListView.separated(
+                padding: EdgeInsets.only(bottom: 170.toHeight),
+                physics: AlwaysScrollableScrollPhysics(),
+                separatorBuilder: (context, index) =>
+                    Divider(indent: 16.toWidth),
+                itemCount: 1,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: SizeConfig().screenHeight - 120.toHeight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Some error occured',
+                          style: TextStyle(
+                            fontSize: 15.toFont,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        SizedBox(height: 10.toHeight),
+                        CustomButton(
+                          isOrange: true,
+                          buttonText: TextStrings().retry,
+                          height: 40.toHeight,
+                          width: 115.toWidth,
+                          onPressed: () {
+                            historyProvider.getSentHistory();
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              load: (provider) async {},
             ),
           ),
-          buildBody(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

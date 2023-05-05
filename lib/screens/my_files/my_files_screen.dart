@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
-import 'package:atsign_atmosphere_pro/data_models/enums/file_types.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/option_header_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';

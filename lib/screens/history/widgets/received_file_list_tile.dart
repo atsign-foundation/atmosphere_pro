@@ -52,6 +52,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloadAvailable = false,
       isFilesAvailableOfline = true,
       isOverwrite = false;
+  
   DateTime? sendTime;
   Uint8List? videoThumbnail, image;
   int fileSize = 0;

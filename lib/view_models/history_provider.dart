@@ -42,7 +42,7 @@ class HistoryProvider extends BaseModel {
   String DOWNLOAD_FILE = 'download_file';
   String DOWNLOAD_ACK = 'download_ack';
   List<FileHistory> sentHistory = [], tempSentHistory = [];
-  List<FileTransfer> receivedHistoryLogs = [];
+  List<FileTransfer> receivedHistoryLogs = []; ///SONLT2 List Received
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
@@ -410,16 +410,19 @@ class HistoryProvider extends BaseModel {
         ..key = MixedConstants.SENT_FILE_HISTORY
         ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
         ..metadata = Metadata();
+
       var keyValue =
           await AtClientManager.getInstance().atClient.get(key).catchError((e) {
         print('error in getSentHistory : $e');
         ExceptionService.instance.showGetExceptionOverlay(e);
         return AtValue();
       });
+
       if (keyValue != null && keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
+
           historyFile['history'].forEach((value) {
             FileHistory filesModel = FileHistory.fromJson(value);
             // checking for download acknowledged
@@ -628,6 +631,7 @@ class HistoryProvider extends BaseModel {
     setStatus(DOWNLOAD_ACK, Status.Done);
   }
 
+  ///kkk
   getReceivedHistory({bool setLoading = true}) async {
     if (setLoading) {
       setStatus(RECEIVED_HISTORY, Status.Loading);
@@ -846,6 +850,7 @@ class HistoryProvider extends BaseModel {
     for (var atKey in fileTransferAtkeys) {
       var isCurrentAtsign = compareAtSign(
           atKey.sharedBy!, BackendService.getInstance().currentAtSign!);
+
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 

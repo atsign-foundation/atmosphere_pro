@@ -24,6 +24,8 @@ class ColorConstants {
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
   static const Color successGreen = Color(0xFF0ACB21);
+  static const Color lightGreen = Color(0xFFE1EDCC);
+  static const Color textGreen = Color(0xFF67A700);
   static const Color selago = Color(0xFFFFFAFA);
   static const Color mildGrey = Color(0xFFE4E4E4);
   static const Color selected_list = Color(0xFFFEF7F7);
