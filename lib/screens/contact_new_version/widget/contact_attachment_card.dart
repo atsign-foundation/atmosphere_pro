@@ -77,11 +77,13 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
               color: ColorConstants.MILD_GREY,
               borderRadius: BorderRadius.circular(5),
             ),
-            child: thumbnail(
-              widget.singleFile.name?.split(".").last,
-              BackendService.getInstance().downloadDirectory!.path +
-                  Platform.pathSeparator +
-                  widget.singleFile.name!,
+            child: Center(
+              child: thumbnail(
+                widget.singleFile.name?.split(".").last,
+                BackendService.getInstance().downloadDirectory!.path +
+                    Platform.pathSeparator +
+                    widget.singleFile.name!,
+              ),
             ),
           ),
           SizedBox(width: 15),

@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/option_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -20,16 +21,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../data_models/file_transfer.dart';
-import '../../services/snackbar_service.dart';
-import '../../utils/constants.dart';
-import '../../utils/file_types.dart';
-import '../../utils/images.dart';
-import '../../utils/text_strings.dart';
-import '../../view_models/file_progress_provider.dart';
-import '../../view_models/internet_connectivity_checker.dart';
-import '../../view_models/my_files_provider.dart';
 import '../common_widgets/provider_handler.dart';
-import '../my_files/widgets/recents.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   final AtContact contact;
@@ -51,8 +43,11 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
   late WelcomeScreenProvider _welcomeScreenProvider;
   late HistoryProvider historyProvider;
   GlobalKey optionKey = GlobalKey();
+  TextEditingController nicknameController = TextEditingController();
   bool isTrusted = false;
   bool isDownloaded = false;
+
+  bool isEditNickname = false;
 
   @override
   void initState() {
@@ -62,6 +57,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     historyProvider =
         Provider.of<HistoryProvider>(NavService.navKey.currentContext!);
     checkTrustedContact();
+    nicknameController.text = widget.contact.tags!['nickname'] ?? "";
     super.initState();
   }
 
@@ -85,6 +81,24 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     }
 
     return tempfiles;
+  }
+
+  editNickname(e) async {
+    AtContact contact = widget.contact;
+    contact.tags =
+        await _contactService.getContactDetails(contact.atSign, null);
+    contact.tags!['nickname'] = nicknameController.text;
+    var res = await _contactService.atContactImpl.add(contact);
+    if (res == true) {
+      await SnackbarService()
+          .showSnackbar(context, "Successfully updated nickname");
+    } else {
+      await SnackbarService()
+          .showSnackbar(context, "Failed to update nickname");
+    }
+    setState(() {
+      isEditNickname = false;
+    });
   }
 
   @override
@@ -131,16 +145,56 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
+                          isEditNickname
+                              ? Text(
+                                  "Nickname",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              : SizedBox(),
+                          SizedBox(height: 5),
                           Flexible(
-                            child: Text(
-                              widget.contact.tags?['name'] ??
-                                  widget.contact.atSign!.substring(1),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: isEditNickname
+                                ? Row(
+                                    children: [
+                                      Flexible(
+                                        child: TextField(
+                                          onTapOutside: editNickname,
+                                          decoration: InputDecoration(
+                                            hintText: 'Enter Nickname',
+                                            hintStyle: TextStyle(
+                                              fontSize: 15.toFont,
+                                              fontWeight: FontWeight.w500,
+                                              color: ColorConstants.textBlack,
+                                            ),
+                                            border: InputBorder.none,
+                                            labelStyle:
+                                                TextStyle(fontSize: 15.toFont),
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            suffixIcon: Icon(
+                                              Icons.clear,
+                                              color: Colors.black,
+                                              size: 16,
+                                            ),
+                                            // contentPadding: EdgeInsets.only(right: -10, top: 15),
+                                          ),
+                                          controller: nicknameController,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Text(
+                                    widget.contact.tags?['nickname'] ??
+                                        widget.contact.atSign!.substring(1),
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                           ),
                           const SizedBox(height: 5),
                           Flexible(
@@ -246,9 +300,9 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 functionName: historyProvider.RECEIVED_HISTORY,
                 showError: false,
                 successBuilder: (provider) {
-                  var files = filterReceivedFiles(
-                      widget.contact.atSign ?? "", provider.receivedHistoryLogs);
-      
+                  var files = filterReceivedFiles(widget.contact.atSign ?? "",
+                      provider.receivedHistoryLogs);
+
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: files.length,
@@ -257,7 +311,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                       List<Widget> list = [];
                       for (var file in files[index].files) {
                         print("path: ${file.path}");
-      
+
                         list.add(
                           ContactAttachmentCard(
                             fileTransfer: files[index],
@@ -265,7 +319,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                           ),
                         );
                       }
-      
+
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: list,
@@ -342,7 +396,11 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
           builder: (BuildContext contextDialog) {
             return OptionDialog(
               position: position,
-              editNickNameFunc: () {},
+              editNickNameFunc: () {
+                setState(() {
+                  isEditNickname = true;
+                });
+              },
               blockFunc: () async {
                 await _contactService.blockUnblockContact(
                   contact: widget.contact,
