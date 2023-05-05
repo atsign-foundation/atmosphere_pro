@@ -1,14 +1,16 @@
-enum ContactsType { contact, trusted, groups }
+enum ListContactType { contact, trusted, groups, all}
 
-extension ContactsTypeExtension on ContactsType {
+extension ContactsTypeExtension on ListContactType {
   String get display {
     switch (this) {
-      case ContactsType.contact:
+      case ListContactType.contact:
         return "Contacts";
-      case ContactsType.trusted:
+      case ListContactType.trusted:
         return "Trusted";
-      case ContactsType.groups:
+      case ListContactType.groups:
         return "Groups";
+      case ListContactType.all:
+        return "All";
     }
   }
 }

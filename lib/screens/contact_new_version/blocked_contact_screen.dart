@@ -54,6 +54,9 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                 borderColor: Colors.white,
                 backgroundColor: Colors.white,
                 hintText: "Search",
+                onChange: (value) {
+                  setState(() {});
+                },
                 hintStyle: TextStyle(
                   color: ColorConstants.darkSliver,
                   fontSize: 15,
@@ -99,8 +102,9 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 24),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 24,
+                                ),
                                 child: Text(
                                   "Empty Contacts",
                                   style: TextStyle(

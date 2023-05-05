@@ -1,8 +1,11 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +28,11 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
   late TrustedContactProvider trustedProvider;
   late List<GroupContactsModel> listContact;
   late GroupService _groupService;
+  late TextEditingController searchController;
 
   @override
   void initState() {
+    searchController = TextEditingController();
     _groupService = GroupService();
     trustedProvider = context.read<TrustedContactProvider>();
     listContact = widget.selectedContacts ?? [];
@@ -62,7 +67,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
             children: <Widget>[
               _buildHeaderWidget(),
               Padding(
-                padding: const EdgeInsets.only(left: 27),
+                padding: const EdgeInsets.only(left: 27, top: 10),
                 child: Text(
                   "Send To:",
                   style: TextStyle(
@@ -72,12 +77,33 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                   ),
                 ),
               ),
+              SearchWidget(
+                controller: searchController,
+                borderColor: Colors.white,
+                backgroundColor: Colors.white,
+                hintText: "Search",
+                hintStyle: TextStyle(
+                  color: ColorConstants.darkSliver,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+                margin: EdgeInsets.fromLTRB(
+                  36.toWidth,
+                  11.toHeight,
+                  36.toWidth,
+                  10.toHeight,
+                ),
+                onChange: (value) {
+                  setState(() {});
+                },
+              ),
               Expanded(
                 child: ListContactWidget(
                   trustedContacts: trustedProvider.trustedContacts,
                   isSelectMultiContacts: true,
-                  showGroups: true,
+                  contactsType: ListContactType.all,
                   selectedContacts: listContact,
+                  searchKeywords: searchController.text,
                   onSelectContacts: (contacts) {
                     setState(() {
                       listContact = contacts;
@@ -134,7 +160,10 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
               Navigator.of(context).pop();
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 6,
+              ),
               child: SvgPicture.asset(
                 AppVectors.icBack,
               ),
@@ -163,7 +192,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                 margin: EdgeInsets.only(top: 10, right: 8),
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: ColorConstants.orange,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -171,6 +200,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                     Text(
                       "Add New",
                       style: TextStyle(
+                        color: Colors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -178,6 +208,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                     SizedBox(width: 9),
                     SvgPicture.asset(
                       AppVectors.icPlus11px,
+                      color: Colors.white,
                     ),
                   ],
                 ),

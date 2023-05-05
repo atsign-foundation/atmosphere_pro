@@ -41,6 +41,7 @@ class _ContactScreenState extends State<ContactScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.background,
+      resizeToAvoidBottomInset: false,
       appBar: AppBarCustom(
         title: "Contacts",
         suffixIcon: Padding(
@@ -133,6 +134,9 @@ class _ContactScreenState extends State<ContactScreen>
               36.toWidth,
               0,
             ),
+            onChange: (value) {
+              setState(() {});
+            },
           ),
           Container(
             height: 56.toHeight,
@@ -171,8 +175,9 @@ class _ContactScreenState extends State<ContactScreen>
               physics: NeverScrollableScrollPhysics(),
               children: [
                 ListContactWidget(
-                  contactsType: ContactsType.contact,
+                  contactsType: ListContactType.contact,
                   trustedContacts: trustedProvider.trustedContacts,
+                  searchKeywords: searchController.text,
                   onTapContact: (contact) async {
                     final result = await Navigator.push(
                       context,
@@ -189,30 +194,26 @@ class _ContactScreenState extends State<ContactScreen>
                   },
                 ),
                 ListContactWidget(
-                  contactsType: ContactsType.trusted,
-                  isOnlyShowContactTrusted: true,
+                  contactsType: ListContactType.trusted,
                   trustedContacts: trustedProvider.trustedContacts,
+                  searchKeywords: searchController.text,
                   onTapContact: (contact) async {
-                    await showModalBottomSheet<void>(
-                      context: context,
-                      isScrollControlled: true,
-                      useRootNavigator: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (BuildContext context) {
-                        return ContactDetailScreen(
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ContactDetailScreen(
                           contact: contact,
                           onTrustFunc: () {
                             Navigator.of(context).pop();
                           },
-                        );
-                      },
+                        ),
+                      ),
                     );
                   },
                 ),
                 ListContactWidget(
-                  contactsType: ContactsType.groups,
-                  showGroups: true,
-                  showContacts: false,
+                  contactsType: ListContactType.groups,
+                  searchKeywords: searchController.text,
                   onTapGroup: (group) async {
                     WidgetsBinding.instance.addPostFrameCallback((_) async {
                       _groupService.groupViewSink.add(group);
@@ -248,7 +249,7 @@ class _ContactScreenState extends State<ContactScreen>
         ),
         child: Center(
           child: Text(
-            ContactsType.values[index].display,
+            ListContactType.values[index].display,
             style: TextStyle(
               color: isCurrentTab ? Colors.white : Colors.black,
               fontSize: 12,

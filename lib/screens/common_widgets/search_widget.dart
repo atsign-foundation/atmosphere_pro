@@ -9,6 +9,7 @@ class SearchWidget extends StatefulWidget {
   final String? hintText;
   final TextStyle? hintStyle;
   final EdgeInsetsGeometry? margin;
+  final Function(String value)? onChange;
 
   const SearchWidget({
     Key? key,
@@ -18,6 +19,7 @@ class SearchWidget extends StatefulWidget {
     this.hintText,
     this.hintStyle,
     this.margin,
+    this.onChange,
   }) : super(key: key);
 
   @override
@@ -41,7 +43,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       child: TextFormField(
         controller: widget.controller,
         onChanged: (value) {
-          setState(() {});
+          widget.onChange?.call(value);
         },
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

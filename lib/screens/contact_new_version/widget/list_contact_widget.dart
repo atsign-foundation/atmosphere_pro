@@ -12,26 +12,19 @@ import 'package:flutter/material.dart';
 import 'empty_contact_widget.dart';
 
 class ListContactWidget extends StatefulWidget {
-  final bool showGroups,
-      showContacts,
-      isShowAlpha,
-      isSelectMultiContacts,
-      isOnlyShowContactTrusted;
+  final bool isShowAlpha, isSelectMultiContacts;
   final Function(AtContact contact)? onTapContact;
   final Function(AtGroup contact)? onTapGroup;
   final Function(List<GroupContactsModel> contacts)? onSelectContacts;
   final List<AtContact>? trustedContacts;
   final List<GroupContactsModel>? selectedContacts;
-  final ContactsType? contactsType;
+  final ListContactType? contactsType;
   final String searchKeywords;
 
   const ListContactWidget({
     Key? key,
-    this.showGroups = false,
-    this.showContacts = true,
     this.isShowAlpha = true,
     this.isSelectMultiContacts = false,
-    this.isOnlyShowContactTrusted = false,
     this.onTapContact,
     this.onTapGroup,
     this.onSelectContacts,
@@ -47,18 +40,25 @@ class ListContactWidget extends StatefulWidget {
 
 class _ListContactWidgetState extends State<ListContactWidget> {
   late GroupService _groupService;
-
-  ContactFilter selectedContactType = ContactFilter.all;
-  bool showContacts = true;
+  bool showContacts = false;
   bool showGroups = false;
 
   @override
   void initState() {
     _groupService = GroupService();
-    showContacts = widget.showContacts;
-    showGroups = widget.showGroups;
-    _groupService.fetchGroupsAndContacts();
 
+    if (widget.contactsType == ListContactType.all) {
+      showContacts = true;
+      showGroups = true;
+    } else if (widget.contactsType == ListContactType.groups) {
+      showContacts = false;
+      showGroups = true;
+    } else {
+      showContacts = true;
+      showGroups = false;
+    }
+
+    _groupService.fetchGroupsAndContacts();
     super.initState();
   }
 
@@ -90,12 +90,9 @@ class _ListContactWidgetState extends State<ListContactWidget> {
             radius: const Radius.circular(11),
             child: ContactsWidget(
               contacts: _filteredList,
-              searchValue: widget.searchKeywords,
-              showGroups: widget.showGroups,
-              showContacts: widget.showContacts,
+              contactsType: widget.contactsType,
               isShowAlpha: widget.isShowAlpha,
               isSelectMultiContacts: widget.isSelectMultiContacts,
-              isOnlyShowContactTrusted: widget.isOnlyShowContactTrusted,
               onTapContact: widget.onTapContact,
               onTapGroup: widget.onTapGroup,
               onSelectContacts: widget.onSelectContacts,
@@ -116,7 +113,6 @@ class _ListContactWidgetState extends State<ListContactWidget> {
   List<GroupContactsModel?> getAllContactList(
       List<GroupContactsModel?> allGroupContactData) {
     var _filteredList = <GroupContactsModel?>[];
-
     for (var c in allGroupContactData) {
       if (showContacts &&
           c?.contact != null &&
@@ -135,7 +131,6 @@ class _ListContactWidgetState extends State<ListContactWidget> {
         _filteredList.add(c);
       }
     }
-
     return _filteredList;
   }
 }

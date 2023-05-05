@@ -1,5 +1,4 @@
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EmptyContactsWidget extends StatelessWidget {
-  final ContactsType? contactsType;
+  final ListContactType? contactsType;
 
   const EmptyContactsWidget({
     Key? key,
@@ -16,100 +15,136 @@ class EmptyContactsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return contactsType == ContactsType.groups ||
-            contactsType == ContactsType.contact
+    return contactsType == ListContactType.groups ||
+            contactsType == ListContactType.contact
         ? _buildEmptyImage()
-        : Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Add contacts to trusted by",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: ColorConstants.grey,
-                    ),
-                  ),
-                  Row(
+        : contactsType == ListContactType.trusted
+            ? Padding(
+                padding: const EdgeInsets.only(top: 100),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
+                    children: [
                       Text(
-                        "selecting",
+                        "Add contacts to trusted by",
                         style: TextStyle(
                           fontSize: 18,
                           color: ColorConstants.grey,
                         ),
                       ),
-                      SvgPicture.asset(
-                        AppVectors.icBigTrustActivated,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            "selecting",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: ColorConstants.grey,
+                            ),
+                          ),
+                          SvgPicture.asset(
+                            AppVectors.icBigTrustActivated,
+                          ),
+                          Text(
+                            "next to their name!",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: ColorConstants.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "next to their name!",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: ColorConstants.grey,
+                    ],
+                  ),
+                ),
+              )
+            : Center(
+                child: SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 122,
+                        width: 226,
+                        child: Image.asset(
+                          ImageConstants.emptyBox,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Text(
+                          "No Contacts",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: ColorConstants.grey,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          );
+                ),
+              );
   }
 
   Widget _buildEmptyImage() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          SizedBox(
-            height: 122,
-            width: 226,
-            child: Image.asset(
-              ImageConstants.emptyBox,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Text(
-              contactsType == ContactsType.groups ? "No Groups" : "No Contacts",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: ColorConstants.grey,
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(
+              height: 122,
+              width: 226,
+              child: Image.asset(
+                ImageConstants.emptyBox,
               ),
             ),
-          ),
-          InkWell(
-            borderRadius: BorderRadius.circular(46),
-            onTap: () async {},
-            child: Container(
-              decoration: BoxDecoration(
-                color: ColorConstants.orange,
-                borderRadius: BorderRadius.circular(46),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 13,
-                vertical: 8,
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
-                contactsType == ContactsType.groups
-                    ? "Add Group"
-                    : "Add Contact",
+                contactsType == ListContactType.groups
+                    ? "No Groups"
+                    : "No Contacts",
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500,
+                  color: ColorConstants.grey,
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 100),
-        ],
+            InkWell(
+              borderRadius: BorderRadius.circular(46),
+              onTap: () async {},
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ColorConstants.orange,
+                  borderRadius: BorderRadius.circular(46),
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 8,
+                ),
+                child: Text(
+                  contactsType == ListContactType.groups
+                      ? "Add Group"
+                      : "Add Contact",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 100),
+          ],
+        ),
       ),
     );
   }
