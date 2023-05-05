@@ -106,17 +106,43 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                     Consumer<FileProgressProvider>(builder: (_c, provider, _) {
                       var fileTransferProgress = provider
                           .receivedFileProgress[widget.fileTransfer.key];
-                      print("filetransferPrgress: $fileTransferProgress");
                       return CommonUtilityFunctions()
                               .checkForDownloadAvailability(widget.fileTransfer)
                           ? fileTransferProgress != null
                               ? CommonUtilityFunctions()
                                   .getDownloadStatus(fileTransferProgress)
                               : (isDownloaded
-                                  ? Icon(
-                                      Icons.done,
-                                      color: Color(0xFF08CB21),
-                                      size: 25,
+                                  ? Stack(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: ColorConstants.MILD_GREY,
+                                          ),
+                                          child: Icon(
+                                            Icons.cloud_download_outlined,
+                                            color: Colors.grey,
+                                            size: 16,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: Container(
+                                            padding: EdgeInsets.all(2),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Color.fromARGB(167, 113, 219, 168),
+                                            ),
+                                            child: Icon(
+                                              Icons.done,
+                                              color: Colors.green,
+                                              size: 8,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     )
                                   : InkWell(
                                       onTap: () async => await downloadFiles(
@@ -140,15 +166,17 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                       width: 10,
                     ),
                     Container(
-                      padding: EdgeInsets.all(3),
+                      padding:
+                          EdgeInsets.only(left: 8, top: 8, bottom: 5, right: 5),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: ColorConstants.yellow,
                       ),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: Colors.black,
-                        size: 18,
+                      child: Center(
+                        child: Image.asset(
+                          ImageConstants.openFileIcon,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     )
                   ],

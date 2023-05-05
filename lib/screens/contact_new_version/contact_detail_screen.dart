@@ -179,7 +179,6 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                                               color: Colors.black,
                                               size: 16,
                                             ),
-                                            // contentPadding: EdgeInsets.only(right: -10, top: 15),
                                           ),
                                           controller: nicknameController,
                                         ),
