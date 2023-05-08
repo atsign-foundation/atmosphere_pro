@@ -22,6 +22,14 @@ import 'package:provider/provider.dart';
 import '../../services/backend_service.dart';
 import 'widgets/downloads_folders.dart';
 
+import '../../services/common_utility_functions.dart';
+import '../../services/navigation_service.dart';
+import '../../services/snackbar_service.dart';
+import '../../utils/text_strings.dart';
+import '../../view_models/file_progress_provider.dart';
+import '../../view_models/history_provider.dart';
+import '../../view_models/internet_connectivity_checker.dart';
+
 class FilesDetailScreen extends StatefulWidget {
   final FileType? type;
   final bool? autoFocus;
@@ -159,6 +167,9 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 child: Consumer<MyFilesProvider>(
                   builder: (context, provider, _) {
                     final files = provider.displayFiles;
+
+                    //TODO - get file transfer data object from this files(FilesDetail) object.
+                    // TODO - add download consumer using the filetranferData object.
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -448,6 +459,93 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
         );
       },
     );
+  }
+
+  Future<bool> downloadFiles(
+    FileTransfer? file, {
+    String? fileName,
+  }) async {
+    var fileTransferProgress = Provider.of<FileProgressProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .receivedFileProgress[file!.key];
+
+    if (fileTransferProgress != null) {
+      return false; //returning because download is still in progress
+    }
+
+    var isConnected = Provider.of<InternetConnectivityChecker>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .isInternetAvailable;
+
+    if (!isConnected) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings.noInternetMsg,
+        bgColor: ColorConstants.redAlert,
+      );
+      return false;
+    }
+
+    var result;
+    if (fileName != null) {
+      result = await Provider.of<HistoryProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .downloadSingleFile(
+        file.key,
+        file.sender,
+        false,
+        fileName,
+      );
+    } else {
+      result = await Provider.of<HistoryProvider>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .downloadFiles(
+        file.key,
+        file.sender!,
+        false,
+      );
+    }
+
+    if (result is bool && result) {
+      // if (mounted) {
+      //   // setState(() {
+      //   //   isDownloaded = true;
+      //   // });
+      // }
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(file);
+
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().fileDownloadd,
+        bgColor: ColorConstants.successGreen,
+      );
+      // send download acknowledgement
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .sendFileDownloadAcknowledgement(file);
+
+      return true;
+    } else if (result is bool && !result) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().downloadFailed,
+        bgColor: ColorConstants.redAlert,
+      );
+      // if (mounted) {
+      //   setState(() {
+      //     // isDownloaded = false;
+      //   });
+      // }
+      return false;
+    }
+
+    return false;
   }
 
   void _onTapPhotoItem(FilesDetail file) {
