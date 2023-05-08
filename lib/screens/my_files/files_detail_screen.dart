@@ -231,8 +231,8 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
       separatorBuilder: (context, index) => SizedBox(height: 10),
       itemBuilder: (context, index) {
         final date = DateTime.parse(files[index].date ?? "").toLocal();
-        final shortDate = DateFormat('dd/MM/yy').format(date);
-        final time = DateFormat('HH:mm').format(date);
+        final shortDate = DateFormat('MM/dd/yy').format(date);
+        final time = DateFormat('kk:mm').format(date);
 
         return Slidable(
           actionPane: const SlidableDrawerActionPane(),

@@ -75,27 +75,17 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                   top: 18.toHeight,
                   right: 32.toWidth,
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SearchWidget(
-                        controller: searchController,
-                        borderColor: Colors.white,
-                        backgroundColor: Colors.white,
-                        hintText: "Search",
-                        hintStyle: TextStyle(
-                          color: ColorConstants.darkSliver,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        margin: EdgeInsets.zero,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    SvgPicture.asset(
-                      AppVectors.icFilter,
-                    ),
-                  ],
+                child: SearchWidget(
+                  controller: searchController,
+                  borderColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  hintText: "Search",
+                  hintStyle: TextStyle(
+                    color: ColorConstants.darkSliver,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  margin: EdgeInsets.zero,
                 ),
               ),
               Padding(
@@ -117,7 +107,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: provider.recentFile.length,
-                          padding: EdgeInsets.zero,
+                          padding: EdgeInsets.only(right: 32),
                           physics: ClampingScrollPhysics(),
                           separatorBuilder: (context, index) => SizedBox(
                             width: 16,

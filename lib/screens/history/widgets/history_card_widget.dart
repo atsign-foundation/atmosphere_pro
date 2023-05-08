@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_attachment_card.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +27,17 @@ class HistoryCardWidget extends StatefulWidget {
 }
 
 class _HistoryCardWidgetState extends State<HistoryCardWidget> {
-  bool isExpanded = false, isFileSharedToGroup = false;
+  bool isExpanded = false,
+      isFileSharedToGroup = false,
+      isDownloadAvailable = false,
+      isFilesAvailableOffline = true,
+      isOverwrite = false;
+
   String nickName = '';
+  List<String?> existingFileNamesToOverwrite = [];
   List<String?> contactList = [];
   List<FileData>? filesList = [];
+  Map<String?, Future> _futureBuilder = {};
 
   @override
   void initState() {
@@ -41,14 +52,24 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
       if (widget.fileHistory!.groupName != null) {
         isFileSharedToGroup = true;
       }
+
+      if (mounted) setState(() {});
     } else {
-      getDisplayDetails();
+      _loadReceived();
     }
 
     super.initState();
   }
 
-  getDisplayDetails() async {
+  void _loadReceived() async {
+    checkForDownloadAvailability();
+    await isFilesAlreadyDownloaded();
+    getFutureBuilders();
+    await getDisplayDetails();
+    if (mounted) setState(() {});
+  }
+
+  Future<void> getDisplayDetails() async {
     AtContact? displayDetails;
 
     if (widget.fileHistory?.type == HistoryType.send) {
@@ -68,11 +89,70 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
             '';
       }
     }
-    setState(() {});
+  }
+
+  void checkForDownloadAvailability() {
+    var expiryDate =
+        widget.fileHistory!.fileDetails!.date!.add(Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+      isDownloadAvailable = true;
+    }
+
+    // if fileList is not having any file then download icon will not be shown
+    var isFileUploaded = false;
+    widget.fileHistory!.fileDetails!.files!.forEach((FileData fileData) {
+      if (fileData.isUploaded!) {
+        isFileUploaded = true;
+      }
+    });
+
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
+  }
+
+  Future<void> isFilesAlreadyDownloaded() async {
+    widget.fileHistory!.fileDetails!.files!.forEach((element) async {
+      String path = BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          (element.name ?? '');
+      File test = File(path);
+      bool fileExists = await test.exists();
+      if (fileExists == false) {
+        if (mounted) {
+          setState(() {
+            isFilesAvailableOffline = false;
+          });
+        }
+      } else {
+        var fileLatsModified = await test.lastModified();
+        if (fileLatsModified.isBefore(widget.fileHistory!.fileDetails!.date!)) {
+          existingFileNamesToOverwrite.add(element.name);
+          if (mounted) {
+            setState(() {
+              isOverwrite = true;
+            });
+          }
+        }
+      }
+    });
+  }
+
+  void getFutureBuilders() {
+    widget.fileHistory!.fileDetails!.files!.forEach((element) {
+      String filePath = BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          element.name!;
+      _futureBuilder[element.name] =
+          CommonUtilityFunctions().isFilePresent(filePath);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("nickname: $nickName");
+    print(
+        "atSign: ${widget.fileHistory?.type == HistoryType.received ? "${widget.fileHistory?.fileDetails?.sender ?? ''}" : isFileSharedToGroup || contactList.isEmpty ? '' : "${contactList[0] ?? ''}"}");
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -175,10 +255,10 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                   ],
                 ),
                 Text(
-                  contactList.length > 1 || isFileSharedToGroup
-                      ? ''
-                      : widget.fileHistory?.type == HistoryType.received
-                          ? "${widget.fileHistory?.fileDetails?.sender ?? ''}"
+                  widget.fileHistory?.type == HistoryType.received
+                      ? "${widget.fileHistory?.fileDetails?.sender ?? ''}"
+                      : isFileSharedToGroup || contactList.isEmpty
+                          ? ''
                           : "${contactList[0] ?? ''}",
                   style: TextStyle(
                     fontSize: 8.toFont,

@@ -38,11 +38,17 @@ class HistoryProvider extends BaseModel {
   String SET_FILE_HISTORY = 'set_flie_history';
   String SET_RECEIVED_HISTORY = 'set_received_history';
   String GET_ALL_FILE_DATA = 'get_all_file_data';
+  String GET_ALL_FILE_HISTORY = 'get_all_file_history';
   String GET_FILE_STATUS = 'get_file_status';
   String DOWNLOAD_FILE = 'download_file';
   String DOWNLOAD_ACK = 'download_ack';
-  List<FileHistory> sentHistory = [], tempSentHistory = [];
-  List<FileTransfer> receivedHistoryLogs = []; ///SONLT2 List Received
+  List<FileHistory> sentHistory = [],
+      tempSentHistory = [],
+      receivedFileHistory = [],
+      allFilesHistory = [];
+  List<FileTransfer> receivedHistoryLogs = [];
+
+  ///SONLT2 List Received
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
@@ -631,7 +637,6 @@ class HistoryProvider extends BaseModel {
     setStatus(DOWNLOAD_ACK, Status.Done);
   }
 
-  ///kkk
   getReceivedHistory({bool setLoading = true}) async {
     if (setLoading) {
       setStatus(RECEIVED_HISTORY, Status.Loading);
@@ -823,9 +828,10 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  getAllFileTransferData() async {
+  Future<void> getAllFileTransferData() async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
     List<FileTransfer> tempReceivedHistoryLogs = [];
+    List<FileHistory> tempReceivedFiles = [];
 
     List<AtKey> fileTransferAtkeys =
         await AtClientManager.getInstance().atClient.getAtKeys(
@@ -854,11 +860,10 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue = await AtClientManager.getInstance()
-            .atClient
-            .get(atKey)
-            // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) {
+        AtValue atvalue =
+            await AtClientManager.getInstance().atClient.get(atKey)
+                // ignore: return_of_invalid_type_from_catch_error
+                .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);
@@ -876,6 +881,17 @@ class HistoryProvider extends BaseModel {
             if (filesModel.key != null) {
               tempReceivedHistoryLogs.insert(0, filesModel);
             }
+
+            final file = FileHistory(
+              filesModel,
+              [],
+              HistoryType.received,
+              fileTransferObject,
+            );
+
+            if (filesModel.key != null) {
+              tempReceivedFiles.insert(0, file);
+            }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
           }
@@ -884,7 +900,30 @@ class HistoryProvider extends BaseModel {
     }
 
     receivedHistoryLogs = tempReceivedHistoryLogs;
+    receivedFileHistory = tempReceivedFiles;
     setStatus(GET_ALL_FILE_DATA, Status.Done);
+  }
+
+  Future<void> getAllFileTransferHistory() async {
+    setStatus(GET_ALL_FILE_HISTORY, Status.Loading);
+    List<FileHistory> tempFileHistoryLogs = [];
+    try {
+      await [
+        getSentHistory(),
+        getAllFileTransferData(),
+      ];
+
+      tempFileHistoryLogs.addAll(receivedFileHistory);
+      tempFileHistoryLogs.addAll(sentHistory);
+
+      tempFileHistoryLogs
+          .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
+
+      allFilesHistory = tempFileHistoryLogs;
+      setStatus(GET_ALL_FILE_DATA, Status.Done);
+    } catch (e) {
+      setStatus(GET_ALL_FILE_DATA, Status.Error);
+    }
   }
 
   getrecentHistoryFiles() async {
@@ -1002,10 +1041,11 @@ class HistoryProvider extends BaseModel {
   }
 
   FileHistory convertFileTransferObjectToFileHistory(
-      FileTransferObject fileTransferObject,
-      List<String> sharedWithAtsigns,
-      Map<String, FileTransferObject> fileShareResult,
-      {String? groupName}) {
+    FileTransferObject fileTransferObject,
+    List<String> sharedWithAtsigns,
+    Map<String, FileTransferObject> fileShareResult, {
+    String? groupName,
+  }) {
     List<FileData> files = [];
     var sthareStatus = <ShareStatus>[];
 
@@ -1415,11 +1455,10 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue = await AtClientManager.getInstance()
-            .atClient
-            .get(atKey)
-            // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) {
+        AtValue atvalue =
+            await AtClientManager.getInstance().atClient.get(atKey)
+                // ignore: return_of_invalid_type_from_catch_error
+                .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);
@@ -1449,14 +1488,14 @@ class HistoryProvider extends BaseModel {
     setStatus(RECEIVED_HISTORY, Status.Done);
   }
 
-  // save file in gallery function is not in use as of now.
-  // saveFilesInGallery(List<File> files) async {
-  //   for (var file in files) {
-  //     if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
-  //         FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
-  //       // saving image,video in gallery.
-  //       await ImageGallerySaver.saveFile(file.path);
-  //     }
-  //   }
-  // }
+// save file in gallery function is not in use as of now.
+// saveFilesInGallery(List<File> files) async {
+//   for (var file in files) {
+//     if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
+//         FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
+//       // saving image,video in gallery.
+//       await ImageGallerySaver.saveFile(file.path);
+//     }
+//   }
+// }
 }
