@@ -42,18 +42,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
   @override
   void initState() {
     filesList = widget.fileHistory!.fileDetails!.files;
+
     if (widget.fileHistory?.type == HistoryType.send) {
-      if (widget.fileHistory!.sharedWith != null) {
-        contactList =
-            widget.fileHistory!.sharedWith!.map((e) => e.atsign).toList();
-        getDisplayDetails();
-      }
-
-      if (widget.fileHistory!.groupName != null) {
-        isFileSharedToGroup = true;
-      }
-
-      if (mounted) setState(() {});
+      _loadSent();
     } else {
       _loadReceived();
     }
@@ -61,10 +52,24 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
     super.initState();
   }
 
+  void _loadSent() async {
+    if (widget.fileHistory!.sharedWith != null) {
+      contactList =
+          widget.fileHistory!.sharedWith!.map((e) => e.atsign).toList();
+      await getDisplayDetails();
+    }
+
+    if (widget.fileHistory!.groupName != null) {
+      isFileSharedToGroup = true;
+    }
+
+    if (mounted) setState(() {});
+  }
+
   void _loadReceived() async {
-    checkForDownloadAvailability();
-    await isFilesAlreadyDownloaded();
-    getFutureBuilders();
+    // checkForDownloadAvailability();
+    // await isFilesAlreadyDownloaded();
+    // getFutureBuilders();
     await getDisplayDetails();
     if (mounted) setState(() {});
   }
@@ -150,9 +155,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print("nickname: $nickName");
-    print(
-        "atSign: ${widget.fileHistory?.type == HistoryType.received ? "${widget.fileHistory?.fileDetails?.sender ?? ''}" : isFileSharedToGroup || contactList.isEmpty ? '' : "${contactList[0] ?? ''}"}");
+    // print("nickname: $nickName");
+    // print(
+    //     "atSign: ${widget.fileHistory?.type == HistoryType.received ? "${widget.fileHistory?.fileDetails?.sender ?? ''}" : isFileSharedToGroup || contactList.isEmpty ? '' : "${contactList[0] ?? ''}"}");
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
