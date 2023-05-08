@@ -98,7 +98,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
               ),
               SizedBox(width: 16),
               InkWell(
-                onTap: (){
+                onTap: () {
                   _onTapFilterIcon();
                 },
                 child: SvgPicture.asset(
@@ -416,21 +416,23 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
     );
   }
 
+  void _onTapFilterIcon() async {
+    RenderBox box = filterKey.currentContext!.findRenderObject() as RenderBox;
+    Offset position = box.localToGlobal(Offset.zero);
 
-    void _onTapFilterIcon() async {
-      RenderBox box = filterKey.currentContext!.findRenderObject() as RenderBox;
-      Offset position = box.localToGlobal(Offset.zero);
-
-      await showDialog(
-        barrierDismissible: true,
-        useRootNavigator: true,
-        context: context,
-        builder: (context) {
-          return FilterHistoryWidget(position: position,);
-        },
-      );
-    }
-
+    await showDialog(
+      barrierDismissible: true,
+      useRootNavigator: true,
+      context: context,
+      builder: (context) {
+        return FilterHistoryWidget(
+          position: position,
+          onSelected: (value) {},
+          setOrder: (value) {},
+        );
+      },
+    );
+  }
 
   Widget _buildTableTitle({
     required String title,

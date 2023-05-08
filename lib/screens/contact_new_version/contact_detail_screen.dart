@@ -161,7 +161,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                                     children: [
                                       Flexible(
                                         child: TextField(
-                                          onTapOutside: editNickname,
+                                          // onTapOutside: editNickname,
                                           decoration: InputDecoration(
                                             hintText: 'Enter Nickname',
                                             hintStyle: TextStyle(

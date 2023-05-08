@@ -1,4 +1,4 @@
-enum ListContactType { contact, trusted, groups, all}
+enum ListContactType { contact, trusted, groups, all }
 
 extension ContactsTypeExtension on ListContactType {
   String get display {

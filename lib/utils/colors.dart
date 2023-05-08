@@ -69,6 +69,8 @@ class ColorConstants {
   static const Color jetColor = Color(0xFF363636);
   static const Color lightSliver = Color(0xFFD8D8D8);
   static const Color raisinBlack = Color(0xFF252525);
+  static const Color disableColor = Color(0xFFC3C3C3);
+  static const Color disableBackgroundColor = Color(0xFFE9E9E9);
 }
 
 class ContactInitialsColors {

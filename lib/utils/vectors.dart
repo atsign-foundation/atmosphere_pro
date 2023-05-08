@@ -57,4 +57,17 @@ class AppVectors {
   static String icArrowDownOutline = '$_basePath/ic_arrow_down_outline.svg';
   static String icCloudDownloaded = '$_basePath/ic_cloud_downloaded.svg';
   static String icCloudDownloading = '$_basePath/ic_cloud_downloading.svg';
+
+  static String icArrowDesc = '$_basePath/ic_arrow_desc.svg';
+  static String icArrowAsc = '$_basePath/ic_arrow_asc.svg';
+  static String icReceived = '$_basePath/ic_received.svg';
+  static String icSent = '$_basePath/ic_sent.svg';
+  static String icPhotos = '$_basePath/ic_photos.svg';
+  static String icFiles = '$_basePath/ic_files.svg';
+  static String icAudio = '$_basePath/ic_audio.svg';
+  static String icVideos = '$_basePath/ic_videos.svg';
+  static String icZips = '$_basePath/ic_zips.svg';
+  static String icOther = '$_basePath/ic_other.svg';
+  static String icChecked = '$_basePath/ic_checked.svg';
+  static String icUnchecked = '$_basePath/ic_uncheck.svg';
 }
