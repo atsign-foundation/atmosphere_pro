@@ -553,8 +553,6 @@ class HistoryProvider extends BaseModel {
           );
         }
       }
-
-
     } else {
       // showing notification for new recieved file
       switch (app_lifecycle_state) {
@@ -1046,13 +1044,14 @@ class HistoryProvider extends BaseModel {
 
     FileTransferObject? fileTransferObject;
 
-    var fileEntityIndex = allFiles
-        .indexWhere((FileEntity element) => element.transferId == transferId);
+    var fileEntityIndex = allFilesHistory.indexWhere(
+        (element) => element.fileTransferObject?.transferId == transferId);
     if (fileEntityIndex == -1) {
       throw Exception('file object not found.');
     }
-    fileTransferObject = allFiles[fileEntityIndex].fileTransferObject;
-    String formattedFileUrl = fileTransferObject.fileUrl;
+
+    fileTransferObject = allFilesHistory[fileEntityIndex].fileTransferObject;
+    String formattedFileUrl = fileTransferObject!.fileUrl;
 
     try {
       formattedFileUrl = formattedFileUrl.replaceFirst('/archive', '');

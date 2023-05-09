@@ -133,14 +133,16 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
 
                         return CommonUtilityFunctions()
                                 .checkForDownloadAvailability(
-                                    widget.fileTransfer)
+                          widget.fileTransfer,
+                        )
                             ? fileTransferProgress != null
-                                ? CommonUtilityFunctions().getDownloadStatus(
-                                    fileTransferProgress,
+                                ? Image.asset(
+                                    ImageConstants.icCloudDownloading,
                                   )
                                 : isDownloaded
                                     ? SvgPicture.asset(
-                                        AppVectors.icCloudDownloaded)
+                                        AppVectors.icCloudDownloaded,
+                                      )
                                     : InkWell(
                                         onTap: () async {
                                           await downloadFiles(
