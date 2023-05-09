@@ -260,6 +260,8 @@ class FileTransferProvider extends BaseModel {
         groupName: groupName,
       );
 
+      _historyProvider.changeIsUpcomingEvent();
+
       // checking if everyone received the notification or not.
       for (var atsignStatus in uploadResult.entries) {
         if (atsignStatus.value.sharedStatus != null &&

@@ -42,7 +42,17 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
   void initState() {
     historyProvider = context.read<HistoryProvider>();
     searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      reloadView();
+    });
     super.initState();
+  }
+
+  void reloadView() async {
+    if (context.read<HistoryProvider>().hadNewFile) {
+      await historyProvider.getAllFileTransferHistory();
+      historyProvider.changeIsUpcomingEvent();
+    }
   }
 
   @override

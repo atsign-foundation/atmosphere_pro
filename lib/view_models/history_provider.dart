@@ -53,6 +53,7 @@ class HistoryProvider extends BaseModel {
   String? state;
   String _historySearchText = '';
   bool isDesc = true;
+  bool hadNewFile = false;
 
   List<FileEntity> allFiles = [];
 
@@ -86,6 +87,11 @@ class HistoryProvider extends BaseModel {
 
   set setHistorySearchText(String txt) {
     _historySearchText = txt.trim().toLowerCase();
+    notifyListeners();
+  }
+
+  void changeIsUpcomingEvent() {
+    hadNewFile = !hadNewFile;
     notifyListeners();
   }
 
@@ -574,6 +580,24 @@ class HistoryProvider extends BaseModel {
         sharedBy,
         filesModel,
         fileTransferObject: fileTransferObject,
+      );
+      receivedFileHistory.insert(
+        0,
+        FileHistory(
+          filesModel,
+          [],
+          HistoryType.received,
+          fileTransferObject,
+        ),
+      );
+      allFilesHistory.insert(
+        0,
+        FileHistory(
+          filesModel,
+          [],
+          HistoryType.received,
+          fileTransferObject,
+        ),
       );
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);

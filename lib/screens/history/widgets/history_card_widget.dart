@@ -275,7 +275,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        "${widget.fileHistory?.notes ?? ''}",
+                        widget.fileHistory?.type == HistoryType.send
+                            ? widget.fileHistory?.notes ?? ''
+                            : widget.fileHistory?.fileDetails?.notes ?? '',
                         style: TextStyle(
                           fontSize: 8.toFont,
                           color: Color(0xFF747474),
