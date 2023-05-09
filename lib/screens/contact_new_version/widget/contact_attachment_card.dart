@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../my_files/widgets/downloads_folders.dart';
+
 class ContactAttachmentCard extends StatefulWidget {
   final FileTransfer fileTransfer;
   final FileData singleFile;
@@ -160,8 +162,17 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                     const SizedBox(
                       width: 10,
                     ),
-                    SvgPicture.asset(
-                      AppVectors.icSendFile,
+                    GestureDetector(
+                      onTap: () async {
+                        await openFilePath(BackendService.getInstance()
+                                .downloadDirectory!
+                                .path +
+                            Platform.pathSeparator +
+                            widget.singleFile.name!);
+                      },
+                      child: SvgPicture.asset(
+                        AppVectors.icSendFile,
+                      ),
                     ),
                     Spacer(),
                     Text(

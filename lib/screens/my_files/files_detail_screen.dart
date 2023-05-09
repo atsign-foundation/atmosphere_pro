@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/sliver_grid_delegate.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/image_view_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -18,13 +19,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/common_utility_functions.dart';
-import '../../services/navigation_service.dart';
-import '../../services/snackbar_service.dart';
-import '../../utils/text_strings.dart';
-import '../../view_models/file_progress_provider.dart';
-import '../../view_models/history_provider.dart';
-import '../../view_models/internet_connectivity_checker.dart';
+import '../../services/backend_service.dart';
+import 'widgets/downloads_folders.dart';
 
 class FilesDetailScreen extends StatefulWidget {
   final FileType? type;
@@ -154,9 +150,6 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 child: Consumer<MyFilesProvider>(
                   builder: (context, provider, _) {
                     final files = provider.displayFiles;
-
-                    //TODO - get file transfer data object from this files(FilesDetail) object.
-                    // TODO - add download consumer using the filetranferData object.
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -246,67 +239,87 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
         final shortDate = DateFormat('MM/dd/yy').format(date);
         final time = DateFormat('kk:mm').format(date);
 
-        late FileTransfer fileTransfer;
-        bool isDownloaded = false;
+        // late FileTransfer fileTransfer;
+        // bool isDownloaded = false;
 
-        for (var filetransfer in provider.myFiles) {
-          if (filetransfer.key == files[index].fileTransferId) {
-            fileTransfer = filetransfer;
-            break;
-          }
-        }
+        // for (var filetransfer in provider.myFiles) {
+        //   if (filetransfer.key == files[index].fileTransferId) {
+        //     fileTransfer = filetransfer;
+        //     break;
+        //   }
+        // }
 
         return Slidable(
           actionPane: const SlidableDrawerActionPane(),
           actionExtentRatio: 0.11,
           secondaryActions: <Widget>[
-            Consumer<FileProgressProvider>(
-              builder: (_c, provider, _) {
-                var fileTransferProgress =
-                    provider.receivedFileProgress[fileTransfer.key];
+            // Consumer<FileProgressProvider>(
+            //   builder: (_c, provider, _) {
+            //     var fileTransferProgress =
+            //         provider.receivedFileProgress[fileTransfer.key];
 
-                return CommonUtilityFunctions()
-                        .checkForDownloadAvailability(fileTransfer)
-                    ? fileTransferProgress != null
-                        ? CommonUtilityFunctions().getDownloadStatus(
-                            fileTransferProgress,
-                          )
-                        : isDownloaded
-                            ? SvgPicture.asset(AppVectors.icCloudDownloaded)
-                            : InkWell(
-                                onTap: () async {
-                                  var res = await downloadFiles(
-                                    fileTransfer,
-                                    fileName: files[index].fileName,
-                                  );
+            //     return CommonUtilityFunctions()
+            //             .checkForDownloadAvailability(fileTransfer)
+            //         ? fileTransferProgress != null
+            //             ? CommonUtilityFunctions().getDownloadStatus(
+            //                 fileTransferProgress,
+            //               )
+            //             : isDownloaded
+            //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
+            //                 : InkWell(
+            //                     onTap: () async {
+            //                       var res = await downloadFiles(
+            //                         fileTransfer,
+            //                         fileName: files[index].fileName,
+            //                       );
 
-                                  setState(() {
-                                    isDownloaded = res;
-                                  });
-                                },
-                                child: SvgPicture.asset(
-                                  AppVectors.icDownloadFile,
-                                ),
-                              )
-                    : SizedBox();
-              },
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 6.0),
-            //   child: SvgPicture.asset(
-            //     AppVectors.icDownloadFile,
-            //   ),
+            //                       setState(() {
+            //                         isDownloaded = res;
+            //                       });
+            //                     },
+            //                     child: SvgPicture.asset(
+            //                       AppVectors.icDownloadFile,
+            //                     ),
+            //                   )
+            //         : SizedBox();
+            //   },
             // ),
             Padding(
               padding: const EdgeInsets.only(left: 6.0),
               child: SvgPicture.asset(
-                AppVectors.icSendFile,
+                AppVectors.icDownloadFile,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 6.0),
-              child: SvgPicture.asset(
-                AppVectors.icDeleteFile,
+              child: GestureDetector(
+                onTap: () async {
+                  await openFilePath(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!);
+                },
+                child: SvgPicture.asset(
+                  AppVectors.icSendFile,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await deleteFile(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!,
+                      fileTransferId: files[index].fileTransferId);
+
+                  files.removeAt(index);
+                  setState(() {});
+                },
+                child: SvgPicture.asset(
+                  AppVectors.icDeleteFile,
+                ),
               ),
             ),
           ],
@@ -410,93 +423,6 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
         );
       },
     );
-  }
-
-  Future<bool> downloadFiles(
-    FileTransfer? file, {
-    String? fileName,
-  }) async {
-    var fileTransferProgress = Provider.of<FileProgressProvider>(
-            NavService.navKey.currentContext!,
-            listen: false)
-        .receivedFileProgress[file!.key];
-
-    if (fileTransferProgress != null) {
-      return false; //returning because download is still in progress
-    }
-
-    var isConnected = Provider.of<InternetConnectivityChecker>(
-            NavService.navKey.currentContext!,
-            listen: false)
-        .isInternetAvailable;
-
-    if (!isConnected) {
-      SnackbarService().showSnackbar(
-        NavService.navKey.currentContext!,
-        TextStrings.noInternetMsg,
-        bgColor: ColorConstants.redAlert,
-      );
-      return false;
-    }
-
-    var result;
-    if (fileName != null) {
-      result = await Provider.of<HistoryProvider>(
-              NavService.navKey.currentContext!,
-              listen: false)
-          .downloadSingleFile(
-        file.key,
-        file.sender,
-        false,
-        fileName,
-      );
-    } else {
-      result = await Provider.of<HistoryProvider>(
-              NavService.navKey.currentContext!,
-              listen: false)
-          .downloadFiles(
-        file.key,
-        file.sender!,
-        false,
-      );
-    }
-
-    if (result is bool && result) {
-      // if (mounted) {
-      //   // setState(() {
-      //   //   isDownloaded = true;
-      //   // });
-      // }
-      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-              listen: false)
-          .saveNewDataInMyFiles(file);
-
-      SnackbarService().showSnackbar(
-        NavService.navKey.currentContext!,
-        TextStrings().fileDownloadd,
-        bgColor: ColorConstants.successGreen,
-      );
-      // send download acknowledgement
-      await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-              listen: false)
-          .sendFileDownloadAcknowledgement(file);
-
-      return true;
-    } else if (result is bool && !result) {
-      SnackbarService().showSnackbar(
-        NavService.navKey.currentContext!,
-        TextStrings().downloadFailed,
-        bgColor: ColorConstants.redAlert,
-      );
-      // if (mounted) {
-      //   setState(() {
-      //     // isDownloaded = false;
-      //   });
-      // }
-      return false;
-    }
-
-    return false;
   }
 
   void _onTapPhotoItem(FilesDetail file) {
