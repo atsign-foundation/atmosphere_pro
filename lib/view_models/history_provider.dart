@@ -21,8 +21,6 @@ import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/cupertino.dart';
-
-// import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -42,22 +40,22 @@ class HistoryProvider extends BaseModel {
   String GET_FILE_STATUS = 'get_file_status';
   String DOWNLOAD_FILE = 'download_file';
   String DOWNLOAD_ACK = 'download_ack';
+
   List<FileHistory> sentHistory = [],
       tempSentHistory = [],
       receivedFileHistory = [],
-      allFilesHistory = [];
+      allFilesHistory = [],
+      displayFilesHistory = [];
+
   List<FileTransfer> receivedHistoryLogs = [];
 
-  ///SONLT2 List Received
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
   String? state;
   String _historySearchText = '';
+  bool isDesc = true;
 
-  List<FileEntity> receivedFiles = [],
-      sentFiles = [],
-      allFiles = [],
-      displayFiles = [];
+  List<FileEntity> allFiles = [];
 
   // on first transfer history fetch, we show loader in history screen.
   // on second attempt we keep the status as idle.
@@ -68,25 +66,10 @@ class HistoryProvider extends BaseModel {
       sentApk,
       sentDocument = [];
 
-  List<FilesDetail> receivedPhotos = [],
-      receivedVideos = [],
-      receivedAudio = [],
-      receivedApk = [],
-      receivedDocument = [],
-      recentFile = [],
-      receivedUnknown = [];
-  List<String> tabNames = ['Recents'];
-
-  List<Widget> tabs = [Recents()];
-
+  List<FilesDetail> recentFile = [];
   List<Widget> desktopTabs = [DesktopRecents()];
-  String SORT_FILES = 'sort_files';
-  String POPULATE_TABS = 'populate_tabs';
   Map sendFileHistory = {'history': []};
-  String SORT_LIST = 'sort_list';
-  BackendService backendService = BackendService.getInstance();
   String? app_lifecycle_state;
-
   HistoryType typeSelected = HistoryType.all;
 
   resetData() {
@@ -95,13 +78,7 @@ class HistoryProvider extends BaseModel {
     receivedHistoryLogs = [];
     sendFileHistory = {'history': []};
     downloadedFileAcknowledgement = {};
-    receivedPhotos = [];
-    receivedVideos = [];
-    receivedAudio = [];
-    receivedApk = [];
-    receivedDocument = [];
     recentFile = [];
-    receivedUnknown = [];
     individualSentFileId = {};
     receivedItemsId = {};
   }
@@ -111,166 +88,6 @@ class HistoryProvider extends BaseModel {
   set setHistorySearchText(String txt) {
     _historySearchText = txt.trim().toLowerCase();
     notifyListeners();
-  }
-
-  Future<void> getAllFiles() async {
-    setStatus(GET_FILE_STATUS, Status.Loading);
-    try {
-      allFiles = [];
-
-      await Future.wait([
-        getReceivedFiles(),
-        getSentFiles(),
-      ]);
-
-      allFiles.addAll(sentFiles);
-      allFiles.addAll(receivedFiles);
-
-      allFiles.sort((a, b) => (b.date ?? '').compareTo(a.date ?? ''));
-      displayFiles = allFiles;
-
-      setStatus(GET_FILE_STATUS, Status.Done);
-    } catch (e) {
-      setStatus(GET_FILE_STATUS, Status.Error);
-    }
-  }
-
-  Future<void> getReceivedFiles() async {
-    List<FileEntity> listReceivedFile = [];
-    await getAllFileTransferData();
-    if (receivedHistoryLogs.isNotEmpty) {
-      for (int i = 0; i < receivedHistoryLogs.length; i++) {
-        FileTransfer? fileTransfer = receivedHistoryLogs[i];
-        if ((fileTransfer.files?.length ?? 0) > 0) {
-          for (int j = 0; j < fileTransfer.files!.length; j++) {
-            var fileTransferObject = FileTransferObject(
-              fileTransfer.key,
-              fileTransfer.fileEncryptionKey!,
-              fileTransfer.url,
-              '',
-              [],
-            );
-            listReceivedFile.add(
-              FileEntity(
-                file: fileTransfer.files![j],
-                date: fileTransfer.date != null
-                    ? fileTransfer.date.toString()
-                    : '',
-                atSign: fileTransfer.sender,
-                historyType: HistoryType.received,
-                note: fileTransfer.notes,
-                transferId: fileTransfer.key,
-                isUploaded: fileTransfer.files?[j].isUploaded ?? false,
-                fileTransferObject: fileTransferObject,
-              ),
-            );
-          }
-        }
-      }
-      receivedFiles = listReceivedFile;
-    }
-  }
-
-  Future<void> getSentFiles() async {
-    List<FileEntity> listSentFile = [];
-    await getSentHistory();
-    if (sentHistory.isNotEmpty) {
-      for (int i = 0; i < sentHistory.length; i++) {
-        FileTransfer? fileTransfer = sentHistory[i].fileDetails;
-        if ((fileTransfer?.files?.length ?? 0) > 0) {
-          for (int j = 0; j < fileTransfer!.files!.length; j++) {
-            for (int k = 0; k < sentHistory[i].sharedWith!.length; k++) {
-              listSentFile.add(
-                FileEntity(
-                    file: fileTransfer.files![j],
-                    date: fileTransfer.date != null
-                        ? fileTransfer.date.toString()
-                        : '',
-                    atSign: sentHistory[i].sharedWith![k].atsign,
-                    historyType: HistoryType.send,
-                    note: fileTransfer.notes,
-                    transferId: fileTransfer.key,
-                    isUploaded: fileTransfer.files?[j].isUploaded ?? false,
-                    fileTransferObject: sentHistory[i].fileTransferObject!),
-              );
-            }
-          }
-        }
-      }
-      sentFiles = listSentFile;
-    }
-  }
-
-  void changeTypeSelected(HistoryType type) {
-    typeSelected = type;
-    displayFiles = filterFiles(type);
-    notifyListeners();
-  }
-
-  void refreshData() async {
-    try {
-      if (typeSelected != HistoryType.all) {
-        setStatus(GET_FILE_STATUS, Status.Loading);
-        typeSelected == HistoryType.send
-            ? await getSentFiles()
-            : await getReceivedFiles();
-        setStatus(GET_FILE_STATUS, Status.Done);
-      } else {
-        await getAllFiles();
-      }
-    } catch (e) {
-      setStatus(GET_FILE_STATUS, Status.Error);
-    }
-  }
-
-  void searchFiles() {
-    List<FileEntity> resultsFilter = [];
-    List<FileEntity> listFiles = [];
-
-    if (typeSelected == HistoryType.received) {
-      listFiles = receivedFiles;
-    } else if (typeSelected == HistoryType.send) {
-      listFiles = sentFiles;
-    } else {
-      listFiles = allFiles;
-    }
-
-    if (_historySearchText.isNotEmpty) {
-      listFiles.forEach(
-        //filter by atSign
-        (FileEntity element) {
-          if ((element.atSign ?? '').contains(_historySearchText)) {
-            resultsFilter.add(element);
-          } else {
-            // filter by file name
-            if (element.file!.name!
-                .toLowerCase()
-                .contains(_historySearchText)) {
-              resultsFilter.add(element);
-            }
-          }
-        },
-      );
-
-      displayFiles = resultsFilter;
-    } else {
-      displayFiles = listFiles;
-    }
-
-    notifyListeners();
-  }
-
-  List<FileEntity> filterFiles(HistoryType type) {
-    switch (type) {
-      case HistoryType.all:
-        return allFiles;
-      case HistoryType.received:
-        return receivedFiles;
-      case HistoryType.send:
-        return sentFiles;
-      default:
-        return [];
-    }
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
@@ -615,7 +432,7 @@ class HistoryProvider extends BaseModel {
           // ExceptionService.instance.showGetExceptionOverlay(e);
           return AtValue();
         });
-        if (atValue != null && atValue.value != null) {
+        if (atValue.value != null) {
           var downloadAcknowledgement =
               DownloadAcknowledgement.fromJson(jsonDecode(atValue.value));
 
@@ -861,16 +678,14 @@ class HistoryProvider extends BaseModel {
         receivedItemsId[atKey.key] = true;
 
         AtValue atvalue =
-            await AtClientManager.getInstance().atClient.get(atKey)
-                // ignore: return_of_invalid_type_from_catch_error
-                .catchError((e) {
-          print("error in getting atValue in getAllFileTransferData : $e");
-          //// Removing exception as called in a loop
-          // ExceptionService.instance.showGetExceptionOverlay(e);
-          return AtValue();
-        });
+            await AtClientManager.getInstance().atClient.get(atKey).catchError(
+          (e) {
+            print("error in getting atValue in getAllFileTransferData : $e");
+            return AtValue();
+          },
+        );
 
-        if (atvalue != null && atvalue.value != null) {
+        if (atvalue.value != null) {
           try {
             FileTransferObject fileTransferObject =
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
@@ -920,9 +735,43 @@ class HistoryProvider extends BaseModel {
           .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
 
       allFilesHistory = tempFileHistoryLogs;
+      displayFilesHistory = allFilesHistory;
+      changeFilterType(typeSelected);
+
       setStatus(GET_ALL_FILE_DATA, Status.Done);
     } catch (e) {
       setStatus(GET_ALL_FILE_DATA, Status.Error);
+    }
+  }
+
+  void changeDesc(bool desc) {
+    isDesc = desc;
+    if (desc) {
+      displayFilesHistory
+          .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
+    } else {
+      displayFilesHistory
+          .sort((a, b) => a.fileDetails!.date!.compareTo(b.fileDetails!.date!));
+    }
+    notifyListeners();
+  }
+
+  void changeFilterType(HistoryType type) {
+    typeSelected = type;
+    displayFilesHistory = filterFileHistory(type);
+    notifyListeners();
+  }
+
+  List<FileHistory> filterFileHistory(HistoryType type) {
+    switch (type) {
+      case HistoryType.all:
+        return allFilesHistory;
+      case HistoryType.received:
+        return receivedFileHistory;
+      case HistoryType.send:
+        return sentHistory;
+      default:
+        return [];
     }
   }
 
@@ -1283,13 +1132,15 @@ class HistoryProvider extends BaseModel {
       ..metadata!.ttl = 518400000
       ..sharedWith = fileTransfer.sender;
     try {
-      var notificationResult =
-          await AtClientManager.getInstance().notificationService.notify(
-                NotificationParams.forUpdate(
-                  atKey,
-                  value: jsonEncode(downloadAcknowledgement.toJson()),
-                ),
-              );
+      var notificationResult = await AtClientManager.getInstance()
+          .atClient
+          .notificationService
+          .notify(
+            NotificationParams.forUpdate(
+              atKey,
+              value: jsonEncode(downloadAcknowledgement.toJson()),
+            ),
+          );
 
       if (notificationResult.notificationStatusEnum ==
           NotificationStatusEnum.delivered) {

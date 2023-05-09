@@ -1,27 +1,32 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_option_item.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class FilterHistoryWidget extends StatefulWidget {
-  final Offset position;
-  final Function(int) onSelected;
-  final Function(bool) setOrder;
+class FilterHistoryWidget extends StatelessWidget {
+  final Offset? position;
+  final Function(HistoryType type)? onSelected;
+  final Function(bool)? setOrder;
+  final bool isDesc;
+  final HistoryType? typeSelected;
 
   FilterHistoryWidget({
     Key? key,
-    required this.position,
-    required this.onSelected,
-    required this.setOrder,
+    this.position,
+    this.onSelected,
+    this.setOrder,
+    this.isDesc = true,
+    this.typeSelected,
   }) : super(key: key);
 
-  @override
-  State<FilterHistoryWidget> createState() => _FilterHistoryWidgetState();
-}
-
-class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
-  bool isDesc = true;
+  final List<HistoryType> historyTypes = [
+    HistoryType.received,
+    HistoryType.send,
+    HistoryType.all,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
             ),
             Positioned(
               right: 15,
-              top: widget.position.dy,
+              top: position?.dy,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -99,16 +104,60 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                           }),
                           value: isDesc,
                           onChanged: (value) {
-                            setState(() {
-                              isDesc = value;
-                            });
-                            widget.setOrder;
+                            print(value);
+                            setOrder?.call(value);
                           },
                         )
                       ],
                     ),
                   ),
-                  Container(
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 30.toWidth,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount: historyTypes.length,
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          color: ColorConstants.disableColor,
+                          height: 1,
+                          // thickness: 0.65,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return FilterOptionItem(
+                          icon: historyTypes[index].icon,
+                          title: historyTypes[index].text,
+                          isCheck: historyTypes[index] == typeSelected,
+                          onTap: () {
+                            onSelected?.call(
+                              historyTypes[index],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  /*SizedBox(
+                    width: MediaQuery.of(context).size.width - 30.toWidth,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount: FileType.values.length,
+                      itemBuilder: (context, index) {
+                        return FilterOptionItem(
+                          icon: FileType.values[index].icon,
+                          title: FileType.values[index].text,
+                          onTap: (){
+
+                          },
+                        );
+                      },
+                    ),
+                  ),*/
+                  /*Container(
                     width: MediaQuery.of(context).size.width - 30.toWidth,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -140,7 +189,6 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                       },
                       separatorBuilder: (context, index) {
                         return Divider(
-                          //TODO: add isDisable variable to check
                           color: (index > 2 && true)
                               ? ColorConstants.disableColor
                               : ColorConstants.lightSliver,
@@ -151,7 +199,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                       },
                       itemCount: filterOptionsList.length,
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
@@ -160,78 +208,4 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
       ),
     );
   }
-
-  Widget _buildFilterOptionItem({
-    required String icon,
-    required String title,
-    bool isDisable = false,
-    required bool isCheck,
-    required int index,
-  }) {
-    Color color =
-        isDisable && index > 2 ? ColorConstants.disableColor : Colors.black;
-    Color backgroundColor = isDisable && index > 2
-        ? ColorConstants.disableBackgroundColor
-        : Colors.white;
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        height: 36,
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: index == filterOptionsList.length - 1
-              ? BorderRadius.vertical(bottom: Radius.circular(12))
-              : BorderRadius.zero,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                icon.isNotEmpty
-                    ? SvgPicture.asset(
-                        icon,
-                        color: color,
-                        height: 16,
-                        width: 12,
-                        fit: BoxFit.cover,
-                      )
-                    : SizedBox(width: 12),
-                SizedBox(width: 16),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            SvgPicture.asset(
-              isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
-              width: 16,
-              height: 16,
-              color: color,
-              fit: BoxFit.cover,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Map<String, String> filterOptionsList = {
-    AppVectors.icReceived: 'Received',
-    AppVectors.icSent: 'Sent',
-    '': 'All',
-    AppVectors.icPhotos: 'Photos',
-    AppVectors.icFiles: 'Files',
-    AppVectors.icAudio: 'Audio',
-    AppVectors.icVideos: 'Videos',
-    AppVectors.icZips: 'Zips',
-    AppVectors.icOther: 'Other'
-  };
 }

@@ -38,6 +38,23 @@ extension GenderTypeExtension on FileType {
     }
   }
 
+  String get icon {
+    switch (this) {
+      case FileType.photo:
+        return AppVectors.icPhotos;
+      case FileType.file:
+        return AppVectors.icFiles;
+      case FileType.audio:
+        return AppVectors.icAudio;
+      case FileType.video:
+        return AppVectors.icVideos;
+      case FileType.zips:
+        return AppVectors.icZips;
+      case FileType.other:
+        return AppVectors.icOther;
+    }
+  }
+
   List<Color> get backgroundColor {
     switch (this) {
       case FileType.photo:

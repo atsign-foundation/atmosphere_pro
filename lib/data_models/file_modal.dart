@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 
 enum HistoryType { all, received, send }
 
@@ -12,7 +13,20 @@ extension HistoryTypeExtension on HistoryType {
       case HistoryType.received:
         return 'Received';
       case HistoryType.send:
-        return 'Send';
+        return 'Sent';
+      default:
+        return '';
+    }
+  }
+
+  String? get icon {
+    switch (this) {
+      case HistoryType.all:
+        return null;
+      case HistoryType.received:
+        return AppVectors.icReceived;
+      case HistoryType.send:
+        return AppVectors.icSent;
       default:
         return '';
     }
