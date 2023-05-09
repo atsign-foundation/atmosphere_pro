@@ -7,7 +7,6 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
@@ -554,6 +553,8 @@ class HistoryProvider extends BaseModel {
           );
         }
       }
+
+
     } else {
       // showing notification for new recieved file
       switch (app_lifecycle_state) {
@@ -738,9 +739,9 @@ class HistoryProvider extends BaseModel {
       displayFilesHistory = allFilesHistory;
       changeFilterType(typeSelected);
 
-      setStatus(GET_ALL_FILE_DATA, Status.Done);
+      setStatus(GET_ALL_FILE_HISTORY, Status.Done);
     } catch (e) {
-      setStatus(GET_ALL_FILE_DATA, Status.Error);
+      setStatus(GET_ALL_FILE_HISTORY, Status.Error);
     }
   }
 

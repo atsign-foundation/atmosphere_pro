@@ -20,7 +20,6 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 import '../../data_models/file_entity.dart';
-import '../../services/backend_service.dart';
 import '../../services/navigation_service.dart';
 import '../../utils/text_strings.dart';
 import '../../view_models/file_transfer_provider.dart';
@@ -110,7 +109,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
               }
             },
             child: ProviderHandler<HistoryProvider>(
-              functionName: historyProvider.GET_ALL_FILE_DATA,
+              functionName: historyProvider.GET_ALL_FILE_HISTORY,
               showError: false,
               load: (provider) async {
                 await historyProvider.getAllFileTransferHistory();
@@ -299,18 +298,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
         );
       },
     );
-  }
-
-  Future<bool> isFilesAlreadyDownloaded(FileEntity fileEntity) async {
-    bool isFilesAvailableOfline = false;
-    String path = BackendService.getInstance().downloadDirectory!.path +
-        Platform.pathSeparator +
-        (fileEntity.file!.name ?? '');
-    File test = File(path);
-    bool fileExists = await test.exists();
-
-    isFilesAvailableOfline = fileExists;
-    return isFilesAvailableOfline;
   }
 
   void openFile(FileEntity fileEntity) async {
