@@ -204,19 +204,27 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
             child: Column(
               children: [
                 Container(
-                  height: 85,
+                  height: 80,
                   decoration: BoxDecoration(
-                    color: ColorConstants.lightSliver,
                     borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: thumbnail(
+                    files[index].fileName?.split(".").last ?? "",
+                    BackendService.getInstance().downloadDirectory!.path +
+                        Platform.pathSeparator +
+                        files[index].fileName!,
                   ),
                 ),
                 Spacer(),
-                Text(
-                  files[index].fileName ?? "",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 8.toFont,
-                    fontWeight: FontWeight.w500,
+                Flexible(
+                  child: Text(
+                    files[index].fileName ?? "",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 8.toFont,
+                      fontWeight: FontWeight.w500,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 )
               ],
@@ -336,8 +344,15 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   height: 49,
                   width: 38,
                   decoration: BoxDecoration(
-                    color: ColorConstants.lightSliver,
                     borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: thumbnail(
+                      files[index].fileName?.split(".").last ?? "",
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!,
+                    ),
                   ),
                 ),
                 SizedBox(width: 14),

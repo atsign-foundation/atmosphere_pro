@@ -198,7 +198,7 @@ Widget thumbnail(String extension, String path) {
                     //   await openDownloadsFolder(context);
                   },
                   child: Container(
-                    padding: EdgeInsets.only(left: 10),
+                    // padding: EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: Image.asset(

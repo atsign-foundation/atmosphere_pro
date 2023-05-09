@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart'
 import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/files_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -19,6 +20,8 @@ import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
+import '../../services/backend_service.dart';
 
 class MyFilesScreen extends StatefulWidget {
   @override
@@ -127,6 +130,18 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                           color: ColorConstants.lightSliver,
                                           borderRadius:
                                               BorderRadius.circular(5),
+                                        ),
+                                        child: thumbnail(
+                                          provider.recentFile[index].fileName
+                                                  ?.split(".")
+                                                  .last ??
+                                              "",
+                                          BackendService.getInstance()
+                                                  .downloadDirectory!
+                                                  .path +
+                                              Platform.pathSeparator +
+                                              provider
+                                                  .recentFile[index].fileName!,
                                         ),
                                       ),
                                       Align(
