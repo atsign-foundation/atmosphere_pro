@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
@@ -8,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/sliver_grid_delegate.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/image_view_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -20,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/backend_service.dart';
+import '../../utils/file_types.dart';
 import 'widgets/downloads_folders.dart';
 
 import '../../services/common_utility_functions.dart';
@@ -48,6 +51,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
   bool isGridType = true;
   late TextEditingController searchController;
   late MyFilesProvider provider;
+  Uint8List? videoThumbnail;
 
   @override
   void initState() {
@@ -225,11 +229,25 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: thumbnail(
+                  child: CommonUtilityFunctions().interactableThumbnail(
                     files[index].fileName?.split(".").last ?? "",
                     BackendService.getInstance().downloadDirectory!.path +
                         Platform.pathSeparator +
                         files[index].fileName!,
+                    files[index],
+                    () async {
+                      await deleteFile(
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!,
+                          fileTransferId: files[index].fileTransferId);
+
+                      files.removeAt(index);
+                      if(mounted) {
+                        Navigator.pop(context);
+                      }
+                      setState(() {});
+                    },
                   ),
                 ),
                 Spacer(),
@@ -364,12 +382,24 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
-                    child: thumbnail(
-                      files[index].fileName?.split(".").last ?? "",
-                      BackendService.getInstance().downloadDirectory!.path +
-                          Platform.pathSeparator +
-                          files[index].fileName!,
-                    ),
+                    child: CommonUtilityFunctions().interactableThumbnail(
+                        files[index].fileName?.split(".").last ?? "",
+                        BackendService.getInstance().downloadDirectory!.path +
+                            Platform.pathSeparator +
+                            files[index].fileName!,
+                        files[index], () async {
+                      await deleteFile(
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!,
+                          fileTransferId: files[index].fileTransferId);
+
+                      files.removeAt(index);
+                      if(mounted) {
+                        Navigator.pop(context);
+                      }
+                      setState(() {});
+                    }),
                   ),
                 ),
                 SizedBox(width: 14),

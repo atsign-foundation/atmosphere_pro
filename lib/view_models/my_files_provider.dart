@@ -419,6 +419,7 @@ class MyFilesProvider extends BaseModel {
             type: file.name!.split('.').last,
             contactName: fileData.sender,
             fileTransferId: fileData.key,
+            message: fileData.notes,
           );
 
           allFiles.add(fileDetail);

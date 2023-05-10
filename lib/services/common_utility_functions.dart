@@ -3,10 +3,13 @@ import 'dart:typed_data';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -16,11 +19,17 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../data_models/file_modal.dart';
 import '../data_models/file_transfer.dart';
 import '../screens/common_widgets/labelled_circular_progress.dart';
+import '../screens/my_files/widgets/downloads_folders.dart';
+import '../screens/my_files/widgets/recents.dart';
+import '../utils/vectors.dart';
 
 class CommonUtilityFunctions {
   static final CommonUtilityFunctions _singleton =
@@ -633,7 +642,6 @@ class CommonUtilityFunctions {
   }
 
   bool checkForDownloadAvailability(FileTransfer file) {
-
     bool isDownloadAvailable = false;
 
     var expiryDate = file.date!.add(Duration(days: 6));
@@ -654,6 +662,288 @@ class CommonUtilityFunctions {
     }
 
     return isDownloadAvailable;
+  }
+
+  Future<String> getNickname(String atSign) async {
+    var res = await ContactService().getContactDetails(atSign, null);
+    return res['nickname'] ?? "";
+  }
+
+  Widget interactableThumbnail(String extension, String path,
+      FilesDetail fileDetail, Function onDelete) {
+    GroupService().allContacts;
+    String nickname = "";
+    for (var contact in GroupService().allContacts) {
+      if (contact?.contact?.atSign == fileDetail.contactName) {
+        nickname = contact?.contact?.tags?["nickname"] ?? "";
+        break;
+      }
+    }
+    return FileTypes.IMAGE_TYPES.contains(extension)
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(10.toHeight),
+            child: GestureDetector(
+              onTap: () async {
+                await showDialog(
+                  context: NavService.navKey.currentContext!,
+                  builder: (_) => Material(
+                    type: MaterialType.transparency,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pop(
+                                    NavService.navKey.currentContext!);
+                              },
+                              child: Icon(
+                                Icons.clear,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Flexible(
+                            child: Image.file(
+                              File(path),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext _context, _, __) {
+                                return Container(
+                                  child: Icon(
+                                    Icons.image,
+                                    size: 30.toFont,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: SvgPicture.asset(
+                                  AppVectors.icDownloadFile,
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await openFilePath(
+                                        BackendService.getInstance()
+                                                .downloadDirectory!
+                                                .path +
+                                            Platform.pathSeparator +
+                                            fileDetail.fileName!);
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppVectors.icSendFile,
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await onDelete();
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppVectors.icDeleteFile,
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: EdgeInsets.all(20),
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  fileDetail.fileName ?? "",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  double.parse(fileDetail.size.toString()) <=
+                                          1024
+                                      ? '${fileDetail.size} ' + TextStrings().kb
+                                      : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                          TextStrings().mb,
+                                  style: TextStyle(
+                                    color: ColorConstants.grey,
+                                    fontSize: 10,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                                SizedBox(height: 10),
+                                nickname.isNotEmpty
+                                    ? Text(
+                                        nickname,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 5),
+                                Text(
+                                  fileDetail.contactName ?? "",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                fileDetail.message.isNotNull
+                                    ? Text(
+                                        "Message",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 5),
+                                Text(
+                                  fileDetail.message ?? "",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 50.toHeight,
+                width: 50.toWidth,
+                child: Image.file(
+                  File(path),
+                  fit: BoxFit.cover,
+                  errorBuilder: (BuildContext _context, _, __) {
+                    return Container(
+                      child: Icon(
+                        Icons.image,
+                        size: 30.toFont,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          )
+        : FileTypes.VIDEO_TYPES.contains(extension)
+            ? FutureBuilder(
+                future: videoThumbnailBuilder(path),
+                builder: (context, snapshot) => ClipRRect(
+                  borderRadius: BorderRadius.circular(10.toHeight),
+                  child: GestureDetector(
+                    onTap: () async {
+                      //   await openDownloadsFolder(context);
+                      await openFilePath(path);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10),
+                      height: 50.toHeight,
+                      width: 50.toWidth,
+                      child: (snapshot.data == null)
+                          ? Image.asset(ImageConstants.videoLogo,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext _context, _, __) {
+                              return Container(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 30.toFont,
+                                ),
+                              );
+                            })
+                          : Image.memory(
+                              snapshot.data as Uint8List,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext _context, _, __) {
+                                return Container(
+                                  child: Icon(
+                                    Icons.image,
+                                    size: 30.toFont,
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
+                ),
+              )
+            : Builder(
+                builder: (context) => ClipRRect(
+                  borderRadius: BorderRadius.circular(10.toHeight),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await openFilePath(path);
+                      //   await openDownloadsFolder(context);
+                    },
+                    child: Container(
+                      // padding: EdgeInsets.only(left: 10),
+                      height: 50.toHeight,
+                      width: 50.toWidth,
+                      child: Image.asset(
+                        FileTypes.PDF_TYPES.contains(extension)
+                            ? ImageConstants.pdfLogo
+                            : FileTypes.AUDIO_TYPES.contains(extension)
+                                ? ImageConstants.musicLogo
+                                : FileTypes.WORD_TYPES.contains(extension)
+                                    ? ImageConstants.wordLogo
+                                    : FileTypes.EXEL_TYPES.contains(extension)
+                                        ? ImageConstants.exelLogo
+                                        : FileTypes.TEXT_TYPES
+                                                .contains(extension)
+                                            ? ImageConstants.txtLogo
+                                            : ImageConstants.unknownLogo,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              );
   }
 
   void showNoFileDialog({double deviceTextFactor = 1}) {
