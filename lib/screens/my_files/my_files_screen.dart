@@ -80,9 +80,13 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                 ),
                 child: SearchWidget(
                   controller: searchController,
+                  readOnly: true,
                   borderColor: Colors.white,
                   backgroundColor: Colors.white,
                   hintText: "Search",
+                  onTap: () {
+                    navigateToFilesDetail(autoFocus: true);
+                  },
                   hintStyle: TextStyle(
                     color: ColorConstants.darkSliver,
                     fontSize: 15,
@@ -290,12 +294,16 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
     return items;
   }
 
-  void navigateToFilesDetail({FileType? type}) {
+  void navigateToFilesDetail({
+    FileType? type,
+    bool? autoFocus,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => FilesDetailScreen(
           type: type,
+          autoFocus: autoFocus,
         ),
       ),
     );

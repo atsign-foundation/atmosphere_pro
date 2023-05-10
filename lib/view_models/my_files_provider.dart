@@ -227,6 +227,22 @@ class MyFilesProvider extends BaseModel {
     }
   }
 
+  void searchFileByKeyword({
+    required String key,
+    FileType? type,
+  }) {
+    final result = filterFiles(type)
+        .where(
+          (element) => (element.fileName ?? '')
+              .toLowerCase()
+              .trim()
+              .contains(key.toLowerCase().trim()),
+        )
+        .toList();
+    displayFiles = result;
+    notifyListeners();
+  }
+
   populateTabs() {
     bool isDesktop = false;
     tabNames = ['Recents'];

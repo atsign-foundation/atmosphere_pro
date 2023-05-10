@@ -9,6 +9,9 @@ class SearchWidget extends StatelessWidget {
   final TextStyle? hintStyle;
   final EdgeInsetsGeometry? margin;
   final Function(String value)? onChange;
+  final bool? readOnly;
+  final Function()? onTap;
+  final bool? autoFocus;
 
   const SearchWidget({
     Key? key,
@@ -19,6 +22,7 @@ class SearchWidget extends StatelessWidget {
     this.hintStyle,
     this.margin,
     this.onChange,
+    this.readOnly, this.onTap, this.autoFocus,
   }) : super(key: key);
 
   @override
@@ -36,6 +40,9 @@ class SearchWidget extends StatelessWidget {
           ),
       child: TextFormField(
         controller: controller,
+        autofocus: autoFocus ?? false,
+        readOnly: readOnly ?? false,
+        onTap: onTap,
         onChanged: (value) {
           onChange?.call(value);
         },

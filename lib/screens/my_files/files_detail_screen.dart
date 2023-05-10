@@ -24,10 +24,12 @@ import 'widgets/downloads_folders.dart';
 
 class FilesDetailScreen extends StatefulWidget {
   final FileType? type;
+  final bool? autoFocus;
 
   const FilesDetailScreen({
     Key? key,
     required this.type,
+    this.autoFocus,
   }) : super(key: key);
 
   @override
@@ -133,11 +135,15 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 28),
               child: SearchWidget(
                 controller: searchController,
+                autoFocus: widget.autoFocus,
                 borderColor: Colors.white,
                 backgroundColor: Colors.white,
                 hintText: "Search",
                 onChange: (value) {
-                  setState(() {});
+                  provider.searchFileByKeyword(
+                    key: value,
+                    type: widget.type,
+                  );
                 },
                 hintStyle: TextStyle(
                   color: ColorConstants.darkSliver,
@@ -375,6 +381,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                               ),
                             ),
                           ),
+                          SizedBox(width: 12),
                           Text(
                             "$shortDate",
                             style: TextStyle(
