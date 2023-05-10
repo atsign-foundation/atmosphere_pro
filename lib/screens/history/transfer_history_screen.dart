@@ -87,7 +87,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                   hintText: "Search",
                   onChange: (text) {
                     setState(() {});
-                    // provider.setHistorySearchText = text;
                   },
                   hintStyle: TextStyle(
                     color: ColorConstants.darkSliver,

@@ -1,9 +1,8 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
-
 import '../../utils/colors.dart';
 
-class SearchWidget extends StatefulWidget {
+class SearchWidget extends StatelessWidget {
   final Color? backgroundColor, borderColor;
   final TextEditingController controller;
   final String? hintText;
@@ -23,55 +22,61 @@ class SearchWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SearchWidget> createState() => _SearchWidgetState();
-}
-
-class _SearchWidgetState extends State<SearchWidget> {
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: 44.toHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: widget.backgroundColor,
+        color: backgroundColor,
       ),
-      margin: widget.margin ??
+      margin: margin ??
           EdgeInsets.symmetric(
             horizontal: 32.toWidth,
             vertical: 18.toHeight,
           ),
       child: TextFormField(
-        controller: widget.controller,
+        controller: controller,
         onChanged: (value) {
-          widget.onChange?.call(value);
+          onChange?.call(value);
         },
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 1,
-              color: widget.borderColor ?? ColorConstants.grey,
+              color: borderColor ?? ColorConstants.grey,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 1,
-              color: widget.borderColor ?? ColorConstants.grey,
+              color: borderColor ?? ColorConstants.grey,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           contentPadding: const EdgeInsets.only(top: 12, left: 14),
-          hintStyle: widget.hintStyle ??
+          hintStyle: hintStyle ??
               TextStyle(
                 fontSize: 14.toFont,
                 color: ColorConstants.grey,
                 fontWeight: FontWeight.normal,
               ),
-          suffixIcon: const Icon(
-            Icons.search,
-            color: ColorConstants.darkSliver,
-          ),
-          hintText: widget.hintText ?? 'Search by atSign or nickname',
+          suffixIcon: controller.text.isEmpty
+              ? Icon(
+                  Icons.search,
+                  color: ColorConstants.darkSliver,
+                )
+              : InkWell(
+                  onTap: () {
+                    controller.clear();
+                    onChange?.call('');
+                  },
+                  child: Icon(
+                    Icons.close,
+                    color: ColorConstants.darkSliver,
+                  ),
+                ),
+          hintText: hintText ?? 'Search by atSign or nickname',
         ),
         textInputAction: TextInputAction.search,
         style: TextStyle(

@@ -136,6 +136,9 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 borderColor: Colors.white,
                 backgroundColor: Colors.white,
                 hintText: "Search",
+                onChange: (value) {
+                  setState(() {});
+                },
                 hintStyle: TextStyle(
                   color: ColorConstants.darkSliver,
                   fontSize: 15,
