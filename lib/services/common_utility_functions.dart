@@ -9,7 +9,6 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -18,9 +17,8 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -28,12 +26,12 @@ import '../data_models/file_modal.dart';
 import '../data_models/file_transfer.dart';
 import '../screens/common_widgets/labelled_circular_progress.dart';
 import '../screens/my_files/widgets/downloads_folders.dart';
-import '../screens/my_files/widgets/recents.dart';
 import '../utils/vectors.dart';
 
 class CommonUtilityFunctions {
   static final CommonUtilityFunctions _singleton =
       CommonUtilityFunctions._internal();
+
   CommonUtilityFunctions._internal();
 
   factory CommonUtilityFunctions() {
@@ -410,8 +408,8 @@ class CommonUtilityFunctions {
     var videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
       imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      maxWidth: 50,
+      // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
       quality: 100,
     );
     return videoThumbnail;
@@ -673,6 +671,10 @@ class CommonUtilityFunctions {
       FilesDetail fileDetail, Function onDelete) {
     GroupService().allContacts;
     String nickname = "";
+    final date = DateTime.parse(fileDetail.date ?? "").toLocal();
+    final shortDate = DateFormat('dd/MM/yy').format(date);
+    final time = DateFormat('HH:mm').format(date);
+
     for (var contact in GroupService().allContacts) {
       if (contact?.contact?.atSign == fileDetail.contactName) {
         nickname = contact?.contact?.tags?["nickname"] ?? "";
@@ -688,111 +690,142 @@ class CommonUtilityFunctions {
                   context: NavService.navKey.currentContext!,
                   builder: (_) => Material(
                     type: MaterialType.transparency,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 10,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(NavService.navKey.currentContext!);
+                            },
+                            child: Icon(
+                              Icons.clear,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pop(
-                                    NavService.navKey.currentContext!);
-                              },
-                              child: Icon(
-                                Icons.clear,
-                                color: Colors.white,
-                                size: 24,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                            // height: double.infinity,
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(horizontal: 33),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: FileImage(
+                                  File(path),
+                                ),
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Flexible(
-                            child: Image.file(
-                              File(path),
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (BuildContext _context, _, __) {
-                                return Container(
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 30.toFont,
-                                  ),
-                                );
-                              },
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6.0),
+                              child: SvgPicture.asset(
+                                AppVectors.icDownloadFile,
+                                height: 50,
+                                width: 50,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6.0),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await openFilePath(
+                                      BackendService.getInstance()
+                                              .downloadDirectory!
+                                              .path +
+                                          Platform.pathSeparator +
+                                          fileDetail.fileName!);
+                                },
                                 child: SvgPicture.asset(
-                                  AppVectors.icDownloadFile,
+                                  AppVectors.icSendFile,
                                   height: 50,
                                   width: 50,
                                 ),
                               ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6.0),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    await openFilePath(
-                                        BackendService.getInstance()
-                                                .downloadDirectory!
-                                                .path +
-                                            Platform.pathSeparator +
-                                            fileDetail.fileName!);
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppVectors.icSendFile,
-                                    height: 50,
-                                    width: 50,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6.0),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    await onDelete();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppVectors.icDeleteFile,
-                                    height: 50,
-                                    width: 50,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
                             ),
-                            padding: EdgeInsets.all(20),
-                            width: double.infinity,
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await onDelete();
+                                },
+                                child: SvgPicture.asset(
+                                  AppVectors.icDeleteFile,
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: EdgeInsets.all(20),
+                          margin: EdgeInsets.symmetric(horizontal: 25),
+                          width: double.infinity,
+                          child: SingleChildScrollView(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        "$shortDate",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: ColorConstants.oldSliver,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 1,
+                                        height: 8,
+                                        color: Color(0xFFD7D7D7),
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 3,
+                                        ),
+                                      ),
+                                      Text(
+                                        "$time",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: ColorConstants.oldSliver,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 12),
                                 Text(
                                   fileDetail.fileName ?? "",
                                   style: TextStyle(
@@ -829,15 +862,16 @@ class CommonUtilityFunctions {
                                   ),
                                 ),
                                 SizedBox(height: 10),
-                                fileDetail.message.isNotNull
-                                    ? Text(
-                                        "Message",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      )
-                                    : SizedBox(),
+                                // fileDetail.message.isNotNull
+                                //     ?
+                                Text(
+                                  "Message",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                // : SizedBox(),
                                 SizedBox(height: 5),
                                 Text(
                                   fileDetail.message ?? "",
@@ -848,8 +882,8 @@ class CommonUtilityFunctions {
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 );

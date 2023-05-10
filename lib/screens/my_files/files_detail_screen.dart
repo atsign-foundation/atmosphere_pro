@@ -4,11 +4,11 @@ import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/sliver_grid_delegate.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/image_view_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -20,18 +20,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../../services/backend_service.dart';
-import '../../utils/file_types.dart';
-import 'widgets/downloads_folders.dart';
-
-import '../../services/common_utility_functions.dart';
-import '../../services/navigation_service.dart';
-import '../../services/snackbar_service.dart';
-import '../../utils/text_strings.dart';
-import '../../view_models/file_progress_provider.dart';
-import '../../view_models/history_provider.dart';
-import '../../view_models/internet_connectivity_checker.dart';
 
 class FilesDetailScreen extends StatefulWidget {
   final FileType? type;
@@ -214,56 +202,47 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
           height: 104,
         ),
         itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              if (widget.type == FileType.photo) {
-                _onTapPhotoItem.call(files[index]);
-              } else {
-                /// handler
-              }
-            },
-            child: Column(
-              children: [
-                Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: CommonUtilityFunctions().interactableThumbnail(
-                    files[index].fileName?.split(".").last ?? "",
-                    BackendService.getInstance().downloadDirectory!.path +
-                        Platform.pathSeparator +
-                        files[index].fileName!,
-                    files[index],
-                    () async {
-                      await deleteFile(
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              files[index].fileName!,
-                          fileTransferId: files[index].fileTransferId);
+          return Column(
+            children: [
+              Container(
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: CommonUtilityFunctions().interactableThumbnail(
+                  files[index].fileName?.split(".").last ?? "",
+                  BackendService.getInstance().downloadDirectory!.path +
+                      Platform.pathSeparator +
+                      files[index].fileName!,
+                  files[index],
+                  () async {
+                    await deleteFile(
+                        BackendService.getInstance().downloadDirectory!.path +
+                            Platform.pathSeparator +
+                            files[index].fileName!,
+                        fileTransferId: files[index].fileTransferId);
 
-                      files.removeAt(index);
-                      if(mounted) {
-                        Navigator.pop(context);
-                      }
-                      setState(() {});
-                    },
+                    files.removeAt(index);
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
+                    setState(() {});
+                  },
+                ),
+              ),
+              Spacer(),
+              Flexible(
+                child: Text(
+                  files[index].fileName ?? "",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 8.toFont,
+                    fontWeight: FontWeight.w500,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Spacer(),
-                Flexible(
-                  child: Text(
-                    files[index].fileName ?? "",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 8.toFont,
-                      fontWeight: FontWeight.w500,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           );
         },
       ),
@@ -395,7 +374,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                           fileTransferId: files[index].fileTransferId);
 
                       files.removeAt(index);
-                      if(mounted) {
+                      if (mounted) {
                         Navigator.pop(context);
                       }
                       setState(() {});
@@ -485,15 +464,6 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
           ),
         );
       },
-    );
-  }
-
-  void _onTapPhotoItem(FilesDetail file) {
-    showDialog(
-      context: context,
-      builder: (context) => ImageViewWidget(
-        image: file,
-      ),
     );
   }
 }

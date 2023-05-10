@@ -163,6 +163,7 @@ class MyFilesProvider extends BaseModel {
               date: fileData.date?.toLocal().toString(),
               type: file.name.split('.').last,
               contactName: fileData.sender,
+              message: fileData.notes,
               fileTransferId: fileData.key);
 
           // check if file exists
@@ -373,6 +374,7 @@ class MyFilesProvider extends BaseModel {
               date: fileData.date?.toLocal().toString(),
               type: file.name!.split('.').last,
               contactName: fileData.sender,
+              message: fileData.notes,
               fileTransferId: fileData.key);
 
           // File tempFile = File(fileDetail.filePath!);
@@ -540,6 +542,7 @@ class MyFilesProvider extends BaseModel {
             date: fileTransfer.date?.toLocal().toString(),
             type: file.name!.split('.').last,
             contactName: fileTransfer.sender,
+            message: fileTransfer.notes,
             fileTransferId: fileTransfer.key,
           );
 
