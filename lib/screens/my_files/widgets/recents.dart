@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
@@ -59,32 +60,10 @@ class _RecentsState extends State<Recents> {
   }
 }
 
-deleteFile(String filePath, {String? fileTransferId}) async {
-  await showModalBottomSheet(
-    context: NavService.navKey.currentContext!,
-    backgroundColor: Colors.white,
-    builder: (context) => EditBottomSheet(
-      onConfirmation: () async {
-        var file = File(filePath);
-        if (await file.exists()) {
-          file.deleteSync();
-        }
-        if (fileTransferId != null) {
-          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                  listen: false)
-              .removeParticularFile(
-                  fileTransferId, filePath.split(Platform.pathSeparator).last);
-        }
-      },
-      deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
-    ),
-  );
-}
-
 Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
   return InkWell(
     onLongPress: () {
-      deleteFile(filePath!, fileTransferId: fileTransferId);
+      FileUtils.deleteFile(filePath!, fileTransferId: fileTransferId);
     },
     child: Column(
       children: <Widget>[

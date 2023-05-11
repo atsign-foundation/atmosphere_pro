@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
@@ -83,7 +84,9 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      isGridType = !isGridType;
+                      if (!isGridType) {
+                        isGridType = !isGridType;
+                      }
                     });
                   },
                   child: Container(
@@ -104,7 +107,9 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      isGridType = !isGridType;
+                      if (isGridType) {
+                        isGridType = !isGridType;
+                      }
                     });
                   },
                   child: Container(
@@ -216,13 +221,15 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                       files[index].fileName!,
                   files[index],
                   () async {
-                    await deleteFile(
-                        BackendService.getInstance().downloadDirectory!.path +
-                            Platform.pathSeparator +
-                            files[index].fileName!,
-                        fileTransferId: files[index].fileTransferId);
-
-                    files.removeAt(index);
+                    await FileUtils.deleteFile(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!,
+                      fileTransferId: files[index].fileTransferId,
+                      onComplete: () {
+                        files.removeAt(index);
+                      },
+                    );
                     if (mounted) {
                       Navigator.pop(context);
                     }
@@ -330,13 +337,15 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
               padding: const EdgeInsets.only(left: 6.0),
               child: GestureDetector(
                 onTap: () async {
-                  await deleteFile(
-                      BackendService.getInstance().downloadDirectory!.path +
-                          Platform.pathSeparator +
-                          files[index].fileName!,
-                      fileTransferId: files[index].fileTransferId);
-
-                  files.removeAt(index);
+                  await FileUtils.deleteFile(
+                    BackendService.getInstance().downloadDirectory!.path +
+                        Platform.pathSeparator +
+                        files[index].fileName!,
+                    fileTransferId: files[index].fileTransferId,
+                    onComplete: () {
+                      files.removeAt(index);
+                    },
+                  );
                   setState(() {});
                 },
                 child: SvgPicture.asset(
@@ -367,13 +376,16 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             Platform.pathSeparator +
                             files[index].fileName!,
                         files[index], () async {
-                      await deleteFile(
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              files[index].fileName!,
-                          fileTransferId: files[index].fileTransferId);
+                      await FileUtils.deleteFile(
+                        BackendService.getInstance().downloadDirectory!.path +
+                            Platform.pathSeparator +
+                            files[index].fileName!,
+                        fileTransferId: files[index].fileTransferId,
+                        onComplete: () {
+                          files.removeAt(index);
+                        },
+                      );
 
-                      files.removeAt(index);
                       if (mounted) {
                         Navigator.pop(context);
                       }

@@ -63,8 +63,8 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
       padding: EdgeInsets.only(left: 34, bottom: 32),
       child: ProviderHandler<MyFilesProvider>(
         load: (provider) async {
-          await provider.getMyFilesRecords();
           await provider.getAllFiles();
+          await provider.getMyFilesRecords();
         },
         functionName: 'all_files',
         showError: false,
