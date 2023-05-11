@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/avatar_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_attachment_card.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/option_dialog.dart';
-import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -45,8 +41,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
   GlobalKey optionKey = GlobalKey();
   TextEditingController nicknameController = TextEditingController();
   bool isTrusted = false;
-  bool isDownloaded = false;
-
+  bool isLoading = false;
   bool isEditNickname = false;
 
   @override
@@ -83,7 +78,10 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     return tempfiles;
   }
 
-  editNickname(e) async {
+  editNickname() async {
+    setState(() {
+      isLoading = true;
+    });
     AtContact contact = widget.contact;
     contact.tags =
         await _contactService.getContactDetails(contact.atSign, null);
@@ -98,6 +96,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     }
     setState(() {
       isEditNickname = false;
+      isLoading = false;
     });
   }
 
@@ -154,30 +153,43 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                                       fontWeight: FontWeight.w500),
                                 )
                               : SizedBox(),
-                          SizedBox(height: 5),
+                          SizedBox(height: 4),
                           Flexible(
                             child: isEditNickname
                                 ? Row(
                                     children: [
                                       Flexible(
                                         child: TextField(
-                                          // onTapOutside: editNickname,
+                                          maxLines: 1,
                                           decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(
+                                              left: 16,
+                                            ),
                                             hintText: 'Enter Nickname',
                                             hintStyle: TextStyle(
-                                              fontSize: 15.toFont,
+                                              fontSize: 14.toFont,
                                               fontWeight: FontWeight.w500,
                                               color: ColorConstants.textBlack,
                                             ),
-                                            border: InputBorder.none,
-                                            labelStyle:
-                                                TextStyle(fontSize: 15.toFont),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            labelStyle: TextStyle(
+                                              fontSize: 14.toFont,
+                                            ),
                                             fillColor: Colors.white,
                                             filled: true,
-                                            suffixIcon: Icon(
-                                              Icons.clear,
-                                              color: Colors.black,
-                                              size: 16,
+                                            suffixIcon: InkWell(
+                                              onTap: () {
+                                                nicknameController.clear();
+                                              },
+                                              child: Icon(
+                                                Icons.clear,
+                                                color: Colors.black,
+                                                size: 16,
+                                              ),
                                             ),
                                           ),
                                           controller: nicknameController,
@@ -195,15 +207,31 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                           ),
-                          const SizedBox(height: 5),
+                          const SizedBox(height: 8),
                           Flexible(
-                            child: Text(
-                              widget.contact.atSign ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
+                            child: isEditNickname
+                                ? _buildButtonIcon(
+                                    height: 36,
+                                    backgroundColor: Colors.black,
+                                    borderRadius: 5,
+                                    title: 'Save',
+                                    titleStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.toFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    useLoadingIndicator: true,
+                                    onTap: () async {
+                                      await editNickname();
+                                    },
+                                  )
+                                : Text(
+                                    widget.contact.atSign ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -254,7 +282,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 title: "Transfer File",
                 titleStyle: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 14.toFont,
                   fontWeight: FontWeight.bold,
                 ),
                 margin: EdgeInsets.symmetric(horizontal: 44),
@@ -343,42 +371,52 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
   Widget _buildButtonIcon({
     String title = '',
     TextStyle? titleStyle,
-    required String imageUrl,
+    String? imageUrl,
     Color backgroundColor = Colors.black,
     EdgeInsetsGeometry? margin,
-    Function? onTap,
+    Function()? onTap,
+    double height = 51,
+    double borderRadius = 10,
+    bool useLoadingIndicator = false,
   }) {
     return Container(
-      height: 51,
+      height: height,
       width: double.infinity,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
       margin: margin,
       child: InkWell(
-        onTap: () {
-          onTap?.call();
-        },
+        onTap: onTap,
         child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                title,
-                style: titleStyle ??
-                    TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+          child: useLoadingIndicator && isLoading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      style: titleStyle ??
+                          TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
                     ),
-              ),
-              const SizedBox(width: 14),
-              SvgPicture.asset(
-                imageUrl,
-              ),
-            ],
-          ),
+                    if (imageUrl != null) const SizedBox(width: 14),
+                    if (imageUrl != null)
+                      SvgPicture.asset(
+                        imageUrl,
+                      ),
+                  ],
+                ),
         ),
       ),
     );
