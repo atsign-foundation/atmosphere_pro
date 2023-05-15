@@ -25,4 +25,5 @@ class FileTypes {
   static List<String> WORD_TYPES = ['doc', 'docx', 'DOC', 'DOCX'];
   static List<String> EXEL_TYPES = ['xls', 'xlsx', 'XLS', 'XLSX'];
   static List<String> TEXT_TYPES = ['txt', 'TXT'];
+  static List<String> ZIP_TYPES = ['zip', 'zipx', '7z', 'rar', 'tar.gz', 'z', 'jar'];
 }

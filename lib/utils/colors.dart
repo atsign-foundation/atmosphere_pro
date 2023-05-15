@@ -49,6 +49,7 @@ class ColorConstants {
   static const Color orange = Color(0xFFF07C50);
   static const Color portlandOrange = Color(0xFFFB6232);
   static const Color unbleachedSilk = Color(0xFFFFDACC);
+  static const Color optionalFilterBackgroundColor = Color(0xFFFFE9E1);
   static const Color lightGrey = Color(0xFFF1F1F1);
   static const Color boxGrey = Color(0xFFEFEFEF);
   static const Color darkGray = Color(0xFFC0C0C0);

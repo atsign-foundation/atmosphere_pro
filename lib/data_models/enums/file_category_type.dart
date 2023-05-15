@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 
@@ -52,6 +53,25 @@ extension GenderTypeExtension on FileType {
         return AppVectors.icZips;
       case FileType.other:
         return AppVectors.icOther;
+    }
+  }
+
+  List<String> get suffixName {
+    switch (this) {
+      case FileType.photo:
+        return FileTypes.IMAGE_TYPES;
+      case FileType.file:
+        return FileTypes.PDF_TYPES +
+            FileTypes.WORD_TYPES +
+            FileTypes.EXEL_TYPES;
+      case FileType.audio:
+        return FileTypes.AUDIO_TYPES;
+      case FileType.video:
+        return FileTypes.VIDEO_TYPES;
+      case FileType.zips:
+        return FileTypes.ZIP_TYPES;
+      default:
+        return [];
     }
   }
 

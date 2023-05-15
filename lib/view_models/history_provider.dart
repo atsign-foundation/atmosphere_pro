@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -198,7 +199,10 @@ class HistoryProvider extends BaseModel {
   // with new approach we are saving data in individual keys
   // 2 -- every sent file data is stored individually in `file_transfer_[ID]` key.
   /// [getSentHistory] will get data from both keys and store them into [sentHistory] variable.
-  getSentHistory({bool setLoading = true}) async {
+  getSentHistory({
+    bool setLoading = true,
+    List<FileType>? listFileTypeSelect,
+  }) async {
     if (setLoading) {
       setStatus(SENT_HISTORY, Status.Loading);
     }
@@ -251,15 +255,49 @@ class HistoryProvider extends BaseModel {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
 
-          historyFile['history'].forEach((value) {
-            FileHistory filesModel = FileHistory.fromJson(value);
-            // checking for download acknowledged
-            filesModel.sharedWith = checkIfileDownloaded(
-              filesModel.sharedWith,
-              filesModel.fileTransferObject!.transferId,
-            );
-            tempSentHistory.add(filesModel);
-          });
+          historyFile['history'].forEach(
+            (value) {
+              FileHistory filesModel = FileHistory.fromJson(value);
+              // checking for download acknowledged
+              filesModel.sharedWith = checkIfileDownloaded(
+                filesModel.sharedWith,
+                filesModel.fileTransferObject!.transferId,
+              );
+
+              if ((listFileTypeSelect ?? []).isNotEmpty) {
+                List<FileData> files = [];
+
+                if ((filesModel.fileDetails?.files ?? []).isNotEmpty) {
+                  Future.forEach(
+                    filesModel.fileDetails!.files!,
+                    (dynamic file) async {
+                      String? fileExtension = file.name.split('.').last;
+                      for (int i = 0; i < listFileTypeSelect!.length; i++) {
+                        if (listFileTypeSelect[i] == FileType.other) {
+                          files.add(file);
+                          break;
+                        }
+
+                        if (listFileTypeSelect[i]
+                            .suffixName
+                            .contains(fileExtension)) {
+                          files.add(file);
+                          break;
+                        }
+                      }
+                    },
+                  );
+                }
+
+                if (files.isNotEmpty) {
+                  filesModel.fileDetails?.files = files;
+                  tempSentHistory.add(filesModel);
+                }
+              } else {
+                tempSentHistory.add(filesModel);
+              }
+            },
+          );
         } catch (e) {
           print('error in file model conversion in getSentHistory: $e');
         }
@@ -668,7 +706,9 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  Future<void> getAllFileTransferData() async {
+  Future<void> getAllFileTransferData({
+    List<FileType>? listFileTypeSelect,
+  }) async {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
     List<FileTransfer> tempReceivedHistoryLogs = [];
     List<FileHistory> tempReceivedFiles = [];
@@ -716,19 +756,57 @@ class HistoryProvider extends BaseModel {
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = atKey.sharedBy!;
 
-            if (filesModel.key != null) {
-              tempReceivedHistoryLogs.insert(0, filesModel);
-            }
+            if ((listFileTypeSelect ?? []).isNotEmpty) {
+              List<FileData> files = [];
 
-            final file = FileHistory(
-              filesModel,
-              [],
-              HistoryType.received,
-              fileTransferObject,
-            );
+              if ((filesModel.files ?? []).isNotEmpty) {
+                await Future.forEach(
+                  filesModel.files!,
+                  (dynamic file) async {
+                    String? fileExtension = file.name.split('.').last;
+                    for (int i = 0; i < listFileTypeSelect!.length; i++) {
+                      if (listFileTypeSelect[i] == FileType.other) {
+                        files.add(file);
+                        break;
+                      }
 
-            if (filesModel.key != null) {
-              tempReceivedFiles.insert(0, file);
+                      if (listFileTypeSelect[i]
+                          .suffixName
+                          .contains(fileExtension)) {
+                        files.add(file);
+                        break;
+                      }
+                    }
+                  },
+                );
+              }
+
+              if (files.isNotEmpty) {
+                filesModel.files = files;
+                tempReceivedHistoryLogs.insert(0, filesModel);
+                final file = FileHistory(
+                  filesModel,
+                  [],
+                  HistoryType.received,
+                  fileTransferObject,
+                );
+                tempReceivedFiles.insert(0, file);
+              }
+            } else {
+              if (filesModel.key != null) {
+                tempReceivedHistoryLogs.insert(0, filesModel);
+              }
+
+              final file = FileHistory(
+                filesModel,
+                [],
+                HistoryType.received,
+                fileTransferObject,
+              );
+
+              if (filesModel.key != null) {
+                tempReceivedFiles.insert(0, file);
+              }
             }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
@@ -797,6 +875,8 @@ class HistoryProvider extends BaseModel {
         return [];
     }
   }
+
+  void filterByFileType(FileType fileType) {}
 
   getrecentHistoryFiles() async {
     // finding last 15 received files data for recent tab
@@ -1330,10 +1410,11 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue =
-            await AtClientManager.getInstance().atClient.get(atKey)
-                // ignore: return_of_invalid_type_from_catch_error
-                .catchError((e) {
+        AtValue atvalue = await AtClientManager.getInstance()
+            .atClient
+            .get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);

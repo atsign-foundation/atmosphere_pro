@@ -32,6 +32,7 @@ class MyFilesProvider extends BaseModel {
       receivedVideos = [],
       receivedAudio = [],
       receivedApk = [],
+      receivedZip = [],
       receivedDocument = [],
       recentFile = [],
       allFiles = [],
@@ -63,6 +64,7 @@ class MyFilesProvider extends BaseModel {
     receivedVideos = [];
     receivedAudio = [];
     receivedApk = [];
+    receivedZip = [];
     receivedDocument = [];
     recentFile = [];
     receivedUnknown = [];
@@ -84,7 +86,7 @@ class MyFilesProvider extends BaseModel {
       case FileType.audio:
         return receivedAudio;
       case FileType.zips:
-        return receivedApk;
+        return receivedZip;
       case FileType.file:
         return receivedDocument;
       case FileType.other:
@@ -133,6 +135,7 @@ class MyFilesProvider extends BaseModel {
       setStatus(SORT_FILES, Status.Loading);
       receivedAudio = [];
       receivedApk = [];
+      receivedZip = [];
       receivedDocument = [];
       receivedPhotos = [];
       receivedVideos = [];
@@ -205,11 +208,11 @@ class MyFilesProvider extends BaseModel {
             if (index == -1) {
               receivedDocument.add(fileDetail);
             }
-          } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
-            int index = receivedApk.indexWhere(
+          } else if (FileTypes.ZIP_TYPES.contains(fileExtension)) {
+            int index = receivedZip.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
             if (index == -1) {
-              receivedApk.add(fileDetail);
+              receivedZip.add(fileDetail);
             }
           } else {
             int index = receivedUnknown.indexWhere(

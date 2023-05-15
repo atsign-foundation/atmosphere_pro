@@ -33,7 +33,7 @@ class TransferHistoryScreen extends StatefulWidget {
 }
 
 class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
-  bool isLoading = false;
+  bool isFilterOpened = false;
   late HistoryProvider historyProvider;
   late TextEditingController searchController;
   GlobalKey filterKey = GlobalKey();
@@ -100,9 +100,14 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
               InkWell(
                 onTap: () {
                   _onTapFilterIcon();
+                  setState(() {
+                    isFilterOpened = true;
+                  });
                 },
                 child: SvgPicture.asset(
-                  AppVectors.icFilter,
+                  isFilterOpened
+                      ? AppVectors.icFilterOpened
+                      : AppVectors.icFilter,
                   key: filterKey,
                 ),
               ),
@@ -253,8 +258,14 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
               position: position,
               typeSelected: provider.typeSelected,
               isDesc: provider.isDesc,
-              onSelected: (value) {
+              onSelectedFilter: (value) {
                 provider.changeFilterType(value);
+                print(value);
+                setState(() {});
+              },
+              onSelectedOptionalFilter: (value) {
+                print(value);
+                setState(() {});
               },
               setOrder: (value) {
                 provider.changeDesc(value);
@@ -264,7 +275,11 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
           },
         );
       },
-    );
+    ).whenComplete(() {
+      setState(() {
+        isFilterOpened = false;
+      });
+    });
   }
 
   void reUploadFileConfirmation(FileEntity fileEntity) async {

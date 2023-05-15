@@ -39,6 +39,7 @@ class AppVectors {
   static String icSettingContactUs = '$_basePath/ic_setting_contact_us.svg';
   static String icSettingPrivacy = '$_basePath/ic_setting_privacy.svg';
   static String icFilter = '$_basePath/ic_filter.svg';
+  static String icFilterOpened = '$_basePath/ic_filter_opened.svg';
   static String icBannerOverlay = '$_basePath/ic_banner_overlay.svg';
 
   static String icCategoryVolume = '$_basePath/ic_category_volume.svg';

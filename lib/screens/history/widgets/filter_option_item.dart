@@ -9,6 +9,8 @@ class FilterOptionItem extends StatelessWidget {
   final bool isDisable, isCheck;
   final BorderRadiusGeometry? borderRadius;
   final Function()? onTap;
+  final Function()? allOptionOnTap;
+  final bool isAllOption;
 
   const FilterOptionItem({
     Key? key,
@@ -18,24 +20,37 @@ class FilterOptionItem extends StatelessWidget {
     this.title,
     this.isCheck = false,
     this.onTap,
+    this.isAllOption = false,
+    this.allOptionOnTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color color = isDisable ? ColorConstants.disableColor : Colors.black;
+    Color color = isCheck
+        ? isDisable
+            ? Colors.black
+            : Colors.white
+        : isDisable
+            ? ColorConstants.lightSliver
+            : Colors.black;
+
     Color backgroundColor =
         isDisable ? ColorConstants.disableBackgroundColor : Colors.white;
 
+    Color checkedBackgroundColor = isDisable
+        ? ColorConstants.optionalFilterBackgroundColor
+        : ColorConstants.orange;
+
     return InkWell(
       onTap: () {
-        onTap?.call();
+        isAllOption ? allOptionOnTap?.call() : onTap?.call();
       },
       child: Container(
         height: 36,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.zero,
+          color: isCheck ? checkedBackgroundColor : backgroundColor,
+          borderRadius: borderRadius ?? BorderRadius.zero,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,12 +78,34 @@ class FilterOptionItem extends StatelessWidget {
                 ),
               ],
             ),
-            SvgPicture.asset(
-              isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
-              width: 16,
-              height: 16,
-              color: color,
-              fit: BoxFit.cover,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isAllOption)
+                  SvgPicture.asset(
+                    //TODO: Use another boolean variable to check isAllType or not
+                    isCheck
+                        ? AppVectors.icArrowUpOutline
+                        : AppVectors.icArrowDownOutline,
+                    width: 20,
+                    height: 20,
+                    color: color,
+                    fit: BoxFit.cover,
+                  ),
+                if (isAllOption) SizedBox(width: 16),
+                InkWell(
+                  onTap: () {
+                    isAllOption ? onTap?.call() : null;
+                  },
+                  child: SvgPicture.asset(
+                    isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
+                    width: 16,
+                    height: 16,
+                    color: color,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
