@@ -186,6 +186,9 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                       itemBuilder: (context, index) {
                         return HistoryCardWidget(
                           fileHistory: filteredFileHistory[index],
+                          onDownloaded: () async {
+                            await provider.getAllFileTransferHistory();
+                          },
                         );
 
                         //   SentFilesListTile(
@@ -257,7 +260,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
             return FilterHistoryWidget(
               position: position,
               typeSelected: provider.typeSelected,
-              isDesc: provider.isDesc,
               onSelectedFilter: (value) {
                 provider.changeFilterType(value);
                 print(value);
@@ -265,12 +267,14 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
               },
               onSelectedOptionalFilter: (value) {
                 print(value);
+                provider.filterByFileType(value);
                 setState(() {});
               },
-              setOrder: (value) {
-                provider.changeDesc(value);
-                print(value);
-              },
+              onSelectedAll: ((value) {
+                provider.filterByAllFileType(value);
+                setState(() {});
+              }),
+              listFileType: provider.listType,
             );
           },
         );

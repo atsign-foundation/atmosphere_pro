@@ -6,38 +6,39 @@ import 'package:flutter_svg/flutter_svg.dart';
 class FilterOptionItem extends StatelessWidget {
   final String? icon;
   final String? title;
-  final bool isDisable, isCheck;
+  final bool isOptional, isCheck;
   final BorderRadiusGeometry? borderRadius;
   final Function()? onTap;
   final Function()? allOptionOnTap;
   final bool isAllOption;
+  final bool? isShowOptional;
 
   const FilterOptionItem({
     Key? key,
     this.icon,
-    this.isDisable = false,
+    this.isOptional = false,
     this.borderRadius,
     this.title,
     this.isCheck = false,
     this.onTap,
     this.isAllOption = false,
-    this.allOptionOnTap,
+    this.allOptionOnTap, this.isShowOptional,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Color color = isCheck
-        ? isDisable
+        ? isOptional
             ? Colors.black
             : Colors.white
-        : isDisable
+        : isOptional
             ? ColorConstants.lightSliver
             : Colors.black;
 
     Color backgroundColor =
-        isDisable ? ColorConstants.disableBackgroundColor : Colors.white;
+        isOptional ? ColorConstants.disableBackgroundColor : Colors.white;
 
-    Color checkedBackgroundColor = isDisable
+    Color checkedBackgroundColor = isOptional
         ? ColorConstants.optionalFilterBackgroundColor
         : ColorConstants.orange;
 
@@ -83,8 +84,7 @@ class FilterOptionItem extends StatelessWidget {
               children: [
                 if (isAllOption)
                   SvgPicture.asset(
-                    //TODO: Use another boolean variable to check isAllType or not
-                    isCheck
+                    isShowOptional ?? false
                         ? AppVectors.icArrowUpOutline
                         : AppVectors.icArrowDownOutline,
                     width: 20,

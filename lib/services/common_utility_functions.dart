@@ -697,14 +697,17 @@ class CommonUtilityFunctions {
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(NavService.navKey.currentContext!);
-                            },
-                            child: Icon(
-                              Icons.clear,
-                              color: Colors.white,
-                              size: 24,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 32),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pop(NavService.navKey.currentContext!);
+                              },
+                              child: Icon(
+                                Icons.clear,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
