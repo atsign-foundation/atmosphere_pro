@@ -190,11 +190,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                             await provider.getAllFileTransferHistory();
                           },
                         );
-
-                        //   SentFilesListTile(
-                        //   sentHistory: filteredSentHistory[index],
-                        //   key: Key(filteredSentHistory[index].fileDetails!.key),
-                        // );
                       },
                     );
                   } else {
@@ -257,23 +252,18 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
       builder: (context) {
         return Consumer<HistoryProvider>(
           builder: (context, provider, _) {
+            provider.resetOptional();
             return FilterHistoryWidget(
               position: position,
               typeSelected: provider.typeSelected,
               onSelectedFilter: (value) {
                 provider.changeFilterType(value);
                 print(value);
-                setState(() {});
               },
-              onSelectedOptionalFilter: (value) {
+              onSelectedOptionalFilter: (value) async {
                 print(value);
-                provider.filterByFileType(value);
-                setState(() {});
+                await provider.filterByFileType(value);
               },
-              onSelectedAll: ((value) {
-                provider.filterByAllFileType(value);
-                setState(() {});
-              }),
               listFileType: provider.listType,
             );
           },

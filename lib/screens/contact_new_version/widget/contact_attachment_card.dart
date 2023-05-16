@@ -50,7 +50,6 @@ class ContactAttachmentCard extends StatefulWidget {
 class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
   bool isDownloaded = false;
   bool isDownloading = false;
-  String? filePath;
 
   @override
   void initState() {
@@ -89,10 +88,6 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                   isPreview: true,
                 );
               }
-              // String filePath =
-              //     await BackendService.getInstance().downloadDirectory!.path +
-              //         Platform.pathSeparator +
-              //         (widget.singleFile.name ?? '');
               await openPreview().whenComplete(
                 () => setState(() {
                   isDownloading = false;
@@ -401,16 +396,13 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
     if (FileTypes.IMAGE_TYPES
         .contains(widget.singleFile.name?.split(".").last)) {
       String nickname = "";
-      String filePath =
-          await BackendService.getInstance().downloadDirectory!.path +
-              Platform.pathSeparator +
-              (widget.singleFile.name ?? '');
-      File image = File(filePath);
+      String filePath = BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          widget.singleFile.name!;
       Uint8List imageBytes = base64Decode(await imageToBase64(filePath));
       final date = (widget.fileTransfer.date ?? DateTime.now()).toLocal();
       final shortDate = DateFormat('dd/MM/yy').format(date);
       final time = DateFormat('HH:mm').format(date);
-
       for (var contact in GroupService().allContacts) {
         if (contact?.contact?.atSign == widget.fileTransfer.sender) {
           nickname = contact?.contact?.tags?["nickname"] ?? "";

@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -47,7 +48,7 @@ class HistoryProvider extends BaseModel {
       allFilesHistory = [],
       displayFilesHistory = [];
 
-  List<FileType> listType = [];
+  List<FileType> listType = FileType.values.toList();
 
   List<FileTransfer> receivedHistoryLogs = [];
 
@@ -96,6 +97,13 @@ class HistoryProvider extends BaseModel {
   void changeIsUpcomingEvent() {
     hadNewFile = !hadNewFile;
     notifyListeners();
+  }
+
+  void resetOptional() {
+    if (typeSelected == HistoryType.all && listType.isEmpty) {
+      listType = FileType.values.toList();
+      notifyListeners();
+    }
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {
@@ -232,10 +240,10 @@ class HistoryProvider extends BaseModel {
       individualSentFileId[atkey.key] = true;
     });
 
-    if (!isNewKeyAvailable) {
-      setStatus(SENT_HISTORY, Status.Done);
-      return;
-    }
+    // if (!isNewKeyAvailable) {
+    //   setStatus(SENT_HISTORY, Status.Done);
+    //   return;
+    // }
 
     tempSentHistory = [];
 
@@ -275,14 +283,17 @@ class HistoryProvider extends BaseModel {
                     (dynamic file) async {
                       String? fileExtension = file.name.split('.').last;
                       for (int i = 0; i < listFileTypeSelect!.length; i++) {
-                        // if (listFileTypeSelect[i] == FileType.other) {
-                        //   files.add(file);
-                        //   break;
-                        // }
-
-                        if (listFileTypeSelect[i]
-                            .suffixName
-                            .contains(fileExtension)) {
+                        if (FileTypes.ALL_TYPES.contains(fileExtension)) {
+                          if (listFileTypeSelect[i]
+                              .suffixName
+                              .contains(fileExtension)) {
+                            files.add(file);
+                            break;
+                          } else {
+                            break;
+                          }
+                        }
+                        if (listFileTypeSelect[i] == FileType.other) {
                           files.add(file);
                           break;
                         }
@@ -731,9 +742,9 @@ class HistoryProvider extends BaseModel {
       receivedItemsId[atkey.key] = true;
     });
 
-    if (!isNewKeyAvailable) {
-      return;
-    }
+    // if (!isNewKeyAvailable) {
+    //   return;
+    // }
 
     for (var atKey in fileTransferAtkeys) {
       var isCurrentAtsign = compareAtSign(
@@ -767,14 +778,17 @@ class HistoryProvider extends BaseModel {
                   (dynamic file) async {
                     String? fileExtension = file.name.split('.').last;
                     for (int i = 0; i < listFileTypeSelect!.length; i++) {
-                      // if (listFileTypeSelect[i] == FileType.other) {
-                      //   files.add(file);
-                      //   break;
-                      // }
-
-                      if (listFileTypeSelect[i]
-                          .suffixName
-                          .contains(fileExtension)) {
+                      if (FileTypes.ALL_TYPES.contains(fileExtension)) {
+                        if (listFileTypeSelect[i]
+                            .suffixName
+                            .contains(fileExtension)) {
+                          files.add(file);
+                          break;
+                        } else {
+                          break;
+                        }
+                      }
+                      if (listFileTypeSelect[i] == FileType.other) {
                         files.add(file);
                         break;
                       }
@@ -861,6 +875,9 @@ class HistoryProvider extends BaseModel {
   }
 
   void changeFilterType(HistoryType type) {
+    if (typeSelected != type && type == HistoryType.all) {
+      listType = FileType.values.toList();
+    }
     typeSelected = type;
     displayFilesHistory = filterFileHistory(type);
     notifyListeners();
@@ -879,22 +896,25 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  void filterByFileType(FileType fileType)  {
-    if (!listType.contains(fileType)) {
-      listType.add(fileType);
-    } else {
-      listType.remove(fileType);
+  Future<void> filterByFileType(List<FileType> fileType) async {
+    setStatus(GET_ALL_FILE_HISTORY, Status.Loading);
+    listType = fileType;
+    List<FileHistory> tempFileHistoryLogs = [];
+    try {
+      await getAllFileTransferData(listFileTypeSelect: listType);
+      await getSentHistory(listFileTypeSelect: listType);
+
+      tempFileHistoryLogs.addAll(receivedFileHistory);
+      tempFileHistoryLogs.addAll(sentHistory);
+
+      tempFileHistoryLogs
+          .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
+
+      displayFilesHistory = tempFileHistoryLogs;
+      setStatus(GET_ALL_FILE_HISTORY, Status.Done);
+    } catch (e) {
+      setStatus(GET_ALL_FILE_HISTORY, Status.Error);
     }
-
-    getAllFileTransferData(listFileTypeSelect: listType);
-    notifyListeners();
-  }
-
-  void filterByAllFileType(List<FileType> filetype) async {
-    typeSelected = HistoryType.all;
-    displayFilesHistory = filterFileHistory(typeSelected);
-    listType = filetype;
-    notifyListeners();
   }
 
   getrecentHistoryFiles() async {

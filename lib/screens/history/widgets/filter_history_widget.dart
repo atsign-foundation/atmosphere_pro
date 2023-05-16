@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 class FilterHistoryWidget extends StatefulWidget {
   final Offset? position;
   final Function(HistoryType historyType)? onSelectedFilter;
-  final Function(FileType fileType)? onSelectedOptionalFilter;
-  final Function(List<FileType> list)? onSelectedAll;
+  final Function(List<FileType> fileTypes)? onSelectedOptionalFilter;
   final HistoryType? typeSelected;
   final List<FileType>? listFileType;
 
@@ -20,7 +19,6 @@ class FilterHistoryWidget extends StatefulWidget {
     this.typeSelected,
     this.onSelectedOptionalFilter,
     this.listFileType,
-    this.onSelectedAll,
   }) : super(key: key);
 
   @override
@@ -29,6 +27,8 @@ class FilterHistoryWidget extends StatefulWidget {
 
 class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
   bool isShowOptional = false;
+  List<FileType> listFileType = [];
+
   final List<HistoryType> historyTypes = [
     HistoryType.received,
     HistoryType.send,
@@ -43,6 +43,12 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
     FileType.zips,
     FileType.other,
   ];
+
+  @override
+  void initState() {
+    listFileType = widget.listFileType ?? [];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +106,8 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                                   bottom: Radius.circular(13),
                                 ),
                           onTap: () {
-                            setState(() {
-                              isShowOptional = !isShowOptional;
-                            });
-                            widget.onSelectedAll?.call(
-                              optionalHistoryTypes,
+                            widget.onSelectedFilter?.call(
+                              historyTypes[index],
                             );
                           },
                         );
@@ -127,14 +130,13 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                     },
                   ),
                 ),
-                if (isShowOptional)
+                if (isShowOptional) ...[
                   Divider(
                     color: ColorConstants.disableColor,
                     height: 0,
                     thickness: 1,
                     // thickness: 0.65,
                   ),
-                if (isShowOptional)
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 30.toWidth,
                     child: ListView.separated(
@@ -144,7 +146,8 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                       itemCount: optionalHistoryTypes.length,
                       separatorBuilder: (context, index) {
                         return Divider(
-                          color: widget.typeSelected == HistoryType.all
+                          color: listFileType
+                              .contains(optionalHistoryTypes[index])
                               ? ColorConstants.orange
                               : ColorConstants.disableColor,
                           height: 0,
@@ -153,38 +156,32 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                         );
                       },
                       itemBuilder: (context, index) {
-                        if (index == optionalHistoryTypes.length - 1) {
-                          return FilterOptionItem(
-                            icon: optionalHistoryTypes[index].icon,
-                            title: optionalHistoryTypes[index].text,
-                            isOptional: true,
-                            isCheck: (widget.listFileType ?? [])
-                                .contains(optionalHistoryTypes[index]),
-                            borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(13),
-                            ),
-                            onTap: () {
-                              widget.onSelectedOptionalFilter?.call(
-                                optionalHistoryTypes[index],
-                              );
-                            },
-                          );
-                        }
                         return FilterOptionItem(
                           icon: optionalHistoryTypes[index].icon,
                           title: optionalHistoryTypes[index].text,
                           isOptional: true,
-                          isCheck: (widget.listFileType ?? [])
+                          isCheck: listFileType
                               .contains(optionalHistoryTypes[index]),
+                          borderRadius: index == optionalHistoryTypes.length - 1
+                              ? BorderRadius.vertical(
+                                  bottom: Radius.circular(13),
+                                )
+                              : null,
                           onTap: () {
-                            widget.onSelectedOptionalFilter?.call(
-                              optionalHistoryTypes[index],
-                            );
+                            final fileType = optionalHistoryTypes[index];
+                            if (listFileType.isNotEmpty &&
+                                listFileType.contains(fileType)) {
+                              listFileType.remove(fileType);
+                            } else {
+                              listFileType.add(fileType);
+                            }
+                            widget.onSelectedOptionalFilter?.call(listFileType);
                           },
                         );
                       },
                     ),
                   ),
+                ]
               ],
             ),
           ),
