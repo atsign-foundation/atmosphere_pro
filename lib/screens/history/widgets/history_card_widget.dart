@@ -16,10 +16,11 @@ import 'package:intl/intl.dart';
 
 class HistoryCardWidget extends StatefulWidget {
   final FileHistory? fileHistory;
+  final Function()? onDownloaded;
 
   const HistoryCardWidget({
     Key? key,
-    this.fileHistory,
+    this.fileHistory, this.onDownloaded,
   }) : super(key: key);
 
   @override
@@ -314,6 +315,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                     singleFile: widget.fileHistory!.fileDetails!.files![index],
                     isShowDate: false,
                     margin: EdgeInsets.fromLTRB(36, 6, 20, 0),
+                    onDownloaded: widget.onDownloaded,
                   );
                 },
               )

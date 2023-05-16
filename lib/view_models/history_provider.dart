@@ -47,6 +47,8 @@ class HistoryProvider extends BaseModel {
       allFilesHistory = [],
       displayFilesHistory = [];
 
+  List<FileType> listType = [];
+
   List<FileTransfer> receivedHistoryLogs = [];
 
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
@@ -776,6 +778,7 @@ class HistoryProvider extends BaseModel {
                         files.add(file);
                         break;
                       }
+                      print(file);
                     }
                   },
                 );
@@ -876,7 +879,35 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  void filterByFileType(FileType fileType) {}
+  void filterByFileType(FileType fileType)  {
+    if (!listType.contains(fileType)) {
+      listType.add(fileType);
+    } else {
+      listType.remove(fileType);
+    }
+
+    getAllFileTransferData(listFileTypeSelect: listType);
+    notifyListeners();
+  }
+
+  Future<void> filterByAllFileType(List<FileType> filetype) async {
+    if(typeSelected != HistoryType.all){
+      return;
+    }
+    List<FileHistory> tempFileHistoryLogs = [];
+
+    await getAllFileTransferData(listFileTypeSelect: filetype);
+    await getSentHistory(listFileTypeSelect: filetype);
+
+    tempFileHistoryLogs.addAll(receivedFileHistory);
+    tempFileHistoryLogs.addAll(sentHistory);
+
+    tempFileHistoryLogs
+        .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
+
+    displayFilesHistory = tempFileHistoryLogs;
+    notifyListeners();
+  }
 
   getrecentHistoryFiles() async {
     // finding last 15 received files data for recent tab
@@ -1410,11 +1441,10 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue = await AtClientManager.getInstance()
-            .atClient
-            .get(atKey)
-            // ignore: return_of_invalid_type_from_catch_error
-            .catchError((e) {
+        AtValue atvalue =
+            await AtClientManager.getInstance().atClient.get(atKey)
+                // ignore: return_of_invalid_type_from_catch_error
+                .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);

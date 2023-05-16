@@ -1,11 +1,17 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_contacts_flutter/utils/text_styles.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_card_widget.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BlockedContactScreen extends StatefulWidget {
   const BlockedContactScreen({Key? key}) : super(key: key);
@@ -17,6 +23,7 @@ class BlockedContactScreen extends StatefulWidget {
 class _BlockedContactScreenState extends State<BlockedContactScreen> {
   late ContactService _contactService;
   late TextEditingController searchController;
+  bool isUnblocking = false;
 
   @override
   void initState() {
@@ -185,9 +192,8 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
           contact: contact!,
           onTap: () async {
             print("unblock");
-            await _contactService.blockUnblockContact(
-              contact: contactsForAlphabet[index].contact!,
-              blockAction: false,
+            await unblockAtsign(
+              contact,
             );
           },
           suffixIcon: Padding(
@@ -257,5 +263,31 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
     }
 
     return contactsForAlphabet;
+  }
+
+  Future<void> unblockAtsign(AtContact atsign) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        Uint8List? image;
+        if (atsign.tags != null && atsign.tags?['image'] != null) {
+          List<int> intList = atsign.tags?['image'].cast<int>();
+          image = Uint8List.fromList(intList);
+        }
+        return ConfirmationDialog(
+          title: atsign.atSign!,
+          heading: 'Do you want to unblock this atSign?',
+          atsign: atsign.atSign,
+          image: image,
+          onYesPressed: () async {
+            await _contactService
+                .blockUnblockContact(contact: atsign, blockAction: false)
+                .then(
+                  (value) => Navigator.pop(context),
+                );
+          },
+        );
+      },
+    );
   }
 }

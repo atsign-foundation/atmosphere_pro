@@ -33,9 +33,8 @@ class FileUtils {
                     NavService.navKey.currentContext!,
                     listen: false)
                 .getAllFiles();
-
-            onComplete;
           }
+          onComplete;
         },
         deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
       ),

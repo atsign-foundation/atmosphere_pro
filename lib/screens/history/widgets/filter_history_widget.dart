@@ -8,19 +8,17 @@ import 'package:flutter/material.dart';
 class FilterHistoryWidget extends StatefulWidget {
   final Offset? position;
   final Function(HistoryType historyType)? onSelectedFilter;
-  final Function(FileType fileType)? onSelectedOptionalFilter;
-  final Function(bool)? setOrder;
-  final bool isDesc;
+  final Function(List<FileType> fileTypes)? onSelectedOptionalFilter;
   final HistoryType? typeSelected;
+  final List<FileType>? listFileType;
 
   FilterHistoryWidget({
     Key? key,
     this.position,
     this.onSelectedFilter,
-    this.setOrder,
-    this.isDesc = true,
     this.typeSelected,
     this.onSelectedOptionalFilter,
+    this.listFileType,
   }) : super(key: key);
 
   @override
@@ -29,6 +27,8 @@ class FilterHistoryWidget extends StatefulWidget {
 
 class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
   bool isShowOptional = false;
+  List<FileType> listFileType = [];
+
   final List<HistoryType> historyTypes = [
     HistoryType.received,
     HistoryType.send,
@@ -43,6 +43,12 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
     FileType.zips,
     FileType.other,
   ];
+
+  @override
+  void initState() {
+    listFileType = widget.listFileType ?? [];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,31 +88,27 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                       );
                     },
                     itemBuilder: (context, index) {
-                      if (index == 0 || index == historyTypes.length - 1) {
+                      if (historyTypes[index] == HistoryType.all) {
                         return FilterOptionItem(
                           icon: historyTypes[index].icon,
                           title: historyTypes[index].text,
                           isCheck: historyTypes[index] == widget.typeSelected,
-                          isAllOption: historyTypes[index] == HistoryType.all,
+                          isAllOption: true,
+                          isShowOptional: isShowOptional,
                           allOptionOnTap: () {
                             setState(() {
                               isShowOptional = !isShowOptional;
                             });
                           },
-                          borderRadius: index == 0
-                              ? BorderRadius.vertical(
-                                  top: Radius.circular(13),
-                                )
-                              : isShowOptional ||
-                                      widget.typeSelected == HistoryType.all
-                                  ? null
-                                  : BorderRadius.vertical(
-                                      bottom: Radius.circular(13),
-                                    ),
+                          borderRadius: isShowOptional
+                              ? null
+                              : BorderRadius.vertical(
+                                  bottom: Radius.circular(13),
+                                ),
                           onTap: () {
-                            widget.onSelectedFilter?.call(
-                              historyTypes[index],
-                            );
+                            setState(() {
+                              isShowOptional = !isShowOptional;
+                            });
                           },
                         );
                       }
@@ -114,6 +116,11 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                         icon: historyTypes[index].icon,
                         title: historyTypes[index].text,
                         isCheck: historyTypes[index] == widget.typeSelected,
+                        borderRadius: index == 0
+                            ? BorderRadius.vertical(
+                                top: Radius.circular(13),
+                              )
+                            : null,
                         onTap: () {
                           widget.onSelectedFilter?.call(
                             historyTypes[index],
@@ -123,14 +130,13 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                     },
                   ),
                 ),
-                if (isShowOptional || widget.typeSelected == HistoryType.all)
+                if (isShowOptional) ...[
                   Divider(
                     color: ColorConstants.disableColor,
                     height: 0,
                     thickness: 1,
                     // thickness: 0.65,
                   ),
-                if (isShowOptional || widget.typeSelected == HistoryType.all)
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 30.toWidth,
                     child: ListView.separated(
@@ -149,101 +155,36 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                         );
                       },
                       itemBuilder: (context, index) {
-                        if (index == optionalHistoryTypes.length - 1) {
-                          return FilterOptionItem(
-                            icon: optionalHistoryTypes[index].icon,
-                            title: optionalHistoryTypes[index].text,
-                            isDisable: true,
-                            isCheck: false,
-                            borderRadius: index == 0
-                                ? BorderRadius.vertical(
-                                    top: Radius.circular(13),
-                                  )
-                                : BorderRadius.vertical(
-                                    bottom: Radius.circular(13),
-                                  ),
-                            onTap: () {
-                              widget.onSelectedOptionalFilter?.call(
-                                optionalHistoryTypes[index],
-                              );
-                            },
-                          );
-                        }
                         return FilterOptionItem(
                           icon: optionalHistoryTypes[index].icon,
                           title: optionalHistoryTypes[index].text,
-                          isDisable: true,
-                          isCheck: false,
+                          isOptional: true,
+                          isCheck: listFileType
+                              .contains(optionalHistoryTypes[index]),
+                          borderRadius: index == optionalHistoryTypes.length - 1
+                              ? BorderRadius.vertical(
+                                  bottom: Radius.circular(13),
+                                )
+                              : null,
                           onTap: () {
-                            widget.onSelectedOptionalFilter?.call(
-                              optionalHistoryTypes[index],
-                            );
+                            final fileType = optionalHistoryTypes[index];
+                            if (listFileType.isNotEmpty) {
+                              final check = listFileType.contains(fileType);
+                              if (check) {
+                                listFileType.remove(fileType);
+                              } else {
+                                listFileType.add(fileType);
+                              }
+                            } else {
+                              listFileType.add(fileType);
+                            }
+                            widget.onSelectedOptionalFilter?.call(listFileType);
                           },
                         );
                       },
                     ),
                   ),
-                /*SizedBox(
-                  width: MediaQuery.of(context).size.width - 30.toWidth,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: FileType.values.length,
-                    itemBuilder: (context, index) {
-                      return FilterOptionItem(
-                        icon: FileType.values[index].icon,
-                        title: FileType.values[index].text,
-                        onTap: (){
-
-                        },
-                      );
-                    },
-                  ),
-                ),*/
-                /*Container(
-                  width: MediaQuery.of(context).size.width - 30.toWidth,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(12),
-                    ),
-                  ),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      if (index > 2) {
-                        return _buildFilterOptionItem(
-                          icon: filterOptionsList.keys.elementAt(index),
-                          title: filterOptionsList.values.elementAt(index),
-                          isCheck: true,
-                          isDisable: true,
-                          index: index,
-                        );
-                      } else {
-                        return _buildFilterOptionItem(
-                          icon: filterOptionsList.keys.elementAt(index),
-                          title: filterOptionsList.values.elementAt(index),
-                          isCheck: false,
-                          index: index,
-                        );
-                      }
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        color: (index > 2 && true)
-                            ? ColorConstants.disableColor
-                            : ColorConstants.lightSliver,
-                        height: 0,
-                        indent: 0,
-                        thickness: 0.65,
-                      );
-                    },
-                    itemCount: filterOptionsList.length,
-                  ),
-                ),*/
+                ]
               ],
             ),
           ),
