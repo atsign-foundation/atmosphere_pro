@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -701,7 +702,8 @@ class CommonUtilityFunctions {
                             padding: const EdgeInsets.only(left: 32),
                             child: InkWell(
                               onTap: () {
-                                Navigator.pop(NavService.navKey.currentContext!);
+                                Navigator.pop(
+                                    NavService.navKey.currentContext!);
                               },
                               child: Icon(
                                 Icons.clear,
@@ -751,12 +753,11 @@ class CommonUtilityFunctions {
                               padding: const EdgeInsets.only(left: 6.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  await openFilePath(
-                                      BackendService.getInstance()
-                                              .downloadDirectory!
-                                              .path +
-                                          Platform.pathSeparator +
-                                          fileDetail.fileName!);
+                                  Navigator.pop(
+                                      NavService.navKey.currentContext!);
+                                  Navigator.pop(
+                                      NavService.navKey.currentContext!);
+                                  await FileUtils.moveToSendFile(path);
                                 },
                                 child: SvgPicture.asset(
                                   AppVectors.icSendFile,

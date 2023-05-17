@@ -343,6 +343,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                           ContactAttachmentCard(
                             fileTransfer: files[index],
                             singleFile: file,
+                            fromContact: true,
                           ),
                         );
                       }

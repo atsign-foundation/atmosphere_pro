@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
@@ -15,9 +16,12 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,6 +37,7 @@ class ContactAttachmentCard extends StatefulWidget {
   final bool isShowDate;
   final EdgeInsetsGeometry? margin;
   final Function()? onDownloaded;
+  final bool fromContact;
 
   const ContactAttachmentCard({
     Key? key,
@@ -41,6 +46,7 @@ class ContactAttachmentCard extends StatefulWidget {
     this.isShowDate = true,
     this.margin,
     this.onDownloaded,
+    this.fromContact = false,
   }) : super(key: key);
 
   @override
@@ -50,11 +56,15 @@ class ContactAttachmentCard extends StatefulWidget {
 class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
   bool isDownloaded = false;
   bool isDownloading = false;
+  late WelcomeScreenProvider _welcomeScreenProvider;
+  late FileTransferProvider _fileTransferProvider;
 
   @override
   void initState() {
     super.initState();
     initDownloads();
+    _welcomeScreenProvider = Provider.of(context, listen: false);
+    _fileTransferProvider = Provider.of(context, listen: false);
   }
 
   void initDownloads() async {
@@ -191,11 +201,15 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          await openFilePath(BackendService.getInstance()
+                          if (widget.fromContact) {
+                            Navigator.pop(context);
+                          }
+                          await FileUtils.moveToSendFile(
+                              BackendService.getInstance()
                                   .downloadDirectory!
                                   .path +
-                              Platform.pathSeparator +
-                              widget.singleFile.name!);
+                                  Platform.pathSeparator +
+                                  widget.singleFile.name!);
                         },
                         child: SvgPicture.asset(
                           AppVectors.icSendFile,
@@ -474,11 +488,16 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                     padding: const EdgeInsets.only(left: 6.0),
                     child: GestureDetector(
                       onTap: () async {
-                        await openFilePath(BackendService.getInstance()
-                                .downloadDirectory!
-                                .path +
-                            Platform.pathSeparator +
-                            (widget.singleFile.name ?? ''));
+                        if (widget.fromContact) {
+                          Navigator.pop(context);
+                        }
+                        Navigator.pop(context);
+                        await FileUtils.moveToSendFile(
+                            BackendService.getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                Platform.pathSeparator +
+                                widget.singleFile.name!);
                       },
                       child: SvgPicture.asset(
                         AppVectors.icSendFile,
