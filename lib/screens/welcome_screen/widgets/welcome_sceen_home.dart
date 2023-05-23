@@ -275,7 +275,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   Widget _buildChoiceContact() {
     return InkWell(
       onTap: () {
-        _choiceContact(clearSelectedContact: true);
+        _choiceContact(clearSelectedContact: false);
       },
       child: Container(
         height: 56.toHeight,

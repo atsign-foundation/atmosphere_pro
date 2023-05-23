@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ class ContactScreen extends StatefulWidget {
 class _ContactScreenState extends State<ContactScreen>
     with SingleTickerProviderStateMixin {
   late TrustedContactProvider trustedProvider;
+  late CreateGroupProvider createGroupProvider;
   late GroupService _groupService;
   late TabController _tabController;
   late TextEditingController searchController;
@@ -31,6 +33,7 @@ class _ContactScreenState extends State<ContactScreen>
   @override
   void initState() {
     trustedProvider = context.read<TrustedContactProvider>();
+    createGroupProvider = context.read<CreateGroupProvider>();
     _groupService = GroupService();
     _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
     searchController = TextEditingController();
@@ -60,8 +63,10 @@ class _ContactScreenState extends State<ContactScreen>
                     );
                   },
                 );
-
-                if (result == true) {
+                if (createGroupProvider.selectedImageByteData != null) {
+                  createGroupProvider.removeSelectedImage();
+                }
+                if (result ?? false) {
                   await _groupService.fetchGroupsAndContacts();
                   setState(() {});
                 }
@@ -77,7 +82,7 @@ class _ContactScreenState extends State<ContactScreen>
                 );
 
                 if (result == true) {
-                  reloadPage();
+                  await reloadPage();
                 }
               }
             },
@@ -189,7 +194,7 @@ class _ContactScreenState extends State<ContactScreen>
                     );
 
                     if (result != false) {
-                      reloadPage();
+                      await reloadPage();
                     }
                   },
                 ),
@@ -261,7 +266,7 @@ class _ContactScreenState extends State<ContactScreen>
     );
   }
 
-  void reloadPage() async {
+  Future<void> reloadPage() async {
     await Future.delayed(Duration(milliseconds: 500), () async {
       await _groupService.fetchGroupsAndContacts();
       setState(() {});

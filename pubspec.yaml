@@ -87,10 +87,7 @@ dependency_overrides:
   biometric_storage: ^4.1.3
   file_picker: ^4.5.1
   at_contacts_group_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets
-      path: packages/at_contacts_group_flutter
-      ref: trunk
+    path: ../../user/at_widgets/packages/at_contacts_group_flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
