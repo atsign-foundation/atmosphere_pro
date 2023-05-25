@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -7,10 +8,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class EmptyContactsWidget extends StatelessWidget {
   final ListContactType? contactsType;
+  final Function() onTapAddButton;
 
   const EmptyContactsWidget({
     Key? key,
     this.contactsType,
+    required this.onTapAddButton,
   }) : super(key: key);
 
   @override
@@ -120,7 +123,7 @@ class EmptyContactsWidget extends StatelessWidget {
             ),
             InkWell(
               borderRadius: BorderRadius.circular(46),
-              onTap: () async {},
+              onTap: onTapAddButton,
               child: Container(
                 decoration: BoxDecoration(
                   color: ColorConstants.orange,

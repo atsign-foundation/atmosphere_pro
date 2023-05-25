@@ -20,6 +20,7 @@ class ListContactWidget extends StatefulWidget {
   final List<GroupContactsModel>? selectedContacts;
   final ListContactType? contactsType;
   final String searchKeywords;
+  final Function()? onTapAddButton;
 
   const ListContactWidget({
     Key? key,
@@ -32,6 +33,7 @@ class ListContactWidget extends StatefulWidget {
     this.selectedContacts,
     this.contactsType,
     this.searchKeywords = '',
+    this.onTapAddButton,
   }) : super(key: key);
 
   @override
@@ -83,6 +85,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
           if (_filteredList.isEmpty) {
             return EmptyContactsWidget(
               contactsType: widget.contactsType,
+              onTapAddButton: widget.onTapAddButton ?? () {},
             );
           }
           // renders contacts according to the initial alphabet

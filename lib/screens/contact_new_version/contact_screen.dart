@@ -197,6 +197,20 @@ class _ContactScreenState extends State<ContactScreen>
                       await reloadPage();
                     }
                   },
+                  onTapAddButton: () async {
+                    final result = await showModalBottomSheet<bool?>(
+                      context: context,
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return AddContactScreen();
+                      },
+                    );
+                    if (result == true) {
+                      await reloadPage();
+                    }
+                  },
                 ),
                 ListContactWidget(
                   contactsType: ListContactType.trusted,
@@ -231,6 +245,26 @@ class _ContactScreenState extends State<ContactScreen>
                         ),
                       ),
                     );
+                  },
+                  onTapAddButton: () async {
+                    final result = await showModalBottomSheet<bool?>(
+                      context: context,
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return CreateGroupScreen(
+                          trustContacts: trustedProvider.trustedContacts,
+                        );
+                      },
+                    );
+                    if (createGroupProvider.selectedImageByteData != null) {
+                      createGroupProvider.removeSelectedImage();
+                    }
+                    if (result ?? false) {
+                      await _groupService.fetchGroupsAndContacts();
+                      setState(() {});
+                    }
                   },
                 ),
               ],

@@ -25,6 +25,11 @@ class CreateGroupProvider extends BaseModel {
     }
   }
 
+  void resetData() {
+    listContact = [];
+    notifyListeners();
+  }
+
   void removeSelectedImage() {
     selectedImageByteData = null;
   }

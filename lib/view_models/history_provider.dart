@@ -85,6 +85,11 @@ class HistoryProvider extends BaseModel {
     recentFile = [];
     individualSentFileId = {};
     receivedItemsId = {};
+    tempSentHistory = [];
+    receivedFileHistory = [];
+    allFilesHistory = [];
+    displayFilesHistory = [];
+    notifyListeners();
   }
 
   String get getSearchText => _historySearchText;
