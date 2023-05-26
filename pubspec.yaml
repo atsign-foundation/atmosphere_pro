@@ -93,7 +93,11 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_widgets
       path: packages/at_contacts_group_flutter
       ref: trunk
-
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      path: packages/at_contacts_flutter
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
