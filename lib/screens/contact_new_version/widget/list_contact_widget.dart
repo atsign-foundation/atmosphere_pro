@@ -80,6 +80,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
         } else {
           // filtering contacts and groups
           var _filteredList = <GroupContactsModel?>[];
+          List<GroupContactsModel> trustedContacts = [];
           _filteredList = getAllContactList(snapshot.data ?? []);
 
           if (_filteredList.isEmpty) {
@@ -88,6 +89,24 @@ class _ListContactWidgetState extends State<ListContactWidget> {
               onTapAddButton: widget.onTapAddButton ?? () {},
             );
           }
+
+          if (widget.contactsType == ListContactType.trusted) {
+            for (var element in (widget.trustedContacts ?? [])) {
+              trustedContacts.add(
+                GroupContactsModel(
+                  contact: element,
+                ),
+              );
+            }
+
+            if (trustedContacts.isEmpty) {
+              return EmptyContactsWidget(
+                contactsType: widget.contactsType,
+                onTapAddButton: widget.onTapAddButton ?? () {},
+              );
+            }
+          }
+
           // renders contacts according to the initial alphabet
           return Scrollbar(
             radius: const Radius.circular(11),
