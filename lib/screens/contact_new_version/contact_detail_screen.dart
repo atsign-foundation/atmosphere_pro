@@ -52,7 +52,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     historyProvider =
         Provider.of<HistoryProvider>(NavService.navKey.currentContext!);
     checkTrustedContact();
-    nicknameController.text = widget.contact.tags!['nickname'] ?? "";
+    nicknameController.text = widget.contact.tags?['nickname'] ?? "";
     super.initState();
   }
 
