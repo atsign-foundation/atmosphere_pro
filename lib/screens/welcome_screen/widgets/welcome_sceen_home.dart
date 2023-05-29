@@ -15,12 +15,12 @@ import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/images.dart';
@@ -63,21 +63,20 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 130,
         title: "${BackendService.getInstance().currentAtSign ?? ''} ",
         description: '',
+        titleStyle: TextStyle(
+          fontSize: 25.toFont,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              ImageConstants.welcomeBackground,
-            ),
-            fit: BoxFit.fill,
-          ),
-          color: Colors.white,
+          color: ColorConstants.background,
         ),
         width: double.infinity,
         height: SizeConfig().screenHeight,
         child: SingleChildScrollView(
           controller: scrollController,
+          padding: EdgeInsets.only(bottom: 100.toHeight),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 30.toWidth,
@@ -87,54 +86,20 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig().isTablet(context)
-                              ? 33.toWidth
-                              : 0,
-                        ),
-                        child: Text(
-                          TextStrings().selectFiles,
-                          style: TextStyle(
-                            fontSize: 20.toFont,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig().isTablet(context) ? 33.toWidth : 0,
+                  ),
+                  child: Text(
+                    TextStrings().selectFiles,
+                    style: TextStyle(
+                      fontSize: 15.toFont,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Consumer<FileTransferProvider>(
-                        builder: (context, provider, _) {
-                      if (provider.selectedFiles.isNotEmpty) {
-                        return InkWell(
-                          onTap: selectFiles,
-                          child: Container(
-                            height: 40.toHeight,
-                            width: 40.toHeight,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.all(10),
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.white,
-                              size: 15.toFont,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return SizedBox();
-                      }
-                    }),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                Consumer<FileTransferProvider>(
-                    builder: (context, provider, _) {
+                const SizedBox(height: 10),
+                Consumer<FileTransferProvider>(builder: (context, provider, _) {
                   if (provider.selectedFiles.isNotEmpty) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,40 +111,22 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           children: List.generate(
                             provider.selectedFiles.length,
                             (index) {
-                              return SizedBox(
-                                width: (MediaQuery.of(context).size.width -
-                                        60.toWidth) /
-                                    2,
-                                child: Stack(
-                                  children: [
-                                    FileCard(
-                                      fileDetail:
-                                          provider.selectedFiles[index],
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: -5,
-                                      child: InkWell(
-                                        onTap: () {
-                                          provider.deleteFiles(index);
-                                          provider.calculateSize();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppVectors.icClose,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              return FileCard(
+                                fileDetail: provider.selectedFiles[index],
+                                deleteFunc: () {
+                                  provider.deleteFiles(index);
+                                  provider.calculateSize();
+                                },
+                                onTap: () {
+                                  openFile(
+                                    provider.selectedFiles[index],
+                                  );
+                                },
                               );
                             },
                           ),
                         ),
-                        SizedBox(
-                          height: provider.selectedFiles.length < 3
-                              ? 71.toHeight
-                              : 0,
-                        )
+                        _buildAddFilesOption()
                       ],
                     );
                   } else {
@@ -187,15 +134,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       onTap: selectFiles,
                       child: Container(
                         height: 142.toHeight,
-                        width: 350.toWidth,
+                        width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            colors: [
-                              ColorConstants.orangeColor,
-                              ColorConstants.yellow.withOpacity(0.65),
-                            ],
-                          ),
                         ),
                         padding: EdgeInsets.all(2),
                         child: Container(
@@ -204,12 +145,22 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                             color: Colors.white,
                           ),
                           child: Center(
-                            child: Text(
-                              'Select file(s) to transfer',
-                              style: TextStyle(
-                                color: ColorConstants.orangeColor,
-                                fontSize: 16.toFont,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  ImageConstants.uploadIcon,
+                                ),
+                                SizedBox(height: 10.toHeight),
+                                Text(
+                                  'Upload your file(s)',
+                                  style: TextStyle(
+                                    color: ColorConstants.gray,
+                                    fontSize: 15.toFont,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -217,79 +168,50 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     );
                   }
                 }),
-                SizedBox(height: 16.toHeight),
+                SizedBox(height: 27.toHeight),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
-                            left: SizeConfig().isTablet(context)
-                                ? 30.toWidth
-                                : 0),
+                          left: SizeConfig().isTablet(context) ? 30.toWidth : 0,
+                        ),
                         child: Text(
                           TextStrings().selectContacts,
                           style: TextStyle(
-                            fontSize: 20.toFont,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15.toFont,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: context
-                          .watch<WelcomeScreenProvider>()
-                          .selectedContacts
-                          .isNotEmpty,
-                      child: InkWell(
-                        onTap: () {
-                          _choiceContact();
-                        },
-                        child: Container(
-                          height: 40.toHeight,
-                          width: 40.toHeight,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.white,
-                            size: 15.toFont,
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
-                SizedBox(height: 16.toHeight),
+                SizedBox(height: 10.toHeight),
                 Consumer<WelcomeScreenProvider>(
                   builder: (context, provider, _) {
                     if (provider.scrollToBottom) {
                       scrollToBottom();
                     }
 
-                    return provider.selectedContacts.isEmpty
-                        ? _buildChoiceContact()
-                        : OverlappingContacts(
+                    return provider.selectedContacts.isNotEmpty
+                        ? OverlappingContacts(
                             selectedList: provider.selectedContacts,
-                            onchange: (isUpdate) {
-                              setState(() {});
-                            },
-                          );
+                          )
+                        : SizedBox();
                   },
                 ),
-                SizedBox(height: 16.toHeight),
+                _buildChoiceContact(),
+                SizedBox(height: 27.toHeight),
                 Container(
                   height: 94.toHeight,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: ColorConstants.grey),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
                   child: TextField(
                     controller: noteController,
                     maxLines: 5,
@@ -302,7 +224,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       hintStyle: TextStyle(
                         fontSize: 15.toFont,
                         fontWeight: FontWeight.w500,
-                        color: ColorConstants.grey,
+                        color: ColorConstants.textBlack,
                       ),
                       border: InputBorder.none,
                       labelStyle: TextStyle(fontSize: 15.toFont),
@@ -317,9 +239,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   onTap: sendFileWithFileBin,
                   child: Container(
                     height: 67.toHeight,
-                    width: 350.toWidth,
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.circular(247),
                       gradient: LinearGradient(
                         colors: [Color(0xffF05E3F), Color(0xffe9a642)],
                         stops: [0.1, 0.8],
@@ -332,17 +254,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                           Text(
                             'Transfer Now',
                             style: TextStyle(
-                                fontSize: 20.toFont, color: Colors.white),
+                              fontSize: 20.toFont,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 20.toFont)
                         ],
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 100)
               ],
             ),
           ),
@@ -354,25 +275,71 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   Widget _buildChoiceContact() {
     return InkWell(
       onTap: () {
-        _choiceContact(clearSelectedContact: true);
+        _choiceContact(clearSelectedContact: false);
       },
+      child: Container(
+        height: 56.toHeight,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Color(0xFFF6DED5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20.toWidth, right: 20.toWidth),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Add atSigns',
+                style: TextStyle(
+                  color: ColorConstants.orange,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Icon(
+                Icons.add_circle_outline,
+                size: 27,
+                color: ColorConstants.orange,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddFilesOption() {
+    return InkWell(
+      onTap: selectFiles,
       child: Container(
         height: 61.toHeight,
         width: double.infinity,
         decoration: BoxDecoration(
+          color: ColorConstants.yellow.withOpacity(0.19),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: ColorConstants.grey),
         ),
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: 20.toWidth),
-          child: Text(
-            'Select atSign',
-            style: TextStyle(
-              color: ColorConstants.grey,
-              fontSize: 15.toFont,
-              fontWeight: FontWeight.w500,
-            ),
+          padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Add Files',
+                style: TextStyle(
+                  color: ColorConstants.yellow,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Icon(
+                Icons.add_circle_outline,
+                size: 27,
+                color: ColorConstants.yellow,
+              )
+            ],
           ),
         ),
       ),
@@ -515,5 +482,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         atSignList: atSignList,
       ),
     );
+  }
+
+  openFile(PlatformFile file) async {
+    final result = await OpenFile.open(file.path);
+
+    if (result.type != ResultType.done) {
+      SnackbarService().showSnackbar(
+        context,
+        result.message,
+      );
+    }
   }
 }

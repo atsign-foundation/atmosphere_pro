@@ -25,7 +25,7 @@ class ContactInitial extends StatelessWidget {
     if (initials!.length < 3) {
       index = initials!.length;
     } else {
-      index = 3;
+      index = 2;
     }
 
     return Container(
@@ -39,7 +39,7 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials!.substring((index == 1) ? 0 : 1, index).toUpperCase(),
+          initials!.substring(0, index).toUpperCase(),
           style: CustomTextStyles.whiteBold(size: (size! ~/ 3)),
         ),
       ),

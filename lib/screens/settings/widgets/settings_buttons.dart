@@ -1,6 +1,7 @@
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton({
@@ -19,28 +20,26 @@ class SettingsButton extends StatelessWidget {
     return MaterialButton(
       elevation: 0,
       onPressed: onPressed,
-      color: ColorConstants.fadedGreyN,
+      color: ColorConstants.jetColor,
       shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: ColorConstants.grey,
-          width: 1,
-          style: BorderStyle.solid,
-        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: Row(
           children: [
-            Image.asset(
+            SvgPicture.asset(
               image,
+              color: ColorConstants.textBoxBg,
               height: 27,
               width: 27,
             ),
-            SizedBox(width: 12),
+            SizedBox(width: 24),
             Text(
               buttonText.toString(),
-              style: CustomTextStyles.greySemiBold18,
+              style: CustomTextStyles.whiteMedium18.copyWith(
+                color: ColorConstants.textBoxBg,
+              ),
             ),
           ],
         ),

@@ -10,11 +10,9 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/contact_card.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class OverlappingContacts extends StatefulWidget {
@@ -64,60 +62,38 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
           itemBuilder: (context, index) {
             Uint8List? image =
                 _atsignImages[widget.selectedList[index]?.contact?.atSign];
+            final contactSelected = provider.selectedContacts[index];
 
             return widget.selectedList[index]?.contact != null
-                ? Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8, top: 4),
-                        child: ContactCard(
-                          key: Key(
-                              widget.selectedList[index]!.contact!.atSign ??
-                                  ''),
-                          contact: widget.selectedList[index]!.contact!,
-                          isTrusted: _checkTrustedContact(
-                              widget.selectedList[index]!.contact!),
-                        ),
-                      ),
-                      Positioned(
-                        top: -5,
-                        right: -5,
-                        child: InkWell(
-                          onTap: () {
-                            provider.removeContacts(
-                                provider.selectedContacts[index]);
-                          },
-                          child: SvgPicture.asset(
-                            AppVectors.icClose,
-                          ),
-                        ),
-                      )
-                    ],
+                ? ContactCard(
+                    key: Key(widget.selectedList[index]!.contact!.atSign ?? ''),
+                    contact: widget.selectedList[index]!.contact!,
+                    isTrusted: _checkTrustedContact(
+                        widget.selectedList[index]!.contact!),
+                    deleteFunc: () {
+                      provider.removeContacts(contactSelected);
+                    },
                   )
                 : ContactListTile(
-                    isSelected: provider.selectedContacts
-                        .contains(provider.selectedContacts[index]),
+                    isSelected:
+                        provider.selectedContacts.contains(contactSelected),
                     onAdd: () {},
                     onRemove: () {
-                      provider.removeContacts(provider.selectedContacts[index]);
+                      provider.removeContacts(contactSelected);
                       widget.onchange!(true);
                     },
-                    name: provider.selectedContacts[index].contact?.atSign
-                            ?.substring(1) ??
-                        provider.selectedContacts[index].group?.groupName
-                            ?.substring(0),
-                    atSign: provider.selectedContacts[index].contact?.atSign ??
-                        '${provider.selectedContacts[index].group?.members?.length.toString()} Members',
+                    name: contactSelected.contact?.atSign?.substring(1) ??
+                        contactSelected.group?.groupName?.substring(0),
+                    atSign: contactSelected.contact?.atSign ??
+                        '${contactSelected.group?.members?.length.toString()} Members',
                     image: (image != null)
                         ? CustomCircleAvatar(
                             byteImage: image,
                             nonAsset: true,
                           )
                         : ContactInitial(
-                            initials: provider
-                                    .selectedContacts[index].contact?.atSign ??
-                                provider
-                                    .selectedContacts[index].group?.groupName,
+                            initials: contactSelected.contact?.atSign ??
+                                contactSelected.group?.groupName,
                           ),
                   );
           },

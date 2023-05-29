@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_apk.dart';
@@ -21,7 +21,6 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
-import 'package:atsign_atmosphere_pro/data_models/enums/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +32,7 @@ class MyFilesProvider extends BaseModel {
       receivedVideos = [],
       receivedAudio = [],
       receivedApk = [],
+      receivedZip = [],
       receivedDocument = [],
       recentFile = [],
       allFiles = [],
@@ -51,7 +51,7 @@ class MyFilesProvider extends BaseModel {
   List<Widget> tabs = [Recents()];
 
   Map<String, List<FilesDetail>> filesByAlpha = {};
-  FileType typeSelected = FileType.all;
+  FileType? typeSelected;
 
   init() async {
     await getMyFilesRecords();
@@ -64,6 +64,7 @@ class MyFilesProvider extends BaseModel {
     receivedVideos = [];
     receivedAudio = [];
     receivedApk = [];
+    receivedZip = [];
     receivedDocument = [];
     recentFile = [];
     receivedUnknown = [];
@@ -71,30 +72,27 @@ class MyFilesProvider extends BaseModel {
     tabNames = ['Recents'];
   }
 
-  void changeTypeSelected(FileType type) {
+  void changeTypeSelected(FileType? type) {
     typeSelected = type;
     displayFiles = filterFiles(type);
-    notifyListeners();
   }
 
-  List<FilesDetail> filterFiles(FileType type) {
+  List<FilesDetail> filterFiles(FileType? type) {
     switch (type) {
-      case FileType.all:
-        return allFiles;
       case FileType.photo:
         return receivedPhotos;
       case FileType.video:
         return receivedVideos;
       case FileType.audio:
         return receivedAudio;
-      case FileType.apk:
-        return receivedApk;
-      case FileType.document:
+      case FileType.zips:
+        return receivedZip;
+      case FileType.file:
         return receivedDocument;
-      case FileType.unknown:
+      case FileType.other:
         return receivedUnknown;
       default:
-        return [];
+        return allFiles;
     }
   }
 
@@ -137,6 +135,7 @@ class MyFilesProvider extends BaseModel {
       setStatus(SORT_FILES, Status.Loading);
       receivedAudio = [];
       receivedApk = [];
+      receivedZip = [];
       receivedDocument = [];
       receivedPhotos = [];
       receivedVideos = [];
@@ -167,6 +166,7 @@ class MyFilesProvider extends BaseModel {
               date: fileData.date?.toLocal().toString(),
               type: file.name.split('.').last,
               contactName: fileData.sender,
+              message: fileData.notes,
               fileTransferId: fileData.key);
 
           // check if file exists
@@ -208,11 +208,11 @@ class MyFilesProvider extends BaseModel {
             if (index == -1) {
               receivedDocument.add(fileDetail);
             }
-          } else if (FileTypes.APK_TYPES.contains(fileExtension)) {
-            int index = receivedApk.indexWhere(
+          } else if (FileTypes.ZIP_TYPES.contains(fileExtension)) {
+            int index = receivedZip.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
             if (index == -1) {
-              receivedApk.add(fileDetail);
+              receivedZip.add(fileDetail);
             }
           } else {
             int index = receivedUnknown.indexWhere(
@@ -229,6 +229,22 @@ class MyFilesProvider extends BaseModel {
     } catch (e) {
       setError(SORT_FILES, e.toString());
     }
+  }
+
+  void searchFileByKeyword({
+    required String key,
+    FileType? type,
+  }) {
+    final result = filterFiles(type)
+        .where(
+          (element) => (element.fileName ?? '')
+              .toLowerCase()
+              .trim()
+              .contains(key.toLowerCase().trim()),
+        )
+        .toList();
+    displayFiles = result;
+    notifyListeners();
   }
 
   populateTabs() {
@@ -361,6 +377,7 @@ class MyFilesProvider extends BaseModel {
               date: fileData.date?.toLocal().toString(),
               type: file.name!.split('.').last,
               contactName: fileData.sender,
+              message: fileData.notes,
               fileTransferId: fileData.key);
 
           // File tempFile = File(fileDetail.filePath!);
@@ -407,6 +424,7 @@ class MyFilesProvider extends BaseModel {
             type: file.name!.split('.').last,
             contactName: fileData.sender,
             fileTransferId: fileData.key,
+            message: fileData.notes,
           );
 
           allFiles.add(fileDetail);
@@ -527,6 +545,7 @@ class MyFilesProvider extends BaseModel {
             date: fileTransfer.date?.toLocal().toString(),
             type: file.name!.split('.').last,
             contactName: fileTransfer.sender,
+            message: fileTransfer.notes,
             fileTransferId: fileTransfer.key,
           );
 

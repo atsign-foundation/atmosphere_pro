@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +12,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final double? height;
   final bool isContent;
   final Widget? suffixIcon;
+  final TextStyle? titleStyle;
 
   const AppBarCustom({
     Key? key,
@@ -21,54 +23,65 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     this.description,
     this.isContent = false,
     this.suffixIcon,
+    this.titleStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 24),
+      color: ColorConstants.background,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30, right: 24),
+            padding: const EdgeInsets.only(left: 30, right: 16),
             child: SvgPicture.asset(
               AppVectors.appIcon,
               color: Colors.black,
             ),
           ),
           Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    title ?? '',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20.toFont,
-                      fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title ?? '',
+                            textAlign: TextAlign.left,
+                            style: titleStyle ??
+                                TextStyle(
+                                  fontSize: 25.toFont,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          description ?? '',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 15.toFont,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                SizedBox(width: 12),
-                Text(
-                  description ?? '',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 15.toFont,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                  suffixIcon ?? SizedBox(),
+                ],
+              ),
             ),
           ),
-          suffixIcon ?? SizedBox(),
         ],
       ),
     );

@@ -13,13 +13,13 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../utils/text_strings.dart';
 
@@ -102,65 +102,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: ColorConstants.scaffoldColor,
-      child: Stack(
-        children: [
-          SafeArea(
-            child: Scaffold(
-              bottomNavigationBar: customBottomNavigationBar(),
-              key: _scaffoldKey,
-              backgroundColor: ColorConstants.scaffoldColor,
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: Container(
-                width: 79,
-                height: 79,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [Color(0xffF05E3F), Color(0xffe9a642)],
-                      stops: [0.1, 0.8],
-                    )),
-                child: FloatingActionButton(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  onPressed: () {
-                    welcomeScreenProvider.changeBottomNavigationIndex(0);
-                  },
-                  child: context
-                              .watch<WelcomeScreenProvider>()
-                              .selectedBottomNavigationIndex ==
-                          0
-                      ? SvgPicture.asset(
-                          "assets/svg/plus.svg",
-                        )
-                      : SvgPicture.asset(
-                          "assets/svg/home.svg",
-                        ),
-                ),
-              ),
-              // appBar: _selectedBottomNavigationIndex == 0
-              //     ? (SizeConfig().isTablet(context)
-              //         ? null
-              //         : CustomAppBar(
-              //             showLeadingicon: true,
-              //           ))
-              //     : CustomAppBar(
-              //         showMenu: true,
-              //         showBackButton: false,
-              //         showTrailingButton: true,
-              //         showTitle: true,
-              //         showClosedBtnText: false,
-              //         title: 'Received Files',
-              //       ),
-              extendBody: true,
-              drawerScrimColor: Colors.transparent,
-              endDrawer: SideBarWidget(
-                isExpanded: true,
-              ),
-              body: Consumer<InternetConnectivityChecker>(
-                  builder: (_c, provider, widget) {
+    return Stack(
+      children: [
+        Scaffold(
+          bottomNavigationBar: customBottomNavigationBar(),
+          key: _scaffoldKey,
+          backgroundColor: ColorConstants.background,
+          // extendBody: true,
+          // drawerScrimColor: Colors.transparent,
+          // endDrawer: SideBarWidget(
+          //   isExpanded: true,
+          // ),
+          body: SafeArea(
+            bottom: false,
+            child: Consumer<InternetConnectivityChecker>(
+              builder: (_c, provider, widget) {
                 if (provider.isInternetAvailable) {
                   return _bottomSheetWidgetOptions[context
                       .watch<WelcomeScreenProvider>()
@@ -170,137 +126,131 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     TextStrings.noInternet,
                   );
                 }
-              }),
+              },
             ),
           ),
-          Consumer<WelcomeScreenProvider>(
-            builder: (_c, welcomeProvider, _) {
-              return !welcomeProvider.isShowOverlay
-                  ? SafeArea(
-                      bottom: false,
-                      child: Container(
-                        height: 24,
-                        width: double.infinity,
-                        child: StreamBuilder<FLUSHBAR_STATUS>(
-                          stream: FileTransferProvider().flushBarStatusStream,
-                          builder: (context, snapshot) {
-                            final flushbarStatus =
-                                snapshot.data ?? FLUSHBAR_STATUS.SENDING;
+        ),
+        Consumer<WelcomeScreenProvider>(
+          builder: (_c, welcomeProvider, _) {
+            return !welcomeProvider.isShowOverlay
+                ? SafeArea(
+                    bottom: false,
+                    child: Container(
+                      height: 24,
+                      width: double.infinity,
+                      child: StreamBuilder<FLUSHBAR_STATUS>(
+                        stream: FileTransferProvider().flushBarStatusStream,
+                        builder: (context, snapshot) {
+                          final flushbarStatus =
+                              snapshot.data ?? FLUSHBAR_STATUS.SENDING;
 
-                            if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
-                              Future.delayed(
-                                const Duration(seconds: 3),
-                                () {
-                                  welcomeScreenProvider
-                                      .changeOverlayStatus(true);
-                                },
-                              );
-                              return Material(
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  color: ColorConstants.successGreen,
-                                  child: Center(
-                                    child: Text(
-                                      'Success!🎉 ',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
+                          if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
+                            Future.delayed(
+                              const Duration(seconds: 3),
+                              () {
+                                welcomeScreenProvider.changeOverlayStatus(true);
+                              },
+                            );
+                            return Material(
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                color: ColorConstants.successGreen,
+                                child: Center(
+                                  child: Text(
+                                    'Success!🎉 ',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                              );
-                            } else if (flushbarStatus ==
-                                FLUSHBAR_STATUS.FAILED) {
-                              Future.delayed(
-                                const Duration(seconds: 3),
-                                () {
-                                  welcomeScreenProvider
-                                      .changeOverlayStatus(true);
-                                },
-                              );
-                              return Material(
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  color: ColorConstants.redAlert,
-                                  child: Center(
-                                    child: Text(
-                                      'Something went wrong! ⚠️',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
+                              ),
+                            );
+                          } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
+                            Future.delayed(
+                              const Duration(seconds: 3),
+                              () {
+                                welcomeScreenProvider.changeOverlayStatus(true);
+                              },
+                            );
+                            return Material(
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                color: ColorConstants.redAlert,
+                                child: Center(
+                                  child: Text(
+                                    'Something went wrong! ⚠️',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                              );
-                            } else {
-                              return Consumer<FileProgressProvider>(
-                                builder: (_c, provider, _) {
-                                  var percent = (provider
-                                              .sentFileTransferProgress
-                                              ?.percent ??
-                                          30) /
-                                      105;
-                                  return ProgressBarAnimation(
-                                    value: percent,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFFF05E3F),
-                                        Color(0xFFEAA743),
-                                      ],
-                                    ),
-                                    // backgroundColor: Colors.red,
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
+                              ),
+                            );
+                          } else {
+                            return Consumer<FileProgressProvider>(
+                              builder: (_c, provider, _) {
+                                var percent = (provider.sentFileTransferProgress
+                                            ?.percent ??
+                                        30) /
+                                    100;
+                                return ProgressBarAnimation(
+                                  value: percent,
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFF05E3F),
+                                      Color(0xFFEAA743),
+                                    ],
+                                  ),
+                                  // backgroundColor: Colors.red,
+                                );
+                              },
+                            );
+                          }
+                        },
                       ),
-                    )
-                  : SizedBox();
-            },
-          ),
-        ],
-      ),
+                    ),
+                  )
+                : SizedBox();
+          },
+        ),
+      ],
     );
   }
 
   Widget customBottomNavigationBar() {
-    return Consumer<WelcomeScreenProvider>(builder: (context, provider, _) {
-      return Selector<WelcomeScreenProvider, int>(
+    return Consumer<WelcomeScreenProvider>(
+      builder: (context, provider, _) {
+        return Selector<WelcomeScreenProvider, int>(
           selector: (context, provider) =>
               provider.selectedBottomNavigationIndex,
           builder: (context, selectedBottomNavigationIndex, _) {
             return Container(
-              height: 70.toHeight,
+              height: 74,
+              margin: EdgeInsets.fromLTRB(
+                16.toWidth,
+                0,
+                16.toWidth,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    topLeft: Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26, spreadRadius: 0, blurRadius: 10),
-                ],
+                borderRadius: BorderRadius.circular(76),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BottomNavigationWidget(
-                        icon: "assets/svg/contacts.svg",
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icUserActivate,
+                        iconInactivate: ImageConstants.icUserInactivate,
                         title: "Contacts",
                         index: 1,
                         indexSelected: selectedBottomNavigationIndex,
@@ -309,9 +259,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               .changeBottomNavigationIndex(index);
                         },
                       ),
-                      BottomNavigationWidget(
-                        icon: "assets/svg/my_files.svg",
-                        title: "My Files",
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icFileActivate,
+                        iconInactivate: ImageConstants.icFileInactivate,
+                        title: "Files",
                         index: 2,
                         indexSelected: selectedBottomNavigationIndex,
                         onTap: (index) {
@@ -319,11 +272,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               .changeBottomNavigationIndex(index);
                         },
                       ),
-                      SizedBox(
-                        width: 1,
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icSendActivate,
+                        iconInactivate: ImageConstants.icSendInactivate,
+                        index: 0,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
                       ),
-                      BottomNavigationWidget(
-                        icon: "assets/svg/history.svg",
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icHistoryActivate,
+                        iconInactivate: ImageConstants.icHistoryInactivate,
                         title: "History",
                         index: 3,
                         indexSelected: selectedBottomNavigationIndex,
@@ -332,8 +297,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               .changeBottomNavigationIndex(index);
                         },
                       ),
-                      BottomNavigationWidget(
-                        icon: "assets/svg/settings.svg",
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icSettingActivate,
+                        iconInactivate: ImageConstants.icSettingInactivate,
                         title: "Settings",
                         index: 4,
                         indexSelected: selectedBottomNavigationIndex,
@@ -342,13 +310,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               .changeBottomNavigationIndex(index);
                         },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );
-          });
-    });
+          },
+        );
+      },
+    );
   }
 }
 

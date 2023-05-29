@@ -36,6 +36,7 @@ class AddContactProvider extends BaseModel {
         return true;
       } else {
         atSignError = contactService.getAtSignError;
+        changeVerifyStatus(false);
         setStatus(addContactStatus, Status.Done);
       }
     } catch (e) {

@@ -23,6 +23,7 @@ class ImageConstants {
   static String txtLogo = '$_basePath/txtLogo.png';
   static String unknownLogo = '$_basePath/unknown.png';
   static String videoLogo = '$_basePath/video-camera.png';
+  static String openFileIcon = '$_basePath/open_file_icon.png';
   static String emptyTrustedSenders = '$_basePath/emptyTrustedSenders.png';
   static String emptyGroup = '$_basePath/empty_group.png';
   static String profileImage = '$_basePath/profile.png';
@@ -77,4 +78,23 @@ class ImageConstants {
   static String sidebarSettings = '$_basePath/settings.png';
 
   static String emptyBox = '$_basePath/img_empty_box.png';
+  static String uploadIcon = '$_basePath/img_upload.png';
+
+  static String icFileActivate = '$_basePath/ic_attach_activate.png';
+  static String icFileInactivate = '$_basePath/ic_attach_inactivate.png';
+  static String icHistoryActivate = '$_basePath/ic_history_activate.png';
+  static String icHistoryInactivate = '$_basePath/ic_history_inactivate.png';
+  static String icSendActivate = '$_basePath/ic_send_activate.png';
+  static String icSendInactivate = '$_basePath/ic_send_inactivate.png';
+  static String icSettingActivate = '$_basePath/ic_setting_activate.png';
+  static String icSettingInactivate = '$_basePath/ic_setting_inactivate.png';
+  static String icUserActivate = '$_basePath/ic_user_activate.png';
+  static String icUserInactivate = '$_basePath/ic_user_inactivate.png';
+  static String icImage = '$_basePath/ic_image.png';
+
+  static String icGridTypeActivate = '$_basePath/ic_grid_type_activate.png';
+  static String icGridType = '$_basePath/ic_grid_type.png';
+  static String icListTypeActivate = '$_basePath/ic_list_type_activate.png';
+  static String icListType = '$_basePath/ic_list_type.png';
+  static String icCloudDownloading = '$_basePath/ic_cloud_downloading.png';
 }

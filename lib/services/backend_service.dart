@@ -21,7 +21,9 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -56,6 +58,7 @@ class BackendService {
   late AtClientPreference atClientPreference;
   bool autoAcceptFiles = false;
   final String AUTH_SUCCESS = "Authentication successful";
+
   // Timer? periodicHistoryRefresh;
   String? get currentAtsign => currentAtSign;
   Directory? downloadDirectory;
@@ -450,9 +453,7 @@ class BackendService {
       late var atClientPrefernce;
       AtOnboardingResult result;
 
-      if ((atSign ?? '').isNotEmpty) {
-        _onboardingService.setAtsign = atSign;
-      }
+      _onboardingService.setAtsign = atSign;
 
       //  await getAtClientPreference();
       await getAtClientPreference()
@@ -521,11 +522,14 @@ class BackendService {
     // clearing file and contact informations.
     Provider.of<WelcomeScreenProvider>(NavService.navKey.currentState!.context,
             listen: false)
-        .selectedContacts = [];
+        .resetData();
     Provider.of<FileTransferProvider>(NavService.navKey.currentState!.context,
             listen: false)
-        .selectedFiles = [];
+        .resetData();
     Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .resetData();
+    Provider.of<CreateGroupProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
 

@@ -1,4 +1,5 @@
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -58,7 +59,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => FileProgressProvider()),
         ChangeNotifierProvider(
             create: (context) => InternetConnectivityChecker()),
-        ChangeNotifierProvider(create: (context) => MyFilesProvider())
+        ChangeNotifierProvider(create: (context) => MyFilesProvider()),
+        ChangeNotifierProvider(create: (context) => CreateGroupProvider())
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget? child) {

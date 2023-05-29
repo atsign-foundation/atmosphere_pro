@@ -39,7 +39,7 @@ class TextStrings {
   String hello = 'hello';
   String reset = 'Reset';
   String selectFiles = 'SELECT FILES';
-  String selectContacts = 'SELECT CONTACT(S)';
+  String selectContacts = 'SELECT CONTACTS';
 
   //sidebar menu texts
   String sidebarGeneral = 'GENERAL';
@@ -171,7 +171,7 @@ class TextStrings {
   String removeGroupPhoto = 'Remove Group Photo';
 
   // terms and conditions texts
-  String termsAppBar = 'Terms & Conditions';
+  String termsAppBar = 'Privacy Policy';
   String termsAndConditions =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\n Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \n\n Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
@@ -336,7 +336,8 @@ class TextStrings {
   String switchatSign = 'Switch atSign';
   String backUpKeys = 'Backup Your Keys';
   String contactUs = 'Contact Us';
-  String deleteAtsigns = 'Delete atSign(s)';
+  String deleteAtsigns = 'Delete Your Key';
+  String blockedAtSign = 'Blocked atSign';
 
   static final String resetButton = 'Reset';
   static const String resetDescription =

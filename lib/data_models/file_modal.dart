@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 
 enum HistoryType { all, received, send }
 
@@ -12,7 +13,20 @@ extension HistoryTypeExtension on HistoryType {
       case HistoryType.received:
         return 'Received';
       case HistoryType.send:
-        return 'Send';
+        return 'Sent';
+      default:
+        return '';
+    }
+  }
+
+  String? get icon {
+    switch (this) {
+      case HistoryType.all:
+        return null;
+      case HistoryType.received:
+        return AppVectors.icReceived;
+      case HistoryType.send:
+        return AppVectors.icSent;
       default:
         return '';
     }
@@ -27,6 +41,7 @@ class FilesDetail {
   String? contactName;
   int? id;
   String? date;
+  String? message;
   String? fileTransferId;
   FileTransferStatus? status;
 
@@ -39,6 +54,7 @@ class FilesDetail {
       this.contactName,
       this.id,
       this.date,
+      this.message,
       this.fileTransferId});
 
   FilesDetail copyWith({
@@ -47,6 +63,7 @@ class FilesDetail {
     double? size,
     String? type,
     String? date,
+    String? message,
     FileTransferStatus? status,
     String? contactName,
     int? id,
@@ -57,6 +74,7 @@ class FilesDetail {
         size: size ?? this.size,
         type: type ?? this.type,
         date: date ?? this.date,
+        message: message ?? this.message,
         status: status ?? this.status,
         id: id ?? this.id,
         contactName: contactName ?? this.contactName);
@@ -69,6 +87,7 @@ class FilesDetail {
       'size': size,
       'type': type,
       'date': date,
+      'message': message,
       'id': id,
       'status': status,
       'contactName': contactName
@@ -84,6 +103,7 @@ class FilesDetail {
         size: map['size'],
         type: map['type'],
         date: map['date'],
+        message: map['message'],
         id: map['id'],
         status: map['status'],
         contactName: map['contactName']);
@@ -96,7 +116,7 @@ class FilesDetail {
 
   @override
   String toString() {
-    return 'FilesDetail(fileName: $fileName, filePath: $filePath, size: $size, type: $type, date: $date, id:$id, contactName:$contactName, status:$status)';
+    return 'FilesDetail(fileName: $fileName, filePath: $filePath, size: $size, type: $type, date: $date, message: $message, id:$id, contactName:$contactName, status:$status)';
   }
 
   @override
@@ -109,6 +129,7 @@ class FilesDetail {
         o.size == size &&
         o.type == type &&
         o.date == date &&
+        o.message == message &&
         o.status == status &&
         o.contactName == contactName &&
         o.id == id;
@@ -121,6 +142,7 @@ class FilesDetail {
         size.hashCode ^
         type.hashCode ^
         date.hashCode ^
+        message.hashCode ^
         id.hashCode ^
         status.hashCode ^
         contactName.hashCode;

@@ -5,11 +5,13 @@ import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.da
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
 import '../data_models/file_transfer_status.dart';
@@ -65,29 +67,17 @@ class OverlayService {
                               child: InkWell(
                                 onTap: () {
                                   hideOverlay();
-                                  WelcomeScreenProvider()
-                                      .changeOverlayStatus(false);
+                                  if (flushbarStatus != FLUSHBAR_STATUS.DONE &&
+                                      flushbarStatus !=
+                                          FLUSHBAR_STATUS.FAILED) {
+                                    WelcomeScreenProvider()
+                                        .changeOverlayStatus(false);
+                                  }
                                 },
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  width: 105.toWidth,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: ColorConstants.grey),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Close',
-                                      style: TextStyle(
-                                        color: ColorConstants.grey,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
+                                child: SvgPicture.asset(
+                                  AppVectors.icClose,
+                                  height: 52,
+                                  width: 52,
                                 ),
                               ),
                             ),

@@ -1,17 +1,14 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_card_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/group_card_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class ContactsWidget extends StatefulWidget {
-  final bool showGroups,
-      showContacts,
-      isShowAlpha,
-      isSelectMultiContacts,
-      isOnlyShowContactTrusted;
+  final bool isShowAlpha, isSelectMultiContacts;
 
   final Function(AtContact contact)? onTapContact;
   final Function(AtGroup group)? onTapGroup;
@@ -19,19 +16,15 @@ class ContactsWidget extends StatefulWidget {
   final List<GroupContactsModel>? selectedContacts;
   final List<AtContact>? trustedContacts;
   final List<GroupContactsModel?> contacts;
-  final String searchValue;
   final Function? onRefresh;
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? padding, contactPadding;
+  final ListContactType? contactsType;
 
   const ContactsWidget({
     Key? key,
     required this.contacts,
-    this.showGroups = false,
-    this.showContacts = true,
     this.isShowAlpha = true,
     this.isSelectMultiContacts = false,
-    this.isOnlyShowContactTrusted = false,
-    this.searchValue = '',
     this.onTapContact,
     this.onTapGroup,
     this.onSelectContacts,
@@ -39,6 +32,8 @@ class ContactsWidget extends StatefulWidget {
     this.selectedContacts,
     this.onRefresh,
     this.padding,
+    this.contactPadding,
+    this.contactsType,
   }) : super(key: key);
 
   @override
@@ -64,7 +59,6 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         setState(() {});
       },
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
         physics: const ClampingScrollPhysics(),
         itemCount: 27,
         shrinkWrap: true,
@@ -78,7 +72,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
             currentChar = 'Others';
           }
 
-          if (widget.isOnlyShowContactTrusted) {
+          if (widget.contactsType == ListContactType.trusted) {
             for (var element in (widget.trustedContacts ?? [])) {
               trustedContacts.add(
                 GroupContactsModel(
@@ -88,7 +82,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
             }
           }
 
-          final listContact = widget.isOnlyShowContactTrusted
+          final listContact = widget.contactsType == ListContactType.trusted
               ? trustedContacts
               : widget.contacts;
 
@@ -102,39 +96,40 @@ class _ContactsWidgetState extends State<ContactsWidget> {
             return const SizedBox();
           }
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.isShowAlpha) ...[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 9,
-                    right: 8,
-                    bottom: 10,
-                    top: 14,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        currentChar,
-                        style: TextStyle(
-                          fontSize: 20.toFont,
-                          fontWeight: FontWeight.bold,
+          return Padding(
+            padding: widget.contactPadding ?? EdgeInsets.zero,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.isShowAlpha) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            currentChar,
+                            style: TextStyle(
+                              fontSize: 20.toFont,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 16.toWidth),
-                      Expanded(
-                        child: Divider(
-                          color: ColorConstants.dividerGrey,
-                          height: 1.toHeight,
+                        SizedBox(width: 16.toWidth),
+                        Expanded(
+                          child: Divider(
+                            color: ColorConstants.dividerGrey,
+                            height: 1.toHeight,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
+                contactListBuilder(contactsForAlphabet)
               ],
-              contactListBuilder(contactsForAlphabet)
-            ],
+            ),
           );
         },
       ),
@@ -146,7 +141,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   ) {
     return ListView.builder(
       itemCount: contactsForAlphabet.length,
-      padding: widget.padding ?? EdgeInsets.zero,
+      padding: widget.padding ?? EdgeInsets.only(left: 24),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -185,31 +180,6 @@ class _ContactsWidgetState extends State<ContactsWidget> {
     );
   }
 
-  // creates a list of contacts by merging atsigns and groups.
-  List<GroupContactsModel?> getAllContactList(
-      List<GroupContactsModel?> allGroupContactData) {
-    var _filteredList = <GroupContactsModel?>[];
-    for (var c in allGroupContactData) {
-      if (widget.showContacts &&
-          c?.contact != null &&
-          (c?.contact?.atSign ?? '').toString().toUpperCase().contains(
-                widget.searchValue.toUpperCase(),
-              )) {
-        _filteredList.add(c);
-      }
-      if (widget.showGroups &&
-          c?.group != null &&
-          c?.group?.displayName != null &&
-          (c?.group?.displayName ?? '').toUpperCase().contains(
-                widget.searchValue.toUpperCase(),
-              )) {
-        _filteredList.add(c);
-      }
-    }
-
-    return _filteredList;
-  }
-
   /// returns list of atsigns, that matches with [currentChar] in [_filteredList]
   List<GroupContactsModel?> getContactsForAlphabets(
       List<GroupContactsModel?> _filteredList,
@@ -220,8 +190,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
     /// contacts, groups that does not starts with alphabets
     if (alphabetIndex == 26) {
       for (var c in _filteredList) {
-        if (widget.showContacts &&
-            c?.contact != null &&
+        if (c?.contact != null &&
             !RegExp(r'^[a-z]+$').hasMatch(
               (c?.contact?.atSign?[1] ?? '').toLowerCase(),
             )) {
@@ -229,9 +198,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         }
       }
       for (var c in _filteredList) {
-        if (widget.showGroups &&
-            c?.group != null &&
-            (c?.group?.displayName ?? '').isNotEmpty) {
+        if (c?.group != null && (c?.group?.displayName ?? '').isNotEmpty) {
           if (!RegExp(r'^[a-z]+$').hasMatch(
             (c?.group?.displayName?[0] ?? '').toLowerCase(),
           )) {
@@ -241,7 +208,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
       }
     } else {
       for (var c in _filteredList) {
-        if (widget.showContacts && c?.contact != null) {
+        if (c?.contact != null) {
           if (c?.contact?.atSign?[1].toUpperCase() == currentChar) {
             contactsForAlphabet.add(c);
           }
@@ -249,9 +216,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
       }
 
       for (var c in _filteredList) {
-        if (widget.showGroups &&
-            c?.group != null &&
-            (c?.group?.displayName ?? '').isNotEmpty) {
+        if (c?.group != null && (c?.group?.displayName ?? '').isNotEmpty) {
           if (c?.group?.displayName?[0].toUpperCase() == currentChar) {
             contactsForAlphabet.add(c);
           }

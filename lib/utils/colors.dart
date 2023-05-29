@@ -24,6 +24,8 @@ class ColorConstants {
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
   static const Color successGreen = Color(0xFF0ACB21);
+  static const Color lightGreen = Color(0xFFE1EDCC);
+  static const Color textGreen = Color(0xFF67A700);
   static const Color selago = Color(0xFFFFFAFA);
   static const Color mildGrey = Color(0xFFE4E4E4);
   static const Color selected_list = Color(0xFFFEF7F7);
@@ -37,22 +39,39 @@ class ColorConstants {
   static const Color textGray = Color(0xFFA7A7A7);
   static const Color textGrey = Color(0xFF868686);
   static const Color textLightGrey = Color(0xFF868686);
+  static const Color oldSliver = Color(0xFF838383);
+  static const Color textLightGray = Color(0xFFBCBCBC);
 
   //NEW UI COLORS
   static const Color fadedGreyN = Color(0xFFF1F1F1);
   static const Color dividerGrey = Color(0xFFD9D9D9);
   static const Color grey = Color(0xFF939393);
   static const Color orange = Color(0xFFF07C50);
+  static const Color portlandOrange = Color(0xFFFB6232);
+  static const Color unbleachedSilk = Color(0xFFFFDACC);
+  static const Color optionalFilterBackgroundColor = Color(0xFFFFE9E1);
   static const Color lightGrey = Color(0xFFF1F1F1);
   static const Color boxGrey = Color(0xFFEFEFEF);
   static const Color darkGray = Color(0xFFC0C0C0);
   static const Color buttonGrey = Color(0xFFC7C7C7);
+  static const Color gray = Color(0xFF9B9B9B);
+  static const Color gray2 = Color(0xFFB9B9B9);
 
   static const Color sidebarTextUnselected = Color(0xFFA4A4A5);
   static const Color sidebarTextSelected = Color(0xFF000000);
   static const Color sidebarTextHeading = Color(0xFFE7E7E7);
   static const Color sidebarTileSelected = Color(0xFFF5F5F5);
   static const Color grayText = Color(0xFF424242);
+  static const Color background = Color(0xFFF8F8F8);
+  static const Color culturedColor = Color(0xFFF4F4F4);
+  static const Color backgroundTab = Color(0xFFF6F0E6);
+  static const Color darkSliver = Color(0xFF717171);
+  static const Color lightGray = Color(0xFFD3D3D3);
+  static const Color jetColor = Color(0xFF363636);
+  static const Color lightSliver = Color(0xFFD8D8D8);
+  static const Color raisinBlack = Color(0xFF252525);
+  static const Color disableColor = Color(0xFFC3C3C3);
+  static const Color disableBackgroundColor = Color(0xFFE9E9E9);
 }
 
 class ContactInitialsColors {

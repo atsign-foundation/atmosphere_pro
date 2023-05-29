@@ -1,15 +1,19 @@
-import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   final List<AtContact>? trustContacts;
@@ -24,30 +28,31 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  List<AtContact> listContact = [];
   late TextEditingController groupNameController;
-  Uint8List? selectedImageByteData;
-  late GroupService _groupService;
-  bool isLoading = false;
+  late TextEditingController searchController;
+  late CreateGroupProvider _provider;
 
   @override
   void initState() {
     groupNameController = TextEditingController();
-    _groupService = GroupService();
+    searchController = TextEditingController();
+    _provider = context.read<CreateGroupProvider>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        bottom: false,
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
+    return Consumer<CreateGroupProvider>(builder: (context, value, child) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          margin: EdgeInsets.only(top: 60),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ColorConstants.culturedColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.25),
@@ -59,56 +64,34 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(27, 24, 27, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 2,
-                          width: 45,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        const Spacer(),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              height: 31,
-                              alignment: Alignment.topRight,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 30,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: ColorConstants.grey,
-                                ),
-                                borderRadius: BorderRadius.circular(28),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Close",
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    color: ColorConstants.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                  InkWell(
+                    onTap: () {
+                      _provider.removeSelectedImage();
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 31, top: 36),
+                      child: SvgPicture.asset(
+                        AppVectors.icBack,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 24,
+                      left: 38,
+                      bottom: 14,
+                    ),
+                    child: Text(
+                      "Add New Group",
+                      style: TextStyle(
+                        fontSize: 20.toFont,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.zero,
@@ -116,71 +99,65 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 27),
-                            child: Text(
-                              "New Group",
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 27,
                             ),
-                          ),
-                          const SizedBox(height: 18),
-                          Container(
-                            height: 48,
-                            margin: const EdgeInsets.symmetric(horizontal: 27),
-                            decoration: BoxDecoration(
-                              border: Border.all(
+                            child: InputWidget(
+                              hintText: 'Group Name',
+                              controller: groupNameController,
+                              hintTextStyle: TextStyle(
+                                fontSize: 14.toFont,
+                                fontWeight: FontWeight.w500,
                                 color: ColorConstants.grey,
                               ),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Center(
-                              child: TextField(
-                                controller: groupNameController,
-                                decoration: InputDecoration.collapsed(
-                                  hintText: 'Group Name',
-                                  hintStyle: TextStyle(
-                                    color: ColorConstants.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {});
-                                },
-                              ),
+                              onchange: (value) {
+                                _provider.setGroupName(value);
+                              },
                             ),
                           ),
-                          _buildImage(),
+                          _buildImage(value.selectedImageByteData),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 8, bottom: 15, left: 27),
+                              top: 22,
+                              left: 31,
+                            ),
                             child: Text(
-                              "Select Members ${listContact.isNotEmpty ? listContact.length : ''}",
+                              "Select Members ${value.listContact.isNotEmpty ? value.listContact.length : ''}",
                               style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
                                 color: Colors.black,
                               ),
                             ),
+                          ),
+                          SearchWidget(
+                            controller: searchController,
+                            borderColor: Colors.white,
+                            backgroundColor: Colors.white,
+                            hintText: "Search",
+                            hintStyle: TextStyle(
+                              color: ColorConstants.darkSliver,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            margin: EdgeInsets.fromLTRB(
+                              28.toWidth,
+                              8.toHeight,
+                              28.toWidth,
+                              14.toHeight,
+                            ),
+                            onChange: (value) {
+                              _provider.setSearchKeyword(value);
+                            },
                           ),
                           Flexible(
                             child: ListContactWidget(
+                              searchKeywords: value.searchKeyword,
                               trustedContacts: widget.trustContacts,
                               isSelectMultiContacts: true,
                               onSelectContacts: (contacts) {
-                                setState(() {
-                                  listContact = [];
-                                  for (var element in contacts) {
-                                    listContact.add(element.contact!);
-                                  }
-                                });
+                                _provider.addGroupContacts(contacts);
                               },
                             ),
                           ),
@@ -190,34 +167,61 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                   SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24, top: 18),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                      ),
                       child: InkWell(
                         onTap: () {
-                          createGroup();
+                          _provider.createGroup(
+                            whenComplete: (result) {
+                              if (result is AtGroup) {
+                                if (!mounted) return;
+                                Navigator.of(context).pop(true);
+                              } else if (result != null) {
+                                if (result.runtimeType ==
+                                    AlreadyExistsException) {
+                                  if (!mounted) return;
+                                  CustomToast().show(
+                                      TextStrings().groupAlreadyExists,
+                                      context);
+                                } else if (result.runtimeType ==
+                                    InvalidAtSignException) {
+                                  CustomToast().show(result.message, context);
+                                } else {
+                                  if (!mounted) return;
+                                  CustomToast().show(
+                                      TextStrings().serviceError, context);
+                                }
+                              } else {
+                                if (!mounted) return;
+                                CustomToast()
+                                    .show(TextStrings().serviceError, context);
+                              }
+                            },
+                            whenNameIsEmpty: () {
+                              if (!mounted) return;
+                              CustomToast()
+                                  .show(TextStrings().groupEmptyName, context);
+                            },
+                          );
                         },
                         child: Container(
-                          height: 67,
+                          height: 51.toHeight,
                           margin: const EdgeInsets.symmetric(horizontal: 27),
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: ColorConstants.buttonGrey,
-                            gradient: groupNameController.text.isNotEmpty &&
-                                    listContact.isNotEmpty
-                                ? LinearGradient(
-                                    colors: [
-                                      ColorConstants.orange,
-                                      ColorConstants.yellow.withOpacity(0.65),
-                                    ],
-                                  )
-                                : null,
+                            color: value.groupName.isNotEmpty &&
+                                    value.listContact.isNotEmpty
+                                ? Colors.black
+                                : ColorConstants.buttonGrey,
                           ),
                           child: const Center(
                             child: Text(
                               "Create Group",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -228,7 +232,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                 ],
               ),
-              isLoading
+              value.isLoading
                   ? Align(
                       alignment: Alignment.center,
                       child: CircularProgressIndicator(
@@ -241,44 +245,31 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(Uint8List? selectedImage) {
     return InkWell(
       onTap: () async {
-        var image = await ImagePicker().pickImage(
-          source: ImageSource.gallery,
-        );
-        if (image != null) {
-          setState(() {
-            selectedImageByteData = File(image.path).readAsBytesSync();
-          });
-        }
+        await _provider.selectCoverImage();
       },
       child: Container(
-        height: 117,
+        height: 89,
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(
-          horizontal: 27,
-          vertical: 15,
-        ),
+        margin: const EdgeInsets.fromLTRB(27, 14, 27, 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: ColorConstants.textBoxBg,
-          image: selectedImageByteData != null
-              ? DecorationImage(
-                  image: Image.memory(selectedImageByteData!).image,
-                  fit: BoxFit.cover,
-                )
-              : null,
-          border: Border.all(
-            color: ColorConstants.grey,
-          ),
+          color: Color(0xFFECECEC),
         ),
-        child: selectedImageByteData != null
-            ? const SizedBox()
+        child: selectedImage != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.memory(
+                  selectedImage,
+                  fit: BoxFit.cover,
+                ),
+              )
             : Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -291,62 +282,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         color: ColorConstants.grey,
                       ),
                     ),
-                    const Icon(
-                      Icons.image_rounded,
-                      size: 60,
+                    SizedBox(height: 8),
+                    Image.asset(
+                      ImageConstants.icImage,
                     ),
                   ],
                 ),
               ),
       ),
     );
-  }
-
-  void createGroup() async {
-    if (groupNameController.text.isNotEmpty) {
-      setState(() {
-        isLoading = true;
-      });
-
-      var group = AtGroup(
-        groupNameController.text.trim(),
-        description: 'group desc',
-        displayName: groupNameController.text.trim(),
-        members: Set.from(listContact),
-        createdBy: _groupService.currentAtsign,
-        updatedBy: _groupService.currentAtsign,
-      );
-
-      if (selectedImageByteData != null) {
-        group.groupPicture = selectedImageByteData;
-      }
-
-      var result = await _groupService.createGroup(group);
-
-      setState(() {
-        isLoading = false;
-      });
-
-      if (result is AtGroup) {
-        if (!mounted) return;
-        Navigator.of(context).pop(true);
-      } else if (result != null) {
-        if (result.runtimeType == AlreadyExistsException) {
-          if (!mounted) return;
-          CustomToast().show(TextStrings().groupAlreadyExists, context);
-        } else if (result.runtimeType == InvalidAtSignException) {
-          CustomToast().show(result.message, context);
-        } else {
-          if (!mounted) return;
-          CustomToast().show(TextStrings().serviceError, context);
-        }
-      } else {
-        if (!mounted) return;
-        CustomToast().show(TextStrings().serviceError, context);
-      }
-    } else {
-      if (!mounted) return;
-      CustomToast().show(TextStrings().groupEmptyName, context);
-    }
   }
 }
