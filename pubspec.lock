@@ -116,11 +116,12 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      sha256: "159656f0387d17471dfe90337d767a989f067de3da0bf74af0894191a4460cea"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.9"
+      path: "packages/at_contacts_flutter"
+      ref: trunk
+      resolved-ref: "2759ce3c5cc3764d5245a93e0956de553275a5d8"
+      url: "https://github.com/atsign-foundation/at_widgets"
+    source: git
+    version: "4.0.10"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
