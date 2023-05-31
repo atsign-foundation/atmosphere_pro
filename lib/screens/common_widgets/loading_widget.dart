@@ -23,7 +23,11 @@ class LoadingDialog {
                 return Center(
                   child: (text != null)
                       ? onlyText(text)
-                      : CircularProgressIndicator(),
+                      : CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            ColorConstants.orange,
+                          ),
+                        ),
                 );
               },
               barrierDismissible: false))

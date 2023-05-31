@@ -116,6 +116,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
         ),
         Expanded(
           child: RefreshIndicator(
+            color: ColorConstants.orange,
             onRefresh: () async {
               if (historyProvider.status[historyProvider.PERIODIC_REFRESH] !=
                   Status.Loading) {

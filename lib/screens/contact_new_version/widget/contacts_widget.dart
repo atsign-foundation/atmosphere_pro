@@ -54,6 +54,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: ColorConstants.orange,
       onRefresh: () async {
         widget.onRefresh?.call();
         setState(() {});

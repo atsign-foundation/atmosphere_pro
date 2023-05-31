@@ -63,10 +63,6 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 130,
         title: "${BackendService.getInstance().currentAtSign ?? ''} ",
         description: '',
-        titleStyle: TextStyle(
-          fontSize: 25.toFont,
-          fontWeight: FontWeight.w600,
-        ),
       ),
       body: Container(
         decoration: BoxDecoration(

@@ -26,7 +26,7 @@ version: 1.0.10+55
 # version: 1.0.1+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -65,7 +65,7 @@ dependencies:
   at_commons: ^3.0.25
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.10
-
+  at_server_status: ^1.0.3
   at_client_mobile: ^3.2.5
   at_onboarding_flutter: ^5.0.2
   at_backupkey_flutter: ^4.0.5
@@ -152,6 +152,21 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter/Inter-Bold.ttf
           weight: 700
+
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins/Poppins-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
+          weight: 600
 
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700

@@ -625,7 +625,11 @@ class CommonUtilityFunctions {
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator();
+    Widget spinner = CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(
+        ColorConstants.orange,
+      ),
+    );
 
     if (fileTransferProgress == null) {
       return spinner;
@@ -799,42 +803,47 @@ class CommonUtilityFunctions {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(
-                                        "$shortDate",
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        fileDetail.fileName ?? "",
                                         style: TextStyle(
-                                          fontSize: 10,
-                                          color: ColorConstants.oldSliver,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Container(
-                                        width: 1,
-                                        height: 8,
-                                        color: Color(0xFFD7D7D7),
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: 3,
+                                    ),
+                                    SizedBox(width: 12),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text(
+                                          "$shortDate",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: ColorConstants.oldSliver,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        "$time",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: ColorConstants.oldSliver,
+                                        Container(
+                                          width: 1,
+                                          height: 8,
+                                          color: Color(0xFFD7D7D7),
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: 3,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 12),
-                                Text(
-                                  fileDetail.fileName ?? "",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                        Text(
+                                          "$time",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: ColorConstants.oldSliver,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(height: 5),
                                 Text(
@@ -845,7 +854,7 @@ class CommonUtilityFunctions {
                                           TextStrings().mb,
                                   style: TextStyle(
                                     color: ColorConstants.grey,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
@@ -854,7 +863,7 @@ class CommonUtilityFunctions {
                                     ? Text(
                                         nickname,
                                         style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       )
                                     : SizedBox(),
@@ -862,7 +871,7 @@ class CommonUtilityFunctions {
                                 Text(
                                   fileDetail.contactName ?? "",
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                   ),
                                 ),
                                 SizedBox(height: 10),
@@ -880,7 +889,7 @@ class CommonUtilityFunctions {
                                 Text(
                                   fileDetail.message ?? "",
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ],

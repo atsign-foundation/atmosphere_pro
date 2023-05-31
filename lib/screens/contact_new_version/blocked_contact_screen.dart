@@ -129,6 +129,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                       return Scrollbar(
                         radius: const Radius.circular(11),
                         child: RefreshIndicator(
+                          color: ColorConstants.orange,
                           onRefresh: () async {},
                           child: ListView.builder(
                             physics: const ClampingScrollPhysics(),
