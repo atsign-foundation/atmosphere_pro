@@ -39,7 +39,7 @@ dependencies:
   flutter_keychain: ^2.1.0
   flutter_local_notifications: ^9.4.0
   flutter_slidable: ^0.6.0
-  google_fonts: ^4.0.5
+  google_fonts: ^4.0.4
   intl: ^0.17.0
   open_file: ^3.2.1
   pedantic: ^1.11.1
@@ -83,7 +83,6 @@ dev_dependencies:
   msix: ^3.3.1
 
 dependency_overrides:
-  http: ^1.0.0
   package_info_plus: ^3.0.0
   at_client: ^3.0.56
   biometric_storage: ^4.1.3

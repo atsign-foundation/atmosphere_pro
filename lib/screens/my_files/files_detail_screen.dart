@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -354,124 +355,145 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
               ),
             ),
           ],
-          child: Container(
-            key: UniqueKey(),
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: <Widget>[
-                Container(
-                  height: 49,
-                  width: 38,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: CommonUtilityFunctions().interactableThumbnail(
-                        files[index].fileName?.split(".").last ?? "",
-                        BackendService.getInstance().downloadDirectory!.path +
-                            Platform.pathSeparator +
-                            files[index].fileName!,
-                        files[index], () async {
-                      await FileUtils.deleteFile(
-                        BackendService.getInstance().downloadDirectory!.path +
-                            Platform.pathSeparator +
-                            files[index].fileName!,
-                        fileTransferId: files[index].fileTransferId,
-                        onComplete: () {
-                          files.removeAt(index);
-                        },
-                      );
+          child: InkWell(
+            onTap: () async {
+              await FileUtils.openFile(
+                path: BackendService.getInstance().downloadDirectory!.path +
+                    Platform.pathSeparator +
+                    files[index].fileName!,
+                extension: files[index].fileName?.split(".").last ?? "",
+                onDelete: () async {
+                  await FileUtils.deleteFile(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!);
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
+                  setState(() {});
+                },
+                fileDetail: files[index],
+              );
+            },
+            child: Container(
+              key: UniqueKey(),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    height: 49,
+                    width: 38,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: CommonUtilityFunctions().interactableThumbnail(
+                          files[index].fileName?.split(".").last ?? "",
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!,
+                          files[index], () async {
+                        await FileUtils.deleteFile(
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!,
+                          fileTransferId: files[index].fileTransferId,
+                          onComplete: () {
+                            files.removeAt(index);
+                          },
+                        );
 
-                      if (mounted) {
-                        Navigator.pop(context);
-                      }
-                      setState(() {});
-                    }),
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
+                        setState(() {});
+                      }),
+                    ),
                   ),
-                ),
-                SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              "${files[index].fileName}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 10,
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                "${files[index].fileName}",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            "$shortDate",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: ColorConstants.oldSliver,
+                            SizedBox(width: 12),
+                            Text(
+                              "$shortDate",
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: ColorConstants.oldSliver,
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 8,
-                            color: Color(0xFFD7D7D7),
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 3,
+                            Container(
+                              width: 1,
+                              height: 8,
+                              color: Color(0xFFD7D7D7),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 3,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "$time",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: ColorConstants.oldSliver,
+                            Text(
+                              "$time",
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: ColorConstants.oldSliver,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7),
-                      Text(
-                        "${(files[index].contactName ?? '').split("@")[1]}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 1),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              "${files[index].contactName}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
+                        SizedBox(height: 7),
+                        Text(
+                          "${(files[index].contactName ?? '').split("@")[1]}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                          ),
+                        ),
+                        SizedBox(height: 1),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                "${files[index].contactName}",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                ),
                               ),
                             ),
-                          ),
-                          Text(
-                            AppUtils.getFileSizeString(
-                              bytes: files[index].size ?? 0,
-                              decimals: 2,
-                            ),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: ColorConstants.oldSliver,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                            Text(
+                              AppUtils.getFileSizeString(
+                                bytes: files[index].size ?? 0,
+                                decimals: 2,
+                              ),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: ColorConstants.oldSliver,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         );
