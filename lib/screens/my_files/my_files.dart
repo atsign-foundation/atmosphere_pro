@@ -139,7 +139,12 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
       ),
       body: SingleChildScrollView(
         child: (isLoading)
-            ? Center(child: CircularProgressIndicator())
+            ? Center(
+                child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  ColorConstants.orange,
+                ),
+              ))
             : Consumer<MyFilesProvider>(
                 builder: (BuildContext _context, _provider, _) {
                   if (_provider.tabs.length != tabs.length) {

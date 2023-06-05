@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
@@ -41,86 +43,90 @@ class OverlayService {
 
     return OverlayEntry(
       builder: (context) {
-        return StreamBuilder<FLUSHBAR_STATUS>(
-          stream: FileTransferProvider().flushBarStatusStream,
-          builder: (context, snapshot) {
-            final flushbarStatus = snapshot.data ?? FLUSHBAR_STATUS.SENDING;
-            return Consumer<FileProgressProvider>(
-              builder: (_context, provider, _) {
-                String text = _getText(
-                  flushbarStatus,
-                  fileTransferProgress: provider.sentFileTransferProgress,
-                );
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: StreamBuilder<FLUSHBAR_STATUS>(
+            stream: FileTransferProvider().flushBarStatusStream,
+            builder: (context, snapshot) {
+              final flushbarStatus = snapshot.data ?? FLUSHBAR_STATUS.SENDING;
+              return Consumer<FileProgressProvider>(
+                builder: (_context, provider, _) {
+                  String text = _getText(
+                    flushbarStatus,
+                    fileTransferProgress: provider.sentFileTransferProgress,
+                  );
 
-                String icon = getImage(flushbarStatus);
-                return Scaffold(
-                  backgroundColor: bgColor.withOpacity(0.7),
-                  body: SafeArea(
-                    child: Material(
-                      color: bgColor.withOpacity(0.7),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 24, right: 14),
-                              child: InkWell(
-                                onTap: () {
-                                  hideOverlay();
-                                  if (flushbarStatus != FLUSHBAR_STATUS.DONE &&
-                                      flushbarStatus !=
-                                          FLUSHBAR_STATUS.FAILED) {
-                                    WelcomeScreenProvider()
-                                        .changeOverlayStatus(false);
-                                  }
-                                },
-                                child: SvgPicture.asset(
-                                  AppVectors.icClose,
-                                  height: 52,
-                                  width: 52,
+                  String icon = getImage(flushbarStatus);
+                  return Scaffold(
+                    backgroundColor: bgColor.withOpacity(0.7),
+                    body: SafeArea(
+                      child: Material(
+                        color: bgColor.withOpacity(0.7),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 24, right: 14),
+                                child: InkWell(
+                                  onTap: () {
+                                    hideOverlay();
+                                    if (flushbarStatus !=
+                                            FLUSHBAR_STATUS.DONE &&
+                                        flushbarStatus !=
+                                            FLUSHBAR_STATUS.FAILED) {
+                                      WelcomeScreenProvider()
+                                          .changeOverlayStatus(false);
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppVectors.icClose,
+                                    height: 52,
+                                    width: 52,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.asset(icon),
-                                SizedBox(height: 40),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 3,
-                                    horizontal: 15,
-                                  ),
-                                  child: Text(
-                                    text,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 25.toFont,
-                                      fontWeight: FontWeight.w400,
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(icon),
+                                  SizedBox(height: 40),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 3,
+                                      horizontal: 15,
+                                    ),
+                                    child: Text(
+                                      text,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 25.toFont,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 30),
-                                flushbarStatus == FLUSHBAR_STATUS.SENDING
-                                    ? getProgressBar()
-                                    : _buildHistoryButton(),
-                              ],
+                                  SizedBox(height: 30),
+                                  flushbarStatus == FLUSHBAR_STATUS.SENDING
+                                      ? getProgressBar()
+                                      : _buildHistoryButton(),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-            );
-          },
+                  );
+                },
+              );
+            },
+          ),
         );
       },
     );

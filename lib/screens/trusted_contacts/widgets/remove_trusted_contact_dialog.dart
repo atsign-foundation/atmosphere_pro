@@ -134,7 +134,11 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                   children: [
                     (Provider.of<TrustedContactProvider>(context)
                             .trustedContactOperation)
-                        ? CircularProgressIndicator()
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              ColorConstants.orange,
+                            ),
+                          )
                         : CustomButton(
                             isOrange: true,
                             buttonText: TextStrings().yes,

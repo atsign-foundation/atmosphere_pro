@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -100,8 +99,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                   fontSize: 14.toFont,
                                   color: Colors.black,
                                 ),
-                                onSubmitted: (value) {
-                                  _checkValid();
+                                onSubmitted: (value) async {
+                                  await state.checkValid(atSignController.text);
                                 },
                               ),
                               Visibility(
@@ -122,8 +121,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               InputWidget(
                                 hintText: 'Enter nickname',
                                 controller: nicknameController,
-                                onSubmitted: (value) {
-                                  _checkValid();
+                                onSubmitted: (value) async {
+                                  await state.checkValid(atSignController.text);
                                 },
                               ),
                               const SizedBox(height: 30),
@@ -161,10 +160,16 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           ),
                         ),
                         state.status['add_contact_status'] == Status.Loading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    ColorConstants.orange,
+                            ? AbsorbPointer(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        ColorConstants.orange,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               )
@@ -216,13 +221,5 @@ class _AddContactScreenState extends State<AddContactScreen> {
         );
       },
     );
-  }
-
-  void _checkValid() {
-    if (atSignController.text.isNotEmpty) {
-      addContactProvider.changeVerifyStatus(true);
-    } else {
-      addContactProvider.changeVerifyStatus(false);
-    }
   }
 }

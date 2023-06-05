@@ -99,13 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(31, 0, 31, 24),
           children: [
-            Text(
-              'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
-              style: CustomTextStyles.black12,
-            ),
-            SizedBox(
-              height: 28,
-            ),
+            SizedBox(height: 28),
             SettingsButton(
               buttonText: optionTitle[0],
               onPressed: () async {
@@ -187,6 +181,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             SizedBox(
               height: 12,
+            ),
+            Text(
+              'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
+              style: CustomTextStyles.black12.copyWith(
+                color: ColorConstants.oldSliver,
+              ),
             ),
           ],
         ),
