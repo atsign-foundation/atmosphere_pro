@@ -160,8 +160,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           ),
                         ),
                         state.status['add_contact_status'] == Status.Loading
-                            ? InkWell(
-                                onTap: () {},
+                            ? AbsorbPointer(
                                 child: SizedBox(
                                   width: double.infinity,
                                   height: double.infinity,
