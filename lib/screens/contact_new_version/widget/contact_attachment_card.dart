@@ -273,10 +273,13 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                     height: 50,
                     width: 50,
                     child: (snapshot.data == null)
-                        ? Image.asset(
-                            ImageConstants.videoLogo,
-                            fit: BoxFit.cover,
-                          )
+                        ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Image.asset(
+                              ImageConstants.videoLogo,
+                              fit: BoxFit.cover,
+                            ),
+                        )
                         : Image.memory(
                             videoThumbnail!,
                             fit: BoxFit.cover,
