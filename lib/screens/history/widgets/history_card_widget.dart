@@ -20,7 +20,8 @@ class HistoryCardWidget extends StatefulWidget {
 
   const HistoryCardWidget({
     Key? key,
-    this.fileHistory, this.onDownloaded,
+    this.fileHistory,
+    this.onDownloaded,
   }) : super(key: key);
 
   @override
@@ -187,6 +188,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                       child: Text(
                         isFileSharedToGroup
                             ? "${widget.fileHistory?.groupName ?? ''}"
+                                "${contactList.isNotEmpty ? " and ${contactList.length} others" : ""}"
                             : nickName,
                         style: TextStyle(
                           fontSize: 10.toFont,
