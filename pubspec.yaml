@@ -61,6 +61,7 @@ dependencies:
   flutter_toastr: ^1.0.3
   video_compress: ^3.1.0
   new_version: ^0.3.0
+  at_server_status: ^1.0.3
 
   at_commons: ^3.0.25
   at_contact: ^3.0.7
