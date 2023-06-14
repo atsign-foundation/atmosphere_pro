@@ -173,134 +173,155 @@ class _HomeState extends State<Home> {
     }
   }
 
+  var cardHeight = 300.0;
+  var paddingSmall = 80.0;
+  var paddingLarge = 100.0;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    // var cardHeight = SizeConfig().screenHeight / 0.3;
+    // var paddingSmall = SizeConfig().screenHeight / 0.1;
+    // var paddingLarge = SizeConfig().screenHeight / 0.2;
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            width: SizeConfig().screenWidth,
-            height: SizeConfig().screenHeight,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  ImageConstants.welcomeBackground,
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 20.toHeight),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  ImageConstants.logoIcon,
+                  height: 60.toHeight,
+                  width: 60.toHeight,
                 ),
-                fit: BoxFit.fill,
-              ),
+                Text(
+                  "atmospherePro",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'HelveticaNeu',
+                  ),
+                ),
+              ],
             ),
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Flexible(
+              child: Stack(
                 children: [
-                  Expanded(
-                    flex: 4,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 10.toWidth,
-                          top: 10.toHeight,
-                        ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: paddingSmall * 4.toHeight),
+                      child: Container(
+                        width: SizeConfig().screenWidth,
                         child: Image.asset(
-                          ImageConstants.logoIcon,
-                          height: 50.toHeight,
-                          width: 50.toHeight,
+                          ImageConstants.graphic4,
+                          height: cardHeight.toHeight,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 12,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 36.toWidth,
-                        vertical: 10.toHeight,
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: paddingSmall * 3.toHeight),
+                      child: Container(
+                        width: SizeConfig().screenWidth,
+                        child: Image.asset(
+                          ImageConstants.graphic3,
+                          height: cardHeight.toHeight,
+                          fit: BoxFit.fill,
+                        ),
                       ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: paddingSmall.toHeight),
+                      child: Container(
+                        width: SizeConfig().screenWidth,
+                        child: Image.asset(
+                          ImageConstants.graphic1,
+                          height: cardHeight.toHeight,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: SizeConfig().screenWidth,
+                      height: cardHeight.toHeight,
+                      child: Image.asset(
+                        ImageConstants.graphic2,
+                        height: cardHeight.toHeight,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: SizeConfig().screenWidth,
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 6,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  TextStrings().homeDescriptionMobile,
-                                  semanticsLabel:
-                                      '${TextStrings().appName} \n ${TextStrings().homeDescriptionMobile}',
-                                  style: GoogleFonts.playfairDisplay(
-                                    textStyle: TextStyle(
-                                      fontSize: 38.toFont,
-                                      letterSpacing: 0.1,
-                                      fontWeight: FontWeight.bold,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 25, bottom: 5),
+                            child: Text(
+                              "Your app, your data",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30.toFont,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 25, bottom: 30),
+                            child: Text(
+                              "Free, Encrypted File Transfer.",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.toFont,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Center(
+                              child: InkWell(
+                                onTap: authenticating
+                                    ? () {}
+                                    : () async {
+                                        await _backendService.checkToOnboard();
+                                      },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    "Upload atSign",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18.toFont,
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 30.toHeight),
-                                Text.rich(
-                                  TextSpan(
-                                    text: TextStrings().homeDescriptionSub,
-                                    style: TextStyle(
-                                      fontSize: 15.toFont,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(flex: 2, child: SizedBox()),
-                          Expanded(
-                            flex: 4,
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: Column(
-                                children: [
-                                  CustomButton(
-                                      width: SizeConfig().screenWidth * 0.8,
-                                      buttonText: TextStrings().buttonStart,
-                                      onPressed: authenticating
-                                          ? () {}
-                                          : () async {
-                                              await _backendService
-                                                  .checkToOnboard();
-                                            }),
-                                  SizedBox(height: 24.toHeight),
-                                  CustomButton(
-                                    onPressed: () {
-                                      CommonUtilityFunctions()
-                                          .showResetAtsignDialog();
-                                    },
-                                    isInverted: true,
-                                    width: SizeConfig().screenWidth * 0.8,
-                                    buttonText: TextStrings.resetButton,
-                                  ),
-                                ],
                               ),
                             ),
                           ),
-                          Center(
-                            child: Text(
-                              TextStrings().appName,
-                              style: TextStyle(
-                                  fontSize: 15.toFont,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Center(
-                            child: Text(
-                              TextStrings().copyRight,
-                              style: TextStyle(
-                                fontSize: 14.toFont,
-                                fontFamily: 'HelveticaNeu',
-                                color: Colors.grey.withOpacity(0.8),
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     ),
@@ -308,31 +329,8 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-          ),
-          authenticating
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color.fromARGB(255, 49, 44, 43))),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            TextStrings().loggingIn,
-                            style: CustomTextStyles.orangeMedium16,
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              : SizedBox()
-        ],
+          ],
+        ),
       ),
     );
   }

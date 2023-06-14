@@ -48,6 +48,12 @@ class ImageConstants {
   static String iconSuccess = '$_basePath/icon_success.png';
   static String iconWarning = '$_basePath/icon_warning.png';
 
+  // Splash screen
+  static String graphic1 = "$_basePath/splash1.png";
+  static String graphic2 = "$_basePath/splash2.png";
+  static String graphic3 = "$_basePath/splash3.png";
+  static String graphic4 = "$_basePath/splash4.png";
+
   // New UI Settings Screen
   static String switchAtSign = '$_basePath/switch_atsign.png';
   static String backupKeys = '$_basePath/backup_keys.png';
