@@ -92,6 +92,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   controller: _controller,
                   children: [
                     RefreshIndicator(
+                      color: ColorConstants.orange,
                       onRefresh: () async {
                         if (historyProvider!
                                 .status[historyProvider!.PERIODIC_REFRESH] !=
@@ -191,6 +192,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       ),
                     ),
                     RefreshIndicator(
+                      color: ColorConstants.orange,
                       onRefresh: () async {
                         if (historyProvider!
                                 .status[historyProvider!.PERIODIC_REFRESH] !=

@@ -525,7 +525,11 @@ class _DesktopReceivedFileDetailsState
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator();
+    Widget spinner = CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(
+        ColorConstants.orange,
+      ),
+    );
 
     if (fileTransferProgress == null) {
       return spinner;

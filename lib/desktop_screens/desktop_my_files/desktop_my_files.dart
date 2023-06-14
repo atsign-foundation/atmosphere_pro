@@ -48,7 +48,12 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
         children: [
           SingleChildScrollView(
             child: (isLoading)
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      ColorConstants.orange,
+                    ),
+                  ))
                 : Container(
                     // reducing size by 75 , so that last list item will be shown
                     height: SizeConfig().screenHeight,

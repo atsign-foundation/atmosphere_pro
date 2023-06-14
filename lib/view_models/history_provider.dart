@@ -1454,10 +1454,11 @@ class HistoryProvider extends BaseModel {
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue =
-            await AtClientManager.getInstance().atClient.get(atKey)
-                // ignore: return_of_invalid_type_from_catch_error
-                .catchError((e) {
+        AtValue atvalue = await AtClientManager.getInstance()
+            .atClient
+            .get(atKey)
+            // ignore: return_of_invalid_type_from_catch_error
+            .catchError((e) {
           print("error in getting atValue in getAllFileTransferData : $e");
           //// Removing exception as called in a loop
           // ExceptionService.instance.showGetExceptionOverlay(e);

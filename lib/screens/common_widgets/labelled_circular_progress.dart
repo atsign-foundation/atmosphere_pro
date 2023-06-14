@@ -11,7 +11,12 @@ class LabelledCircularProgressIndicator extends StatelessWidget {
     return SizedBox(
       child: Stack(
         children: [
-          CircularProgressIndicator(value: value),
+          CircularProgressIndicator(
+            value: value,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              ColorConstants.orange,
+            ),
+          ),
           value != null
               ? Positioned(
                   top: 10,

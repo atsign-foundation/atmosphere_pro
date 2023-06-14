@@ -72,6 +72,8 @@ class ColorConstants {
   static const Color raisinBlack = Color(0xFF252525);
   static const Color disableColor = Color(0xFFC3C3C3);
   static const Color disableBackgroundColor = Color(0xFFE9E9E9);
+  static const Color unselectedFilterOptionBackgroundColor = Color(0xFFFAFAFA);
+  static const Color unselectedFilterOptionColor = Color(0xFF8D8D8D);
 }
 
 class ContactInitialsColors {

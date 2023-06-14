@@ -22,7 +22,8 @@ class FilterOptionItem extends StatelessWidget {
     this.isCheck = false,
     this.onTap,
     this.isAllOption = false,
-    this.allOptionOnTap, this.isShowOptional,
+    this.allOptionOnTap,
+    this.isShowOptional,
   }) : super(key: key);
 
   @override
@@ -32,11 +33,12 @@ class FilterOptionItem extends StatelessWidget {
             ? Colors.black
             : Colors.white
         : isOptional
-            ? ColorConstants.lightSliver
+            ? ColorConstants.unselectedFilterOptionColor
             : Colors.black;
 
-    Color backgroundColor =
-        isOptional ? ColorConstants.disableBackgroundColor : Colors.white;
+    Color backgroundColor = isOptional
+        ? ColorConstants.unselectedFilterOptionBackgroundColor
+        : Colors.white;
 
     Color checkedBackgroundColor = isOptional
         ? ColorConstants.optionalFilterBackgroundColor
@@ -47,7 +49,7 @@ class FilterOptionItem extends StatelessWidget {
         isAllOption ? allOptionOnTap?.call() : onTap?.call();
       },
       child: Container(
-        height: 36,
+        height: 44,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: isCheck ? checkedBackgroundColor : backgroundColor,
@@ -99,8 +101,8 @@ class FilterOptionItem extends StatelessWidget {
                   },
                   child: SvgPicture.asset(
                     isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
-                    width: 16,
-                    height: 16,
+                    width: 24,
+                    height: 24,
                     color: color,
                     fit: BoxFit.cover,
                   ),

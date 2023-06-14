@@ -52,7 +52,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
       isDownloadAvailable = false,
       isFilesAvailableOfline = true,
       isOverwrite = false;
-  
+
   DateTime? sendTime;
   Uint8List? videoThumbnail, image;
   int fileSize = 0;
@@ -965,7 +965,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator();
+    Widget spinner = CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(
+        ColorConstants.orange,
+      ),
+    );
 
     if (fileTransferProgress == null) {
       return spinner;

@@ -182,10 +182,16 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           ),
                         ),
                         state.status['add_contact_status'] == Status.Loading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    ColorConstants.orange,
+                            ? AbsorbPointer(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        ColorConstants.orange,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               )
