@@ -133,7 +133,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         await showDialog(
                           context: context,
                           builder: (context) {
-                            return PickFileDialog(selectFiles: selectFiles,);
+                            return PickFileDialog(
+                              selectFiles: selectFiles,
+                            );
                           },
                         );
                       },
@@ -317,7 +319,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   Widget _buildAddFilesOption() {
     return InkWell(
-      onTap: selectFiles("FILES"),
+      onTap: () async {
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return PickFileDialog(
+              selectFiles: selectFiles,
+            );
+          },
+        );
+      },
       child: Container(
         height: 61.toHeight,
         width: double.infinity,
@@ -380,6 +391,9 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         taskName: (provider) => provider.PICK_FILES,
         onSuccess: (provider) {},
         onError: (err) => ErrorDialog().show(err.toString(), context: context));
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   scrollToBottom() {

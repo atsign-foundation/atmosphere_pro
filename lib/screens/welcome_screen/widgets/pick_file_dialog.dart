@@ -18,8 +18,8 @@ class PickFileDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
-            onTap: () {
-              selectFiles("MEDIA");
+            onTap: () async {
+              await selectFiles("MEDIA");
             },
             child: Row(children: <Widget>[
               Icon(
@@ -37,8 +37,8 @@ class PickFileDialog extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           InkWell(
-            onTap: () {
-              selectFiles("FILES");
+            onTap: () async {
+              await selectFiles("FILES");
             },
             child: Row(children: <Widget>[
               Icon(
