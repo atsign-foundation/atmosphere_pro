@@ -691,215 +691,223 @@ class CommonUtilityFunctions {
             borderRadius: BorderRadius.circular(10.toHeight),
             child: GestureDetector(
               onTap: () async {
-                await showDialog(
-                  context: NavService.navKey.currentContext!,
-                  builder: (_) => Material(
-                    type: MaterialType.transparency,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 32),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pop(
-                                    NavService.navKey.currentContext!);
-                              },
-                              child: Icon(
-                                Icons.clear,
-                                color: Colors.white,
-                                size: 24,
+                File test = File(path);
+                bool fileExists = await test.exists();
+                if (fileExists) {
+                  await showDialog(
+                    context: NavService.navKey.currentContext!,
+                    builder: (_) => Material(
+                      type: MaterialType.transparency,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 32),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pop(
+                                      NavService.navKey.currentContext!);
+                                },
+                                child: Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Expanded(
-                          child: Container(
-                            // height: double.infinity,
-                            width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 33),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Expanded(
+                            child: Container(
+                              // height: double.infinity,
+                              width: double.infinity,
+                              margin: EdgeInsets.symmetric(horizontal: 33),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(
+                                    File(path),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 6.0),
+                              //   child: SvgPicture.asset(
+                              //     AppVectors.icDownloadFile,
+                              //     height: 50,
+                              //     width: 50,
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   width: 10,
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    Navigator.pop(
+                                        NavService.navKey.currentContext!);
+                                    Navigator.pop(
+                                        NavService.navKey.currentContext!);
+                                    await FileUtils.moveToSendFile(path);
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppVectors.icSendFile,
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await onDelete();
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppVectors.icDeleteFile,
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                image: FileImage(
-                                  File(path),
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: SvgPicture.asset(
-                                AppVectors.icDownloadFile,
-                                height: 50,
-                                width: 50,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  Navigator.pop(
-                                      NavService.navKey.currentContext!);
-                                  Navigator.pop(
-                                      NavService.navKey.currentContext!);
-                                  await FileUtils.moveToSendFile(path);
-                                },
-                                child: SvgPicture.asset(
-                                  AppVectors.icSendFile,
-                                  height: 50,
-                                  width: 50,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await onDelete();
-                                },
-                                child: SvgPicture.asset(
-                                  AppVectors.icDeleteFile,
-                                  height: 50,
-                                  width: 50,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          margin: EdgeInsets.symmetric(horizontal: 25),
-                          width: double.infinity,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        fileDetail.fileName ?? "",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                            padding: EdgeInsets.all(20),
+                            margin: EdgeInsets.symmetric(horizontal: 25),
+                            width: double.infinity,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          fileDetail.fileName ?? "",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
+                                      SizedBox(width: 12),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            "$shortDate",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: ColorConstants.oldSliver,
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 1,
+                                            height: 8,
+                                            color: Color(0xFFD7D7D7),
+                                            margin: EdgeInsets.symmetric(
+                                              horizontal: 3,
+                                            ),
+                                          ),
+                                          Text(
+                                            "$time",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: ColorConstants.oldSliver,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    double.parse(fileDetail.size.toString()) <=
+                                            1024
+                                        ? '${fileDetail.size} ' +
+                                            TextStrings().kb
+                                        : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                            TextStrings().mb,
+                                    style: TextStyle(
+                                      color: ColorConstants.grey,
+                                      fontSize: 12,
                                     ),
-                                    SizedBox(width: 12),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text(
-                                          "$shortDate",
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  SizedBox(height: 10),
+                                  nickname.isNotEmpty
+                                      ? Text(
+                                          nickname,
                                           style: TextStyle(
-                                            fontSize: 12,
-                                            color: ColorConstants.oldSliver,
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 1,
-                                          height: 8,
-                                          color: Color(0xFFD7D7D7),
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 3,
-                                          ),
-                                        ),
-                                        Text(
-                                          "$time",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: ColorConstants.oldSliver,
-                                          ),
-                                        ),
-                                      ],
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    fileDetail.contactName ?? "",
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  double.parse(fileDetail.size.toString()) <=
-                                          1024
-                                      ? '${fileDetail.size} ' + TextStrings().kb
-                                      : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                          TextStrings().mb,
-                                  style: TextStyle(
-                                    color: ColorConstants.grey,
-                                    fontSize: 12,
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                SizedBox(height: 10),
-                                nickname.isNotEmpty
-                                    ? Text(
-                                        nickname,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 5),
-                                Text(
-                                  fileDetail.contactName ?? "",
-                                  style: TextStyle(
-                                    fontSize: 14,
+                                  SizedBox(height: 10),
+                                  // fileDetail.message.isNotNull
+                                  //     ?
+                                  Text(
+                                    "Message",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 10),
-                                // fileDetail.message.isNotNull
-                                //     ?
-                                Text(
-                                  "Message",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
+                                  // : SizedBox(),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    fileDetail.message ?? "",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                                // : SizedBox(),
-                                SizedBox(height: 5),
-                                Text(
-                                  fileDetail.message ?? "",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  CommonUtilityFunctions().showNoFileDialog();
+                }
               },
               child: Container(
                 height: 50.toHeight,
