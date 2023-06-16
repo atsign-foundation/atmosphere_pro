@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/pick_file_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -24,6 +25,7 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/images.dart';
+import '../../../utils/text_styles.dart';
 import '../../common_widgets/app_bar_custom.dart';
 import 'choice_contacts_widget.dart';
 
@@ -127,7 +129,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     );
                   } else {
                     return InkWell(
-                      onTap: selectFiles,
+                      onTap: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PickFileDialog(
+                              selectFiles: selectFiles,
+                            );
+                          },
+                        );
+                      },
                       child: Container(
                         height: 142.toHeight,
                         width: double.infinity,
@@ -308,7 +319,16 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   Widget _buildAddFilesOption() {
     return InkWell(
-      onTap: selectFiles,
+      onTap: () async {
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return PickFileDialog(
+              selectFiles: selectFiles,
+            );
+          },
+        );
+      },
       child: Container(
         height: 61.toHeight,
         width: double.infinity,
@@ -365,12 +385,15 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
   }
 
-  selectFiles() async {
+  selectFiles(String choice) async {
     await providerCallback<FileTransferProvider>(context,
-        task: (provider) => provider.pickFiles(provider.FILES),
+        task: (provider) => provider.pickFiles(choice),
         taskName: (provider) => provider.PICK_FILES,
         onSuccess: (provider) {},
         onError: (err) => ErrorDialog().show(err.toString(), context: context));
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   scrollToBottom() {
