@@ -74,6 +74,9 @@ class ColorConstants {
   static const Color disableBackgroundColor = Color(0xFFE9E9E9);
   static const Color unselectedFilterOptionBackgroundColor = Color(0xFFFAFAFA);
   static const Color unselectedFilterOptionColor = Color(0xFF8D8D8D);
+  static const Color scaffoldBackgroundColor = Color(0xFFF8F8F8);
+  static const Color desktopPrimary = Color(0xFFF07C50);
+
 }
 
 class ContactInitialsColors {

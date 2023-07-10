@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+
+import 'colors.dart';
+
+class Themes {
+  static ThemeData lightTheme({
+    Color highlightColor = Colors.black,
+    String? fontFamily,
+  }) {
+    return ThemeData(
+      brightness: Brightness.light,
+      primaryColor: ColorConstants.desktopPrimary,
+      primaryColorDark: Colors.black,
+      backgroundColor: getBackgroundColor(highlightColor),
+      canvasColor: Colors.white,
+      highlightColor: highlightColor,
+      scaffoldBackgroundColor: ColorConstants.scaffoldBackgroundColor,
+      fontFamily: fontFamily ?? 'HelveticaNeu',
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      colorScheme: ThemeData.dark().colorScheme.copyWith(
+            brightness: Brightness.light,
+            primary: ColorConstants.desktopPrimary,
+          ),
+    );
+  }
+
+  static Color getBackgroundColor(Color color) {
+    String colorStr = color.toString().toLowerCase().substring(10, 16);
+
+    if (colorStr.toUpperCase() == 'BB86FC') {
+      return color.withOpacity(0.3);
+    } else if (colorStr == '3FC0F3') {
+      return color.withOpacity(0.05);
+    } else if (colorStr == 'A77D60') {
+      return color.withOpacity(0.05);
+    } else if (colorStr == 'C47E61') {
+      return color.withOpacity(0.05);
+    } else {
+      return color.withOpacity(0.1);
+    }
+  }
+}
