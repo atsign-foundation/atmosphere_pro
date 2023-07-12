@@ -3,6 +3,7 @@ class ImageConstants {
 
   static String welcomeBackground = '$_basePath/new_welcome_bg.png';
   static String logoIcon = '$_basePath/logo.png';
+  static String logoWhiteIcon = '$_basePath/logo_white.png';
   // static String myFiles = '$_basePath/myfiles.png';
   static String group = '$_basePath/group.png';
   static String trustedsenders = '$_basePath/trustedsenders.png';

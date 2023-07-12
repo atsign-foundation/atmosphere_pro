@@ -1,3 +1,4 @@
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/theme.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
@@ -83,7 +84,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         initialRoute: initialRoute,
         navigatorKey: NavService.navKey,
-        theme: Themes.lightTheme(highlightColor: Colors.black),
+        theme: Themes.lightTheme(highlightColor: ColorConstants.raisinBlack),
         // theme: ThemeData(
         //     fontFamily: 'Poppins',
         //     scaffoldBackgroundColor: Colors.white,

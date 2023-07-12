@@ -4,13 +4,13 @@ import 'colors.dart';
 
 class Themes {
   static ThemeData lightTheme({
-    Color highlightColor = Colors.black,
+    Color highlightColor = ColorConstants.raisinBlack,
     String? fontFamily,
   }) {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: ColorConstants.desktopPrimary,
-      primaryColorDark: Colors.black,
+      primaryColorDark: ColorConstants.raisinBlack,
       backgroundColor: getBackgroundColor(highlightColor),
       canvasColor: Colors.white,
       highlightColor: highlightColor,
