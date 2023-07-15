@@ -54,6 +54,7 @@ class ImageConstants {
   static String graphic2 = "$_basePath/splash2.png";
   static String graphic3 = "$_basePath/splash3.png";
   static String graphic4 = "$_basePath/splash4.png";
+  static String desktopSplash = "$_basePath/desktop_splash.png";
 
   // New UI Settings Screen
   static String switchAtSign = '$_basePath/switch_atsign.png';
