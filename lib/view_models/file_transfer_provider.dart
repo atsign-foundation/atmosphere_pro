@@ -477,6 +477,10 @@ class FileTransferProvider extends BaseModel {
     isFileSending = val;
     notifyListeners();
   }
+
+  notify() {
+    notifyListeners();
+  }
 }
 
 enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED, DONE }
