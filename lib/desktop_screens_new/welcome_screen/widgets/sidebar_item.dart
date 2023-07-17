@@ -1,4 +1,5 @@
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,10 +44,18 @@ class SidebarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var childRoutes =
+        menuItem.children?.map((e) => e.routeName ?? "").toList() ?? [];
+
     SizeConfig().init(context);
     var nestedProvider = Provider.of<NestedRouteProvider>(
         NavService.navKey.currentContext!,
         listen: false);
+
+    ExpandableController controller = ExpandableController(
+        initialExpanded:
+            childRoutes.contains(nestedProvider.current_route ?? "") ||
+                nestedProvider.current_route == menuItem.routeName);
 
     return Container(
       child: menuItem.children?.isEmpty ?? true
@@ -62,39 +71,72 @@ class SidebarItem extends StatelessWidget {
                 nestedProvider: nestedProvider,
               ),
             )
-          : ExpansionTile(
-              childrenPadding: EdgeInsets.zero,
-              tilePadding: EdgeInsets.zero,
-              onExpansionChanged: (value) {
+          : InkWell(
+              onTap: () {
                 onTapItem(menuItem);
               },
-              maintainState: true,
-              title: BuildSidebarIconTitle(
-                image: menuItem.image,
-                route: menuItem.routeName ?? "",
-                isSidebarExpanded: isSidebarExpanded,
-                title: menuItem.title,
-                nestedProvider: nestedProvider,
+              child: ExpandableNotifier(
+                controller: controller,
+                child: Column(
+                  children: [
+                    Expandable(
+                      collapsed: ExpandableButton(
+                        child: InkWell(
+                          onTap: () {
+                            onTapItem(menuItem);
+                          },
+                          child: BuildSidebarIconTitle(
+                            image: menuItem.image,
+                            route: menuItem.routeName ?? "",
+                            isSidebarExpanded: isSidebarExpanded,
+                            title: menuItem.title,
+                            nestedProvider: nestedProvider,
+                          ),
+                        ),
+                      ),
+                      expanded: Column(
+                        children: [
+                          ExpandableButton(
+                            child: InkWell(
+                              child: BuildSidebarIconTitle(
+                                image: menuItem.image,
+                                route: menuItem.routeName ?? "",
+                                isSidebarExpanded: isSidebarExpanded,
+                                childRoutes: childRoutes,
+                                title: menuItem.title,
+                                nestedProvider: nestedProvider,
+                              ),
+                            ),
+                          ),
+                          ...menuItem.children!.map((item) {
+                            return Container(
+                              color: ColorConstants.raisinBlack,
+                              child: Padding(
+                                padding: isSidebarExpanded
+                                    ? const EdgeInsets.symmetric(vertical: 5)
+                                    : EdgeInsets.zero,
+                                child: InkWell(
+                                  onTap: () {
+                                    onTapItem(item);
+                                  },
+                                  child: BuildSidebarIconTitle(
+                                    image: item.image,
+                                    route: item.routeName ?? "",
+                                    isSidebarExpanded: isSidebarExpanded,
+                                    isChildTile: true,
+                                    title: item.title,
+                                    nestedProvider: nestedProvider,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-              children: menuItem.children!.map((item) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: InkWell(
-                    onTap: () {
-                      onTapItem(item);
-                    },
-                    child: BuildSidebarIconTitle(
-                      image: item.image,
-                      route: item.routeName ?? "",
-                      isSidebarExpanded: isSidebarExpanded,
-                      title: item.title,
-                      nestedProvider: nestedProvider,
-                    ),
-                  ),
-                );
-              }).toList(),
-              collapsedBackgroundColor: Colors.transparent,
-              // backgroundColor: Theme.of(context).primaryColor,
             ),
     );
   }
@@ -130,17 +172,27 @@ class BuildSidebarIconTitle extends StatelessWidget {
     required this.isSidebarExpanded,
     required this.title,
     required this.nestedProvider,
+    this.childRoutes = const [],
+    this.isChildTile = false,
   }) : super(key: key);
 
   final String? image;
   final String route;
   final bool isSidebarExpanded;
   final NestedRouteProvider nestedProvider;
+  final List<String> childRoutes;
+  final bool isChildTile;
   final String? title;
 
   @override
   Widget build(BuildContext context) {
-    var isCurrentRoute = nestedProvider.current_route == route ? true : false;
+    var isCurrentRoute;
+    if (nestedProvider.current_route == route ||
+        childRoutes.contains(nestedProvider.current_route)) {
+      isCurrentRoute = true;
+    } else {
+      isCurrentRoute = false;
+    }
     if (!isCurrentRoute) {
       isCurrentRoute = (nestedProvider.current_route == null &&
               route == DesktopRoutes.DESKTOP_HOME)
@@ -152,9 +204,11 @@ class BuildSidebarIconTitle extends StatelessWidget {
       height: 40.toHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        color: isCurrentRoute ? Theme.of(context).primaryColor : null,
+        color: isCurrentRoute
+            ? Theme.of(context).primaryColor
+            : ColorConstants.raisinBlack,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.only(left: isChildTile ? 30 : 10, right: 10, top: 5, bottom: 5),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: isSidebarExpanded
