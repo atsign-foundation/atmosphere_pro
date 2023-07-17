@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../data_models/menu_item.dart';
-import '../../../desktop_routes/desktop_route_names.dart';
-import '../../../desktop_routes/desktop_routes.dart';
-import '../../../services/navigation_service.dart';
-import '../../../utils/colors.dart';
-import '../../../utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/data_models/menu_item.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 
 class SidebarItem extends StatelessWidget {
   final MenuItem menuItem;
