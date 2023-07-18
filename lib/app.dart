@@ -1,3 +1,5 @@
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/theme.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
@@ -82,18 +84,19 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         initialRoute: initialRoute,
         navigatorKey: NavService.navKey,
-        theme: ThemeData(
-            fontFamily: 'Poppins',
-            scaffoldBackgroundColor: Colors.white,
-            primaryColor: Color.fromARGB(255, 240, 94, 62),
-            appBarTheme: AppBarTheme(
-              color: Colors.white,
-              elevation: 0,
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
-            buttonBarTheme: ButtonBarThemeData(
-              alignment: MainAxisAlignment.center,
-            )),
+        theme: Themes.lightTheme(highlightColor: ColorConstants.raisinBlack),
+        // theme: ThemeData(
+        //     fontFamily: 'Poppins',
+        //     scaffoldBackgroundColor: Colors.white,
+        //     primaryColor: Color.fromARGB(255, 240, 94, 62),
+        //     appBarTheme: AppBarTheme(
+        //       color: Colors.white,
+        //       elevation: 0,
+        //       iconTheme: IconThemeData(color: Colors.black),
+        //     ),
+        //     buttonBarTheme: ButtonBarThemeData(
+        //       alignment: MainAxisAlignment.center,
+        //     )),
         routes: routes,
       ),
     );
