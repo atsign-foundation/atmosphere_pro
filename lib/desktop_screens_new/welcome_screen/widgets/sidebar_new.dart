@@ -30,7 +30,7 @@ class _SideBarNewState extends State<SideBarNew> {
         MenuItem(
           title: TextStrings().sidebarTrustedSenders,
           image: ImageConstants.trustedSender,
-          routeName: DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER,
+          routeName: DesktopRoutes.DESKTOP_TRUSTED_SENDER,
         ),
         MenuItem(
           title: TextStrings().groups,
