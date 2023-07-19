@@ -1,10 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DesktopContactTile extends StatelessWidget {
   const DesktopContactTile({
@@ -92,7 +95,33 @@ class DesktopContactTile extends StatelessWidget {
             width: 10,
           ),
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              var res = await Provider.of<TrustedContactProvider>(context,
+                      listen: false)
+                  .removeTrustedContacts(AtContact(atSign: title));
+
+              if (res == true) {
+                await ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: ColorConstants.successGreen,
+                    content: Text(
+                      'Successfully removed contact from trusted senders',
+                      style: CustomTextStyles.secondaryRegular14,
+                    ),
+                  ),
+                );
+              } else {
+                await ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: ColorConstants.red,
+                    content: Text(
+                      'Failed to remove contact',
+                      style: CustomTextStyles.secondaryRegular14,
+                    ),
+                  ),
+                );
+              }
+            },
             child: Icon(
               Icons.verified_outlined,
               color: Theme.of(context).primaryColor,

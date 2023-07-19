@@ -18,6 +18,7 @@ class DesktopTrustedScreen extends StatefulWidget {
 
 class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
   String searchText = '';
+  bool isSearchActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +53,45 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                     ),
                   ),
                   Spacer(),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.search,
-                      size: 25,
+                  isSearchActive
+                      ? Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextField(
+                            onChanged:(value) {
+                              setState(() {
+                                searchText = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              hintText: "Search...",
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isSearchActive = !isSearchActive;
+                        searchText = "";
+                      });
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.search,
+                        size: 25,
+                      ),
                     ),
                   ),
                   SizedBox(
