@@ -16,7 +16,6 @@ import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -314,12 +313,12 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
             //         : SizedBox();
             //   },
             // ),
-            Padding(
-              padding: const EdgeInsets.only(left: 6.0),
-              child: SvgPicture.asset(
-                AppVectors.icDownloadFile,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 6.0),
+            //   child: SvgPicture.asset(
+            //     AppVectors.icDownloadFile,
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(left: 6.0),
               child: GestureDetector(
@@ -458,7 +457,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                         ),
                         SizedBox(height: 7),
                         Text(
-                          "${(files[index].contactName ?? '').split("@")[1]}",
+                          "${(files[index].contactName)?.split("@")[1] ?? ''}",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
@@ -470,7 +469,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                "${files[index].contactName}",
+                                "${files[index].contactName ?? ''}",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 10,

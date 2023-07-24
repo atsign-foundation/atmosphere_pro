@@ -50,7 +50,7 @@ class TextStrings {
   String sidebarTransferHistory = 'Transfer History';
   String sidebarBlockedUser = 'Blocked atSigns';
   String sidebarMyFiles = 'My Files';
-  String sidebarTrustedSenders = 'Trusted Senders';
+  String sidebarTrustedSenders = 'Trusted';
   String sidebarMyGroups = 'My Groups';
   String sidebarBackupKey = 'Backup Your keys';
   String sidebarTermsAndConditions = 'Terms and Conditions';

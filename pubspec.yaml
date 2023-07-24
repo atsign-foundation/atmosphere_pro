@@ -61,11 +61,11 @@ dependencies:
   flutter_toastr: ^1.0.3
   video_compress: ^3.1.0
   new_version: ^0.3.0
+  at_server_status: ^1.0.3
 
   at_commons: ^3.0.25
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.10
-  at_server_status: ^1.0.3
   at_client_mobile: ^3.2.5
   at_onboarding_flutter: ^5.0.2
   at_backupkey_flutter: ^4.0.5
@@ -78,6 +78,7 @@ dependencies:
   flutter_svg: ^1.1.5
   image_picker: 0.8.6
   dotted_border: ^2.0.0+3
+  expandable: ^5.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
