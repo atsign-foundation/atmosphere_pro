@@ -84,27 +84,27 @@ packages:
   at_client_mobile:
     dependency: "direct main"
     description:
-      name: at_client_mobile
-      sha256: f056674b02bdf13e5442725934e834f7757abcd7062d302ec2e65e46432ca134
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.9"
+      path: "packages/at_client_mobile"
+      ref: "hotfix/fix-biometric-storage"
+      resolved-ref: "308b6ffb59e5a0d800299da94dc777876bdb187a"
+      url: "https://github.com/atsign-foundation/at_client_sdk"
+    source: git
+    version: "3.2.11"
   at_common_flutter:
     dependency: "direct main"
     description:
-      name: at_common_flutter
-      sha256: "75f7b1070d9aa5d42f9878859995f2a24654733a118012b83eb552baaba8ce13"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.11"
+      path: "../at_widgets/packages/at_common_flutter"
+      relative: true
+    source: path
+    version: "2.0.12"
   at_commons:
     dependency: "direct main"
     description:
       name: at_commons
-      sha256: "2028941bd97196dd5d0b3c6075fd338d3086915d79b616891242bcd4c9673085"
+      sha256: "1e8c6b981f9797ee8b902efc1dc17c85245d61a272d4f2f735070b98a2d55871"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.45"
+    version: "3.0.52"
   at_contact:
     dependency: "direct main"
     description:
@@ -116,21 +116,17 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      path: "packages/at_contacts_flutter"
-      ref: trunk
-      resolved-ref: "682447077d9d1a5825274de2ea74b02c91979b36"
-      url: "https://github.com/atsign-foundation/at_widgets"
-    source: git
-    version: "4.0.10"
+      path: "../at_widgets/packages/at_contacts_flutter"
+      relative: true
+    source: path
+    version: "4.0.11"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      path: "packages/at_contacts_group_flutter"
-      ref: trunk
-      resolved-ref: "8bed2c021e1f8d0884ec86fe7ea5283c34530185"
-      url: "https://github.com/atsign-foundation/at_widgets"
-    source: git
-    version: "4.0.11"
+      path: "../at_widgets/packages/at_contacts_group_flutter"
+      relative: true
+    source: path
+    version: "4.0.12"
   at_file_saver:
     dependency: transitive
     description:
@@ -143,10 +139,10 @@ packages:
     dependency: transitive
     description:
       name: at_lookup
-      sha256: d1ecc7b48c0843289efe90ee3f7948805ddcc7077c984a35fabbc89c3ba7d958
+      sha256: a12dd6996ab586b096cccfec1df0dc7a256cc6ae3ff684644c59e73725d95687
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.36"
+    version: "3.0.38"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
@@ -199,10 +195,10 @@ packages:
     dependency: transitive
     description:
       name: at_utils
-      sha256: a244ea7f6411b177ba2f011d36d23ec786b0d41b0e62b58bb0e8bf9ad61cf530
+      sha256: "7033979de6e6b023cb86405039e3316b8f25c184c0985dfbd3a690d8bc3b8812"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.12"
+    version: "3.0.15"
   biometric_storage:
     dependency: "direct main"
     description:
@@ -500,10 +496,34 @@ packages:
     dependency: transitive
     description:
       name: flutter_image_compress
-      sha256: "37f1b26399098e5f97b74c1483f534855e7dff68ead6ddaccf747029fb03f29f"
+      sha256: "2725cce5c58fdeaf1db8f4203688228bb67e3523a66305ccaa6f99071beb6dc2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.3"
+    version: "2.0.4"
+  flutter_image_compress_common:
+    dependency: transitive
+    description:
+      name: flutter_image_compress_common
+      sha256: "8e7299afe109dc4b97fda34bf0f4967cc1fc10bc8050c374d449cab262d095b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  flutter_image_compress_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_image_compress_platform_interface
+      sha256: "3c7e86da7540b1adfa919b461885a41a018d4a26544d0fcbeaa769f6542e603d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  flutter_image_compress_web:
+    dependency: transitive
+    description:
+      name: flutter_image_compress_web
+      sha256: e879189dc7f246dcf8f06c07ee849231341508bf51e8ed7d5dcbe778ddde0e81
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3+1"
   flutter_keychain:
     dependency: "direct main"
     description:
@@ -548,10 +568,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_slidable
-      sha256: c7607eb808cdef19c8468246e95a133308aeaeb3971cdd9edfb9d5e31cedfbe9
+      sha256: cc4231579e3eae41ae166660df717f4bad1359c87f4a4322ad8ba1befeb3d2be
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "3.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -1569,4 +1589,4 @@ packages:
     version: "0.1.1"
 sdks:
   dart: ">=3.0.0-0 <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.7.0"
