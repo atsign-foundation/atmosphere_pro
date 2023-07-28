@@ -1,4 +1,3 @@
-import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
@@ -12,6 +11,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_emp
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/widgets/welcome_screen_home.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/desktop_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/desktop_home_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:flutter/material.dart';
@@ -52,12 +52,7 @@ class DesktopSetupRoutes {
           DesktopHistoryScreen(tabIndex: 1),
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
-        return DesktopContactsScreen(
-          () {
-            DesktopSetupRoutes.nested_pop();
-          },
-          showBackButton: false,
-        );
+        return DesktopContactsScreen();
       },
       DesktopRoutes.DESKTOP_DOWNLOAD_ALL: (context) {
         return DesktopDownloadAllFiles();
@@ -65,13 +60,7 @@ class DesktopSetupRoutes {
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
-        return DesktopContactsScreen(
-          () {
-            DesktopSetupRoutes.nested_pop();
-          },
-          isBlockedScreen: args['isBlockedScreen'],
-          showBackButton: false,
-        );
+        return DesktopContactsScreen();
       },
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedSender(),
       DesktopRoutes.DESKTOP_SETTINGS: (context) => DesktopSettings(),
