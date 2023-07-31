@@ -6,12 +6,12 @@ import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_history/desktop_history.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_settings/desktop_settings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/widgets/welcome_screen_home.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/desktop_myfiles.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/category_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/desktop_home_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,13 @@ class DesktopSetupRoutes {
           WelcomeScreenHome(),
       DesktopRoutes.DESKTOP_HISTORY: (context) =>
           DesktopHistoryScreen(tabIndex: 1),
-      DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
+      DesktopRoutes.DEKSTOP_MYFILES: (context) => MyFilesDesktop(),
+      DesktopRoutes.DESKTOP_CATEGORY_FILES: (context) {
+        Map<String, dynamic> args =
+            routeSettings.arguments as Map<String, dynamic>;
+
+        return CategoryScreen(fileType: args['fileType']);
+      },
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactsScreen(
           () {
