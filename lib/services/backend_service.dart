@@ -29,6 +29,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -530,6 +531,9 @@ class BackendService {
             listen: false)
         .resetData();
     Provider.of<CreateGroupProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .resetData();
+    Provider.of<SwitchAtsignProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
 

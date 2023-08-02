@@ -1,4 +1,5 @@
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,10 @@ class SidebarItem extends StatelessWidget {
       this.isSidebarExpanded = true,
       required this.menuItem});
 
-  void onTapItem(MenuItem item) async {
+  void onTapItem(MenuItem item, BuildContext context) async {
+    //disable to switch atSign modal
+    Provider.of<SwitchAtsignProvider>(context, listen: false).closeModal();
+
     if ((item.isUrl == true) && (item.routeName != null)) {
       await _launchInBrowser(item.routeName ?? "");
       return;
@@ -61,7 +65,7 @@ class SidebarItem extends StatelessWidget {
       child: menuItem.children?.isEmpty ?? true
           ? InkWell(
               onTap: () {
-                onTapItem(menuItem);
+                onTapItem(menuItem, context);
               },
               child: BuildSidebarIconTitle(
                 image: menuItem.image,
@@ -73,7 +77,7 @@ class SidebarItem extends StatelessWidget {
             )
           : InkWell(
               onTap: () {
-                onTapItem(menuItem);
+                onTapItem(menuItem, context);
               },
               child: ExpandableNotifier(
                 controller: controller,
@@ -83,7 +87,7 @@ class SidebarItem extends StatelessWidget {
                       collapsed: ExpandableButton(
                         child: InkWell(
                           onTap: () {
-                            onTapItem(menuItem);
+                            onTapItem(menuItem, context);
                           },
                           child: BuildSidebarIconTitle(
                             image: menuItem.image,
@@ -117,7 +121,7 @@ class SidebarItem extends StatelessWidget {
                                     : EdgeInsets.zero,
                                 child: InkWell(
                                   onTap: () {
-                                    onTapItem(item);
+                                    onTapItem(item, context);
                                   },
                                   child: BuildSidebarIconTitle(
                                     image: item.image,
@@ -208,7 +212,8 @@ class BuildSidebarIconTitle extends StatelessWidget {
             ? Theme.of(context).primaryColor
             : ColorConstants.raisinBlack,
       ),
-      padding: EdgeInsets.only(left: isChildTile ? 30 : 10, right: 10, top: 5, bottom: 5),
+      padding: EdgeInsets.only(
+          left: isChildTile ? 30 : 10, right: 10, top: 5, bottom: 5),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: isSidebarExpanded

@@ -3,7 +3,9 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/menu_item.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/sidebar_item.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/switch_atsign_tile.dart';
+import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -307,37 +309,49 @@ class _SideBarNewState extends State<SideBarNew> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: onboardedAtSigns.length,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        await backendService.checkToOnboard(
-                                            atSign: onboardedAtSigns[index]);
-                                      },
-                                      child: SwitchAtSignTile(
-                                        atSign: onboardedAtSigns[index],
-                                        isExpanded:
-                                            _sideBarProvider.isSidebarExpanded,
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: 200,
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: onboardedAtSigns.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () async {
+                                          await backendService.checkToOnboard(
+                                              atSign: onboardedAtSigns[index]);
+                                          await Navigator
+                                              .pushNamedAndRemoveUntil(
+                                                  NavService
+                                                      .navKey.currentContext!,
+                                                  DesktopRoutes.DESKTOP_HOME,
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                        },
+                                        child: SwitchAtSignTile(
+                                          atSign: onboardedAtSigns[index],
+                                          isExpanded: _sideBarProvider
+                                              .isSidebarExpanded,
+                                        ),
                                       ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.zero,
-                                      margin: EdgeInsets.zero,
-                                      child: Divider(
-                                        thickness: 1,
-                                        height: 1,
-                                        color: ColorConstants.MILD_GREY,
-                                        indent: 20,
-                                        endIndent: 20,
+                                      Container(
+                                        padding: EdgeInsets.zero,
+                                        margin: EdgeInsets.zero,
+                                        child: Divider(
+                                          thickness: 1,
+                                          height: 1,
+                                          color: ColorConstants.MILD_GREY,
+                                          indent: 20,
+                                          endIndent: 20,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
                             InkWell(
                               onTap: () async {

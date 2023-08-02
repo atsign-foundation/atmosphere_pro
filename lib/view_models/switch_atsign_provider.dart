@@ -4,7 +4,7 @@ class SwitchAtsignProvider extends BaseModel {
   SwitchAtsignProvider();
   String switchAtsign = 'switchAtsign';
 
-  bool isModalOpen = true;
+  bool isModalOpen = false;
 
   update() {
     setStatus(switchAtsign, Status.Done);
@@ -12,6 +12,16 @@ class SwitchAtsignProvider extends BaseModel {
 
   toggleModal() {
     isModalOpen = !isModalOpen;
+    notifyListeners();
+  }
+
+  closeModal() {
+    isModalOpen = false;
+    notifyListeners();
+  }
+
+  resetData() {
+    isModalOpen = false;
     notifyListeners();
   }
 }
