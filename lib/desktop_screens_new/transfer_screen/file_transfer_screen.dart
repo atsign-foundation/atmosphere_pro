@@ -369,9 +369,21 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                 widthFactor: 0.7,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: selectedFiles.isNotEmpty
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey,
+                    gradient: selectedFiles.isNotEmpty
+                        ? LinearGradient(
+                            colors: [
+                              Color.fromRGBO(240, 94, 63, 1),
+                              Color.fromRGBO(234, 167, 67, 0.65),
+                            ],
+                          )
+                        : LinearGradient(
+                            colors: [
+                              Color.fromRGBO(216, 216, 216, 1),
+                              Color.fromRGBO(216, 216, 216, 1),
+
+                            ],
+                          ),
+
                     borderRadius: BorderRadius.circular(30),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

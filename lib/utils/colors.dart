@@ -19,9 +19,9 @@ class ColorConstants {
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
-  static const Color orangeColorDim = Color.fromARGB(65, 240, 96, 63);
+  static const Color orangeColorDim = Color.fromRGBO(240, 94, 63, 0.08);
   static const Color yellow = Color(0xFFEAA743);
-  static const Color yellowDim = Color.fromARGB(68, 234, 167, 67);
+  static const Color yellowDim = Color.fromRGBO(234, 167, 67, 0.19);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
