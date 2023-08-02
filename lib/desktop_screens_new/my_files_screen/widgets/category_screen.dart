@@ -7,16 +7,11 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -321,98 +316,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final shortDate = DateFormat('dd/MM/yy').format(date);
     final time = DateFormat('HH:mm').format(date);
 
-    bool isOpen = false,
-        isDownloading = false,
-        isDownloaded = false,
-        isDownloadAvailable = true,
-        isFilesAvailableOfline = true,
-        isOverwrite = false;
-
-    print("path is : ${file.filePath}");
-
-    /// provide [fileName] to download that file
-    void downloadFiles(FileTransfer? receivedHistory,
-        {String? fileName}) async {
-      var fileTransferProgress = Provider.of<FileProgressProvider>(
-              NavService.navKey.currentContext!,
-              listen: false)
-          .receivedFileProgress[file.fileTransferId];
-
-      if (fileTransferProgress != null) {
-        return; //returning because download is still in progress
-      }
-      var isConnected = Provider.of<InternetConnectivityChecker>(
-              NavService.navKey.currentContext!,
-              listen: false)
-          .isInternetAvailable;
-
-      if (!isConnected) {
-        SnackbarService().showSnackbar(
-          NavService.navKey.currentContext!,
-          TextStrings.noInternetMsg,
-          bgColor: ColorConstants.redAlert,
-        );
-        return;
-      }
-
-      var result;
-      if (fileName != null) {
-        result = await Provider.of<HistoryProvider>(
-                NavService.navKey.currentContext!,
-                listen: false)
-            .downloadSingleFile(
-          file.fileTransferId ?? "",
-          file.contactName,
-          isOpen,
-          fileName,
-        );
-      } else {
-        result = await Provider.of<HistoryProvider>(
-                NavService.navKey.currentContext!,
-                listen: false)
-            .downloadFiles(
-          file.fileTransferId ?? "",
-          file.contactName ?? "",
-          isOpen,
-        );
-      }
-
-      if (result is bool && result) {
-        if (mounted) {
-          // getFutureBuilders();
-          setState(() {
-            isDownloaded = true;
-            isFilesAvailableOfline = true;
-            isOverwrite = false;
-          });
-        }
-        // await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-        //         listen: false)
-        //     .saveNewDataInMyFiles(widget.receivedHistory!);
-
-        SnackbarService().showSnackbar(
-          NavService.navKey.currentContext!,
-          TextStrings().fileDownloadd,
-          bgColor: ColorConstants.successGreen,
-        );
-        // send download acknowledgement
-        await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .sendFileDownloadAcknowledgement(receivedHistory!);
-      } else if (result is bool && !result) {
-        SnackbarService().showSnackbar(
-          NavService.navKey.currentContext!,
-          TextStrings().downloadFailed,
-          bgColor: ColorConstants.redAlert,
-        );
-        if (mounted) {
-          setState(() {
-            isDownloaded = false;
-          });
-        }
-      }
-    }
-
     var isDeleting = false;
 
     await showDialog(
@@ -430,7 +333,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(128, 255, 255, 255),
+                  color: const Color.fromRGBO(255, 255, 255, 0.7),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.hardEdge,
@@ -483,28 +386,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           SizedBox(
                             width: 10,
                           ),
-
-                          // Consumer<FileProgressProvider>(
-                          //     builder: (_c, provider, _) {
-                          //   var fileTransferProgress = provider
-                          //       .receivedFileProgress[file.fileTransferId];
-                          //   return isDownloadAvailable
-                          //       ? fileTransferProgress != null
-                          //           ? getDownloadStatus(fileTransferProgress)
-                          //           : ((isDownloaded ||
-                          //                       isFilesAvailableOfline) &&
-                          //                   !isOverwrite)
-                          //               ? Icon(
-                          //                   Icons.done,
-                          //                   color: Color(0xFF08CB21),
-                          //                   size: 25.toFont,
-                          //                 )
-                          //               : Icon(
-                          //                   Icons.download_sharp,
-                          //                   size: 25.toFont,
-                          //                 )
-                          //       : SizedBox();
-                          // }),
 
                           Container(
                             decoration: BoxDecoration(
