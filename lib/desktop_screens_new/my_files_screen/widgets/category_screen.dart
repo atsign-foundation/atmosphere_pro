@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_ti
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
@@ -382,29 +383,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               AppVectors.icDownloadFile,
                             ),
                           ),
-
                           SizedBox(
                             width: 10,
                           ),
-
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(50)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Icon(
-                                Icons.send_outlined,
-                                color: Colors.white,
-                                size: 30,
+                          InkWell(
+                            onTap: () async {
+                              await openFilePath(file.filePath ?? "");
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Icon(
+                                  Icons.send_outlined,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
-
                           SizedBox(
                             width: 10,
                           ),
-
                           InkWell(
                             onTap: () async {
                               if (isDeleting == false) {
