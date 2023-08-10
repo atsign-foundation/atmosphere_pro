@@ -41,6 +41,7 @@ class FileTransferProvider extends BaseModel {
   PlatformFile? file;
   FLUSHBAR_STATUS? flushbarStatus;
   List<PlatformFile> selectedFiles = [];
+  List<GroupContactsModel> selectedContacts = [];
   List<FileTransferStatus> transferStatus = [];
   Map<String, List<Map<String, bool>>> transferStatusMap = {};
   bool sentStatus = false, isFileSending = false;
@@ -58,6 +59,7 @@ class FileTransferProvider extends BaseModel {
 
   resetData() {
     selectedFiles = [];
+    selectedContacts = [];
     setStatus(PICK_FILES, Status.Done);
   }
 
@@ -475,6 +477,10 @@ class FileTransferProvider extends BaseModel {
 
   updateFileSendingStatus(bool val) {
     isFileSending = val;
+    notifyListeners();
+  }
+
+  notify() {
     notifyListeners();
   }
 }
