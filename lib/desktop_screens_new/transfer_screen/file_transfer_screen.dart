@@ -33,6 +33,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   var isSentFileEntrySaved;
   var isFileShareFailed;
   bool isFileSending = false;
+  String initialLetter = "";
 
   List<GroupContactsModel?> filteredContactList = [];
 
@@ -559,47 +560,83 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                   isTrusted = true;
                                 }
                               }
-
+                              if (initialLetter != contact.atSign?[1]) {
+                                initialLetter = contact.atSign?[1] ?? "";
+                              }else {
+                                initialLetter = "";
+                              }
                               byteImage = CommonUtilityFunctions()
                                   .getCachedContactImage(
                                 contact.atSign!,
                               );
+                            } else {
+                              if (initialLetter !=
+                                  groupContactModel?.group?.groupName?[0]) {
+                                initialLetter =
+                                    groupContactModel?.group?.groupName?[0] ??
+                                        "";
+                              }else {
+                                initialLetter = "";
+                              }
                             }
 
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, top: 5, bottom: 5),
-                              child: InkWell(
-                                onTap: () {
-                                  addSelectedContact(groupContactModel!);
-                                  setDialogState(() {});
-                                },
-                                child: groupContactModel?.contactType ==
-                                        ContactsType.CONTACT
-                                    ? AddContactTile(
-                                        title: contact.atSign,
-                                        subTitle: contact.tags?["nickname"] ??
-                                            contact.atSign,
-                                        image: byteImage,
-                                        showImage: byteImage != null,
-                                        isSelected: selectedContacts
-                                            .contains(groupContactModel),
-                                        showDivider: true,
-                                        isTrusted: isTrusted,
-                                      )
-                                    : AddContactTile(
-                                        title:
-                                            groupContactModel?.group?.groupName,
-                                        subTitle:
-                                            groupContactModel?.group?.groupName,
-                                        image: byteImage,
-                                        showImage: byteImage != null,
-                                        isSelected: selectedContacts
-                                            .contains(groupContactModel),
-                                        showDivider: true,
-                                        isTrusted: false,
+                            return Column(
+                              children: [
+                                initialLetter != "" ? Row(
+                                  children: [
+                                    Text(
+                                      initialLetter,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color(0xFF717171),
                                       ),
-                              ),
+                                    ),
+                                    SizedBox(width: 20,),
+                                    Expanded(
+                                      child: Divider(
+                                        thickness: 1,
+                                      ),
+                                    ),
+                                  ],
+                                ) : SizedBox(),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, top: 5, bottom: 5),
+                                  child: InkWell(
+                                    onTap: () {
+                                      addSelectedContact(groupContactModel!);
+                                      setDialogState(() {});
+                                    },
+                                    child: groupContactModel?.contactType ==
+                                            ContactsType.CONTACT
+                                        ? AddContactTile(
+                                            title: contact.atSign,
+                                            subTitle:
+                                                contact.tags?["nickname"] ??
+                                                    contact.atSign,
+                                            image: byteImage,
+                                            showImage: byteImage != null,
+                                            isSelected: selectedContacts
+                                                .contains(groupContactModel),
+                                            showDivider: true,
+                                            isTrusted: isTrusted,
+                                          )
+                                        : AddContactTile(
+                                            title: groupContactModel
+                                                ?.group?.groupName,
+                                            subTitle: groupContactModel
+                                                ?.group?.groupName,
+                                            image: byteImage,
+                                            showImage: byteImage != null,
+                                            isSelected: selectedContacts
+                                                .contains(groupContactModel),
+                                            showDivider: true,
+                                            isTrusted: false,
+                                          ),
+                                  ),
+                                ),
+                              ],
                             );
                           },
                         ),
