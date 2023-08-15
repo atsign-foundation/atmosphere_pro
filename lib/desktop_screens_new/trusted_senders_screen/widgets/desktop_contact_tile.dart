@@ -22,6 +22,33 @@ class DesktopContactTile extends StatelessWidget {
   final bool showImage;
   final Uint8List? image;
 
+  removeTrustedContact(BuildContext context) async {
+    var res = await Provider.of<TrustedContactProvider>(context, listen: false)
+        .removeTrustedContacts(AtContact(atSign: title));
+
+    if (res == true) {
+      await ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: ColorConstants.successGreen,
+          content: Text(
+            'Successfully removed contact from trusted senders',
+            style: CustomTextStyles.secondaryRegular14,
+          ),
+        ),
+      );
+    } else {
+      await ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: ColorConstants.red,
+          content: Text(
+            'Failed to remove contact',
+            style: CustomTextStyles.secondaryRegular14,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -96,31 +123,7 @@ class DesktopContactTile extends StatelessWidget {
           ),
           InkWell(
             onTap: () async {
-              var res = await Provider.of<TrustedContactProvider>(context,
-                      listen: false)
-                  .removeTrustedContacts(AtContact(atSign: title));
-
-              if (res == true) {
-                await ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: ColorConstants.successGreen,
-                    content: Text(
-                      'Successfully removed contact from trusted senders',
-                      style: CustomTextStyles.secondaryRegular14,
-                    ),
-                  ),
-                );
-              } else {
-                await ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: ColorConstants.red,
-                    content: Text(
-                      'Failed to remove contact',
-                      style: CustomTextStyles.secondaryRegular14,
-                    ),
-                  ),
-                );
-              }
+              await removeTrustedContact(context);
             },
             child: Icon(
               Icons.verified_outlined,
