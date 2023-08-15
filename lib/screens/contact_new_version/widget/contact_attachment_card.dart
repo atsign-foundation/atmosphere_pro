@@ -199,7 +199,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                       const SizedBox(
                         width: 10,
                       ),
-                      GestureDetector(
+                      isDownloaded ? GestureDetector(
                         onTap: () async {
                           if (widget.fromContact) {
                             Navigator.pop(context);
@@ -214,7 +214,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                         child: SvgPicture.asset(
                           AppVectors.icSendFile,
                         ),
-                      ),
+                      ) : SizedBox(),
                       Spacer(),
                       Text(
                         double.parse(widget.singleFile.size.toString()) <= 1024
@@ -273,10 +273,13 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                     height: 50,
                     width: 50,
                     child: (snapshot.data == null)
-                        ? Image.asset(
-                            ImageConstants.videoLogo,
-                            fit: BoxFit.cover,
-                          )
+                        ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Image.asset(
+                              ImageConstants.videoLogo,
+                              fit: BoxFit.cover,
+                            ),
+                        )
                         : Image.memory(
                             videoThumbnail!,
                             fit: BoxFit.cover,

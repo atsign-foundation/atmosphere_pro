@@ -1,4 +1,6 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_server_status/at_server_status.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -15,10 +17,17 @@ class AddContactScreen extends StatefulWidget {
   State<AddContactScreen> createState() => _AddContactScreenState();
 }
 
+enum CheckValid { idle, valid, inValid, loading }
+
 class _AddContactScreenState extends State<AddContactScreen> {
   late TextEditingController atSignController;
   late TextEditingController nicknameController;
   late AddContactProvider addContactProvider, state;
+
+  late AtStatus atStatus;
+  final AtStatusImpl atStatusImpl = AtStatusImpl();
+
+  var isValid = CheckValid.idle;
 
   @override
   void initState() {
@@ -99,8 +108,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                   fontSize: 14.toFont,
                                   color: Colors.black,
                                 ),
-                                onSubmitted: (value) async {
-                                  await state.checkValid(atSignController.text);
+                                onchange: (value) async {
+                                  await _checkValid(value);
                                 },
                               ),
                               Visibility(
@@ -121,9 +130,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               InputWidget(
                                 hintText: 'Enter nickname',
                                 controller: nicknameController,
-                                onSubmitted: (value) async {
-                                  await state.checkValid(atSignController.text);
-                                },
                               ),
                               const SizedBox(height: 30),
                               Container(
@@ -135,26 +141,42 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               const SizedBox(height: 28),
                               Align(
                                 alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
-                                      "atSign valid",
-                                      style: TextStyle(
-                                        fontSize: 14.toFont,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Icon(
-                                      Icons.check_circle_outlined,
-                                      size: 23,
-                                      color: state.isVerify
-                                          ? Colors.green
-                                          : Colors.black,
-                                    )
-                                  ],
-                                ),
+                                child: isValid != CheckValid.idle
+                                    ? isValid == CheckValid.loading
+                                        ? const CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              ColorConstants.orange,
+                                            ),
+                                          )
+                                        : Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                isValid == CheckValid.valid
+                                                    ? "atSign valid"
+                                                    : "Invalid atSign",
+                                                style: TextStyle(
+                                                  fontSize: 14.toFont,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Icon(
+                                                isValid == CheckValid.valid
+                                                    ? Icons
+                                                        .check_circle_outlined
+                                                    : Icons
+                                                        .remove_circle_outline,
+                                                size: 23,
+                                                color:
+                                                    isValid == CheckValid.valid
+                                                        ? Colors.green
+                                                        : Colors.red,
+                                              )
+                                            ],
+                                          )
+                                    : const SizedBox(),
                               ),
                             ],
                           ),
@@ -181,7 +203,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     padding: const EdgeInsets.fromLTRB(27, 0, 27, 16),
                     child: InkWell(
                       onTap: () async {
-                        if (addContactProvider.isVerify) {
+                        if (isValid == CheckValid.valid) {
                           var response = await addContactProvider.addContact(
                             atSign: atSignController.text,
                             nickname: nicknameController.text,
@@ -196,7 +218,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         height: 51.toHeight,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: !state.isVerify
+                          color: isValid != CheckValid.valid
                               ? ColorConstants.buttonGrey
                               : Colors.black,
                           borderRadius: BorderRadius.circular(8),
@@ -221,5 +243,34 @@ class _AddContactScreenState extends State<AddContactScreen> {
         );
       },
     );
+  }
+
+  // Check if the atSign in valid
+  _checkValid(String atSign) async {
+    if (atSign.isEmpty) {
+      setState(() {
+        isValid = CheckValid.idle;
+      });
+    }
+
+    try {
+      setState(() {
+        isValid = CheckValid.loading;
+      });
+      atStatus = await atStatusImpl.get(atSign);
+      if (atSignController.text != atSign) {
+        return;
+      }
+      if (atStatus.serverStatus == ServerStatus.activated) {
+        isValid = CheckValid.valid;
+      } else {
+        isValid = CheckValid.inValid;
+      }
+      setState(() {
+        isValid;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

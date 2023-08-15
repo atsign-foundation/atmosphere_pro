@@ -9,10 +9,8 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_settings/desktop_settings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/widgets/welcome_screen_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/trusted_senders_screen/desktop_trusted.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/file_transfer_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/desktop_home_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +46,7 @@ class DesktopSetupRoutes {
       BuildContext context, RouteSettings routeSettings) {
     return {
       DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL: (context) =>
-          WelcomeScreenHome(),
+          FileTransferScreen(),
       DesktopRoutes.DESKTOP_HISTORY: (context) =>
           DesktopHistoryScreen(tabIndex: 1),
       DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
