@@ -6,6 +6,7 @@ import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/blocked_contacts.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/settings_desktop.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/desktop_myfiles.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/category_screen.dart';
@@ -68,15 +69,7 @@ class DesktopSetupRoutes {
         return DesktopDownloadAllFiles();
       },
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
-        Map<String, dynamic> args =
-            routeSettings.arguments as Map<String, dynamic>;
-        return DesktopContactsScreen(
-          () {
-            DesktopSetupRoutes.nested_pop();
-          },
-          isBlockedScreen: args['isBlockedScreen'],
-          showBackButton: false,
-        );
+        return DesktopBlockedContacts();
       },
       DesktopRoutes.DESKTOP_SETTINGS: (context) => SettingsScreenDesktop(),
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedScreen(),
