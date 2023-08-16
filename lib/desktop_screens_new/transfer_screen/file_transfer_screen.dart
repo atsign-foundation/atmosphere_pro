@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_contact_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_file_tile.dart';
@@ -32,9 +32,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
 
   var isSentFileEntrySaved;
   var isFileShareFailed;
-  var isFileSending;
+  bool isFileSending = false;
+  String initialLetter = "";
 
-  var filteredContactList = [];
+  List<GroupContactsModel?> filteredContactList = [];
 
   @override
   void initState() {
@@ -44,17 +45,17 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
 
     messageController = TextEditingController(text: "");
     searchController = TextEditingController(text: "");
-    filteredContactList.addAll(ContactService().contactList);
+    filteredContactList.addAll(GroupService().allContacts);
+    GroupService().fetchGroupsAndContacts();
   }
 
   List<GroupContactsModel> selectedContacts = [];
 
-  void addSelectedContact(AtContact contact) {
-    var groupContact = GroupContactsModel(contact: contact);
-    if (selectedContacts.contains(groupContact)) {
-      selectedContacts.remove(groupContact);
+  void addSelectedContact(GroupContactsModel contact) {
+    if (selectedContacts.contains(contact)) {
+      selectedContacts.remove(contact);
     } else {
-      selectedContacts.add(groupContact);
+      selectedContacts.add(contact);
     }
   }
 
@@ -68,8 +69,6 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         isFileSending = true;
       });
     }
-    // _filePickerProvider.resetSelectedContactsStatus();
-    // _filePickerProvider.resetSelectedFilesStatus();
 
     var res = await _filePickerProvider.sendFileWithFileBin(
       _filePickerProvider.selectedFiles,
@@ -88,7 +87,6 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
           TextStrings().fileSentSuccessfully,
           bgColor: Color(0xFF5FAA45),
         );
-        // _welcomeScreenProvider.isSelectionItemChanged = false;
       } else {
         SnackbarService().showSnackbar(
           context,
@@ -266,30 +264,47 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                     ),
                     itemCount: selectedContacts.length,
                     itemBuilder: (context, index) {
-                      var contact = selectedContacts[index];
-                      var isTrusted = false;
-                      for (var ts in trustedContacts) {
-                        if (ts.atSign == (contact.contact?.atSign ?? "")) {
-                          isTrusted = true;
+                      var groupContactModel = selectedContacts[index];
+                      late var contact;
+                      var isTrusted;
+                      var byteImage;
+                      if (groupContactModel.contactType ==
+                          ContactsType.CONTACT) {
+                        contact = groupContactModel.contact;
+                        isTrusted = false;
+                        for (var ts in trustedContacts) {
+                          if (ts.atSign == (contact?.atSign ?? "")) {
+                            isTrusted = true;
+                          }
                         }
+                        byteImage =
+                            CommonUtilityFunctions().getCachedContactImage(
+                          (contact?.atSign ?? ""),
+                        );
                       }
-                      Uint8List? byteImage =
-                          CommonUtilityFunctions().getCachedContactImage(
-                        contact.contact!.atSign!,
-                      );
                       return Container(
                         height: 70,
-                        child: AddContactTile(
-                          title: selectedContacts[index].contact?.atSign,
-                          subTitle: selectedContacts[index]
-                                  .contact
-                                  ?.tags?["nickname"] ??
-                              selectedContacts[index].contact?.atSign,
-                          image: byteImage,
-                          showImage: byteImage != null,
-                          hasBackground: true,
-                          isTrusted: isTrusted,
-                        ),
+                        child: groupContactModel.contactType ==
+                                ContactsType.CONTACT
+                            ? AddContactTile(
+                                title: selectedContacts[index].contact?.atSign,
+                                subTitle: selectedContacts[index]
+                                        .contact
+                                        ?.tags?["nickname"] ??
+                                    selectedContacts[index].contact?.atSign,
+                                image: byteImage,
+                                showImage: byteImage != null,
+                                hasBackground: true,
+                                isTrusted: isTrusted,
+                              )
+                            : AddContactTile(
+                                title: groupContactModel.group?.groupName,
+                                subTitle: groupContactModel.group?.groupName,
+                                image: byteImage,
+                                showImage: byteImage != null,
+                                hasBackground: true,
+                                isTrusted: false,
+                              ),
                       );
                     },
                   )
@@ -363,7 +378,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
             ),
             InkWell(
               onTap: () async {
-                await sendFileWithFileBin(contactList);
+                if (isFileSending == false) {
+                  await sendFileWithFileBin(contactList);
+                }
               },
               child: FractionallySizedBox(
                 widthFactor: 0.7,
@@ -380,15 +397,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                             colors: [
                               Color.fromRGBO(216, 216, 216, 1),
                               Color.fromRGBO(216, 216, 216, 1),
-
                             ],
                           ),
-
                     borderRadius: BorderRadius.circular(30),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Text(
-                    "Transfer Now",
+                    isFileSending == true ? "Sending..." : "Transfer Now",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -416,7 +431,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setDialogState) {
           if (searchController.text.isEmpty && filteredContactList.isEmpty) {
-            filteredContactList = [...ContactService().contactList];
+            filteredContactList = [...GroupService().allContacts];
             setDialogState(() {});
           }
 
@@ -435,120 +450,199 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               width: 400.toWidth,
               child: Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          InkWell(
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              size: 25,
-                            ),
-                          ),
-                          SizedBox(width: 15),
-                          Text(
-                            "Add atSigns",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
+                  SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                size: 25,
                               ),
-                              child: TextField(
-                                onChanged: (value) {
-                                  filteredContactList = [];
-                                  for (var contact
-                                      in ContactService().contactList) {
-                                    if (contact.atSign!.contains(value)) {
-                                      filteredContactList.add(contact);
+                            ),
+                            SizedBox(width: 15),
+                            Text(
+                              "Add atSigns",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    filteredContactList = [];
+                                    for (var contact
+                                        in GroupService().allContacts) {
+                                      if (contact?.contactType ==
+                                          ContactsType.CONTACT) {
+                                        if ((contact?.contact?.atSign
+                                                ?.contains(value)) ??
+                                            false) {
+                                          filteredContactList.add(contact);
+                                        }
+                                      } else if (contact?.contactType ==
+                                          ContactsType.GROUP) {
+                                        if ((contact?.group?.groupName
+                                                ?.contains(value)) ??
+                                            false) {
+                                          filteredContactList.add(contact);
+                                        }
+                                      }
                                     }
-                                  }
-                                  setDialogState(() {});
-                                },
-                                controller: searchController,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 20),
-                                  hintText: "Search...",
-                                  suffixIcon: Icon(
-                                    Icons.search,
-                                    size: 25,
+                                    setDialogState(() {});
+                                  },
+                                  controller: searchController,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    hintText: "Search...",
+                                    suffixIcon: Icon(
+                                      Icons.search,
+                                      size: 25,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 10),
-                          InkWell(
-                            onTap: () {},
-                            child: CircleAvatar(
-                              backgroundColor: ColorConstants.MILD_GREY,
-                              child: Icon(
-                                Icons.verified_outlined,
-                                size: 25,
+                            SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {},
+                              child: CircleAvatar(
+                                backgroundColor: ColorConstants.MILD_GREY,
+                                child: Icon(
+                                  Icons.verified_outlined,
+                                  size: 25,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
 
-                      SizedBox(height: 30),
+                        SizedBox(height: 30),
 
-                      // contact list
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: filteredContactList.length,
-                        itemBuilder: (context, index) {
-                          var contact = filteredContactList[index];
-                          var isTrusted = false;
-                          for (var ts in trustedContacts) {
-                            if (ts.atSign == (contact.atSign)) {
-                              isTrusted = true;
+                        // contact list
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: filteredContactList.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var groupContactModel = filteredContactList[index];
+                            late AtContact contact;
+                            var isTrusted = false;
+                            Uint8List? byteImage;
+
+                            if (groupContactModel?.contactType ==
+                                ContactsType.CONTACT) {
+                              contact = groupContactModel!.contact!;
+                              for (var ts in trustedContacts) {
+                                if (ts.atSign == (contact.atSign)) {
+                                  isTrusted = true;
+                                }
+                              }
+                              if (initialLetter != contact.atSign?[1]) {
+                                initialLetter = contact.atSign?[1] ?? "";
+                              }else {
+                                initialLetter = "";
+                              }
+                              byteImage = CommonUtilityFunctions()
+                                  .getCachedContactImage(
+                                contact.atSign!,
+                              );
+                            } else {
+                              if (initialLetter !=
+                                  groupContactModel?.group?.groupName?[0]) {
+                                initialLetter =
+                                    groupContactModel?.group?.groupName?[0] ??
+                                        "";
+                              }else {
+                                initialLetter = "";
+                              }
                             }
-                          }
 
-                          Uint8List? byteImage =
-                              CommonUtilityFunctions().getCachedContactImage(
-                            contact.atSign!,
-                          );
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15, top: 5, bottom: 5),
-                            child: InkWell(
-                              onTap: () {
-                                addSelectedContact(contact);
-                                setDialogState(() {});
-                              },
-                              child: AddContactTile(
-                                title: contact.atSign,
-                                subTitle:
-                                    contact.tags?["nickname"] ?? contact.atSign,
-                                image: byteImage,
-                                showImage: byteImage != null,
-                                isSelected: selectedContacts.contains(
-                                    GroupContactsModel(contact: contact)),
-                                showDivider: true,
-                                isTrusted: isTrusted,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                            return Column(
+                              children: [
+                                initialLetter != "" ? Row(
+                                  children: [
+                                    Text(
+                                      initialLetter,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color(0xFF717171),
+                                      ),
+                                    ),
+                                    SizedBox(width: 20,),
+                                    Expanded(
+                                      child: Divider(
+                                        thickness: 1,
+                                      ),
+                                    ),
+                                  ],
+                                ) : SizedBox(),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, top: 5, bottom: 5),
+                                  child: InkWell(
+                                    onTap: () {
+                                      addSelectedContact(groupContactModel!);
+                                      setDialogState(() {});
+                                    },
+                                    child: groupContactModel?.contactType ==
+                                            ContactsType.CONTACT
+                                        ? AddContactTile(
+                                            title: contact.atSign,
+                                            subTitle:
+                                                contact.tags?["nickname"] ??
+                                                    contact.atSign,
+                                            image: byteImage,
+                                            showImage: byteImage != null,
+                                            isSelected: selectedContacts
+                                                .contains(groupContactModel),
+                                            showDivider: true,
+                                            isTrusted: isTrusted,
+                                          )
+                                        : AddContactTile(
+                                            title: groupContactModel
+                                                ?.group?.groupName,
+                                            subTitle: groupContactModel
+                                                ?.group?.groupName,
+                                            image: byteImage,
+                                            showImage: byteImage != null,
+                                            isSelected: selectedContacts
+                                                .contains(groupContactModel),
+                                            showDivider: true,
+                                            isTrusted: false,
+                                          ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(height: 100),
+                      ],
+                    ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
