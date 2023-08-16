@@ -78,6 +78,7 @@ class ColorConstants {
   static const Color unselectedFilterOptionColor = Color(0xFF8D8D8D);
   static const Color scaffoldBackgroundColor = Color(0xFFF8F8F8);
   static const Color desktopPrimary = Color(0xFFF07C50);
+  static const Color disableIconButton = Color(0xFFE2E2E2);
 
 }
 
