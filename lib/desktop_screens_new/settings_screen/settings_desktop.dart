@@ -94,9 +94,9 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                       Expanded(
                         child: InkWell(
                           onTap: () async {
-                            await context
-                                .read<SwitchAtsignProvider>()
-                                .toggleModal();
+                            context
+                                .read<SideBarProvider>()
+                                .changeIsSwitchingAtSign();
                           },
                           child: DesktopSettingsCard(
                             title: TextStrings().switchatSign,

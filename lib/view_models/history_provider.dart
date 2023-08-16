@@ -111,6 +111,11 @@ class HistoryProvider extends BaseModel {
     }
   }
 
+  void setSelectedType(HistoryType type) {
+    typeSelected = type;
+    notifyListeners();
+  }
+
   updateFileHistoryDetail(FileHistory fileHistory) async {
     // checking whether sent file is stored in individual atKey or in sentHistory list.
     if (individualSentFileId[fileHistory.fileDetails!.key] != null) {
@@ -286,7 +291,7 @@ class HistoryProvider extends BaseModel {
                   Future.forEach(
                     filesModel.fileDetails!.files!,
                     (dynamic file) async {
-                      String? fileExtension = file.name.split('.').last;
+                      String? fileExtension = file.displayName.split('.').last;
                       for (int i = 0; i < listFileTypeSelect!.length; i++) {
                         if (FileTypes.ALL_TYPES.contains(fileExtension)) {
                           if (listFileTypeSelect[i]
@@ -781,7 +786,7 @@ class HistoryProvider extends BaseModel {
                 await Future.forEach(
                   filesModel.files!,
                   (dynamic file) async {
-                    String? fileExtension = file.name.split('.').last;
+                    String? fileExtension = file.displayName.split('.').last;
                     for (int i = 0; i < listFileTypeSelect!.length; i++) {
                       if (FileTypes.ALL_TYPES.contains(fileExtension)) {
                         if (listFileTypeSelect[i]
@@ -899,6 +904,11 @@ class HistoryProvider extends BaseModel {
       default:
         return [];
     }
+  }
+
+  updateFileType(List<FileType> fileType) {
+    listType = fileType;
+    notifyListeners();
   }
 
   Future<void> filterByFileType(List<FileType> fileType) async {
