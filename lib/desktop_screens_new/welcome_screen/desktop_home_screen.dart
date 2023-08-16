@@ -23,7 +23,7 @@ class _HomeScreenDesktopState extends State<HomeScreenDesktop> {
     return Scaffold(
       body: Stack(
         children: [
-          SideBarNew(),
+          Expanded(child: SideBarNew()),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
