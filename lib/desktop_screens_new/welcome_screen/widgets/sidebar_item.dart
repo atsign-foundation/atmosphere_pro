@@ -1,5 +1,4 @@
 import 'package:at_backupkey_flutter/utils/size_config.dart';
-import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +23,6 @@ class SidebarItem extends StatelessWidget {
       required this.menuItem});
 
   void onTapItem(MenuItem item, BuildContext context) async {
-    //disable to switch atSign modal
-    Provider.of<SwitchAtsignProvider>(context, listen: false).closeModal();
-
     if ((item.isUrl == true) && (item.routeName != null)) {
       await _launchInBrowser(item.routeName ?? "");
       return;

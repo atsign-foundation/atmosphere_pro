@@ -533,9 +533,6 @@ class BackendService {
     Provider.of<CreateGroupProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
-    Provider.of<SwitchAtsignProvider>(NavService.navKey.currentState!.context,
-            listen: false)
-        .resetData();
 
     await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
     startMonitor();

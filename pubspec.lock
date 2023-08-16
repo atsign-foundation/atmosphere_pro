@@ -84,11 +84,12 @@ packages:
   at_client_mobile:
     dependency: "direct main"
     description:
-      name: at_client_mobile
-      sha256: f056674b02bdf13e5442725934e834f7757abcd7062d302ec2e65e46432ca134
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.9"
+      path: "packages/at_client_mobile"
+      ref: trunk
+      resolved-ref: e87fbc53d1a4fd78c35c93489ddf6f3f75ece28b
+      url: "https://github.com/atsign-foundation/at_client_sdk"
+    source: git
+    version: "3.2.12"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -101,10 +102,10 @@ packages:
     dependency: "direct main"
     description:
       name: at_commons
-      sha256: "2028941bd97196dd5d0b3c6075fd338d3086915d79b616891242bcd4c9673085"
+      sha256: d58706ff327a1ddb6fe96d93d41739ce454638b99c61f5475b4c1a4ab2c9de8e
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.45"
+    version: "3.0.53"
   at_contact:
     dependency: "direct main"
     description:
@@ -143,10 +144,10 @@ packages:
     dependency: transitive
     description:
       name: at_lookup
-      sha256: d1ecc7b48c0843289efe90ee3f7948805ddcc7077c984a35fabbc89c3ba7d958
+      sha256: a12dd6996ab586b096cccfec1df0dc7a256cc6ae3ff684644c59e73725d95687
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.36"
+    version: "3.0.38"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
@@ -199,10 +200,10 @@ packages:
     dependency: transitive
     description:
       name: at_utils
-      sha256: a244ea7f6411b177ba2f011d36d23ec786b0d41b0e62b58bb0e8bf9ad61cf530
+      sha256: "7033979de6e6b023cb86405039e3316b8f25c184c0985dfbd3a690d8bc3b8812"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.12"
+    version: "3.0.15"
   biometric_storage:
     dependency: "direct main"
     description:
@@ -355,6 +356,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
+  dotted_border:
+    dependency: "direct main"
+    description:
+      name: dotted_border
+      sha256: "07a5c5e8d4e6e992279e190e0352be8faa5b8f96d81c77a78b2d42f060279840"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0+3"
   ecdsa:
     dependency: transitive
     description:
@@ -746,6 +755,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.1"
   local_notifier:
     dependency: "direct main"
     description:
