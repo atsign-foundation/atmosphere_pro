@@ -276,6 +276,18 @@ class CustomTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle desktopPrimaryW50015 = TextStyle(
+    color: Colors.black,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle desktopPrimaryW50010 = TextStyle(
+    color: Colors.black,
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle desktopPrimaryBold18 = TextStyle(
       color: ColorConstants.fontPrimary,
       fontSize: 18,
@@ -329,5 +341,17 @@ class CustomTextStyles {
       color: Colors.white,
       fontSize: 15,
       letterSpacing: 0.1,
-      fontWeight: FontWeight.w700);
+      fontWeight: FontWeight.w700,);
+
+  static TextStyle orangeW50015 = TextStyle(
+    color: ColorConstants.orange,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle whiteW50015 = TextStyle(
+    color: Colors.white,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
 }

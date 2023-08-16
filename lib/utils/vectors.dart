@@ -1,6 +1,8 @@
 class AppVectors {
   static String _basePath = 'assets/svg';
   static String appIcon = '$_basePath/app_icon.svg';
+  static String icDeleteGray = '$_basePath/ic_delete_gray.svg';
+  static String icFilterGray = '$_basePath/ic_filter_gray.svg';
   static String icReload = '$_basePath/ic_reload.svg';
   static String icSearch = '$_basePath/ic_search.svg';
   static String icArrowDown = '$_basePath/ic_arrow_down.svg';
@@ -9,6 +11,7 @@ class AppVectors {
   static String icCancel = '$_basePath/ic_cancel.svg';
   static String icReceive = '$_basePath/ic_receive.svg';
   static String icSend = '$_basePath/ic_send.svg';
+  static String icSendNew = '$_basePath/ic_send_new.svg';
   static String icSort = '$_basePath/ic_sort.svg';
   static String icReceiveBorder = '$_basePath/ic_receive_border.svg';
   static String icSendBorder = '$_basePath/ic_send_border.svg';
@@ -71,4 +74,7 @@ class AppVectors {
   static String icOther = '$_basePath/ic_other.svg';
   static String icChecked = '$_basePath/ic_checked.svg';
   static String icUnchecked = '$_basePath/ic_uncheck.svg';
+
+  static String icMore = '$_basePath/ic_more.svg';
+  static String icAddNew = '$_basePath/ic_add_new.svg';
 }
