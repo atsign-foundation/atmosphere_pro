@@ -5,9 +5,10 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/desktop_my_files.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_settings/desktop_settings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/desktop_myfiles.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/category_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/history_desktop.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/trusted_senders_screen/desktop_trusted.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/file_transfer_screen.dart';
@@ -47,8 +48,14 @@ class DesktopSetupRoutes {
     return {
       DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL: (context) =>
           FileTransferScreen(),
+      DesktopRoutes.DEKSTOP_MYFILES: (context) => MyFilesDesktop(),
+      DesktopRoutes.DESKTOP_CATEGORY_FILES: (context) {
+        Map<String, dynamic> args =
+            routeSettings.arguments as Map<String, dynamic>;
+
+        return CategoryScreen(fileType: args['fileType']);
+      },
       DesktopRoutes.DESKTOP_HISTORY: (context) => HistoryDesktopScreen(),
-      DesktopRoutes.DEKSTOP_MYFILES: (context) => DesktopMyFiles(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactsScreen(
           () {
