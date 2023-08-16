@@ -3,8 +3,9 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/menu_item.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/onboarded_atsign_card.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/sidebar_item.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/switching_atsign_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/switching_atsign_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -161,7 +162,7 @@ class _SideBarNewState extends State<SideBarNew> {
                       },
                       successBuilder: (provider) => SingleChildScrollView(
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          // mainAxisSize: MainAxisSize.min,
                           // crossAxisAlignment: _sideBarProvider.isSidebarExpanded
                           //     ? CrossAxisAlignment.start
                           //     : CrossAxisAlignment.center,
@@ -315,12 +316,15 @@ class _SideBarNewState extends State<SideBarNew> {
                             SizedBox(
                               height: 48,
                             ),
-                            SizedBox(
-                              width: double.maxFinite,
-                              child: SidebarItem(
-                                menuItem: settingsMenuItem,
-                                isSidebarExpanded:
-                                    _sideBarProvider.isSidebarExpanded,
+                            Expanded(
+                              flex: 0,
+                              child: SizedBox(
+                                width: double.maxFinite,
+                                child: SidebarItem(
+                                  menuItem: settingsMenuItem,
+                                  isSidebarExpanded:
+                                      _sideBarProvider.isSidebarExpanded,
+                                ),
                               ),
                             ),
                             SizedBox(height: 16),

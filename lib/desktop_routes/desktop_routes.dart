@@ -5,8 +5,8 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_settings/desktop_settings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/settings_desktop.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/desktop_myfiles.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/category_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/history_desktop.dart';
@@ -78,8 +78,8 @@ class DesktopSetupRoutes {
           showBackButton: false,
         );
       },
+      DesktopRoutes.DESKTOP_SETTINGS: (context) => SettingsScreenDesktop(),
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedScreen(),
-      DesktopRoutes.DESKTOP_SETTINGS: (context) => DesktopSettings(),
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) {

@@ -332,10 +332,14 @@ class TextStrings {
 
   //New UI Setting Screen
   String switchatSign = 'Switch atSign';
+  String switchatSignSubtitle = 'Toggle between your atSigns';
   String backUpKeys = 'Backup Your Keys';
+  String backUpKeysSubtitle = "Save a Pair of your atKeys";
   String contactUs = 'Contact Us';
   String deleteAtsigns = 'Delete Your Key';
+  String deleteAtsignsSubtitle = 'Delete your active atkey';
   String blockedAtSign = 'Blocked atSign';
+  String blockedAtSignSubtitle = 'View list of blocked atSign';
 
   static final String resetButton = 'Reset';
   static const String resetDescription =

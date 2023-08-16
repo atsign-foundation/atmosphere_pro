@@ -129,185 +129,187 @@ class _CategoryScreenState extends State<CategoryScreen> {
       padding: EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
       color: ColorConstants.fadedBlue,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  DesktopSetupRoutes.nested_pop();
-                },
-                child:
-                    Icon(Icons.arrow_back_ios, color: Colors.black, size: 24),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                getTitle(),
-                style: TextStyle(
-                  fontSize: 12.toFont,
-                  fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    DesktopSetupRoutes.nested_pop();
+                  },
+                  child:
+                      Icon(Icons.arrow_back_ios, color: Colors.black, size: 24),
                 ),
-              ),
-              Spacer(),
-              isSearchActive
-                  ? Container(
-                      width: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            searchText = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          isDense: true,
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 15),
-                          hintText: "Search...",
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              SizedBox(
-                width: 10,
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isSearchActive = !isSearchActive;
-                    searchText = "";
-                  });
-                },
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.search,
-                    size: 25,
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  getTitle(),
+                  style: TextStyle(
+                    fontSize: 12.toFont,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                  vertical: 6,
-                  horizontal: 21,
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 4,
-                  horizontal: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: ColorConstants.dividerGrey,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (!isGridType) {
-                            isGridType = !isGridType;
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 34,
-                        width: 34,
+                Spacer(),
+                isSearchActive
+                    ? Container(
+                        width: 200,
                         decoration: BoxDecoration(
-                          color: isGridType ? Colors.white : Colors.transparent,
-                          borderRadius: BorderRadius.circular(17),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        padding: EdgeInsets.all(8),
-                        child: Image.asset(
-                          isGridType
-                              ? ImageConstants.icGridTypeActivate
-                              : ImageConstants.icGridType,
+                        child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              searchText = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 15),
+                            hintText: "Search...",
+                          ),
                         ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (isGridType) {
-                            isGridType = !isGridType;
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 34,
-                        width: 34,
-                        decoration: BoxDecoration(
-                          color: isGridType ? Colors.transparent : Colors.white,
-                          borderRadius: BorderRadius.circular(17),
-                        ),
-                        padding: EdgeInsets.all(8),
-                        child: Image.asset(
-                          isGridType
-                              ? ImageConstants.icListType
-                              : ImageConstants.icListTypeActivate,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Divider(
-            thickness: 1,
-            color: Colors.black,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-
-          // body
-          Wrap(
-            children: files.map((file) {
-              if (!file.fileName
-                  .toLowerCase()
-                  .contains(searchText.toLowerCase())) {
-                return SizedBox();
-              }
-              return InkWell(
-                onTap: () {
-                  showFileDetailsDialog(file);
-                  setSelectedFileName(file.fileName ?? "");
-                },
-                child: isGridType
-                    ? FileTile(
-                        fileName: file.fileName ?? "",
-                        fileSize: file.size ?? 0,
-                        filePath: file.filePath ?? "",
-                        fileExt: file.fileName?.split(".").last ?? "",
-                        fileDate: file.date ?? "",
-                        selectedFileName: selectedFileName,
                       )
-                    : FileListTile(
-                        fileName: file.fileName ?? "",
-                        fileSize: file.size ?? 0,
-                        filePath: file.filePath ?? "",
-                        fileExt: file.fileName?.split(".").last ?? "",
-                        fileDate: file.date ?? "",
-                        selectedFileName: selectedFileName,
+                    : SizedBox(),
+                SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      isSearchActive = !isSearchActive;
+                      searchText = "";
+                    });
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.search,
+                      size: 25,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: 6,
+                    horizontal: 21,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorConstants.dividerGrey,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (!isGridType) {
+                              isGridType = !isGridType;
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: 34,
+                          width: 34,
+                          decoration: BoxDecoration(
+                            color: isGridType ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(17),
+                          ),
+                          padding: EdgeInsets.all(8),
+                          child: Image.asset(
+                            isGridType
+                                ? ImageConstants.icGridTypeActivate
+                                : ImageConstants.icGridType,
+                          ),
+                        ),
                       ),
-              );
-            }).toList(),
-          ),
-        ],
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (isGridType) {
+                              isGridType = !isGridType;
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: 34,
+                          width: 34,
+                          decoration: BoxDecoration(
+                            color: isGridType ? Colors.transparent : Colors.white,
+                            borderRadius: BorderRadius.circular(17),
+                          ),
+                          padding: EdgeInsets.all(8),
+                          child: Image.asset(
+                            isGridType
+                                ? ImageConstants.icListType
+                                : ImageConstants.icListTypeActivate,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Divider(
+              thickness: 1,
+              color: Colors.black,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+          
+            // body
+            Wrap(
+              children: files.map((file) {
+                if (!file.fileName
+                    .toLowerCase()
+                    .contains(searchText.toLowerCase())) {
+                  return SizedBox();
+                }
+                return InkWell(
+                  onTap: () {
+                    showFileDetailsDialog(file);
+                    setSelectedFileName(file.fileName ?? "");
+                  },
+                  child: isGridType
+                      ? FileTile(
+                          fileName: file.fileName ?? "",
+                          fileSize: file.size ?? 0,
+                          filePath: file.filePath ?? "",
+                          fileExt: file.fileName?.split(".").last ?? "",
+                          fileDate: file.date ?? "",
+                          selectedFileName: selectedFileName,
+                        )
+                      : FileListTile(
+                          fileName: file.fileName ?? "",
+                          fileSize: file.size ?? 0,
+                          filePath: file.filePath ?? "",
+                          fileExt: file.fileName?.split(".").last ?? "",
+                          fileDate: file.date ?? "",
+                          selectedFileName: selectedFileName,
+                        ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
       ),
     );
   }
