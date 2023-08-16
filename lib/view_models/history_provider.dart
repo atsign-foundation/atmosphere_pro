@@ -111,6 +111,11 @@ class HistoryProvider extends BaseModel {
     }
   }
 
+  void setSelectedType(HistoryType type) {
+    typeSelected = type;
+    notifyListeners();
+  }
+
   updateFileHistoryDetail(FileHistory fileHistory) async {
     // checking whether sent file is stored in individual atKey or in sentHistory list.
     if (individualSentFileId[fileHistory.fileDetails!.key] != null) {
@@ -899,6 +904,11 @@ class HistoryProvider extends BaseModel {
       default:
         return [];
     }
+  }
+
+  updateFileType(List<FileType> fileType) {
+    listType = fileType;
+    notifyListeners();
   }
 
   Future<void> filterByFileType(List<FileType> fileType) async {
