@@ -11,7 +11,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_emp
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/desktop_welcome_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_welcome_screen/widgets/welcome_screen_home.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/desktop_contact_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/desktop_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/desktop_home_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:flutter/material.dart';
