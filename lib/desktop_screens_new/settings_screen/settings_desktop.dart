@@ -8,7 +8,7 @@ import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
-import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
