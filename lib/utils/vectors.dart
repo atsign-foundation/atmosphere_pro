@@ -71,4 +71,5 @@ class AppVectors {
   static String icOther = '$_basePath/ic_other.svg';
   static String icChecked = '$_basePath/ic_checked.svg';
   static String icUnchecked = '$_basePath/ic_uncheck.svg';
+  static String icMore = '$_basePath/ic_more.svg';
 }

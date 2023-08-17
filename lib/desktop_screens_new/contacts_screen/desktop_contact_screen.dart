@@ -1,4 +1,5 @@
 import 'package:at_contact/at_contact.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/information_card_expanded.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/circular_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/desktop_contact_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -17,31 +18,36 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: Container(
-        color: Color(0xFFF8F8F8),
-        padding:
-            const EdgeInsets.only(left: 50.0, top: 35, right: 50, bottom: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Header(),
-            Divider(
-              height: 35,
-              color: Colors.black,
+      body: Row(
+        children: [
+          Container(
+            color: Color(0xFFF8F8F8),
+            padding:
+                const EdgeInsets.only(left: 50.0, top: 35, right: 50, bottom: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Header(),
+                Divider(
+                  height: 35,
+                  color: Colors.black,
+                ),
+                // Expanded(
+                // child:
+                // Text('test')
+                Container(
+                  width: double.infinity,
+                  child: DesktopContactCard(
+                    contact: AtContact(atSign: '@kevin'),
+                  ),
+                ),
+                // )
+              ],
             ),
-            // Expanded(
-            // child:
-            // Text('test')
-            Container(
-              width: double.infinity,
-              child: DesktopContactCard(
-                contact: AtContact(atSign: '@kevin'),
-              ),
-            ),
-            // )
-          ],
-        ),
+          ),
+InformationCardExpanded(atContact: atContact, onBack: onBack)
+        ],
       ),
     );
   }
