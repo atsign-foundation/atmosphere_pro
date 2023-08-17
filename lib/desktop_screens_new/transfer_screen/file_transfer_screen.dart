@@ -5,8 +5,8 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_contact_tile.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_file_tile.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -157,7 +157,35 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               widthFactor: 0.9,
               child: Wrap(
                 children: selectedFiles.map((file) {
-                  return AddFileTile(file: file);
+                  return Stack(
+                    children: [
+                      FileTile(
+                        fileName: file.name,
+                        fileExt: file.name.split(".").last,
+                        filePath: file.path ?? "",
+                        fileSize: file.size.toDouble(),
+                        fileDate: DateTime.now().toString(),
+                      ),
+                      Positioned(
+                        right: 20,
+                        top: 20,
+                        child: InkWell(
+                          onTap: () {
+                            var index = selectedFiles.indexOf(file);
+                            context.read<FileTransferProvider>().deleteFiles(index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            padding: EdgeInsets.all(2),
+                            child: Icon(Icons.clear, size: 14,),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
                 }).toList(),
               ),
             ),
@@ -562,7 +590,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               }
                               if (initialLetter != contact.atSign?[1]) {
                                 initialLetter = contact.atSign?[1] ?? "";
-                              }else {
+                              } else {
                                 initialLetter = "";
                               }
                               byteImage = CommonUtilityFunctions()
@@ -575,31 +603,35 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                 initialLetter =
                                     groupContactModel?.group?.groupName?[0] ??
                                         "";
-                              }else {
+                              } else {
                                 initialLetter = "";
                               }
                             }
 
                             return Column(
                               children: [
-                                initialLetter != "" ? Row(
-                                  children: [
-                                    Text(
-                                      initialLetter,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Color(0xFF717171),
-                                      ),
-                                    ),
-                                    SizedBox(width: 20,),
-                                    Expanded(
-                                      child: Divider(
-                                        thickness: 1,
-                                      ),
-                                    ),
-                                  ],
-                                ) : SizedBox(),
+                                initialLetter != ""
+                                    ? Row(
+                                        children: [
+                                          Text(
+                                            initialLetter,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Color(0xFF717171),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Expanded(
+                                            child: Divider(
+                                              thickness: 1,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox(),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 15, top: 5, bottom: 5),

@@ -40,6 +40,7 @@ class FileTile extends StatelessWidget {
                   : Colors.transparent,
               width: 5),
         ),
+        clipBehavior: Clip.hardEdge,
         child: Column(
           children: [
             Container(
@@ -50,6 +51,10 @@ class FileTile extends StatelessWidget {
                 child: thumbnail(fileExt, filePath),
               ),
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
                 color: selectedFileName == fileName
                     ? Theme.of(context).primaryColor
                     : ColorConstants.MILD_GREY,
