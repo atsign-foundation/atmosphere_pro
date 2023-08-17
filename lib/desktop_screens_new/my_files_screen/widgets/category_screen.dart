@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
@@ -8,9 +10,11 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widget
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
@@ -225,7 +229,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           height: 34,
                           width: 34,
                           decoration: BoxDecoration(
-                            color: isGridType ? Colors.white : Colors.transparent,
+                            color:
+                                isGridType ? Colors.white : Colors.transparent,
                             borderRadius: BorderRadius.circular(17),
                           ),
                           padding: EdgeInsets.all(8),
@@ -248,7 +253,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           height: 34,
                           width: 34,
                           decoration: BoxDecoration(
-                            color: isGridType ? Colors.transparent : Colors.white,
+                            color:
+                                isGridType ? Colors.transparent : Colors.white,
                             borderRadius: BorderRadius.circular(17),
                           ),
                           padding: EdgeInsets.all(8),
@@ -274,7 +280,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             SizedBox(
               height: 10,
             ),
-          
+
             // body
             Wrap(
               children: files.map((file) {
@@ -292,7 +298,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ? FileTile(
                           fileName: file.fileName ?? "",
                           fileSize: file.size ?? 0,
-                          filePath: file.filePath ?? "",
+                          filePath: BackendService.getInstance()
+                                  .downloadDirectory!
+                                  .path +
+                              Platform.pathSeparator +
+                              (file.fileName ?? ""),
                           fileExt: file.fileName?.split(".").last ?? "",
                           fileDate: file.date ?? "",
                           selectedFileName: selectedFileName,
@@ -300,7 +310,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       : FileListTile(
                           fileName: file.fileName ?? "",
                           fileSize: file.size ?? 0,
-                          filePath: file.filePath ?? "",
+                          filePath: BackendService.getInstance()
+                                  .downloadDirectory!
+                                  .path +
+                              Platform.pathSeparator +
+                              (file.fileName ?? ""),
                           fileExt: file.fileName?.split(".").last ?? "",
                           fileDate: file.date ?? "",
                           selectedFileName: selectedFileName,
@@ -369,8 +383,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: thumbnail(file.fileName?.split(".").last ?? "",
-                          file.filePath ?? ""),
+                      child: thumbnail(
+                          file.fileName?.split(".").last ?? "",
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              (file.fileName ?? "")),
                     ),
                     SizedBox(height: 24),
                     Align(
@@ -378,19 +395,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: SvgPicture.asset(
-                              AppVectors.icDownloadFile,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
                           InkWell(
                             onTap: () async {
-                              await openFilePath(file.filePath ?? "");
+                              await FileUtils.moveToSendFile(
+                                  BackendService.getInstance()
+                                          .downloadDirectory!
+                                          .path +
+                                      Platform.pathSeparator +
+                                      (file.fileName ?? ""));
+                              await DesktopSetupRoutes.nested_pop();
+                              Navigator.pop(context);
                             },
                             child: Container(
                               decoration: BoxDecoration(
