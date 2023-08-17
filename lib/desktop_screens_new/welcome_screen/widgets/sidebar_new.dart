@@ -138,6 +138,7 @@ class _SideBarNewState extends State<SideBarNew> {
                         ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                         : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
                     padding: EdgeInsets.symmetric(horizontal: 20),
+                    height: SizeConfig().screenHeight,
                     decoration: BoxDecoration(
                       color: Theme.of(context).highlightColor,
                       borderRadius: BorderRadius.only(
@@ -159,165 +160,169 @@ class _SideBarNewState extends State<SideBarNew> {
                       load: (provider) {
                         provider.init();
                       },
-                      successBuilder: (provider) => Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 20.toHeight),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      successBuilder: (provider) => Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  DesktopSetupRoutes.nested_pop();
-                                },
-                                child: Image.asset(
-                                    ImageConstants.logoWhiteIcon,
-                                    height: 52.toHeight),
-                              ),
-                              SizedBox(width: 10.toWidth),
-                              _sideBarProvider.isSidebarExpanded
-                                  ? Text.rich(
-                                      TextSpan(
-                                          text: "Atmosphere",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          children: [
-                                            TextSpan(
-                                              text: "Pro",
+                              SizedBox(height: 20.toHeight),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      DesktopSetupRoutes.nested_pop();
+                                    },
+                                    child: Image.asset(
+                                        ImageConstants.logoWhiteIcon,
+                                        height: 52.toHeight),
+                                  ),
+                                  SizedBox(width: 10.toWidth),
+                                  _sideBarProvider.isSidebarExpanded
+                                      ? Text.rich(
+                                          TextSpan(
+                                              text: "Atmosphere",
                                               style: TextStyle(
-                                                fontWeight: FontWeight.normal,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text: "Pro",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ]),
+                                          style: TextStyle(
+                                            fontSize: 20.toFont,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                ],
+                              ),
+                              SizedBox(height: 20.toHeight),
+                              Container(
+                                height: 1.toHeight,
+                                width: double.maxFinite,
+                                color: Colors.white,
+                              ),
+                              SizedBox(height: 20.toHeight),
+                              InkWell(
+                                onTap: () async {
+                                  await DesktopSetupRoutes.nested_pop();
+                                },
+                                child: _sideBarProvider.isSidebarExpanded
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(30),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 15.toHeight,
+                                            horizontal: 25.toWidth),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Transfer",
+                                              style: TextStyle(
+                                                fontSize: 15.toFont,
+                                                color: Colors.black,
                                               ),
                                             ),
-                                          ]),
-                                      style: TextStyle(
-                                        fontSize: 20.toFont,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                            ],
-                          ),
-                          SizedBox(height: 20.toHeight),
-                          Container(
-                            height: 1.toHeight,
-                            width: double.maxFinite,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 20.toHeight),
-                          InkWell(
-                            onTap: () async {
-                              await DesktopSetupRoutes.nested_pop();
-                            },
-                            child: _sideBarProvider.isSidebarExpanded
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 15.toHeight,
-                                        horizontal: 25.toWidth),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Transfer",
-                                          style: TextStyle(
-                                            fontSize: 15.toFont,
+                                            SizedBox(width: 8.toWidth),
+                                            Icon(
+                                              Icons.send_outlined,
+                                              size: 22,
+                                              color: Colors.black,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        minRadius: 25,
+                                        backgroundColor: Colors.white,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.send_outlined,
+                                            size: 22,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(width: 8.toWidth),
-                                        Icon(
-                                          Icons.send_outlined,
-                                          size: 22,
-                                          color: Colors.black,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : CircleAvatar(
-                                    minRadius: 25,
-                                    backgroundColor: Colors.white,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.send_outlined,
-                                        size: 22,
-                                        color: Colors.black,
                                       ),
+                              ),
+                              SizedBox(height: 20.toHeight),
+                              Text(
+                                "GENERAL",
+                                style: TextStyle(
+                                  fontSize: 8.toFont,
+                                  color: ColorConstants.lightGray,
+                                ),
+                              ),
+                              SizedBox(height: 5.toHeight),
+                              ListView.builder(
+                                itemCount: generalMenuItems.length,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: ((context, index) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    child: SidebarItem(
+                                      menuItem: generalMenuItems[index],
+                                      isSidebarExpanded:
+                                          _sideBarProvider.isSidebarExpanded,
                                     ),
-                                  ),
-                          ),
-                          SizedBox(height: 20.toHeight),
-                          Text(
-                            "GENERAL",
-                            style: TextStyle(
-                              fontSize: 8.toFont,
-                              color: ColorConstants.lightGray,
-                            ),
-                          ),
-                          SizedBox(height: 5.toHeight),
-                          ListView.builder(
-                            itemCount: generalMenuItems.length,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: ((context, index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
+                                  );
+                                }),
+                              ),
+                              SizedBox(height: 40.toHeight),
+                              Text(
+                                "HELP CENTER",
+                                style: TextStyle(
+                                  fontSize: 8.toFont,
+                                  color: ColorConstants.lightGray,
+                                ),
+                              ),
+                              SizedBox(height: 5.toHeight),
+                              ListView.builder(
+                                itemCount: helpCenterMenuItems.length,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: ((context, index) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    child: SidebarItem(
+                                      menuItem: helpCenterMenuItems[index],
+                                      isSidebarExpanded:
+                                          _sideBarProvider.isSidebarExpanded,
+                                      isUrlLauncher:
+                                          helpCenterMenuItems[index].isUrl ??
+                                              false,
+                                      isEmailLauncher:
+                                          helpCenterMenuItems[index].isEmail ??
+                                              false,
+                                    ),
+                                  );
+                                }),
+                              ),
+                              SizedBox(height: 100),
+                              SizedBox(
+                                width: double.maxFinite,
                                 child: SidebarItem(
-                                  menuItem: generalMenuItems[index],
+                                  menuItem: settingsMenuItem,
                                   isSidebarExpanded:
                                       _sideBarProvider.isSidebarExpanded,
                                 ),
-                              );
-                            }),
+                              ),
+                              SizedBox(height: 16),
+                            ],
                           ),
-                          SizedBox(height: 40.toHeight),
-                          Text(
-                            "HELP CENTER",
-                            style: TextStyle(
-                              fontSize: 8.toFont,
-                              color: ColorConstants.lightGray,
-                            ),
-                          ),
-                          SizedBox(height: 5.toHeight),
-                          ListView.builder(
-                            itemCount: helpCenterMenuItems.length,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: ((context, index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
-                                child: SidebarItem(
-                                  menuItem: helpCenterMenuItems[index],
-                                  isSidebarExpanded:
-                                      _sideBarProvider.isSidebarExpanded,
-                                  isUrlLauncher:
-                                      helpCenterMenuItems[index].isUrl ??
-                                          false,
-                                  isEmailLauncher:
-                                      helpCenterMenuItems[index].isEmail ??
-                                          false,
-                                ),
-                              );
-                            }),
-                          ),
-                          Spacer(),
-                          SizedBox(
-                            width: double.maxFinite,
-                            child: SidebarItem(
-                              menuItem: settingsMenuItem,
-                              isSidebarExpanded:
-                                  _sideBarProvider.isSidebarExpanded,
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                        ],
+                        ),
                       ),
                       errorBuilder: (provider) => Center(
                         child: Text(TextStrings().errorOccured),
