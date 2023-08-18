@@ -3,7 +3,6 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widget
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/circular_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/desktop_contact_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class DesktopContactsScreen extends StatefulWidget {
@@ -18,12 +17,12 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: Row(
+      body: Stack(
         children: [
           Container(
             color: Color(0xFFF8F8F8),
-            padding:
-                const EdgeInsets.only(left: 50.0, top: 35, right: 50, bottom: 10),
+            padding: const EdgeInsets.only(
+                left: 50.0, top: 35, right: 50, bottom: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +45,17 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
               ],
             ),
           ),
-InformationCardExpanded(atContact: atContact, onBack: onBack)
+          Row(
+            children: [
+              Expanded(child: SizedBox()),
+              Expanded(
+                child: InformationCardExpanded(
+                  atContact: AtContact(atSign: '@kevin'),
+                  onBack: () {},
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
