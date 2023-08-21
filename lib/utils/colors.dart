@@ -79,7 +79,10 @@ class ColorConstants {
   static const Color scaffoldBackgroundColor = Color(0xFFF8F8F8);
   static const Color desktopPrimary = Color(0xFFF07C50);
   static const Color disableIconButton = Color(0xFFE2E2E2);
-
+  static const Color textFieldFillColor = Color(0xFFFCFCFC);
+  static const Color pickerBackgroundColor = Color(0xFFF7ECE9);
+  static const Color iconButtonColor = Color(0xFFEAEAEA);
+  static const Color ORANGE = Color(0xFFFC7A30);
 }
 
 class ContactInitialsColors {
