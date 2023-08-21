@@ -1,10 +1,11 @@
 import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_initial_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/desktop_groups_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/blocked_contacts.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/settings_desktop.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/desktop_myfiles.dart';
@@ -22,12 +23,10 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
-
   // static String initialRoute = DesktopRoutes.DESKTOP_WELCOME;
   static var _provider = Provider.of<NestedRouteProvider>(
       NavService.navKey.currentContext!,
       listen: false);
-
   static Map<String, WidgetBuilder> get routes {
     return {
       DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(),
@@ -77,7 +76,12 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
           DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) {
-        return DesktopGroupsScreen(showBackButton: false);
+        Map<String, dynamic>? args =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+        DesktopGroupSetupRoutes.setExitFunction(() {
+          DesktopSetupRoutes.nested_pop();
+        });
+        return DesktopGroupInitialScreen(showBackButton: false);
       },
       // =>  DesktopEmptyGroup(),
 
@@ -148,9 +152,7 @@ class DesktopSetupRoutes {
 
 class NestedRouteProvider extends BaseModel {
   String Routes = 'routes';
-
   NestedRouteProvider();
-
   String? current_route;
 
   init() {

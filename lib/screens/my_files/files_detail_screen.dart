@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/sliver_grid_delegate.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
@@ -278,86 +279,81 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
         // }
 
         return Slidable(
-          endActionPane: ActionPane(
-            motion: ScrollMotion(),
-            extentRatio: 0.11,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await openFilePath(
-                        BackendService.getInstance().downloadDirectory!.path +
-                            Platform.pathSeparator +
-                            files[index].fileName!);
-                  },
-                  child: SvgPicture.asset(
-                    AppVectors.icSendFile,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await FileUtils.deleteFile(
+          actionPane: const SlidableDrawerActionPane(),
+          actionExtentRatio: 0.11,
+          secondaryActions: <Widget>[
+            // Consumer<FileProgressProvider>(
+            //   builder: (_c, provider, _) {
+            //     var fileTransferProgress =
+            //         provider.receivedFileProgress[fileTransfer.key];
+
+            //     return CommonUtilityFunctions()
+            //             .checkForDownloadAvailability(fileTransfer)
+            //         ? fileTransferProgress != null
+            //             ? CommonUtilityFunctions().getDownloadStatus(
+            //                 fileTransferProgress,
+            //               )
+            //             : isDownloaded
+            //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
+            //                 : InkWell(
+            //                     onTap: () async {
+            //                       var res = await downloadFiles(
+            //                         fileTransfer,
+            //                         fileName: files[index].fileName,
+            //                       );
+
+            //                       setState(() {
+            //                         isDownloaded = res;
+            //                       });
+            //                     },
+            //                     child: SvgPicture.asset(
+            //                       AppVectors.icDownloadFile,
+            //                     ),
+            //                   )
+            //         : SizedBox();
+            //   },
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 6.0),
+            //   child: SvgPicture.asset(
+            //     AppVectors.icDownloadFile,
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await openFilePath(
                       BackendService.getInstance().downloadDirectory!.path +
                           Platform.pathSeparator +
-                          files[index].fileName!,
-                      fileTransferId: files[index].fileTransferId,
-                      onComplete: () {
-                        files.removeAt(index);
-                      },
-                    );
-                    setState(() {});
-                  },
-                  child: SvgPicture.asset(
-                    AppVectors.icDeleteFile,
-                  ),
+                          files[index].fileName!);
+                },
+                child: SvgPicture.asset(
+                  AppVectors.icSendFile,
                 ),
               ),
-            ],
-          )
-
-          // Consumer<FileProgressProvider>(
-          //   builder: (_c, provider, _) {
-          //     var fileTransferProgress =
-          //         provider.receivedFileProgress[fileTransfer.key];
-
-          //     return CommonUtilityFunctions()
-          //             .checkForDownloadAvailability(fileTransfer)
-          //         ? fileTransferProgress != null
-          //             ? CommonUtilityFunctions().getDownloadStatus(
-          //                 fileTransferProgress,
-          //               )
-          //             : isDownloaded
-          //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
-          //                 : InkWell(
-          //                     onTap: () async {
-          //                       var res = await downloadFiles(
-          //                         fileTransfer,
-          //                         fileName: files[index].fileName,
-          //                       );
-
-          //                       setState(() {
-          //                         isDownloaded = res;
-          //                       });
-          //                     },
-          //                     child: SvgPicture.asset(
-          //                       AppVectors.icDownloadFile,
-          //                     ),
-          //                   )
-          //         : SizedBox();
-          //   },
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 6.0),
-          //   child: SvgPicture.asset(
-          //     AppVectors.icDownloadFile,
-          //   ),
-          // ),
-
-          ,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await FileUtils.deleteFile(
+                    BackendService.getInstance().downloadDirectory!.path +
+                        Platform.pathSeparator +
+                        files[index].fileName!,
+                    fileTransferId: files[index].fileTransferId,
+                    onComplete: () {
+                      files.removeAt(index);
+                    },
+                  );
+                  setState(() {});
+                },
+                child: SvgPicture.asset(
+                  AppVectors.icDeleteFile,
+                ),
+              ),
+            ),
+          ],
           child: InkWell(
             onTap: () async {
               await FileUtils.openFile(

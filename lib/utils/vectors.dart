@@ -77,13 +77,4 @@ class AppVectors {
 
   static String icMore = '$_basePath/ic_more.svg';
   static String icAddNew = '$_basePath/ic_add_new.svg';
-  static String icEdit = '$_basePath/ic_edit.svg';
-  static String icDesktopImage = '$_basePath/ic_desktop_image.svg';
-  static String icDesktopAdd = '$_basePath/ic_desktop_add.svg';
-  static String icShare = '$_basePath/ic_share.svg';
-  static String icDelete = '$_basePath/ic_delete.svg';
-  static String icTransfer = '$_basePath/ic_transfer.svg';
-  static String icRefresh = '$_basePath/ic_refresh.svg';
-  static String icSendGroup = '$_basePath/ic_send_group.svg';
-  static String icOptions = '$_basePath/ic_options.svg';
 }
