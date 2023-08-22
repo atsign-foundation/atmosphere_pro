@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -133,100 +134,106 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
             SizedBox(
               width: 20,
             ),
-            widget.fileHistory.type == HistoryType.received ? Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Consumer<FileProgressProvider>(
-                  builder: (_c, provider, _) {
-                    var fileTransferProgress =
-                        provider.receivedFileProgress[widget.fileTransfer.key];
+            widget.fileHistory.type == HistoryType.received
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Consumer<FileProgressProvider>(
+                        builder: (_c, provider, _) {
+                          var fileTransferProgress = provider
+                              .receivedFileProgress[widget.fileTransfer.key];
 
-                    return CommonUtilityFunctions()
-                            .checkForDownloadAvailability(
-                      widget.fileTransfer,
-                    )
-                        ? fileTransferProgress != null &&
-                                fileTransferProgress.fileName ==
-                                    widget.singleFile.name
-                            ? Image.asset(
-                                ImageConstants.icCloudDownloading,
-                              )
-                            : isDownloaded
-                                ? SvgPicture.asset(
-                                    AppVectors.icCloudDownloaded,
-                                  )
-                                : InkWell(
-                                    onTap: () async {
-                                      await downloadFiles(
-                                        widget.fileTransfer,
-                                        fileName: widget.singleFile.name,
-                                      );
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppVectors.icDownloadFile,
-                                    ),
-                                  )
-                        : SizedBox();
-                  },
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                isDownloaded
-                    ? GestureDetector(
-                        onTap: () async {
-                          if (widget.fromContact) {
-                            Navigator.pop(context);
-                          }
-                          await FileUtils.moveToSendFile(
-                              BackendService.getInstance()
-                                      .downloadDirectory!
-                                      .path +
-                                  Platform.pathSeparator +
-                                  widget.singleFile.name!);
-
+                          return CommonUtilityFunctions()
+                                  .checkForDownloadAvailability(
+                            widget.fileTransfer,
+                          )
+                              ? fileTransferProgress != null &&
+                                      fileTransferProgress.fileName ==
+                                          widget.singleFile.name
+                                  ? Image.asset(
+                                      ImageConstants.icCloudDownloading,
+                                    )
+                                  : isDownloaded
+                                      ? SvgPicture.asset(
+                                          AppVectors.icCloudDownloaded,
+                                        )
+                                      : InkWell(
+                                          onTap: () async {
+                                            await downloadFiles(
+                                              widget.fileTransfer,
+                                              fileName: widget.singleFile.name,
+                                            );
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppVectors.icDownloadFile,
+                                          ),
+                                        )
+                              : SizedBox();
                         },
-                        child: SvgPicture.asset(
-                          AppVectors.icSendNew,
-                        ),
-                      )
-                    : SizedBox(),
-                isDownloaded ? Padding(
-                  padding: const EdgeInsets.only(left: 6.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      String filePath =
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              (widget.singleFile.name ?? "");
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      isDownloaded
+                          ? GestureDetector(
+                              onTap: () async {
+                                if (widget.fromContact) {
+                                  Navigator.pop(context);
+                                }
+                                await FileUtils.moveToSendFile(
+                                    BackendService.getInstance()
+                                            .downloadDirectory!
+                                            .path +
+                                        Platform.pathSeparator +
+                                        widget.singleFile.name!);
 
-                      File file = File(filePath);
-                      bool fileExists = await file.exists();
-                      if (fileExists == false) {
-                        await SnackbarService().showSnackbar(
-                          context,
-                          "File does not exist on your device",
-                          bgColor: ColorConstants.redAlert,
-                        );
-                      } else {
-                        file.deleteSync();
-                        SnackbarService().showSnackbar(
-                          context,
-                          "Successfully deleted the file",
-                          bgColor: ColorConstants.successColor,
-                        );
-                        setState(() {
-                          isDownloaded = false;
-                        });
-                      }
-                    },
-                    child: SvgPicture.asset(
-                      AppVectors.icDeleteGray,
-                    ),
-                  ),
-                ) : SizedBox(),
-              ],
-            ) : SizedBox(),
+                                await DesktopSetupRoutes.nested_pop();
+                              },
+                              child: SvgPicture.asset(
+                                AppVectors.icSendNew,
+                              ),
+                            )
+                          : SizedBox(),
+                      isDownloaded
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 6.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  String filePath = BackendService.getInstance()
+                                          .downloadDirectory!
+                                          .path +
+                                      Platform.pathSeparator +
+                                      (widget.singleFile.name ?? "");
+
+                                  File file = File(filePath);
+                                  bool fileExists = await file.exists();
+                                  if (fileExists == false) {
+                                    await SnackbarService().showSnackbar(
+                                      context,
+                                      "File does not exist on your device",
+                                      bgColor: ColorConstants.redAlert,
+                                    );
+                                  } else {
+                                    file.deleteSync();
+                                    SnackbarService().showSnackbar(
+                                      context,
+                                      "Successfully deleted the file",
+                                      bgColor: ColorConstants.successColor,
+                                    );
+                                    setState(() {
+                                      isDownloaded = false;
+                                    });
+                                  }
+                                },
+                                child: SvgPicture.asset(
+                                  AppVectors.icDeleteGray,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  )
+                : SizedBox(),
           ],
         ),
       ),

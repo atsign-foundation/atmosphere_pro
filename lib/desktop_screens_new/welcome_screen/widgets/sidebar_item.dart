@@ -216,14 +216,12 @@ class BuildSidebarIconTitle extends StatelessWidget {
             ? MainAxisAlignment.start
             : MainAxisAlignment.center,
         children: [
-          Flexible(
-            child: Image.asset(
-              image!,
-              height: 22.toFont,
-              color: isCurrentRoute
-                  ? Colors.white
-                  : ColorConstants.sidebarTextUnselected,
-            ),
+          Image.asset(
+            image!,
+            height: 22.toFont,
+            color: isCurrentRoute
+                ? Colors.white
+                : ColorConstants.sidebarTextUnselected,
           ),
           SizedBox(width: isSidebarExpanded ? 10 : 0),
           isSidebarExpanded
