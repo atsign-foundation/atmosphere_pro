@@ -38,7 +38,7 @@ dependencies:
   desktop_window: ^0.4.0
   flutter_keychain: ^2.1.0
   flutter_local_notifications: ^9.4.0
-  flutter_slidable: ^0.6.0
+  flutter_slidable: ^3.0.0
   google_fonts: ^4.0.4
   intl: ^0.17.0
   open_file: ^3.2.1
@@ -74,9 +74,10 @@ dependencies:
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.6
   showcaseview: ^1.1.5
-  biometric_storage: ^4.1.3
+  biometric_storage: ^5.0.0
   flutter_svg: ^1.1.5
   image_picker: 0.8.6
+  dotted_border: ^2.0.0+3
   expandable: ^5.0.1
 dev_dependencies:
   flutter_test:
@@ -86,13 +87,12 @@ dev_dependencies:
 dependency_overrides:
   package_info_plus: ^3.0.0
   at_client: ^3.0.56
-  biometric_storage: ^4.1.3
   file_picker: ^5.0.0
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets
       path: packages/at_contacts_group_flutter
-      ref: trunk
+      ref: feature/add-get-trusted-contact-method
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets

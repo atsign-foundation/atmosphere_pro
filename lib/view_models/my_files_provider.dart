@@ -146,25 +146,25 @@ class MyFilesProvider extends BaseModel {
 
       await Future.forEach(myFiles, (FileTransfer fileData) async {
         await Future.forEach(fileData.files!, (dynamic file) async {
-          String? fileExtension = file.name.split('.').last;
+          String? fileExtension = file.displayName.split('.').last;
           String filePath =
               BackendService.getInstance().downloadDirectory!.path +
                   Platform.pathSeparator +
-                  file.name;
+                  file.displayName;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
                 fileData.sender! +
                 Platform.pathSeparator +
-                file.name;
+                file.displayName;
           }
           FilesDetail fileDetail = FilesDetail(
-              fileName: file.name,
+              fileName: file.displayName,
               filePath: filePath,
               size: double.parse(file.size.toString()),
               date: fileData.date?.toLocal().toString(),
-              type: file.name.split('.').last,
+              type: file.displayName.split('.').last,
               contactName: fileData.sender,
               message: fileData.notes,
               fileTransferId: fileData.key);

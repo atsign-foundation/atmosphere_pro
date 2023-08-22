@@ -19,7 +19,9 @@ class ColorConstants {
   static const Color fadedGrey = Color(0xffF1F2F3);
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color orangeColor = Color(0xffF05E3F);
+  static const Color orangeColorDim = Color.fromRGBO(240, 94, 63, 0.08);
   static const Color yellow = Color(0xFFEAA743);
+  static const Color yellowDim = Color.fromRGBO(234, 167, 67, 0.19);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
   static const Color redAlert = Color(0xffF86060);
   static const Color red = Color(0xFFe34040);
@@ -76,7 +78,11 @@ class ColorConstants {
   static const Color unselectedFilterOptionColor = Color(0xFF8D8D8D);
   static const Color scaffoldBackgroundColor = Color(0xFFF8F8F8);
   static const Color desktopPrimary = Color(0xFFF07C50);
+  static const Color disableIconButton = Color(0xFFE2E2E2);
+  static const Color textFieldFillColor = Color(0xFFFCFCFC);
+  static const Color pickerBackgroundColor = Color(0xFFF7ECE9);
   static const Color iconButtonColor = Color(0xFFEAEAEA);
+  static const Color ORANGE = Color(0xFFFC7A30);
 }
 
 class ContactInitialsColors {

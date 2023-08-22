@@ -277,6 +277,18 @@ class CustomTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle desktopPrimaryW50015 = TextStyle(
+    color: Colors.black,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle desktopPrimaryW50010 = TextStyle(
+    color: Colors.black,
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle desktopPrimaryBold18 = TextStyle(
       color: ColorConstants.fontPrimary,
       fontSize: 18,
@@ -327,33 +339,60 @@ class CustomTextStyles {
   );
 
   static TextStyle desktopButton15 = TextStyle(
-      color: Colors.white,
-      fontSize: 15,
-      letterSpacing: 0.1,
-      fontWeight: FontWeight.w700);
-
-  static TextStyle desktopPrimaryW400S14 = TextStyle(
-    color: Colors.black,
-    fontSize: 14,
+    color: Colors.white,
+    fontSize: 15,
     letterSpacing: 0.1,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w700,
   );
 
-  static TextStyle whiteBoldS12 = TextStyle(
-      color: Colors.white,
-      fontSize: 12,
-      fontWeight: FontWeight.w700
-  );
-
-  static TextStyle desktopPrimaryW500S15 = TextStyle(
-    color: Colors.black,
+  static TextStyle orangeW50015 = TextStyle(
+    color: ColorConstants.orange,
     fontSize: 15,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle oldSliverW400S10 = TextStyle(
-    color: ColorConstants.oldSliver,
-    fontSize: 10,
+  static TextStyle whiteW50015 = TextStyle(
+    color: Colors.white,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle blackW50020 = const TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle orangeW50014 = TextStyle(
+      color: ColorConstants.orange, fontSize: 14, fontWeight: FontWeight.w500);
+
+  static TextStyle whiteBold12 = const TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle blackW60013 = const TextStyle(
+    color: Colors.black,
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle blackW40011 = const TextStyle(
+    color: Colors.black,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle darkSliverBold20 = TextStyle(
+    color: ColorConstants.darkSliver,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle raisinBlackW60025 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 25.toFont,
+    fontWeight: FontWeight.w600,
   );
 }

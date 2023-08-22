@@ -54,6 +54,7 @@ class ImageConstants {
   static String graphic2 = "$_basePath/splash2.png";
   static String graphic3 = "$_basePath/splash3.png";
   static String graphic4 = "$_basePath/splash4.png";
+  static String desktopSplash = "$_basePath/desktop_splash.png";
 
   // New UI Settings Screen
   static String switchAtSign = '$_basePath/switch_atsign.png';
@@ -104,4 +105,7 @@ class ImageConstants {
   static String icListTypeActivate = '$_basePath/ic_list_type_activate.png';
   static String icListType = '$_basePath/ic_list_type.png';
   static String icCloudDownloading = '$_basePath/ic_cloud_downloading.png';
+
+  // New UI tranfer screen 
+  static String uploadFile = '$_basePath/upload_file.png';
 }
