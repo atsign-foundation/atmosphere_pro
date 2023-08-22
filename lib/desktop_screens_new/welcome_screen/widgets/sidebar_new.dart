@@ -138,12 +138,11 @@ class _SideBarNewState extends State<SideBarNew> {
                         ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                         : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    height: SizeConfig().screenHeight,
+                    height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       color: Theme.of(context).highlightColor,
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10),
-                        // bottomRight: Radius.circular(10),
                       ),
                       boxShadow: [
                         BoxShadow(
