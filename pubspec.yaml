@@ -90,12 +90,12 @@ dependency_overrides:
   file_picker: ^5.0.0
   at_contacts_group_flutter:
     git:
-      url: https://github.com/atsign-foundation/at_widgets
+      url: https://github.com/atsign-foundation/at_widgets/
       path: packages/at_contacts_group_flutter
       ref: feature/add-get-trusted-contact-method
   at_contacts_flutter:
     git:
-      url: https://github.com/atsign-foundation/at_widgets
+      url: https://github.com/atsign-foundation/at_widgets/
       path: packages/at_contacts_flutter
       ref: trunk
 

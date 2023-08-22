@@ -118,8 +118,8 @@ packages:
     description:
       path: "packages/at_contacts_flutter"
       ref: trunk
-      resolved-ref: fe02a936c2c7980657a48c96e9d5b63399158d1d
-      url: "https://github.com/atsign-foundation/at_widgets"
+      resolved-ref: "87025a2b85c9bea17f5a8be9499fecced5921aca"
+      url: "https://github.com/atsign-foundation/at_widgets/"
     source: git
     version: "4.0.11"
   at_contacts_group_flutter:
@@ -127,8 +127,8 @@ packages:
     description:
       path: "packages/at_contacts_group_flutter"
       ref: "feature/add-get-trusted-contact-method"
-      resolved-ref: c4e2ecf934f584b5340eb258898adfe9a11cf97b
-      url: "https://github.com/atsign-foundation/at_widgets"
+      resolved-ref: "6549e5af25f4056ac4da0cc89d25b475cc3e7397"
+      url: "https://github.com/atsign-foundation/at_widgets/"
     source: git
     version: "4.0.13"
   at_file_saver:
