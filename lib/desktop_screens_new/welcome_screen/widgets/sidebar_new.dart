@@ -143,7 +143,7 @@ class _SideBarNewState extends State<SideBarNew> {
                       color: Theme.of(context).highlightColor,
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
+                        // bottomRight: Radius.circular(10),
                       ),
                       boxShadow: [
                         BoxShadow(
