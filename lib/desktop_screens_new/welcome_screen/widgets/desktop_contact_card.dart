@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/circular_icon.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -108,9 +110,23 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
           Spacer(),
           Row(
             children: [
-              CircularIcon(
-                icon: Icons.send_rounded,
-                iconColor: Color(0xFFEAA743),
+              InkWell(
+                onTap: () async {
+                  Provider.of<FileTransferProvider>(context, listen: false)
+                      .selectedContacts = [
+                    GroupContactsModel(
+                        contact: widget.contact,
+                        contactType: ContactsType.CONTACT),
+                  ];
+                  Provider.of<FileTransferProvider>(context, listen: false)
+                      .notify();
+
+                  await DesktopSetupRoutes.nested_pop();
+                },
+                child: CircularIcon(
+                  icon: Icons.send_rounded,
+                  iconColor: Color(0xFFEAA743),
+                ),
               ),
               isTrusted
                   ? Padding(

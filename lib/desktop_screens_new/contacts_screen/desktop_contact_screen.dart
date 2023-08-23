@@ -66,6 +66,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
           Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Container(
                   color: Color(0xFFF8F8F8),
                   padding: const EdgeInsets.only(
@@ -112,7 +113,6 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                     trustedContactsMap[contact.atSign] = true;
                                   }
 
-                                  var itemCount = snapshot.data!.length;
                                   _filteredList = <BaseContact>[];
 
                                   for (BaseContact contact

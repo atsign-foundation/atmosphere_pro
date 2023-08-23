@@ -120,7 +120,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
   }
 
   Widget buildAppBarRow() {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -132,9 +132,9 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
             width: 24,
           ),
         ),
-        SizedBox(width: 48),
-        buildInfoWidget(),
-        SizedBox(width: 48),
+        Center(
+          child: buildInfoWidget(),
+        ),
       ],
     );
   }
