@@ -135,6 +135,28 @@ class CustomTextStyles {
     letterSpacing: 0.1,
   );
 
+  static TextStyle desktopPrimaryW400S14 = TextStyle(
+    color: Colors.black,
+    fontSize: 14,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle desktopPrimaryW500S15 = TextStyle(
+    color: Colors.black,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle oldSliverW400S10 = TextStyle(
+    color: ColorConstants.oldSliver,
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle whiteBoldS12 =
+      TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700);
+
   static TextStyle primaryBold16 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontSize: 16.toFont,

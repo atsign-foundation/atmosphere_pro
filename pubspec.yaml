@@ -74,7 +74,7 @@ dependencies:
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.6
   showcaseview: ^1.1.5
-  biometric_storage: ^5.0.0
+  biometric_storage: ^5.0.0+3
   flutter_svg: ^1.1.5
   image_picker: 0.8.6
   dotted_border: ^2.0.0+3
@@ -85,6 +85,7 @@ dev_dependencies:
   msix: ^3.3.1
 
 dependency_overrides:
+  file_selector_macos: ^0.9.3+1
   package_info_plus: ^3.0.0
   at_client: ^3.0.56
   file_picker: ^5.0.0

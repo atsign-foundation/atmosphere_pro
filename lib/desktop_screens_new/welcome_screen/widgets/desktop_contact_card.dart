@@ -5,7 +5,9 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class DesktopContactCard extends StatefulWidget {
   final AtContact contact;
@@ -21,6 +23,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
 
   @override
   void initState() {
+    getNameAndImage();
     super.initState();
   }
 
@@ -61,8 +64,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                   nonAsset: true,
                 )
               : ContactInitial(
-                  borderRadius: 18,
-                  size: 40,
+                  size: 50,
                   initials: contactName,
                 ),
           const SizedBox(width: 18),
@@ -96,9 +98,11 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                 icon: Icons.send_rounded,
                 iconColor: Color(0xFFEAA743),
               ),
-              CircularIcon(
-                icon: Icons.check,
-                iconColor: ColorConstants.orangeColor,
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: SvgPicture.asset(
+                  AppVectors.icTrustActivated,
+                ),
               ),
               CircularIcon(
                 icon: Icons.keyboard_control,

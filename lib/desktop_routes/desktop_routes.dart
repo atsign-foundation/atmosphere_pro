@@ -64,7 +64,7 @@ class DesktopSetupRoutes {
       },
       DesktopRoutes.DESKTOP_HISTORY: (context) => HistoryDesktopScreen(),
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
-        return DesktopContactsScreen();
+        return DesktopContactScreen();
       },
       DesktopRoutes.DESKTOP_DOWNLOAD_ALL: (context) {
         return DesktopDownloadAllFiles();

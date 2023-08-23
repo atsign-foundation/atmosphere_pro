@@ -1,23 +1,61 @@
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/models/contact_base_model.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/add_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/information_card_expanded.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/circular_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/desktop_contact_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 enum contactSidebar { contactDetails, addContact }
 
-class DesktopContactsScreen extends StatefulWidget {
-  const DesktopContactsScreen({Key? key}) : super(key: key);
+class DesktopContactScreen extends StatefulWidget {
+  const DesktopContactScreen({Key? key}) : super(key: key);
 
   @override
-  State<DesktopContactsScreen> createState() => _DesktopContactsScreenState();
+  State<DesktopContactScreen> createState() => _DesktopContactScreenState();
 }
 
-class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
+class _DesktopContactScreenState extends State<DesktopContactScreen> {
   contactSidebar? sidebarView;
+  var _filteredList = <BaseContact>[];
+  String searchText = '';
+  BaseContact? selectedContact;
+  // bool isRefresh = false;
+  bool isSearching = false, showTrusted = false;
+  late TrustedContactProvider trustedProvider;
+
+  @override
+  void initState() {
+    fetchContacts();
+    trustedProvider = context.read<TrustedContactProvider>();
+    super.initState();
+  }
+
+  fetchContacts() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      List<AtContact>? result;
+
+      result = await ContactService().fetchContacts();
+      if (result == null) {
+        if (mounted) {
+          // TODO
+          // add error
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +79,83 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                         height: 35,
                         color: Colors.black,
                       ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            sidebarView = contactSidebar.contactDetails;
-                          });
-                        },
-                        child: Container(
+                      Container(
                           width: double.infinity,
-                          child: DesktopContactCard(
-                            contact: AtContact(atSign: '@kevin'),
-                          ),
-                        ),
-                      ),
+                          height: SizeConfig().screenHeight - 120,
+                          child: StreamBuilder<List<BaseContact?>>(
+                              stream: ContactService().contactStream,
+                              initialData: ContactService().baseContactList,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if ((snapshot.data == null ||
+                                    snapshot.data!.isEmpty)) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        TextStrings().noContacts,
+                                        style: CustomTextStyles.primaryBold16,
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  var itemCount = snapshot.data!.length;
+
+                                  return ListView.separated(
+                                    itemCount: itemCount,
+                                    itemBuilder: (context, index) {
+                                      var contact = snapshot.data![index]!;
+
+                                      if (contact.contact!.atSign!
+                                          .contains(searchText)) {
+                                        _filteredList.add(contact);
+                                        return InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedContact = contact;
+                                              sidebarView =
+                                                  contactSidebar.contactDetails;
+                                            });
+                                          },
+                                          child: Container(
+                                              key: UniqueKey(),
+                                              child: DesktopContactCard(
+                                                contact: contact.contact!,
+                                              )),
+                                        );
+                                      } else {
+                                        _filteredList.remove(contact);
+
+                                        if (_filteredList.isEmpty &&
+                                            searchText.trim().isNotEmpty &&
+                                            index == itemCount - 1) {
+                                          return const Center(
+                                            child: Text('No Contacts found'),
+                                          );
+                                        }
+
+                                        return const SizedBox();
+                                      }
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      var contact = snapshot.data![index]!;
+                                      if (contact.contact!.atSign!
+                                          .contains(searchText)) {
+                                        return const Divider(
+                                          thickness: 0.2,
+                                        );
+                                      }
+                                      return const SizedBox();
+                                    },
+                                  );
+                                }
+                              })),
                     ],
                   ),
                 ),
@@ -82,14 +184,86 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           ),
         ),
         Spacer(),
-        CircularIcon(icon: Icons.search),
         Padding(
           padding: const EdgeInsets.only(left: 13.0),
-          child: CircularIcon(icon: Icons.check),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  showTrusted = !showTrusted;
+                });
+              },
+              child: SvgPicture.asset(
+                AppVectors.icTrustActivated,
+                color: showTrusted ? null : Colors.grey,
+              ),
+            ),
+          ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 13.0),
-          child: CircularIcon(icon: Icons.refresh),
+        isSearching
+            ? Container(
+                margin: const EdgeInsets.only(left: 13.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: Container(
+                    height: 40,
+                    width: 308,
+                    color: Colors.white,
+                    child: TextField(
+                      autofocus: true,
+                      onChanged: (value) {
+                        setState(() {
+                          searchText = value;
+                        });
+                      },
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 8),
+                        border: InputBorder.none,
+                        hintText: 'Search',
+                        hintStyle: TextStyle(
+                          color: ColorConstants.grey,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                searchText = '';
+                                isSearching = false;
+                              });
+                            },
+                            child: const Icon(Icons.close)),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Container(
+                margin: const EdgeInsets.only(left: 13.0),
+                child: IconButtonWidget(
+                  icon: AppVectors.icSearch,
+                  onTap: () {
+                    setState(() {
+                      isSearching = true;
+                    });
+                  },
+                ),
+              ),
+        InkWell(
+          onTap: () {
+            fetchContacts();
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 13.0),
+            child: CircularIcon(icon: Icons.refresh),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 13.0),
@@ -115,7 +289,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
   Widget getSidebarWidget() {
     if (sidebarView == contactSidebar.contactDetails) {
       return InformationCardExpanded(
-        atContact: AtContact(atSign: '@kevin'),
+        atContact: selectedContact!.contact!,
         onBack: () {
           setState(() {
             sidebarView = null;

@@ -80,7 +80,7 @@ SPEC CHECKSUMS:
   biometric_storage: 43caa6e7ef00e8e19c074216e7e1786dacda9e76
   desktop_window: fb7c4f12c1129f947ac482296b6f14059d57a3c3
   emoji_picker_flutter: 533634326b1c5de9a181ba14b9758e6dfe967a20
-  file_selector_macos: f1b08a781e66103e3ba279fd5d4024a2478b3af6
+  file_selector_macos: 468fb6b81fac7c0e88d71317f3eec34c3b008ff9
   flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   local_notifier: e9506bc66fc70311e8bc7291fb70f743c081e4ff
