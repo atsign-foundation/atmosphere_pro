@@ -12,7 +12,7 @@ class FileListTile extends StatelessWidget {
     required this.filePath,
     required this.fileExt,
     required this.fileDate,
-    this.selectedFileName = "",
+    this.selectedFile = false,
   }) : super(key: key);
 
   final String fileName;
@@ -20,7 +20,7 @@ class FileListTile extends StatelessWidget {
   final String filePath;
   final String fileExt;
   final String fileDate;
-  final String selectedFileName;
+  final bool selectedFile;
 
   @override
   Widget build(BuildContext context) {

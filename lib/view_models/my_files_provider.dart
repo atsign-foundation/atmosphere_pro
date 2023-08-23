@@ -161,7 +161,7 @@ class MyFilesProvider extends BaseModel {
     myFiles = myFilesRecord;
     print('myFiles length: ${myFiles.length}');
     await getAllFiles();
-    await sortAllFiles();
+    await sortFiles();
     await getrecentHistoryFiles();
 
     // populateTabs();
@@ -254,25 +254,25 @@ class MyFilesProvider extends BaseModel {
 
       await Future.forEach(myFiles, (FileTransfer fileData) async {
         await Future.forEach(fileData.files!, (dynamic file) async {
-          String? fileExtension = file.displayName.split('.').last;
+          String? fileExtension = file.name.split('.').last;
           String filePath =
               BackendService.getInstance().downloadDirectory!.path +
                   Platform.pathSeparator +
-                  file.displayName;
+                  file.name;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
-                fileData.sender! +
+                (fileData.sender ?? "") +
                 Platform.pathSeparator +
-                file.displayName;
+                file.name;
           }
           FilesDetail fileDetail = FilesDetail(
-              fileName: file.displayName,
+              fileName: file.name,
               filePath: filePath,
               size: double.parse(file.size.toString()),
               date: fileData.date?.toLocal().toString(),
-              type: file.displayName.split('.').last,
+              type: file.name.split('.').last,
               contactName: fileData.sender,
               message: fileData.notes,
               fileTransferId: fileData.key);
@@ -469,7 +469,7 @@ class MyFilesProvider extends BaseModel {
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
-                fileData.sender! +
+                (fileData.sender ?? "") +
                 Platform.pathSeparator +
                 (file.name ?? '');
           } else {

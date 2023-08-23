@@ -8,7 +8,6 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_ti
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -16,10 +15,8 @@ import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -36,12 +33,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
   String searchText = '';
   bool isSearchActive = false;
   bool isGridType = true;
-  String selectedFileName = "";
-  var files = [];
+  FilesDetail? selectedFile;
+  List<FilesDetail> files = [];
 
-  setSelectedFileName(String name) {
+  setSelectedFileName(FilesDetail? file) {
     setState(() {
-      selectedFileName = name;
+      selectedFile = file;
     });
   }
 
@@ -284,15 +281,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
             // body
             Wrap(
               children: files.map((file) {
-                if (!file.fileName
+                if ((file.fileName ?? "")
                     .toLowerCase()
-                    .contains(searchText.toLowerCase())) {
+                    .contains(searchText.toLowerCase()) == false) {
                   return SizedBox();
                 }
                 return InkWell(
                   onTap: () {
                     showFileDetailsDialog(file);
-                    setSelectedFileName(file.fileName ?? "");
+                    setSelectedFileName(file);
                   },
                   child: isGridType
                       ? FileTile(
@@ -305,7 +302,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               (file.fileName ?? ""),
                           fileExt: file.fileName?.split(".").last ?? "",
                           fileDate: file.date ?? "",
-                          selectedFileName: selectedFileName,
+                          selectedFile: selectedFile == file,
                         )
                       : FileListTile(
                           fileName: file.fileName ?? "",
@@ -317,7 +314,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               (file.fileName ?? ""),
                           fileExt: file.fileName?.split(".").last ?? "",
                           fileDate: file.date ?? "",
-                          selectedFileName: selectedFileName,
+                          selectedFile: selectedFile == file,
                         ),
                 );
               }).toList(),
@@ -448,7 +445,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   if (Navigator.canPop(context)) {
                                     Navigator.pop(context);
                                   }
-                                  setSelectedFileName(" ");
+                                  setSelectedFileName(null);
                                 }
                               }
 
@@ -536,18 +533,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            "${(file.contactName ?? '').split("@")[1]}",
+                            "${file.contactName ?? ""}",
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(height: 1),
-                          Text(
-                            "${file.contactName}",
-                            style: TextStyle(
-                              color: Colors.black,
                               fontSize: 10,
                             ),
                           ),
