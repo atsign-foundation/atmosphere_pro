@@ -697,6 +697,15 @@ class MyFilesProvider extends BaseModel {
       }
       if (fileIndex != -1) {
         myFiles[myFileIndex].files!.removeAt(fileIndex);
+        // also remove file from allFiles
+        FilesDetail? fileToDelete;
+        for(var file in allFiles) {
+          if(file.fileTransferId == fileTransferId && file.fileName == filename) {
+            fileToDelete = file;
+            break;
+          }
+        }
+        allFiles.remove(fileToDelete);
       }
     }
 
@@ -711,6 +720,7 @@ class MyFilesProvider extends BaseModel {
       await sortFiles();
       populateTabs();
     }
+    notifyListeners();
     return res;
   }
 
