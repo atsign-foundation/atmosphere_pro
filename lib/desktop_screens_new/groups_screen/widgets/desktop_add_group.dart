@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
@@ -17,37 +19,18 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/desktop_add_group_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 /// This widget gives a screen view for displaying contacts and group details
 // ignore: must_be_immutable
 class DesktopAddGroup extends StatefulWidget {
-  /// Boolean flag to set view to show contacts
-  final bool showContacts;
-
-  /// Boolean flag to set view to show groups
-  final bool showGroups;
-
-  /// Boolean flag to set view to show single selection
-  final bool singleSelection;
-
-  /// Boolean flag to set view as selection screen
-  final bool asSelectionScreen;
-
   Function()? onDoneTap;
-
-  /// Callback to get the list of selected contacts back to the app
-  final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
   DesktopAddGroup({
     Key? key,
-    this.showContacts = false,
-    this.showGroups = false,
-    this.singleSelection = false,
-    this.asSelectionScreen = true,
-    this.selectedList,
     this.onDoneTap,
   }) : super(key: key);
 
@@ -59,159 +42,120 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
   /// Instance of group service
   late GroupService _groupService;
 
-  /// Text from the search field
-  String searchText = '';
-
   /// Boolean indicator of blocking action in progress
   bool blockingContact = false;
-
-  /// List to hold the last saved contacts of a group
-  List<GroupContactsModel?> unmodifiedSelectedGroupContacts = [];
 
   /// Instance of contact service
   late ContactService _contactService;
 
   /// Boolean indicator of deleting action in progress
   bool deletingContact = false;
-  ContactTabs contactTabs = ContactTabs.ALL;
+
+  late DesktopAddGroupProvider addGroupProvider;
 
   /// Controller of group name field
   late TextEditingController groupNameController;
-
-  Uint8List? selectedImageByteData;
 
   bool processing = false;
 
   @override
   void initState() {
+    groupNameController = TextEditingController();
     _groupService = GroupService();
     _contactService = ContactService();
-    groupNameController = TextEditingController();
     _groupService.fetchGroupsAndContacts(isDesktop: true);
-    unmodifiedSelectedGroupContacts =
-        List.from(_groupService.selectedGroupContacts);
-
+    addGroupProvider = context.read<DesktopAddGroupProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      addGroupProvider.setGroupName('');
+      addGroupProvider.setSelectedImageByteData(Uint8List(0));
+    });
     super.initState();
   }
 
-  List<AtContact> selectedList = [];
+  void setSelectedContactsList(List<GroupContactsModel?> list) {
+    _groupService.setSelectedContacts(list.map((e) => e?.contact).toList());
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: DesktopCustomAppBar(
-        showTitle: true,
-        centerTitle: false,
-        titleText: 'Add New Group',
-        titleTextStyle: CustomTextStyles.blackW50020,
-        leadingIcon: InkWell(
-          onTap: widget.onDoneTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: SvgPicture.asset(
-              AppVectors.icBack,
-              width: 8,
-              height: 20,
+    return Consumer<DesktopAddGroupProvider>(
+        builder: (context, provider, child) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: DesktopCustomAppBar(
+          showTitle: true,
+          centerTitle: false,
+          titleText: 'Add New Group',
+          titleTextStyle: CustomTextStyles.blackW50020,
+          leadingIcon: InkWell(
+            onTap: widget.onDoneTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: SvgPicture.asset(
+                AppVectors.icBack,
+                width: 8,
+                height: 20,
+              ),
+            ),
+          ),
+          showLeadingIcon: true,
+          showTrailingIcon: true,
+          trailingIcon: InkWell(
+            onTap: () async {
+              await createGroup();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 52, vertical: 8),
+              margin: const EdgeInsets.only(right: 28),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(46),
+                color: ColorConstants.orange,
+              ),
+              child: Text(
+                'Save',
+                style: CustomTextStyles.whiteW50015,
+              ),
             ),
           ),
         ),
-        showLeadingIcon: true,
-        showTrailingIcon: true,
-        trailingIcon: InkWell(
-          onTap: () async {
-            await createGroup();
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 52, vertical: 8),
-            margin: const EdgeInsets.only(right: 28),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(46),
-              color: ColorConstants.orange,
+        body: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                  left: 24.toHeight, right: 24.toHeight, bottom: 12.toHeight),
+              height: double.infinity,
+              child: ListView(
+                children: [
+                  DesktopGroupNameTextField(
+                    groupNameController: groupNameController,
+                    onChanged: (value) {
+                      provider.setGroupName(value ?? '');
+                    },
+                  ),
+                  SizedBox(height: 20.toHeight),
+                  DesktopCoverImagePicker(
+                    selectedImage: provider.selectedImageByteData,
+                    onSelected: (value) {
+                      provider.setSelectedImageByteData(value);
+                    },
+                    isEdit: true,
+                    onCancel: () {
+                      provider.setSelectedImageByteData(Uint8List(0));
+                    },
+                  ),
+                  SizedBox(height: 20.toHeight),
+                  DesktopGroupContactsList(
+                    asSelectionScreen: true,
+                  ),
+                ],
+              ),
             ),
-            child: Text(
-              'Save',
-              style: CustomTextStyles.whiteW50015,
-            ),
-          ),
+            const DesktopFloatingAddContactButton(),
+          ],
         ),
-      ),
-      body: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.only(
-                left: 24.toHeight, right: 24.toHeight, bottom: 12.toHeight),
-            height: double.infinity,
-            child: ListView(
-              children: [
-                DesktopGroupNameTextField(
-                  groupNameController: groupNameController,
-                ),
-                SizedBox(height: 20.toHeight),
-                DesktopCoverImagePicker(
-                  selectedImage: selectedImageByteData,
-                  onSelected: (value) {
-                    setState(() {
-                      selectedImageByteData = value;
-                    });
-                  },
-                  isEdit: true,
-                ),
-                SizedBox(height: 20.toHeight),
-                DesktopGroupContactsList(
-                  asSelectionScreen: widget.asSelectionScreen,
-                  singleSelection: widget.singleSelection,
-                  selectedList: widget.selectedList,
-                  showContacts: widget.showContacts,
-                  showGroups: widget.showGroups,
-                ),
-              ],
-            ),
-          ),
-          const DesktopFloatingAddContactButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSearchField() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: TextField(
-        textInputAction: TextInputAction.search,
-        onChanged: (text) => setState(() {
-          searchText = text;
-        }),
-        decoration: InputDecoration(
-          filled: true,
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: TextStyle(
-            fontSize: 14.toFont,
-            color: ColorConstants.grey,
-            fontWeight: FontWeight.w500,
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 24, top: 20, bottom: 20),
-            child: SvgPicture.asset(
-              AppVectors.icSearch,
-              width: 20,
-              height: 20,
-              color: ColorConstants.grey,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        style: TextStyle(
-          fontSize: 14.toFont,
-          color: Colors.black,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
+      );
+    });
   }
 
   Widget gridViewContactList(
@@ -225,16 +169,16 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
       itemCount: contactsForAlphabet.length,
       itemBuilder: (context, alphabetIndex) {
         return CircularContacts(
-          asSelectionTile: widget.asSelectionScreen,
-          selectSingle: widget.singleSelection,
+          asSelectionTile: true,
+          selectSingle: false,
           selectedList: (s) {
-            widget.selectedList!(s);
+            setSelectedContactsList(s);
           },
           onTap: () {
             if (contactsForAlphabet[alphabetIndex]!.group != null) {
               Navigator.pop(context);
               _groupService.addGroupContact(contactsForAlphabet[alphabetIndex]);
-              widget.selectedList!(GroupService().selectedGroupContacts);
+              setSelectedContactsList(GroupService().selectedGroupContacts);
             }
           },
           onLongPressed: () {
@@ -285,7 +229,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
             if (contactsForAlphabet[alphabetIndex]!.group != null) {
               Navigator.pop(context);
               _groupService.addGroupContact(contactsForAlphabet[alphabetIndex]);
-              widget.selectedList!(GroupService().selectedGroupContacts);
+              setSelectedContactsList(GroupService().selectedGroupContacts);
             }
           },
           groupContact: contactsForAlphabet[alphabetIndex],
@@ -364,25 +308,8 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
     }
   }
 
-// creates a list of contacts by merging atsigns and groups.
-
-  List<GroupContactsModel?> filterFavContacts(
-      List<GroupContactsModel?> _filteredList) {
-    _filteredList.removeWhere((groupContact) {
-      if (groupContact != null && groupContact.contact != null) {
-        return groupContact.contact!.favourite == false;
-      } else if (groupContact != null && groupContact.contact == null) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    return _filteredList;
-  }
-
   createGroup() async {
-    String groupName = groupNameController.text;
+    String groupName = addGroupProvider.groupName;
     // ignore: unnecessary_null_comparison
     if (groupName != null) {
       setState(() {
@@ -406,21 +333,20 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
           updatedBy: GroupService().currentAtsign,
         );
 
-        if (selectedImageByteData != null) {
-          group.groupPicture = selectedImageByteData;
+        if (addGroupProvider.selectedImageByteData != null &&
+            addGroupProvider.selectedImageByteData!.isNotEmpty) {
+          group.groupPicture = addGroupProvider.selectedImageByteData;
         }
 
         var result = await GroupService().createGroup(group);
         if (result is AtGroup) {
-
           setState(() {
             processing = false;
           });
 
-          widget.onDoneTap;
+          widget.onDoneTap?.call();
 
-          GroupService().setSelectedContacts([]);
-
+          GroupService().emptySelectedGroupContact();
         } else if (result != null) {
           if (mounted) {
             if (result.runtimeType == AlreadyExistsException) {

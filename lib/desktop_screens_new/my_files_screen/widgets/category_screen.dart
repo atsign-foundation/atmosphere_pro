@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
@@ -117,7 +118,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    DesktopSetupRoutes.nested_pop();
+                    DesktopSetupRoutes.nested_push(
+                        DesktopRoutes.DEKSTOP_MYFILES);
                   },
                   child:
                       Icon(Icons.arrow_back_ios, color: Colors.black, size: 24),

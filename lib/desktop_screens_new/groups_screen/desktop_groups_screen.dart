@@ -7,9 +7,11 @@ import 'package:atsign_atmosphere_pro/data_models/enums/group_card_state.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_add_group.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_groups_detail.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_groups_list.dart';
+import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:provider/provider.dart';
 
 class DesktopGroupsScreen extends StatefulWidget {
   final bool showBackButton;
@@ -23,7 +25,6 @@ class DesktopGroupsScreen extends StatefulWidget {
 
 class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
   bool createBtnTapped = false;
-  List<AtContact?> selectedContactList = [];
   bool shouldUpdate = false;
   List<AtGroup>? previousData;
 
@@ -125,77 +126,67 @@ class NestedNavigators extends StatefulWidget {
 }
 
 class _NestedNavigatorsState extends State<NestedNavigators> {
-  GroupCardState groupCardState = GroupCardState.disable;
-  AtGroup? selectedAtGroup;
+  late DesktopGroupsScreenProvider groupsProvider;
+
+  @override
+  void initState() {
+    groupsProvider = context.read<DesktopGroupsScreenProvider>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.data.isEmpty
-            ? const DesktopEmptyGroup(true)
-            : DesktopGroupsList(
-                widget.data,
-                key: UniqueKey(),
-                expandIndex: widget.expandIndex,
-                onExpand: (value) {
-                  setState(() {
-                    selectedAtGroup = value;
-                    groupCardState = GroupCardState.expanded;
-                  });
-                },
-                onAdd: () {
-                  setState(() {
-                    groupCardState = GroupCardState.add;
-                  });
-                },
-              ),
-        if (groupCardState != GroupCardState.disable)
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      groupCardState = GroupCardState.disable;
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: buildGroupCard(),
-              ),
-            ],
-          )
-      ],
+    return Consumer<DesktopGroupsScreenProvider>(
+      builder: (BuildContext context, provider, Widget? child) {
+        return Stack(
+          children: [
+            widget.data.isEmpty
+                ? const DesktopEmptyGroup(true)
+                : DesktopGroupsList(
+                    widget.data,
+                    key: UniqueKey(),
+                    expandIndex: widget.expandIndex,
+                    onExpand: (value) {
+                      provider.setSelectedAtGroup(value);
+                      provider.setGroupCardState(GroupCardState.expanded);
+                    },
+                    onAdd: () {
+                      provider.setGroupCardState(GroupCardState.add);
+                    },
+                  ),
+            if (provider.groupCardState != GroupCardState.disable)
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        provider.reset();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: buildGroupCard(provider.groupCardState),
+                  ),
+                ],
+              )
+          ],
+        );
+      },
     );
   }
 
-  Widget buildGroupCard() {
-    switch (groupCardState) {
+  Widget buildGroupCard(GroupCardState state) {
+    switch (state) {
       case GroupCardState.add:
         return DesktopAddGroup(
-          asSelectionScreen: true,
-          singleSelection: false,
-          showGroups: false,
-          showContacts: true,
-          selectedList: (selectedContactList) {
-            GroupService().setSelectedContacts(
-                selectedContactList.map((e) => e?.contact).toList());
-          },
           onDoneTap: () {
-            setState(() {
-              groupCardState = GroupCardState.disable;
-            });
+            groupsProvider.reset();
           },
         );
       case GroupCardState.expanded:
         return DesktopGroupsDetail(
-          group: selectedAtGroup!,
           onBackArrowTap: () {
-            setState(() {
-              groupCardState = GroupCardState.disable;
-            });
+            groupsProvider.reset();
           },
         );
       default:
