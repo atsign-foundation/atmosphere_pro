@@ -61,7 +61,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: TextField(
-                            onChanged:(value) {
+                            onChanged: (value) {
                               setState(() {
                                 searchText = value;
                               });
@@ -137,19 +137,15 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                             );
                             if (provider.trustedContacts[index].atSign!
                                 .contains(searchText)) {
-                              return InkWell(
-                                onTap: () {},
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: DesktopContactTile(
-                                    title:
-                                        provider.trustedContacts[index].atSign,
-                                    subTitle:
-                                        provider.trustedContacts[index].atSign,
-                                    showImage: byteImage != null ? true : false,
-                                    image: byteImage,
-                                  ),
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: DesktopContactTile(
+                                  title: provider.trustedContacts[index].atSign,
+                                  subTitle:
+                                      provider.trustedContacts[index].atSign,
+                                  showImage: byteImage != null ? true : false,
+                                  image: byteImage,
                                 ),
                               );
                             } else {
@@ -158,46 +154,50 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                           },
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                            padding: EdgeInsets.only(left: 30),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Add contacts to trusted by ",
-                                  style: TextStyle(
-                                    color: ColorConstants.grey,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "selecting ",
-                                      style: TextStyle(
-                                        color: ColorConstants.grey,
-                                        fontSize: 18,
+                      provider.trustedContacts.isEmpty
+                          ? Expanded(
+                              child: Container(
+                                  padding: EdgeInsets.only(left: 30),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Add contacts to trusted by ",
+                                        style: TextStyle(
+                                          color: ColorConstants.grey,
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                    Icon(
-                                      Icons.verified_outlined,
-                                      color: Theme.of(context).primaryColor,
-                                      size: 25,
-                                    ),
-                                    Text(
-                                      " next to their name!",
-                                      style: TextStyle(
-                                        color: ColorConstants.grey,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )),
-                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "selecting ",
+                                            style: TextStyle(
+                                              color: ColorConstants.grey,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.verified_outlined,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            size: 25,
+                                          ),
+                                          Text(
+                                            " next to their name!",
+                                            style: TextStyle(
+                                              color: ColorConstants.grey,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),

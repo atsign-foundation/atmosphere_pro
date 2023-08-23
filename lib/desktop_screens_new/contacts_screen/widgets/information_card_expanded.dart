@@ -21,6 +21,7 @@ class InformationCardExpanded extends StatefulWidget {
   final Function() onBack;
 
   const InformationCardExpanded({
+    Key? key,
     required this.atContact,
     required this.onBack,
   });
@@ -49,7 +50,17 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(covariant InformationCardExpanded oldWidget) {
+    controller =
+        TextEditingController(text: widget.atContact.tags?['nickname'] ?? '');
+    contactService = ContactService();
+    getContactState();
+    super.didUpdateWidget(oldWidget);
+  }
+
   void getContactState() {
+    isTrusted = false;
     trustedContactProvider.trustedContacts.forEach((element) {
       if (element.atSign == widget.atContact.atSign) {
         setState(() {
@@ -124,18 +135,6 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
         SizedBox(width: 48),
         buildInfoWidget(),
         SizedBox(width: 48),
-        InkWell(
-          child: SizedBox(
-            width: 20,
-            height: 24,
-            child: SvgPicture.asset(
-              AppVectors.icMore,
-              height: 4,
-              width: 16,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -214,9 +213,13 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
         SizedBox(width: 20),
         OptionsIconButton(
           onTap: () async {
-            await contactService.deleteAtSign(
+            var res = await contactService.deleteAtSign(
               atSign: widget.atContact.atSign!,
             );
+
+            if (res) {
+              widget.onBack();
+            }
           },
           icon: AppVectors.icDelete,
         ),

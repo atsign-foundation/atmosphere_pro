@@ -6,8 +6,10 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class DesktopContactCard extends StatefulWidget {
   final AtContact contact;
@@ -20,10 +22,14 @@ class DesktopContactCard extends StatefulWidget {
 class _DesktopContactCardState extends State<DesktopContactCard> {
   String contactName = 'UG';
   Uint8List? image;
+  late TrustedContactProvider trustedProvider;
+  bool isTrusted = false;
 
   @override
   void initState() {
+    trustedProvider = context.read<TrustedContactProvider>();
     getNameAndImage();
+    checkTrustedContact();
     super.initState();
   }
 
@@ -43,6 +49,14 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
     } catch (e) {
       contactName = 'UG';
       print('Error in getting image $e');
+    }
+  }
+
+  checkTrustedContact() {
+    for (AtContact contact in trustedProvider.trustedContacts) {
+      if (contact.atSign == widget.contact.atSign) {
+        isTrusted = true;
+      }
     }
   }
 
@@ -98,16 +112,18 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                 icon: Icons.send_rounded,
                 iconColor: Color(0xFFEAA743),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: SvgPicture.asset(
-                  AppVectors.icTrustActivated,
-                ),
-              ),
-              CircularIcon(
-                icon: Icons.keyboard_control,
-                iconColor: ColorConstants.gray,
-              ),
+              isTrusted
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: SvgPicture.asset(
+                        AppVectors.icTrustActivated,
+                      ),
+                    )
+                  : SizedBox(),
+              // CircularIcon(
+              //   icon: Icons.keyboard_control,
+              //   iconColor: ColorConstants.gray,
+              // ),
             ],
           )
         ],

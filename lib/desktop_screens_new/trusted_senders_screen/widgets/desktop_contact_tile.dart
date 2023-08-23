@@ -113,11 +113,11 @@ class DesktopContactTile extends StatelessWidget {
             ],
           ),
           Spacer(),
-          Icon(
-            Icons.send_outlined,
-            color: Theme.of(context).primaryColor,
-            size: 24,
-          ),
+          // Icon(
+          //   Icons.send_outlined,
+          //   color: Theme.of(context).primaryColor,
+          //   size: 24,
+          // ),
           const SizedBox(
             width: 10,
           ),
@@ -134,11 +134,11 @@ class DesktopContactTile extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-          Icon(
-            Icons.more_horiz_outlined,
-            color: ColorConstants.MILD_GREY,
-            size: 24,
-          ),
+          // Icon(
+          //   Icons.more_horiz_outlined,
+          //   color: ColorConstants.MILD_GREY,
+          //   size: 24,
+          // ),
           const SizedBox(
             width: 20,
           ),

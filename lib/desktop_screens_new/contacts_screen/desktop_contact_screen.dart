@@ -105,43 +105,55 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                     ],
                                   );
                                 } else {
+                                  // adding trusted contact array in a map for faster access
+                                  var trustedContactsMap = {};
+                                  for (AtContact contact
+                                      in trustedProvider.trustedContacts) {
+                                    trustedContactsMap[contact.atSign] = true;
+                                  }
+
                                   var itemCount = snapshot.data!.length;
+                                  _filteredList = <BaseContact>[];
+
+                                  for (BaseContact contact
+                                      in snapshot.data! as List<BaseContact>) {
+                                    if (contact.contact!.atSign!
+                                        .contains(searchText)) {
+                                      /// Filtering trusted contacts
+                                      if (showTrusted) {
+                                        if (trustedContactsMap[
+                                                    contact.contact!.atSign] !=
+                                                null ||
+                                            trustedContactsMap[
+                                                    contact.contact!.atSign] ==
+                                                true) {
+                                          _filteredList.add(contact);
+                                        }
+                                      } else {
+                                        _filteredList.add(contact);
+                                      }
+                                    }
+                                  }
 
                                   return ListView.separated(
-                                    itemCount: itemCount,
+                                    itemCount: _filteredList.length,
                                     itemBuilder: (context, index) {
-                                      var contact = snapshot.data![index]!;
+                                      var contact = _filteredList[index];
 
-                                      if (contact.contact!.atSign!
-                                          .contains(searchText)) {
-                                        _filteredList.add(contact);
-                                        return InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedContact = contact;
-                                              sidebarView =
-                                                  contactSidebar.contactDetails;
-                                            });
-                                          },
-                                          child: Container(
-                                              key: UniqueKey(),
-                                              child: DesktopContactCard(
-                                                contact: contact.contact!,
-                                              )),
-                                        );
-                                      } else {
-                                        _filteredList.remove(contact);
-
-                                        if (_filteredList.isEmpty &&
-                                            searchText.trim().isNotEmpty &&
-                                            index == itemCount - 1) {
-                                          return const Center(
-                                            child: Text('No Contacts found'),
-                                          );
-                                        }
-
-                                        return const SizedBox();
-                                      }
+                                      return InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedContact = contact;
+                                            sidebarView =
+                                                contactSidebar.contactDetails;
+                                          });
+                                        },
+                                        child: Container(
+                                            key: UniqueKey(),
+                                            child: DesktopContactCard(
+                                              contact: contact.contact!,
+                                            )),
+                                      );
                                     },
                                     separatorBuilder: (context, index) {
                                       var contact = snapshot.data![index]!;
@@ -289,6 +301,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
   Widget getSidebarWidget() {
     if (sidebarView == contactSidebar.contactDetails) {
       return InformationCardExpanded(
+        key: UniqueKey(),
         atContact: selectedContact!.contact!,
         onBack: () {
           setState(() {
