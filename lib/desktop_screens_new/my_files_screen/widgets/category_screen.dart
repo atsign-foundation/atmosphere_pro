@@ -260,8 +260,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
             Wrap(
               children: files.map((file) {
                 if ((file.fileName ?? "")
-                    .toLowerCase()
-                    .contains(searchText.toLowerCase()) == false) {
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase()) ==
+                    false) {
                   return SizedBox();
                 }
                 return InkWell(
@@ -409,6 +410,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     .removeParticularFile(
                                         file.fileTransferId ?? "",
                                         file.fileName ?? "");
+
+                                String filePath = BackendService.getInstance()
+                                        .downloadDirectory!
+                                        .path +
+                                    Platform.pathSeparator +
+                                    (file.fileName ?? "");
+
+                                File localFile = File(filePath);
+                                bool fileExists = await localFile.exists();
+                                if (fileExists) {
+                                  localFile.deleteSync();
+                                }
 
                                 await SnackbarService().showSnackbar(
                                     context,
