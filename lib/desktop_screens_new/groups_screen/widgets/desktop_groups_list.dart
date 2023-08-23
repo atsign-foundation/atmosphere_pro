@@ -11,8 +11,10 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class DesktopGroupsList extends StatefulWidget {
   final List<AtGroup> groups;
@@ -35,133 +37,122 @@ class DesktopGroupsList extends StatefulWidget {
 }
 
 class _DesktopGroupsListState extends State<DesktopGroupsList> {
-  String searchText = '';
+  late TextEditingController searchController;
   bool showBackIcon = true;
   List<AtGroup> _filteredList = [];
-  bool isSearching = false;
-  List<AtContact> trustedContactsList = [];
 
   @override
   void initState() {
     showBackIcon = GroupService().groupPreferece.showBackButton;
-    GroupService().getTrustedContacts().then((value) {
-      if (GroupService().trustedContacts.isNotEmpty) {
-        if (trustedContactsList.isNotEmpty) {
-          trustedContactsList.clear();
-        }
-        setState(() {
-          trustedContactsList.addAll(GroupService().trustedContacts);
-        });
-      }
-    });
+    GroupService().getTrustedContacts();
+    searchController = TextEditingController(
+        text: context.read<DesktopGroupsScreenProvider>().searchGroupText);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (searchText != '') {
-      _filteredList = widget.groups.where((grp) {
-        return grp.displayName!.contains(searchText);
-      }).toList();
-    } else {
-      _filteredList = widget.groups;
-    }
-    return Container(
-      color: const Color(0xFFFAFAFA),
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 10,
-          ),
-          DesktopHeader(
-            title: 'Groups',
-            isTitleCentered: false,
-            showBackIcon: showBackIcon,
-            onBackTap: () {
-              DesktopGroupSetupRoutes.exitGroupPackage();
-            },
-            actions: [
-              isSearching
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: Container(
-                        height: 40,
-                        width: 308,
-                        color: Colors.white,
-                        child: TextField(
-                          autofocus: true,
-                          onChanged: (value) {
-                            setState(() {
-                              searchText = value;
-                            });
-                          },
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 28, vertical: 8),
-                            border: InputBorder.none,
-                            hintText: 'Search',
-                            hintStyle: TextStyle(
-                              color: ColorConstants.grey,
+    return Consumer<DesktopGroupsScreenProvider>(
+        builder: (context, provider, child) {
+      if (provider.searchGroupText != '') {
+        _filteredList = widget.groups.where((grp) {
+          return grp.displayName!.contains(provider.searchGroupText);
+        }).toList();
+      } else {
+        _filteredList = widget.groups;
+      }
+      return Container(
+        color: const Color(0xFFFAFAFA),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: 10,
+            ),
+            DesktopHeader(
+              title: 'Groups',
+              isTitleCentered: false,
+              showBackIcon: showBackIcon,
+              onBackTap: () {
+                DesktopGroupSetupRoutes.exitGroupPackage();
+              },
+              actions: [
+                provider.isSearching
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: Container(
+                          height: 40,
+                          width: 308,
+                          color: Colors.white,
+                          child: TextField(
+                            controller: searchController,
+                            autofocus: true,
+                            onChanged: (value) {
+                              provider.setSearchGroupText(value);
+                            },
+                            style: const TextStyle(
+                              color: Colors.black,
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                             ),
-                            suffixIcon: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    searchText = '';
-                                    isSearching = false;
-                                  });
-                                },
-                                child: const Icon(Icons.close)),
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 28, vertical: 8),
+                              border: InputBorder.none,
+                              hintText: 'Search',
+                              hintStyle: TextStyle(
+                                color: ColorConstants.grey,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              suffixIcon: InkWell(
+                                  onTap: () {
+                                    provider.setSearchGroupText('');
+                                    provider.setIsSearching(false);
+                                  },
+                                  child: const Icon(Icons.close)),
+                            ),
                           ),
+                        ),
+                      )
+                    : IconButtonWidget(
+                        icon: AppVectors.icSearch,
+                        onTap: () {
+                          provider.setIsSearching(true);
+                        },
+                      ),
+                const SizedBox(width: 12),
+                IconButtonWidget(
+                  icon: AppVectors.icRefresh,
+                  onTap: () {
+                    setState(() {
+                      GroupService().getAllGroupsDetails();
+                    });
+                  },
+                ),
+                const SizedBox(width: 12),
+                buildAddGroupButton(),
+              ],
+            ),
+            Expanded(
+              child: _filteredList.isEmpty
+                  ? Center(
+                      child: Text(
+                        TextStrings().noContactsFound,
+                        style: TextStyle(
+                          fontSize: 15.toFont,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     )
-                  : IconButtonWidget(
-                      icon: AppVectors.icSearch,
-                      onTap: () {
-                        setState(() {
-                          isSearching = true;
-                        });
-                      },
+                  : ListView(
+                      physics: const ClampingScrollPhysics(),
+                      children: buildGroupList(),
                     ),
-              const SizedBox(width: 12),
-              IconButtonWidget(
-                icon: AppVectors.icRefresh,
-                onTap: () {
-                  setState(() {
-                    GroupService().getAllGroupsDetails();
-                  });
-                },
-              ),
-              const SizedBox(width: 12),
-              buildAddGroupButton(),
-            ],
-          ),
-          Expanded(
-            child: _filteredList.isEmpty
-                ? Center(
-                    child: Text(
-                      TextStrings().noContactsFound,
-                      style: TextStyle(
-                        fontSize: 15.toFont,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  )
-                : ListView(
-                    physics: const ClampingScrollPhysics(),
-                    children: buildGroupList(),
-                  ),
-          ),
-        ],
-      ),
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   List<Widget> buildGroupList() {
@@ -234,6 +225,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                           Uint8List.fromList(data.groupPicture.cast<int>()),
                           fit: BoxFit.cover,
                           width: 72,
+                          height: 72,
                         )
                       : ContactInitial(
                           size: 72,

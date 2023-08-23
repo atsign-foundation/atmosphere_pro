@@ -18,22 +18,20 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DesktopGroupsDetail extends StatefulWidget {
-  AtGroup group;
-  Function()? onBackArrowTap;
-  bool isEditing;
+  Function() onBackArrowTap;
 
   DesktopGroupsDetail({
     Key? key,
-    required this.group,
-    this.onBackArrowTap,
-    this.isEditing = false,
+    required this.onBackArrowTap,
   }) : super(key: key);
 
   @override
@@ -41,140 +39,147 @@ class DesktopGroupsDetail extends StatefulWidget {
 }
 
 class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
-  bool isEditingName = false, updatingName = false, updatingImage = false;
-  TextEditingController? textController;
-  Uint8List? groupImage;
-  late bool isEditing;
-  bool isAddingContacts = false;
   late TextEditingController groupNameController;
+  late DesktopGroupsScreenProvider groupProvider;
 
   @override
   void initState() {
-    isEditing = widget.isEditing;
+    groupProvider = context.read<DesktopGroupsScreenProvider>();
     groupNameController =
-        TextEditingController(text: widget.group.displayName ?? '');
-    textController = TextEditingController.fromValue(
-      TextEditingValue(
-        text: widget.group.groupName ?? '',
-        selection: const TextSelection.collapsed(offset: -1),
-      ),
-    );
-    if (widget.group.groupPicture != null) {
-      groupImage = Uint8List.fromList(
-        widget.group.groupPicture.cast<int>(),
-      );
-    }
-
+        TextEditingController(text: groupProvider.selectedGroupName);
     super.initState();
+  }
+
+  void resetGroupName() {
+    groupNameController = TextEditingController(
+        text: groupProvider.selectedAtGroup?.groupName ?? '');
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isAddingContacts) {
-      GroupService().fetchGroupsAndContacts(isDesktop: true);
-      if ((widget.group.members ?? {}).isNotEmpty) {
-        for (var i in widget.group.members ?? {}) {
-          GroupService().addGroupContact(
-            GroupContactsModel(
-              contact: i,
-              contactType: ContactsType.CONTACT,
-            ),
-          );
+    return Consumer<DesktopGroupsScreenProvider>(
+        builder: (context, provider, child) {
+      if (provider.isAddingContacts) {
+        GroupService().fetchGroupsAndContacts(isDesktop: true);
+        if ((provider.selectedAtGroup?.members ?? {}).isNotEmpty) {
+          for (var i in provider.selectedAtGroup?.members ?? {}) {
+            GroupService().addGroupContact(
+              GroupContactsModel(
+                contact: i,
+                contactType: ContactsType.CONTACT,
+              ),
+            );
+          }
         }
+      } else {
+        GroupService().selectedGroupContacts.clear();
       }
-    } else {
-      GroupService().selectedGroupContacts.clear();
-    }
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: DesktopCustomAppBar(
-          showTitle: true,
-          centerTitle: false,
-          titleText: isEditing ? 'Edit' : widget.group.displayName,
-          titleTextStyle: CustomTextStyles.blackW50020,
-          leadingIcon: InkWell(
-            onTap: () {
-              if (widget.onBackArrowTap != null) {
-                widget.onBackArrowTap!();
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: SvgPicture.asset(
-                AppVectors.icBack,
-                width: 8,
-                height: 20,
+      return SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: DesktopCustomAppBar(
+            showTitle: true,
+            centerTitle: false,
+            titleText: provider.isEditing
+                ? 'Edit'
+                : provider.selectedAtGroup?.displayName,
+            titleTextStyle: CustomTextStyles.blackW50020,
+            leadingIcon: InkWell(
+              onTap: provider.isEditing
+                  ? () {
+                      provider.setIsEditing(false);
+                      if (provider.isAddingContacts) {
+                        provider.setIsAddingContact();
+                      }
+                      resetGroupName();
+                    }
+                  : () => widget.onBackArrowTap(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: SvgPicture.asset(
+                  AppVectors.icBack,
+                  width: 8,
+                  height: 20,
+                ),
+              ),
+            ),
+            showLeadingIcon: true,
+            showTrailingIcon: provider.isEditing,
+            trailingIcon: InkWell(
+              onTap: () async {
+                await updateGroup();
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 52, vertical: 8),
+                margin: const EdgeInsets.only(right: 28),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(46),
+                  color: ColorConstants.orange,
+                ),
+                child: Text(
+                  'Save',
+                  style: CustomTextStyles.whiteW50015,
+                ),
               ),
             ),
           ),
-          showLeadingIcon: true,
-          showTrailingIcon: isEditing,
-          trailingIcon: InkWell(
-            onTap: () async {
-              await updateGroup();
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 52, vertical: 8),
-              margin: const EdgeInsets.only(right: 28),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(46),
-                color: ColorConstants.orange,
-              ),
-              child: Text(
-                'Save',
-                style: CustomTextStyles.whiteW50015,
-              ),
-            ),
-          ),
-        ),
-        body: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              children: [
-                if (isEditing) ...[
-                  DesktopGroupNameTextField(
-                    groupNameController: groupNameController,
+          body: Stack(
+            children: [
+              ListView(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                children: [
+                  if (provider.isEditing) ...[
+                    DesktopGroupNameTextField(
+                      groupNameController: groupNameController,
+                      onChanged: (value) {
+                        provider.setSelectedGroupName(value ?? '');
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  DesktopCoverImagePicker(
+                    selectedImage: provider.selectedGroupImage,
+                    isEdit: provider.isEditing,
+                    onSelected: (value) {
+                      provider.setSelectedGroupImage(value);
+                    },
+                    onCancel: () {
+                      provider.setSelectedGroupImage(Uint8List(0));
+                    },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: provider.isEditing ? 16 : 20),
+                  buildDetailOptions(
+                    isAddingContacts: provider.isAddingContacts,
+                    isEditing: provider.isEditing,
+                  ),
+                  const SizedBox(height: 12),
+                  DesktopGroupContactsList(
+                    asSelectionScreen: provider.isAddingContacts,
+                    initialData: provider.isAddingContacts
+                        ? []
+                        : provider.selectedAtGroup?.members
+                            ?.map((e) => GroupContactsModel(
+                                  contact: e,
+                                ))
+                            .toList(),
+                  ),
                 ],
-                DesktopCoverImagePicker(
-                  selectedImage: groupImage,
-                  isEdit: isEditing,
-                  onSelected: (value) {
-                    setState(() {
-                      groupImage = value;
-                    });
-                  },
-                ),
-                SizedBox(height: isEditing ? 16 : 20),
-                buildDetailOptions(),
-                const SizedBox(height: 12),
-                DesktopGroupContactsList(
-                  asSelectionScreen: isAddingContacts,
-                  selectedList: (selectedContactList) {
-                    GroupService().setSelectedContacts(
-                        selectedContactList.map((e) => e?.contact).toList());
-                  },
-                  initialData: isAddingContacts
-                      ? []
-                      : widget.group.members
-                          ?.map((e) => GroupContactsModel(
-                                contact: e,
-                              ))
-                          .toList(),
-                ),
-              ],
-            ),
-            if (isAddingContacts) const DesktopFloatingAddContactButton(),
-          ],
+              ),
+              if (provider.isAddingContacts)
+                const DesktopFloatingAddContactButton(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget buildDetailOptions() {
+  Widget buildDetailOptions({
+    required bool isEditing,
+    required bool isAddingContacts,
+  }) {
     return isEditing
         ? Row(
             mainAxisSize: MainAxisSize.min,
@@ -183,10 +188,8 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
               IconButtonWidget(
                 icon: AppVectors.icDesktopAdd,
                 isSelected: isAddingContacts,
-                onTap: () async {
-                  setState(() {
-                    isAddingContacts = !isAddingContacts;
-                  });
+                onTap: () {
+                  groupProvider.setIsAddingContact();
                 },
                 backgroundColor: ColorConstants.iconButtonColor,
               ),
@@ -202,7 +205,10 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
               IconButtonWidget(
                 icon: AppVectors.icDelete,
                 onTap: () async {
-                  await showMyDialog(context, widget.group);
+                  await showMyDialog(
+                    context,
+                    groupProvider.selectedAtGroup!,
+                  );
                 },
                 backgroundColor: ColorConstants.iconButtonColor,
               ),
@@ -214,7 +220,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
               InkWell(
                 onTap: () async {
                   WelcomeScreenProvider().selectedContacts =
-                      widget.group.members!
+                      groupProvider.selectedAtGroup!.members!
                           .map(
                             (element) => GroupContactsModel(
                               contactType: ContactsType.CONTACT,
@@ -258,18 +264,17 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
                   IconButtonWidget(
                     icon: AppVectors.icEdit,
                     backgroundColor: ColorConstants.iconButtonColor,
-                    onTap: () {
-                      setState(() {
-                        isEditing = true;
-                      });
-                    },
+                    onTap: () => groupProvider.setIsEditing(true),
                   ),
                   const SizedBox(width: 24),
                   IconButtonWidget(
                     icon: AppVectors.icDelete,
                     backgroundColor: ColorConstants.iconButtonColor,
                     onTap: () async {
-                      await showMyDialog(context, widget.group);
+                      await showMyDialog(
+                        context,
+                        groupProvider.selectedAtGroup!,
+                      );
                     },
                   ),
                 ],
@@ -309,6 +314,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
 
   updateGroup() async {
     String groupName = groupNameController.text;
+    Uint8List? groupImage = groupProvider.selectedGroupImage;
     // ignore: unnecessary_null_comparison
     if (groupName != null) {
       // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
@@ -318,19 +324,21 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
 
       if (groupName.trim().isNotEmpty) {
         var group = AtGroup(
-          groupName != widget.group.displayName
+          groupName != groupProvider.selectedAtGroup?.displayName
               ? groupName
-              : widget.group.displayName,
-          groupId: widget.group.groupId,
-          description: widget.group.description,
-          displayName: groupName != widget.group.displayName
+              : groupProvider.selectedAtGroup?.displayName,
+          groupId: groupProvider.selectedAtGroup?.groupId,
+          description: groupProvider.selectedAtGroup?.description,
+          displayName: groupName != groupProvider.selectedAtGroup?.displayName
               ? groupName
-              : widget.group.displayName,
-          groupPicture: groupImage != widget.group.groupPicture
-              ? groupImage
-              : widget.group.groupPicture,
+              : groupProvider.selectedAtGroup?.displayName,
+          groupPicture:
+              groupImage != groupProvider.selectedAtGroup?.groupPicture &&
+                      groupImage!.isNotEmpty
+                  ? groupImage
+                  : groupProvider.selectedAtGroup?.groupPicture,
           members: GroupService().selectedGroupContacts.isEmpty
-              ? widget.group.members
+              ? groupProvider.selectedAtGroup?.members
               : Set.from(GroupService()
                   .selectedGroupContacts
                   .map((element) => element?.contact)),
@@ -339,10 +347,11 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
         );
         var result = await GroupService().updateGroup(group);
         if (result is AtGroup) {
-          //ignore: across_async_gaps
-          widget.onBackArrowTap;
+          if (mounted) {
+            widget.onBackArrowTap.call();
 
-          GroupService().setSelectedContacts([]);
+            GroupService().emptySelectedGroupContact();
+          }
         } else if (result != null) {
           if (mounted) {
             if (result.runtimeType == AlreadyExistsException) {

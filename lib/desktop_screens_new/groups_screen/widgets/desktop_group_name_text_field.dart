@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 
 class DesktopGroupNameTextField extends StatelessWidget {
   final TextEditingController groupNameController;
+  final Function(String?)? onChanged;
 
   const DesktopGroupNameTextField({
-    Key? key, required this.groupNameController,
+    Key? key,
+    required this.groupNameController,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -15,6 +18,7 @@ class DesktopGroupNameTextField extends StatelessWidget {
         fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
+      onChanged: onChanged,
       decoration: InputDecoration(
         hintText: 'Group Name',
         enabledBorder: const UnderlineInputBorder(),

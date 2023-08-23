@@ -11,27 +11,23 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class DesktopGroupContactsList extends StatefulWidget {
   final bool asSelectionScreen;
   final bool singleSelection;
-  final ValueChanged<List<GroupContactsModel?>>? onContactsTap;
-  final ValueChanged<List<GroupContactsModel?>>? selectedList;
   final bool showContacts;
-  final bool showGroups;
   final List<GroupContactsModel?>? initialData;
 
   const DesktopGroupContactsList({
     Key? key,
     this.asSelectionScreen = false,
     this.singleSelection = false,
-    this.onContactsTap,
     this.showContacts = true,
-    this.showGroups = false,
-    this.selectedList,
     this.initialData,
   }) : super(key: key);
 
@@ -42,104 +38,118 @@ class DesktopGroupContactsList extends StatefulWidget {
 
 class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
   late GroupService _groupService;
-  String searchText = '';
+  late DesktopGroupsScreenProvider groupProvider;
+  late TextEditingController searchController;
   bool blockingContact = false;
   bool deletingContact = false;
-  bool showTrustedContacts = false;
 
   @override
   void initState() {
     _groupService = GroupService();
+    groupProvider = context.read<DesktopGroupsScreenProvider>();
+    searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      groupProvider.setSearchContactText('');
+      if (groupProvider.showTrustedContacts) {
+        groupProvider.setShowTrustedContacts();
+      }
+    });
     super.initState();
+  }
+
+  void setSelectedContactsList(List<GroupContactsModel?> list) {
+    _groupService.setSelectedContacts(list.map((e) => e?.contact).toList());
+  }
+
+  @override
+  void dispose() {
+    _groupService.emptySelectedGroupContact();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: buildSearchField(),
-            ),
-            const SizedBox(width: 12),
-            IconButtonWidget(
-              icon: AppVectors.icTrust,
-              backgroundColor: ColorConstants.iconButtonColor,
-              isSelected: showTrustedContacts,
-              onTap: () {
-                setState(() {
-                  showTrustedContacts = !showTrustedContacts;
-                });
-              },
-            )
-          ],
-        ),
-        const SizedBox(height: 20),
-        (widget.asSelectionScreen)
-            ? (widget.singleSelection)
-                ? Container()
-                : HorizontalCircularList(onContactsTap: widget.onContactsTap)
-            : Container(),
-        (widget.initialData ?? []).isNotEmpty
-            ? buildContactsList(showTrustedContacts
-                ? widget.initialData
-                    ?.where((e) => _groupService
-                        .trustedContacts
-                        .any((element) => element.atSign == e?.contact?.atSign))
-                    .toList()
-                : widget.initialData)
-            : StreamBuilder<List<GroupContactsModel?>>(
-                stream: _groupService.allContactsStream,
-                initialData: _groupService.allContacts,
-                builder: (context, snapshot) {
-                  if ((snapshot.connectionState == ConnectionState.waiting)) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    if ((snapshot.data == null || snapshot.data!.isEmpty)) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            TextStrings().noContacts,
-                            style: CustomTextStyles.blackBold(),
-                          ),
-                          const SizedBox(height: 20.0),
-                          CustomButton(
-                            fontColor: Colors.white,
-                            buttonColor: ColorConstants.ORANGE,
-                            buttonText: 'Add',
-                            height: 40,
-                            width: 115,
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => const AddContactDialog(),
-                              );
-                            },
-                          ),
-                        ],
+    return Consumer<DesktopGroupsScreenProvider>(
+        builder: (context, provider, child) {
+      return Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: buildSearchField(),
+              ),
+              const SizedBox(width: 12),
+              IconButtonWidget(
+                icon: AppVectors.icTrust,
+                backgroundColor: ColorConstants.iconButtonColor,
+                isSelected: provider.showTrustedContacts,
+                onTap: () {
+                  provider.setShowTrustedContacts();
+                },
+              )
+            ],
+          ),
+          const SizedBox(height: 20),
+          widget.asSelectionScreen ? HorizontalCircularList() : Container(),
+          (widget.initialData ?? []).isNotEmpty
+              ? buildContactsList(provider.showTrustedContacts
+                  ? widget.initialData
+                      ?.where((e) => _groupService.trustedContacts.any(
+                          (element) => element.atSign == e?.contact?.atSign))
+                      .toList()
+                  : widget.initialData)
+              : StreamBuilder<List<GroupContactsModel?>>(
+                  stream: _groupService.allContactsStream,
+                  initialData: _groupService.allContacts,
+                  builder: (context, snapshot) {
+                    if ((snapshot.connectionState == ConnectionState.waiting)) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
                     } else {
-                      return buildContactsList(showTrustedContacts
-                          ? _groupService
-                              .trustedContacts
-                              .map((e) => GroupContactsModel(
-                                    contact: e,
-                                    contactType: ContactsType.CONTACT,
-                                  ))
-                              .toList()
-                          : snapshot.data);
+                      if ((snapshot.data == null || snapshot.data!.isEmpty)) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              TextStrings().noContacts,
+                              style: CustomTextStyles.blackBold(),
+                            ),
+                            const SizedBox(height: 20.0),
+                            CustomButton(
+                              fontColor: Colors.white,
+                              buttonColor: ColorConstants.ORANGE,
+                              buttonText: 'Add',
+                              height: 40,
+                              width: 115,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      const AddContactDialog(),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        return buildContactsList(provider.showTrustedContacts
+                            ? _groupService.trustedContacts
+                                .map((e) => GroupContactsModel(
+                                      contact: e,
+                                      contactType: ContactsType.CONTACT,
+                                    ))
+                                .toList()
+                            : snapshot.data);
+                      }
                     }
-                  }
-                })
-      ],
-    );
+                  })
+        ],
+      );
+    });
   }
 
   Widget buildContactsList(List<GroupContactsModel?>? data) {
@@ -221,10 +231,9 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: TextField(
+        controller: searchController,
         textInputAction: TextInputAction.search,
-        onChanged: (text) => setState(() {
-          searchText = text;
-        }),
+        onChanged: (text) => groupProvider.setSearchContactText(text),
         decoration: InputDecoration(
           filled: true,
           border: InputBorder.none,
@@ -260,20 +269,11 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
       List<GroupContactsModel?> allGroupContactData) {
     var _filteredList = <GroupContactsModel?>[];
     for (var c in allGroupContactData) {
-      if (widget.showContacts &&
-          c!.contact != null &&
+      if (c!.contact != null &&
           c.contact!.atSign
               .toString()
               .toUpperCase()
-              .contains(searchText.toUpperCase())) {
-        _filteredList.add(c);
-      }
-      if (widget.showGroups &&
-          c!.group != null &&
-          c.group!.displayName != null &&
-          c.group!.displayName!
-              .toUpperCase()
-              .contains(searchText.toUpperCase())) {
+              .contains(groupProvider.searchContactText.toUpperCase())) {
         _filteredList.add(c);
       }
     }
@@ -291,19 +291,9 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     /// contacts, groups that does not starts with alphabets
     if (alphabetIndex == 26) {
       for (var c in _filteredList) {
-        if (widget.showContacts &&
-            c!.contact != null &&
+        if (c!.contact != null &&
             !RegExp(r'^[a-z]+$').hasMatch(
               c.contact!.atSign![1].toLowerCase(),
-            )) {
-          contactsForAlphabet.add(c);
-        }
-      }
-      for (var c in _filteredList) {
-        if (widget.showGroups &&
-            c!.group != null &&
-            !RegExp(r'^[a-z]+$').hasMatch(
-              c.group!.displayName![0].toLowerCase(),
             )) {
           contactsForAlphabet.add(c);
         }
@@ -374,10 +364,10 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                     key: UniqueKey(),
                     onTap: () {},
                     asSelectionTile: widget.asSelectionScreen,
-                    selectSingle: widget.singleSelection,
+                    selectSingle: false,
                     item: contactsForAlphabet[index],
                     selectedList: (s) {
-                      widget.selectedList!(s);
+                      setSelectedContactsList(s);
                     },
                     onTrailingPressed: () {
                       if (contactsForAlphabet[index]!.contact != null) {
@@ -385,7 +375,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
 
                         _groupService
                             .addGroupContact(contactsForAlphabet[index]);
-                        widget.selectedList!(
+                        setSelectedContactsList(
                             _groupService.selectedGroupContacts);
                       }
                     },
@@ -398,19 +388,18 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                   key: UniqueKey(),
                   onTap: () {},
                   asSelectionTile: widget.asSelectionScreen,
-                  selectSingle: widget.singleSelection,
+                  selectSingle: false,
                   item: contactsForAlphabet[index],
                   selectedList: (s) {
-                    widget.selectedList!(s);
+                    setSelectedContactsList(s);
                   },
                   onTrailingPressed: () {
                     if (contactsForAlphabet[index]!.group != null) {
                       Navigator.pop(context);
 
-                      _groupService
-                          .addGroupContact(contactsForAlphabet[index]);
-                      widget
-                          .selectedList!(_groupService.selectedGroupContacts);
+                      _groupService.addGroupContact(contactsForAlphabet[index]);
+                      setSelectedContactsList(
+                          _groupService.selectedGroupContacts);
                     }
                   },
                   isTrusted: _groupService.trustedContacts.any((element) =>
