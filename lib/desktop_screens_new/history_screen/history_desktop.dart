@@ -182,11 +182,19 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.refresh,
-                    size: 25,
+                InkWell(
+                  onTap: () async {
+                    var provider = context.read<HistoryProvider>();
+                    await provider.getAllFileTransferHistory();
+                    historyfiles = provider.allFilesHistory;
+                    filteredFiles = provider.allFilesHistory;
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.refresh,
+                      size: 25,
+                    ),
                   ),
                 ),
               ],
@@ -201,9 +209,9 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
             SizedBox(
               height: 10,
             ),
-    
+
             //body
-    
+
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,

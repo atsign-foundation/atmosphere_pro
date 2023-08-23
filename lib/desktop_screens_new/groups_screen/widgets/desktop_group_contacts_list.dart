@@ -41,24 +41,15 @@ class DesktopGroupContactsList extends StatefulWidget {
 }
 
 class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
+  late GroupService _groupService;
   String searchText = '';
   bool blockingContact = false;
   bool deletingContact = false;
   bool showTrustedContacts = false;
-  List<AtContact> trustedContactsList = [];
 
   @override
   void initState() {
-    GroupService().getTrustedContacts().then((value) {
-      if (GroupService().trustedContacts.isNotEmpty) {
-        if (trustedContactsList.isNotEmpty) {
-          trustedContactsList.clear();
-        }
-        setState(() {
-          trustedContactsList.addAll(GroupService().trustedContacts);
-        });
-      }
-    });
+    _groupService = GroupService();
     super.initState();
   }
 
@@ -93,10 +84,16 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                 : HorizontalCircularList(onContactsTap: widget.onContactsTap)
             : Container(),
         (widget.initialData ?? []).isNotEmpty
-            ? buildContactsList(widget.initialData)
+            ? buildContactsList(showTrustedContacts
+                ? widget.initialData
+                    ?.where((e) => _groupService
+                        .trustedContacts
+                        .any((element) => element.atSign == e?.contact?.atSign))
+                    .toList()
+                : widget.initialData)
             : StreamBuilder<List<GroupContactsModel?>>(
-                stream: GroupService().allContactsStream,
-                initialData: GroupService().allContacts,
+                stream: _groupService.allContactsStream,
+                initialData: _groupService.allContacts,
                 builder: (context, snapshot) {
                   if ((snapshot.connectionState == ConnectionState.waiting)) {
                     return const Center(
@@ -130,7 +127,8 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                       );
                     } else {
                       return buildContactsList(showTrustedContacts
-                          ? trustedContactsList
+                          ? _groupService
+                              .trustedContacts
                               .map((e) => GroupContactsModel(
                                     contact: e,
                                     contactType: ContactsType.CONTACT,
@@ -385,13 +383,13 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                       if (contactsForAlphabet[index]!.contact != null) {
                         Navigator.pop(context);
 
-                        GroupService()
+                        _groupService
                             .addGroupContact(contactsForAlphabet[index]);
                         widget.selectedList!(
-                            GroupService().selectedGroupContacts);
+                            _groupService.selectedGroupContacts);
                       }
                     },
-                    isTrusted: trustedContactsList.any((element) =>
+                    isTrusted: _groupService.trustedContacts.any((element) =>
                         element.atSign ==
                         contactsForAlphabet[index]?.contact?.atSign),
                   ),
@@ -409,13 +407,13 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                     if (contactsForAlphabet[index]!.group != null) {
                       Navigator.pop(context);
 
-                      GroupService()
+                      _groupService
                           .addGroupContact(contactsForAlphabet[index]);
                       widget
-                          .selectedList!(GroupService().selectedGroupContacts);
+                          .selectedList!(_groupService.selectedGroupContacts);
                     }
                   },
-                  isTrusted: trustedContactsList.any((element) =>
+                  isTrusted: _groupService.trustedContacts.any((element) =>
                       element.atSign ==
                       contactsForAlphabet[index]?.contact?.atSign),
                 ),
@@ -445,7 +443,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     );
     var _res = await ContactService()
         .blockUnblockContact(contact: contact, blockAction: true);
-    await GroupService().fetchGroupsAndContacts();
+    await _groupService.fetchGroupsAndContacts();
     setState(() {
       blockingContact = true;
       Navigator.pop(context);
@@ -479,7 +477,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     );
     var _res = await ContactService().deleteAtSign(atSign: contact.atSign!);
     if (_res) {
-      await GroupService().removeContact(contact.atSign!);
+      await _groupService.removeContact(contact.atSign!);
     }
     setState(() {
       deletingContact = false;

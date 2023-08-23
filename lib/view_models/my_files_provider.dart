@@ -46,6 +46,7 @@ class MyFilesProvider extends BaseModel {
   String RECENT_HISTORY = 'recent_history';
   String ALL_FILES = 'all_files';
   String MY_FILES = 'my_files';
+  String FETCH_AND_SORT = "fetch_and_sort";
   String fileSearchText = '';
 
   List<Widget> tabs = [Recents()];
@@ -128,6 +129,113 @@ class MyFilesProvider extends BaseModel {
     await sortFiles();
     populateTabs();
     setStatus(MY_FILES, Status.Done);
+  }
+
+  fetchAndSortFiles() async {
+    var atClient = AtClientManager.getInstance().atClient;
+
+    setStatus(FETCH_AND_SORT, Status.Loading);
+    List<FileTransfer> myFilesRecord = [];
+    var myFilesAtKeys =
+        await atClient.getAtKeys(regex: MixedConstants.MY_FILES_KEY);
+
+    await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
+      AtValue atvalue = await atClient.get(atkey).catchError(
+        (e) {
+          print("Exception in getting my files atValue: $e");
+          return AtValue();
+        },
+      );
+
+      if (atvalue.value != null) {
+        try {
+          FileTransfer fileTransferObject =
+              FileTransfer.fromJson(jsonDecode(atvalue.value));
+
+          myFilesRecord.insert(0, fileTransferObject);
+        } catch (e) {
+          print('error in getAllFileTransferData file model conversion: $e');
+        }
+      }
+    });
+    myFiles = myFilesRecord;
+    print('myFiles length: ${myFiles.length}');
+    await getAllFiles();
+    await sortAllFiles();
+    await getrecentHistoryFiles();
+
+    // populateTabs();
+    setStatus(FETCH_AND_SORT, Status.Done);
+  }
+
+  sortAllFiles() async {
+    try {
+      setStatus(SORT_FILES, Status.Loading);
+      receivedAudio = [];
+      receivedApk = [];
+      receivedZip = [];
+      receivedDocument = [];
+      receivedPhotos = [];
+      receivedVideos = [];
+      receivedUnknown = [];
+      recentFile = [];
+
+      await Future.forEach(allFiles, (FilesDetail file) async {
+        var fileExtention = file.fileName?.split('.').last ?? "";
+        if (FileTypes.AUDIO_TYPES.contains(fileExtention)) {
+          int index = receivedAudio
+              .indexWhere((element) => element.fileName == file.fileName);
+          if (index == -1) {
+            receivedAudio.add(file);
+          }
+        } else if (FileTypes.VIDEO_TYPES.contains(fileExtention)) {
+          int index = receivedVideos
+              .indexWhere((element) => element.fileName == file.fileName);
+          if (index == -1) {
+            receivedVideos.add(file);
+          }
+        } else if (FileTypes.IMAGE_TYPES.contains(fileExtention)) {
+          int index = receivedPhotos
+              .indexWhere((element) => element.fileName == file.fileName);
+          if (index == -1) {
+            // checking is photo is downloaded or not
+            //if photo is downloaded then only it's shown in my files screen
+            // File file = File(element.filePath!);
+            // bool isFileDownloaded = await file.exists();
+
+            // if (isFileDownloaded) {
+            receivedPhotos.add(file);
+            // }
+          }
+        } else if (FileTypes.TEXT_TYPES.contains(fileExtention) ||
+            FileTypes.PDF_TYPES.contains(fileExtention) ||
+            FileTypes.WORD_TYPES.contains(fileExtention) ||
+            FileTypes.EXEL_TYPES.contains(fileExtention)) {
+          int index = receivedDocument
+              .indexWhere((element) => element.fileName == file.fileName);
+          if (index == -1) {
+            receivedDocument.add(file);
+          }
+        } else if (FileTypes.ZIP_TYPES.contains(fileExtention)) {
+          int index = receivedZip
+              .indexWhere((element) => element.fileName == file.fileName);
+          if (index == -1) {
+            receivedZip.add(file);
+          }
+        } else {
+          int index = receivedUnknown
+              .indexWhere((element) => element.fileName == file.fileName);
+          if (index == -1) {
+            receivedUnknown.add(file);
+          }
+        }
+      });
+
+      setStatus(SORT_FILES, Status.Done);
+    } catch (e) {
+      print(e);
+      setStatus(SORT_FILES, Status.Done);
+    }
   }
 
   sortFiles() async {
@@ -396,6 +504,10 @@ class MyFilesProvider extends BaseModel {
     }
   }
 
+  notify() {
+    notifyListeners();
+  }
+
   Future<void> getAllFiles() async {
     setStatus(ALL_FILES, Status.Loading);
     allFiles = [];
@@ -407,7 +519,7 @@ class MyFilesProvider extends BaseModel {
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
-                fileData.sender! +
+                (fileData.sender ?? "") +
                 Platform.pathSeparator +
                 (file.name ?? '');
           } else {
