@@ -10,12 +10,14 @@ class DesktopCoverImagePicker extends StatelessWidget {
   final Uint8List? selectedImage;
   final Function(Uint8List) onSelected;
   final bool isEdit;
+  final Function() onCancel;
 
   const DesktopCoverImagePicker({
     Key? key,
     this.selectedImage,
     required this.onSelected,
     required this.isEdit,
+    required this.onCancel,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class DesktopCoverImagePicker extends StatelessWidget {
           }
         }
       },
-      child: selectedImage != null
+      child: selectedImage != null && selectedImage!.isNotEmpty
           ? SizedBox(
               width: 360,
               height: 88,
@@ -48,18 +50,41 @@ class DesktopCoverImagePicker extends StatelessWidget {
                     Positioned(
                       top: 12,
                       right: 12,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white54.withOpacity(0.5),
-                        ),
-                        child: SvgPicture.asset(
-                          AppVectors.icEdit,
-                          width: 16,
-                          height: 16,
-                          fit: BoxFit.cover,
-                        ),
+                      left: 12,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: onCancel,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white54.withOpacity(0.5),
+                              ),
+                              child: SvgPicture.asset(
+                                AppVectors.icCancel,
+                                width: 16,
+                                height: 16,
+                                color: Colors.black,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white54.withOpacity(0.5),
+                            ),
+                            child: SvgPicture.asset(
+                              AppVectors.icEdit,
+                              width: 16,
+                              height: 16,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                 ],
