@@ -623,6 +623,12 @@ class MyFilesProvider extends BaseModel {
   // }
 
   saveNewDataInMyFiles(FileTransfer fileTransfer) async {
+    for(FileTransfer myfile in myFiles) {
+      if(myfile.key == fileTransfer.key) {
+        return;
+      }
+    }
+
     var _atClient = AtClientManager.getInstance().atClient;
     var _keyStore = _atClient.getLocalSecondary()!.keyStore!;
 
