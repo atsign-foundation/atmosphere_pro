@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -102,26 +100,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
         files = [];
         break;
     }
-  }
-
-  Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(
-        ColorConstants.orange,
-      ),
-    );
-
-    if (fileTransferProgress == null) {
-      return spinner;
-    }
-
-    if (fileTransferProgress.fileState == FileState.download &&
-        fileTransferProgress.percent != null) {
-      spinner = LabelledCircularProgressIndicator(
-          value: (fileTransferProgress.percent! / 100));
-    }
-
-    return spinner;
   }
 
   @override
