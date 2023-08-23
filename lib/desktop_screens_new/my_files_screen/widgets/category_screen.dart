@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -16,10 +16,8 @@ import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -142,7 +140,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    DesktopSetupRoutes.nested_pop();
+                    DesktopSetupRoutes.nested_push(
+                        DesktopRoutes.DEKSTOP_MYFILES);
                   },
                   child:
                       Icon(Icons.arrow_back_ios, color: Colors.black, size: 24),
