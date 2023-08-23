@@ -133,6 +133,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                             setState(() {
                               searchText = value;
                             });
+                            filterSearchFiles();
                           },
                           decoration: InputDecoration(
                             isDense: true,
@@ -153,6 +154,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                       isSearchActive = !isSearchActive;
                       searchText = "";
                     });
+                    filterSearchFiles();
                   },
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
@@ -372,6 +374,30 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
 
     setState(() {
       filteredFiles;
+    });
+  }
+
+  void filterSearchFiles() async {
+    if (searchText.trim().isEmpty) {
+      setState(() {
+        filteredFiles = context.read<HistoryProvider>().allFilesHistory;
+      });
+      return;
+    }
+
+    // await context.read<HistoryProvider>().getAllFileTransferHistory();
+    var files = context.read<HistoryProvider>().allFilesHistory;
+    List<FileHistory> tempFiles = [];
+    for (var filehistory in files) {
+      for (FileData file in filehistory.fileDetails?.files ?? []) {
+        if (file.name?.contains(searchText) ?? false) {
+          tempFiles.add(filehistory);
+        }
+      }
+    }
+
+    setState(() {
+      filteredFiles = tempFiles;
     });
   }
 
