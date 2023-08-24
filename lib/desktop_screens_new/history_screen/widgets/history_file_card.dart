@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -76,21 +77,35 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
     return fileExists;
   }
 
+  Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
+    Widget spinner = CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(
+        ColorConstants.orange,
+      ),
+    );
+
+    if (fileTransferProgress == null) {
+      return spinner;
+    }
+
+    if (fileTransferProgress.fileState == FileState.download &&
+        fileTransferProgress.percent != null) {
+      spinner = LabelledCircularProgressIndicator(
+          value: (fileTransferProgress.percent! / 100));
+    }
+
+    return spinner;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: isDownloading
-          ? null
-          : () async {
-              bool isExist = await isFilePresent(widget.singleFile.name ?? '');
-              if (!isExist) {
-                await downloadFiles(
-                  widget.fileTransfer,
-                  fileName: widget.singleFile.name,
-                  isPreview: true,
-                );
-              }
-            },
+      onTap: () async {
+        await openFilePath(
+            BackendService.getInstance().downloadDirectory!.path +
+                Platform.pathSeparator +
+                (widget.singleFile.name ?? ""));
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -150,9 +165,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                               ? fileTransferProgress != null &&
                                       fileTransferProgress.fileName ==
                                           widget.singleFile.name
-                                  ? Image.asset(
-                                      ImageConstants.icCloudDownloading,
-                                    )
+                                  ? getDownloadStatus(fileTransferProgress)
                                   : isDownloaded
                                       ? SvgPicture.asset(
                                           AppVectors.icCloudDownloaded,

@@ -161,7 +161,7 @@ class MyFilesProvider extends BaseModel {
     myFiles = myFilesRecord;
     print('myFiles length: ${myFiles.length}');
     await getAllFiles();
-    await sortAllFiles();
+    await sortFiles();
     await getrecentHistoryFiles();
 
     // populateTabs();
@@ -254,25 +254,25 @@ class MyFilesProvider extends BaseModel {
 
       await Future.forEach(myFiles, (FileTransfer fileData) async {
         await Future.forEach(fileData.files!, (dynamic file) async {
-          String? fileExtension = file.displayName.split('.').last;
+          String? fileExtension = file.name.split('.').last;
           String filePath =
               BackendService.getInstance().downloadDirectory!.path +
                   Platform.pathSeparator +
-                  file.displayName;
+                  file.name;
 
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
-                fileData.sender! +
+                (fileData.sender ?? "") +
                 Platform.pathSeparator +
-                file.displayName;
+                file.name;
           }
           FilesDetail fileDetail = FilesDetail(
-              fileName: file.displayName,
+              fileName: file.name,
               filePath: filePath,
               size: double.parse(file.size.toString()),
               date: fileData.date?.toLocal().toString(),
-              type: file.displayName.split('.').last,
+              type: file.name.split('.').last,
               contactName: fileData.sender,
               message: fileData.notes,
               fileTransferId: fileData.key);
@@ -469,7 +469,7 @@ class MyFilesProvider extends BaseModel {
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
-                fileData.sender! +
+                (fileData.sender ?? "") +
                 Platform.pathSeparator +
                 (file.name ?? '');
           } else {
@@ -623,6 +623,12 @@ class MyFilesProvider extends BaseModel {
   // }
 
   saveNewDataInMyFiles(FileTransfer fileTransfer) async {
+    for(FileTransfer myfile in myFiles) {
+      if(myfile.key == fileTransfer.key) {
+        return;
+      }
+    }
+
     var _atClient = AtClientManager.getInstance().atClient;
     var _keyStore = _atClient.getLocalSecondary()!.keyStore!;
 
@@ -697,6 +703,15 @@ class MyFilesProvider extends BaseModel {
       }
       if (fileIndex != -1) {
         myFiles[myFileIndex].files!.removeAt(fileIndex);
+        // also remove file from allFiles
+        FilesDetail? fileToDelete;
+        for(var file in allFiles) {
+          if(file.fileTransferId == fileTransferId && file.fileName == filename) {
+            fileToDelete = file;
+            break;
+          }
+        }
+        allFiles.remove(fileToDelete);
       }
     }
 
@@ -711,6 +726,7 @@ class MyFilesProvider extends BaseModel {
       await sortFiles();
       populateTabs();
     }
+    notifyListeners();
     return res;
   }
 

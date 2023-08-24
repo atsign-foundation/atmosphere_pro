@@ -13,7 +13,7 @@ class FileTile extends StatelessWidget {
     required this.filePath,
     required this.fileExt,
     required this.fileDate,
-    this.selectedFileName = "",
+    this.selectedFile = false,
   }) : super(key: key);
 
   final String fileName;
@@ -21,7 +21,7 @@ class FileTile extends StatelessWidget {
   final String filePath;
   final String fileExt;
   final String fileDate;
-  final String selectedFileName;
+  final bool selectedFile;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class FileTile extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-              color: selectedFileName == fileName
+              color: selectedFile
                   ? Theme.of(context).primaryColor
                   : Colors.transparent,
               width: 5),
@@ -55,7 +55,7 @@ class FileTile extends StatelessWidget {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
-                color: selectedFileName == fileName
+                color: selectedFile
                     ? Theme.of(context).primaryColor
                     : ColorConstants.MILD_GREY,
               ),

@@ -97,17 +97,12 @@ class DesktopFilterOptionItem extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 if (isAllOption) SizedBox(width: 16),
-                InkWell(
-                  onTap: () {
-                    isAllOption ? onTap?.call() : null;
-                  },
-                  child: SvgPicture.asset(
-                    isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
-                    width: 24,
-                    height: 24,
-                    color: color,
-                    fit: BoxFit.cover,
-                  ),
+                SvgPicture.asset(
+                  isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
+                  width: 24,
+                  height: 24,
+                  color: color,
+                  fit: BoxFit.cover,
                 ),
               ],
             ),
