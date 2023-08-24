@@ -5,11 +5,11 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
-import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -68,11 +68,10 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
   }
 
   Future<bool> isFilePresent(String fileName) async {
-    String filePath = BackendService.getInstance().downloadDirectory!.path +
-        Platform.pathSeparator +
-        fileName;
+    String filePath = await MixedConstants.getFileLocation(
+        sharedBy: widget.fileTransfer.sender!);
 
-    File file = File(filePath);
+    File file = File(filePath + Platform.pathSeparator + fileName);
     bool fileExists = await file.exists();
     return fileExists;
   }
@@ -101,10 +100,10 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        await openFilePath(
-            BackendService.getInstance().downloadDirectory!.path +
-                Platform.pathSeparator +
-                (widget.singleFile.name ?? ""));
+        await openFilePath(await MixedConstants.getFileLocation(
+                sharedBy: widget.fileTransfer.sender!) +
+            Platform.pathSeparator +
+            (widget.singleFile.name ?? ""));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -194,9 +193,9 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                                   Navigator.pop(context);
                                 }
                                 await FileUtils.moveToSendFile(
-                                    BackendService.getInstance()
-                                            .downloadDirectory!
-                                            .path +
+                                    await MixedConstants.getFileLocation(
+                                            sharedBy:
+                                                widget.fileTransfer.sender!) +
                                         Platform.pathSeparator +
                                         widget.singleFile.name!);
 
@@ -212,11 +211,12 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                               padding: const EdgeInsets.only(left: 6.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  String filePath = BackendService.getInstance()
-                                          .downloadDirectory!
-                                          .path +
-                                      Platform.pathSeparator +
-                                      (widget.singleFile.name ?? "");
+                                  String filePath =
+                                      await MixedConstants.getFileLocation(
+                                              sharedBy:
+                                                  widget.fileTransfer.sender!) +
+                                          Platform.pathSeparator +
+                                          (widget.singleFile.name ?? "");
 
                                   File file = File(filePath);
                                   bool fileExists = await file.exists();

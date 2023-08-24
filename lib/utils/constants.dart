@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class MixedConstants {
@@ -105,4 +106,39 @@ class MixedConstants {
 
   // Onboarding API key - requires different key for production
   static String ONBOARD_API_KEY = '477b-876u-bcez-c42z-6a3d';
+
+  ///returns file download location
+  ///creates the directory if does not exists one
+  static Future<String> getFileLocation({String? sharedBy}) async {
+    String _downloadPath = '';
+    if (Platform.isMacOS ||
+        Platform.isWindows ||
+        Platform.isLinux && sharedBy != null) {
+      _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+          Platform.pathSeparator +
+          sharedBy!;
+      await BackendService.getInstance()
+          .doesDirectoryExist(path: _downloadPath);
+      return _downloadPath;
+    } else {
+      return BackendService.getInstance().atClientPreference.downloadPath!;
+    }
+  }
+
+  /// returns file download location
+  /// does not create the directory if does not exists
+  static String getFileLocationSync({String? sharedBy}) {
+    String _downloadPath = '';
+    if (Platform.isMacOS ||
+        Platform.isWindows ||
+        Platform.isLinux && sharedBy != null) {
+      _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+          Platform.pathSeparator +
+          sharedBy!;
+
+      return _downloadPath;
+    } else {
+      return BackendService.getInstance().atClientPreference.downloadPath!;
+    }
+  }
 }

@@ -1092,13 +1092,7 @@ class HistoryProvider extends BaseModel {
 
       var _downloadPath;
 
-      /// only do for desktop
-      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-            Platform.pathSeparator +
-            sharedBy;
-        BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
-      }
+      _downloadPath = await MixedConstants.getFileLocation(sharedBy: sharedBy);
 
       var files;
       try {
@@ -1150,21 +1144,24 @@ class HistoryProvider extends BaseModel {
     bool? isWidgetOpen,
     String fileName,
   ) async {
-    var index =
-    allFilesHistory.indexWhere((element) => element.fileDetails?.key == transferId);
-    var _fileIndex = allFilesHistory[index].fileDetails
+    var index = allFilesHistory
+        .indexWhere((element) => element.fileDetails?.key == transferId);
+    var _fileIndex = allFilesHistory[index]
+        .fileDetails
         ?.files!
         .indexWhere((_file) => _file.name == fileName);
     try {
       if ((index > -1) && (_fileIndex! > -1)) {
-        allFilesHistory[index].fileDetails?.files![_fileIndex].isDownloading = true;
+        allFilesHistory[index].fileDetails?.files![_fileIndex].isDownloading =
+            true;
         allFilesHistory[index].fileDetails?.isWidgetOpen = isWidgetOpen;
       }
       notifyListeners();
 
       var files =
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
-      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading = false;
+      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
+          false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
@@ -1185,7 +1182,8 @@ class HistoryProvider extends BaseModel {
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
               listen: false)
           .removeReceiveProgressItem(transferId);
-      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading = false;
+      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
+          false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
     }
@@ -1194,8 +1192,9 @@ class HistoryProvider extends BaseModel {
   Future<List<File>> _downloadSingleFileFromWeb(
       String? transferId, String? sharedByAtSign, String fileName,
       {String? downloadPath}) async {
-    downloadPath ??=
-        BackendService.getInstance().atClientPreference.downloadPath;
+    downloadPath ??= await MixedConstants.getFileLocation(
+      sharedBy: sharedByAtSign,
+    );
     if (downloadPath == null) {
       throw Exception('downloadPath not found');
     }
@@ -1270,6 +1269,7 @@ class HistoryProvider extends BaseModel {
           .removeReceiveProgressItem(transferId);
       // deleting temp directory
       Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);
+      tempDirectory.deleteSync(recursive: true);
       return downloadedFiles;
     } catch (e) {
       print('error in downloadFile: $e');

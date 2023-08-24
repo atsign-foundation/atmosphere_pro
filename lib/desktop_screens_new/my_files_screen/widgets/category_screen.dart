@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
@@ -12,6 +13,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
@@ -284,6 +286,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           fileExt: file.fileName?.split(".").last ?? "",
                           fileDate: file.date ?? "",
                           selectedFile: selectedFile == file,
+                          id: file.fileTransferId,
                         )
                       : FileListTile(
                           fileName: file.fileName ?? "",
@@ -312,6 +315,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final time = DateFormat('HH:mm').format(date);
 
     var isDeleting = false;
+
+    //finding file sender to get file download location
+    String? sender;
+    String _filePath = '';
+    var myFilesProvider = Provider.of<MyFilesProvider>(context, listen: false);
+    var i = myFilesProvider.myFiles.indexWhere(
+        (FileTransfer element) => element.key == file.fileTransferId);
+    if (i != -1) {
+      sender = myFilesProvider.myFiles[i].sender;
+    }
+
+    if (sender != null) {
+      _filePath = MixedConstants.getFileLocationSync(sharedBy: sender) +
+          Platform.pathSeparator +
+          file.fileName!;
+    } else {
+      _filePath = file.filePath!;
+    }
 
     await showDialog(
       context: context,
@@ -362,10 +383,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: thumbnail(
-                          file.fileName?.split(".").last ?? "",
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              (file.fileName ?? "")),
+                          file.fileName?.split(".").last ?? "", _filePath),
                     ),
                     SizedBox(height: 24),
                     Align(
