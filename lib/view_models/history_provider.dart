@@ -851,10 +851,8 @@ class HistoryProvider extends BaseModel {
     setStatus(GET_ALL_FILE_HISTORY, Status.Loading);
     List<FileHistory> tempFileHistoryLogs = [];
     try {
-      await [
-        getSentHistory(),
-        getAllFileTransferData(),
-      ];
+      await getSentHistory();
+      await getAllFileTransferData();
 
       tempFileHistoryLogs.addAll(receivedFileHistory);
       tempFileHistoryLogs.addAll(sentHistory);
@@ -1150,21 +1148,24 @@ class HistoryProvider extends BaseModel {
     bool? isWidgetOpen,
     String fileName,
   ) async {
-    var index =
-    allFilesHistory.indexWhere((element) => element.fileDetails?.key == transferId);
-    var _fileIndex = allFilesHistory[index].fileDetails
+    var index = allFilesHistory
+        .indexWhere((element) => element.fileDetails?.key == transferId);
+    var _fileIndex = allFilesHistory[index]
+        .fileDetails
         ?.files!
         .indexWhere((_file) => _file.name == fileName);
     try {
       if ((index > -1) && (_fileIndex! > -1)) {
-        allFilesHistory[index].fileDetails?.files![_fileIndex].isDownloading = true;
+        allFilesHistory[index].fileDetails?.files![_fileIndex].isDownloading =
+            true;
         allFilesHistory[index].fileDetails?.isWidgetOpen = isWidgetOpen;
       }
       notifyListeners();
 
       var files =
           await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
-      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading = false;
+      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
+          false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
@@ -1185,7 +1186,8 @@ class HistoryProvider extends BaseModel {
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
               listen: false)
           .removeReceiveProgressItem(transferId);
-      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading = false;
+      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
+          false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
     }

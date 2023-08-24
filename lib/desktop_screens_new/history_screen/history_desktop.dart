@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_filter_history_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/history_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -27,24 +28,14 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
   GlobalKey filterKey = GlobalKey();
   bool isFilterOpened = false;
 
-  List<FileHistory> historyfiles = [];
   List<FileHistory> filteredFiles = [];
 
   @override
   void initState() {
     super.initState();
-    getHistory();
+    context.read<HistoryProvider>().reset("get_all_file_history");
   }
 
-  void getHistory() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      var provider = context.read<HistoryProvider>();
-      await provider.getAllFileTransferHistory();
-      historyfiles = provider.allFilesHistory;
-      filteredFiles = provider.allFilesHistory;
-      provider.setSelectedType(HistoryType.send);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,200 +46,225 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
       child: Container(
         padding: EdgeInsets.all(40),
         color: ColorConstants.fadedBlue,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Transfer History",
-                  style: TextStyle(
-                    fontSize: 12.toFont,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    context
-                        .read<HistoryProvider>()
-                        .setSelectedType(HistoryType.send);
-                  },
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: typeSelected == HistoryType.send
-                          ? Theme.of(context).primaryColor
-                          : ColorConstants.MILD_GREY,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                        child: Text(
-                      "Sent",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 7.toFont,
-                      ),
-                    )),
-                  ),
-                ),
-                SizedBox(width: 20),
-                InkWell(
-                  onTap: () async {
-                    context
-                        .read<HistoryProvider>()
-                        .setSelectedType(HistoryType.received);
-                  },
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: typeSelected == HistoryType.received
-                          ? Theme.of(context).primaryColor
-                          : ColorConstants.MILD_GREY,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                        child: Text(
-                      "Received",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 7.toFont,
-                      ),
-                    )),
-                  ),
-                ),
-                Spacer(),
-                isSearchActive
-                    ? Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            setState(() {
-                              searchText = value;
-                            });
-                            filterSearchFiles();
-                          },
-                          decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
-                            hintText: "Search...",
-                          ),
-                        ),
-                      )
-                    : SizedBox(),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      isSearchActive = !isSearchActive;
-                      searchText = "";
-                    });
-                    filterSearchFiles();
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.search,
-                      size: 25,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    _onTapFilterIcon();
-                    setState(() {
-                      isFilterOpened = true;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                    isFilterOpened
-                        ? AppVectors.icFilterOpened
-                        : AppVectors.icFilterGray,
-                  ),
-                  key: filterKey,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    var provider = context.read<HistoryProvider>();
-                    await provider.getAllFileTransferHistory();
-                    historyfiles = provider.allFilesHistory;
-                    filteredFiles = provider.allFilesHistory;
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.refresh,
-                      size: 25,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Divider(
-              thickness: 1,
-              color: Colors.black,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-
-            //body
-
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              child: Row(
+        child: ProviderHandler<HistoryProvider>(
+          functionName: context.read<HistoryProvider>().GET_ALL_FILE_HISTORY,
+          load: (provider) async {
+            await provider.getAllFileTransferHistory();
+            filteredFiles = provider.allFilesHistory;
+            provider.setSelectedType(HistoryType.send);
+          },
+          successBuilder: (provider) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      children: [
-                        Text(
-                          typeSelected == HistoryType.received ? "From" : "To",
-                          style: TextStyle(color: Color(0xFF909090)),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 14,
-                          color: Color(0xFF909090),
-                        ),
-                      ],
+                  Text(
+                    "Transfer History",
+                    style: TextStyle(
+                      fontSize: 12.toFont,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Expanded(
-                    flex: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {
+                      context
+                          .read<HistoryProvider>()
+                          .setSelectedType(HistoryType.send);
+                    },
+                    child: Container(
+                      width: 150,
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: typeSelected == HistoryType.send
+                            ? Theme.of(context).primaryColor
+                            : ColorConstants.MILD_GREY,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Center(
+                          child: Text(
+                        "Sent",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 7.toFont,
+                        ),
+                      )),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  InkWell(
+                    onTap: () async {
+                      context
+                          .read<HistoryProvider>()
+                          .setSelectedType(HistoryType.received);
+                    },
+                    child: Container(
+                      width: 150,
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: typeSelected == HistoryType.received
+                            ? Theme.of(context).primaryColor
+                            : ColorConstants.MILD_GREY,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Center(
+                          child: Text(
+                        "Received",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 7.toFont,
+                        ),
+                      )),
+                    ),
+                  ),
+                  Spacer(),
+                  isSearchActive
+                      ? Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                searchText = value;
+                              });
+                              filterSearchFiles();
+                            },
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              hintText: "Search...",
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isSearchActive = !isSearchActive;
+                        searchText = "";
+                      });
+                      filterSearchFiles();
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.search,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _onTapFilterIcon();
+                      setState(() {
+                        isFilterOpened = true;
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      isFilterOpened
+                          ? AppVectors.icFilterOpened
+                          : AppVectors.icFilterGray,
+                    ),
+                    key: filterKey,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      var provider = context.read<HistoryProvider>();
+                      await provider.getAllFileTransferHistory();
+                      filteredFiles = provider.allFilesHistory;
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.refresh,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Divider(
+                thickness: 1,
+                color: Colors.black,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
+              //body
+
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
                       child: Row(
                         children: [
                           Text(
-                            "Files",
+                            typeSelected == HistoryType.received
+                                ? "From"
+                                : "To",
+                            style: TextStyle(color: Color(0xFF909090)),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
+                            size: 14,
+                            color: Color(0xFF909090),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Files",
+                              style: TextStyle(color: Color(0xFF909090)),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              size: 14,
+                              color: Color(0xFF909090),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
+                          Text(
+                            "Status",
                             style: TextStyle(color: Color(0xFF909090)),
                           ),
                           Icon(
@@ -259,106 +275,90 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      children: [
-                        Text(
-                          "Status",
-                          style: TextStyle(color: Color(0xFF909090)),
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 14,
-                          color: Color(0xFF909090),
-                        ),
-                      ],
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Text(
+                            "Message",
+                            style: TextStyle(color: Color(0xFF909090)),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
+                            size: 14,
+                            color: Color(0xFF909090),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      children: [
-                        Text(
-                          "Message",
-                          style: TextStyle(color: Color(0xFF909090)),
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 14,
-                          color: Color(0xFF909090),
-                        ),
-                      ],
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Date",
+                            style: TextStyle(color: Color(0xFF909090)),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
+                            size: 14,
+                            color: Color(0xFF909090),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Date",
-                          style: TextStyle(color: Color(0xFF909090)),
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 14,
-                          color: Color(0xFF909090),
-                        ),
-                      ],
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Type",
+                            style: TextStyle(color: Color(0xFF909090)),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
+                            size: 14,
+                            color: Color(0xFF909090),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Type",
-                          style: TextStyle(color: Color(0xFF909090)),
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 14,
-                          color: Color(0xFF909090),
-                        ),
-                      ],
+                    SizedBox(
+                      width: 10,
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: filteredFiles.length,
-              itemBuilder: (context, index) {
-                var file = filteredFiles[index];
-                return file.type == typeSelected &&
-                        (file.fileDetails?.files?.isNotEmpty ?? false)
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: HistoryCardWidget(
-                          fileHistory: filteredFiles[index],
-                          tags: getFileTags(filteredFiles[index]),
-                        ),
-                      )
-                    : SizedBox();
-              },
-            )
-          ],
+              SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: filteredFiles.length,
+                itemBuilder: (context, index) {
+                  var file = filteredFiles[index];
+                  return file.type == typeSelected &&
+                          (file.fileDetails?.files?.isNotEmpty ?? false)
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: HistoryCardWidget(
+                            fileHistory: filteredFiles[index],
+                            tags: getFileTags(filteredFiles[index]),
+                          ),
+                        )
+                      : SizedBox();
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   // Used to filter files when we choose a filter from the header
-  void filterFiles(List<FileType> selectedFileTypes) async {
+  Future<void> filterFiles(List<FileType> selectedFileTypes) async {
     await context.read<HistoryProvider>().getAllFileTransferHistory();
     filteredFiles = context.read<HistoryProvider>().allFilesHistory;
     for (var filehistory in filteredFiles) {
@@ -449,7 +449,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                 typeSelected: provider.typeSelected,
                 onSelectedOptionalFilter: (value) async {
                   await provider.updateFileType(value);
-                  filterFiles(value);
+                  await filterFiles(value);
                 },
                 listFileType: provider.listType,
               ),
