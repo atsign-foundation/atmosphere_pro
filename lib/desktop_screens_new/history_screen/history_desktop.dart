@@ -385,12 +385,11 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
       return;
     }
 
-    // await context.read<HistoryProvider>().getAllFileTransferHistory();
     var files = context.read<HistoryProvider>().allFilesHistory;
     List<FileHistory> tempFiles = [];
     for (var filehistory in files) {
       for (FileData file in filehistory.fileDetails?.files ?? []) {
-        if (file.name?.contains(searchText) ?? false) {
+        if (file.name?.toLowerCase().contains(searchText.toLowerCase()) ?? false) {
           tempFiles.add(filehistory);
         }
       }
