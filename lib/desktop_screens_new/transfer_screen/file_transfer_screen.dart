@@ -249,13 +249,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               SizedBox(
                                 height: 10.toHeight,
                               ),
-                              Text(
-                                "Drag or drop files or Browse",
-                                style: TextStyle(
-                                  color: ColorConstants.gray,
-                                  fontSize: 15.toFont,
-                                ),
-                              ),
+                              // Text(
+                              //   "Drag or drop files or Browse",
+                              //   style: TextStyle(
+                              //     color: ColorConstants.gray,
+                              //     fontSize: 15.toFont,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -570,16 +570,16 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            InkWell(
-                              onTap: () {},
-                              child: CircleAvatar(
-                                backgroundColor: ColorConstants.MILD_GREY,
-                                child: Icon(
-                                  Icons.verified_outlined,
-                                  size: 25,
-                                ),
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () {},
+                            //   child: CircleAvatar(
+                            //     backgroundColor: ColorConstants.MILD_GREY,
+                            //     child: Icon(
+                            //       Icons.verified_outlined,
+                            //       size: 25,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
 
