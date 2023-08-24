@@ -52,8 +52,19 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   List<GroupContactsModel> selectedContacts = [];
 
   void addSelectedContact(GroupContactsModel contact) {
-    if (selectedContacts.contains(contact)) {
-      selectedContacts.remove(contact);
+    if (isSelected(contact)) {
+      var i = selectedContacts.indexWhere((selectedContact) {
+        if (contact.contactType == ContactsType.CONTACT &&
+            contact.contact!.atSign == selectedContact.contact!.atSign) {
+          return true;
+        } else if (contact.contactType == ContactsType.GROUP &&
+            contact.group!.groupId == selectedContact.group!.groupId) {
+          return true;
+        }
+        return false;
+      });
+
+      selectedContacts.removeAt(i);
     } else {
       selectedContacts.add(contact);
     }
@@ -121,6 +132,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   Widget build(BuildContext context) {
     var selectedFiles = context.watch<FileTransferProvider>().selectedFiles;
     var contactList = context.watch<FileTransferProvider>().selectedContacts;
+    selectedContacts = context.watch<FileTransferProvider>().selectedContacts;
 
     List<AtContact> trustedContacts =
         context.read<TrustedContactProvider>().trustedContacts;
@@ -172,7 +184,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         child: InkWell(
                           onTap: () {
                             var index = selectedFiles.indexOf(file);
-                            context.read<FileTransferProvider>().deleteFiles(index);
+                            context
+                                .read<FileTransferProvider>()
+                                .deleteFiles(index);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -180,7 +194,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               color: Colors.white,
                             ),
                             padding: EdgeInsets.all(2),
-                            child: Icon(Icons.clear, size: 14,),
+                            child: Icon(
+                              Icons.clear,
+                              size: 14,
+                            ),
                           ),
                         ),
                       ),
@@ -195,11 +212,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
             InkWell(
               onTap: () async {
                 var files = await desktopImagePicker();
-                if (files != null) {
+                if (files != null && files.isNotEmpty) {
                   _filePickerProvider.selectedFiles.add(files[0]);
                   _filePickerProvider.notify();
                 }
-                print("selected files: $files");
               },
               child: selectedFiles.isEmpty
                   ? DottedBorder(
@@ -233,13 +249,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               SizedBox(
                                 height: 10.toHeight,
                               ),
-                              Text(
-                                "Drag or drop files or Browse",
-                                style: TextStyle(
-                                  color: ColorConstants.gray,
-                                  fontSize: 15.toFont,
-                                ),
-                              ),
+                              // Text(
+                              //   "Drag or drop files or Browse",
+                              //   style: TextStyle(
+                              //     color: ColorConstants.gray,
+                              //     fontSize: 15.toFont,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -554,16 +570,16 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            InkWell(
-                              onTap: () {},
-                              child: CircleAvatar(
-                                backgroundColor: ColorConstants.MILD_GREY,
-                                child: Icon(
-                                  Icons.verified_outlined,
-                                  size: 25,
-                                ),
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () {},
+                            //   child: CircleAvatar(
+                            //     backgroundColor: ColorConstants.MILD_GREY,
+                            //     child: Icon(
+                            //       Icons.verified_outlined,
+                            //       size: 25,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
 
@@ -649,8 +665,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                                     contact.atSign,
                                             image: byteImage,
                                             showImage: byteImage != null,
-                                            isSelected: selectedContacts
-                                                .contains(groupContactModel),
+                                            isSelected:
+                                                isSelected(groupContactModel!),
                                             showDivider: true,
                                             isTrusted: isTrusted,
                                           )
@@ -661,8 +677,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                                 ?.group?.groupName,
                                             image: byteImage,
                                             showImage: byteImage != null,
-                                            isSelected: selectedContacts
-                                                .contains(groupContactModel),
+                                            isSelected:
+                                                isSelected(groupContactModel!),
                                             showDivider: true,
                                             isTrusted: false,
                                           ),
@@ -714,5 +730,25 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         });
       },
     );
+  }
+
+  bool isSelected(GroupContactsModel groupContactsModel) {
+    for (GroupContactsModel contact in selectedContacts) {
+      if (groupContactsModel.contactType != contact.contactType) {
+        return false;
+      }
+
+      if (groupContactsModel.contactType == ContactsType.CONTACT &&
+          contact.contact?.atSign == groupContactsModel.contact!.atSign) {
+        return true;
+      }
+
+      if (groupContactsModel.contactType == ContactsType.GROUP &&
+          contact.group?.groupId == groupContactsModel.group!.groupId) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

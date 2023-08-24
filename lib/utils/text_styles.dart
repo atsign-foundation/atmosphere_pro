@@ -113,6 +113,7 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w700,
   );
+
   static TextStyle whiteBold({int size = 16}) => TextStyle(
         color: Colors.white,
         fontSize: size.toFont,
@@ -133,6 +134,28 @@ class CustomTextStyles {
     fontSize: 18.toFont,
     letterSpacing: 0.1,
   );
+
+  static TextStyle desktopPrimaryW400S14 = TextStyle(
+    color: Colors.black,
+    fontSize: 14,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle desktopPrimaryW500S15 = TextStyle(
+    color: Colors.black,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle oldSliverW400S10 = TextStyle(
+    color: ColorConstants.oldSliver,
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle whiteBoldS12 =
+      TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700);
 
   static TextStyle primaryBold16 = TextStyle(
     color: ColorConstants.fontPrimary,
@@ -338,10 +361,11 @@ class CustomTextStyles {
   );
 
   static TextStyle desktopButton15 = TextStyle(
-      color: Colors.white,
-      fontSize: 15,
-      letterSpacing: 0.1,
-      fontWeight: FontWeight.w700,);
+    color: Colors.white,
+    fontSize: 15,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
 
   static TextStyle orangeW50015 = TextStyle(
     color: ColorConstants.orange,
@@ -362,10 +386,7 @@ class CustomTextStyles {
   );
 
   static TextStyle orangeW50014 = TextStyle(
-      color: ColorConstants.orange,
-      fontSize: 14,
-      fontWeight: FontWeight.w500
-  );
+      color: ColorConstants.orange, fontSize: 14, fontWeight: FontWeight.w500);
 
   static TextStyle whiteBold12 = const TextStyle(
     color: Colors.white,
