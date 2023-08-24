@@ -196,104 +196,110 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
           ),
         ),
         Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(left: 13.0),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  showTrusted = !showTrusted;
-                });
-              },
-              child: SvgPicture.asset(
-                AppVectors.icTrustActivated,
-                color: showTrusted ? null : Colors.grey,
-              ),
-            ),
-          ),
-        ),
-        isSearching
-            ? Container(
-                margin: const EdgeInsets.only(left: 13.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: Container(
-                    height: 40,
-                    width: 308,
-                    color: Colors.white,
-                    child: TextField(
-                      autofocus: true,
-                      onChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
-                      },
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 28, vertical: 8),
-                        border: InputBorder.none,
-                        hintText: 'Search',
-                        hintStyle: TextStyle(
-                          color: ColorConstants.grey,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+        sidebarView == null
+            ? Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            showTrusted = !showTrusted;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          AppVectors.icTrustActivated,
+                          color: showTrusted ? null : Colors.grey,
                         ),
-                        suffixIcon: InkWell(
-                            onTap: () {
-                              setState(() {
-                                searchText = '';
-                                isSearching = false;
-                              });
-                            },
-                            child: const Icon(Icons.close)),
                       ),
                     ),
                   ),
-                ),
+                  isSearching
+                      ? Container(
+                          margin: const EdgeInsets.only(left: 13.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: Container(
+                              height: 40,
+                              width: 308,
+                              color: Colors.white,
+                              child: TextField(
+                                autofocus: true,
+                                onChanged: (value) {
+                                  setState(() {
+                                    searchText = value;
+                                  });
+                                },
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 28, vertical: 8),
+                                  border: InputBorder.none,
+                                  hintText: 'Search',
+                                  hintStyle: TextStyle(
+                                    color: ColorConstants.grey,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  suffixIcon: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          searchText = '';
+                                          isSearching = false;
+                                        });
+                                      },
+                                      child: const Icon(Icons.close)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.only(left: 13.0),
+                          child: IconButtonWidget(
+                            icon: AppVectors.icSearch,
+                            onTap: () {
+                              setState(() {
+                                isSearching = true;
+                              });
+                            },
+                          ),
+                        ),
+                  InkWell(
+                    onTap: () {
+                      fetchContacts();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 13.0),
+                      child: CircularIcon(icon: Icons.refresh),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: CommonButton(
+                      'Add contact',
+                      () {
+                        setState(() {
+                          sidebarView = contactSidebar.addContact;
+                        });
+                      },
+                      color: Color(0xFFF07C50),
+                      border: 20,
+                      height: 40,
+                      width: 136,
+                      fontSize: 18,
+                      removePadding: true,
+                    ),
+                  )
+                ],
               )
-            : Container(
-                margin: const EdgeInsets.only(left: 13.0),
-                child: IconButtonWidget(
-                  icon: AppVectors.icSearch,
-                  onTap: () {
-                    setState(() {
-                      isSearching = true;
-                    });
-                  },
-                ),
-              ),
-        InkWell(
-          onTap: () {
-            fetchContacts();
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 13.0),
-            child: CircularIcon(icon: Icons.refresh),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 13.0),
-          child: CommonButton(
-            'Add contact',
-            () {
-              setState(() {
-                sidebarView = contactSidebar.addContact;
-              });
-            },
-            color: Color(0xFFF07C50),
-            border: 20,
-            height: 40,
-            width: 136,
-            fontSize: 18,
-            removePadding: true,
-          ),
-        )
+            : SizedBox(),
       ],
     );
   }

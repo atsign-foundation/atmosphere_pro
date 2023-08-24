@@ -110,6 +110,14 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
           Spacer(),
           Row(
             children: [
+              isTrusted
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: SvgPicture.asset(
+                        AppVectors.icTrustActivated,
+                      ),
+                    )
+                  : SizedBox(),
               InkWell(
                 onTap: () async {
                   Provider.of<FileTransferProvider>(context, listen: false)
@@ -128,14 +136,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                   iconColor: Color(0xFFEAA743),
                 ),
               ),
-              isTrusted
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 4),
-                      child: SvgPicture.asset(
-                        AppVectors.icTrustActivated,
-                      ),
-                    )
-                  : SizedBox(),
+
               // CircularIcon(
               //   icon: Icons.keyboard_control,
               //   iconColor: ColorConstants.gray,
