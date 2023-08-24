@@ -172,7 +172,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         child: InkWell(
                           onTap: () {
                             var index = selectedFiles.indexOf(file);
-                            context.read<FileTransferProvider>().deleteFiles(index);
+                            context
+                                .read<FileTransferProvider>()
+                                .deleteFiles(index);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -180,7 +182,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               color: Colors.white,
                             ),
                             padding: EdgeInsets.all(2),
-                            child: Icon(Icons.clear, size: 14,),
+                            child: Icon(
+                              Icons.clear,
+                              size: 14,
+                            ),
                           ),
                         ),
                       ),
@@ -598,8 +603,11 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                 contact.atSign!,
                               );
                             } else {
-                              if (initialLetter !=
-                                  groupContactModel?.group?.groupName?[0]) {
+                              if ((groupContactModel
+                                          ?.group?.groupName?.isNotEmpty ??
+                                      false) &&
+                                  initialLetter !=
+                                      groupContactModel?.group?.groupName?[0]) {
                                 initialLetter =
                                     groupContactModel?.group?.groupName?[0] ??
                                         "";
