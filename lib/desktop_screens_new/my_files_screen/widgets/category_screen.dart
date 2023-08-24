@@ -421,7 +421,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                                 File localFile = File(filePath);
                                 bool fileExists = await localFile.exists();
-                                if (fileExists) {
+                                if (fileExists && res) {
                                   localFile.deleteSync();
                                 }
 
