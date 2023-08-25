@@ -62,7 +62,7 @@ class AddContactTile extends StatelessWidget {
                       ),
                     )
                   : ContactInitial(
-                      initials: title ?? ' ',
+                      initials: (title?.isEmpty ?? true) ? '@UG' : title,
                       size: 60,
                       maxSize: (80.0 - 20.0),
                       minSize: 60,
