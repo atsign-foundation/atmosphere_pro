@@ -277,15 +277,24 @@ class BackendService {
 
   syncWithSecondary() async {
     AtSyncUIService().init(
-      appNavigator: NavService.navKey,
-      onSuccessCallback: _onSuccessCallback,
-      onErrorCallback: _onSyncErrorCallback,
-      primaryColor: ColorConstants.orangeColor,
-      showRemoveAtsignOption: true,
-      // TODO : add remove atsign function
-    );
+        appNavigator: NavService.navKey,
+        onSuccessCallback: _onSuccessCallback,
+        onErrorCallback: _onSyncErrorCallback,
+        primaryColor: ColorConstants.orangeColor,
+        showRemoveAtsignOption: true,
+        onAtSignRemoved: _onAtsignRemoved);
 
     AtSyncUIService().sync(atSyncUIOverlay: AtSyncUIOverlay.dialog);
+  }
+
+  _onAtsignRemoved() async {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          DesktopRoutes.DESKTOP_HOME, (Route<dynamic> route) => false);
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          Routes.HOME, (Route<dynamic> route) => false);
+    }
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
