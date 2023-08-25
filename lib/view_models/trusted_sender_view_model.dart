@@ -3,9 +3,7 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
-import 'package:flutter/material.dart';
 
 class TrustedContactProvider extends BaseModel {
   TrustedContactProvider._();
@@ -32,9 +30,6 @@ class TrustedContactProvider extends BaseModel {
   }
 
   addTrustedContacts(AtContact trustedContact) async {
-    if (trustedContact.tags != null && trustedContact.tags!['image'] != null) {
-      trustedContact.tags!['image'] = null;
-    }
     trustedContactOperation = true;
     setStatus(AddTrustedContacts, Status.Loading);
     String at_sign_name = trustedContact.atSign!.replaceAll("@", "");
