@@ -1090,13 +1090,8 @@ class HistoryProvider extends BaseModel {
 
       var _downloadPath;
 
-      /// only do for desktop
-      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-            Platform.pathSeparator +
-            sharedBy;
-        BackendService.getInstance().doesDirectoryExist(path: _downloadPath);
-      }
+      _downloadPath =
+          await MixedConstants.getFileDownloadLocation(sharedBy: sharedBy);
 
       var files;
       try {
@@ -1196,8 +1191,9 @@ class HistoryProvider extends BaseModel {
   Future<List<File>> _downloadSingleFileFromWeb(
       String? transferId, String? sharedByAtSign, String fileName,
       {String? downloadPath}) async {
-    downloadPath ??=
-        BackendService.getInstance().atClientPreference.downloadPath;
+    downloadPath ??= await MixedConstants.getFileDownloadLocation(
+      sharedBy: sharedByAtSign,
+    );
     if (downloadPath == null) {
       throw Exception('downloadPath not found');
     }
@@ -1272,6 +1268,7 @@ class HistoryProvider extends BaseModel {
           .removeReceiveProgressItem(transferId);
       // deleting temp directory
       Directory(fileDownloadReponse.filePath!).deleteSync(recursive: true);
+      tempDirectory.deleteSync(recursive: true);
       return downloadedFiles;
     } catch (e) {
       print('error in downloadFile: $e');

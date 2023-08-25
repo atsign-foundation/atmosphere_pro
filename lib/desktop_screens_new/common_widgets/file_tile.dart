@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class FileTile extends StatelessWidget {
+class FileTile extends StatefulWidget {
   const FileTile({
     Key? key,
     required this.fileName,
@@ -13,6 +19,7 @@ class FileTile extends StatelessWidget {
     required this.filePath,
     required this.fileExt,
     required this.fileDate,
+    required this.id,
     this.selectedFile = false,
   }) : super(key: key);
 
@@ -22,10 +29,44 @@ class FileTile extends StatelessWidget {
   final String fileExt;
   final String fileDate;
   final bool selectedFile;
+  final String? id;
+
+  @override
+  State<FileTile> createState() => _FileTileState();
+}
+
+class _FileTileState extends State<FileTile> {
+  String _filePath = '';
+  String? sender;
+  late MyFilesProvider myFilesProvider;
+
+  @override
+  void initState() {
+    myFilesProvider = Provider.of<MyFilesProvider>(context, listen: false);
+    findSenderAtsign();
+    super.initState();
+  }
+
+  findSenderAtsign() {
+    var i = myFilesProvider.myFiles
+        .indexWhere((FileTransfer element) => element.key == widget.id);
+    if (i != -1) {
+      sender = myFilesProvider.myFiles[i].sender;
+    }
+
+    if (sender != null) {
+      _filePath = MixedConstants.getFileDownloadLocationSync(sharedBy: sender) +
+          Platform.pathSeparator +
+          widget.fileName;
+    } else {
+      _filePath = widget.filePath;
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.parse(fileDate).toLocal();
+    final date = DateTime.parse(widget.fileDate).toLocal();
     final shortDate = DateFormat('dd/MM/yy').format(date);
     final time = DateFormat('HH:mm').format(date);
 
@@ -35,7 +76,7 @@ class FileTile extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-              color: selectedFile
+              color: widget.selectedFile
                   ? Theme.of(context).primaryColor
                   : Colors.transparent,
               width: 5),
@@ -48,14 +89,14 @@ class FileTile extends StatelessWidget {
               height: 100,
               child: Padding(
                 padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                child: thumbnail(fileExt, filePath),
+                child: thumbnail(widget.fileExt, _filePath),
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
-                color: selectedFile
+                color: widget.selectedFile
                     ? Theme.of(context).primaryColor
                     : ColorConstants.MILD_GREY,
               ),
@@ -78,7 +119,7 @@ class FileTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          fileName,
+                          widget.fileName,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: 16,
@@ -98,7 +139,7 @@ class FileTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    AppUtils.getFileSizeString(bytes: fileSize),
+                    AppUtils.getFileSizeString(bytes: widget.fileSize),
                     style: TextStyle(
                       fontSize: 12,
                       color: ColorConstants.gray,

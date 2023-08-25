@@ -192,12 +192,12 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                           return SizedBox();
                         }
                         return FileTile(
-                          fileName: file.fileName ?? "",
-                          fileExt: file.fileName?.split(".").last ?? "",
-                          filePath: file.filePath ?? "",
-                          fileSize: file.size ?? 0,
-                          fileDate: file.date ?? "",
-                        );
+                            fileName: file.fileName ?? "",
+                            fileExt: file.fileName?.split(".").last ?? "",
+                            filePath: file.filePath ?? "",
+                            fileSize: file.size ?? 0,
+                            fileDate: file.date ?? "",
+                            id: file.fileTransferId);
                       }).toList(),
                     ),
                   ),
@@ -212,7 +212,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                         fontSize: 6.toFont, fontWeight: FontWeight.w600),
                   ),
 
-                  SizedBox(height: 10),
+                  SizedBox(height: 30),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

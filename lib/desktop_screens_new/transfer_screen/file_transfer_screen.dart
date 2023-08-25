@@ -177,6 +177,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         filePath: file.path ?? "",
                         fileSize: file.size.toDouble(),
                         fileDate: DateTime.now().toString(),
+                        id: null,
                       ),
                       Positioned(
                         right: 20,
