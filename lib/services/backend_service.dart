@@ -5,6 +5,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
@@ -276,13 +277,24 @@ class BackendService {
 
   syncWithSecondary() async {
     AtSyncUIService().init(
-      appNavigator: NavService.navKey,
-      onSuccessCallback: _onSuccessCallback,
-      onErrorCallback: _onSyncErrorCallback,
-      primaryColor: ColorConstants.orangeColor,
-    );
+        appNavigator: NavService.navKey,
+        onSuccessCallback: _onSuccessCallback,
+        onErrorCallback: _onSyncErrorCallback,
+        primaryColor: ColorConstants.orangeColor,
+        showRemoveAtsignOption: true,
+        onAtSignRemoved: _onAtsignRemoved);
 
-    AtSyncUIService().sync();
+    AtSyncUIService().sync(atSyncUIOverlay: AtSyncUIOverlay.dialog);
+  }
+
+  _onAtsignRemoved() async {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          DesktopRoutes.DESKTOP_HOME, (Route<dynamic> route) => false);
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
+          Routes.HOME, (Route<dynamic> route) => false);
+    }
   }
 
   _onSuccessCallback(SyncResult syncStatus) async {
@@ -533,6 +545,15 @@ class BackendService {
     Provider.of<CreateGroupProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
+    Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .resetData();
+    await Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .getMyFilesRecords();
+    await Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .getAllFiles();
 
     await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
     startMonitor();

@@ -172,6 +172,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                   return Stack(
                     children: [
                       FileTile(
+                        key: UniqueKey(),
                         fileName: file.name,
                         fileExt: file.name.split(".").last,
                         filePath: file.path ?? "",
@@ -275,7 +276,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Add Files (Drag or Drop Files)",
+                              "Add Files",
                               style: TextStyle(
                                 color: ColorConstants.yellow,
                                 fontSize: 16.toFont,
@@ -422,11 +423,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               height: 30.toHeight,
             ),
             InkWell(
-              onTap: isFileSending ? null :() async {
-                if (isFileSending == false) {
-                  await sendFileWithFileBin(contactList);
-                }
-              },
+              onTap: isFileSending
+                  ? null
+                  : () async {
+                      if (isFileSending == false) {
+                        await sendFileWithFileBin(contactList);
+                      }
+                    },
               child: FractionallySizedBox(
                 widthFactor: 0.7,
                 child: Container(
