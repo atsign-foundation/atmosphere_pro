@@ -336,7 +336,7 @@ class TextStrings {
   String backUpKeys = 'Backup Your Keys';
   String backUpKeysSubtitle = "Save a Pair of your atKeys";
   String contactUs = 'Contact Us';
-  String deleteAtsigns = 'Delete Your Key';
+  String deleteAtsigns = 'Remove Your Key';
   String deleteAtsignsSubtitle = 'Delete your active atkey';
   String blockedAtSign = 'Blocked atSign';
   String blockedAtSignSubtitle = 'View list of blocked atSign';
