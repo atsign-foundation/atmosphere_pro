@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class DesktopAddContactScreen extends StatefulWidget {
   final Function() onBack;
+
   const DesktopAddContactScreen({Key? key, required this.onBack})
       : super(key: key);
 
@@ -211,7 +212,9 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                     padding: const EdgeInsets.fromLTRB(27, 0, 27, 16),
                     child: InkWell(
                       onTap: () async {
-                        if (isValid == CheckValid.valid) {
+                        if (isValid == CheckValid.valid &&
+                            state.status['add_contact_status'] !=
+                                Status.Loading) {
                           var response = await addContactProvider.addContact(
                             atSign: atSignController.text,
                             nickname: nicknameController.text,
@@ -226,7 +229,9 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                         height: 51.toHeight,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: isValid != CheckValid.valid
+                          color: isValid != CheckValid.valid ||
+                                  state.status['add_contact_status'] ==
+                                      Status.Loading
                               ? ColorConstants.buttonGrey
                               : Colors.black,
                           borderRadius: BorderRadius.circular(8),

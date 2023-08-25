@@ -19,7 +19,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -219,15 +219,15 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
             children: [
               InkWell(
                 onTap: () async {
-                  WelcomeScreenProvider().selectedContacts =
-                      groupProvider.selectedAtGroup!.members!
-                          .map(
-                            (element) => GroupContactsModel(
-                              contactType: ContactsType.CONTACT,
-                              contact: element,
-                            ),
-                          )
-                          .toList();
+                  Provider.of<FileTransferProvider>(context, listen: false)
+                      .selectedContacts = [
+                    GroupContactsModel(
+                      group: groupProvider.selectedAtGroup,
+                      contactType: ContactsType.GROUP,
+                    ),
+                  ];
+                  Provider.of<FileTransferProvider>(context, listen: false)
+                      .notify();
                   await DesktopSetupRoutes.nested_pop();
                 },
                 child: Container(

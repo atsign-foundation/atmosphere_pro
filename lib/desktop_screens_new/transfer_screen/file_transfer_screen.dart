@@ -422,7 +422,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               height: 30.toHeight,
             ),
             InkWell(
-              onTap: () async {
+              onTap: isFileSending ? null :() async {
                 if (isFileSending == false) {
                   await sendFileWithFileBin(contactList);
                 }
@@ -615,8 +615,11 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                 contact.atSign!,
                               );
                             } else {
-                              if (initialLetter !=
-                                  groupContactModel?.group?.groupName?[0]) {
+                              if ((groupContactModel
+                                          ?.group?.groupName?.isNotEmpty ??
+                                      false) &&
+                                  initialLetter !=
+                                      groupContactModel?.group?.groupName?[0]) {
                                 initialLetter =
                                     groupContactModel?.group?.groupName?[0] ??
                                         "";

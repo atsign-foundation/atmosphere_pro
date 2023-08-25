@@ -93,7 +93,7 @@ class _SideBarNewState extends State<SideBarNew> {
     super.initState();
   }
 
-  void getAtsignDetails({String? atSign}) async {
+  Future<void> getAtsignDetails({String? atSign}) async {
     AtContact? contact;
     if (BackendService.getInstance().currentAtSign != null) {
       contact = await getAtSignDetails(
@@ -333,9 +333,10 @@ class _SideBarNewState extends State<SideBarNew> {
                       right: 16,
                       bottom: 24,
                       child: SwitchingAtSignDialog(
-                        onSwitchAtSign: (value) {
+                        onSwitchAtSign: (value) async {
                           _sideBarProvider.changeIsSwitchingAtSign();
-                          getAtsignDetails(atSign: value);
+                          await getAtsignDetails(atSign: value);
+                          await DesktopSetupRoutes.nested_pop();
                         },
                       ),
                     ),

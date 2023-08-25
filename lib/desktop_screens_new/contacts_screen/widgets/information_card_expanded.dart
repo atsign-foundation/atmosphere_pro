@@ -10,11 +10,12 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class InformationCardExpanded extends StatefulWidget {
   final AtContact atContact;
@@ -247,12 +248,12 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
   Widget buildTransferFileButton() {
     return InkWell(
       onTap: () async {
-        WelcomeScreenProvider().selectedContacts = [
+        Provider.of<FileTransferProvider>(context, listen: false)
+            .selectedContacts = [
           GroupContactsModel(
-            contactType: ContactsType.CONTACT,
-            contact: widget.atContact,
-          ),
+              contact: widget.atContact, contactType: ContactsType.CONTACT),
         ];
+        Provider.of<FileTransferProvider>(context, listen: false).notify();
         await DesktopSetupRoutes.nested_pop();
       },
       child: Container(

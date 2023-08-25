@@ -851,10 +851,8 @@ class HistoryProvider extends BaseModel {
     setStatus(GET_ALL_FILE_HISTORY, Status.Loading);
     List<FileHistory> tempFileHistoryLogs = [];
     try {
-      await [
-        getSentHistory(),
-        getAllFileTransferData(),
-      ];
+      await getSentHistory();
+      await getAllFileTransferData();
 
       tempFileHistoryLogs.addAll(receivedFileHistory);
       tempFileHistoryLogs.addAll(sentHistory);
