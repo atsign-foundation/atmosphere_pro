@@ -55,7 +55,7 @@ class _FileTileState extends State<FileTile> {
     }
 
     if (sender != null) {
-      _filePath = MixedConstants.getFileLocationSync(sharedBy: sender) +
+      _filePath = MixedConstants.getFileDownloadLocationSync(sharedBy: sender) +
           Platform.pathSeparator +
           widget.fileName;
     } else {

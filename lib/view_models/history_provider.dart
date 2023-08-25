@@ -1092,7 +1092,8 @@ class HistoryProvider extends BaseModel {
 
       var _downloadPath;
 
-      _downloadPath = await MixedConstants.getFileLocation(sharedBy: sharedBy);
+      _downloadPath =
+          await MixedConstants.getFileDownloadLocation(sharedBy: sharedBy);
 
       var files;
       try {
@@ -1192,7 +1193,7 @@ class HistoryProvider extends BaseModel {
   Future<List<File>> _downloadSingleFileFromWeb(
       String? transferId, String? sharedByAtSign, String fileName,
       {String? downloadPath}) async {
-    downloadPath ??= await MixedConstants.getFileLocation(
+    downloadPath ??= await MixedConstants.getFileDownloadLocation(
       sharedBy: sharedByAtSign,
     );
     if (downloadPath == null) {

@@ -57,7 +57,9 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
     Provider.of<InternetConnectivityChecker>(NavService.navKey.currentContext!,
             listen: false)
         .checkConnectivity();
-    initDownloads();
+    if (widget.historyType == HistoryType.received) {
+      initDownloads();
+    }
   }
 
   void initDownloads() async {
@@ -68,7 +70,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
   }
 
   Future<bool> isFilePresent(String fileName) async {
-    String filePath = await MixedConstants.getFileLocation(
+    String filePath = await MixedConstants.getFileDownloadLocation(
         sharedBy: widget.fileTransfer.sender!);
 
     File file = File(filePath + Platform.pathSeparator + fileName);
@@ -100,10 +102,17 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        await openFilePath(await MixedConstants.getFileLocation(
-                sharedBy: widget.fileTransfer.sender!) +
-            Platform.pathSeparator +
-            (widget.singleFile.name ?? ""));
+        late String filePath;
+        if (widget.historyType == HistoryType.received) {
+          filePath = await MixedConstants.getFileDownloadLocation(
+              sharedBy: widget.fileTransfer.sender!);
+        } else if (widget.historyType == HistoryType.send) {
+          filePath = await MixedConstants.getFileSentLocation();
+        }
+
+        await openFilePath(
+          filePath + Platform.pathSeparator + (widget.singleFile.name ?? ""),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -193,9 +202,10 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                                   Navigator.pop(context);
                                 }
                                 await FileUtils.moveToSendFile(
-                                    await MixedConstants.getFileLocation(
-                                            sharedBy:
-                                                widget.fileTransfer.sender!) +
+                                    await MixedConstants
+                                            .getFileDownloadLocation(
+                                                sharedBy: widget
+                                                    .fileTransfer.sender!) +
                                         Platform.pathSeparator +
                                         widget.singleFile.name!);
 
@@ -211,12 +221,12 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                               padding: const EdgeInsets.only(left: 6.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  String filePath =
-                                      await MixedConstants.getFileLocation(
+                                  String filePath = await MixedConstants
+                                          .getFileDownloadLocation(
                                               sharedBy:
                                                   widget.fileTransfer.sender!) +
-                                          Platform.pathSeparator +
-                                          (widget.singleFile.name ?? "");
+                                      Platform.pathSeparator +
+                                      (widget.singleFile.name ?? "");
 
                                   File file = File(filePath);
                                   bool fileExists = await file.exists();

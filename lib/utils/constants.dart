@@ -109,7 +109,7 @@ class MixedConstants {
 
   ///returns file download location
   ///creates the directory if does not exists one
-  static Future<String> getFileLocation({String? sharedBy}) async {
+  static Future<String> getFileDownloadLocation({String? sharedBy}) async {
     String _downloadPath = '';
     if (Platform.isMacOS ||
         Platform.isWindows ||
@@ -127,7 +127,7 @@ class MixedConstants {
 
   /// returns file download location
   /// does not create the directory if does not exists
-  static String getFileLocationSync({String? sharedBy}) {
+  static String getFileDownloadLocationSync({String? sharedBy}) {
     String _downloadPath = '';
     if (Platform.isMacOS ||
         Platform.isWindows ||
@@ -137,6 +137,20 @@ class MixedConstants {
           sharedBy!;
 
       return _downloadPath;
+    } else {
+      return BackendService.getInstance().atClientPreference.downloadPath!;
+    }
+  }
+
+  /// returns sent-file location, creates one if does not exists
+  static Future<String> getFileSentLocation() async {
+    String _sentPath = '';
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+          Platform.pathSeparator +
+          'sent-files';
+      await BackendService.getInstance().doesDirectoryExist(path: _sentPath);
+      return _sentPath;
     } else {
       return BackendService.getInstance().atClientPreference.downloadPath!;
     }
