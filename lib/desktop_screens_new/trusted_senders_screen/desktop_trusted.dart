@@ -126,34 +126,39 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: provider.trustedContacts.length,
-                          itemBuilder: (context, index) {
-                            Uint8List? byteImage =
-                                CommonUtilityFunctions().getCachedContactImage(
-                              provider.trustedContacts[index].atSign!,
-                            );
-                            if (provider.trustedContacts[index].atSign!
-                                .contains(searchText)) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: DesktopContactTile(
-                                  title: provider.trustedContacts[index].atSign,
-                                  subTitle:
-                                      provider.trustedContacts[index].atSign,
-                                  showImage: byteImage != null ? true : false,
-                                  image: byteImage,
-                                ),
-                              );
-                            } else {
-                              return SizedBox();
-                            }
-                          },
-                        ),
-                      ),
+                      provider.trustedContacts.isNotEmpty
+                          ? Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: provider.trustedContacts.length,
+                                itemBuilder: (context, index) {
+                                  Uint8List? byteImage =
+                                      CommonUtilityFunctions()
+                                          .getCachedContactImage(
+                                    provider.trustedContacts[index].atSign!,
+                                  );
+                                  if (provider.trustedContacts[index].atSign!
+                                      .contains(searchText)) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: DesktopContactTile(
+                                        title: provider
+                                            .trustedContacts[index].atSign,
+                                        subTitle: provider
+                                            .trustedContacts[index].atSign,
+                                        showImage:
+                                            byteImage != null ? true : false,
+                                        image: byteImage,
+                                      ),
+                                    );
+                                  } else {
+                                    return SizedBox();
+                                  }
+                                },
+                              ),
+                            )
+                          : SizedBox(),
                       provider.trustedContacts.isEmpty
                           ? Expanded(
                               child: Container(

@@ -69,6 +69,7 @@ class MyFilesProvider extends BaseModel {
     receivedDocument = [];
     recentFile = [];
     receivedUnknown = [];
+    allFiles = [];
     tabs = [Recents()];
     tabNames = ['Recents'];
   }
@@ -623,8 +624,8 @@ class MyFilesProvider extends BaseModel {
   // }
 
   saveNewDataInMyFiles(FileTransfer fileTransfer) async {
-    for(FileTransfer myfile in myFiles) {
-      if(myfile.key == fileTransfer.key) {
+    for (FileTransfer myfile in myFiles) {
+      if (myfile.key == fileTransfer.key) {
         return;
       }
     }
@@ -705,8 +706,9 @@ class MyFilesProvider extends BaseModel {
         myFiles[myFileIndex].files!.removeAt(fileIndex);
         // also remove file from allFiles
         FilesDetail? fileToDelete;
-        for(var file in allFiles) {
-          if(file.fileTransferId == fileTransferId && file.fileName == filename) {
+        for (var file in allFiles) {
+          if (file.fileTransferId == fileTransferId &&
+              file.fileName == filename) {
             fileToDelete = file;
             break;
           }

@@ -545,6 +545,15 @@ class BackendService {
     Provider.of<CreateGroupProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
+    Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .resetData();
+    await Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .getMyFilesRecords();
+    await Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
+            listen: false)
+        .getAllFiles();
 
     await KeychainUtil.makeAtSignPrimary(onboardedAtsign);
     startMonitor();

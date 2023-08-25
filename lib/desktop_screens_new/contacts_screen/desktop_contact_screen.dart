@@ -82,7 +82,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                       ),
                       Container(
                           width: double.infinity,
-                          height: SizeConfig().screenHeight - 120,
+                          height: MediaQuery.of(context).size.height - 120,
                           child: StreamBuilder<List<BaseContact?>>(
                               stream: ContactService().contactStream,
                               initialData: ContactService().baseContactList,
