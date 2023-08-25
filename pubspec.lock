@@ -455,10 +455,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_selector_macos
-      sha256: "4ada532862917bf16e3adb3891fe3a5917a58bae03293e497082203a80909412"
+      sha256: e87311d719039da30d26ae829aab3ae66f82deb3318cd70ffecb608c99e3da68
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.3+1"
+    version: "0.8.2+2"
   file_selector_platform_interface:
     dependency: transitive
     description:

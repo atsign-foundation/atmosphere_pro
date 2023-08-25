@@ -27,6 +27,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
 
   GlobalKey filterKey = GlobalKey();
   bool isFilterOpened = false;
+  late var screenWidth;
 
   List<FileHistory> filteredFiles = [];
 
@@ -36,12 +37,15 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     context.read<HistoryProvider>().reset("get_all_file_history");
   }
 
-
   @override
   Widget build(BuildContext context) {
     HistoryType typeSelected = context.watch<HistoryProvider>().typeSelected;
 
     SizeConfig().init(context);
+    screenWidth = MediaQuery.of(context).size.width;
+    print(
+      MediaQuery.of(context).size.width,
+    );
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(40),
@@ -165,37 +169,41 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                   SizedBox(
                     width: 10,
                   ),
-                  InkWell(
-                    onTap: () {
-                      _onTapFilterIcon();
-                      setState(() {
-                        isFilterOpened = true;
-                      });
-                    },
-                    child: SvgPicture.asset(
-                      isFilterOpened
-                          ? AppVectors.icFilterOpened
-                          : AppVectors.icFilterGray,
-                    ),
-                    key: filterKey,
-                  ),
+                  screenWidth < 1250
+                      ? SizedBox()
+                      : InkWell(
+                          onTap: () {
+                            _onTapFilterIcon();
+                            setState(() {
+                              isFilterOpened = true;
+                            });
+                          },
+                          child: SvgPicture.asset(
+                            isFilterOpened
+                                ? AppVectors.icFilterOpened
+                                : AppVectors.icFilterGray,
+                          ),
+                          key: filterKey,
+                        ),
                   SizedBox(
                     width: 10,
                   ),
-                  InkWell(
-                    onTap: () async {
-                      var provider = context.read<HistoryProvider>();
-                      await provider.getAllFileTransferHistory();
-                      filteredFiles = provider.allFilesHistory;
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.refresh,
-                        size: 25,
-                      ),
-                    ),
-                  ),
+                  screenWidth < 1250
+                      ? SizedBox()
+                      : InkWell(
+                          onTap: () async {
+                            var provider = context.read<HistoryProvider>();
+                            await provider.getAllFileTransferHistory();
+                            filteredFiles = provider.allFilesHistory;
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.refresh,
+                              size: 25,
+                            ),
+                          ),
+                        ),
                 ],
               ),
               SizedBox(
@@ -389,7 +397,8 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     List<FileHistory> tempFiles = [];
     for (var filehistory in files) {
       for (FileData file in filehistory.fileDetails?.files ?? []) {
-        if (file.name?.toLowerCase().contains(searchText.toLowerCase()) ?? false) {
+        if (file.name?.toLowerCase().contains(searchText.toLowerCase()) ??
+            false) {
           tempFiles.add(filehistory);
         }
       }
