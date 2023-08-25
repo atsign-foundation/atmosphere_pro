@@ -4,7 +4,9 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_header.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -12,6 +14,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -259,7 +262,18 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    Provider.of<FileTransferProvider>(context, listen: false)
+                        .selectedContacts = [
+                      GroupContactsModel(
+                        group: data,
+                        contactType: ContactsType.GROUP,
+                      ),
+                    ];
+                    Provider.of<FileTransferProvider>(context, listen: false)
+                        .notify();
+                    await DesktopSetupRoutes.nested_pop();
+                  },
                   child: SvgPicture.asset(
                     AppVectors.icSendGroup,
                     width: 20,
