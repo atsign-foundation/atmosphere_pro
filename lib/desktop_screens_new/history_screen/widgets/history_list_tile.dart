@@ -26,15 +26,7 @@ class HistoryCardWidget extends StatefulWidget {
 }
 
 class _HistoryCardWidgetState extends State<HistoryCardWidget> {
-  bool isExpanded = false,
-      isFileSharedToGroup = false,
-      isDownloadAvailable = false,
-      isFilesAvailableOffline = true,
-      isOverwrite = false;
-
-  String nickName = '';
-  List<String?> existingFileNamesToOverwrite = [];
-  List<String?> contactList = [];
+  bool isExpanded = false;
   List<FileData>? filesList = [];
 
   @override
@@ -128,7 +120,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                             ),
                             child: Center(
                               child: Text(
-                                widget.fileHistory?.type == HistoryType.received
+                                widget.fileHistory?.type ==
+                                        HistoryType.received
                                     ? "Received"
                                     : "Sent",
                                 style: TextStyle(
@@ -216,18 +209,21 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
         isExpanded
             ? ListView.builder(
                 shrinkWrap: true,
-                itemCount: widget.fileHistory?.fileDetails?.files?.length ?? 0,
+                itemCount:
+                    widget.fileHistory?.fileDetails?.files?.length ?? 0,
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.only(top: 4),
                 itemBuilder: (context, index) {
                   return HistoryFileCard(
                     key: UniqueKey(),
                     fileTransfer: widget.fileHistory!.fileDetails!,
-                    singleFile: widget.fileHistory!.fileDetails!.files![index],
+                    singleFile:
+                        widget.fileHistory!.fileDetails!.files![index],
                     isShowDate: false,
                     margin: EdgeInsets.fromLTRB(36, 6, 20, 0),
                     onDownloaded: widget.onDownloaded,
-                    historyType: widget.fileHistory!.type ?? HistoryType.send,
+                    historyType:
+                        widget.fileHistory!.type ?? HistoryType.send,
                     fileHistory: widget.fileHistory!,
                   );
                 },

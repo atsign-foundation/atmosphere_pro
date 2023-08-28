@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:local_notifier/local_notifier.dart';
 
 class LocalNotificationService {
   LocalNotificationService._() {
@@ -99,7 +98,7 @@ class LocalNotificationService {
       await _notificationsPlugin.show(
           0, '$from sent you a file', message, platformChannelSpecifics,
           payload: jsonEncode(payload));
-    } else if (Platform.isWindows) {
+    } /*else if (Platform.isWindows) {
       final localNotifier = LocalNotifier.instance;
       LocalNotification notification = LocalNotification(
         identifier: 'identifier',
@@ -107,7 +106,7 @@ class LocalNotificationService {
         subtitle: message,
       );
       await localNotifier.notify(notification);
-    }
+    }*/
   }
 
   cancelNotifications() async {

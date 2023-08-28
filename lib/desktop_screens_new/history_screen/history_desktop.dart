@@ -351,7 +351,6 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                       ? Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: HistoryCardWidget(
-                            key: UniqueKey(),
                             fileHistory: filteredFiles[index],
                             tags: getFileTags(filteredFiles[index]),
                           ),
