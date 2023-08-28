@@ -107,13 +107,13 @@ class _SideBarNewState extends State<SideBarNew> {
         });
       }
 
-      if (contact.tags != null && contact.tags!['name'] != null) {
+      if (mounted) {
+        bool isNicknameExist =
+            contact.tags != null && contact.tags!['name'] != null;
         String newName = contact.tags!['name'].toString();
-        if (mounted) {
-          setState(() {
-            name = newName;
-          });
-        }
+        setState(() {
+          name = isNicknameExist ? newName : '';
+        });
       }
     }
 
