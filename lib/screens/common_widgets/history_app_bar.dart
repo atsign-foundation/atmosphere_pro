@@ -141,8 +141,8 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
         folderIconColor: Colors.teal,
         allowedExtensions: [],
         fileTileSelectMode: FileTileSelectMode.wholeTile,
-        requestPermission: () async =>
-            await Permission.storage.request().isGranted,
+        // requestPermission: () async =>
+        //     await Permission.storage.request().isGranted,
       );
     } else {
       String url = 'shareddocuments://' +
