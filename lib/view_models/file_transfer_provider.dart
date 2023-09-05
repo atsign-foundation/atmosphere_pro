@@ -89,11 +89,11 @@ class FileTransferProvider extends BaseModel {
   }
 
   pickFiles(String choice) async {
-    PermissionStatus status = await Permission.storage.status;
-    if (status.isDenied) {
-      await showNoPermissionDialog();
-      return;
-    }
+    // PermissionStatus status = await Permission.storage.status;
+    // if (status.isDenied) {
+    //   await showNoPermissionDialog();
+    //   return;
+    // }
 
     setStatus(PICK_FILES, Status.Loading);
     try {
