@@ -79,6 +79,7 @@ dependencies:
   image_picker: 0.8.6
   dotted_border: ^2.0.0+3
   expandable: ^5.0.1
+  desktop_drop: ^0.4.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -86,6 +87,7 @@ dev_dependencies:
 
 dependency_overrides:
   package_info_plus: ^3.0.0
+  biometric_storage: 5.0.0+1
   at_client: ^3.0.56
   file_picker: ^5.0.0
   at_contacts_group_flutter:
@@ -179,7 +181,7 @@ msix_config:
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
-  msix_version: 1.0.6.0
+  msix_version: 1.0.11.0
   logo_path: app-icon.png
   capabilities: internetClient
   store: true

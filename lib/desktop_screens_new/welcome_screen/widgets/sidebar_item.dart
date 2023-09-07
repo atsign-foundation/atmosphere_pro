@@ -1,6 +1,8 @@
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,6 +17,7 @@ class SidebarItem extends StatelessWidget {
   final MenuItem menuItem;
   final Map<String, dynamic>? arguments;
   final bool isUrlLauncher, isSidebarExpanded, isEmailLauncher;
+
   SidebarItem(
       {this.arguments,
       this.isUrlLauncher = false,
@@ -28,7 +31,7 @@ class SidebarItem extends StatelessWidget {
       return;
     }
     if ((item.isEmail == true)) {
-      await _launchInEmail(arguments!['email']);
+      await _launchInEmail('atmospherepro@atsign.com');
       return;
     }
 
@@ -77,64 +80,76 @@ class SidebarItem extends StatelessWidget {
               },
               child: ExpandableNotifier(
                 controller: controller,
-                child: Column(
-                  children: [
-                    Expandable(
-                      collapsed: ExpandableButton(
+                child: Expandable(
+                  collapsed: ExpandableButton(
+                    child: InkWell(
+                      onTap: () {
+                        onTapItem(menuItem, context);
+                      },
+                      child: BuildSidebarIconTitle(
+                        image: menuItem.image,
+                        route: menuItem.routeName ?? "",
+                        isSidebarExpanded: isSidebarExpanded,
+                        title: menuItem.title,
+                        nestedProvider: nestedProvider,
+                        isExpanded: false,
+                      ),
+                    ),
+                  ),
+                  expanded: Column(
+                    children: [
+                      ExpandableButton(
                         child: InkWell(
-                          onTap: () {
-                            onTapItem(menuItem, context);
-                          },
                           child: BuildSidebarIconTitle(
                             image: menuItem.image,
                             route: menuItem.routeName ?? "",
                             isSidebarExpanded: isSidebarExpanded,
+                            childRoutes: childRoutes,
                             title: menuItem.title,
                             nestedProvider: nestedProvider,
+                            isExpanded: true,
                           ),
                         ),
                       ),
-                      expanded: Column(
-                        children: [
-                          ExpandableButton(
-                            child: InkWell(
-                              child: BuildSidebarIconTitle(
-                                image: menuItem.image,
-                                route: menuItem.routeName ?? "",
-                                isSidebarExpanded: isSidebarExpanded,
-                                childRoutes: childRoutes,
-                                title: menuItem.title,
-                                nestedProvider: nestedProvider,
-                              ),
-                            ),
-                          ),
-                          ...menuItem.children!.map((item) {
-                            return Container(
-                              color: ColorConstants.raisinBlack,
-                              child: Padding(
-                                padding: isSidebarExpanded
-                                    ? const EdgeInsets.symmetric(vertical: 5)
-                                    : EdgeInsets.zero,
-                                child: InkWell(
-                                  onTap: () {
-                                    onTapItem(item, context);
-                                  },
-                                  child: BuildSidebarIconTitle(
-                                    image: item.image,
-                                    route: item.routeName ?? "",
-                                    isSidebarExpanded: isSidebarExpanded,
-                                    isChildTile: true,
-                                    title: item.title,
-                                    nestedProvider: nestedProvider,
-                                  ),
+                      ListView.separated(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final MenuItem item =
+                              menuItem.children![index];
+                          return Container(
+                            color: ColorConstants.raisinBlack,
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: InkWell(
+                                onTap: () {
+                                  onTapItem(item, context);
+                                },
+                                child: BuildSidebarIconTitle(
+                                  image: item.image,
+                                  route: item.routeName ?? "",
+                                  isSidebarExpanded:
+                                      isSidebarExpanded,
+                                  isChildTile: true,
+                                  title: item.title,
+                                  nestedProvider: nestedProvider,
                                 ),
                               ),
-                            );
-                          }).toList(),
-                        ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: 0,
+                            color: ColorConstants.sidebarTextUnselected,
+                            indent: 32,
+                            endIndent: 12,
+                          );
+                        },
+                        itemCount: menuItem.children?.length ?? 0,
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -174,6 +189,7 @@ class BuildSidebarIconTitle extends StatelessWidget {
     required this.nestedProvider,
     this.childRoutes = const [],
     this.isChildTile = false,
+    this.isExpanded,
   }) : super(key: key);
 
   final String? image;
@@ -183,6 +199,7 @@ class BuildSidebarIconTitle extends StatelessWidget {
   final List<String> childRoutes;
   final bool isChildTile;
   final String? title;
+  final bool? isExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -201,15 +218,16 @@ class BuildSidebarIconTitle extends StatelessWidget {
     }
 
     return Container(
-      height: 40.toHeight,
+      height: 40,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
         color: isCurrentRoute
             ? Theme.of(context).primaryColor
             : ColorConstants.raisinBlack,
       ),
       padding: EdgeInsets.only(
-          left: isChildTile ? 30 : 10, right: 10, top: 5, bottom: 5),
+          left: isChildTile ? 16 : 20, right: 20, top: 8, bottom: 8),
+      margin: EdgeInsets.only(left: isChildTile ? 30 : 10, right: 10),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: isSidebarExpanded
@@ -218,26 +236,38 @@ class BuildSidebarIconTitle extends StatelessWidget {
         children: [
           Image.asset(
             image!,
-            height: 22.toFont,
+            height: 24,
+            width: 24,
+            fit: isChildTile ? BoxFit.fitWidth : BoxFit.fitHeight,
             color: isCurrentRoute
                 ? Colors.white
                 : ColorConstants.sidebarTextUnselected,
           ),
-          SizedBox(width: isSidebarExpanded ? 10 : 0),
-          isSidebarExpanded
-              ? Flexible(
-                  child: Text(
-                    title!,
-                    softWrap: true,
-                    style: CustomTextStyles.desktopPrimaryRegular14.copyWith(
-                      color: isCurrentRoute
-                          ? Colors.white
-                          : ColorConstants.sidebarTextUnselected,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                )
-              : SizedBox()
+          SizedBox(width: isSidebarExpanded ? 12 : 8),
+          if (isSidebarExpanded)
+            Expanded(
+              child: Text(
+                title!,
+                softWrap: true,
+                style: CustomTextStyles.desktopPrimaryRegular14.copyWith(
+                  color: isCurrentRoute
+                      ? Colors.white
+                      : ColorConstants.sidebarTextUnselected,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          if (isExpanded != null)
+            SvgPicture.asset(
+              isExpanded!
+                  ? AppVectors.icArrowUpOutline
+                  : AppVectors.icArrowDownOutline,
+              width: 12,
+              fit: BoxFit.fitWidth,
+              color: isCurrentRoute
+                  ? Colors.white
+                  : ColorConstants.sidebarTextUnselected,
+            ),
         ],
       ),
     );

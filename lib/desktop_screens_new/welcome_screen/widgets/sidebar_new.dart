@@ -30,7 +30,7 @@ class _SideBarNewState extends State<SideBarNew> {
   List<MenuItem> generalMenuItems = [
     MenuItem(
       title: TextStrings().sidebarContact,
-      image: ImageConstants.contactsIcon,
+      image: ImageConstants.icUserInactivate,
       routeName: DesktopRoutes.DEKSTOP_CONTACTS_SCREEN,
       children: [
         MenuItem(
@@ -40,14 +40,14 @@ class _SideBarNewState extends State<SideBarNew> {
         ),
         MenuItem(
           title: TextStrings().groups,
-          image: ImageConstants.groups,
+          image: ImageConstants.icGroups,
           routeName: DesktopRoutes.DESKTOP_GROUP,
         ),
       ],
     ),
     MenuItem(
       title: TextStrings().sidebarTransferHistory,
-      image: ImageConstants.transferHistoryIcon,
+      image: ImageConstants.transferHistory,
       routeName: DesktopRoutes.DESKTOP_HISTORY,
     ),
     MenuItem(
@@ -66,7 +66,7 @@ class _SideBarNewState extends State<SideBarNew> {
     ),
     MenuItem(
       title: TextStrings().contactUs,
-      image: ImageConstants.contactUs,
+      image: ImageConstants.contactUsLogo,
       isEmail: true,
     ),
     MenuItem(
@@ -261,23 +261,27 @@ class _SideBarNewState extends State<SideBarNew> {
                               ),
                             ),
                             SizedBox(height: 5.toHeight),
-                            ListView.builder(
+                            ListView.separated(
                               itemCount: generalMenuItems.length,
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  color: ColorConstants.sidebarTextUnselected,
+                                  height: 0,
+                                  indent: 12,
+                                  endIndent: 12,
+                                );
+                              },
                               itemBuilder: ((context, index) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: SidebarItem(
-                                    menuItem: generalMenuItems[index],
-                                    isSidebarExpanded:
-                                        _sideBarProvider.isSidebarExpanded,
-                                  ),
+                                return SidebarItem(
+                                  menuItem: generalMenuItems[index],
+                                  isSidebarExpanded:
+                                      _sideBarProvider.isSidebarExpanded,
                                 );
                               }),
                             ),
-                            SizedBox(height: 40.toHeight),
+                            SizedBox(height: 20.toHeight),
                             Text(
                               "HELP CENTER",
                               style: TextStyle(
@@ -286,25 +290,29 @@ class _SideBarNewState extends State<SideBarNew> {
                               ),
                             ),
                             SizedBox(height: 5.toHeight),
-                            ListView.builder(
+                            ListView.separated(
                               itemCount: helpCenterMenuItems.length,
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  height: 0,
+                                  color: ColorConstants.sidebarTextUnselected,
+                                  indent: 12,
+                                  endIndent: 12,
+                                );
+                              },
                               itemBuilder: ((context, index) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: SidebarItem(
-                                    menuItem: helpCenterMenuItems[index],
-                                    isSidebarExpanded:
-                                        _sideBarProvider.isSidebarExpanded,
-                                    isUrlLauncher:
-                                        helpCenterMenuItems[index].isUrl ??
-                                            false,
-                                    isEmailLauncher:
-                                        helpCenterMenuItems[index].isEmail ??
-                                            false,
-                                  ),
+                                return SidebarItem(
+                                  menuItem: helpCenterMenuItems[index],
+                                  isSidebarExpanded:
+                                      _sideBarProvider.isSidebarExpanded,
+                                  isUrlLauncher:
+                                      helpCenterMenuItems[index].isUrl ??
+                                          false,
+                                  isEmailLauncher:
+                                      helpCenterMenuItems[index].isEmail ??
+                                          false,
                                 );
                               }),
                             ),

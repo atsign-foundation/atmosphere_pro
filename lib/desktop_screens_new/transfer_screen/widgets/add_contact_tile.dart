@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddContactTile extends StatelessWidget {
   const AddContactTile({
@@ -16,6 +18,7 @@ class AddContactTile extends StatelessWidget {
     this.showDivider = false,
     this.hasBackground = false,
     this.isTrusted = false,
+    this.index,
   }) : super(key: key);
 
   final String? title, subTitle;
@@ -25,6 +28,7 @@ class AddContactTile extends StatelessWidget {
   final bool showDivider;
   final bool hasBackground;
   final bool isTrusted;
+  final int? index;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +48,14 @@ class AddContactTile extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              showImage
-                  ? Container(
-                      height: 60,
-                      width: 60,
-                      child: Image.memory(
+              ClipRRect(
+                borderRadius:
+                    BorderRadius.horizontal(left: Radius.circular(10)),
+                child: showImage
+                    ? Image.memory(
                         image!,
+                        height: 60,
+                        width: 60,
                         fit: BoxFit.fill,
                         errorBuilder: (BuildContext _context, _, __) {
                           return Container(
@@ -59,15 +65,15 @@ class AddContactTile extends StatelessWidget {
                             ),
                           );
                         },
+                      )
+                    : ContactInitial(
+                        initials: (title?.isEmpty ?? true) ? '@UG' : title,
+                        size: 60,
+                        maxSize: (80.0 - 20.0),
+                        minSize: 60,
+                        borderRadius: 0,
                       ),
-                    )
-                  : ContactInitial(
-                      initials: (title?.isEmpty ?? true) ? '@UG' : title,
-                      size: 60,
-                      maxSize: (80.0 - 20.0),
-                      minSize: 60,
-                      borderRadius: 0,
-                    ),
+              ),
               SizedBox(width: 20),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -96,11 +102,33 @@ class AddContactTile extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              isTrusted ? Icon(
-                Icons.verified_outlined,
-                color: Theme.of(context).primaryColor,
-                size: 24,
-              ) : const SizedBox(),
+              isTrusted
+                  ? Icon(
+                      Icons.verified_outlined,
+                      color: Theme.of(context).primaryColor,
+                      size: 24,
+                    )
+                  : const SizedBox(),
+              SizedBox(width: 12),
+              if (index != null)
+                InkWell(
+                  onTap: () {
+                    context
+                        .read<FileTransferProvider>()
+                        .removeSelectedContact(index!);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Icon(
+                      Icons.clear,
+                      size: 14,
+                    ),
+                  ),
+                ),
               const SizedBox(
                 width: 20,
               ),
