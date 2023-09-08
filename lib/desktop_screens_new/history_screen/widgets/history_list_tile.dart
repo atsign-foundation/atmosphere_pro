@@ -2,12 +2,16 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/history_file_card.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HistoryCardWidget extends StatefulWidget {
   final FileHistory? fileHistory;
@@ -120,8 +124,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                             ),
                             child: Center(
                               child: Text(
-                                widget.fileHistory?.type ==
-                                        HistoryType.received
+                                widget.fileHistory?.type == HistoryType.received
                                     ? "Received"
                                     : "Sent",
                                 style: TextStyle(
@@ -196,6 +199,24 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         ],
                       ),
                     ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              openFileReceiptBottomSheet();
+                            },
+                            child: Icon(
+                              Icons.done_all,
+                              size: 14,
+                              color: Color(0xFF909090),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(width: 6),
                     isExpanded
                         ? SvgPicture.asset(AppVectors.icArrowUpOutline)
@@ -209,21 +230,18 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
         isExpanded
             ? ListView.builder(
                 shrinkWrap: true,
-                itemCount:
-                    widget.fileHistory?.fileDetails?.files?.length ?? 0,
+                itemCount: widget.fileHistory?.fileDetails?.files?.length ?? 0,
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.only(top: 4),
                 itemBuilder: (context, index) {
                   return HistoryFileCard(
                     key: UniqueKey(),
                     fileTransfer: widget.fileHistory!.fileDetails!,
-                    singleFile:
-                        widget.fileHistory!.fileDetails!.files![index],
+                    singleFile: widget.fileHistory!.fileDetails!.files![index],
                     isShowDate: false,
                     margin: EdgeInsets.fromLTRB(36, 6, 20, 0),
                     onDownloaded: widget.onDownloaded,
-                    historyType:
-                        widget.fileHistory!.type ?? HistoryType.send,
+                    historyType: widget.fileHistory!.type ?? HistoryType.send,
                     fileHistory: widget.fileHistory!,
                   );
                 },
@@ -231,5 +249,43 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
             : SizedBox(),
       ],
     );
+  }
+
+  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
+    Provider.of<FileTransferProvider>(context, listen: false)
+        .selectedFileHistory = widget.fileHistory;
+
+    showDialog(
+        context: context,
+        barrierColor: Colors.transparent,
+        barrierDismissible: true,
+        builder: (_context) {
+          return StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Dialog(
+                insetPadding: EdgeInsets.zero,
+                alignment: Alignment.centerRight,
+                elevation: 5.0,
+                clipBehavior: Clip.hardEdge,
+                child: Container(
+                  width: 400,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(12.0),
+                      topRight: const Radius.circular(12.0),
+                    ),
+                  ),
+                  child: FileRecipients(
+                    widget.fileHistory!.sharedWith,
+                    fileRecipientSection: fileRecipientSection,
+                    key: UniqueKey(),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }
