@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
@@ -41,12 +40,10 @@ class DesktopGroupsList extends StatefulWidget {
 
 class _DesktopGroupsListState extends State<DesktopGroupsList> {
   late TextEditingController searchController;
-  bool showBackIcon = true;
   List<AtGroup> _filteredList = [];
 
   @override
   void initState() {
-    showBackIcon = GroupService().groupPreferece.showBackButton;
     GroupService().getTrustedContacts();
     searchController = TextEditingController(
         text: context.read<DesktopGroupsScreenProvider>().searchGroupText);
@@ -74,10 +71,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
             DesktopHeader(
               title: 'Groups',
               isTitleCentered: false,
-              showBackIcon: showBackIcon,
-              onBackTap: () {
-                DesktopGroupSetupRoutes.exitGroupPackage();
-              },
+              showBackIcon: false,
               actions: [
                 provider.isSearching
                     ? ClipRRect(
@@ -109,8 +103,9 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                               ),
                               suffixIcon: InkWell(
                                   onTap: () {
-                                    provider.setSearchGroupText('');
-                                    provider.setIsSearching(false);
+                                    provider.searchGroupText.isNotEmpty
+                                        ? provider.setSearchGroupText('')
+                                        : provider.setIsSearching(false);
                                   },
                                   child: const Icon(Icons.close)),
                             ),
@@ -135,6 +130,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                 const SizedBox(width: 12),
                 buildAddGroupButton(),
               ],
+              onBackTap: () {},
             ),
             Expanded(
               child: _filteredList.isEmpty

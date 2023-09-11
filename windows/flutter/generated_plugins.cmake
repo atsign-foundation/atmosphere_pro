@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   at_file_saver
+  desktop_drop
   desktop_window
   emoji_picker_flutter
   file_selector_windows

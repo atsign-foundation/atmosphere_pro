@@ -27,14 +27,15 @@ class OnboardedAtSignCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       width: isExpanded
           ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
           : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
       color: ColorConstants.unselectedFilterOptionBackgroundColor,
       padding: EdgeInsets.fromLTRB(
-        isExpanded ? 20 : 8,
+        isExpanded ? 20 : 0,
         16,
-        isExpanded ? 24 : 12,
+        isExpanded ? 24 : 0,
         16,
       ),
       child: Row(
@@ -76,7 +77,7 @@ class OnboardedAtSignCard extends StatelessWidget {
               ),
             ),
           ] else
-            SizedBox(width: 20),
+           SizedBox(width: 20),
           InkWell(
             onTap: onTap,
             child: SvgPicture.asset(

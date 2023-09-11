@@ -483,6 +483,11 @@ class FileTransferProvider extends BaseModel {
   notify() {
     notifyListeners();
   }
+
+  void removeSelectedContact(int index) {
+    selectedContacts.removeAt(index);
+    notifyListeners();
+  }
 }
 
 enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED, DONE }

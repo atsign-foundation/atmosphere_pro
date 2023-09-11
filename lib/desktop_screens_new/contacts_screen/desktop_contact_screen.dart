@@ -1,15 +1,14 @@
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/add_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/group_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/information_card_expanded.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/circular_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/desktop_contact_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -32,14 +31,18 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
   var _filteredList = <BaseContact>[];
   String searchText = '';
   BaseContact? selectedContact;
+  bool showGroup = true;
+
   // bool isRefresh = false;
   bool isSearching = false, showTrusted = false;
   late TrustedContactProvider trustedProvider;
+  late TextEditingController searchController;
 
   @override
   void initState() {
     fetchContacts();
     trustedProvider = context.read<TrustedContactProvider>();
+    searchController = TextEditingController();
     super.initState();
   }
 
@@ -50,8 +53,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
       result = await ContactService().fetchContacts();
       if (result == null) {
         if (mounted) {
-          // TODO
-          // add error
+          setState(() {});
         }
       }
     });
@@ -80,94 +82,137 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                         height: 35,
                         color: Colors.black,
                       ),
-                      Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height - 120,
-                          child: StreamBuilder<List<BaseContact?>>(
-                              stream: ContactService().contactStream,
-                              initialData: ContactService().baseContactList,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if ((snapshot.data == null ||
-                                    snapshot.data!.isEmpty)) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        TextStrings().noContacts,
-                                        style: CustomTextStyles.primaryBold16,
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  // adding trusted contact array in a map for faster access
-                                  var trustedContactsMap = {};
-                                  for (AtContact contact
-                                      in trustedProvider.trustedContacts) {
-                                    trustedContactsMap[contact.atSign] = true;
-                                  }
-
-                                  _filteredList = <BaseContact>[];
-
-                                  for (BaseContact contact
-                                      in snapshot.data! as List<BaseContact>) {
-                                    if (contact.contact!.atSign!
-                                        .contains(searchText)) {
-                                      /// Filtering trusted contacts
-                                      if (showTrusted) {
-                                        if (trustedContactsMap[
-                                                    contact.contact!.atSign] !=
-                                                null ||
-                                            trustedContactsMap[
-                                                    contact.contact!.atSign] ==
-                                                true) {
-                                          _filteredList.add(contact);
-                                        }
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height - 120,
+                                child: StreamBuilder<List<BaseContact?>>(
+                                    stream: ContactService().contactStream,
+                                    initialData:
+                                        ContactService().baseContactList,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else if ((snapshot.data == null ||
+                                          snapshot.data!.isEmpty)) {
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              TextStrings().noContacts,
+                                              style: CustomTextStyles
+                                                  .primaryBold16,
+                                            ),
+                                          ],
+                                        );
                                       } else {
-                                        _filteredList.add(contact);
-                                      }
-                                    }
-                                  }
+                                        // adding trusted contact array in a map for faster access
+                                        var trustedContactsMap = {};
+                                        for (AtContact contact
+                                            in trustedProvider
+                                                .trustedContacts) {
+                                          trustedContactsMap[contact.atSign] =
+                                              true;
+                                        }
 
-                                  return ListView.separated(
-                                    itemCount: _filteredList.length,
-                                    itemBuilder: (context, index) {
-                                      var contact = _filteredList[index];
+                                        _filteredList = <BaseContact>[];
 
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedContact = contact;
-                                            sidebarView =
-                                                contactSidebar.contactDetails;
-                                          });
-                                        },
-                                        child: Container(
-                                            key: UniqueKey(),
-                                            child: DesktopContactCard(
-                                              contact: contact.contact!,
-                                            )),
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      var contact = snapshot.data![index]!;
-                                      if (contact.contact!.atSign!
-                                          .contains(searchText)) {
-                                        return const Divider(
-                                          thickness: 0.2,
+                                        for (BaseContact contact in snapshot
+                                            .data! as List<BaseContact>) {
+                                          if (contact.contact!.atSign!
+                                              .contains(searchText)) {
+                                            /// Filtering trusted contacts
+                                            if (showTrusted) {
+                                              if (trustedContactsMap[contact
+                                                          .contact!.atSign] !=
+                                                      null ||
+                                                  trustedContactsMap[contact
+                                                          .contact!.atSign] ==
+                                                      true) {
+                                                _filteredList.add(contact);
+                                              }
+                                            } else {
+                                              _filteredList.add(contact);
+                                            }
+                                          }
+                                        }
+
+                                        return ListView.separated(
+                                          itemCount: _filteredList.length,
+                                          itemBuilder: (context, index) {
+                                            var contact = _filteredList[index];
+
+                                            return InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedContact = contact;
+                                                  sidebarView = contactSidebar
+                                                      .contactDetails;
+                                                });
+                                              },
+                                              child: Container(
+                                                  width: double.infinity,
+                                                  key: UniqueKey(),
+                                                  child: DesktopContactCard(
+                                                    contact: contact.contact!,
+                                                  )),
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            var contact =
+                                                snapshot.data![index]!;
+                                            if (contact.contact!.atSign!
+                                                .contains(searchText)) {
+                                              return const Divider(
+                                                thickness: 0.2,
+                                              );
+                                            }
+                                            return const SizedBox();
+                                          },
                                         );
                                       }
-                                      return const SizedBox();
-                                    },
-                                  );
-                                }
-                              })),
+                                    })),
+                          ),
+                          SizedBox(width: 68),
+                          showGroup
+                              ? Expanded(
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height -
+                                        120,
+                                    child: GroupList(
+                                      onBack: () {
+                                        setState(() {
+                                          showGroup = !showGroup;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showGroup = !showGroup;
+                                    });
+                                  },
+                                  child: Text(
+                                    'Show Groups',
+                                    style: CustomTextStyles.darkSliverWW50015
+                                        .copyWith(
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -226,6 +271,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                               width: 308,
                               color: Colors.white,
                               child: TextField(
+                                controller: searchController,
                                 autofocus: true,
                                 onChanged: (value) {
                                   setState(() {
@@ -249,10 +295,14 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                   ),
                                   suffixIcon: InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          searchText = '';
-                                          isSearching = false;
-                                        });
+                                        searchText.isEmpty
+                                            ? setState(() {
+                                                isSearching = false;
+                                              })
+                                            : setState(() {
+                                                searchText = '';
+                                                searchController.clear();
+                                              });
                                       },
                                       child: const Icon(Icons.close)),
                                 ),

@@ -14,10 +14,7 @@ import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 
 class DesktopGroupsScreen extends StatefulWidget {
-  final bool showBackButton;
-
-  const DesktopGroupsScreen({Key? key, this.showBackButton = true})
-      : super(key: key);
+  const DesktopGroupsScreen({Key? key}) : super(key: key);
 
   @override
   State<DesktopGroupsScreen> createState() => _DesktopGroupsScreenState();
@@ -36,7 +33,6 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
     groupsProvider = context.read<DesktopGroupsScreenProvider>();
     try {
       super.initState();
-      GroupService().groupPreferece.showBackButton = widget.showBackButton;
       GroupService().getAllGroupsDetails();
     } catch (e) {
       atSignLogger.severe('Error in init of Group_list $e');

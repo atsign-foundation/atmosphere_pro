@@ -417,4 +417,10 @@ class CustomTextStyles {
     fontSize: 25.toFont,
     fontWeight: FontWeight.w600,
   );
+
+  static TextStyle darkSliverWW50015 = TextStyle(
+    color: ColorConstants.darkSliver,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
 }

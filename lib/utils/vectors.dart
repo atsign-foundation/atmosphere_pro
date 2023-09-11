@@ -86,4 +86,7 @@ class AppVectors {
   static String icRefresh = '$_basePath/ic_refresh.svg';
   static String icSendGroup = '$_basePath/ic_send_group.svg';
   static String icOptions = '$_basePath/ic_options.svg';
+  static String icContactUs = '$_basePath/ic_contact_us.svg';
+  static String icContacts = '$_basePath/ic_contacts.svg';
+  static String icTransferHistory = '$_basePath/ic_transfer_history.svg';
 }
