@@ -270,10 +270,10 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                               openFileReceiptBottomSheet();
                             },
                             child: Container(
-                              padding: EdgeInsets.only(left: 5),
+                              padding: EdgeInsets.only(left: 8),
                               child: Icon(
                                 Icons.done_all,
-                                size: 14,
+                                size: 20,
                                 color: Color(0xFF909090),
                               ),
                             ),
