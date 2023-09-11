@@ -264,19 +264,21 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         ),
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        openFileReceiptBottomSheet();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Icon(
-                          Icons.done_all,
-                          size: 14,
-                          color: Color(0xFF909090),
-                        ),
-                      ),
-                    )
+                    widget.fileHistory?.type == HistoryType.send
+                        ? InkWell(
+                            onTap: () {
+                              openFileReceiptBottomSheet();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Icon(
+                                Icons.done_all,
+                                size: 14,
+                                color: Color(0xFF909090),
+                              ),
+                            ),
+                          )
+                        : SizedBox()
                   ],
                 ),
                 Text(
