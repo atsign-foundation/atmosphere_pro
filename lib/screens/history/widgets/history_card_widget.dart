@@ -5,14 +5,18 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_attachment_card.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HistoryCardWidget extends StatefulWidget {
   final FileHistory? fileHistory;
@@ -260,6 +264,19 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () {
+                        openFileReceiptBottomSheet();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Icon(
+                          Icons.done_all,
+                          size: 14,
+                          color: Color(0xFF909090),
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 Text(
@@ -324,5 +341,32 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
             : SizedBox(),
       ],
     );
+  }
+
+  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
+    Provider.of<FileTransferProvider>(context, listen: false)
+        .selectedFileHistory = widget.fileHistory;
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: StadiumBorder(),
+        builder: (_context) {
+          return Container(
+            height: SizeConfig().screenHeight * 0.8,
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12.0),
+                topRight: const Radius.circular(12.0),
+              ),
+            ),
+            child: FileRecipients(
+              widget.fileHistory!.sharedWith,
+              fileRecipientSection: fileRecipientSection,
+              key: UniqueKey(),
+            ),
+          );
+        });
   }
 }
