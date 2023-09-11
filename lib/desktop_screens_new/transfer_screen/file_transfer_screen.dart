@@ -14,7 +14,10 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -98,9 +101,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
           TextStrings().fileSentSuccessfully,
           bgColor: Color(0xFF5FAA45),
         );
-        setState((){
-          selectedContacts.clear();
-        });
+        _filePickerProvider.selectedContacts.clear();
         _filePickerProvider.selectedFiles.clear();
         _filePickerProvider.notify();
       } else {
@@ -135,345 +136,377 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var selectedFiles = context.watch<FileTransferProvider>().selectedFiles;
-    var contactList = context.watch<FileTransferProvider>().selectedContacts;
-    selectedContacts = context.watch<FileTransferProvider>().selectedContacts;
-
     List<AtContact> trustedContacts =
         context.read<TrustedContactProvider>().trustedContacts;
     SizeConfig().init(context);
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 40, top: 30, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Transfer File",
-              style: TextStyle(
-                fontSize: 24.toFont,
-                fontWeight: FontWeight.bold,
+    return Consumer<FileTransferProvider>(builder: (context, provider, child) {
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 40, top: 30, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Transfer File",
+                style: TextStyle(
+                  fontSize: 24.toFont,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            const Divider(
-              thickness: 1,
-              color: Colors.black,
-            ),
-            SizedBox(height: 20),
-            Text(
-              "SELECT FILES",
-              style: TextStyle(
-                color: ColorConstants.gray,
-                fontSize: 15.toFont,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 10),
+              const Divider(
+                thickness: 1,
+                color: Colors.black,
               ),
-            ),
-            FractionallySizedBox(
-              widthFactor: 0.9,
-              child: Wrap(
-                children: selectedFiles.map((file) {
-                  return Stack(
-                    children: [
-                      FileTile(
-                        key: UniqueKey(),
-                        fileName: file.name,
-                        fileExt: file.name.split(".").last,
-                        filePath: file.path ?? "",
-                        fileSize: file.size.toDouble(),
-                        fileDate: DateTime.now().toString(),
-                        id: null,
+              SizedBox(height: 20),
+              Text(
+                "SELECT FILES",
+                style: TextStyle(
+                  color: ColorConstants.gray,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              DropTarget(
+                onDragDone: (details) async {
+                  await Future.forEach(details.files, (XFile f) async {
+                    _filePickerProvider.selectedFiles.add(
+                      PlatformFile(
+                        path: f.path,
+                        name: f.name,
+                        size: await f.length(),
                       ),
-                      Positioned(
-                        right: 20,
-                        top: 20,
-                        child: InkWell(
-                          onTap: () {
-                            var index = selectedFiles.indexOf(file);
-                            context
-                                .read<FileTransferProvider>()
-                                .deleteFiles(index);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                            ),
-                            padding: EdgeInsets.all(2),
-                            child: Icon(
-                              Icons.clear,
-                              size: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(
-              height: 10.toHeight,
-            ),
-            InkWell(
-              onTap: () async {
-                var files = await desktopImagePicker();
-                if (files != null && files.isNotEmpty) {
-                  _filePickerProvider.selectedFiles.add(files[0]);
+                    );
+                  });
                   _filePickerProvider.notify();
-                }
-              },
-              child: selectedFiles.isEmpty
-                  ? DottedBorder(
-                      color: Theme.of(context).primaryColor,
-                      padding: EdgeInsets.zero,
-                      dashPattern: [6, 4],
-                      strokeWidth: 1.5,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: ColorConstants.orangeColorDim,
-                            borderRadius: BorderRadius.circular(5)),
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: FractionallySizedBox(
-                          widthFactor: 0.7,
-                          child: Column(
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FractionallySizedBox(
+                      widthFactor: 0.9,
+                      child: Wrap(
+                        children: provider.selectedFiles.map((file) {
+                          return Stack(
                             children: [
-                              Image.asset(
-                                ImageConstants.uploadFile,
-                                height: 60.toHeight,
+                              FileTile(
+                                key: UniqueKey(),
+                                fileName: file.name,
+                                fileExt: file.name.split(".").last,
+                                filePath: file.path ?? "",
+                                fileSize: file.size.toDouble(),
+                                fileDate: DateTime.now().toString(),
+                                id: null,
                               ),
-                              SizedBox(
-                                height: 10.toHeight,
-                              ),
-                              Text(
-                                "Upload your File(s)",
-                                style: TextStyle(
-                                  fontSize: 20.toFont,
-                                  fontWeight: FontWeight.bold,
+                              Positioned(
+                                right: 20,
+                                top: 20,
+                                child: InkWell(
+                                  onTap: () {
+                                    var index =
+                                        provider.selectedFiles.indexOf(file);
+                                    context
+                                        .read<FileTransferProvider>()
+                                        .deleteFiles(index);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
+                                    padding: EdgeInsets.all(2),
+                                    child: Icon(
+                                      Icons.clear,
+                                      size: 14,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 10.toHeight,
-                              ),
-                              // Text(
-                              //   "Drag or drop files or Browse",
-                              //   style: TextStyle(
-                              //     color: ColorConstants.gray,
-                              //     fontSize: 15.toFont,
-                              //   ),
-                              // ),
                             ],
-                          ),
-                        ),
+                          );
+                        }).toList(),
                       ),
-                    )
-                  : FractionallySizedBox(
-                      widthFactor: 0.7,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorConstants.yellowDim,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Add Files",
-                              style: TextStyle(
-                                color: ColorConstants.yellow,
-                                fontSize: 16.toFont,
+                    ),
+                    SizedBox(
+                      height: 10.toHeight,
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        var files = await desktopImagePicker();
+                        if (files != null && files.isNotEmpty) {
+                          _filePickerProvider.selectedFiles.addAll(files);
+                          _filePickerProvider.notify();
+                        }
+                      },
+                      child: provider.selectedFiles.isEmpty
+                          ? DottedBorder(
+                              color: Theme.of(context).primaryColor,
+                              padding: EdgeInsets.zero,
+                              dashPattern: [6, 4],
+                              strokeWidth: 1.5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: ColorConstants.orangeColorDim,
+                                    borderRadius: BorderRadius.circular(5)),
+                                padding: EdgeInsets.symmetric(vertical: 40),
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.7,
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        ImageConstants.uploadFile,
+                                        height: 60.toHeight,
+                                      ),
+                                      SizedBox(
+                                        height: 10.toHeight,
+                                      ),
+                                      Text(
+                                        "Upload your File(s)",
+                                        style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Drag and drop files or Browse",
+                                        style: TextStyle(
+                                          color: ColorConstants.greyTextColor,
+                                          fontSize: 12.toFont,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.toHeight,
+                                      ),
+                                      // Text(
+                                      //   "Drag or drop files or Browse",
+                                      //   style: TextStyle(
+                                      //     color: ColorConstants.gray,
+                                      //     fontSize: 15.toFont,
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          : FractionallySizedBox(
+                              widthFactor: 0.7,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: ColorConstants.yellowDim,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 30),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Add Files",
+                                      style: TextStyle(
+                                        color: ColorConstants.yellow,
+                                        fontSize: 16.toFont,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.add_circle_outline,
+                                      color: ColorConstants.yellow,
+                                      size: 25,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                            Icon(
-                              Icons.add_circle_outline,
-                              color: ColorConstants.yellow,
-                              size: 25,
-                            )
-                          ],
-                        ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 30.toHeight,
+              ),
+              selectedContacts.isNotEmpty
+                  ? GridView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        // number of items per row
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 0,
+                        // horizontal spacing between the items
+                        crossAxisSpacing: 30,
+                        mainAxisExtent: 80,
                       ),
-                    ),
-            ),
-            SizedBox(
-              height: 30.toHeight,
-            ),
-            selectedContacts.isNotEmpty
-                ? GridView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      // number of items per row
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 0,
-                      // horizontal spacing between the items
-                      crossAxisSpacing: 30,
-                      mainAxisExtent: 80,
-                    ),
-                    itemCount: selectedContacts.length,
-                    itemBuilder: (context, index) {
-                      var groupContactModel = selectedContacts[index];
-                      late var contact;
-                      var isTrusted;
-                      var byteImage;
-                      if (groupContactModel.contactType ==
-                          ContactsType.CONTACT) {
-                        contact = groupContactModel.contact;
-                        isTrusted = false;
-                        for (var ts in trustedContacts) {
-                          if (ts.atSign == (contact?.atSign ?? "")) {
-                            isTrusted = true;
+                      itemCount: selectedContacts.length,
+                      itemBuilder: (context, index) {
+                        var groupContactModel = selectedContacts[index];
+                        late var contact;
+                        var isTrusted;
+                        var byteImage;
+                        if (groupContactModel.contactType ==
+                            ContactsType.CONTACT) {
+                          contact = groupContactModel.contact;
+                          isTrusted = false;
+                          for (var ts in trustedContacts) {
+                            if (ts.atSign == (contact?.atSign ?? "")) {
+                              isTrusted = true;
+                            }
                           }
+                          byteImage =
+                              CommonUtilityFunctions().getCachedContactImage(
+                            (contact?.atSign ?? ""),
+                          );
                         }
-                        byteImage =
-                            CommonUtilityFunctions().getCachedContactImage(
-                          (contact?.atSign ?? ""),
+                        return Container(
+                          height: 70,
+                          child: groupContactModel.contactType ==
+                                  ContactsType.CONTACT
+                              ? AddContactTile(
+                                  title:
+                                      selectedContacts[index].contact?.atSign,
+                                  subTitle: selectedContacts[index]
+                                          .contact
+                                          ?.tags?["nickname"] ??
+                                      selectedContacts[index].contact?.atSign,
+                                  image: byteImage,
+                                  showImage: byteImage != null,
+                                  hasBackground: true,
+                                  isTrusted: isTrusted,
+                                  index: index,
+                                )
+                              : AddContactTile(
+                                  title: groupContactModel.group?.groupName,
+                                  subTitle:
+                                      '${groupContactModel.group?.members?.length} members',
+                                  image: byteImage,
+                                  showImage: byteImage != null,
+                                  hasBackground: true,
+                                  isTrusted: false,
+                                  index: index,
+                                ),
                         );
-                      }
-                      return Container(
-                        height: 70,
-                        child: groupContactModel.contactType ==
-                                ContactsType.CONTACT
-                            ? AddContactTile(
-                                title: selectedContacts[index].contact?.atSign,
-                                subTitle: selectedContacts[index]
-                                        .contact
-                                        ?.tags?["nickname"] ??
-                                    selectedContacts[index].contact?.atSign,
-                                image: byteImage,
-                                showImage: byteImage != null,
-                                hasBackground: true,
-                                isTrusted: isTrusted,
-                              )
-                            : AddContactTile(
-                                title: groupContactModel.group?.groupName,
-                                subTitle: groupContactModel.group?.groupName,
-                                image: byteImage,
-                                showImage: byteImage != null,
-                                hasBackground: true,
-                                isTrusted: false,
-                              ),
-                      );
-                    },
-                  )
-                : SizedBox(),
-            Text(
-              "SELECT CONTACTS",
-              style: TextStyle(
-                color: ColorConstants.gray,
-                fontSize: 15.toFont,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 10.toHeight,
-            ),
-            InkWell(
-              onTap: () {
-                showAtSignDialog(trustedContacts);
-              },
-              child: FractionallySizedBox(
-                widthFactor: 0.7,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: ColorConstants.orangeColorDim,
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Add atsigns",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 16.toFont,
-                        ),
-                      ),
-                      Icon(
-                        Icons.add_circle_outline,
-                        color: Theme.of(context).primaryColor,
-                        size: 25,
-                      )
-                    ],
-                  ),
+                      },
+                    )
+                  : SizedBox(),
+              Text(
+                "SELECT CONTACTS",
+                style: TextStyle(
+                  color: ColorConstants.gray,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20.toHeight,
-            ),
-            FractionallySizedBox(
-              widthFactor: 0.7,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TextField(
-                  controller: messageController,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Send Message (Optional)",
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
-                  maxLines: 5,
-                ),
+              SizedBox(
+                height: 10.toHeight,
               ),
-            ),
-            SizedBox(
-              height: 30.toHeight,
-            ),
-            InkWell(
-              onTap: isFileSending
-                  ? null
-                  : () async {
-                      if (isFileSending == false) {
-                        await sendFileWithFileBin(contactList);
-                      }
-                    },
-              child: FractionallySizedBox(
-                widthFactor: 0.7,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: selectedFiles.isNotEmpty
-                        ? LinearGradient(
-                            colors: [
-                              Color.fromRGBO(240, 94, 63, 1),
-                              Color.fromRGBO(234, 167, 67, 0.65),
-                            ],
-                          )
-                        : LinearGradient(
-                            colors: [
-                              Color.fromRGBO(216, 216, 216, 1),
-                              Color.fromRGBO(216, 216, 216, 1),
-                            ],
-                          ),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Text(
-                    isFileSending == true ? "Sending..." : "Transfer Now",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: () {
+                  showAtSignDialog(trustedContacts);
+                },
+                child: FractionallySizedBox(
+                  widthFactor: 0.7,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: ColorConstants.orangeColorDim,
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-                    textAlign: TextAlign.center,
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Add atSigns",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 16.toFont,
+                          ),
+                        ),
+                        Icon(
+                          Icons.add_circle_outline,
+                          color: Theme.of(context).primaryColor,
+                          size: 25,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 30.toHeight,
-            ),
-          ],
+              SizedBox(
+                height: 20.toHeight,
+              ),
+              FractionallySizedBox(
+                widthFactor: 0.7,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    controller: messageController,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Send Message (Optional)",
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
+                    maxLines: 5,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30.toHeight,
+              ),
+              InkWell(
+                onTap: isFileSending
+                    ? null
+                    : () async {
+                        if (isFileSending == false) {
+                          await sendFileWithFileBin(provider.selectedContacts);
+                        }
+                      },
+                child: FractionallySizedBox(
+                  widthFactor: 0.7,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: provider.selectedFiles.isNotEmpty
+                          ? LinearGradient(
+                              colors: [
+                                Color.fromRGBO(240, 94, 63, 1),
+                                Color.fromRGBO(234, 167, 67, 0.65),
+                              ],
+                            )
+                          : LinearGradient(
+                              colors: [
+                                Color.fromRGBO(216, 216, 216, 1),
+                                Color.fromRGBO(216, 216, 216, 1),
+                              ],
+                            ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    child: Text(
+                      isFileSending == true ? "Sending..." : "Transfer Now",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30.toHeight,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   void showAtSignDialog(List<AtContact> trustedContacts) async {
@@ -685,8 +718,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                         : AddContactTile(
                                             title: groupContactModel
                                                 ?.group?.groupName,
-                                            subTitle: groupContactModel
-                                                ?.group?.groupName,
+                                            subTitle:
+                                                '${groupContactModel?.group?.members?.length} members',
                                             image: byteImage,
                                             showImage: byteImage != null,
                                             isSelected:

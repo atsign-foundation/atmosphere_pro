@@ -108,4 +108,6 @@ class ImageConstants {
 
   // New UI tranfer screen 
   static String uploadFile = '$_basePath/upload_file.png';
+  static String transferHistory = '$_basePath/transfer_history.png';
+  static String icGroups = '$_basePath/ic_groups.png';
 }

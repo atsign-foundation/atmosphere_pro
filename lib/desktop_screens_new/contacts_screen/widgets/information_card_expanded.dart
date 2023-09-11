@@ -1,6 +1,7 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/options_icon_button.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/receive_items_list.dart';
@@ -214,13 +215,18 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
         SizedBox(width: 20),
         OptionsIconButton(
           onTap: () async {
-            var res = await contactService.deleteAtSign(
-              atSign: widget.atContact.atSign!,
-            );
+            await showConfirmationDialog(
+              action: 'delete',
+              onYesPressed: () async {
+                var res = await contactService.deleteAtSign(
+                  atSign: widget.atContact.atSign!,
+                );
 
-            if (res) {
-              widget.onBack();
-            }
+                if (res) {
+                  widget.onBack();
+                }
+              },
+            );
           },
           icon: AppVectors.icDelete,
         ),
@@ -228,16 +234,21 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
         OptionsIconButton(
           isSelected: isBlocked,
           onTap: () async {
-            await contactService
-                .blockUnblockContact(
-                  contact: widget.atContact,
-                  blockAction: !isBlocked,
-                )
-                .then(
-                  (value) => setState(() {
-                    isBlocked = !isBlocked;
-                  }),
-                );
+            await showConfirmationDialog(
+              action: 'block',
+              onYesPressed: () async {
+                await contactService
+                    .blockUnblockContact(
+                      contact: widget.atContact,
+                      blockAction: !isBlocked,
+                    )
+                    .then(
+                      (value) => setState(() {
+                        isBlocked = !isBlocked;
+                      }),
+                    );
+              },
+            );
           },
           icon: AppVectors.icBlock,
         ),
@@ -356,6 +367,28 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
           ),
         )
       ],
+    );
+  }
+
+  Future<void> showConfirmationDialog({
+    required String action,
+    required Function() onYesPressed,
+  }) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        Uint8List? image;
+        if (widget.atContact.tags?['image'] != null) {
+          List<int> intList = widget.atContact.tags?['image'].cast<int>();
+          image = Uint8List.fromList(intList);
+        }
+        return ConfirmationDialog(
+          title: '${widget.atContact.atSign}',
+          heading: 'Are you sure you want to $action this contact?',
+          onYesPressed: onYesPressed,
+          image: image,
+        );
+      },
     );
   }
 }

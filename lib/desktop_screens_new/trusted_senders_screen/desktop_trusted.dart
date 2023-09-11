@@ -6,8 +6,10 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.da
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DesktopTrustedScreen extends StatefulWidget {
   const DesktopTrustedScreen({Key? key}) : super(key: key);
@@ -19,6 +21,13 @@ class DesktopTrustedScreen extends StatefulWidget {
 class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
   String searchText = '';
   bool isSearchActive = false;
+  late TextEditingController searchController;
+
+  @override
+  void initState() {
+    searchController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +35,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
     return Container(
       padding: EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
-      color: ColorConstants.fadedBlue,
+      color: const Color(0xFFF8F8F8),
       child: ProviderHandler<TrustedContactProvider>(
         functionName: 'get_trusted_contacts',
         load: (provider) async {
@@ -61,6 +70,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: TextField(
+                            controller: searchController,
                             onChanged: (value) {
                               setState(() {
                                 searchText = value;
@@ -72,6 +82,18 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 15),
                               hintText: "Search...",
+                              suffixIcon: InkWell(
+                                  onTap: () {
+                                    searchText.isNotEmpty
+                                        ? setState(() {
+                                            searchText = '';
+                                            searchController.clear();
+                                          })
+                                        : setState(() {
+                                            isSearchActive = false;
+                                          });
+                                  },
+                                  child: const Icon(Icons.close)),
                             ),
                           ),
                         )
@@ -86,22 +108,36 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                         searchText = "";
                       });
                     },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.search,
-                        size: 25,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: SvgPicture.asset(
+                        AppVectors.icSearch,
+                        color: Colors.black,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.refresh,
-                      size: 25,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: SvgPicture.asset(
+                      AppVectors.icRefresh,
+                      color: Colors.black,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ],

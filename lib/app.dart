@@ -89,7 +89,10 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         initialRoute: initialRoute,
         navigatorKey: NavService.navKey,
-        theme: Themes.lightTheme(highlightColor: ColorConstants.raisinBlack),
+        theme: Themes.lightTheme(
+          highlightColor: ColorConstants.raisinBlack,
+          fontFamily: 'Poppins',
+        ),
         // theme: ThemeData(
         //     fontFamily: 'Poppins',
         //     scaffoldBackgroundColor: Colors.white,

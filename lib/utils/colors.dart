@@ -83,6 +83,7 @@ class ColorConstants {
   static const Color pickerBackgroundColor = Color(0xFFF7ECE9);
   static const Color iconButtonColor = Color(0xFFEAEAEA);
   static const Color ORANGE = Color(0xFFFC7A30);
+  static const Color greyTextColor = Color(0xFF949494);
 }
 
 class ContactInitialsColors {
