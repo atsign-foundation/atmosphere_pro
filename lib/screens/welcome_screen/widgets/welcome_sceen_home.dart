@@ -25,7 +25,6 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/images.dart';
-import '../../../utils/text_styles.dart';
 import '../../common_widgets/app_bar_custom.dart';
 import 'choice_contacts_widget.dart';
 
@@ -204,7 +203,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
                     return provider.selectedContacts.isNotEmpty
                         ? OverlappingContacts(
-                            selectedList: provider.selectedContacts,
+                            onchange: (bool value) {
+                              if (value) {
+                                listContacts = provider.selectedContacts;
+                              }
+                            },
                           )
                         : SizedBox();
                   },

@@ -25,17 +25,13 @@ class WelcomeScreenProvider extends BaseModel {
     setStatus(updateContacts, Status.Done);
   }
 
-  void changeBottomNavigationIndex(int index){
+  void changeBottomNavigationIndex(int index) {
     selectedBottomNavigationIndex = index;
     notifyListeners();
   }
 
   void _addtoContactsList(GroupContactsModel _obj) {
-    if (selectedContacts.indexWhere(
-            (element) => element.contact!.atSign == _obj.contact!.atSign) ==
-        -1) {
       selectedContacts.add(_obj);
-    }
   }
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList,
@@ -48,17 +44,7 @@ class WelcomeScreenProvider extends BaseModel {
       }
 
       for (var _obj in updatedList) {
-        if (_obj?.contact != null) {
-          _addtoContactsList(_obj!);
-        } else if (_obj!.group != null) {
-          groupName = _obj.group!.groupName;
-
-          /// add groups as contacts
-          /// this helps to remove contacts as well
-          _obj.group!.members?.forEach((element) {
-            _addtoContactsList(GroupContactsModel(contact: element));
-          });
-        }
+        _addtoContactsList(_obj!);
       }
 
       hasSelectedContactsChanged = true;

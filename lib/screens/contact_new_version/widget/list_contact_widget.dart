@@ -3,7 +3,6 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart'
     hide ContactsType;
 import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/enums/contact_filter_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contacts_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -40,8 +39,10 @@ class ListContactWidget extends StatefulWidget {
   State<ListContactWidget> createState() => _ListContactWidgetState();
 }
 
-class _ListContactWidgetState extends State<ListContactWidget> {
+class _ListContactWidgetState extends State<ListContactWidget>
+    with AutomaticKeepAliveClientMixin<ListContactWidget> {
   late GroupService _groupService;
+  late ScrollController scrollController;
   bool showContacts = false;
   bool showGroups = false;
 
@@ -60,73 +61,77 @@ class _ListContactWidgetState extends State<ListContactWidget> {
       showGroups = false;
     }
 
-    _groupService.fetchGroupsAndContacts();
+    scrollController = ScrollController();
+    // _groupService.fetchGroupsAndContacts();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeConfig().init(context);
     return StreamBuilder<List<GroupContactsModel?>>(
       stream: _groupService.allContactsStream,
       initialData: _groupService.allContacts,
       builder: (context, snapshot) {
-        if ((snapshot.connectionState == ConnectionState.waiting)) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: ColorConstants.orange,
-            ),
-          );
-        } else {
-          // filtering contacts and groups
-          var _filteredList = <GroupContactsModel?>[];
-          List<GroupContactsModel> trustedContacts = [];
-          _filteredList = getAllContactList(snapshot.data ?? []);
+        // if ((snapshot.connectionState == ConnectionState.waiting)) {
+        //   return const Center(
+        //     child: CircularProgressIndicator(
+        //       color: ColorConstants.orange,
+        //     ),
+        //   );
+        // } else {
+        // filtering contacts and groups
+        var _filteredList = <GroupContactsModel?>[];
+        List<GroupContactsModel> trustedContacts = [];
+        _filteredList = getAllContactList(snapshot.data ?? []);
 
-          if (_filteredList.isEmpty) {
+        if (_filteredList.isEmpty) {
+          return EmptyContactsWidget(
+            contactsType: widget.contactsType,
+            onTapAddButton: widget.onTapAddButton ?? () {},
+          );
+        }
+
+        if (widget.contactsType == ListContactType.trusted) {
+          for (var element in (widget.trustedContacts ?? [])) {
+            trustedContacts.add(
+              GroupContactsModel(
+                contact: element,
+              ),
+            );
+          }
+
+          if (trustedContacts.isEmpty) {
             return EmptyContactsWidget(
               contactsType: widget.contactsType,
               onTapAddButton: widget.onTapAddButton ?? () {},
             );
           }
-
-          if (widget.contactsType == ListContactType.trusted) {
-            for (var element in (widget.trustedContacts ?? [])) {
-              trustedContacts.add(
-                GroupContactsModel(
-                  contact: element,
-                ),
-              );
-            }
-
-            if (trustedContacts.isEmpty) {
-              return EmptyContactsWidget(
-                contactsType: widget.contactsType,
-                onTapAddButton: widget.onTapAddButton ?? () {},
-              );
-            }
-          }
-
-          // renders contacts according to the initial alphabet
-          return Scrollbar(
-            radius: const Radius.circular(11),
-            child: ContactsWidget(
-              contacts: _filteredList,
-              contactsType: widget.contactsType,
-              isShowAlpha: widget.isShowAlpha,
-              isSelectMultiContacts: widget.isSelectMultiContacts,
-              onTapContact: widget.onTapContact,
-              onTapGroup: widget.onTapGroup,
-              onSelectContacts: widget.onSelectContacts,
-              onRefresh: () async {
-                await _groupService.fetchGroupsAndContacts();
-              },
-              contactPadding: EdgeInsets.only(left: 18, right: 28),
-              selectedContacts: widget.selectedContacts,
-              trustedContacts: widget.trustedContacts,
-            ),
-          );
         }
+
+        // renders contacts according to the initial alphabet
+        return Scrollbar(
+          controller: scrollController,
+          radius: const Radius.circular(11),
+          child: ContactsWidget(
+            scrollController: scrollController,
+            contacts: _filteredList,
+            contactsType: widget.contactsType,
+            isShowAlpha: widget.isShowAlpha,
+            isSelectMultiContacts: widget.isSelectMultiContacts,
+            onTapContact: widget.onTapContact,
+            onTapGroup: widget.onTapGroup,
+            onSelectContacts: widget.onSelectContacts,
+            onRefresh: () async {
+              await _groupService.fetchGroupsAndContacts();
+            },
+            contactPadding: EdgeInsets.only(left: 18, right: 28),
+            selectedContacts: widget.selectedContacts,
+            trustedContacts: widget.trustedContacts,
+          ),
+        );
+        // }
       },
     );
   }
@@ -155,4 +160,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
     }
     return _filteredList;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

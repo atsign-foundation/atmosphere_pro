@@ -84,6 +84,8 @@ class ColorConstants {
   static const Color iconButtonColor = Color(0xFFEAEAEA);
   static const Color ORANGE = Color(0xFFFC7A30);
   static const Color greyTextColor = Color(0xFF949494);
+  static const Color iconHeaderColor = Color(0xFF231F20);
+  static const Color downloadIndicatorColor = Color(0xFF67A700);
 }
 
 class ContactInitialsColors {
