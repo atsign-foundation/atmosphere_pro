@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
@@ -16,20 +15,15 @@ import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
-
-import '../../my_files/widgets/downloads_folders.dart';
 
 class ContactAttachmentCard extends StatefulWidget {
   final FileTransfer fileTransfer;
@@ -47,24 +41,21 @@ class ContactAttachmentCard extends StatefulWidget {
     this.margin,
     this.onDownloaded,
     this.fromContact = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ContactAttachmentCard> createState() => _ContactAttachmentCardState();
 }
 
-class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
+class _ContactAttachmentCardState extends State<ContactAttachmentCard>
+    with TickerProviderStateMixin {
   bool isDownloaded = false;
   bool isDownloading = false;
-  late WelcomeScreenProvider _welcomeScreenProvider;
-  late FileTransferProvider _fileTransferProvider;
 
   @override
   void initState() {
     super.initState();
     initDownloads();
-    _welcomeScreenProvider = Provider.of(context, listen: false);
-    _fileTransferProvider = Provider.of(context, listen: false);
   }
 
   void initDownloads() async {
@@ -91,18 +82,13 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
           ? null
           : () async {
               bool isExist = await isFilePresent(widget.singleFile.name ?? '');
-              if (!isExist) {
-                await downloadFiles(
-                  widget.fileTransfer,
-                  fileName: widget.singleFile.name,
-                  isPreview: true,
+              if (isExist) {
+                await openPreview().whenComplete(
+                  () => setState(() {
+                    isDownloading = false;
+                  }),
                 );
               }
-              await openPreview().whenComplete(
-                () => setState(() {
-                  isDownloading = false;
-                }),
-              );
             },
       child: Container(
         decoration: BoxDecoration(
@@ -169,14 +155,36 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                         builder: (_c, provider, _) {
                           var fileTransferProgress = provider
                               .receivedFileProgress[widget.fileTransfer.key];
+                          print(fileTransferProgress?.percent);
 
                           return CommonUtilityFunctions()
                                   .checkForDownloadAvailability(
                             widget.fileTransfer,
                           )
-                              ? fileTransferProgress != null
-                                  ? Image.asset(
-                                      ImageConstants.icCloudDownloading,
+                              ? fileTransferProgress?.fileName ==
+                                          widget.singleFile.name &&
+                                      fileTransferProgress != null
+                                  ? Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppVectors.icCloudDownloading,
+                                        ),
+                                        Center(
+                                          child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: CircularProgressIndicator(
+                                              value: (fileTransferProgress
+                                                          .percent ??
+                                                      0) /
+                                                  100,
+                                              strokeWidth: 1,
+                                              color: ColorConstants
+                                                  .downloadIndicatorColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     )
                                   : isDownloaded
                                       ? SvgPicture.asset(
@@ -199,22 +207,24 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                       const SizedBox(
                         width: 10,
                       ),
-                      isDownloaded ? GestureDetector(
-                        onTap: () async {
-                          if (widget.fromContact) {
-                            Navigator.pop(context);
-                          }
-                          await FileUtils.moveToSendFile(
-                              BackendService.getInstance()
-                                  .downloadDirectory!
-                                  .path +
-                                  Platform.pathSeparator +
-                                  widget.singleFile.name!);
-                        },
-                        child: SvgPicture.asset(
-                          AppVectors.icSendFile,
-                        ),
-                      ) : SizedBox(),
+                      isDownloaded
+                          ? GestureDetector(
+                              onTap: () async {
+                                if (widget.fromContact) {
+                                  Navigator.pop(context);
+                                }
+                                await FileUtils.moveToSendFile(
+                                    BackendService.getInstance()
+                                            .downloadDirectory!
+                                            .path +
+                                        Platform.pathSeparator +
+                                        widget.singleFile.name!);
+                              },
+                              child: SvgPicture.asset(
+                                AppVectors.icSendFile,
+                              ),
+                            )
+                          : SizedBox(),
                       Spacer(),
                       Text(
                         double.parse(widget.singleFile.size.toString()) <= 1024
@@ -274,12 +284,12 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard> {
                     width: 50,
                     child: (snapshot.data == null)
                         ? Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Image.asset(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Image.asset(
                               ImageConstants.videoLogo,
                               fit: BoxFit.cover,
                             ),
-                        )
+                          )
                         : Image.memory(
                             videoThumbnail!,
                             fit: BoxFit.cover,

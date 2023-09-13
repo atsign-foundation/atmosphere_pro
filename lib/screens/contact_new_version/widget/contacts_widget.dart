@@ -19,6 +19,7 @@ class ContactsWidget extends StatefulWidget {
   final Function? onRefresh;
   final EdgeInsetsGeometry? padding, contactPadding;
   final ListContactType? contactsType;
+  final ScrollController? scrollController;
 
   const ContactsWidget({
     Key? key,
@@ -34,6 +35,7 @@ class ContactsWidget extends StatefulWidget {
     this.padding,
     this.contactPadding,
     this.contactsType,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -60,6 +62,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         setState(() {});
       },
       child: ListView.builder(
+        controller: widget.scrollController,
         physics: const ClampingScrollPhysics(),
         itemCount: 27,
         shrinkWrap: true,

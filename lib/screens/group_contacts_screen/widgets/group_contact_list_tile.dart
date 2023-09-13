@@ -42,65 +42,71 @@ class _ContactListTileState extends State<ContactListTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListTile(
-        onTap: (widget.onlyRemoveMethod)
-            ? () {
-                widget.onTileTap!();
-              }
-            : () {
-                setState(() {
-                  selected = !selected;
-                  !selected ? widget.onRemove() : widget.onAdd();
-                });
-              },
-        title: Text(
-          widget.atSign!,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14.toFont,
-            letterSpacing: 0.1,
-            fontWeight: FontWeight.normal,
-          ),
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        20.toWidth,
+        12.toHeight,
+        14.toWidth,
+        12.toHeight,
+      ),
+      margin: EdgeInsets.only(bottom: 10.toHeight),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: ColorConstants.textBoxBg,
         ),
-        subtitle: Text(
-          widget.name!,
-          style: TextStyle(
-            color: ColorConstants.fadedText,
-            fontSize: 14.toFont,
-            letterSpacing: 0.1,
-            fontWeight: FontWeight.normal,
+        color: Colors.white,
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                18,
+              ),
+            ),
+            child: widget.image,
           ),
-        ),
-        trailing: (widget.plainView)
-            ? SizedBox()
-            : (widget.isSelected)
-                ? GestureDetector(
-                    onTap: () {
-                      widget.onRemove();
-                    },
-                    child: SvgPicture.asset(
-                      AppVectors.icClose,
-                    ),
-                  )
-                : Icon(
-                    Icons.add,
+          const SizedBox(width: 18),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  widget.atSign ?? '',
+                  style: TextStyle(
+                    fontSize: 14.toFont,
+                    fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
-        leading: Stack(
-          children: [
-            Container(
-              height: 40.toHeight,
-              width: 40.toHeight,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-              ),
-              child: widget.image,
+                ),
+                Text(
+                  widget.name ?? '',
+                  style: TextStyle(
+                    fontSize: 11.toFont,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          InkWell(
+            onTap: () {
+              widget.onRemove.call();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: SvgPicture.asset(
+                AppVectors.icClose,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

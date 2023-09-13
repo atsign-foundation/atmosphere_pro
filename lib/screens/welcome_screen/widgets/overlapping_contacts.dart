@@ -16,13 +16,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class OverlappingContacts extends StatefulWidget {
-  final List<GroupContactsModel?> selectedList;
-  final ValueChanged<bool>? onchange;
+  final ValueChanged<bool> onchange;
 
   const OverlappingContacts({
     Key? key,
-    required this.selectedList,
-    this.onchange,
+    required this.onchange,
   }) : super(key: key);
 
   @override
@@ -33,18 +31,25 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
   bool isExpanded = false;
   Map _atsignImages = {};
   late TrustedContactProvider trustedProvider;
+  late WelcomeScreenProvider welcomeScreenProvider;
 
   @override
   void initState() {
     trustedProvider = context.read<TrustedContactProvider>();
-    for (var index = 0; index < widget.selectedList.length; index++) {
+    welcomeScreenProvider = context.read<WelcomeScreenProvider>();
+    for (var index = 0;
+        index < welcomeScreenProvider.selectedContacts.length;
+        index++) {
       Uint8List? image;
-      if (widget.selectedList[index]?.contact?.tags != null &&
-          widget.selectedList[index]?.contact?.tags!['image'] != null) {
-        image = CommonUtilityFunctions()
-            .getContactImage(widget.selectedList[index]!.contact!);
+      if (welcomeScreenProvider.selectedContacts[index].contact?.tags != null &&
+          welcomeScreenProvider
+                  .selectedContacts[index].contact?.tags!['image'] !=
+              null) {
+        image = CommonUtilityFunctions().getContactImage(
+            welcomeScreenProvider.selectedContacts[index].contact!);
       }
-      _atsignImages[widget.selectedList[index]?.contact?.atSign] = image;
+      _atsignImages[welcomeScreenProvider
+          .selectedContacts[index].contact?.atSign] = image;
     }
 
     super.initState();
@@ -57,21 +62,24 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
         return ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
-          itemCount: widget.selectedList.length,
+          itemCount: provider.selectedContacts.length,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             Uint8List? image =
-                _atsignImages[widget.selectedList[index]?.contact?.atSign];
+                _atsignImages[provider.selectedContacts[index].contact?.atSign];
             final contactSelected = provider.selectedContacts[index];
 
-            return widget.selectedList[index]?.contact != null
+            return provider.selectedContacts[index].contactType ==
+                    ContactsType.CONTACT
                 ? ContactCard(
-                    key: Key(widget.selectedList[index]!.contact!.atSign ?? ''),
-                    contact: widget.selectedList[index]!.contact!,
+                    key: Key(
+                        provider.selectedContacts[index].contact!.atSign ?? ''),
+                    contact: provider.selectedContacts[index].contact!,
                     isTrusted: _checkTrustedContact(
-                        widget.selectedList[index]!.contact!),
+                        provider.selectedContacts[index].contact!),
                     deleteFunc: () {
                       provider.removeContacts(contactSelected);
+                      widget.onchange.call(true);
                     },
                   )
                 : ContactListTile(
@@ -80,12 +88,12 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                     onAdd: () {},
                     onRemove: () {
                       provider.removeContacts(contactSelected);
-                      widget.onchange!(true);
+                      widget.onchange.call(true);
                     },
                     name: contactSelected.contact?.atSign?.substring(1) ??
-                        contactSelected.group?.groupName?.substring(0),
-                    atSign: contactSelected.contact?.atSign ??
                         '${contactSelected.group?.members?.length.toString()} Members',
+                    atSign: contactSelected.contact?.atSign ??
+                        contactSelected.group?.groupName?.substring(0),
                     image: (image != null)
                         ? CustomCircleAvatar(
                             byteImage: image,
