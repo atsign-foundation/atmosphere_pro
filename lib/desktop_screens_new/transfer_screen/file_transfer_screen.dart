@@ -32,9 +32,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   late FileTransferProvider _filePickerProvider;
   late TextEditingController messageController;
   late TextEditingController searchController;
+  bool showFileSentCard = false;
 
   var isSentFileEntrySaved;
-  var isFileShareFailed;
+  var isFileShareFailed = false;
   bool isFileSending = false;
   String initialLetter = "";
 
@@ -74,6 +75,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   }
 
   sendFileWithFileBin(List<GroupContactsModel> contactList) async {
+    setState(() {
+      showFileSentCard = false;
+    });
     _filePickerProvider.updateFileSendingStatus(true);
     if (mounted) {
       setState(() {
@@ -93,6 +97,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
     if (mounted && res is bool) {
       setState(() {
         isFileShareFailed = !res;
+        showFileSentCard = true;
       });
 
       if (!isFileShareFailed) {
@@ -456,6 +461,44 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 20.toHeight,
+              ),
+              showFileSentCard
+                  ? FractionallySizedBox(
+                      widthFactor: 0.7,
+                      child: Card(
+                        color: isFileShareFailed
+                            ? Colors.red.shade300
+                            : Colors.green.shade300,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  isFileShareFailed
+                                      ? "Failed to send file(s)"
+                                      : "Sent successfully",
+                                  style: TextStyle(color: Colors.white)),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    showFileSentCard = false;
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 30.toHeight,
               ),
