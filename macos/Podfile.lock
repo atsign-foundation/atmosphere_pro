@@ -3,7 +3,11 @@ PODS:
     - FlutterMacOS
   - biometric_storage (0.0.1):
     - FlutterMacOS
+  - desktop_drop (0.0.1):
+    - FlutterMacOS
   - desktop_window (0.0.1):
+    - FlutterMacOS
+  - device_info_plus (0.0.1):
     - FlutterMacOS
   - emoji_picker_flutter (0.0.1):
     - FlutterMacOS
@@ -32,7 +36,9 @@ PODS:
 DEPENDENCIES:
   - at_file_saver (from `Flutter/ephemeral/.symlinks/plugins/at_file_saver/macos`)
   - biometric_storage (from `Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos`)
+  - desktop_drop (from `Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos`)
   - desktop_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_window/macos`)
+  - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
   - emoji_picker_flutter (from `Flutter/ephemeral/.symlinks/plugins/emoji_picker_flutter/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
@@ -50,8 +56,12 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/at_file_saver/macos
   biometric_storage:
     :path: Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos
+  desktop_drop:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos
   desktop_window:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_window/macos
+  device_info_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
   emoji_picker_flutter:
     :path: Flutter/ephemeral/.symlinks/plugins/emoji_picker_flutter/macos
   file_selector_macos:
@@ -78,19 +88,21 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   at_file_saver: 1fc6ed722f17c7a20ce79cce168d1100fcad4b95
   biometric_storage: 43caa6e7ef00e8e19c074216e7e1786dacda9e76
+  desktop_drop: 69eeff437544aa619c8db7f4481b3a65f7696898
   desktop_window: fb7c4f12c1129f947ac482296b6f14059d57a3c3
+  device_info_plus: 5401765fde0b8d062a2f8eb65510fb17e77cf07f
   emoji_picker_flutter: 533634326b1c5de9a181ba14b9758e6dfe967a20
   file_selector_macos: f1b08a781e66103e3ba279fd5d4024a2478b3af6
   flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   local_notifier: e9506bc66fc70311e8bc7291fb70f743c081e4ff
   package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
-  path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   share_plus_macos: 853ee48e7dce06b633998ca0735d482dd671ade4
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  url_launcher_macos: 5335912b679c073563f29d89d33d10d459f95451
+  url_launcher_macos: d2691c7dd33ed713bf3544850a623080ec693d95
   video_compress: c896234f100791b5fef7f049afa38f6d2ef7b42f
 
-PODFILE CHECKSUM: 353c8bcc5d5b0994e508d035b5431cfe18c1dea7
+PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0
 
 COCOAPODS: 1.12.1
