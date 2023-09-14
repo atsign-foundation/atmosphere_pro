@@ -80,6 +80,8 @@ dependencies:
   dotted_border: ^2.0.0+3
   expandable: ^5.0.1
   desktop_drop: ^0.4.3
+  thumblr: ^0.0.4
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

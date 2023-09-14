@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
@@ -14,6 +15,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thumblr/thumblr.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Recents extends StatefulWidget {
@@ -22,6 +24,11 @@ class Recents extends StatefulWidget {
 }
 
 class _RecentsState extends State<Recents> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<MyFilesProvider>(
@@ -133,9 +140,11 @@ Widget thumbnail(String extension, String path) {
         )
       : FileTypes.VIDEO_TYPES.contains(extension)
           ? FutureBuilder(
-              future: videoThumbnailBuilder(path),
+              // future: videoThumbnailBuilder(path),
+              future: generateVideoThumbnail(path),
               builder: (context, snapshot) => ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
+                // child: Image(image: thumbnailBytes.image!)
                 child: GestureDetector(
                   onTap: () async {
                     //   await openDownloadsFolder(context);
@@ -221,4 +230,20 @@ Future videoThumbnailBuilder(String path) async {
     quality: 100,
   );
   return videoThumbnail;
+}
+
+Future<dynamic> generateVideoThumbnail(String path) async {
+  var thumbnailBytes = await generateThumbnail(
+    filePath: path,
+  );
+
+  if (thumbnailBytes != null) {
+    final pngBytes =
+        await thumbnailBytes.image.toByteData(format: ImageByteFormat.png);
+
+    videoThumbnail = await Uint8List.view(pngBytes!.buffer);
+    await File('my_image.jpg').writeAsBytes(videoThumbnail!);
+
+    return videoThumbnail;
+  }
 }
