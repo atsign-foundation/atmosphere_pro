@@ -32,7 +32,7 @@ class FileUtils {
         onConfirmation: () async {
           var file = File(filePath);
           if (await file.exists()) {
-            file.deleteSync();
+            await file.delete();
           }
           if (fileTransferId != null) {
             await Provider.of<MyFilesProvider>(
@@ -46,7 +46,7 @@ class FileUtils {
                     listen: false)
                 .getAllFiles();
           }
-          onComplete;
+          onComplete?.call();
         },
         deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
       ),

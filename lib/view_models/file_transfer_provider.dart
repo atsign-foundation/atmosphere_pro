@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -16,6 +17,8 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,7 +28,9 @@ import 'package:path/path.dart' show basename;
 
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
+
   static FileTransferProvider _instance = FileTransferProvider._();
+
   factory FileTransferProvider() => _instance;
   final String MEDIA = 'MEDIA';
   final String FILES = 'FILES';
@@ -52,7 +57,9 @@ class FileTransferProvider extends BaseModel {
   bool hasSelectedFilesChanged = false, scrollToBottom = false;
 
   final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
+
   Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
+
   StreamSink<FLUSHBAR_STATUS> get flushBarStatusSink => _flushBarStream.sink;
 
   FileHistory? _selectedFileHistory;
@@ -277,7 +284,7 @@ class FileTransferProvider extends BaseModel {
             ),
           );
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
-
+          await showRetrySending();
           return false;
         }
       }
@@ -294,6 +301,76 @@ class FileTransferProvider extends BaseModel {
         'Something went wrong',
       );
       flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      await showRetrySending();
+    }
+  }
+
+  Future<void> showRetrySending() async {
+    await NavService.navKey.currentContext!
+        .read<InternetConnectivityChecker>()
+        .checkConnectivity();
+    final bool isInternetAvailable = NavService.navKey.currentContext!
+        .read<InternetConnectivityChecker>()
+        .isInternetAvailable;
+    if (isInternetAvailable) {
+      await openFileReceiptBottomSheet();
+    } else {
+      Timer.periodic(Duration(seconds: 5), (timer) async {
+        await NavService.navKey.currentContext!
+            .read<InternetConnectivityChecker>()
+            .checkConnectivity();
+        final bool isInternetAvailable = NavService.navKey.currentContext!
+            .read<InternetConnectivityChecker>()
+            .isInternetAvailable;
+        if (isInternetAvailable) {
+          timer.cancel();
+          await openFileReceiptBottomSheet();
+        }
+      });
+    }
+  }
+
+  openFileReceiptBottomSheet(
+      {FileRecipientSection? fileRecipientSection}) async {
+    await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+            listen: false)
+        .getSentHistory();
+    final List<FileHistory> sentList = Provider.of<HistoryProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .sentHistory;
+    selectedFileHistory = sentList[0];
+
+    if (!(sentList[0].fileDetails?.files ?? [])
+        .any((element) => element.isUploaded == false)) {
+      await showModalBottomSheet(
+        context: NavService.navKey.currentContext!,
+        isScrollControlled: true,
+        shape: StadiumBorder(),
+        builder: (_context) {
+          return Container(
+            height: SizeConfig().screenHeight * 0.8,
+            decoration: BoxDecoration(
+              color: Theme.of(NavService.navKey.currentContext!)
+                  .scaffoldBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12.0),
+                topRight: const Radius.circular(12.0),
+              ),
+            ),
+            child: FileRecipients(
+              sentList[0].sharedWith,
+              fileRecipientSection: fileRecipientSection,
+              key: UniqueKey(),
+            ),
+          );
+        },
+      ).then((value) {
+        resetData();
+        Provider.of<WelcomeScreenProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .resetData();
+      });
     }
   }
 

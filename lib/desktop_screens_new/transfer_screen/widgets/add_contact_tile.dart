@@ -75,40 +75,42 @@ class AddContactTile extends StatelessWidget {
                       ),
               ),
               SizedBox(width: 20),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(width: 10.toHeight),
-                  Text(
-                    title!,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10.toHeight),
+                    Text(
+                      title!,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subTitle != null
-                      ? Text(
-                          subTitle!,
-                          style: CustomTextStyles.desktopPrimaryRegular12,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : SizedBox(),
-                  SizedBox(width: 10.toHeight),
-                ],
+                    subTitle != null
+                        ? Text(
+                            subTitle!,
+                            style: CustomTextStyles.desktopPrimaryRegular12,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : SizedBox(),
+                    SizedBox(width: 10.toHeight),
+                  ],
+                ),
               ),
-              Spacer(),
-              isTrusted
-                  ? Icon(
-                      Icons.verified_outlined,
-                      color: Theme.of(context).primaryColor,
-                      size: 24,
-                    )
-                  : const SizedBox(),
+              if (isTrusted) ...[
+                SizedBox(width: 12),
+                Icon(
+                  Icons.verified_outlined,
+                  color: Theme.of(context).primaryColor,
+                  size: 24,
+                )
+              ],
               SizedBox(width: 12),
               if (index != null)
                 InkWell(

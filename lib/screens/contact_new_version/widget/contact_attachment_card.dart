@@ -30,7 +30,7 @@ class ContactAttachmentCard extends StatefulWidget {
   final FileData singleFile;
   final bool isShowDate;
   final EdgeInsetsGeometry? margin;
-  final Function()? onDownloaded;
+  final Function()? onAction;
   final bool fromContact;
 
   const ContactAttachmentCard({
@@ -39,8 +39,8 @@ class ContactAttachmentCard extends StatefulWidget {
     required this.singleFile,
     this.isShowDate = true,
     this.margin,
-    this.onDownloaded,
     this.fromContact = false,
+    this.onAction,
   });
 
   @override
@@ -83,11 +83,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
           : () async {
               bool isExist = await isFilePresent(widget.singleFile.name ?? '');
               if (isExist) {
-                await openPreview().whenComplete(
-                  () => setState(() {
-                    isDownloading = false;
-                  }),
-                );
+                await openPreview().whenComplete(() => widget.onAction?.call());
               }
             },
       child: Container(
@@ -156,6 +152,11 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                           var fileTransferProgress = provider
                               .receivedFileProgress[widget.fileTransfer.key];
                           print(fileTransferProgress?.percent);
+                          if (fileTransferProgress?.percent == null &&
+                              fileTransferProgress?.fileName ==
+                                  widget.singleFile.name) {
+                             isDownloaded = true;
+                          }
 
                           return CommonUtilityFunctions()
                                   .checkForDownloadAvailability(
@@ -394,7 +395,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
               listen: false)
           .saveNewDataInMyFiles(file);
       print(file.url);
-
+      widget.onAction?.call();
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
         TextStrings().fileDownloadd,
@@ -529,11 +530,16 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                         await FileUtils.deleteFile(
                           filePath,
                           fileTransferId: widget.fileTransfer.key,
-                        ).then((value) => isDownloaded = false);
-                        if (mounted) {
-                          Navigator.pop(context);
-                        }
-                        setState(() {});
+                          onComplete: () {
+                            if (mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
+                        ).then((value) {
+                          setState(() {
+                            isDownloaded = false;
+                          });
+                        });
                       },
                       child: SvgPicture.asset(
                         AppVectors.icDeleteFile,
