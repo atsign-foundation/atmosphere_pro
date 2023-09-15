@@ -4,6 +4,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_contact_tile.dart';
@@ -12,6 +13,7 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:desktop_drop/desktop_drop.dart';
@@ -502,46 +504,53 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               SizedBox(
                 height: 30.toHeight,
               ),
-              InkWell(
-                onTap: isFileSending
-                    ? null
-                    : () async {
-                        if (isFileSending == false) {
-                          await sendFileWithFileBin(provider.selectedContacts);
-                        }
-                      },
-                child: FractionallySizedBox(
-                  widthFactor: 0.7,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: provider.selectedFiles.isNotEmpty
-                          ? LinearGradient(
-                              colors: [
-                                Color.fromRGBO(240, 94, 63, 1),
-                                Color.fromRGBO(234, 167, 67, 0.65),
-                              ],
-                            )
-                          : LinearGradient(
-                              colors: [
-                                Color.fromRGBO(216, 216, 216, 1),
-                                Color.fromRGBO(216, 216, 216, 1),
-                              ],
-                            ),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    child: Text(
-                      isFileSending == true ? "Sending..." : "Transfer Now",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+              Consumer<FileProgressProvider>(builder: (context, value, child) {
+                String text = _getText(
+                  fileTransferProgress: value.sentFileTransferProgress,
+                );
+                return InkWell(
+                  onTap: isFileSending
+                      ? null
+                      : () async {
+                          if (isFileSending == false) {
+                            await sendFileWithFileBin(
+                                provider.selectedContacts);
+                          }
+                        },
+                  child: FractionallySizedBox(
+                    widthFactor: 0.7,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: provider.selectedFiles.isNotEmpty
+                            ? LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(240, 94, 63, 1),
+                                  Color.fromRGBO(234, 167, 67, 0.65),
+                                ],
+                              )
+                            : LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(216, 216, 216, 1),
+                                  Color.fromRGBO(216, 216, 216, 1),
+                                ],
+                              ),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      textAlign: TextAlign.center,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      child: Text(
+                        isFileSending == true ? text : "Transfer Now",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
               SizedBox(
                 height: 30.toHeight,
               ),
@@ -550,6 +559,14 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         ),
       );
     });
+  }
+
+  String _getText({FileTransferProgress? fileTransferProgress}) {
+    if (fileTransferProgress?.fileState == FileState.encrypt) {
+      return 'Encrypting...';
+    } else {
+      return 'Sending...';
+    }
   }
 
   void showAtSignDialog(List<AtContact> trustedContacts) async {
