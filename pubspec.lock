@@ -419,6 +419,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  fc_native_video_thumbnail:
+    dependency: "direct main"
+    description:
+      name: fc_native_video_thumbnail
+      sha256: "965c6f5bea95c0823c12df145afa224e2303551b884bf17a31ac3934b0ee8329"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.2"
   ffi:
     dependency: transitive
     description:
@@ -1392,12 +1400,11 @@ packages:
     source: hosted
     version: "0.5.1"
   thumblr:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
-      name: thumblr
-      sha256: bfdb4c3d6e95d9595d4d464b255b85845db5f7ab88d8648d3edfe4f19adf043b
-      url: "https://pub.dev"
-    source: hosted
+      path: "C:\\Web Dev\\thumblr\\thumblr"
+      relative: false
+    source: path
     version: "0.0.4"
   thumblr_macos:
     dependency: transitive

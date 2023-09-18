@@ -115,6 +115,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            InkWell(
+              onTap: () async {
+                await generateVideoThumbnail(
+                    "C:\\Users\\Dell\\Documents\\@mosphere-pro\\@snowboard89\\Screen_Recording_2023-08-22_at_2.28.28_PM.mov");
+              },
+              child: Container(
+                child: Text("generate"),
+              ),
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

@@ -13,6 +13,7 @@ import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:fc_native_video_thumbnail/fc_native_video_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thumblr/thumblr.dart';
@@ -139,44 +140,71 @@ Widget thumbnail(String extension, String path) {
           ),
         )
       : FileTypes.VIDEO_TYPES.contains(extension)
-          ? FutureBuilder(
-              // future: videoThumbnailBuilder(path),
-              future: generateVideoThumbnail(path),
-              builder: (context, snapshot) => ClipRRect(
-                borderRadius: BorderRadius.circular(10.toHeight),
-                // child: Image(image: thumbnailBytes.image!)
-                child: GestureDetector(
-                  onTap: () async {
-                    //   await openDownloadsFolder(context);
-                    await openFilePath(path);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10),
-                    height: 50.toHeight,
-                    width: 50.toWidth,
-                    child: (snapshot.data == null || videoThumbnail == null)
-                        ? Image.asset(
-                            ImageConstants.videoLogo,
-                            fit: BoxFit.cover,
-                          )
-                        : (videoThumbnail != null)
-                            ? Image.memory(
-                                videoThumbnail!,
+          ? (Platform.isAndroid || Platform.isIOS)
+              ? FutureBuilder(
+                  future: videoThumbnailBuilder(path),
+                  builder: (context, snapshot) => ClipRRect(
+                    borderRadius: BorderRadius.circular(10.toHeight),
+                    // child: Image(image: thumbnailBytes.image!)
+                    child: GestureDetector(
+                      onTap: () async {
+                        //   await openDownloadsFolder(context);
+                        await openFilePath(path);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10),
+                        height: 50.toHeight,
+                        width: 50.toWidth,
+                        child: (snapshot.data == null || videoThumbnail == null)
+                            ? Image.asset(
+                                ImageConstants.videoLogo,
                                 fit: BoxFit.cover,
-                                errorBuilder: (BuildContext _context, _, __) {
-                                  return Container(
-                                    child: Icon(
-                                      Icons.image,
-                                      size: 30.toFont,
-                                    ),
-                                  );
-                                },
                               )
-                            : SizedBox(),
+                            : (videoThumbnail != null)
+                                ? Image.memory(
+                                    videoThumbnail!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (BuildContext _context, _, __) {
+                                      return Container(
+                                        child: Icon(
+                                          Icons.image,
+                                          size: 30.toFont,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
+                )
+              : FutureBuilder(
+                  future: generateVideoThumbnail(path),
+                  builder: (context, snapshot) => ClipRRect(
+                    borderRadius: BorderRadius.circular(10.toHeight),
+                    // child: Image(image: thumbnailBytes.image!)
+                    child: GestureDetector(
+                      onTap: () async {
+                        //   await openDownloadsFolder(context);
+                        await openFilePath(path);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10),
+                        height: 50.toHeight,
+                        width: 50.toWidth,
+                        child: (File(path + "_thumbnail.jpeg").existsSync() &&
+                                File(path).existsSync())
+                            ? Image.file(File(path + "_thumbnail.jpeg"),
+                                    fit: BoxFit.cover)
+                            : Image.asset(
+                                ImageConstants.videoLogo,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    ),
+                  ),
+                )
           : Builder(
               builder: (context) => ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
@@ -233,17 +261,29 @@ Future videoThumbnailBuilder(String path) async {
 }
 
 Future<dynamic> generateVideoThumbnail(String path) async {
-  var thumbnailBytes = await generateThumbnail(
-    filePath: path,
+  final plugin = FcNativeVideoThumbnail();
+
+  String thumbnailPath = path;
+  var temp = thumbnailPath.split("\\");
+  var fileNamewithExt = temp.removeLast();
+  var parentPath = temp.join("\\");
+
+  var file = File("${parentPath}\\${fileNamewithExt}_thumbnail.jpeg");
+  bool isExist = await file.exists();
+
+  if (isExist) {
+    return;
+  }
+
+  final thumbnailGenerated = await plugin.getVideoThumbnail(
+    srcFile: path,
+    destFile: "${parentPath}\\${fileNamewithExt}_thumbnail.jpeg",
+    width: 300,
+    height: 300,
+    keepAspectRatio: true,
+    format: 'jpeg',
+    quality: 90,
   );
 
-  if (thumbnailBytes != null) {
-    final pngBytes =
-        await thumbnailBytes.image.toByteData(format: ImageByteFormat.png);
-
-    videoThumbnail = await Uint8List.view(pngBytes!.buffer);
-    await File('my_image.jpg').writeAsBytes(videoThumbnail!);
-
-    return videoThumbnail;
-  }
+  print(thumbnailGenerated);
 }
