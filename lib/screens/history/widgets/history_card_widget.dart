@@ -45,6 +45,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
       isDownloadAvailable = false,
       isFilesAvailableOffline = true,
       isOverwrite = false,
+      isFileSentSuccess = true,
       isDownloading = false,
       isDownloaded = false;
 
@@ -74,6 +75,11 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
     if (widget.fileHistory!.sharedWith != null) {
       contactList =
           widget.fileHistory!.sharedWith!.map((e) => e.atsign).toList();
+      widget.fileHistory!.sharedWith!.forEach((ShareStatus sharedWith) {
+        if (sharedWith.isNotificationSend == false) {
+          isFileSentSuccess = false;
+        }
+      });
       await getDisplayDetails();
     }
 
@@ -244,19 +250,19 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                           ),
                         ),
                         SizedBox(width: 6),
-                        Container(
-                          height: 10,
-                          width: 10,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: ColorConstants.lightGreen,
-                          ),
-                          child: Icon(
-                            Icons.check,
-                            size: 8,
-                            color: ColorConstants.textGreen,
-                          ),
-                        ),
+                        // Container(
+                        //   height: 10,
+                        //   width: 10,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(5),
+                        //     color: ColorConstants.lightGreen,
+                        //   ),
+                        //   child: Icon(
+                        //     Icons.check,
+                        //     size: 8,
+                        //     color: ColorConstants.textGreen,
+                        //   ),
+                        // ),
                         SizedBox(width: 4),
                         Container(
                           height: 16,
@@ -269,7 +275,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(33),
-                            color: ColorConstants.lightGreen,
+                            color: isFileSentSuccess
+                                ? ColorConstants.lightGreen
+                                : Colors.red.withOpacity(0.3),
                           ),
                           child: Center(
                             child: Text(
@@ -277,7 +285,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   ? "Received"
                                   : "Sent",
                               style: TextStyle(
-                                color: ColorConstants.textGreen,
+                                color: isFileSentSuccess
+                                    ? ColorConstants.lightGreen
+                                    : Colors.red,
                                 fontSize: 8.toFont,
                               ),
                             ),
