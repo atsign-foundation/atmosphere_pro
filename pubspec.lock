@@ -1399,37 +1399,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
-  thumblr:
-    dependency: "direct overridden"
-    description:
-      path: "C:\\Web Dev\\thumblr\\thumblr"
-      relative: false
-    source: path
-    version: "0.0.4"
-  thumblr_macos:
-    dependency: transitive
-    description:
-      name: thumblr_macos
-      sha256: "3b5189db149ee4c6c2fabc6f4bf3d84ed09c96cc45a2153a53ae781742c404c6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
-  thumblr_platform_interface:
-    dependency: transitive
-    description:
-      name: thumblr_platform_interface
-      sha256: abfcd54b5567b3c8d9a5426b43ed4783c613c34194564c47ffba0ea51f328962
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1+1"
-  thumblr_windows:
-    dependency: transitive
-    description:
-      name: thumblr_windows
-      sha256: a1d372ccb4d4981e6d55ff516ee5b102f65d0f905d5d36c9712a095358d9e91a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3+1"
   timezone:
     dependency: transitive
     description:

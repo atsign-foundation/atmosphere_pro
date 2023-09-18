@@ -92,8 +92,6 @@ dependency_overrides:
   at_client: ^3.0.56
   file_picker: ^5.0.0
   biometric_storage: 5.0.0
-  thumblr:
-    path: C:\Web Dev\thumblr\thumblr
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets/
