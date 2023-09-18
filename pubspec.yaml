@@ -74,12 +74,14 @@ dependencies:
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.6
   showcaseview: ^1.1.5
-  biometric_storage: ^5.0.0+3
+  biometric_storage: ^5.0.0+4
   flutter_svg: ^1.1.5
   image_picker: 0.8.6
   dotted_border: ^2.0.0+3
   expandable: ^5.0.1
   desktop_drop: ^0.4.3
+  fc_native_video_thumbnail: ^0.5.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -89,7 +91,7 @@ dependency_overrides:
   package_info_plus: ^3.0.0
   at_client: ^3.0.56
   file_picker: ^5.0.0
-  biometric_storage: 5.0.0
+  biometric_storage: 5.0.0+1
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets/

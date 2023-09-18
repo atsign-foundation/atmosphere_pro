@@ -12,7 +12,12 @@ import 'package:provider/provider.dart';
 class FileRecipients extends StatefulWidget {
   final List<ShareStatus>? filesharedWith;
   FileRecipientSection? fileRecipientSection;
-  FileRecipients(this.filesharedWith, {this.fileRecipientSection, Key? key});
+
+  FileRecipients(
+    this.filesharedWith, {
+    this.fileRecipientSection,
+    Key? key,
+  });
 
   @override
   _FileRecipientsState createState() => _FileRecipientsState();
@@ -24,6 +29,7 @@ class _FileRecipientsState extends State<FileRecipients> {
   List<ShareStatus> filedInDeliveringList = [];
 
   Color color = Colors.white;
+
   @override
   void initState() {
     sortAtsigns();
@@ -210,9 +216,10 @@ class _FileRecipientsState extends State<FileRecipients> {
                           List.generate(filedInDeliveringList.length, (index) {
                         return Container(
                           child: CustomPersonVerticalTile(
-                              key: UniqueKey(),
-                              shareStatus: filedInDeliveringList[index],
-                              isFailedAtsignList: true),
+                            key: UniqueKey(),
+                            shareStatus: filedInDeliveringList[index],
+                            isFailedAtsignList: true,
+                          ),
                         );
                       }),
                     ),

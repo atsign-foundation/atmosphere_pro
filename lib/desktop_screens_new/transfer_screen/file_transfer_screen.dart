@@ -1,18 +1,25 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_contact_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -32,9 +39,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   late FileTransferProvider _filePickerProvider;
   late TextEditingController messageController;
   late TextEditingController searchController;
+  bool showFileSentCard = false;
 
   var isSentFileEntrySaved;
-  var isFileShareFailed;
+  var isFileShareFailed = false;
   bool isFileSending = false;
   String initialLetter = "";
 
@@ -74,6 +82,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   }
 
   sendFileWithFileBin(List<GroupContactsModel> contactList) async {
+    setState(() {
+      showFileSentCard = false;
+    });
     _filePickerProvider.updateFileSendingStatus(true);
     if (mounted) {
       setState(() {
@@ -93,6 +104,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
     if (mounted && res is bool) {
       setState(() {
         isFileShareFailed = !res;
+        showFileSentCard = true;
       });
 
       if (!isFileShareFailed) {
@@ -110,6 +122,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
           TextStrings().oopsSomethingWentWrong,
           bgColor: ColorConstants.redAlert,
         );
+        await showRetrySending();
       }
     } else if (res == null) {
       SnackbarService().showSnackbar(
@@ -117,7 +130,6 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         TextStrings().oopsSomethingWentWrong,
         bgColor: ColorConstants.redAlert,
       );
-
       if (mounted) {
         setState(() {
           isFileShareFailed = true;
@@ -131,6 +143,69 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         _filePickerProvider.updateFileSendingStatus(false);
         isFileSending = false;
       });
+    }
+  }
+
+  Future<void> showRetrySending() async {
+    await context.read<InternetConnectivityChecker>().checkConnectivity();
+    final bool isInternetAvailable =
+        context.read<InternetConnectivityChecker>().isInternetAvailable;
+    if (isInternetAvailable) {
+      await openFileReceiptBottomSheet();
+    } else {
+      Timer.periodic(Duration(seconds: 5), (timer) async {
+        await context.read<InternetConnectivityChecker>().checkConnectivity();
+        final bool isInternetAvailable =
+            context.read<InternetConnectivityChecker>().isInternetAvailable;
+        if (isInternetAvailable) {
+          timer.cancel();
+          await openFileReceiptBottomSheet();
+        }
+      });
+    }
+  }
+
+  openFileReceiptBottomSheet(
+      {FileRecipientSection? fileRecipientSection}) async {
+    await Provider.of<HistoryProvider>(context, listen: false).getSentHistory();
+    final List<FileHistory> sentList =
+        Provider.of<HistoryProvider>(context, listen: false).sentHistory;
+    _filePickerProvider.selectedFileHistory = sentList[0];
+
+    if (!(sentList[0].fileDetails?.files ?? [])
+        .any((element) => element.isUploaded == false)) {
+      await showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          barrierDismissible: true,
+          builder: (_context) {
+            return StatefulBuilder(
+              builder: (context, setDialogState) {
+                return Dialog(
+                  insetPadding: EdgeInsets.zero,
+                  alignment: Alignment.centerRight,
+                  elevation: 5.0,
+                  clipBehavior: Clip.hardEdge,
+                  child: Container(
+                    width: 400,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(12.0),
+                        topRight: const Radius.circular(12.0),
+                      ),
+                    ),
+                    child: FileRecipients(
+                      sentList[0].sharedWith,
+                      fileRecipientSection: fileRecipientSection,
+                      key: UniqueKey(),
+                    ),
+                  ),
+                );
+              },
+            );
+          }).then((value) => _filePickerProvider.resetData());
     }
   }
 
@@ -328,7 +403,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               SizedBox(
                 height: 30.toHeight,
               ),
-              selectedContacts.isNotEmpty
+              provider.selectedContacts.isNotEmpty
                   ? GridView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.zero,
@@ -341,9 +416,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         crossAxisSpacing: 30,
                         mainAxisExtent: 80,
                       ),
-                      itemCount: selectedContacts.length,
+                      itemCount: provider.selectedContacts.length,
                       itemBuilder: (context, index) {
-                        var groupContactModel = selectedContacts[index];
+                        var groupContactModel =
+                            provider.selectedContacts[index];
                         late var contact;
                         var isTrusted;
                         var byteImage;
@@ -366,12 +442,12 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                           child: groupContactModel.contactType ==
                                   ContactsType.CONTACT
                               ? AddContactTile(
-                                  title:
-                                      selectedContacts[index].contact?.atSign,
-                                  subTitle: selectedContacts[index]
-                                          .contact
-                                          ?.tags?["nickname"] ??
-                                      selectedContacts[index].contact?.atSign,
+                                  title: provider
+                                      .selectedContacts[index].contact?.atSign,
+                                  subTitle: provider.selectedContacts[index]
+                                          .contact?.tags?["nickname"] ??
+                                      provider.selectedContacts[index].contact
+                                          ?.atSign,
                                   image: byteImage,
                                   showImage: byteImage != null,
                                   hasBackground: true,
@@ -457,48 +533,93 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                 ),
               ),
               SizedBox(
+                height: 20.toHeight,
+              ),
+              showFileSentCard
+                  ? FractionallySizedBox(
+                      widthFactor: 0.7,
+                      child: Card(
+                        color: isFileShareFailed
+                            ? Colors.red.shade300
+                            : Colors.green.shade300,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  isFileShareFailed
+                                      ? "Failed to send file(s)"
+                                      : "Sent successfully",
+                                  style: TextStyle(color: Colors.white)),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    showFileSentCard = false;
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(
                 height: 30.toHeight,
               ),
-              InkWell(
-                onTap: isFileSending
-                    ? null
-                    : () async {
-                        if (isFileSending == false) {
-                          await sendFileWithFileBin(provider.selectedContacts);
-                        }
-                      },
-                child: FractionallySizedBox(
-                  widthFactor: 0.7,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: provider.selectedFiles.isNotEmpty
-                          ? LinearGradient(
-                              colors: [
-                                Color.fromRGBO(240, 94, 63, 1),
-                                Color.fromRGBO(234, 167, 67, 0.65),
-                              ],
-                            )
-                          : LinearGradient(
-                              colors: [
-                                Color.fromRGBO(216, 216, 216, 1),
-                                Color.fromRGBO(216, 216, 216, 1),
-                              ],
-                            ),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    child: Text(
-                      isFileSending == true ? "Sending..." : "Transfer Now",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+              Consumer<FileProgressProvider>(builder: (context, value, child) {
+                String text = _getText(
+                  fileTransferProgress: value.sentFileTransferProgress,
+                );
+                return InkWell(
+                  onTap: isFileSending
+                      ? null
+                      : () async {
+                          if (isFileSending == false) {
+                            await sendFileWithFileBin(
+                                provider.selectedContacts);
+                          }
+                        },
+                  child: FractionallySizedBox(
+                    widthFactor: 0.7,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: provider.selectedFiles.isNotEmpty
+                            ? LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(240, 94, 63, 1),
+                                  Color.fromRGBO(234, 167, 67, 0.65),
+                                ],
+                              )
+                            : LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(216, 216, 216, 1),
+                                  Color.fromRGBO(216, 216, 216, 1),
+                                ],
+                              ),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      textAlign: TextAlign.center,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      child: Text(
+                        isFileSending == true ? text : "Transfer Now",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
               SizedBox(
                 height: 30.toHeight,
               ),
@@ -507,6 +628,14 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         ),
       );
     });
+  }
+
+  String _getText({FileTransferProgress? fileTransferProgress}) {
+    if (fileTransferProgress?.fileState == FileState.encrypt) {
+      return 'Encrypting...';
+    } else {
+      return 'Sending...';
+    }
   }
 
   void showAtSignDialog(List<AtContact> trustedContacts) async {

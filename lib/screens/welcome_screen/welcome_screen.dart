@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/settings_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/bottom_navigation_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/welcome_sceen_home.dart';
+import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -118,88 +119,97 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               builder: (_c, welcomeProvider, _) {
                 return !welcomeProvider.isShowOverlay
                     ? SafeArea(
-                  bottom: false,
-                  child: Container(
-                    height: 24,
-                    width: double.infinity,
-                    child: StreamBuilder<FLUSHBAR_STATUS>(
-                      stream: FileTransferProvider().flushBarStatusStream,
-                      builder: (context, snapshot) {
-                        final flushbarStatus =
-                            snapshot.data ?? FLUSHBAR_STATUS.SENDING;
+                        bottom: false,
+                        child: Container(
+                          height: 24,
+                          width: double.infinity,
+                          child: StreamBuilder<FLUSHBAR_STATUS>(
+                            stream: FileTransferProvider().flushBarStatusStream,
+                            builder: (context, snapshot) {
+                              final flushbarStatus =
+                                  snapshot.data ?? FLUSHBAR_STATUS.SENDING;
 
-                        if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
-                          Future.delayed(
-                            const Duration(seconds: 3),
-                                () {
-                              welcomeScreenProvider.changeOverlayStatus(true);
-                            },
-                          );
-                          return Material(
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: ColorConstants.successGreen,
-                              child: Center(
-                                child: Text(
-                                  'Success!🎉 ',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                              if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
+                                Future.delayed(
+                                  const Duration(seconds: 3),
+                                  () {
+                                    welcomeScreenProvider
+                                        .changeOverlayStatus(true);
+                                  },
+                                );
+                                return Material(
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: ColorConstants.successGreen,
+                                    child: Center(
+                                      child: Text(
+                                        'Success!🎉 ',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          );
-                        } else if (flushbarStatus == FLUSHBAR_STATUS.FAILED) {
-                          Future.delayed(
-                            const Duration(seconds: 3),
-                                () {
-                              welcomeScreenProvider.changeOverlayStatus(true);
-                            },
-                          );
-                          return Material(
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: ColorConstants.redAlert,
-                              child: Center(
-                                child: Text(
-                                  'Something went wrong! ⚠️',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                                );
+                              } else if (flushbarStatus ==
+                                  FLUSHBAR_STATUS.FAILED) {
+                                Future.delayed(
+                                  const Duration(seconds: 3),
+                                  () {
+                                    welcomeScreenProvider
+                                        .changeOverlayStatus(true);
+                                  },
+                                );
+                                return Material(
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: ColorConstants.redAlert,
+                                    child: Center(
+                                      child: Text(
+                                        'Something went wrong! ⚠️',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Consumer<FileProgressProvider>(
-                            builder: (_c, provider, _) {
-                              var percent = (provider.sentFileTransferProgress
-                                  ?.percent ??
-                                  30) /
-                                  100;
-                              return ProgressBarAnimation(
-                                value: percent,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFF05E3F),
-                                    Color(0xFFEAA743),
-                                  ],
-                                ),
-                                // backgroundColor: Colors.red,
-                              );
+                                );
+                              } else {
+                                return Consumer<FileProgressProvider>(
+                                  builder: (_c, provider, _) {
+                                    var percent = (provider
+                                                .sentFileTransferProgress
+                                                ?.percent ??
+                                            30) /
+                                        100;
+                                    return InkWell(
+                                      onTap: () {
+                                        OverlayService.instance.showOverlay();
+                                      },
+                                      child: ProgressBarAnimation(
+                                        value: percent,
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            Color(0xFFF05E3F),
+                                            Color(0xFFEAA743),
+                                          ],
+                                        ),
+                                        // backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
                             },
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                )
+                          ),
+                        ),
+                      )
                     : SizedBox();
               },
             ),
