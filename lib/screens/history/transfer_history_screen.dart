@@ -186,6 +186,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                       itemCount: filteredFileHistory.length,
                       itemBuilder: (context, index) {
                         return HistoryCardWidget(
+                          key: UniqueKey(),
                           fileHistory: filteredFileHistory[index],
                           onDownloaded: () async {
                             await provider.getAllFileTransferHistory();

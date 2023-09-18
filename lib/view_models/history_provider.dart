@@ -58,6 +58,7 @@ class HistoryProvider extends BaseModel {
   String _historySearchText = '';
   bool isDesc = true;
   bool hadNewFile = false;
+  bool isDownloadDone = false;
 
   List<FileEntity> allFiles = [];
 
@@ -109,6 +110,11 @@ class HistoryProvider extends BaseModel {
       listType = FileType.values.toList();
       notifyListeners();
     }
+  }
+
+  void resetIsDownloadDone () {
+    isDownloadDone = false;
+    notifyListeners();
   }
 
   void setSelectedType(HistoryType type) {
@@ -562,7 +568,12 @@ class HistoryProvider extends BaseModel {
             value.key,
             value.sender!,
             false,
-          );
+          ).then((value) {
+            if (value) {
+              isDownloadDone = true;
+              notifyListeners();
+            }
+          });
         }
       }
     }

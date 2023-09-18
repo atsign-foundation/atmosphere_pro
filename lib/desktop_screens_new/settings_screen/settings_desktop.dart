@@ -20,6 +20,20 @@ class SettingsScreenDesktop extends StatefulWidget {
 }
 
 class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
+  bool enableShareStSign = false;
+  final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
+
+  @override
+  void initState() {
+    super.initState();
+    getShareAtSign();
+  }
+
+  void getShareAtSign() async {
+    enableShareStSign = await _keyChainManager.isUsingSharedStorage() ?? false;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -127,6 +141,31 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 40),
+                  Row(
+                    children: [
+                      DesktopSettingsCard(
+                        title: 'Sharing atSign',
+                        subtitle: 'Share atSign between apps',
+                        vectorIcon: AppVectors.icShare,
+                      ),
+                      SizedBox(width: 16),
+                      Switch(
+                        activeColor: ColorConstants.orange,
+                          value: enableShareStSign,
+                          onChanged: (check) async {
+                            if (check) {
+                              await _keyChainManager.enableUsingSharedStorage();
+                            } else {
+                              await _keyChainManager
+                                  .disableUsingSharedStorage();
+                            }
+                            setState(() {
+                              enableShareStSign = check;
+                            });
+                          })
+                    ],
+                  )
                 ],
               ),
             ),
