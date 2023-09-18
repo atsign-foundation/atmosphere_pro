@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 class CustomPersonVerticalTile extends StatefulWidget {
   final ShareStatus shareStatus;
   final bool isFailedAtsignList;
+
   @override
   final Key? key;
 
@@ -30,6 +31,7 @@ class CustomPersonVerticalTile extends StatefulWidget {
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   Uint8List? image;
   String? contactName;
+
   @override
   void initState() {
     super.initState();

@@ -26,7 +26,7 @@ class HistoryFileCard extends StatefulWidget {
   final FileData singleFile;
   final bool isShowDate;
   final EdgeInsetsGeometry? margin;
-  final Function()? onDownloaded;
+  final Function()? onAction;
   final bool fromContact;
   final HistoryType historyType;
   final FileHistory fileHistory;
@@ -37,7 +37,7 @@ class HistoryFileCard extends StatefulWidget {
     required this.singleFile,
     this.isShowDate = true,
     this.margin,
-    this.onDownloaded,
+    this.onAction,
     this.fromContact = false,
     required this.historyType,
     required this.fileHistory,
@@ -243,6 +243,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                                       "Successfully deleted the file",
                                       bgColor: ColorConstants.successColor,
                                     );
+                                    widget.onAction?.call();
                                     setState(() {
                                       isDownloaded = false;
                                     });
@@ -327,7 +328,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
               listen: false)
           .saveNewDataInMyFiles(file);
       print(file.url);
-
+      widget.onAction?.call();
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
         TextStrings().fileDownloadd,
