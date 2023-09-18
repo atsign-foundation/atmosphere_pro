@@ -58,7 +58,7 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
               content: ConfirmationDialog(message, () async {
-                widget.onConfirmation();
+                widget.onConfirmation.call();
               }));
         });
 

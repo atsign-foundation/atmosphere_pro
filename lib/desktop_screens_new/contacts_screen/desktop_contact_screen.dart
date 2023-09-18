@@ -2,6 +2,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/add_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/group_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/information_card_expanded.dart';
@@ -34,7 +35,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
   bool showGroup = true;
 
   // bool isRefresh = false;
-  bool isSearching = false, showTrusted = false;
+  bool isSearching = false, showTrusted = false, isLoading = false;
   late TrustedContactProvider trustedProvider;
   late TextEditingController searchController;
 
@@ -48,14 +49,14 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
 
   fetchContacts() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      List<AtContact>? result;
-
-      result = await ContactService().fetchContacts();
-      if (result == null) {
-        if (mounted) {
-          setState(() {});
-        }
-      }
+      setState(() {
+        isLoading = true;
+      });
+      await ContactService().fetchContacts();
+      await GroupService().getAllGroupsDetails();
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -157,6 +158,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                                   selectedContact = contact;
                                                   sidebarView = contactSidebar
                                                       .contactDetails;
+                                                  showGroup = false;
                                                 });
                                               },
                                               child: Container(
@@ -224,7 +226,15 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                     )
                   : SizedBox(),
             ],
-          )
+          ),
+          if (isLoading)
+            Container(
+              color: Colors.grey.withOpacity(0.4),
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(
+                color: ColorConstants.orange,
+              ),
+            )
         ],
       ),
     );
@@ -337,6 +347,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                       () {
                         setState(() {
                           sidebarView = contactSidebar.addContact;
+                          showGroup = false;
                         });
                       },
                       color: Color(0xFFF07C50),
