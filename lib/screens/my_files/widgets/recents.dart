@@ -106,7 +106,6 @@ Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
 Widget thumbnail(String extension, String path) {
   return FileTypes.IMAGE_TYPES.contains(extension)
       ? ClipRRect(
-          borderRadius: BorderRadius.circular(10.toHeight),
           child: GestureDetector(
             onTap: () async {
               await openFilePath(path);
@@ -135,10 +134,9 @@ Widget thumbnail(String extension, String path) {
                   future: videoThumbnailBuilder(path),
                   builder: (context, snapshot) => ClipRRect(
                     borderRadius: BorderRadius.circular(10.toHeight),
-                    // child: Image(image: thumbnailBytes.image!)
                     child: GestureDetector(
                       onTap: () async {
-                        //   await openDownloadsFolder(context);
+                        // await openDownloadsFolder(context);
                         await openFilePath(path);
                       },
                       child: Container(
@@ -173,20 +171,17 @@ Widget thumbnail(String extension, String path) {
                   future: generateVideoThumbnail(path),
                   builder: (context, snapshot) => ClipRRect(
                     borderRadius: BorderRadius.circular(10.toHeight),
-                    // child: Image(image: thumbnailBytes.image!)
                     child: GestureDetector(
                       onTap: () async {
-                        //   await openDownloadsFolder(context);
                         await openFilePath(path);
                       },
                       child: Container(
-                        padding: EdgeInsets.only(left: 10),
                         height: 50.toHeight,
                         width: 50.toWidth,
                         child: (File(path + "_thumbnail.jpeg").existsSync() &&
                                 File(path).existsSync())
                             ? Image.file(File(path + "_thumbnail.jpeg"),
-                                    fit: BoxFit.cover)
+                                fit: BoxFit.cover)
                             : Image.asset(
                                 ImageConstants.videoLogo,
                                 fit: BoxFit.cover,
@@ -254,11 +249,12 @@ Future<dynamic> generateVideoThumbnail(String path) async {
   final plugin = FcNativeVideoThumbnail();
 
   String thumbnailPath = path;
-  var temp = thumbnailPath.split("\\");
+  String seperator = Platform.pathSeparator;
+  var temp = thumbnailPath.split(seperator);
   var fileNamewithExt = temp.removeLast();
-  var parentPath = temp.join("\\");
+  var parentPath = temp.join(seperator);
 
-  var file = File("${parentPath}\\${fileNamewithExt}_thumbnail.jpeg");
+  var file = File("${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg");
   bool isExist = await file.exists();
 
   if (isExist) {
@@ -267,7 +263,7 @@ Future<dynamic> generateVideoThumbnail(String path) async {
 
   final thumbnailGenerated = await plugin.getVideoThumbnail(
     srcFile: path,
-    destFile: "${parentPath}\\${fileNamewithExt}_thumbnail.jpeg",
+    destFile: "${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg",
     width: 300,
     height: 300,
     keepAspectRatio: true,
