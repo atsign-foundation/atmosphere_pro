@@ -7,8 +7,6 @@ PODS:
     - FlutterMacOS
   - desktop_window (0.0.1):
     - FlutterMacOS
-  - device_info_plus (0.0.1):
-    - FlutterMacOS
   - emoji_picker_flutter (0.0.1):
     - FlutterMacOS
   - fc_native_video_thumbnail (0.0.1):
@@ -40,7 +38,6 @@ DEPENDENCIES:
   - biometric_storage (from `Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos`)
   - desktop_drop (from `Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos`)
   - desktop_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_window/macos`)
-  - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
   - emoji_picker_flutter (from `Flutter/ephemeral/.symlinks/plugins/emoji_picker_flutter/macos`)
   - fc_native_video_thumbnail (from `Flutter/ephemeral/.symlinks/plugins/fc_native_video_thumbnail/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
@@ -63,8 +60,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos
   desktop_window:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_window/macos
-  device_info_plus:
-    :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
   emoji_picker_flutter:
     :path: Flutter/ephemeral/.symlinks/plugins/emoji_picker_flutter/macos
   fc_native_video_thumbnail:
@@ -95,7 +90,6 @@ SPEC CHECKSUMS:
   biometric_storage: 43caa6e7ef00e8e19c074216e7e1786dacda9e76
   desktop_drop: 69eeff437544aa619c8db7f4481b3a65f7696898
   desktop_window: fb7c4f12c1129f947ac482296b6f14059d57a3c3
-  device_info_plus: 5401765fde0b8d062a2f8eb65510fb17e77cf07f
   emoji_picker_flutter: 533634326b1c5de9a181ba14b9758e6dfe967a20
   fc_native_video_thumbnail: 828487c6e1509b0ba74f6741b2788ac47aa0285b
   file_selector_macos: f1b08a781e66103e3ba279fd5d4024a2478b3af6
@@ -103,12 +97,12 @@ SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   local_notifier: e9506bc66fc70311e8bc7291fb70f743c081e4ff
   package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   share_plus_macos: 853ee48e7dce06b633998ca0735d482dd671ade4
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  url_launcher_macos: d2691c7dd33ed713bf3544850a623080ec693d95
+  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
+  url_launcher_macos: 5335912b679c073563f29d89d33d10d459f95451
   video_compress: c896234f100791b5fef7f049afa38f6d2ef7b42f
 
-PODFILE CHECKSUM: b8dfd78fc8a63303ad90683e71a7bdebe1d55f59
+PODFILE CHECKSUM: dac0ddf03d136db544afc27b87cc6c08492e67b9
 
 COCOAPODS: 1.12.1
