@@ -1,26 +1,16 @@
 import 'dart:io';
-import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart' show basename;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -39,7 +29,6 @@ class _HomeState extends State<Home> {
 
   bool authenticating = false;
 
-  List<SharedMediaFile>? _sharedFiles;
   late FileTransferProvider filePickerProvider;
   String? activeAtSign;
 
@@ -59,7 +48,6 @@ class _HomeState extends State<Home> {
     _backendService = BackendService.getInstance();
     _checkToOnboard();
 
-    acceptFiles();
     _checkForPermissionStatus();
     BackendService.getInstance()
         .isAuthuneticatingStream
@@ -101,63 +89,6 @@ class _HomeState extends State<Home> {
       await Provider.of<WelcomeScreenProvider>(context, listen: false)
           .onboardingLoad(atSign: currentatSign);
     }
-  }
-
-  void acceptFiles() async {
-    await ReceiveSharingIntent.getMediaStream().listen(
-        (List<SharedMediaFile> value) async {
-      _sharedFiles = value;
-
-      if (value.isNotEmpty) {
-        value.forEach((element) async {
-          File file = File(element.path);
-          var length = await file.length();
-          FileTransferProvider.appClosedSharedFiles.add(
-            PlatformFile(
-                name: basename(file.path),
-                path: file.path,
-                size: length.round(),
-                bytes: await file.readAsBytes()),
-          );
-          await filePickerProvider.setFiles();
-        });
-
-        print("Shared:" + (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
-        // check to see if atsign is paired
-        var atsign = await _backendService.currentAtsign;
-        if (atsign != null) {
-          BuildContext c = NavService.navKey.currentContext!;
-          await Navigator.pushNamedAndRemoveUntil(
-              c, Routes.WELCOME_SCREEN, (route) => false);
-        }
-      }
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
-
-    // For sharing images coming from outside the app while the app is closed
-    await ReceiveSharingIntent.getInitialMedia().then(
-        (List<SharedMediaFile> value) async {
-      _sharedFiles = value;
-      if (_sharedFiles != null && _sharedFiles!.isNotEmpty) {
-        _sharedFiles!.forEach((element) async {
-          File file = File(element.path);
-          var length = await file.length();
-          PlatformFile fileToBeAdded = PlatformFile(
-              name: basename(file.path),
-              path: file.path,
-              size: length.round(),
-              bytes: await file.readAsBytes());
-          FileTransferProvider.appClosedSharedFiles.add(fileToBeAdded);
-          filePickerProvider.setFiles();
-        });
-
-        print("Shared second:" +
-            (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
-      }
-    }, onError: (error) {
-      print('ERROR IS HERE=========>$error');
-    });
   }
 
   bool isAuth = false;
