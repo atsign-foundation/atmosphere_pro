@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
@@ -64,6 +65,10 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 130,
         title: "${BackendService.getInstance().currentAtSign ?? ''} ",
         description: '',
+        suffixIcon: Padding(
+          padding: EdgeInsets.only(right: 8),
+          child: NotificationIcon(),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(

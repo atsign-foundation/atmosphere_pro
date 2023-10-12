@@ -1,7 +1,7 @@
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/theme.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_add_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
             create: (context) => DesktopGroupsScreenProvider()),
         ChangeNotifierProvider(create: (context) => DesktopAddGroupProvider()),
-        ChangeNotifierProvider(create: (context) => ContactProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationService()),
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget? child) {
