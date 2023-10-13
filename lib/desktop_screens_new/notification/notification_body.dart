@@ -69,7 +69,10 @@ class _NotificationBodyState extends State<NotificationBody> {
                         : SizedBox(),
                     SizedBox(height: 5),
                     sendingFileCard(provider),
-                    provider.recentNotification.isEmpty
+                    provider.recentNotification.isEmpty &&
+                            provider.currentFileShareStatus[notification_service
+                                    .NotificationService.flushbarStatuskey] ==
+                                null
                         ? Center(
                             child: Text('No notifications'),
                           )
