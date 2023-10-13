@@ -560,8 +560,11 @@ class BackendService {
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
-    await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
-        Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
+    await Navigator.pushNamedAndRemoveUntil(
+      NavService.navKey.currentContext!,
+      Routes.WELCOME_SCREEN,
+      (Route<dynamic> route) => false,
+    );
   }
 
   String? state;

@@ -179,9 +179,6 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // print("nickname: $nickName");
-    // print(
-    //     "atSign: ${widget.fileHistory?.type == HistoryType.received ? "${widget.fileHistory?.fileDetails?.sender ?? ''}" : isFileSharedToGroup || contactList.isEmpty ? '' : "${contactList[0] ?? ''}"}");
     return Consumer<HistoryProvider>(
       builder: (context, provider, child) {
         if (provider.isDownloadDone) {
@@ -286,7 +283,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   : "Sent",
                               style: TextStyle(
                                 color: isFileSentSuccess
-                                    ? ColorConstants.lightGreen
+                                    ? ColorConstants.textGreen
                                     : Colors.red,
                                 fontSize: 8.toFont,
                               ),

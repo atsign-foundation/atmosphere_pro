@@ -1,4 +1,5 @@
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
@@ -57,7 +58,16 @@ class DesktopSetupRoutes {
 
         return CategoryScreen(fileType: args['fileType']);
       },
-      DesktopRoutes.DESKTOP_HISTORY: (context) => HistoryDesktopScreen(),
+      DesktopRoutes.DESKTOP_HISTORY: (context) {
+        var arg = routeSettings.arguments;
+        Map<String, dynamic>? args;
+        if (arg != null) {
+          args = routeSettings.arguments as Map<String, dynamic>;
+        }
+
+        return HistoryDesktopScreen(
+            historyType: args?['historyType'] ?? HistoryType.send);
+      },
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactScreen();
       },
