@@ -286,7 +286,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   : "Sent",
                               style: TextStyle(
                                 color: isFileSentSuccess
-                                    ? ColorConstants.lightGreen
+                                    ? ColorConstants.textGreen
                                     : Colors.red,
                                 fontSize: 8.toFont,
                               ),
