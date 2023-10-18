@@ -37,7 +37,7 @@ class AddContactTile extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
             color: hasBackground ? Colors.white : null,
             border: isSelected
                 ? Border.all(color: Theme.of(context).primaryColor, width: 2.0)
@@ -91,7 +91,7 @@ class AddContactTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    subTitle != null
+                    (subTitle ?? '').isNotEmpty
                         ? Text(
                             subTitle!,
                             style: CustomTextStyles.desktopPrimaryRegular12,
