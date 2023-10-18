@@ -47,7 +47,7 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
     return Container(
       padding: EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
-      color: ColorConstants.fadedBlue,
+      color: ColorConstants.background,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -58,8 +58,8 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
               Text(
                 "Blocked Contacts",
                 style: TextStyle(
-                  fontSize: 12.toFont,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               Spacer(),

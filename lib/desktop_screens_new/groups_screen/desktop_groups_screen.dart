@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/data_models/enums/group_card_state.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_add_group.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_groups_detail.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_groups_list.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
     return Consumer<DesktopGroupsScreenProvider>(
         builder: (context, provider, child) {
       return Container(
-        color: const Color(0xFFF8F8F8),
+        color: ColorConstants.background,
         child: Stack(
           children: [
             StreamBuilder(

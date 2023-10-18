@@ -214,8 +214,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               Text(
                 "Transfer File",
                 style: TextStyle(
-                  fontSize: 24.toFont,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               SizedBox(height: 10),
@@ -392,6 +392,17 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               SizedBox(
                 height: 30.toHeight,
               ),
+              Text(
+                "SELECT CONTACTS",
+                style: TextStyle(
+                  color: ColorConstants.gray,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 10.toHeight,
+              ),
               provider.selectedContacts.isNotEmpty
                   ? GridView.builder(
                       shrinkWrap: true,
@@ -434,9 +445,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                   title: provider
                                       .selectedContacts[index].contact?.atSign,
                                   subTitle: provider.selectedContacts[index]
-                                          .contact?.tags?["nickname"] ??
-                                      provider.selectedContacts[index].contact
-                                          ?.atSign,
+                                      .contact?.tags?["nickname"],
                                   image: byteImage,
                                   showImage: byteImage != null,
                                   hasBackground: true,
@@ -457,17 +466,6 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                       },
                     )
                   : SizedBox(),
-              Text(
-                "SELECT CONTACTS",
-                style: TextStyle(
-                  color: ColorConstants.gray,
-                  fontSize: 15.toFont,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10.toHeight,
-              ),
               InkWell(
                 onTap: () {
                   showAtSignDialog(trustedContacts);
@@ -823,9 +821,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                             ContactsType.CONTACT
                                         ? AddContactTile(
                                             title: contact.atSign,
-                                            subTitle:
-                                                contact.tags?["nickname"] ??
-                                                    contact.atSign,
+                                            subTitle: contact.tags?["nickname"],
                                             image: byteImage,
                                             showImage: byteImage != null,
                                             isSelected:

@@ -73,7 +73,10 @@ class DesktopHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(height: 0.5)
+          const Divider(
+            height: 0.5,
+            color: Colors.black,
+          )
         ],
       ),
     );

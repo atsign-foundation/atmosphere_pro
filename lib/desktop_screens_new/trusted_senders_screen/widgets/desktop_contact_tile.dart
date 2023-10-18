@@ -79,7 +79,7 @@ class DesktopContactTile extends StatelessWidget {
                   ),
                 )
               : ContactInitial(
-                  initials: title ?? ' ',
+                  initials: (title ?? '').replaceFirst('@', ''),
                   size: 60,
                   maxSize: (80.0 - 20.0),
                   minSize: 60,
@@ -101,7 +101,7 @@ class DesktopContactTile extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              subTitle != null
+              (subTitle ?? '').isNotEmpty
                   ? Text(
                       subTitle!,
                       style: CustomTextStyles.desktopPrimaryRegular12,
