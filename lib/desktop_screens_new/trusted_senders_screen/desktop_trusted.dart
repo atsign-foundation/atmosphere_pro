@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/trusted_senders_screen/widgets/desktop_contact_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
@@ -35,7 +36,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
     return Container(
       padding: EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
-      color: const Color(0xFFF8F8F8),
+      color: ColorConstants.background,
       child: ProviderHandler<TrustedContactProvider>(
         functionName: 'get_trusted_contacts',
         load: (provider) async {
@@ -57,72 +58,65 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                   Text(
                     "Trusted",
                     style: TextStyle(
-                      fontSize: 12.toFont,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   Spacer(),
                   isSearchActive
-                      ? Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: Container(
+                          height: 40,
+                          width: 308,
+                          color: Colors.white,
                           child: TextField(
                             controller: searchController,
+                            autofocus: true,
                             onChanged: (value) {
                               setState(() {
                                 searchText = value;
                               });
                             },
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                             decoration: InputDecoration(
-                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 28, vertical: 8),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 15),
-                              hintText: "Search...",
+                              hintText: 'Search',
+                              hintStyle: TextStyle(
+                                color: ColorConstants.grey,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                               suffixIcon: InkWell(
                                   onTap: () {
-                                    searchText.isNotEmpty
+                                    searchText.isEmpty
                                         ? setState(() {
-                                            searchText = '';
-                                            searchController.clear();
+                                            isSearchActive = false;
                                           })
                                         : setState(() {
-                                            isSearchActive = false;
+                                            searchText = '';
+                                            searchController.clear();
                                           });
                                   },
                                   child: const Icon(Icons.close)),
                             ),
                           ),
-                        )
-                      : SizedBox(),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        isSearchActive = !isSearchActive;
-                        searchText = "";
-                      });
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
+                        ),
+                      )
+                      : IconButtonWidget(
+                        icon: AppVectors.icSearch,
+                        onTap: () {
+                          setState(() {
+                            isSearchActive = true;
+                          });
+                        },
                       ),
-                      child: SvgPicture.asset(
-                        AppVectors.icSearch,
-                        color: Colors.black,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     width: 10,
                   ),
@@ -182,7 +176,8 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                                         title: provider
                                             .trustedContacts[index].atSign,
                                         subTitle: provider
-                                            .trustedContacts[index].atSign,
+                                            .trustedContacts[index]
+                                            .tags?["nickname"],
                                         showImage:
                                             byteImage != null ? true : false,
                                         image: byteImage,

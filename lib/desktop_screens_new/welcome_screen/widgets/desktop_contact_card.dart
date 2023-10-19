@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 class DesktopContactCard extends StatefulWidget {
   final AtContact contact;
+
   const DesktopContactCard({Key? key, required this.contact}) : super(key: key);
 
   @override
@@ -86,6 +87,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
           const SizedBox(width: 18),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
@@ -96,15 +98,15 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                   color: Colors.black,
                 ),
               ),
-              Text(
-                widget.contact.tags?['nickname'] ??
-                    widget.contact.atSign!.substring(1),
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
+              if ((widget.contact.tags?['nickname'] ?? '').isNotEmpty)
+                Text(
+                  widget.contact.tags?['nickname'],
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
             ],
           ),
           Spacer(),

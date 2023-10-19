@@ -2,6 +2,7 @@ import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/files_category_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
@@ -41,7 +42,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
             child: Container(
               padding: EdgeInsets.all(40),
               height: SizeConfig().screenHeight,
-              color: ColorConstants.fadedBlue,
+              color: ColorConstants.background,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -51,66 +52,71 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                       Text(
                         "My Files",
                         style: TextStyle(
-                          fontSize: 12.toFont,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       Spacer(),
                       isSearchActive
-                          ? Container(
-                              width: 200,
-                              decoration: BoxDecoration(
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(40),
+                              child: Container(
+                                height: 40,
+                                width: 308,
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: TextField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    searchText = value;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 15),
-                                  hintText: "Search...",
+                                child: TextField(
+                                  autofocus: true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      searchText = value;
+                                    });
+                                  },
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 28, vertical: 8),
+                                    border: InputBorder.none,
+                                    hintText: 'Search',
+                                    hintStyle: TextStyle(
+                                      color: ColorConstants.grey,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    suffixIcon: InkWell(
+                                        onTap: () {
+                                          searchText.isEmpty
+                                              ? setState(() {
+                                                  isSearchActive = false;
+                                                })
+                                              : setState(() {
+                                                  searchText = '';
+                                                });
+                                        },
+                                        child: const Icon(Icons.close)),
+                                  ),
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          : IconButtonWidget(
+                              icon: AppVectors.icSearch,
+                              onTap: () {
+                                setState(() {
+                                  isSearchActive = true;
+                                });
+                              },
+                            ),
                       SizedBox(
                         width: 10,
                       ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            isSearchActive = !isSearchActive;
-                            searchText = "";
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.search,
-                            size: 25,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
+                      IconButtonWidget(
+                        icon: AppVectors.icRefresh,
                         onTap: () async {
                           await provider.fetchAndSortFiles();
                         },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.refresh,
-                            size: 25,
-                          ),
-                        ),
                       ),
                     ],
                   ),

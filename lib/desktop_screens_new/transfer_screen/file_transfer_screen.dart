@@ -65,18 +65,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
 
   void addSelectedContact(GroupContactsModel contact) {
     if (isSelected(contact)) {
-      var i = selectedContacts.indexWhere((selectedContact) {
-        if (contact.contactType == ContactsType.CONTACT &&
-            contact.contact!.atSign == selectedContact.contact!.atSign) {
-          return true;
-        } else if (contact.contactType == ContactsType.GROUP &&
-            contact.group!.groupId == selectedContact.group!.groupId) {
-          return true;
-        }
-        return false;
-      });
-
-      selectedContacts.removeAt(i);
+      selectedContacts.removeWhere((element) => element == contact);
     } else {
       selectedContacts.add(contact);
     }
@@ -229,8 +218,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                   Text(
                     "Transfer File",
                     style: TextStyle(
-                      fontSize: 24.toFont,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   NotificationIcon()
@@ -410,6 +399,17 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               SizedBox(
                 height: 30.toHeight,
               ),
+              Text(
+                "SELECT CONTACTS",
+                style: TextStyle(
+                  color: ColorConstants.gray,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 10.toHeight,
+              ),
               provider.selectedContacts.isNotEmpty
                   ? GridView.builder(
                       shrinkWrap: true,
@@ -452,9 +452,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                   title: provider
                                       .selectedContacts[index].contact?.atSign,
                                   subTitle: provider.selectedContacts[index]
-                                          .contact?.tags?["nickname"] ??
-                                      provider.selectedContacts[index].contact
-                                          ?.atSign,
+                                      .contact?.tags?["nickname"],
                                   image: byteImage,
                                   showImage: byteImage != null,
                                   hasBackground: true,
@@ -475,17 +473,6 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                       },
                     )
                   : SizedBox(),
-              Text(
-                "SELECT CONTACTS",
-                style: TextStyle(
-                  color: ColorConstants.gray,
-                  fontSize: 15.toFont,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10.toHeight,
-              ),
               InkWell(
                 onTap: () {
                   showAtSignDialog(trustedContacts);
@@ -841,9 +828,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                             ContactsType.CONTACT
                                         ? AddContactTile(
                                             title: contact.atSign,
-                                            subTitle:
-                                                contact.tags?["nickname"] ??
-                                                    contact.atSign,
+                                            subTitle: contact.tags?["nickname"],
                                             image: byteImage,
                                             showImage: byteImage != null,
                                             isSelected:
@@ -894,7 +879,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         margin: EdgeInsets.only(bottom: 20),
                         width: double.maxFinite,
                         child: Text(
-                          "Add atSigns   ${selectedContacts.length}",
+                          "Add atSigns ${selectedContacts.length}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -915,21 +900,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
 
   bool isSelected(GroupContactsModel groupContactsModel) {
     for (GroupContactsModel contact in selectedContacts) {
-      if (groupContactsModel.contactType != contact.contactType) {
-        return false;
-      }
-
-      if (groupContactsModel.contactType == ContactsType.CONTACT &&
-          contact.contact?.atSign == groupContactsModel.contact!.atSign) {
-        return true;
-      }
-
-      if (groupContactsModel.contactType == ContactsType.GROUP &&
-          contact.group?.groupId == groupContactsModel.group!.groupId) {
+      if ((groupContactsModel.contactType == ContactsType.CONTACT &&
+              contact.contact == groupContactsModel.contact) ||
+          (groupContactsModel.contactType == ContactsType.GROUP &&
+              contact.group == groupContactsModel.group)) {
         return true;
       }
     }
-
     return false;
   }
 }

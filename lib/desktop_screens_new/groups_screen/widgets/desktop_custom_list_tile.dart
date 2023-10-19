@@ -145,7 +145,7 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
             },
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color:
                       isSelected ? ColorConstants.orange : Colors.transparent,
@@ -191,22 +191,16 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(
-                            widget.item!.contact == null
-                                // ignore: prefer_if_null_operators
-                                ? widget.item!.group!.displayName == null
-                                    ? widget.item!.group!.groupName
-                                    : widget.item!.group!.displayName
-                                // ignore: prefer_if_null_operators
-                                : widget.item!.contact!.tags?['name'] == null
-                                    ? widget.item!.contact!.atSign!.substring(1)
-                                    : widget.item!.contact!.tags!['name'],
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 10.toFont,
-                              fontWeight: FontWeight.w400,
+                          if ((widget.item?.contact?.tags?["nickname"] ?? '')
+                              .isNotEmpty)
+                            Text(
+                              widget.item?.contact?.tags?["nickname"],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 10.toFont,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

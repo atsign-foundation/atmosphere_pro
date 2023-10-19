@@ -40,15 +40,15 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
     return Container(
       padding: EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
-      color: ColorConstants.fadedBlue,
+      color: ColorConstants.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Settings",
             style: TextStyle(
-              fontSize: 12.toFont,
-              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.start,
           ),
@@ -151,7 +151,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                       ),
                       SizedBox(width: 16),
                       Switch(
-                        activeColor: ColorConstants.orange,
+                          activeColor: ColorConstants.orange,
                           value: enableShareStSign,
                           onChanged: (check) async {
                             if (check) {

@@ -7,7 +7,6 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widget
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/group_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/information_card_expanded.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/circular_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/desktop_contact_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -15,7 +14,6 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 enum contactSidebar { contactDetails, addContact }
@@ -63,15 +61,14 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: ColorConstants.background,
       body: Stack(
         children: [
           Row(
             children: [
               Expanded(
                 flex: 2,
-                child: Container(
-                  color: Color(0xFFF8F8F8),
+                child: Padding(
                   padding: const EdgeInsets.only(
                       left: 50.0, top: 35, right: 50, bottom: 10),
                   child: Column(
@@ -246,8 +243,8 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
         Text(
           'Contacts',
           style: TextStyle(
-            fontSize: 23,
-            fontWeight: FontWeight.bold,
+            fontSize: 25,
+            fontWeight: FontWeight.w600,
           ),
         ),
         Spacer(),
@@ -258,16 +255,15 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                     padding: const EdgeInsets.only(left: 13.0),
                     child: Padding(
                       padding: const EdgeInsets.only(right: 4),
-                      child: InkWell(
+                      child: IconButtonWidget(
+                        padding: EdgeInsets.all(8),
+                        icon: AppVectors.icTrustActivated,
+                        isSelected: showTrusted,
                         onTap: () {
                           setState(() {
                             showTrusted = !showTrusted;
                           });
                         },
-                        child: SvgPicture.asset(
-                          AppVectors.icTrustActivated,
-                          color: showTrusted ? null : Colors.grey,
-                        ),
                       ),
                     ),
                   ),
@@ -331,13 +327,13 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                             },
                           ),
                         ),
-                  InkWell(
-                    onTap: () {
-                      fetchContacts();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 13.0),
-                      child: CircularIcon(icon: Icons.refresh),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: IconButtonWidget(
+                      icon: AppVectors.icRefresh,
+                      onTap: () {
+                        fetchContacts();
+                      },
                     ),
                   ),
                   Padding(
