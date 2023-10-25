@@ -27,6 +27,8 @@ class CreateGroupProvider extends BaseModel {
 
   void resetData() {
     listContact = [];
+    groupName = '';
+    searchKeyword = '';
     notifyListeners();
   }
 

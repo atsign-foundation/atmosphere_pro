@@ -33,7 +33,7 @@ dependencies:
     sdk: flutter
   archive: ^3.2.2
   cupertino_icons: ^1.0.5
-  file_picker: ^4.5.1
+  file_picker: ^6.0.0
   filesystem_picker: ^2.0.0-nullsafety.0
   desktop_window: ^0.4.0
   flutter_keychain: ^2.1.0
@@ -81,6 +81,7 @@ dependencies:
   expandable: ^5.0.1
   desktop_drop: ^0.4.3
   fc_native_video_thumbnail: ^0.5.2
+  device_info_plus: ^9.1.0
   
 dev_dependencies:
   flutter_test:
@@ -92,6 +93,7 @@ dependency_overrides:
   at_client: ^3.0.56
   file_picker: ^5.0.0
   biometric_storage: 5.0.0+1
+  permission_handler: ^11.0.1
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets/
