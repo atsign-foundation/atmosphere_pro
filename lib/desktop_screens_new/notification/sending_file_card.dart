@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +27,35 @@ class SendingFileCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'sending ${fileTransfer!.files?.length ?? 0} files',
-                  style: TextStyle(fontSize: 11),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'sending',
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      TextSpan(
+                        text: '${fileTransfer!.files?.length ?? 0} files',
+                        style: TextStyle(fontSize: 11, color: Colors.black),
+                      )
+                    ],
+                  ),
                 ),
-                Text(
-                  getAtsignCountFromFileTransfer(fileTransfer!),
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: (Platform.isAndroid || Platform.isIOS) ? 200 : 230,
+                  child: Text(
+                    getAtsignCountFromFileTransfer(fileTransfer!),
+                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 SizedBox(height: 5),
-                LinearProgressIndicator()
+                LinearProgressIndicator(
+                  minHeight: 10,
+                  borderRadius: BorderRadius.circular(5),
+                )
               ],
             ),
           )

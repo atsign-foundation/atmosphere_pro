@@ -54,7 +54,12 @@ class _NotificationBodyState extends State<NotificationBody> {
                             fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),
-                    Divider(color: ColorConstants.buttonHighLightColor),
+                    Center(
+                      child: SizedBox(
+                          width: 123,
+                          child: Divider(
+                              color: ColorConstants.buttonHighLightColor)),
+                    ),
                     provider.currentFileShareStatus[notification_service
                                 .NotificationService.fileObjectKey] !=
                             null
@@ -119,7 +124,8 @@ class _NotificationBodyState extends State<NotificationBody> {
               : Container(
                   margin: EdgeInsets.only(top: 15),
                   child: ReceivedFileCard(
-                      fileHistory: provider.recentNotification[i]),
+                    fileHistory: provider.recentNotification[i],
+                  ),
                 );
         },
       ),
@@ -141,7 +147,7 @@ class _NotificationBodyState extends State<NotificationBody> {
     if (Platform.isAndroid || Platform.isIOS) {
       return double.infinity;
     } else {
-      return 285;
+      return 400;
     }
   }
 }

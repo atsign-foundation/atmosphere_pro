@@ -14,6 +14,14 @@ class NotificationIcon extends StatefulWidget {
 }
 
 class _NotificationIconState extends State<NotificationIcon> {
+  late bool isNotificationSelected;
+
+  @override
+  void initState() {
+    isNotificationSelected = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -25,7 +33,9 @@ class _NotificationIconState extends State<NotificationIcon> {
             color: Colors.transparent,
             child: Icon(
               Icons.circle_notifications,
-              color: ColorConstants.buttonHighLightColor,
+              color: isNotificationSelected
+                  ? ColorConstants.buttonHighLightColor
+                  : null,
               size: 45,
             ),
           ),
@@ -36,12 +46,14 @@ class _NotificationIconState extends State<NotificationIcon> {
           child: Consumer<notification_service.NotificationService>(
             builder: (_, provider, __) {
               return provider.recentNotification.isEmpty
-                  ? SizedBox()
+                  ? SizedBox.shrink()
                   : Container(
                       height: 25,
                       width: 25,
                       decoration: BoxDecoration(
-                        color: Color(0xFFF6DED5),
+                        color: isNotificationSelected
+                            ? Color(0xFFF6DED5)
+                            : Color(0xFFDBDBDB),
                         borderRadius: BorderRadius.circular(13),
                       ),
                       child: Center(
@@ -49,7 +61,9 @@ class _NotificationIconState extends State<NotificationIcon> {
                           /// for notifications more than 10 -> 10+
                           getNotificationCount(provider),
                           style: TextStyle(
-                            color: ColorConstants.buttonHighLightColor,
+                            color: isNotificationSelected
+                                ? ColorConstants.buttonHighLightColor
+                                : Colors.black,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
@@ -64,6 +78,10 @@ class _NotificationIconState extends State<NotificationIcon> {
   }
 
   showNotificationDialog() async {
+    setState(() {
+      isNotificationSelected = !isNotificationSelected;
+    });
+
     await showDialog(
         context: context,
         barrierColor: Colors.transparent,
@@ -75,6 +93,10 @@ class _NotificationIconState extends State<NotificationIcon> {
             },
           );
         });
+
+    setState(() {
+      isNotificationSelected = !isNotificationSelected;
+    });
   }
 
   String getNotificationCount(
