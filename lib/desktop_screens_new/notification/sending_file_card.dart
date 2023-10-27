@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -52,10 +53,16 @@ class SendingFileCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 5),
-                LinearProgressIndicator(
-                  minHeight: 10,
-                  borderRadius: BorderRadius.circular(5),
-                )
+                ProgressBarAnimation(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFFB6232),
+                      Color(0xFFF05E3F),
+                      Color(0xFFEAA743),
+                      Color(0xFFFFFFFF),
+                    ],
+                  ),
+                ),
               ],
             ),
           )
