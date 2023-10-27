@@ -26,14 +26,14 @@ class _NotificationBodyState extends State<NotificationBody> {
     return Consumer<notification_service.NotificationService>(
       builder: (_context, provider, _) {
         return Container(
-          margin: EdgeInsets.only(top: 80, right: 20),
+          margin: EdgeInsets.only(top: 80),
           child: Dialog(
-            insetPadding: EdgeInsets.zero,
+            insetPadding: EdgeInsets.symmetric(horizontal: 6),
             alignment: Alignment.topRight,
             elevation: 5.0,
             clipBehavior: Clip.hardEdge,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 5),
+              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 30),
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(255, 255, 255, 0.7),
                 borderRadius: BorderRadius.circular(20),
