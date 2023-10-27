@@ -1,5 +1,4 @@
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -29,7 +28,7 @@ class EmptyContactsWidget extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
+                      const Text(
                         "Add contacts to trusted by",
                         style: TextStyle(
                           fontSize: 18,
@@ -39,7 +38,7 @@ class EmptyContactsWidget extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Text(
+                          const Text(
                             "selecting",
                             style: TextStyle(
                               fontSize: 18,
@@ -49,7 +48,7 @@ class EmptyContactsWidget extends StatelessWidget {
                           SvgPicture.asset(
                             AppVectors.icBigTrustActivated,
                           ),
-                          Text(
+                          const Text(
                             "next to their name!",
                             style: TextStyle(
                               fontSize: 18,
@@ -64,7 +63,7 @@ class EmptyContactsWidget extends StatelessWidget {
               )
             : Center(
                 child: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -76,8 +75,8 @@ class EmptyContactsWidget extends StatelessWidget {
                           ImageConstants.emptyBox,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
                         child: Text(
                           "No Contacts",
                           style: TextStyle(
@@ -96,7 +95,7 @@ class EmptyContactsWidget extends StatelessWidget {
   Widget _buildEmptyImage() {
     return Center(
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -114,7 +113,7 @@ class EmptyContactsWidget extends StatelessWidget {
                 contactsType == ListContactType.groups
                     ? "No Groups"
                     : "No Contacts",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: ColorConstants.grey,
@@ -129,7 +128,7 @@ class EmptyContactsWidget extends StatelessWidget {
                   color: ColorConstants.orange,
                   borderRadius: BorderRadius.circular(46),
                 ),
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 13,
                   vertical: 8,
                 ),
@@ -137,7 +136,7 @@ class EmptyContactsWidget extends StatelessWidget {
                   contactsType == ListContactType.groups
                       ? "Add Group"
                       : "Add Contact",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -145,7 +144,7 @@ class EmptyContactsWidget extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
           ],
         ),
       ),

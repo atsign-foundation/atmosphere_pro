@@ -5,7 +5,6 @@ import 'dart:isolate';
 
 // import 'package:at_client/src/stream/file_transfer_object.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -16,12 +15,13 @@ import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_client/src/service/encryption_service.dart';
 
 class FileTransferService {
   FileTransferService._();
-  static FileTransferService _instance = FileTransferService._();
+
+  static final FileTransferService _instance = FileTransferService._();
+
   factory FileTransferService.getInstance() {
     return _instance;
   }
@@ -29,17 +29,17 @@ class FileTransferService {
   Future<Map<String, FileTransferObject>> uploadFile(
       List<File> files, List<String> sharedWithAtSigns,
       {String? notes}) async {
-    var _encryptionService =
+    var encryptionService =
         AtClientManager.getInstance().atClient.encryptionService;
 
-    if (_encryptionService == null) {
+    if (encryptionService == null) {
       throw ('Encryption service is null');
     }
 
-    var encryptionKey = _encryptionService.generateFileEncryptionKey();
-    var key = MixedConstants.FILE_TRANSFER_KEY + Uuid().v4();
+    var encryptionKey = encryptionService.generateFileEncryptionKey();
+    var key = MixedConstants.FILE_TRANSFER_KEY + const Uuid().v4();
     var fileStatus = await _uploadFiles(key, files, encryptionKey);
-    var fileUrl = MixedConstants.FILEBIN_URL + 'archive/' + key + '/zip';
+    var fileUrl = '${MixedConstants.FILEBIN_URL}archive/$key/zip';
     return shareFiles(
       sharedWithAtSigns,
       key,
@@ -56,7 +56,7 @@ class FileTransferService {
         NavService.navKey.currentContext!,
         listen: false);
 
-    var _preference = BackendService.getInstance().atClientPreference;
+    var preference = BackendService.getInstance().atClientPreference;
     var fileStatuses = <FileStatus>[];
 
     for (var file in files) {
@@ -72,7 +72,7 @@ class FileTransferService {
         final encryptedFile = await encryptFile(
           file,
           encryptionKey,
-          _preference.fileEncryptionChunkSize,
+          preference.fileEncryptionChunkSize,
         );
 
         var response = await uploadToFileBinWithStreamedRequest(
@@ -90,10 +90,9 @@ class FileTransferService {
         }
 
         // storing sent files in a a directory.
-        if (_preference.downloadPath != null) {
-          var sentFilesDirectory = await Directory(_preference.downloadPath! +
-                  Platform.pathSeparator +
-                  'sent-files')
+        if (preference.downloadPath != null) {
+          var sentFilesDirectory = await Directory(
+                  '${preference.downloadPath!}${Platform.pathSeparator}sent-files')
               .create();
           await File(file.path).copy(sentFilesDirectory.path +
               Platform.pathSeparator +
@@ -192,7 +191,7 @@ class FileTransferService {
 
   Future<File> encryptFile(
       File file, String encryptionKey, int fileEncryptionChunkSize) {
-    var _preference = BackendService.getInstance().atClientPreference;
+    var preference = BackendService.getInstance().atClientPreference;
     final Completer<File> completer = Completer<File>();
     var receiverPort = ReceivePort();
 
@@ -200,7 +199,7 @@ class FileTransferService {
       'sendPort': receiverPort.sendPort,
       'file': file,
       'encryptionKey': encryptionKey,
-      'fileEncryptionChunkSize': _preference.fileEncryptionChunkSize,
+      'fileEncryptionChunkSize': preference.fileEncryptionChunkSize,
       'path': MixedConstants.RECEIVED_FILE_DIRECTORY
     });
 
@@ -218,7 +217,7 @@ class FileTransferService {
           NavService.navKey.currentContext!,
           listen: false);
       var postUri =
-          Uri.parse(MixedConstants.FILEBIN_URL + '$container/' + fileName);
+          Uri.parse('${MixedConstants.FILEBIN_URL}$container/$fileName');
       final streamedRequest = http.StreamedRequest('POST', postUri);
 
       var uploadedBytes = 0;
@@ -248,7 +247,7 @@ class FileTransferService {
 
   Future<List<File>> downloadFile(String transferId, String sharedByAtSign,
       {String? downloadPath}) async {
-    var _preference = BackendService.getInstance().atClientPreference;
+    var preference = BackendService.getInstance().atClientPreference;
     downloadPath ??=
         BackendService.getInstance().atClientPreference.downloadPath;
     if (downloadPath == null) {
@@ -262,7 +261,7 @@ class FileTransferService {
         await AtClientManager.getInstance().atClient.get(atKey).catchError(
       (e) {
         print('Error in get $e');
-        ExceptionService.instance.showGetExceptionOverlay(e);
+        return ExceptionService.instance.showGetExceptionOverlay(e);
       },
     );
 
@@ -297,7 +296,7 @@ class FileTransferService {
         var decryptedFile = await decryptFile(
             File(encryptedFile.path),
             fileTransferObject.fileEncryptionKey,
-            _preference.fileEncryptionChunkSize);
+            preference.fileEncryptionChunkSize);
         decryptedFile.copySync(downloadPath +
             Platform.pathSeparator +
             encryptedFile.path.split(Platform.pathSeparator).last);
@@ -318,13 +317,13 @@ class FileTransferService {
       File file, String encryptionKey, int fileEncryptionChunkSize) async {
     final Completer<File> completer = Completer<File>();
     var receiverPort = ReceivePort();
-    var _preference = BackendService.getInstance().atClientPreference;
+    var preference = BackendService.getInstance().atClientPreference;
 
     await Isolate.spawn(decryptFileInIsolate, {
       'sendPort': receiverPort.sendPort,
       'file': file,
       'encryptionKey': encryptionKey,
-      'fileEncryptionChunkSize': _preference.fileEncryptionChunkSize,
+      'fileEncryptionChunkSize': preference.fileEncryptionChunkSize,
     });
 
     receiverPort.listen((encryptedFile) {
@@ -349,7 +348,7 @@ class FileTransferService {
 
       for (int i = 0; i < fileTransferObject.fileStatus.length; i++) {
         String fileName = fileTransferObject.fileStatus[i].fileName!;
-        String fileUrl = filebinContainer + '/' + fileName;
+        String fileUrl = '$filebinContainer/$fileName';
         updateFileTransferState(
           fileName,
           fileTransferObject.transferId,

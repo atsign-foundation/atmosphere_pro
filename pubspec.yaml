@@ -81,16 +81,19 @@ dependencies:
   expandable: ^5.0.1
   desktop_drop: ^0.4.3
   fc_native_video_thumbnail: ^0.5.2
+  path_provider: ^2.1.1
+  uuid: ^3.0.4
   device_info_plus: ^9.1.0
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   msix: ^3.3.1
+  flutter_lints: ^3.0.0
 
 dependency_overrides:
   package_info_plus: ^3.0.0
-  at_client: ^3.0.56
+  at_client: ^3.0.67
   file_picker: ^5.0.0
   biometric_storage: 5.0.0+1
   permission_handler: ^11.0.1

@@ -16,10 +16,14 @@ import 'package:provider/provider.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
-  Key? key;
-  DesktopHistoryScreen({this.tabIndex = 0, this.key});
+
+  const DesktopHistoryScreen({
+    Key? key,
+    this.tabIndex = 0,
+  }) : super(key: key);
+
   @override
-  _DesktopHistoryScreenState createState() => _DesktopHistoryScreenState();
+  State<DesktopHistoryScreen> createState() => _DesktopHistoryScreenState();
 }
 
 class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
@@ -89,9 +93,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   }
 
   onTabChanged({int? index}) {
-    if (index == null) {
-      index = _controller!.index;
-    }
+    index ??= _controller!.index;
     if (index == 0) {
       isSentTab = true;
     } else if (index == 1) {
@@ -102,9 +104,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (historyProvider == null) {
-      historyProvider = Provider.of<HistoryProvider>(context);
-    }
+    historyProvider = Provider.of<HistoryProvider>(context);
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,
@@ -121,7 +121,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                     children: [
                       Container(
                         height: 80,
-                        padding: EdgeInsets.symmetric(vertical: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         child: TabBar(
                           labelColor: ColorConstants.fontPrimary,
                           indicatorWeight: 5,
@@ -134,7 +134,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           tabs: [
                             Text(
                               TextStrings().sent,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 letterSpacing: 0.1,
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
@@ -142,7 +142,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             ),
                             Text(
                               TextStrings().received,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 letterSpacing: 0.1,
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
@@ -156,7 +156,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                         top: 25,
                         child: InkWell(
                             onTap: refreshHistoryScreen,
-                            child: Icon(Icons.refresh)),
+                            child: const Icon(Icons.refresh)),
                       ),
                       Positioned(
                         right: 45,
@@ -167,11 +167,11 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                 _showSearchField = true;
                               });
                             },
-                            child: Icon(Icons.search)),
+                            child: const Icon(Icons.search)),
                       ),
                     ],
                   ),
-                  _showSearchField ? searchHistoryField() : SizedBox(),
+                  _showSearchField ? searchHistoryField() : const SizedBox(),
                   Expanded(
                     child: TabBarView(
                       controller: _controller,
@@ -190,7 +190,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                               );
                             } else {
                               List<FileHistory> filteredSentHistory = [];
-                              provider.sentHistory.forEach((element) {
+                              for (var element in provider.sentHistory) {
                                 if (element.sharedWith!.any(
                                       (ShareStatus sharedStatus) => sharedStatus
                                           .atsign!
@@ -203,11 +203,11 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                                                 .toLowerCase()))) {
                                   filteredSentHistory.add(element);
                                 }
-                              });
+                              }
                               if (filteredSentHistory.isNotEmpty) {
                                 return getSentHistory(filteredSentHistory);
                               } else {
-                                return Center(
+                                return const Center(
                                   child: Text('No results found'),
                                 );
                               }
@@ -247,18 +247,20 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                               );
                             } else {
                               List<FileTransfer> filteredReceivedList = [];
-                              provider.receivedHistoryLogs.forEach((element) {
+                              for (var element
+                                  in provider.receivedHistoryLogs) {
                                 if (element.sender!.contains(
                                   provider.getSearchText,
                                 )) {
                                   filteredReceivedList.add(element);
                                 }
-                              });
+                              }
 
                               if (filteredReceivedList.isNotEmpty) {
                                 return getReceivedTiles(filteredReceivedList);
                               } else {
-                                return Center(child: Text('No results found'));
+                                return const Center(
+                                    child: Text('No results found'));
                               }
                             }
                           },
@@ -274,15 +276,15 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
             ),
           ),
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: SizeConfig().screenHeight - 80,
               child: isSentTab
                   ? selectedSentFileData == null
-                      ? SizedBox()
+                      ? const SizedBox()
                       : Consumer<HistoryProvider>(
                           builder: (context, provider, _) {
                             if (provider.sentHistory.isEmpty) {
-                              return SizedBox();
+                              return const SizedBox();
                             }
 
                             return DesktopSentFileDetails(
@@ -293,11 +295,11 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                           },
                         )
                   : receivedFileData == null
-                      ? SizedBox()
+                      ? const SizedBox()
                       : Consumer<HistoryProvider>(
                           builder: (context, provider, _) {
                             if (provider.receivedHistoryLogs.isEmpty) {
-                              return SizedBox();
+                              return const SizedBox();
                             }
 
                             return DesktopReceivedFileDetails(
@@ -336,19 +338,19 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
         borderRadius: BorderRadius.circular(5),
         color: ColorConstants.receivedSelectedTileColor,
       ),
-      padding: EdgeInsets.fromLTRB(10, 3, 10, 5),
-      margin: EdgeInsets.fromLTRB(10, 3, 10, 5),
+      padding: const EdgeInsets.fromLTRB(10, 3, 10, 5),
+      margin: const EdgeInsets.fromLTRB(10, 3, 10, 5),
       child: Row(
         children: [
           Expanded(
             child: TextField(
               autofocus: true,
               controller: _textController,
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
               onChanged: (String txt) {
                 historyProvider.setHistorySearchText = txt;
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Search history by atsign'),
             ),
@@ -360,7 +362,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                 historyProvider.setHistorySearchText = "";
               });
             },
-            child: Icon(Icons.close),
+            child: const Icon(Icons.close),
           )
         ],
       ),
@@ -370,7 +372,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   Widget getReceivedTiles(List<FileTransfer> filteredReceivedList) {
     return ListView.separated(
       padding: EdgeInsets.only(bottom: 170.toHeight),
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) => Divider(
         indent: 16.toWidth,
       ),
@@ -401,7 +403,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
   getSentHistory(List<FileHistory> filteredSentHistory) {
     return ListView.separated(
       padding: EdgeInsets.only(bottom: 170.toHeight),
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) {
         return Divider(
           indent: 16.toWidth,

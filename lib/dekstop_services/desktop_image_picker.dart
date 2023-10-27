@@ -5,12 +5,8 @@ import 'package:file_selector/file_selector.dart';
 Future<List<PlatformFile>?> desktopImagePicker() async {
   try {
     var selectedFiles = <PlatformFile>[];
-    final XTypeGroup typeGroup = XTypeGroup();
+    const XTypeGroup typeGroup = XTypeGroup();
     final List<XFile> files = await openFiles(acceptedTypeGroups: [typeGroup]);
-
-    if (files == null) {
-      return null;
-    }
 
     await Future.forEach(files, (XFile f) async {
       selectedFiles.add(

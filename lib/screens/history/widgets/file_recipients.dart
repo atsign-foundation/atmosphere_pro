@@ -11,16 +11,16 @@ import 'package:provider/provider.dart';
 
 class FileRecipients extends StatefulWidget {
   final List<ShareStatus>? filesharedWith;
-  FileRecipientSection? fileRecipientSection;
+  final FileRecipientSection? fileRecipientSection;
 
-  FileRecipients(
+  const FileRecipients(
     this.filesharedWith, {
-    this.fileRecipientSection,
     Key? key,
-  });
+    this.fileRecipientSection,
+  }) : super(key: key);
 
   @override
-  _FileRecipientsState createState() => _FileRecipientsState();
+  State<FileRecipients> createState() => _FileRecipientsState();
 }
 
 class _FileRecipientsState extends State<FileRecipients> {
@@ -55,7 +55,7 @@ class _FileRecipientsState extends State<FileRecipients> {
     downloadedByList = [];
     filedInDeliveringList = [];
 
-    widget.filesharedWith!.forEach((element) {
+    for (var element in widget.filesharedWith!) {
       if (element.isNotificationSend!) {
         deliveredToList.add(element);
       } else {
@@ -65,7 +65,7 @@ class _FileRecipientsState extends State<FileRecipients> {
       if (element.isFileDownloaded!) {
         downloadedByList.add(element);
       }
-    });
+    }
   }
 
   @override
@@ -87,15 +87,15 @@ class _FileRecipientsState extends State<FileRecipients> {
                             color: ColorConstants.blueText,
                             size: 15.toFont,
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(TextStrings().downloadedBy,
                               style: CustomTextStyles.grey15),
                         ],
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 downloadedByList.isNotEmpty
                     ? SizedBox(height: 15.toHeight)
-                    : SizedBox(),
+                    : const SizedBox(),
                 AnimatedContainer(
                   width: double.infinity,
                   duration: const Duration(seconds: 1),
@@ -112,17 +112,17 @@ class _FileRecipientsState extends State<FileRecipients> {
                       runSpacing: 10.0,
                       spacing: 15.0,
                       children: List.generate(downloadedByList.length, (index) {
-                        return Container(
-                          child: CustomPersonVerticalTile(
-                            key: UniqueKey(),
-                            shareStatus: downloadedByList[index],
-                          ),
+                        return CustomPersonVerticalTile(
+                          key: UniqueKey(),
+                          shareStatus: downloadedByList[index],
                         );
                       }),
                     ),
                   ),
                 ),
-                downloadedByList.isNotEmpty ? Divider() : SizedBox(),
+                downloadedByList.isNotEmpty
+                    ? const Divider()
+                    : const SizedBox(),
                 SizedBox(height: 18.toHeight),
                 deliveredToList.isNotEmpty
                     ? Row(
@@ -132,15 +132,15 @@ class _FileRecipientsState extends State<FileRecipients> {
                             color: ColorConstants.successGreen,
                             size: 15.toFont,
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(TextStrings().deliveredTo,
                               style: CustomTextStyles.grey15),
                         ],
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 deliveredToList.isNotEmpty
                     ? SizedBox(height: 15.toHeight)
-                    : SizedBox(),
+                    : const SizedBox(),
                 AnimatedContainer(
                   width: double.infinity,
                   duration: const Duration(seconds: 1),
@@ -157,17 +157,15 @@ class _FileRecipientsState extends State<FileRecipients> {
                       runSpacing: 10.0,
                       spacing: 15.0,
                       children: List.generate(deliveredToList.length, (index) {
-                        return Container(
-                          child: CustomPersonVerticalTile(
-                            key: UniqueKey(),
-                            shareStatus: deliveredToList[index],
-                          ),
+                        return CustomPersonVerticalTile(
+                          key: UniqueKey(),
+                          shareStatus: deliveredToList[index],
                         );
                       }),
                     ),
                   ),
                 ),
-                deliveredToList.isNotEmpty ? Divider() : SizedBox(),
+                deliveredToList.isNotEmpty ? const Divider() : const SizedBox(),
                 SizedBox(height: 18.toHeight),
                 filedInDeliveringList.isNotEmpty
                     ? Row(
@@ -180,7 +178,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                                 color: ColorConstants.redAlert,
                                 size: 15.toFont,
                               ),
-                              SizedBox(width: 5),
+                              const SizedBox(width: 5),
                               Text(
                                 TextStrings().failedToSend,
                                 style: CustomTextStyles.grey15,
@@ -193,10 +191,10 @@ class _FileRecipientsState extends State<FileRecipients> {
                           ),
                         ],
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 filedInDeliveringList.isNotEmpty
                     ? SizedBox(height: 15.toHeight)
-                    : SizedBox(),
+                    : const SizedBox(),
                 AnimatedContainer(
                   width: double.infinity,
                   duration: const Duration(seconds: 1),
@@ -214,18 +212,18 @@ class _FileRecipientsState extends State<FileRecipients> {
                       spacing: 15.0,
                       children:
                           List.generate(filedInDeliveringList.length, (index) {
-                        return Container(
-                          child: CustomPersonVerticalTile(
-                            key: UniqueKey(),
-                            shareStatus: filedInDeliveringList[index],
-                            isFailedAtsignList: true,
-                          ),
+                        return CustomPersonVerticalTile(
+                          key: UniqueKey(),
+                          shareStatus: filedInDeliveringList[index],
+                          isFailedAtsignList: true,
                         );
                       }),
                     ),
                   ),
                 ),
-                filedInDeliveringList.isNotEmpty ? Divider() : SizedBox(),
+                filedInDeliveringList.isNotEmpty
+                    ? const Divider()
+                    : const SizedBox(),
               ],
             );
           })),

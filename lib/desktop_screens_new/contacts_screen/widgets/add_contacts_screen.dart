@@ -1,6 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -45,7 +44,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddContactProvider>(
-      builder: (_c, provider, _) {
+      builder: (c, provider, _) {
         state = context.watch<AddContactProvider>();
         return Scaffold(
           backgroundColor: Colors.transparent,
@@ -77,7 +76,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                           widget.onBack();
                         },
                         child: Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 35,
                           ),
                           child: SvgPicture.asset(
@@ -143,7 +142,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                               const SizedBox(height: 30),
                               Container(
                                 height: 1,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: ColorConstants.lightGray,
                                 ),
                               ),
@@ -191,7 +190,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                           ),
                         ),
                         state.status['add_contact_status'] == Status.Loading
-                            ? AbsorbPointer(
+                            ? const AbsorbPointer(
                                 child: SizedBox(
                                   width: double.infinity,
                                   height: double.infinity,
@@ -204,7 +203,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                                   ),
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     ),
                   ),

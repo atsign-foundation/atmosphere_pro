@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -13,10 +14,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
@@ -61,16 +62,17 @@ class _HomeState extends State<Home> {
   }
 
   storeApplicationDocumentsDirectory() async {
-    var _dir;
+    Directory? dir;
     if (Platform.isIOS || Platform.isWindows) {
-      _dir = await getApplicationDocumentsDirectory();
+      dir = await getApplicationDocumentsDirectory();
     } else {
-      _dir = await getExternalStorageDirectory();
+      dir = await getExternalStorageDirectory();
     }
-    MixedConstants.ApplicationDocumentsDirectory = _dir.path;
+    MixedConstants.ApplicationDocumentsDirectory = dir?.path;
   }
 
-  var atClientPrefernce;
+  late AtClientPreference atClientPrefernce;
+
   void _checkToOnboard() async {
     setState(() {
       authenticating = true;
@@ -78,16 +80,17 @@ class _HomeState extends State<Home> {
     String? currentatSign = await _backendService.getAtSign();
     await _backendService
         .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
+        .then((value) => atClientPrefernce = value);
 
     if (currentatSign == null || currentatSign == '') {
       setState(() {
         authenticating = false;
       });
     } else {
-      await Provider.of<WelcomeScreenProvider>(context, listen: false)
-          .onboardingLoad(atSign: currentatSign);
+      if (mounted) {
+        await Provider.of<WelcomeScreenProvider>(context, listen: false)
+            .onboardingLoad(atSign: currentatSign);
+      }
     }
   }
 
@@ -128,7 +131,7 @@ class _HomeState extends State<Home> {
                   height: 60.toHeight,
                   width: 60.toHeight,
                 ),
-                Text(
+                const Text(
                   "atmospherePro",
                   style: TextStyle(
                     fontSize: 30,
@@ -144,8 +147,9 @@ class _HomeState extends State<Home> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: paddingSmall * 4.toHeight),
-                      child: Container(
+                      padding:
+                          EdgeInsets.only(bottom: paddingSmall * 4.toHeight),
+                      child: SizedBox(
                         width: SizeConfig().screenWidth,
                         child: Image.asset(
                           ImageConstants.graphic4,
@@ -158,8 +162,9 @@ class _HomeState extends State<Home> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: paddingSmall * 3.toHeight),
-                      child: Container(
+                      padding:
+                          EdgeInsets.only(bottom: paddingSmall * 3.toHeight),
+                      child: SizedBox(
                         width: SizeConfig().screenWidth,
                         child: Image.asset(
                           ImageConstants.graphic3,
@@ -173,7 +178,7 @@ class _HomeState extends State<Home> {
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: EdgeInsets.only(bottom: paddingSmall.toHeight),
-                      child: Container(
+                      child: SizedBox(
                         width: SizeConfig().screenWidth,
                         child: Image.asset(
                           ImageConstants.graphic1,
@@ -185,7 +190,7 @@ class _HomeState extends State<Home> {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
+                    child: SizedBox(
                       width: SizeConfig().screenWidth,
                       height: cardHeight.toHeight,
                       child: Image.asset(
@@ -197,7 +202,7 @@ class _HomeState extends State<Home> {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
+                    child: SizedBox(
                       width: SizeConfig().screenWidth,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -236,7 +241,8 @@ class _HomeState extends State<Home> {
                                       },
                                 child: Container(
                                   width: double.infinity,
-                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(30),

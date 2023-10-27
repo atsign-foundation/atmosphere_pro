@@ -248,14 +248,9 @@ class HistoryProvider extends BaseModel {
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
 
-    bool isNewKeyAvailable = false;
-
-    sentFileAtkeys.forEach((AtKey atkey) {
-      if (individualSentFileId[atkey.key] == null) {
-        isNewKeyAvailable = true;
-      }
+    for (var atkey in sentFileAtkeys) {
       individualSentFileId[atkey.key] = true;
-    });
+    }
 
     // if (!isNewKeyAvailable) {
     //   setStatus(SENT_HISTORY, Status.Done);
@@ -277,7 +272,7 @@ class HistoryProvider extends BaseModel {
         return AtValue();
       });
 
-      if (keyValue != null && keyValue.value != null) {
+      if (keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
@@ -372,7 +367,7 @@ class HistoryProvider extends BaseModel {
         },
       );
 
-      if (atvalue != null && atvalue.value != null) {
+      if (atvalue.value != null) {
         try {
           FileHistory fileHistory = FileHistory.fromJson(
             jsonDecode(atvalue.value),
@@ -392,21 +387,21 @@ class HistoryProvider extends BaseModel {
     for (int i = 0; i < sentHistory.length; i++) {
       FileHistory fileHistory = sentHistory[i];
       var sentFileDeletionDate =
-          fileHistory.fileDetails!.date!.add(Duration(days: 15));
+          fileHistory.fileDetails!.date!.add(const Duration(days: 15));
       if (sentFileDeletionDate.difference(DateTime.now()) <
-          Duration(seconds: 0)) {
+          const Duration(seconds: 0)) {
         idsToDelete.add(sentHistory[i].fileDetails!.key);
       }
     }
 
-    idsToDelete.forEach((String id) {
+    for (var id in idsToDelete) {
       var index =
           sentHistory.indexWhere((element) => element.fileDetails!.key == id);
       if (index > -1) {
         updateSendFileHistoryArray(sentHistory[index], isDelete: true);
         sentHistory.removeAt(index);
       }
-    });
+    }
 
     await updateSentHistory();
   }
@@ -549,22 +544,22 @@ class HistoryProvider extends BaseModel {
     for (var value in receivedHistoryLogs) {
       isTrustedSender = false;
 
-      for (var _contact in Provider.of<TrustedContactProvider>(
+      for (var contact in Provider.of<TrustedContactProvider>(
               NavService.navKey.currentContext!,
               listen: false)
           .trustedContacts) {
-        if (_contact.atSign == value.sender) {
+        if (contact.atSign == value.sender) {
           isTrustedSender = true;
           break;
         }
       }
 
       if (isTrustedSender && (value.files ?? []).isNotEmpty) {
-        var _isFileDownloaded =
+        bool isFileExist =
             await isFileDownloaded(value.sender, value.files![0]);
 
         /// only check for one file and download entire zip if one is not present
-        if (!_isFileDownloaded) {
+        if (!isFileExist) {
           await downloadFiles(
             value.key,
             value.sender!,
@@ -580,18 +575,18 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  Future<bool> isFileDownloaded(String? sender, FileData _fileData) async {
+  Future<bool> isFileDownloaded(String? sender, FileData fileData) async {
     String path;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       path = MixedConstants.RECEIVED_FILE_DIRECTORY +
           Platform.pathSeparator +
           (sender ?? '') +
           Platform.pathSeparator +
-          (_fileData.name ?? '');
+          (fileData.name ?? '');
     } else {
       path = BackendService.getInstance().downloadDirectory!.path +
           Platform.pathSeparator +
-          (_fileData.name ?? '');
+          (fileData.name ?? '');
     }
     File test = File(path);
     bool fileExists = await test.exists();
@@ -753,13 +748,9 @@ class HistoryProvider extends BaseModel {
     fileTransferAtkeys.retainWhere((element) =>
         !element.key!.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
 
-    bool isNewKeyAvailable = false;
-    fileTransferAtkeys.forEach((AtKey atkey) {
-      if (receivedItemsId[atkey.key] == null) {
-        isNewKeyAvailable = true;
-      }
+    for (var atkey in fileTransferAtkeys) {
       receivedItemsId[atkey.key] = true;
-    });
+    }
 
     // if (!isNewKeyAvailable) {
     //   return;
@@ -829,9 +820,7 @@ class HistoryProvider extends BaseModel {
                 tempReceivedFiles.insert(0, file);
               }
             } else {
-              if (filesModel.key != null) {
-                tempReceivedHistoryLogs.insert(0, filesModel);
-              }
+              tempReceivedHistoryLogs.insert(0, filesModel);
 
               final file = FileHistory(
                 filesModel,
@@ -840,9 +829,7 @@ class HistoryProvider extends BaseModel {
                 fileTransferObject,
               );
 
-              if (filesModel.key != null) {
-                tempReceivedFiles.insert(0, file);
-              }
+              tempReceivedFiles.insert(0, file);
             }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
@@ -994,23 +981,23 @@ class HistoryProvider extends BaseModel {
   bool checkRegexFromBlockedAtsign(String atsign) {
     bool isBlocked = false;
 
-    ContactService().blockContactList.forEach((element) {
+    for (var element in ContactService().blockContactList) {
       if (compareAtSign(element.atSign!, atsign)) {
         isBlocked = true;
       }
-    });
+    }
     return isBlocked;
   }
 
   FileTransfer convertFiletransferObjectToFileTransfer(
       FileTransferObject fileTransferObject) {
     List<FileData> files = [];
-    fileTransferObject.fileStatus.forEach((fileDetail) {
+    for (var fileDetail in fileTransferObject.fileStatus) {
       files.add(FileData(
           name: fileDetail.fileName,
           size: fileDetail.size,
           isUploaded: fileDetail.isUploaded));
-    });
+    }
 
     return FileTransfer(
         url: fileTransferObject.fileUrl,
@@ -1062,12 +1049,12 @@ class HistoryProvider extends BaseModel {
     List<FileData> files = [];
     var sthareStatus = <ShareStatus>[];
 
-    fileTransferObject.fileStatus.forEach((fileDetail) {
+    for (var fileDetail in fileTransferObject.fileStatus) {
       files.add(FileData(
           name: fileDetail.fileName,
           size: fileDetail.size,
           isUploaded: fileDetail.isUploaded));
-    });
+    }
 
     FileTransfer fileTransfer = FileTransfer(
       key: fileTransferObject.transferId,
@@ -1077,10 +1064,10 @@ class HistoryProvider extends BaseModel {
       fileEncryptionKey: fileTransferObject.fileEncryptionKey,
     );
 
-    sharedWithAtsigns.forEach((atsign) {
+    for (var atsign in sharedWithAtsigns) {
       sthareStatus
           .add(ShareStatus(atsign, fileShareResult[atsign]!.sharedStatus));
-    });
+    }
 
     return FileHistory(
       fileTransfer,
@@ -1098,17 +1085,16 @@ class HistoryProvider extends BaseModel {
       FileTransferService.getInstance()
           .updateFileTransferState('', transferId, null, FileState.processing);
 
-      var _downloadPath;
+      String downloadPath0;
 
-      _downloadPath =
+      downloadPath0 =
           await MixedConstants.getFileDownloadLocation(sharedBy: sharedBy);
 
-      var files;
       try {
-        files = await FileTransferService.getInstance().downloadFile(
+        await FileTransferService.getInstance().downloadFile(
           transferId,
           sharedBy,
-          downloadPath: downloadPath ?? _downloadPath,
+          downloadPath: downloadPath ?? downloadPath0,
         );
       } catch (e) {
         Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
@@ -1130,13 +1116,9 @@ class HistoryProvider extends BaseModel {
               listen: false)
           .removeReceiveProgressItem(
               transferId); //setting filetransfer progress as null
-      if (files is List<File>) {
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return true;
-      } else {
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return false;
-      }
+
+      setStatus(DOWNLOAD_FILE, Status.Done);
+      return true;
     } catch (e) {
       print('error in downloading file: $e');
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
@@ -1155,43 +1137,36 @@ class HistoryProvider extends BaseModel {
   ) async {
     var index = allFilesHistory
         .indexWhere((element) => element.fileDetails?.key == transferId);
-    var _fileIndex = allFilesHistory[index]
+    var fileIndex = allFilesHistory[index]
         .fileDetails
         ?.files!
-        .indexWhere((_file) => _file.name == fileName);
+        .indexWhere((file) => file.name == fileName);
     try {
-      if ((index > -1) && (_fileIndex! > -1)) {
-        allFilesHistory[index].fileDetails?.files![_fileIndex].isDownloading =
+      if ((index > -1) && (fileIndex! > -1)) {
+        allFilesHistory[index].fileDetails?.files![fileIndex].isDownloading =
             true;
         allFilesHistory[index].fileDetails?.isWidgetOpen = isWidgetOpen;
       }
       notifyListeners();
-
-      var files =
-          await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
-      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
+      await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
+      allFilesHistory[index].fileDetails?.files![fileIndex!].isDownloading =
           false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
           .checkForUndownloadedFiles();
 
-      if (files is List<File>) {
-        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return true;
-      } else {
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return false;
-      }
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
+      setStatus(DOWNLOAD_FILE, Status.Done);
+      return true;
     } catch (e) {
       print('error in downloading file: $e');
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
               listen: false)
           .removeReceiveProgressItem(transferId);
-      allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
+      allFilesHistory[index].fileDetails?.files![fileIndex!].isDownloading =
           false;
       setStatus(DOWNLOAD_FILE, Status.Error);
       return false;
@@ -1204,9 +1179,6 @@ class HistoryProvider extends BaseModel {
     downloadPath ??= await MixedConstants.getFileDownloadLocation(
       sharedBy: sharedByAtSign,
     );
-    if (downloadPath == null) {
-      throw Exception('downloadPath not found');
-    }
 
     FileTransferObject? fileTransferObject;
 
@@ -1222,7 +1194,7 @@ class HistoryProvider extends BaseModel {
     try {
       formattedFileUrl = formattedFileUrl.replaceFirst('/archive', '');
       formattedFileUrl = formattedFileUrl.replaceFirst('/zip', '');
-      formattedFileUrl = formattedFileUrl + '/$fileName';
+      formattedFileUrl = '$formattedFileUrl/$fileName';
 
       print('fileTransferObject.fileUrl ${fileTransferObject.fileUrl}');
     } on Exception catch (e) {
@@ -1339,10 +1311,10 @@ class HistoryProvider extends BaseModel {
 
   bool compareAtSign(String atsign1, String atsign2) {
     if (atsign1[0] != '@') {
-      atsign1 = '@' + atsign1;
+      atsign1 = '@$atsign1';
     }
     if (atsign2[0] != '@') {
-      atsign2 = '@' + atsign2;
+      atsign2 = '@$atsign2';
     }
 
     return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;
@@ -1350,7 +1322,7 @@ class HistoryProvider extends BaseModel {
 
   String formatAtsign(String atsign) {
     if (atsign[0] != '@') {
-      atsign = '@' + atsign;
+      atsign = '@$atsign';
     }
     return atsign;
   }

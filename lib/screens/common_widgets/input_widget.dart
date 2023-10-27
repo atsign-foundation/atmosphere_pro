@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_outline_input_border.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -53,14 +52,14 @@ class _InputWidgetState extends State<InputWidget> {
           prefixStyle: widget.prefixStyle,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               width: 1,
               color: Colors.white,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               width: 1,
               color: Colors.white,
             ),

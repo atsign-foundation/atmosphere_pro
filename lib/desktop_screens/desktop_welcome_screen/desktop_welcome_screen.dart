@@ -27,8 +27,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DesktopWelcomeScreenStart extends StatefulWidget {
   const DesktopWelcomeScreenStart({Key? key}) : super(key: key);
+
   @override
-  _DesktopWelcomeScreenStartState createState() =>
+  State<DesktopWelcomeScreenStart> createState() =>
       _DesktopWelcomeScreenStartState();
 }
 
@@ -59,8 +60,8 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
               DesktopWelcomeScreen(atClient: atClient),
               authenticating
                   ? LoadingDialog().showTextLoader(
-                  '${TextStrings().initialisingFor} $currentatSign')
-                  : SizedBox()
+                      '${TextStrings().initialisingFor} $currentatSign')
+                  : const SizedBox()
             ]),
           );
         });
@@ -76,7 +77,7 @@ class DesktopWelcomeScreen extends StatefulWidget {
   final AtClient atClient;
 
   @override
-  _DesktopWelcomeScreenState createState() => _DesktopWelcomeScreenState();
+  State<DesktopWelcomeScreen> createState() => _DesktopWelcomeScreenState();
 }
 
 class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
@@ -137,246 +138,246 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Consumer<SideBarProvider>(builder: (_context, _sideBarProvider, _) {
-                return SizedBox(
-                  width: _sideBarProvider.isSidebarExpanded
-                      ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
-                      : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
-                );
-              }),
-              Expanded(
-                child: Navigator(
-                  key: NavService.nestedNavKey,
-                  initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
-                  onGenerateRoute: (routeSettings) {
-                    var routeBuilders =
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Consumer<SideBarProvider>(builder: (context, sideBarProvider, _) {
+            return SizedBox(
+              width: sideBarProvider.isSidebarExpanded
+                  ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
+                  : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
+            );
+          }),
+          Expanded(
+            child: Navigator(
+              key: NavService.nestedNavKey,
+              initialRoute: DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL,
+              onGenerateRoute: (routeSettings) {
+                var routeBuilders =
                     DesktopSetupRoutes.routeBuilders(context, routeSettings);
-                    return MaterialPageRoute(builder: (context) {
-                      return routeBuilders[routeSettings.name!]!(context);
-                    });
-                  },
-                ),
-              ),
-            ],
+                return MaterialPageRoute(builder: (context) {
+                  return routeBuilders[routeSettings.name!]!(context);
+                });
+              },
+            ),
           ),
-          Consumer<SideBarProvider>(
-            builder: (_context, _sideBarProvider, _) {
-              return Container(
-                width: _sideBarProvider.isSidebarExpanded
-                    ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
-                    : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
-                height: SizeConfig().screenHeight,
-                margin: EdgeInsets.only(right: 2),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      // color: Colors.grey.withOpacity(0.5),
-                      color: ColorConstants.light_grey,
-                      spreadRadius: 0,
-                      blurRadius: 1,
-                      offset: Offset(1, 2), // changes position of shadow
+        ],
+      ),
+      Consumer<SideBarProvider>(
+        builder: (context, sideBarProvider, _) {
+          return Container(
+            width: sideBarProvider.isSidebarExpanded
+                ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
+                : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
+            height: SizeConfig().screenHeight,
+            margin: const EdgeInsets.only(right: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  // color: Colors.grey.withOpacity(0.5),
+                  color: ColorConstants.light_grey,
+                  spreadRadius: 0,
+                  blurRadius: 1,
+                  offset: Offset(1, 2), // changes position of shadow
+                ),
+              ],
+            ),
+            child: ProviderHandler<NestedRouteProvider>(
+              functionName: 'routes',
+              showError: true,
+              load: (provider) {
+                provider.init();
+              },
+              successBuilder: (provider) => SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: sideBarProvider.isSidebarExpanded
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20.toHeight),
+                    InkWell(
+                      onTap: () {
+                        DesktopSetupRoutes.nested_pop();
+                      },
+                      child: Image.asset(ImageConstants.logoIcon,
+                          height: 58.toHeight),
                     ),
+                    SizedBox(height: 20.toHeight),
+                    if (sideBarProvider.isSidebarExpanded)
+                      GradientButton(
+                        onPressed: () {},
+                        height: 50.toHeight,
+                        width: MixedConstants.SIDEBAR_WIDTH_EXPANDED - 41,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              TextStrings().sidebarSendFiles,
+                              style: CustomTextStyles.desktopButton15,
+                            ),
+                            SizedBox(width: 8.toWidth),
+                            Image.asset(
+                              ImageConstants.sendIcon,
+                              height: 20.toHeight,
+                              fit: BoxFit.cover,
+                              color: CustomTextStyles.desktopButton15.color,
+                            ),
+                          ],
+                        ),
+                      ),
+                    SizedBox(height: 2.toHeight),
+                    SidebarTitleText(TextStrings().sidebarGeneral),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[0],
+                      routes[0],
+                      title: menuItemsTitle[0],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[1],
+                      routes[1],
+                      arguments: const {
+                        'isBlockedScreen': false,
+                      },
+                      title: menuItemsTitle[1],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[2],
+                      routes[2],
+                      title: menuItemsTitle[2],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[3],
+                      routes[3],
+                      arguments: const {
+                        'isBlockedScreen': true,
+                      },
+                      title: menuItemsTitle[3],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[4],
+                      routes[4],
+                      title: menuItemsTitle[4],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[5],
+                      routes[5],
+                      title: menuItemsTitle[5],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[6],
+                      routes[6],
+                      title: menuItemsTitle[6],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SidebarTitleText(TextStrings().sidebarHelpCenter),
+                    // SideBarIcon(
+                    //   menuItemsIcons[7],
+                    //   routes[7],
+                    //   isUrlLauncher: true,
+                    //   title: menuItemsTitle[7],
+                    //   isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                    // ),
+                    // SizedBox(height: 40.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[7],
+                      routes[10],
+                      isUrlLauncher: true,
+                      arguments: const {"url": MixedConstants.FAQ},
+                      title: menuItemsTitle[7],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[8],
+                      routes[8],
+                      isUrlLauncher: true,
+                      arguments: const {"url": MixedConstants.TERMS_CONDITIONS},
+                      title: menuItemsTitle[8],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 2.toHeight),
+                    SideBarIcon(
+                      menuItemsIcons[9],
+                      routes[7],
+                      title: menuItemsTitle[9],
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    // SideBarIcon(
+                    //   menuItemsIcons[10],
+                    //   routes[7],
+                    //   isEmailLauncher: true,
+                    //   arguments: {"email": 'atmospherepro@atsign.com'},
+                    //   title: menuItemsTitle[9],
+                    //   isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                    // ),
+                    SizedBox(height: 10.toHeight),
+                    BuildAvatarWidget(
+                      atClient: widget.atClient,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
+                    ),
+                    SizedBox(height: 10.toHeight),
                   ],
                 ),
-                child: ProviderHandler<NestedRouteProvider>(
-                  functionName: 'routes',
-                  showError: true,
-                  load: (provider) {
-                    provider.init();
-                  },
-                  successBuilder: (provider) => SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: _sideBarProvider.isSidebarExpanded
-                          ? CrossAxisAlignment.start
-                          : CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 20.toHeight),
-                        InkWell(
-                          onTap: () {
-                            DesktopSetupRoutes.nested_pop();
-                          },
-                          child: Image.asset(ImageConstants.logoIcon,
-                              height: 58.toHeight),
-                        ),
-                        SizedBox(height: 20.toHeight),
-                        if (_sideBarProvider.isSidebarExpanded)
-                          GradientButton(
-                            onPressed: () {},
-                            height: 50.toHeight,
-                            width: MixedConstants.SIDEBAR_WIDTH_EXPANDED - 41,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  TextStrings().sidebarSendFiles,
-                                  style: CustomTextStyles.desktopButton15,
-                                ),
-                                SizedBox(width: 8.toWidth),
-                                Image.asset(
-                                  ImageConstants.sendIcon,
-                                  height: 20.toHeight,
-                                  fit: BoxFit.cover,
-                                  color: CustomTextStyles.desktopButton15.color,
-                                ),
-                              ],
-                            ),
-                          ),
-                        SizedBox(height: 2.toHeight),
-                        SidebarTitleText(TextStrings().sidebarGeneral),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[0],
-                          routes[0],
-                          title: menuItemsTitle[0],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[1],
-                          routes[1],
-                          arguments: {
-                            'isBlockedScreen': false,
-                          },
-                          title: menuItemsTitle[1],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[2],
-                          routes[2],
-                          title: menuItemsTitle[2],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[3],
-                          routes[3],
-                          arguments: {
-                            'isBlockedScreen': true,
-                          },
-                          title: menuItemsTitle[3],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[4],
-                          routes[4],
-                          title: menuItemsTitle[4],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[5],
-                          routes[5],
-                          title: menuItemsTitle[5],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[6],
-                          routes[6],
-                          title: menuItemsTitle[6],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SidebarTitleText(TextStrings().sidebarHelpCenter),
-                        // SideBarIcon(
-                        //   menuItemsIcons[7],
-                        //   routes[7],
-                        //   isUrlLauncher: true,
-                        //   title: menuItemsTitle[7],
-                        //   isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        // ),
-                        // SizedBox(height: 40.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[7],
-                          routes[10],
-                          isUrlLauncher: true,
-                          arguments: {"url": MixedConstants.FAQ},
-                          title: menuItemsTitle[7],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[8],
-                          routes[8],
-                          isUrlLauncher: true,
-                          arguments: {"url": MixedConstants.TERMS_CONDITIONS},
-                          title: menuItemsTitle[8],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 2.toHeight),
-                        SideBarIcon(
-                          menuItemsIcons[9],
-                          routes[7],
-                          title: menuItemsTitle[9],
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        // SideBarIcon(
-                        //   menuItemsIcons[10],
-                        //   routes[7],
-                        //   isEmailLauncher: true,
-                        //   arguments: {"email": 'atmospherepro@atsign.com'},
-                        //   title: menuItemsTitle[9],
-                        //   isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        // ),
-                        SizedBox(height: 10.toHeight),
-                        BuildAvatarWidget(
-                          atClient: widget.atClient,
-                          isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
-                        ),
-                        SizedBox(height: 10.toHeight),
-                      ],
-                    ),
-                  ),
-                  errorBuilder: (provider) => Center(
-                    child: Text(TextStrings().errorOccured),
-                  ),
+              ),
+              errorBuilder: (provider) => Center(
+                child: Text(TextStrings().errorOccured),
+              ),
+            ),
+          );
+        },
+      ),
+      Consumer<SideBarProvider>(builder: (context, provider, _) {
+        return Positioned(
+          top: 40,
+          left: provider.isSidebarExpanded
+              ? MixedConstants.SIDEBAR_WIDTH_EXPANDED - 20
+              : MixedConstants.SIDEBAR_WIDTH_COLLAPSED - 20,
+          child: Builder(
+            builder: (context) {
+              return InkWell(
+                onTap: () {
+                  Provider.of<SideBarProvider>(context, listen: false)
+                      .updateSidebarWidth();
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.toWidth),
+                      color: Colors.black),
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Icon(
+                      provider.isSidebarExpanded
+                          ? Icons.arrow_back_ios
+                          : Icons.arrow_forward_ios_sharp,
+                      size: 20,
+                      color: Colors.white),
                 ),
               );
             },
           ),
-          Consumer<SideBarProvider>(builder: (_context, _provider, _) {
-            return Positioned(
-              top: 40,
-              left: _provider.isSidebarExpanded
-                  ? MixedConstants.SIDEBAR_WIDTH_EXPANDED - 20
-                  : MixedConstants.SIDEBAR_WIDTH_COLLAPSED - 20,
-              child: Builder(
-                builder: (context) {
-                  return InkWell(
-                    onTap: () {
-                      Provider.of<SideBarProvider>(context, listen: false)
-                          .updateSidebarWidth();
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.toWidth),
-                          color: Colors.black),
-                      padding: EdgeInsets.only(left: 4),
-                      child: Icon(
-                          _provider.isSidebarExpanded
-                              ? Icons.arrow_back_ios
-                              : Icons.arrow_forward_ios_sharp,
-                          size: 20,
-                          color: Colors.white),
-                    ),
-                  );
-                },
-              ),
-            );
-          }),
-        ]));
+        );
+      }),
+    ]));
   }
 
   Widget sendFileTo({bool isSelectContacts = false}) {
@@ -387,32 +388,32 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
           });
         },
         child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
             ),
             child: ListTile(
               title: showContent
                   ? Text(
-                  (isSelectContacts
-                      ? '18 contacts added'
-                      : '2 files selected'),
-                  style: CustomTextStyles.desktopSecondaryRegular18)
-                  : SizedBox(),
+                      (isSelectContacts
+                          ? '18 contacts added'
+                          : '2 files selected'),
+                      style: CustomTextStyles.desktopSecondaryRegular18)
+                  : const SizedBox(),
               trailing: isSelectContacts
                   ? Container(
-                padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                child: Image.asset(
-                  ImageConstants.contactsIcon,
-                  color: Colors.black,
-                ),
-              )
+                      padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                      child: Image.asset(
+                        ImageConstants.contactsIcon,
+                        color: Colors.black,
+                      ),
+                    )
                   : Container(
-                padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                child: Icon(
-                  Icons.add_circle,
-                  color: Colors.black,
-                ),
-              ),
+                      padding: EdgeInsets.symmetric(vertical: 15.toHeight),
+                      child: const Icon(
+                        Icons.add_circle,
+                        color: Colors.black,
+                      ),
+                    ),
             )));
   }
 }
@@ -463,22 +464,21 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
 
   getPopupMenuItem(List<String> list) {
     List<PopupMenuItem<String>> menuItems = [];
-    list.forEach((element) {
+    for (var element in list) {
       menuItems.add(PopupMenuItem(
         value: element,
         child: DesktopSwitchAtsign(key: Key(element), atsign: element),
       ));
-    });
+    }
 
     return menuItems;
   }
 
   onAtsignChange(String selectedOption) async {
-    late var atClientPrefernce;
+    late AtClientPreference atClientPrefernce;
     await BackendService.getInstance()
         .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
+        .then((value) => atClientPrefernce = value);
 
     if (selectedOption == TextStrings().addNewAtsign) {
       await CustomOnboarding.onboard(
@@ -487,9 +487,11 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
         showLoader: _showLoader,
       );
     } else if (selectedOption == TextStrings().saveBackupKey) {
-      BackupKeyWidget(
-        atsign: AtClientManager.getInstance().atClient.getCurrentAtSign()!,
-      ).showBackupDialog(context);
+      if (mounted) {
+        BackupKeyWidget(
+          atsign: AtClientManager.getInstance().atClient.getCurrentAtSign()!,
+        ).showBackupDialog(context);
+      }
     } else if (selectedOption !=
         AtClientManager.getInstance().atClient.getCurrentAtSign()) {
       await CustomOnboarding.onboard(
@@ -510,7 +512,7 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
             List<String>? atsignList = snapshot.data;
             var image = CommonUtilityFunctions()
                 .getCachedContactImage(widget.atClient.getCurrentAtSign()!);
-            return Container(
+            return SizedBox(
               width: widget.isSidebarExpanded
                   ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                   : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
@@ -523,23 +525,23 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
                     children: [
                       image == null
                           ? ContactInitialV2(
-                        initials: widget.atClient.getCurrentAtSign(),
-                        size: 50.toFont,
-                        maxSize: (80.0 - 30.0),
-                        minSize: 50,
-                      )
+                              initials: widget.atClient.getCurrentAtSign(),
+                              size: 50.toFont,
+                              maxSize: (80.0 - 30.0),
+                              minSize: 50,
+                            )
                           : CustomCircleAvatarV2(
-                        byteImage: image,
-                        nonAsset: true,
-                        size: 50.toFont,
-                      ),
+                              byteImage: image,
+                              nonAsset: true,
+                              size: 50.toFont,
+                            ),
                       // Icon(Icons.arrow_drop_down)
                       if (widget.isSidebarExpanded)
                         Flexible(
                           child: Text(
-                            '     ' + widget.atClient.getCurrentAtSign()!,
+                            '     ${widget.atClient.getCurrentAtSign()!}',
                             style:
-                            CustomTextStyles.desktopPrimaryBold12.copyWith(
+                                CustomTextStyles.desktopPrimaryBold12.copyWith(
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -553,7 +555,7 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
                   onSelected: onAtsignChange),
             );
           } else {
-            return SizedBox();
+            return const SizedBox();
           }
         });
   }
@@ -561,9 +563,9 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
 
 class SidebarTitleText extends StatelessWidget {
   const SidebarTitleText(
-      this.text, {
-        Key? key,
-      }) : super(key: key);
+    this.text, {
+    Key? key,
+  }) : super(key: key);
 
   final String text;
 
@@ -584,12 +586,16 @@ class SideBarIcon extends StatelessWidget {
   final String? image, routeName, title;
   final Map<String, dynamic>? arguments;
   final bool isUrlLauncher, isSidebarExpanded, isEmailLauncher;
+
   SideBarIcon(this.image, this.routeName,
-      {this.arguments,
-        this.isUrlLauncher = false,
-        this.isEmailLauncher = false,
-        this.isSidebarExpanded = true,
-        this.title});
+      {Key? key,
+      this.arguments,
+      this.isUrlLauncher = false,
+      this.isEmailLauncher = false,
+      this.isSidebarExpanded = true,
+      this.title})
+      : super(key: key);
+
   bool isHovered = false;
   bool isCurrentRoute = false;
   var nestedProvider = Provider.of<NestedRouteProvider>(
@@ -601,7 +607,7 @@ class SideBarIcon extends StatelessWidget {
     isCurrentRoute = nestedProvider.current_route == routeName ? true : false;
     if (!isCurrentRoute) {
       isCurrentRoute = (nestedProvider.current_route == null &&
-          routeName == DesktopRoutes.DESKTOP_HOME)
+              routeName == DesktopRoutes.DESKTOP_HOME)
           ? true
           : false;
     }
@@ -612,11 +618,11 @@ class SideBarIcon extends StatelessWidget {
         children: [
           isCurrentRoute
               ? Image.asset(
-            ImageConstants.sidebarSelectedTile,
-            height: 50.toHeight,
-            width: 4,
-          )
-              : SizedBox(width: 4),
+                  ImageConstants.sidebarSelectedTile,
+                  height: 50.toHeight,
+                  width: 4,
+                )
+              : const SizedBox(width: 4),
           Flexible(
             child: Container(
                 width: isSidebarExpanded ? double.maxFinite : 50,
@@ -626,12 +632,12 @@ class SideBarIcon extends StatelessWidget {
                   horizontal: isSidebarExpanded ? 20 : 12,
                 ),
                 decoration: isCurrentRoute
-                    ? BoxDecoration(
-                    color: ColorConstants.sidebarTileSelected,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ))
+                    ? const BoxDecoration(
+                        color: ColorConstants.sidebarTileSelected,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ))
                     : null,
                 child: InkWell(
                   onTap: () {
@@ -656,44 +662,44 @@ class SideBarIcon extends StatelessWidget {
                   },
                   child: routeName == DesktopRoutes.DESKTOP_HISTORY
                       ? Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      BuildSidebarIconTitle(
-                        image: image,
-                        isCurrentRoute: isCurrentRoute,
-                        isSidebarExpanded: isSidebarExpanded,
-                        title: title,
-                      ),
-                      Consumer<FileDownloadChecker>(
-                        builder: (context, _fileDownloadChecker, _) {
-                          return _fileDownloadChecker
-                              .undownloadedFilesExist
-                              ? Positioned(
-                            left: 12,
-                            top: -4,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              padding: EdgeInsets.all(1.toHeight),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.red,
-                                radius: 5.toWidth,
-                              ),
+                          clipBehavior: Clip.none,
+                          children: [
+                            BuildSidebarIconTitle(
+                              image: image,
+                              isCurrentRoute: isCurrentRoute,
+                              isSidebarExpanded: isSidebarExpanded,
+                              title: title,
                             ),
-                          )
-                              : SizedBox();
-                        },
-                      ),
-                    ],
-                  )
+                            Consumer<FileDownloadChecker>(
+                              builder: (context, fileDownloadChecker, _) {
+                                return fileDownloadChecker
+                                        .undownloadedFilesExist
+                                    ? Positioned(
+                                        left: 12,
+                                        top: -4,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding: EdgeInsets.all(1.toHeight),
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.red,
+                                            radius: 5.toWidth,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox();
+                              },
+                            ),
+                          ],
+                        )
                       : BuildSidebarIconTitle(
-                    image: image,
-                    isCurrentRoute: isCurrentRoute,
-                    isSidebarExpanded: isSidebarExpanded,
-                    title: title,
-                  ),
+                          image: image,
+                          isCurrentRoute: isCurrentRoute,
+                          isSidebarExpanded: isSidebarExpanded,
+                          title: title,
+                        ),
                 )),
           ),
         ],
@@ -753,16 +759,16 @@ class BuildSidebarIconTitle extends StatelessWidget {
         SizedBox(width: isSidebarExpanded ? 10 : 0),
         isSidebarExpanded
             ? Text(
-          title!,
-          softWrap: true,
-          style: CustomTextStyles.desktopPrimaryRegular12.copyWith(
-            color: isCurrentRoute
-                ? null
-                : ColorConstants.sidebarTextUnselected,
-            fontWeight: FontWeight.w500,
-          ),
-        )
-            : SizedBox()
+                title!,
+                softWrap: true,
+                style: CustomTextStyles.desktopPrimaryRegular12.copyWith(
+                  color: isCurrentRoute
+                      ? null
+                      : ColorConstants.sidebarTextUnselected,
+                  fontWeight: FontWeight.w500,
+                ),
+              )
+            : const SizedBox()
       ],
     );
   }

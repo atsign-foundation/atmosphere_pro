@@ -3,7 +3,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/side_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/blocked_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
@@ -86,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: ColorConstants.background,
       // extendBodyBehindAppBar: true,
-      appBar: AppBarCustom(
+      appBar: const AppBarCustom(
         height: 330,
         title: "Settings",
       ),
@@ -99,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(31, 0, 31, 24),
           children: [
-            SizedBox(height: 28),
+            const SizedBox(height: 28),
             SettingsButton(
               buttonText: optionTitle[0],
               onPressed: () async {
@@ -107,14 +106,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) {
-                      return BlockedContactScreen();
+                      return const BlockedContactScreen();
                     },
                   ),
                 );
               },
               image: optionIcons[0],
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             SettingsButton(
               buttonText: optionTitle[1],
               onPressed: () async {
@@ -126,13 +125,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               image: optionIcons[1],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SettingsButton(
               buttonText: optionTitle[2],
               onPressed: switchAtsign,
               image: optionIcons[2],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SettingsButton(
               buttonText: optionTitle[3],
               onPressed: () async {
@@ -140,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               image: optionIcons[3],
             ),
-            SizedBox(height: 33),
+            const SizedBox(height: 33),
             SettingsButton(
               buttonText: optionTitle[4],
               onPressed: () {
@@ -151,7 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               image: optionIcons[4],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SettingsButton(
               buttonText: optionTitle[5],
               onPressed: () async {
@@ -164,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               image: optionIcons[5],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SettingsButton(
               buttonText: optionTitle[6],
               onPressed: () {
@@ -179,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               image: optionIcons[6],
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Text(

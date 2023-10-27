@@ -15,7 +15,8 @@ class DesktopCustomInputField extends StatelessWidget {
   TextEditingController textController = TextEditingController();
 
   DesktopCustomInputField(
-      {this.hintText = '',
+      {Key? key,
+      this.hintText = '',
       this.height = 50,
       this.width = 300,
       this.iconColor,
@@ -26,14 +27,15 @@ class DesktopCustomInputField extends StatelessWidget {
       this.initialValue = '',
       this.onSubmitted,
       this.backgroundColor,
-      this.isReadOnly = false});
+      this.isReadOnly = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
+        text: initialValue,
         selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+            offset: initialValue.isNotEmpty ? initialValue.length : -1)));
     return Container(
       width: width.toWidth,
       height: height,
@@ -88,7 +90,7 @@ class DesktopCustomInputField extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox()
+                : const SizedBox()
           ],
         ),
       ),

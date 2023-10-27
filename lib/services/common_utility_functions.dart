@@ -6,11 +6,14 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -19,17 +22,12 @@ import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../data_models/file_modal.dart';
-import '../data_models/file_transfer.dart';
-import '../screens/common_widgets/labelled_circular_progress.dart';
-import '../screens/my_files/widgets/downloads_folders.dart';
-import '../utils/vectors.dart';
 
 class CommonUtilityFunctions {
   static final CommonUtilityFunctions _singleton =
@@ -45,9 +43,7 @@ class CommonUtilityFunctions {
     Uint8List? image;
     AtContact contact = checkForCachedContactDetail(atsign);
 
-    if (contact != null &&
-        contact.tags != null &&
-        contact.tags!['image'] != null) {
+    if (contact.tags != null && contact.tags!['image'] != null) {
       try {
         return getContactImage(contact);
       } catch (e) {
@@ -70,16 +66,14 @@ class CommonUtilityFunctions {
   }
 
   getCachedContactName(String atsign) {
-    String? _name;
+    String? name;
     AtContact contact = checkForCachedContactDetail(atsign);
 
-    if (contact != null &&
-        contact.tags != null &&
-        contact.tags!['name'] != null) {
-      _name = contact.tags!['name'].toString();
+    if (contact.tags != null && contact.tags!['name'] != null) {
+      name = contact.tags!['name'].toString();
     }
 
-    return _name;
+    return name;
   }
 
   Future<bool> isFilePresent(String filePath) async {
@@ -92,14 +86,12 @@ class CommonUtilityFunctions {
     bool isSelectAtsign = false;
     bool? isSelectAll = false;
     var atsignsList = await KeychainUtil.getAtsignList();
-    if (atsignsList == null) {
-      atsignsList = [];
-    }
+    atsignsList ??= [];
     Map atsignMap = {};
     for (String atsign in atsignsList) {
       atsignMap[atsign] = false;
     }
-    GlobalKey _one = GlobalKey();
+    GlobalKey one = GlobalKey();
     BuildContext? myContext;
     await showDialog(
         barrierDismissible: true,
@@ -111,7 +103,7 @@ class CommonUtilityFunctions {
               return Dialog(
                   child: SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   width: 600,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -120,16 +112,17 @@ class CommonUtilityFunctions {
                         children: [
                           Expanded(
                             child: Showcase(
-                              key: _one,
+                              key: one,
                               description:
                                   'You can have more than one atSign associated with this app and can remove one or all of the atSigns from the app at any time.',
-                              shapeBorder: CircleBorder(),
+                              shapeBorder: const CircleBorder(),
                               disableAnimation: true,
-                              radius: BorderRadius.all(Radius.circular(40)),
+                              radius:
+                                  const BorderRadius.all(Radius.circular(40)),
                               showArrow: false,
-                              overlayPadding: EdgeInsets.all(5),
+                              overlayPadding: const EdgeInsets.all(5),
                               blurValue: 2,
-                              child: Text(
+                              child: const Text(
                                 TextStrings.resetDescription,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -142,16 +135,16 @@ class CommonUtilityFunctions {
                           GestureDetector(
                             onTap: () {
                               ShowCaseWidget.of(myContext!)
-                                  .startShowCase([_one]);
+                                  .startShowCase([one]);
                             },
                             child: Container(
                               decoration: BoxDecoration(
                                   color: Colors.grey.shade400,
                                   borderRadius: BorderRadius.circular(50)),
-                              margin: EdgeInsets.all(0),
+                              margin: const EdgeInsets.all(0),
                               height: 20,
                               width: 20,
-                              child: Icon(
+                              child: const Icon(
                                 Icons.question_mark,
                                 size: 15,
                               ),
@@ -159,15 +152,15 @@ class CommonUtilityFunctions {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Divider(
+                      const Divider(
                         thickness: 0.8,
                       ),
                       atsignsList!.isEmpty
                           ? Column(mainAxisSize: MainAxisSize.min, children: [
-                              Text(TextStrings.noAtsignToReset,
+                              const Text(TextStrings.noAtsignToReset,
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal,
@@ -180,7 +173,7 @@ class CommonUtilityFunctions {
                                   },
                                   child: Text(
                                     TextStrings().buttonClose,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                       // color: AtTheme.themecolor,
@@ -204,7 +197,7 @@ class CommonUtilityFunctions {
                                   checkColor: Colors.white,
                                   activeColor: Theme.of(context).primaryColor,
                                   title: Text(TextStrings().selectAll,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       )),
                                 ),
@@ -217,27 +210,27 @@ class CommonUtilityFunctions {
                                     value: atsignMap[atsign],
                                     checkColor: Colors.white,
                                     activeColor: Theme.of(context).primaryColor,
-                                    title: Text('$atsign'),
+                                    title: Text(atsign),
                                   ),
-                                Divider(thickness: 0.8),
+                                const Divider(thickness: 0.8),
                               ],
                             ),
                       if (isSelectAtsign)
-                        Text(TextStrings.resetErrorText,
+                        const Text(TextStrings.resetErrorText,
                             style: TextStyle(
                               color: Colors.red,
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
                             )),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(TextStrings.resetWarningText,
+                      const Text(TextStrings.resetWarningText,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
                           )),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(children: [
@@ -247,14 +240,14 @@ class CommonUtilityFunctions {
                           },
                           child: Text(
                             TextStrings().buttonCancel,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 15,
                               color: Colors.black,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         TextButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
@@ -274,11 +267,11 @@ class CommonUtilityFunctions {
                                 isSelectAtsign = false;
                                 await _resetDevice(tempAtsignMap.keys.toList());
                                 await _onboardNextAtsign();
-                              }, 'Remove ${atsignsListLength} atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
+                              }, 'Remove $atsignsListLength atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
                             }
                           },
                           child: Text(TextStrings().remove,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal,
@@ -306,11 +299,11 @@ class CommonUtilityFunctions {
   }
 
   _onboardNextAtsign() async {
-    var _backendService = BackendService.getInstance();
+    var backendService = BackendService.getInstance();
     var atSignList = await KeychainUtil.getAtsignList();
     if (atSignList != null &&
         atSignList.isNotEmpty &&
-        _backendService.currentAtSign != atSignList.first) {
+        backendService.currentAtSign != atSignList.first) {
       // _backendService.checkToOnboard(atSign: atSignList.first);
       await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
           Routes.HOME, (Route<dynamic> route) => false);
@@ -334,19 +327,17 @@ class CommonUtilityFunctions {
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
-            child: Container(
+            child: SizedBox(
               height: 50.toHeight,
               width: 50.toWidth,
               child: isFilePresent!
                   ? Image.file(
                       File(path!),
                       fit: BoxFit.cover,
-                      errorBuilder: (BuildContext _context, _, __) {
-                        return Container(
-                          child: Icon(
-                            Icons.image,
-                            size: 30.toFont,
-                          ),
+                      errorBuilder: (BuildContext context, _, __) {
+                        return Icon(
+                          Icons.image,
+                          size: 30.toFont,
                         );
                       },
                     )
@@ -362,29 +353,25 @@ class CommonUtilityFunctions {
                 builder: (context, snapshot) => ClipRRect(
                   borderRadius: BorderRadius.circular(10.toHeight),
                   child: Container(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: (snapshot.data == null)
                         ? Image.asset(ImageConstants.videoLogo,
                             fit: BoxFit.cover,
-                            errorBuilder: (BuildContext _context, _, __) {
-                            return Container(
-                              child: Icon(
-                                Icons.image,
-                                size: 30.toFont,
-                              ),
+                            errorBuilder: (BuildContext context, _, __) {
+                            return Icon(
+                              Icons.image,
+                              size: 30.toFont,
                             );
                           })
                         : Image.memory(
                             snapshot.data as Uint8List,
                             fit: BoxFit.cover,
-                            errorBuilder: (BuildContext _context, _, __) {
-                              return Container(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 30.toFont,
-                                ),
+                            errorBuilder: (BuildContext context, _, __) {
+                              return Icon(
+                                Icons.image,
+                                size: 30.toFont,
                               );
                             },
                           ),
@@ -394,7 +381,7 @@ class CommonUtilityFunctions {
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   height: 50.toHeight,
                   width: 50.toWidth,
                   child: Image.asset(
@@ -427,8 +414,8 @@ class CommonUtilityFunctions {
   }
 
   bool isFileDownloadAvailable(DateTime date) {
-    var expiryDate = date.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+    var expiryDate = date.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
       return true;
     } else {
       return false;
@@ -463,7 +450,7 @@ class CommonUtilityFunctions {
   }
 
   deleteAtSign(String atsign) async {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     await showDialog(
         context: NavService.navKey.currentContext!,
         builder: (BuildContext context) {
@@ -492,14 +479,14 @@ class CommonUtilityFunctions {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text('$atsign',
+                const SizedBox(height: 20),
+                Text(atsign,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 20.toFont,
                         letterSpacing: 0.1,
                         fontWeight: FontWeight.bold)),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   TextStrings().typeAtsignAbove,
                   textAlign: TextAlign.center,
@@ -510,9 +497,9 @@ class CommonUtilityFunctions {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Form(
-                  key: _formKey,
+                  key: formKey,
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     validator: (value) {
@@ -522,7 +509,7 @@ class CommonUtilityFunctions {
                         return null;
                       }
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white)),
                         enabledBorder: OutlineInputBorder(
@@ -532,7 +519,7 @@ class CommonUtilityFunctions {
                         fillColor: Colors.white),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   TextStrings().actionCannotUndone,
                   style: TextStyle(
@@ -541,7 +528,7 @@ class CommonUtilityFunctions {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -558,13 +545,13 @@ class CommonUtilityFunctions {
                         ),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 Theme.of(context).primaryColor)),
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             await BackendService.getInstance()
                                 .deleteAtSignFromKeyChain(atsign);
                           }
@@ -635,7 +622,7 @@ class CommonUtilityFunctions {
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator(
+    Widget spinner = const CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(
         ColorConstants.orange,
       ),
@@ -657,18 +644,18 @@ class CommonUtilityFunctions {
   bool checkForDownloadAvailability(FileTransfer file) {
     bool isDownloadAvailable = false;
 
-    var expiryDate = file.date!.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+    var expiryDate = file.date!.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
 
     // if fileList is not having any file then download icon will not be shown
     var isFileUploaded = false;
-    file.files!.forEach((FileData fileData) {
+    for (var fileData in file.files!) {
       if (fileData.isUploaded!) {
         isFileUploaded = true;
       }
-    });
+    }
 
     if (!isFileUploaded) {
       isDownloadAvailable = false;
@@ -710,7 +697,7 @@ class CommonUtilityFunctions {
                       type: MaterialType.transparency,
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Align(
@@ -722,7 +709,7 @@ class CommonUtilityFunctions {
                                   Navigator.pop(
                                       NavService.navKey.currentContext!);
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.clear,
                                   color: Colors.white,
                                   size: 24,
@@ -730,14 +717,15 @@ class CommonUtilityFunctions {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Expanded(
                             child: Container(
                               // height: double.infinity,
                               width: double.infinity,
-                              margin: EdgeInsets.symmetric(horizontal: 33),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 33),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
@@ -749,7 +737,7 @@ class CommonUtilityFunctions {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
                           Row(
@@ -783,7 +771,7 @@ class CommonUtilityFunctions {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Padding(
@@ -801,7 +789,7 @@ class CommonUtilityFunctions {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
                           Container(
@@ -809,8 +797,8 @@ class CommonUtilityFunctions {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            padding: EdgeInsets.all(20),
-                            margin: EdgeInsets.symmetric(horizontal: 25),
+                            padding: const EdgeInsets.all(20),
+                            margin: const EdgeInsets.symmetric(horizontal: 25),
                             width: double.infinity,
                             child: SingleChildScrollView(
                               child: Column(
@@ -823,19 +811,19 @@ class CommonUtilityFunctions {
                                       Expanded(
                                         child: Text(
                                           fileDetail.fileName ?? "",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 12),
+                                      const SizedBox(width: 12),
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           Text(
-                                            "$shortDate",
-                                            style: TextStyle(
+                                            shortDate,
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               color: ColorConstants.oldSliver,
                                             ),
@@ -843,14 +831,14 @@ class CommonUtilityFunctions {
                                           Container(
                                             width: 1,
                                             height: 8,
-                                            color: Color(0xFFD7D7D7),
-                                            margin: EdgeInsets.symmetric(
+                                            color: const Color(0xFFD7D7D7),
+                                            margin: const EdgeInsets.symmetric(
                                               horizontal: 3,
                                             ),
                                           ),
                                           Text(
-                                            "$time",
-                                            style: TextStyle(
+                                            time,
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               color: ColorConstants.oldSliver,
                                             ),
@@ -859,40 +847,38 @@ class CommonUtilityFunctions {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
                                   Text(
                                     double.parse(fileDetail.size.toString()) <=
                                             1024
-                                        ? '${fileDetail.size} ' +
-                                            TextStrings().kb
-                                        : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                            TextStrings().mb,
-                                    style: TextStyle(
+                                        ? '${fileDetail.size} ${TextStrings().kb}'
+                                        : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                                    style: const TextStyle(
                                       color: ColorConstants.grey,
                                       fontSize: 12,
                                     ),
                                     textAlign: TextAlign.left,
                                   ),
-                                  SizedBox(height: 10),
+                                  const SizedBox(height: 10),
                                   nickname.isNotEmpty
                                       ? Text(
                                           nickname,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         )
-                                      : SizedBox(),
-                                  SizedBox(height: 5),
+                                      : const SizedBox(),
+                                  const SizedBox(height: 5),
                                   Text(
                                     fileDetail.contactName ?? "",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  const SizedBox(height: 10),
                                   // fileDetail.message.isNotNull
                                   //     ?
-                                  Text(
+                                  const Text(
                                     "Message",
                                     style: TextStyle(
                                       fontSize: 12,
@@ -900,10 +886,10 @@ class CommonUtilityFunctions {
                                     ),
                                   ),
                                   // : SizedBox(),
-                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
                                   Text(
                                     fileDetail.message ?? "",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                     ),
                                   ),
@@ -919,18 +905,16 @@ class CommonUtilityFunctions {
                   CommonUtilityFunctions().showNoFileDialog();
                 }
               },
-              child: Container(
+              child: SizedBox(
                 height: 50.toHeight,
                 width: 50.toWidth,
                 child: Image.file(
                   File(path),
                   fit: BoxFit.cover,
-                  errorBuilder: (BuildContext _context, _, __) {
-                    return Container(
-                      child: Icon(
-                        Icons.image,
-                        size: 30.toFont,
-                      ),
+                  errorBuilder: (BuildContext context, _, __) {
+                    return Icon(
+                      Icons.image,
+                      size: 30.toFont,
                     );
                   },
                 ),
@@ -948,29 +932,25 @@ class CommonUtilityFunctions {
                       await openFilePath(path);
                     },
                     child: Container(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       height: 50.toHeight,
                       width: 50.toWidth,
                       child: (snapshot.data == null)
                           ? Image.asset(ImageConstants.videoLogo,
                               fit: BoxFit.cover,
-                              errorBuilder: (BuildContext _context, _, __) {
-                              return Container(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 30.toFont,
-                                ),
+                              errorBuilder: (BuildContext context, _, __) {
+                              return Icon(
+                                Icons.image,
+                                size: 30.toFont,
                               );
                             })
                           : Image.memory(
                               snapshot.data as Uint8List,
                               fit: BoxFit.cover,
-                              errorBuilder: (BuildContext _context, _, __) {
-                                return Container(
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 30.toFont,
-                                  ),
+                              errorBuilder: (BuildContext context, _, __) {
+                                return Icon(
+                                  Icons.image,
+                                  size: 30.toFont,
                                 );
                               },
                             ),
@@ -986,7 +966,7 @@ class CommonUtilityFunctions {
                       await openFilePath(path);
                       //   await openDownloadsFolder(context);
                     },
-                    child: Container(
+                    child: SizedBox(
                       // padding: EdgeInsets.only(left: 10),
                       height: 50.toHeight,
                       width: 50.toWidth,
@@ -1018,18 +998,18 @@ class CommonUtilityFunctions {
           return Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
+            child: SizedBox(
               height: 200.0.toHeight,
               width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  const Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
                     TextStrings().noFileFound,
                     style: CustomTextStyles.primaryBold16,
                   ),
-                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  const Padding(padding: EdgeInsets.only(top: 30.0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

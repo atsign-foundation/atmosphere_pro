@@ -17,32 +17,33 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory? selectedFileData;
-  Key? key;
-  DesktopSentFileDetails({this.key, this.selectedFileData});
+
+  const DesktopSentFileDetails({Key? key, this.selectedFileData})
+      : super(key: key);
 
   @override
-  _DesktopSentFileDetailsState createState() => _DesktopSentFileDetailsState();
+  State<DesktopSentFileDetails> createState() => _DesktopSentFileDetailsState();
 }
 
 class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
   int fileCount = 0, fileSize = 0;
-  Map<String?, Future> _futureBuilder = {};
+  final Map<String?, Future> _futureBuilder = {};
 
   @override
   void initState() {
     super.initState();
     fileCount = widget.selectedFileData!.fileDetails!.files!.length;
-    widget.selectedFileData!.fileDetails!.files!.forEach((element) {
+    for (var element in widget.selectedFileData!.fileDetails!.files!) {
       fileSize += element.size!;
-    });
+    }
     getFutureBuilders();
   }
 
   getFutureBuilders() {
-    widget.selectedFileData!.fileDetails!.files!.forEach((element) {
+    for (var element in widget.selectedFileData!.fileDetails!.files!) {
       _futureBuilder[element.name] = CommonUtilityFunctions()
           .isFilePresent(MixedConstants.SENT_FILE_DIRECTORY + element.name!);
-    });
+    }
   }
 
   @override
@@ -51,13 +52,14 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
       color: ColorConstants.selago,
       height: SizeConfig().screenHeight - MixedConstants.APPBAR_HEIGHT,
       width: SizeConfig().screenWidth * 0.45,
-      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(TextStrings().details,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             SizedBox(height: 15.toHeight),
             Column(
               children: <Widget>[
@@ -71,7 +73,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                     children: List.generate(
                         widget.selectedFileData!.fileDetails!.files!.length,
                         (index) {
-                      return Container(
+                      return SizedBox(
                         width: 250,
                         child: ListTile(
                           title: Text(
@@ -90,9 +92,9 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                         .files![index].size
                                         .toString()) <=
                                     1024
-                                ? '${widget.selectedFileData!.fileDetails!.files![index].size} ${TextStrings().kb}' +
+                                ? '${widget.selectedFileData!.fileDetails!.files![index].size} ${TextStrings().kb}'
                                     ' . ${widget.selectedFileData!.fileDetails!.files![index].name!.split('.').last}'
-                                : '${(widget.selectedFileData!.fileDetails!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}' +
+                                : '${(widget.selectedFileData!.fileDetails!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}'
                                     ' . ${widget.selectedFileData!.fileDetails!.files![index].name!.split('.').last} ',
                             style: TextStyle(
                               color: ColorConstants.fadedText,
@@ -155,7 +157,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                                     isFilePresent:
                                                         snapshot.data as bool),
                                           )
-                                        : SizedBox();
+                                        : const SizedBox();
                                   })),
                           trailing: IconButton(
                             icon: (widget.selectedFileData!.fileDetails!
@@ -163,20 +165,20 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                                         null &&
                                     widget.selectedFileData!.fileDetails!
                                         .files![index].isUploaded!)
-                                ? SizedBox()
+                                ? const SizedBox()
                                 : (widget.selectedFileData!.fileDetails!
                                                 .files![index].isUploading !=
                                             null &&
                                         widget.selectedFileData!.fileDetails!
                                             .files![index].isUploading!)
-                                    ? TypingIndicator(
+                                    ? const TypingIndicator(
                                         showIndicator: true,
                                         flashingCircleBrightColor:
                                             ColorConstants.dullText,
                                         flashingCircleDarkColor:
                                             ColorConstants.fadedText,
                                       )
-                                    : Icon(
+                                    : const Icon(
                                         Icons.refresh,
                                         color: ColorConstants.redAlert,
                                       ),
@@ -238,7 +240,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                       ],
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
             SizedBox(height: 15.toHeight),
             widget.selectedFileData != null
                 ? DesktopTranferOverlappingContacts(
@@ -246,7 +248,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                         .selectedFileData!.fileTransferObject!.transferId),
                     selectedList: widget.selectedFileData!.sharedWith,
                     fileHistory: widget.selectedFileData)
-                : SizedBox()
+                : const SizedBox()
           ],
         ),
       ),

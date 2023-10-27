@@ -2,12 +2,9 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_card_widget.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +39,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
       backgroundColor: ColorConstants.background,
       appBar: AppBar(
         backgroundColor: ColorConstants.background,
-        title: Text(
+        title: const Text(
           "Blocked atSigns",
           style: TextStyle(
             color: Colors.black,
@@ -51,7 +48,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: Column(
@@ -64,7 +61,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                 onChange: (value) {
                   setState(() {});
                 },
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: ColorConstants.darkSliver,
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -108,8 +105,8 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
                                   ImageConstants.emptyBox,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
                                   vertical: 24,
                                 ),
                                 child: Text(
@@ -184,7 +181,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
   ) {
     return ListView.builder(
       itemCount: contactsForAlphabet.length,
-      padding: EdgeInsets.only(left: 44, right: 28),
+      padding: const EdgeInsets.only(left: 44, right: 28),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -197,8 +194,8 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
               contact,
             );
           },
-          suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 8),
+          suffixIcon: const Padding(
+            padding: EdgeInsets.only(right: 8),
             child: Icon(
               Icons.block,
               color: Colors.red,
@@ -238,7 +235,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
   }
 
   List<BaseContact> getContactsForAlphabets(
-    List<BaseContact?> _filteredList,
+    List<BaseContact?> filteredList,
     String currentChar,
     int alphabetIndex,
   ) {
@@ -246,7 +243,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
 
     /// contacts, groups that does not starts with alphabets
     if (alphabetIndex == 26) {
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (!RegExp(r'^[a-z]+$').hasMatch(
           (c?.contact?.atSign?[1] ?? '').toLowerCase(),
         )) {
@@ -254,7 +251,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
         }
       }
     } else {
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c?.contact != null) {
           if (c?.contact?.atSign?[1].toUpperCase() == currentChar) {
             contactsForAlphabet.add(c!);

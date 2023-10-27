@@ -102,7 +102,7 @@ class BackendService {
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
-    var _atClientPreference = AtClientPreference()
+    var atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
       ..commitLogPath = path
       ..downloadPath = downloadDirectory!.path
@@ -110,9 +110,9 @@ class BackendService {
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
-      ..monitorHeartbeatInterval = Duration(minutes: 1)
+      ..monitorHeartbeatInterval = const Duration(minutes: 1)
       ..hiveStoragePath = path;
-    return _atClientPreference;
+    return atClientPreference;
   }
 
   ///Fetches atsign from device keychain.
@@ -149,7 +149,8 @@ class BackendService {
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   startMonitor() async {
-    await AtClientManager.getInstance()
+    AtClientManager.getInstance()
+        .atClient
         .notificationService
         .subscribe(regex: MixedConstants.appNamespace, shouldDecrypt: true)
         .listen((AtNotification notification) async {
@@ -181,7 +182,7 @@ class BackendService {
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
             DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
@@ -198,7 +199,7 @@ class BackendService {
       var atKey = notificationKey.split(':')[1];
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage.isNotEmpty) {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
@@ -209,17 +210,19 @@ class BackendService {
 
         BuildContext context = NavService.navKey.currentContext!;
         bool trustedSender = false;
-        TrustedContactProvider trustedContactProvider =
-            Provider.of<TrustedContactProvider>(context, listen: false);
+        if (context.mounted) {
+          TrustedContactProvider trustedContactProvider =
+              Provider.of<TrustedContactProvider>(context, listen: false);
 
-        trustedContactProvider.trustedContacts.forEach((element) {
-          if (element.atSign == fromAtSign) {
-            trustedSender = true;
+          for (var element in trustedContactProvider.trustedContacts) {
+            if (element.atSign == fromAtSign) {
+              trustedSender = true;
+            }
           }
-        });
 
-        if (trustedSender) {
-          await downloadFiles(context, atKey.split('.').first, fromAtSign);
+          if (trustedSender) {
+            await downloadFiles(context, atKey.split('.').first, fromAtSign);
+          }
         }
       }
     }
@@ -348,12 +351,12 @@ class BackendService {
   }
 
   _onSyncErrorCallback(SyncResult syncStatus) async {
-    print('sync failed : ${syncStatus}');
+    print('sync failed : $syncStatus');
     ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
       SnackBar(
-        duration: Duration(days: 365),
+        duration: const Duration(days: 365),
         content: Padding(
-          padding: EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -388,10 +391,10 @@ class BackendService {
     if (atSignList != null) {
       atSignList.removeWhere((element) => element == atsign);
     }
-    late var atClientPrefernce;
+    late AtClientPreference atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
 
-    var tempAtsign;
+    String? tempAtsign;
     if (atSignList == null || atSignList.isEmpty) {
       tempAtsign = '';
     } else {
@@ -419,7 +422,7 @@ class BackendService {
       final result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
+          atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
@@ -457,17 +460,15 @@ class BackendService {
     bool isSwitchAccount = false,
   }) async {
     try {
-      final OnboardingService _onboardingService =
+      final OnboardingService onboardingService =
           OnboardingService.getInstance();
-      late var atClientPrefernce;
+      late AtClientPreference atClientPrefernce;
       AtOnboardingResult result;
 
-      _onboardingService.setAtsign = atSign;
+      onboardingService.setAtsign = atSign;
 
       //  await getAtClientPreference();
-      await getAtClientPreference()
-          .then((value) => atClientPrefernce = value)
-          .catchError((e) => print(e));
+      await getAtClientPreference().then((value) => atClientPrefernce = value);
 
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
@@ -475,7 +476,7 @@ class BackendService {
       result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
+          atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
@@ -485,7 +486,7 @@ class BackendService {
 
       switch (result.status) {
         case AtOnboardingResultStatus.success:
-          final value = _onboardingService.atClientServiceMap;
+          final value = onboardingService.atClientServiceMap;
           authenticating = true;
           isAuthuneticatingSink.add(authenticating);
           await onboardSuccessCallback(
@@ -586,11 +587,11 @@ class BackendService {
   }
 
   setDownloadDirectory() async {
-    var _preference = await getAtClientPreference();
+    var preference = await getAtClientPreference();
     MixedConstants.setNewApplicationDocumentsDirectory(
         AtClientManager.getInstance().atClient.getCurrentAtSign());
-    _preference.downloadPath = MixedConstants.RECEIVED_FILE_DIRECTORY;
-    AtClientManager.getInstance().atClient.setPreferences(_preference);
+    preference.downloadPath = MixedConstants.RECEIVED_FILE_DIRECTORY;
+    AtClientManager.getInstance().atClient.setPreferences(preference);
   }
 
   /// to create directory if does not exist

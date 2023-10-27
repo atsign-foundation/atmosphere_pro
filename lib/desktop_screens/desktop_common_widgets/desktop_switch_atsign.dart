@@ -12,8 +12,8 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSwitchAtsign extends StatefulWidget {
-  String atsign;
-  DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
+  final String atsign;
+  const DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
 
   @override
   State<DesktopSwitchAtsign> createState() => _DesktopSwitchAtsignState();
@@ -22,7 +22,6 @@ class DesktopSwitchAtsign extends StatefulWidget {
 class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   BackendService backendService = BackendService.getInstance();
   bool isCurrentAtsign = false;
-  var atClientPrefernce;
   AtClient atClient = AtClientManager.getInstance().atClient;
   String? atsignName = '';
 
@@ -52,7 +51,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
     }
   }
 
-  Widget _contactRow(String _atsign, String _name,
+  Widget _contactRow(String atsign, String name,
       {bool isCurrentAtsign = false}) {
     Uint8List? image =
         CommonUtilityFunctions().getCachedContactImage(widget.atsign);
@@ -66,46 +65,44 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                 size: isCurrentAtsign ? 40 : 40,
               )
             : ContactInitial(
-                initials: _atsign,
+                initials: atsign,
                 size: isCurrentAtsign ? 40 : 40,
                 maxSize: isCurrentAtsign ? 50 : 40,
                 minSize: isCurrentAtsign ? 40 : 30,
               ),
-        SizedBox(width: 10),
-        Container(
-          child: Tooltip(
-            message: _atsign,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 180,
-                  child: Text(
-                    _atsign,
-                    style: isCurrentAtsign
-                        ? CustomTextStyles.blackBold()
-                        : CustomTextStyles.desktopSecondaryRegular14,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        const SizedBox(width: 10),
+        Tooltip(
+          message: atsign,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 180,
+                child: Text(
+                  atsign,
+                  style: isCurrentAtsign
+                      ? CustomTextStyles.blackBold()
+                      : CustomTextStyles.desktopSecondaryRegular14,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 5),
-                (_name != null && _name != '')
-                    ? SizedBox(
-                        width: 180,
-                        child: Text(
-                          _name,
-                          style: isCurrentAtsign
-                              ? CustomTextStyles.greyText16
-                              : CustomTextStyles.desktopSecondaryRegular14,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )
-                    : SizedBox(),
-              ],
-            ),
+              ),
+              const SizedBox(height: 5),
+              (name != '')
+                  ? SizedBox(
+                      width: 180,
+                      child: Text(
+                        name,
+                        style: isCurrentAtsign
+                            ? CustomTextStyles.greyText16
+                            : CustomTextStyles.desktopSecondaryRegular14,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
           ),
         ),
         Expanded(
@@ -117,7 +114,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                         .pop(); // this is to close the popup menu button
                     CommonUtilityFunctions().deleteAtSign(widget.atsign);
                   },
-                  child: Icon(Icons.delete))),
+                  child: const Icon(Icons.delete))),
         )
       ],
     );
@@ -125,7 +122,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
 
   Widget addNewContactRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
           Container(
@@ -136,13 +133,13 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
               border: Border.all(),
               shape: BoxShape.circle,
             ),
-            child: Icon(
+            child: const Icon(
               Icons.add,
               color: ColorConstants.fadedText,
               size: 35,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Text(
@@ -155,10 +152,10 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
   }
 
   Widget saveBackupKeyRow() {
-    return Column(
+    return const Column(
       children: [
         Divider(height: 1),
-        Container(
+        SizedBox(
           height: 50,
           child: Row(
             children: [

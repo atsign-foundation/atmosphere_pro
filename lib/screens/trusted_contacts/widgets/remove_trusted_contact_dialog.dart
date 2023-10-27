@@ -3,18 +3,15 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
-    as pro_text_strings;
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
-
-import '../../../utils/colors.dart';
 
 class RemoveTrustedContact extends StatefulWidget {
   final String? title;
@@ -34,7 +31,7 @@ class RemoveTrustedContact extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RemoveTrustedContactState createState() => _RemoveTrustedContactState();
+  State<RemoveTrustedContact> createState() => _RemoveTrustedContactState();
 }
 
 class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
@@ -67,7 +64,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
           ),
         ],
       ),
-      content: Container(
+      content: SizedBox(
         height: 260.toHeight,
         child: Column(
           children: [
@@ -134,7 +131,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                   children: [
                     (Provider.of<TrustedContactProvider>(context)
                             .trustedContactOperation)
-                        ? CircularProgressIndicator(
+                        ? const CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
                               ColorConstants.orange,
                             ),
@@ -149,18 +146,21 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                                           context,
                                           listen: false)
                                       .removeTrustedContacts(widget.contact);
-                              if (res) {
-                                Navigator.pop(context);
-                              } else {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  backgroundColor: ColorConstants.red,
-                                  content: Text(
-                                    'Error occured to delete the atKey',
-                                    style: CustomTextStyles.secondaryRegular14,
-                                  ),
-                                ));
+                              if (mounted) {
+                                if (res) {
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: ColorConstants.red,
+                                    content: Text(
+                                      'Error occured to delete the atKey',
+                                      style:
+                                          CustomTextStyles.secondaryRegular14,
+                                    ),
+                                  ));
+                                }
                               }
                             },
                           ),
@@ -169,7 +169,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                 SizedBox(height: 10.toHeight),
                 (Provider.of<TrustedContactProvider>(context)
                         .trustedContactOperation)
-                    ? SizedBox()
+                    ? const SizedBox()
                     : CustomButton(
                         buttonText: TextStrings().no,
                         isInverted: true,

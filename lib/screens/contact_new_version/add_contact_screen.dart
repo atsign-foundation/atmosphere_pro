@@ -1,6 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -41,13 +40,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddContactProvider>(
-      builder: (_c, provider, _) {
+      builder: (c, provider, _) {
         state = context.watch<AddContactProvider>();
         return Scaffold(
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           body: Container(
-            margin: EdgeInsets.only(top: 60),
+            margin: const EdgeInsets.only(top: 60),
             width: double.infinity,
             decoration: BoxDecoration(
               color: ColorConstants.culturedColor,
@@ -72,7 +71,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       Navigator.of(context).pop();
                     },
                     child: Padding(
-                      padding: EdgeInsets.only(left: 31, top: 36),
+                      padding: const EdgeInsets.only(left: 31, top: 36),
                       child: SvgPicture.asset(
                         AppVectors.icBack,
                       ),
@@ -134,7 +133,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               const SizedBox(height: 30),
                               Container(
                                 height: 1,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: ColorConstants.lightGray,
                                 ),
                               ),
@@ -182,7 +181,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           ),
                         ),
                         state.status['add_contact_status'] == Status.Loading
-                            ? AbsorbPointer(
+                            ? const AbsorbPointer(
                                 child: SizedBox(
                                   width: double.infinity,
                                   height: double.infinity,
@@ -195,7 +194,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                   ),
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     ),
                   ),
@@ -209,7 +208,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             nickname: nicknameController.text,
                           );
 
-                          if (response ?? false) {
+                          if ((response ?? false) && mounted) {
                             Navigator.of(context).pop(true);
                           }
                         }

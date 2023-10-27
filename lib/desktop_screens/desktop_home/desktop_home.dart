@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/widgets/home_description_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/widgets/logo_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -17,12 +18,12 @@ class DesktopHome extends StatefulWidget {
   const DesktopHome({Key? key}) : super(key: key);
 
   @override
-  _DesktopHomeState createState() => _DesktopHomeState();
+  State<DesktopHome> createState() => _DesktopHomeState();
 }
 
 class _DesktopHomeState extends State<DesktopHome> {
   BackendService backendService = BackendService.getInstance();
-  late var atClientPrefernce;
+  late AtClientPreference atClientPrefernce;
   bool authenticating = false, onboardError = false;
   String? currentatSign;
 
@@ -34,9 +35,8 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   /// before login we keep atmospher-pro as the directory
   storeApplicationDocumentsDirectory() async {
-    var _dir = await getApplicationDocumentsDirectory();
-    final path =
-        Directory(_dir.path + Platform.pathSeparator + '@mosphere-pro');
+    var dir = await getApplicationDocumentsDirectory();
+    final path = Directory('${dir.path}${Platform.pathSeparator}@mosphere-pro');
 
     if (!(await path.exists())) {
       await path.create();
@@ -59,19 +59,16 @@ class _DesktopHomeState extends State<DesktopHome> {
     print('currentatSign $currentatSign, ${(currentatSign != null)}');
     await backendService
         .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) {
-      print(e);
-    });
+        .then((value) => atClientPrefernce = value);
 
     if (currentatSign != null) {
       await _onBoard(currentatSign);
     }
   }
 
-  Future<void> _onBoard(String? _atsign) async {
+  Future<void> _onBoard(String? atsign) async {
     await CustomOnboarding.onboard(
-        atSign: _atsign,
+        atSign: atsign,
         atClientPrefernce: atClientPrefernce,
         isInit: true,
         onError: onOnboardError);
@@ -97,12 +94,12 @@ class _DesktopHomeState extends State<DesktopHome> {
               top: 60.toHeight,
               left: 68.toWidth,
             ),
-            child: LogoWidget(),
+            child: const LogoWidget(),
           ),
           SizedBox(
             height: 96.toHeight,
           ),
-          Center(
+          const Center(
             child: HomeDescriptionWidget(),
           ),
           SizedBox(height: 28.toHeight),

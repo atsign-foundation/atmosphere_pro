@@ -1,11 +1,13 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/colors.dart';
-
 class LabelledCircularProgressIndicator extends StatelessWidget {
-  double? value;
-  LabelledCircularProgressIndicator({this.value});
+  final double? value;
+
+  const LabelledCircularProgressIndicator({Key? key, this.value})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -13,7 +15,7 @@ class LabelledCircularProgressIndicator extends StatelessWidget {
         children: [
           CircularProgressIndicator(
             value: value,
-            valueColor: AlwaysStoppedAnimation<Color>(
+            valueColor: const AlwaysStoppedAnimation<Color>(
               ColorConstants.orange,
             ),
           ),
@@ -21,8 +23,8 @@ class LabelledCircularProgressIndicator extends StatelessWidget {
               ? Positioned(
                   top: 10,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 7),
-                    child: Text((value! * 100).toStringAsFixed(0) + '%',
+                    padding: const EdgeInsets.only(left: 7),
+                    child: Text('${(value! * 100).toStringAsFixed(0)}%',
                         style: TextStyle(
                           fontSize: 8.toFont,
                           fontWeight: FontWeight.bold,
@@ -30,7 +32,7 @@ class LabelledCircularProgressIndicator extends StatelessWidget {
                         )),
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

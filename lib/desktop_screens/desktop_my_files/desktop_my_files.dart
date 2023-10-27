@@ -2,15 +2,16 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/des
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DesktopMyFiles extends StatefulWidget {
+  const DesktopMyFiles({Key? key}) : super(key: key);
+
   @override
-  _DesktopMyFilesState createState() => _DesktopMyFilesState();
+  State<DesktopMyFiles> createState() => _DesktopMyFilesState();
 }
 
 class _DesktopMyFilesState extends State<DesktopMyFiles>
@@ -22,6 +23,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
   List<String> tabNames = [];
 
   bool isLoading = false;
+
   @override
   void initState() {
     myFilesProvider = Provider.of<MyFilesProvider>(context, listen: false);
@@ -48,19 +50,19 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
         children: [
           SingleChildScrollView(
             child: (isLoading)
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                       ColorConstants.orange,
                     ),
                   ))
-                : Container(
+                : SizedBox(
                     // reducing size by 75 , so that last list item will be shown
                     height: SizeConfig().screenHeight,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         DesktopHeader(
                             showBackIcon: false,
                             title: "My Files",
@@ -80,7 +82,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                                     myFilesProvider
                                         .setFileSearchText(val.toLowerCase());
                                   }),
-                              SizedBox(width: 15),
+                              const SizedBox(width: 15),
                               //TODO: filter option is removed from ui for now.
                               // InkWell(
                               //   onTap: () {
@@ -96,7 +98,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                             ]),
                         Container(
                           height: 40,
-                          padding: EdgeInsets.only(left: 50),
+                          padding: const EdgeInsets.only(left: 50),
                           child: TabBar(
                             onTap: (index) async {},
                             isScrollable: true,
@@ -112,11 +114,11 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                                 (index) => Text(tabNames[index])),
                           ),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         Expanded(
                           child: TabBarView(
                             controller: _controller,
-                            physics: ClampingScrollPhysics(),
+                            physics: const ClampingScrollPhysics(),
                             children: tabs,
                           ),
                         )
@@ -130,7 +132,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                   top: 20,
                   child: Container(
                     width: 150,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         right: 10, left: 10, top: 10, bottom: 10),
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -142,7 +144,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Filters',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
@@ -153,11 +155,11 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                                   _isFilterOption = !_isFilterOption;
                                 });
                               },
-                              child: Icon(Icons.close, size: 18),
+                              child: const Icon(Icons.close, size: 18),
                             ),
                           ],
                         ),
-                        Divider(
+                        const Divider(
                           height: 10,
                           color: ColorConstants.greyText,
                         ),
@@ -165,7 +167,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                         getFilterOptionWidget('By name', false),
                         getFilterOptionWidget('By size', false),
                         getFilterOptionWidget('By date', false),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         TextButton(
                           onPressed: () {},
                           style: ButtonStyle(backgroundColor:
@@ -175,10 +177,10 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                             },
                           ), fixedSize: MaterialStateProperty.resolveWith<Size>(
                             (Set<MaterialState> states) {
-                              return Size(120, 40);
+                              return const Size(120, 40);
                             },
                           )),
-                          child: Text(
+                          child: const Text(
                             'Apply',
                             style: TextStyle(
                               color: Colors.white,
@@ -190,7 +192,7 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                     ),
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );
@@ -202,13 +204,13 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
       children: [
         Text(
           title,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         Checkbox(
           value: isSelected,
           onChanged: (value) {},
           activeColor: Colors.black,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(15),
             ),

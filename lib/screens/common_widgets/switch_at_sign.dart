@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
@@ -12,20 +13,22 @@ import 'package:showcaseview/showcaseview.dart';
 
 class AtSignBottomSheet extends StatefulWidget {
   final List<String>? atSignList;
-  AtSignBottomSheet({Key? key, this.atSignList}) : super(key: key);
+
+  const AtSignBottomSheet({Key? key, this.atSignList}) : super(key: key);
 
   @override
-  _AtSignBottomSheetState createState() => _AtSignBottomSheetState();
+  State<AtSignBottomSheet> createState() => _AtSignBottomSheetState();
 }
 
 class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
-  GlobalKey _one = GlobalKey();
-  GlobalKey _two = GlobalKey();
+  final GlobalKey _one = GlobalKey();
+  final GlobalKey _two = GlobalKey();
   BuildContext? myContext;
 
   BackendService backendService = BackendService.getInstance();
   bool isLoading = false;
-  var atClientPrefernce;
+  late AtClientPreference atClientPrefernce;
+
   @override
   Widget build(BuildContext context) {
     backendService
@@ -43,7 +46,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                 onClosing: () {},
                 backgroundColor: Colors.transparent,
                 builder: (context) => ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10)),
                   child: Container(
@@ -59,14 +62,15 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                               key: _one,
                               description:
                                   'You can pair multiple atSigns with this app.',
-                              shapeBorder: CircleBorder(),
+                              shapeBorder: const CircleBorder(),
                               disableAnimation: true,
-                              radius: BorderRadius.all(Radius.circular(40)),
+                              radius:
+                                  const BorderRadius.all(Radius.circular(40)),
                               showArrow: false,
-                              overlayPadding: EdgeInsets.all(5),
+                              overlayPadding: const EdgeInsets.all(5),
                               blurValue: 2,
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                                 child: Text(TextStrings().sidebarSwitchOut,
                                     style:
@@ -82,10 +86,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 decoration: BoxDecoration(
                                     color: Colors.grey.shade400,
                                     borderRadius: BorderRadius.circular(50)),
-                                margin: EdgeInsets.all(0),
+                                margin: const EdgeInsets.all(0),
                                 height: 20,
                                 width: 20,
-                                child: Icon(
+                                child: const Icon(
                                   Icons.question_mark,
                                   size: 15,
                                 ),
@@ -116,11 +120,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                                     atSign: widget
                                                         .atSignList![index]);
 
-                                            Navigator.pop(context);
                                             // Navigator.pop(context);
                                           },
                                     child: Padding(
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                           left: 10, right: 10, top: 20),
                                       child: Column(
                                         children: [
@@ -159,7 +162,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                   );
                                 },
                               )),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               GestureDetector(
@@ -181,14 +184,15 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                   key: _two,
                                   description:
                                       'Use the + icon to either generate a new free atSign or pair an existing one. All paired atSigns will appear here, where you can switch between them.',
-                                  shapeBorder: CircleBorder(),
-                                  radius: BorderRadius.all(Radius.circular(40)),
+                                  shapeBorder: const CircleBorder(),
+                                  radius: const BorderRadius.all(
+                                      Radius.circular(40)),
                                   showArrow: false,
                                   disableAnimation: true,
-                                  overlayPadding: EdgeInsets.all(5),
+                                  overlayPadding: const EdgeInsets.all(5),
                                   blurValue: 2,
                                   child: Container(
-                                    margin: EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(right: 10),
                                     height: 40,
                                     width: 40,
                                     child: Icon(

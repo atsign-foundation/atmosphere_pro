@@ -5,7 +5,6 @@ import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart'
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contacts_widget.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'empty_contact_widget.dart';
@@ -82,11 +81,11 @@ class _ListContactWidgetState extends State<ListContactWidget>
         //   );
         // } else {
         // filtering contacts and groups
-        var _filteredList = <GroupContactsModel?>[];
+        var filteredList = <GroupContactsModel?>[];
         List<GroupContactsModel> trustedContacts = [];
-        _filteredList = getAllContactList(snapshot.data ?? []);
+        filteredList = getAllContactList(snapshot.data ?? []);
 
-        if (_filteredList.isEmpty) {
+        if (filteredList.isEmpty) {
           return EmptyContactsWidget(
             contactsType: widget.contactsType,
             onTapAddButton: widget.onTapAddButton ?? () {},
@@ -116,7 +115,7 @@ class _ListContactWidgetState extends State<ListContactWidget>
           radius: const Radius.circular(11),
           child: ContactsWidget(
             scrollController: scrollController,
-            contacts: _filteredList,
+            contacts: filteredList,
             contactsType: widget.contactsType,
             isShowAlpha: widget.isShowAlpha,
             isSelectMultiContacts: widget.isSelectMultiContacts,
@@ -126,7 +125,7 @@ class _ListContactWidgetState extends State<ListContactWidget>
             onRefresh: () async {
               await _groupService.fetchGroupsAndContacts();
             },
-            contactPadding: EdgeInsets.only(left: 18, right: 28),
+            contactPadding: const EdgeInsets.only(left: 18, right: 28),
             selectedContacts: widget.selectedContacts,
             trustedContacts: widget.trustedContacts,
           ),
@@ -139,14 +138,14 @@ class _ListContactWidgetState extends State<ListContactWidget>
   // creates a list of contacts by merging atsigns and groups.
   List<GroupContactsModel?> getAllContactList(
       List<GroupContactsModel?> allGroupContactData) {
-    var _filteredList = <GroupContactsModel?>[];
+    var filteredList = <GroupContactsModel?>[];
     for (var c in allGroupContactData) {
       if (showContacts &&
           c?.contact != null &&
           (c?.contact?.atSign ?? '').toString().toUpperCase().contains(
                 widget.searchKeywords.toUpperCase(),
               )) {
-        _filteredList.add(c);
+        filteredList.add(c);
       }
 
       if (showGroups &&
@@ -155,10 +154,10 @@ class _ListContactWidgetState extends State<ListContactWidget>
           (c?.group?.displayName ?? '').toUpperCase().contains(
                 widget.searchKeywords.toUpperCase(),
               )) {
-        _filteredList.add(c);
+        filteredList.add(c);
       }
     }
-    return _filteredList;
+    return filteredList;
   }
 
   @override

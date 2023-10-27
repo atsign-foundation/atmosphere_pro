@@ -34,15 +34,15 @@ class SetupRoutes {
           indexBottomBarSelected: args['indexBottomBarSelected'],
         );
       },
-      Routes.FAQ_SCREEN: (context) => WebsiteScreen(
+      Routes.FAQ_SCREEN: (context) => const WebsiteScreen(
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
           ),
       Routes.MY_FILES: (context) => MyFiles(),
       Routes.MY_FILES_SCREEN: (context) => MyFilesScreen(),
       Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
-      Routes.HISTORY_SCREEN: (context) => TransferHistoryScreen(),
-      Routes.BLOCKED_USERS: (context) => BlockedScreen(),
+      Routes.HISTORY_SCREEN: (context) => const TransferHistoryScreen(),
+      Routes.BLOCKED_USERS: (context) => const BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
         Map<String, dynamic> args =
             ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -56,12 +56,10 @@ class SetupRoutes {
         );
       },
       Routes.GROUPS: (context) {
-        Map<String, dynamic>? args =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-        return GroupList();
+        return const GroupList();
       },
       Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),
-      Routes.SETTINGS: (context) => SettingsScreen()
+      Routes.SETTINGS: (context) => const SettingsScreen()
     };
   }
 }

@@ -6,52 +6,43 @@ import 'package:flutter/material.dart';
 class DesktopHeader extends StatelessWidget {
   final String? title;
   final ValueChanged<bool>? onFilter;
-  List<Widget>? actions;
-  List<String> options = [
+  final List<Widget>? actions;
+  final List<String> options = [
     'By type',
     'By name',
     'By size',
     'By date',
     'add-btn'
   ];
-  bool showBackIcon, isTitleCentered;
+  final bool showBackIcon, isTitleCentered;
+
   DesktopHeader(
-      {this.title,
+      {Key? key,
+      this.title,
       this.showBackIcon = true,
       this.onFilter,
       this.actions,
-      this.isTitleCentered = false});
+      this.isTitleCentered = false})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          SizedBox(width: 20.toWidth),
-          showBackIcon
-              ? InkWell(
-                  onTap: () {
-                    DesktopSetupRoutes.nested_pop();
-                  },
-                  child: Icon(Icons.arrow_back),
-                )
-              : SizedBox(),
-          SizedBox(width: 15.toWidth),
-          title != null && isTitleCentered
-              ? Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20.toWidth),
-                    child: Center(
-                      child: Text(
-                        title!,
-                        style: CustomTextStyles.primaryRegular20,
-                        maxLines: 2,
-                      ),
-                    ),
-                  ),
-                )
-              : SizedBox(),
-          title != null && !isTitleCentered
-              ? Container(
+    return Row(
+      children: <Widget>[
+        SizedBox(width: 20.toWidth),
+        showBackIcon
+            ? InkWell(
+                onTap: () {
+                  DesktopSetupRoutes.nested_pop();
+                },
+                child: const Icon(Icons.arrow_back),
+              )
+            : const SizedBox(),
+        SizedBox(width: 15.toWidth),
+        title != null && isTitleCentered
+            ? Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20.toWidth),
                   child: Center(
                     child: Text(
                       title!,
@@ -59,17 +50,26 @@ class DesktopHeader extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
-                )
-              : SizedBox(),
-          SizedBox(width: 15.toWidth),
-          !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
-          actions != null
-              ? Row(
-                  children: actions!,
-                )
-              : SizedBox()
-        ],
-      ),
+                ),
+              )
+            : const SizedBox(),
+        title != null && !isTitleCentered
+            ? Center(
+                child: Text(
+                  title!,
+                  style: CustomTextStyles.primaryRegular20,
+                  maxLines: 2,
+                ),
+              )
+            : const SizedBox(),
+        SizedBox(width: 15.toWidth),
+        !isTitleCentered ? const Expanded(child: SizedBox()) : const SizedBox(),
+        actions != null
+            ? Row(
+                children: actions!,
+              )
+            : const SizedBox()
+      ],
     );
   }
 }

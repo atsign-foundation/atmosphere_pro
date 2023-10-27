@@ -7,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DesktopSelectedContacts extends StatefulWidget {
-  ValueChanged<bool> onChange;
-  bool showCancelIcon;
-  DesktopSelectedContacts(this.onChange, {this.showCancelIcon = false});
+  final ValueChanged<bool> onChange;
+  final bool showCancelIcon;
+
+  const DesktopSelectedContacts(this.onChange,
+      {Key? key, this.showCancelIcon = false})
+      : super(key: key);
 
   @override
-  _DesktopSelectedContactsState createState() =>
+  State<DesktopSelectedContacts> createState() =>
       _DesktopSelectedContactsState();
 }
 
@@ -47,7 +50,7 @@ class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
           ],
         ),
       ),
-      SizedBox(
+      const SizedBox(
         height: 30,
       ),
       Align(

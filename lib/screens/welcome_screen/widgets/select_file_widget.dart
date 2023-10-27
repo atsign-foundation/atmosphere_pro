@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -15,13 +14,16 @@ class SelectFileWidget extends StatefulWidget {
   final Function(bool) onUpdate;
   final Function onNotesUpdate;
   final String? initialValue;
-  SelectFileWidget(
+
+  const SelectFileWidget(
     this.onUpdate,
     this.onNotesUpdate, {
+    Key? key,
     this.initialValue,
-  });
+  }) : super(key: key);
+
   @override
-  _SelectFileWidgetState createState() => _SelectFileWidgetState();
+  State<SelectFileWidget> createState() => _SelectFileWidgetState();
 }
 
 class _SelectFileWidgetState extends State<SelectFileWidget> {
@@ -61,12 +63,12 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  const Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
                     TextStrings().fileChoiceQuestion,
                     style: CustomTextStyles.primaryBold16,
                   ),
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  const Padding(padding: EdgeInsets.only(top: 15.0)),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
@@ -85,13 +87,13 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                           color: Colors.black,
                         ),
                         Padding(
-                            padding: EdgeInsets.only(left: 20),
+                            padding: const EdgeInsets.only(left: 20),
                             child: Text(
                               TextStrings().choice1,
                               style: CustomTextStyles.primaryBold14,
                             ))
                       ])),
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  const Padding(padding: EdgeInsets.only(top: 15.0)),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
@@ -110,7 +112,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                           color: Colors.black,
                         ),
                         Padding(
-                            padding: EdgeInsets.only(left: 20),
+                            padding: const EdgeInsets.only(left: 20),
                             child: Text(
                               TextStrings().choice2,
                               style: CustomTextStyles.primaryBold14,
@@ -166,7 +168,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
               },
               trailing: Container(
                 padding: EdgeInsets.symmetric(vertical: 15.toHeight),
-                child: Icon(
+                child: const Icon(
                   Icons.add_circle,
                   color: Colors.black,
                 ),
@@ -175,7 +177,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
             filePickerProvider!.selectedFiles.isNotEmpty
                 ? ListView.builder(
                     shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     itemCount: filePickerProvider!.selectedFiles.isNotEmpty
                         ? int.parse(
                             filePickerProvider!.selectedFiles.length.toString())
@@ -184,7 +186,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                       return Consumer<FileTransferProvider>(
                           builder: (context, provider, _) {
                         if (provider.selectedFiles.isEmpty) {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                         return Container(
                           decoration: BoxDecoration(
@@ -209,9 +211,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                               double.parse(provider.selectedFiles[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.selectedFiles[index].size} Kb' +
+                                  ? '${provider.selectedFiles[index].size} Kb'
                                       ' . ${provider.selectedFiles[index].extension}'
-                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb'
                                       ' . ${provider.selectedFiles[index].extension}',
                               style: TextStyle(
                                 color: ColorConstants.fadedText,
@@ -224,7 +226,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                                     .toString(),
                                 provider.selectedFiles[index].path.toString()),
                             trailing: IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.clear,
                               ),
                               onPressed: () {
@@ -245,7 +247,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                       });
                     },
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),

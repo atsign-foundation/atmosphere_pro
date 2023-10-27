@@ -16,12 +16,12 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:provider/provider.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 
 class DesktopTrustedSender extends StatefulWidget {
+  const DesktopTrustedSender({Key? key}) : super(key: key);
+
   @override
-  _DesktopTrustedSenderState createState() => _DesktopTrustedSenderState();
+  State<DesktopTrustedSender> createState() => _DesktopTrustedSenderState();
 }
 
 class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
@@ -39,7 +39,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       color: ColorConstants.fadedBlue,
       child: ProviderHandler<TrustedContactProvider>(
           functionName: 'get_trusted_contacts',
@@ -60,7 +60,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           DesktopHeader(
                             title: TextStrings().trustedSenders,
                             isTitleCentered: true,
@@ -94,12 +94,12 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                 ), fixedSize:
                                     MaterialStateProperty.resolveWith<Size>(
                                   (Set<MaterialState> states) {
-                                    return Size(100, 40);
+                                    return const Size(100, 40);
                                   },
                                 )),
                                 child: Text(
                                   TextStrings().add,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -120,7 +120,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               // SizedBox(width: 10),
                             ],
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Align(
                             alignment: Alignment.topLeft,
                             child: Wrap(
@@ -164,7 +164,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                     ),
                                   );
                                 } else {
-                                  return SizedBox();
+                                  return const SizedBox();
                                 }
                               }),
                             ),
@@ -183,16 +183,16 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               contactSelectedHistory: provider.trustedContacts
                                   .map((e) => GroupContactsModel(contact: e))
                                   .toList(),
-                              selectedList: (_list) {
+                              selectedList: (list) {
                                 providerCallback<TrustedContactProvider>(
                                     context,
                                     task: (provider) async {
-                                      _list.forEach((element) async {
+                                      for (var element in list) {
                                         if (element!.contact != null) {
                                           await provider.addTrustedContacts(
                                               element.contact!);
                                         }
-                                      });
+                                      }
 
                                       isContactSelection = false;
                                     },
@@ -213,7 +213,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               onDoneTap: () {},
                             ),
                           )
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                 ),
                 _isFilterOption
@@ -222,7 +222,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                         top: 55,
                         child: Container(
                           width: 150,
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               right: 10, left: 10, top: 10, bottom: 10),
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -237,7 +237,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                 children: [
                                   Text(
                                     TextStrings().sortBy,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -247,18 +247,18 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                         _isFilterOption = !_isFilterOption;
                                       });
                                     },
-                                    child: Icon(Icons.close, size: 18),
+                                    child: const Icon(Icons.close, size: 18),
                                   ),
                                 ],
                               ),
-                              Divider(
+                              const Divider(
                                 height: 10,
                                 color: ColorConstants.greyText,
                               ),
                               getFilterOptionWidget(TextStrings().byName, true),
                               getFilterOptionWidget(
                                   TextStrings().byDate, false),
-                              SizedBox(height: 15),
+                              const SizedBox(height: 15),
                               TextButton(
                                 onPressed: () {},
                                 style: ButtonStyle(backgroundColor:
@@ -269,12 +269,12 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                 ), fixedSize:
                                     MaterialStateProperty.resolveWith<Size>(
                                   (Set<MaterialState> states) {
-                                    return Size(120, 40);
+                                    return const Size(120, 40);
                                   },
                                 )),
                                 child: Text(
                                   TextStrings().apply,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -284,7 +284,7 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                           ),
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ],
             );
           }),
@@ -305,13 +305,13 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
       children: [
         Text(
           title,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         Checkbox(
           value: isSelected,
           onChanged: (value) {},
           activeColor: Colors.black,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(15),
             ),

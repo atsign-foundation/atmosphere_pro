@@ -33,11 +33,10 @@ Widget customPersonVerticalTile(
               right: 0,
               child: InkWell(
                 onTap: () {
-                  if (onCancel != null) {
-                    onCancel();
-                  }
+                  onCancel.call();
                 },
-                child: isCancelIcon ? Icon(Icons.cancel) : SizedBox(),
+                child:
+                    isCancelIcon ? const Icon(Icons.cancel) : const SizedBox(),
               ),
             ),
           ],
@@ -45,7 +44,7 @@ Widget customPersonVerticalTile(
       ),
       SizedBox(width: 10.toHeight),
       Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +63,7 @@ Widget customPersonVerticalTile(
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       )

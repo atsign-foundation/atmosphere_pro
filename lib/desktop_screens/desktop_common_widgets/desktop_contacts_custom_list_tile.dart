@@ -27,7 +27,7 @@ class DesktopContactsCustomListTile extends StatelessWidget {
       leading: Container(
           height: 50,
           width: 50,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.black,
             shape: BoxShape.circle,
           ),
@@ -39,7 +39,7 @@ class DesktopContactsCustomListTile extends StatelessWidget {
           )),
       trailing: IconButton(
         onPressed: () {},
-        icon: (false) ? Icon(Icons.close) : Icon(Icons.add),
+        icon: const Icon(Icons.add),
       ),
     );
   }

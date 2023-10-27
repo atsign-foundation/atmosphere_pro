@@ -2,7 +2,6 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SideBarItem extends StatelessWidget {
   final String? image;
@@ -12,8 +11,9 @@ class SideBarItem extends StatelessWidget {
   final bool showIconOnly, isDesktop;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
-  bool isScale;
+  final bool isScale;
   final bool showNotificationDot;
+
   SideBarItem(
       {Key? key,
       this.image,
@@ -26,10 +26,12 @@ class SideBarItem extends StatelessWidget {
       this.showNotificationDot = false,
       this.isDesktop = false})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    if (SizeConfig().isMobile(context)) {
-      isScale = false;
+    bool isScaled = isScale;
+    if (SizeConfig().isMobile(context) && isScale) {
+      isScaled = false;
     }
 
     return InkWell(
@@ -40,7 +42,7 @@ class SideBarItem extends StatelessWidget {
         }
         Navigator.pushNamed(context, routeName!, arguments: arguments ?? {});
       },
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: Row(
           children: [
@@ -49,7 +51,7 @@ class SideBarItem extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(right: isDesktop ? 20 : 10),
                   child: Transform.scale(
-                    scale: isScale ? 1.2 : 1,
+                    scale: isScaled ? 1.2 : 1,
                     child: Image.asset(
                       image!,
                       height: SizeConfig().isTablet(context) ? 24 : 22.toHeight,
@@ -64,7 +66,7 @@ class SideBarItem extends StatelessWidget {
                     child: Container(
                       width: 8.toWidth,
                       height: 8.toWidth,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.red,
                       ),
@@ -85,22 +87,10 @@ class SideBarItem extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
