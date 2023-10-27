@@ -176,6 +176,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             whenComplete: (result) {
                               if (result is AtGroup) {
                                 if (!mounted) return;
+                                searchController.clear();
+                                groupNameController.clear();
+                                _provider.removeSelectedImage();
+                                _provider.resetData();
                                 Navigator.of(context).pop(true);
                               } else if (result != null) {
                                 if (result.runtimeType ==
