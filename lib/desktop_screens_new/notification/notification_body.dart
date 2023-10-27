@@ -51,14 +51,15 @@ class _NotificationBodyState extends State<NotificationBody> {
                       child: Text(
                         'Notifications',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                            fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                     ),
                     Center(
                       child: SizedBox(
-                          width: 123,
-                          child: Divider(
-                              color: ColorConstants.buttonHighLightColor)),
+                        width: 155,
+                        child:
+                            Divider(color: ColorConstants.buttonHighLightColor),
+                      ),
                     ),
                     provider.currentFileShareStatus[notification_service
                                 .NotificationService.fileObjectKey] !=
@@ -110,8 +111,8 @@ class _NotificationBodyState extends State<NotificationBody> {
   Widget getNotificationList(
       notification_service.NotificationService provider) {
     return Container(
-      height: 300,
       child: ListView.builder(
+        shrinkWrap: true,
         itemCount: provider.recentNotification.length,
         itemBuilder: (_, i) {
           return provider.recentNotification[i].type == HistoryType.send

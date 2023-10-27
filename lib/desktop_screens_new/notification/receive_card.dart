@@ -43,7 +43,7 @@ class ReceivedFileCard extends StatelessWidget {
                         TextSpan(
                           text: '${fileHistory.fileDetails?.sender ?? ''}',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -56,7 +56,7 @@ class ReceivedFileCard extends StatelessWidget {
                   TextSpan(
                     text: 'Sent ',
                     style: TextStyle(
-                      fontSize: 9,
+                      fontSize: 12,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -64,7 +64,7 @@ class ReceivedFileCard extends StatelessWidget {
                   TextSpan(
                     text: '${fileHistory.fileDetails?.files?.length} files',
                     style: TextStyle(
-                      fontSize: 9,
+                      fontSize: 12,
                       color: Colors.black,
                     ),
                   ),
@@ -96,12 +96,12 @@ class ReceivedFileCard extends StatelessWidget {
                   children: [
                     Text(
                       'View',
-                      style: TextStyle(color: Colors.white, fontSize: 10),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                     Icon(
                       Icons.arrow_outward,
                       color: Colors.white,
-                      size: 10,
+                      size: 12,
                     )
                   ],
                 ))

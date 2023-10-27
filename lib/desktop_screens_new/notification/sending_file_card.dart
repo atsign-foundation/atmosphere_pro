@@ -31,15 +31,15 @@ class SendingFileCard extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'sending',
+                        text: 'Sending',
                         style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.black),
                       ),
                       TextSpan(
                         text: '${fileTransfer!.files?.length ?? 0} files',
-                        style: TextStyle(fontSize: 11, color: Colors.black),
+                        style: TextStyle(fontSize: 15, color: Colors.black),
                       )
                     ],
                   ),
@@ -48,7 +48,7 @@ class SendingFileCard extends StatelessWidget {
                   width: (Platform.isAndroid || Platform.isIOS) ? 200 : 230,
                   child: Text(
                     getAtsignCountFromFileTransfer(fileTransfer!),
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(height: 5),

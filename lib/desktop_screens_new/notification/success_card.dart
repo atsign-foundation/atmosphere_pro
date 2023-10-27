@@ -52,7 +52,7 @@ class SuccessCard extends StatelessWidget {
                       TextSpan(
                         text: 'Successfully sent ',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 15,
                           color: Color(0xFF18A2EF),
                           fontWeight: FontWeight.bold,
                         ),
@@ -60,7 +60,7 @@ class SuccessCard extends StatelessWidget {
                       TextSpan(
                         text: '${fileHistory.fileDetails?.files?.length} files',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 15,
                           color: Color(0xFF18A2EF),
                         ),
                       )
@@ -72,7 +72,7 @@ class SuccessCard extends StatelessWidget {
                   child: Text(
                     getAtsignCount(fileHistory),
                     style: TextStyle(
-                      fontSize: 9,
+                      fontSize: 12,
                       color: Color(0xFF18A2EF),
                     ),
                   ),
@@ -86,7 +86,7 @@ class SuccessCard extends StatelessWidget {
                 children: [
                   Text(
                     'Delivered',
-                    style: TextStyle(color: Color(0xFF18A2EF), fontSize: 10),
+                    style: TextStyle(color: Color(0xFF18A2EF), fontSize: 12),
                   ),
                 ],
               ),

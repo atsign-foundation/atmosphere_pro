@@ -56,7 +56,7 @@ class FailCard extends StatelessWidget {
                       TextSpan(
                         text: 'Failed to send ',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 15,
                           color: ColorConstants.buttonHighLightColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -64,7 +64,7 @@ class FailCard extends StatelessWidget {
                       TextSpan(
                         text: '${fileHistory.fileDetails?.files?.length} files',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 15,
                           color: ColorConstants.buttonHighLightColor,
                         ),
                       )
@@ -72,16 +72,50 @@ class FailCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: (Platform.isAndroid || Platform.isIOS) ? 200 : 230,
+                  width: 180,
                   child: Text(
                     getAtsignCount(fileHistory),
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       color: ColorConstants.buttonHighLightColor,
                     ),
                   ),
                 ),
               ],
+            ),
+            Container(
+              width: 25,
+              height: 25,
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Color(0xFFFCDFD9),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Center(
+                child: Text(
+                  '!',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: ColorConstants.buttonHighLightColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: Color(0xFFFCDFD9),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Text(
+                'Error',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: ColorConstants.buttonHighLightColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             NotificationCardButton(
                 backgroundColor: Color(0xFFE1E1E1),
@@ -90,12 +124,12 @@ class FailCard extends StatelessWidget {
                   children: [
                     Text(
                       'Retry',
-                      style: TextStyle(color: Colors.black, fontSize: 10),
+                      style: TextStyle(color: Colors.black, fontSize: 12),
                     ),
                     Icon(
                       Icons.refresh,
                       color: Colors.black,
-                      size: 10,
+                      size: 12,
                     )
                   ],
                 ))
