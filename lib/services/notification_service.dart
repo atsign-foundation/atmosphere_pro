@@ -18,9 +18,12 @@ class NotificationService extends ChangeNotifier {
 
   List<FileHistory> get recentNotification => _recentNotifications;
   Map<String, dynamic> get currentFileShareStatus => _currentFileShareStatus;
+  int _notificationCount = 0;
 
-  addNotification(FileHistory fileHistory) {
-    _recentNotifications.insert(0, fileHistory);
+  int get notificationCount => _notificationCount;
+
+  resetNotificationCount() {
+    _notificationCount = 0;
     notifyListeners();
   }
 
@@ -35,6 +38,7 @@ class NotificationService extends ChangeNotifier {
 
   addRecentNotifications(FileHistory fileHistory) {
     _recentNotifications.insert(0, fileHistory);
+    ++_notificationCount;
     notifyListeners();
   }
 }

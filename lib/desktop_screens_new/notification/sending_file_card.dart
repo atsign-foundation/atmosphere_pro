@@ -32,7 +32,7 @@ class SendingFileCard extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Sending',
+                        text: 'Sending ',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,

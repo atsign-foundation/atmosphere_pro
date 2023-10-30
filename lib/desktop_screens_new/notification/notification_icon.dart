@@ -45,7 +45,7 @@ class _NotificationIconState extends State<NotificationIcon> {
           right: 0,
           child: Consumer<notification_service.NotificationService>(
             builder: (_, provider, __) {
-              return provider.recentNotification.isEmpty
+              return provider.notificationCount == 0
                   ? SizedBox.shrink()
                   : Container(
                       height: 25,
@@ -82,6 +82,10 @@ class _NotificationIconState extends State<NotificationIcon> {
       isNotificationSelected = !isNotificationSelected;
     });
 
+    Provider.of<notification_service.NotificationService>(context,
+            listen: false)
+        .resetNotificationCount();
+
     await showDialog(
         context: context,
         barrierColor: Colors.transparent,
@@ -101,10 +105,10 @@ class _NotificationIconState extends State<NotificationIcon> {
 
   String getNotificationCount(
       notification_service.NotificationService provider) {
-    if (provider.recentNotification.length > 10) {
+    if (provider.notificationCount > 10) {
       return '10+';
     } else {
-      return '${provider.recentNotification.length}';
+      return '${provider.notificationCount}';
     }
   }
 
