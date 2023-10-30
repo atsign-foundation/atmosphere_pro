@@ -41,8 +41,13 @@ class FileTransferService {
     var fileStatus = await _uploadFiles(key, files, encryptionKey);
     var fileUrl = MixedConstants.FILEBIN_URL + 'archive/' + key + '/zip';
     return shareFiles(
-        sharedWithAtSigns, key, fileUrl, encryptionKey, fileStatus,
-        notes: notes);
+      sharedWithAtSigns,
+      key,
+      fileUrl,
+      encryptionKey,
+      fileStatus,
+      notes: notes,
+    );
   }
 
   Future<List<FileStatus>> _uploadFiles(
@@ -149,8 +154,10 @@ class FileTransferService {
           ..metadata!.ttl = 1296000000 // 1000 * 60 * 60 * 24 * 15
           ..sharedBy = BackendService.getInstance().currentAtSign;
 
-        var notificationResult =
-            await AtClientManager.getInstance().notificationService.notify(
+        var notificationResult = await AtClientManager.getInstance()
+                .atClient
+                .notificationService
+                .notify(
                   NotificationParams.forUpdate(
                     atKey,
                     value: jsonEncode(fileTransferObject.toJson()),
@@ -173,6 +180,10 @@ class FileTransferService {
         fileTransferObject.sharedStatus = false;
         fileTransferObject.error = e.toString();
         fileTransferObject.atClientException = e;
+      } catch (e) {
+        fileTransferObject.sharedStatus = false;
+        fileTransferObject.error = e.toString();
+        fileTransferObject.atClientException = Exception(e.toString());
       }
       result[sharedWithAtSign] = fileTransferObject;
     }

@@ -13,6 +13,7 @@ class FileTransfer {
   bool? isWidgetOpen;
   String? notes;
   String? fileEncryptionKey;
+  List<String>? atSigns;
   FileTransfer(
       {required this.url,
       this.files,
@@ -23,7 +24,8 @@ class FileTransfer {
       this.isUpdate = false,
       this.isWidgetOpen = false,
       this.notes,
-      required this.fileEncryptionKey}) {
+      required this.fileEncryptionKey,
+      this.atSigns}) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
 

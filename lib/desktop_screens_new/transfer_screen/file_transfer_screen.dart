@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_contact_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
@@ -211,12 +212,18 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Transfer File",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Transfer File",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  NotificationIcon()
+                ],
               ),
               SizedBox(height: 10),
               const Divider(

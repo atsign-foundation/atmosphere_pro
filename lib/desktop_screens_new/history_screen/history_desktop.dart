@@ -15,7 +15,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class HistoryDesktopScreen extends StatefulWidget {
-  const HistoryDesktopScreen({Key? key}) : super(key: key);
+  final HistoryType? historyType;
+  const HistoryDesktopScreen({Key? key, this.historyType}) : super(key: key);
 
   @override
   State<HistoryDesktopScreen> createState() => _HistoryDesktopScreenState();
@@ -36,6 +37,12 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
   void initState() {
     super.initState();
     context.read<HistoryProvider>().reset("get_all_file_history");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      context
+          .read<HistoryProvider>()
+          .setSelectedType(widget.historyType ?? HistoryType.all);
+    });
   }
 
   @override
@@ -44,9 +51,6 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
 
     SizeConfig().init(context);
     screenWidth = MediaQuery.of(context).size.width;
-    print(
-      MediaQuery.of(context).size.width,
-    );
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(40),
@@ -56,7 +60,6 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
           load: (provider) async {
             await provider.getAllFileTransferHistory();
             filteredFiles = provider.allFilesHistory;
-            provider.setSelectedType(HistoryType.send);
           },
           successBuilder: (provider) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,

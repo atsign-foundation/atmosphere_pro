@@ -5,6 +5,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.da
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
@@ -231,6 +233,11 @@ class FileTransferProvider extends BaseModel {
       List<PlatformFile> selectedFiles, List<GroupContactsModel?> contactList,
       {String? groupName, String? notes}) async {
     flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
+    var notifProvider = Provider.of<NotificationService>(
+        NavService.navKey.currentContext!,
+        listen: false);
+    bool shareStatus = true;
+
     setStatus(SEND_FILES, Status.Loading);
     var fileUploadProvider = Provider.of<FileProgressProvider>(
         NavService.navKey.currentContext!,
@@ -259,6 +266,18 @@ class FileTransferProvider extends BaseModel {
           });
         }
       });
+
+      notifProvider.updateCurrentFileShareStatus(
+        FileTransfer(
+          url: '',
+          key: '',
+          fileEncryptionKey: '',
+          files:
+              _files.map((File e) => FileData(name: e.path, size: 0)).toList(),
+          atSigns: _atSigns,
+        ),
+        FLUSHBAR_STATUS.SENDING,
+      );
 
       var uploadResult = await FileTransferService.getInstance().uploadFile(
         _files,
@@ -289,16 +308,32 @@ class FileTransferProvider extends BaseModel {
           );
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
           await showRetrySending();
-          return false;
+          shareStatus = false;
         }
       }
+
+      FileHistory fileHistory =
+          _historyProvider.convertFileTransferObjectToFileHistory(
+        uploadResult[_atSigns[0]]!,
+        _atSigns,
+        uploadResult,
+      );
+      notifProvider.updateCurrentFileShareStatus(
+        null,
+        FLUSHBAR_STATUS.DONE,
+      );
+      notifProvider.addRecentNotifications(fileHistory);
 
       fileUploadProvider.removeSentFileProgress();
       flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
       setStatus(SEND_FILES, Status.Done);
-      return true;
+      return shareStatus;
     } catch (e) {
       fileUploadProvider.removeSentFileProgress();
+      notifProvider.updateCurrentFileShareStatus(
+        null,
+        FLUSHBAR_STATUS.FAILED,
+      );
       setStatus(SEND_FILES, Status.Error);
       setError(
         SEND_FILES,

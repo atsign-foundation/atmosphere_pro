@@ -13,16 +13,14 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_pro/screens/history/history_screen.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
-import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/local_notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
@@ -30,7 +28,6 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/switch_atsign_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +36,6 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
-import 'package:at_client/src/service/sync_service.dart';
-import 'package:at_client/src/service/notification_service_impl.dart';
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 
 class BackendService {
@@ -244,13 +238,15 @@ class BackendService {
         ..metadata!.ttr = -1
         ..metadata!.ttl = 518400000;
 
-      var notificationResult =
-          await AtClientManager.getInstance().notificationService.notify(
-                NotificationParams.forUpdate(
-                  atKey,
-                  value: 'receive_ack_$key',
-                ),
-              );
+      var notificationResult = await AtClientManager.getInstance()
+          .atClient
+          .notificationService
+          .notify(
+            NotificationParams.forUpdate(
+              atKey,
+              value: 'receive_ack_$key',
+            ),
+          );
     } catch (e) {
       print('error in ack: $e');
       ExceptionService.instance.showNotifyExceptionOverlay(e);
@@ -564,15 +560,18 @@ class BackendService {
     initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
-    await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
-        Routes.WELCOME_SCREEN, (Route<dynamic> route) => false);
+    await Navigator.pushNamedAndRemoveUntil(
+      NavService.navKey.currentContext!,
+      Routes.WELCOME_SCREEN,
+      (Route<dynamic> route) => false,
+    );
   }
 
   String? state;
-  late LocalNotificationService _notificationService;
+  late LocalLocalNotificationService _notificationService;
 
   void initLocalNotification() async {
-    _notificationService = LocalNotificationService();
+    _notificationService = LocalLocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
 

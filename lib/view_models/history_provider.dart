@@ -12,7 +12,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/local_notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -24,7 +24,8 @@ import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
+import 'package:atsign_atmosphere_pro/services/notification_service.dart'
+    as notificationService;
 import 'trusted_sender_view_model.dart';
 
 class HistoryProvider extends BaseModel {
@@ -112,7 +113,7 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  void resetIsDownloadDone () {
+  void resetIsDownloadDone() {
     isDownloadDone = false;
     notifyListeners();
   }
@@ -637,40 +638,37 @@ class HistoryProvider extends BaseModel {
         case 'AppLifecycleState.resumed':
         case 'AppLifecycleState.inactive':
         case 'AppLifecycleState.detached':
-          await LocalNotificationService()
+          await LocalLocalNotificationService()
               .showNotification(sharedBy, 'Download and view the file(s).');
           break;
         case 'AppLifecycleState.paused':
-          await LocalNotificationService().showNotification(
+          await LocalLocalNotificationService().showNotification(
               sharedBy, 'Open the app to download and view the file(s).');
           break;
         default:
-          await LocalNotificationService()
+          await LocalLocalNotificationService()
               .showNotification(sharedBy, 'Download and view the file(s).');
       }
+
+      var fileHistory = FileHistory(
+        filesModel,
+        [],
+        HistoryType.received,
+        fileTransferObject,
+      );
+
+      Provider.of<notificationService.NotificationService>(
+              NavService.navKey.currentContext!,
+              listen: false)
+          .addRecentNotifications(fileHistory);
+
       await addToReceiveFileHistory(
         sharedBy,
         filesModel,
         fileTransferObject: fileTransferObject,
       );
-      receivedFileHistory.insert(
-        0,
-        FileHistory(
-          filesModel,
-          [],
-          HistoryType.received,
-          fileTransferObject,
-        ),
-      );
-      allFilesHistory.insert(
-        0,
-        FileHistory(
-          filesModel,
-          [],
-          HistoryType.received,
-          fileTransferObject,
-        ),
-      );
+      receivedFileHistory.insert(0, fileHistory);
+      allFilesHistory.insert(0, fileHistory);
     }
     setStatus(UPDATE_RECEIVED_RECORD, Status.Done);
   }
@@ -1072,11 +1070,12 @@ class HistoryProvider extends BaseModel {
     });
 
     FileTransfer fileTransfer = FileTransfer(
-        key: fileTransferObject.transferId,
-        date: fileTransferObject.date,
-        files: files,
-        url: fileTransferObject.fileUrl,
-        fileEncryptionKey: fileTransferObject.fileEncryptionKey);
+      key: fileTransferObject.transferId,
+      date: fileTransferObject.date,
+      files: files,
+      url: fileTransferObject.fileUrl,
+      fileEncryptionKey: fileTransferObject.fileEncryptionKey,
+    );
 
     sharedWithAtsigns.forEach((atsign) {
       sthareStatus
