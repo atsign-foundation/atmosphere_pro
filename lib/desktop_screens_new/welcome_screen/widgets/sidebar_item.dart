@@ -18,12 +18,14 @@ class SidebarItem extends StatelessWidget {
   final Map<String, dynamic>? arguments;
   final bool isUrlLauncher, isSidebarExpanded, isEmailLauncher;
 
-  SidebarItem(
-      {this.arguments,
+  const SidebarItem(
+      {Key? key,
+      this.arguments,
       this.isUrlLauncher = false,
       this.isEmailLauncher = false,
       this.isSidebarExpanded = true,
-      required this.menuItem});
+      required this.menuItem})
+      : super(key: key);
 
   void onTapItem(MenuItem item, BuildContext context) async {
     if ((item.isUrl == true) && (item.routeName != null)) {
@@ -35,7 +37,7 @@ class SidebarItem extends StatelessWidget {
       return;
     }
 
-    if (item.routeName != null && item.routeName != '') {
+    if ((item.routeName ?? '').isNotEmpty) {
       if (item.routeName == DesktopRoutes.DESKTOP_HOME) {
         await DesktopSetupRoutes.nested_pop();
         return;
@@ -112,11 +114,10 @@ class SidebarItem extends StatelessWidget {
                         ),
                       ),
                       ListView.separated(
-                        padding: EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(vertical: 4),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          final MenuItem item =
-                              menuItem.children![index];
+                          final MenuItem item = menuItem.children![index];
                           return Container(
                             color: ColorConstants.raisinBlack,
                             child: Padding(
@@ -128,8 +129,7 @@ class SidebarItem extends StatelessWidget {
                                 child: BuildSidebarIconTitle(
                                   image: item.image,
                                   route: item.routeName ?? "",
-                                  isSidebarExpanded:
-                                      isSidebarExpanded,
+                                  isSidebarExpanded: isSidebarExpanded,
                                   isChildTile: true,
                                   title: item.title,
                                   nestedProvider: nestedProvider,
@@ -139,7 +139,7 @@ class SidebarItem extends StatelessWidget {
                           );
                         },
                         separatorBuilder: (context, index) {
-                          return Divider(
+                          return const Divider(
                             height: 0,
                             color: ColorConstants.sidebarTextUnselected,
                             indent: 32,
@@ -203,7 +203,7 @@ class BuildSidebarIconTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isCurrentRoute;
+    bool isCurrentRoute;
     if (nestedProvider.current_route == route ||
         childRoutes.contains(nestedProvider.current_route)) {
       isCurrentRoute = true;
@@ -220,7 +220,7 @@ class BuildSidebarIconTitle extends StatelessWidget {
     return Container(
       height: 40,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
         color: isCurrentRoute
             ? Theme.of(context).primaryColor
             : ColorConstants.raisinBlack,

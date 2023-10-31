@@ -5,7 +5,6 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
@@ -85,9 +84,9 @@ class FileTransferProvider extends BaseModel {
       selectedFiles = [];
       totalSize = 0;
       if (appClosedSharedFiles.isNotEmpty) {
-        appClosedSharedFiles.forEach((element) {
+        for (var element in appClosedSharedFiles) {
           selectedFiles.add(element);
-        });
+        }
         calculateSize();
         hasSelectedFilesChanged = true;
       }
@@ -129,13 +128,13 @@ class FileTransferProvider extends BaseModel {
         selectedFiles = tempList;
         tempList = [];
 
-        result!.files.forEach((element) {
+        for (var element in result!.files) {
           selectedFiles.add(element);
-        });
+        }
         if (appClosedSharedFiles.isNotEmpty) {
-          appClosedSharedFiles.forEach((element) {
+          for (var element in appClosedSharedFiles) {
             selectedFiles.add(element);
-          });
+          }
         }
         hasSelectedFilesChanged = true;
       }
@@ -169,9 +168,9 @@ class FileTransferProvider extends BaseModel {
 
   calculateSize() async {
     totalSize = 0;
-    selectedFiles.forEach((element) {
+    for (var element in selectedFiles) {
       totalSize += element.size;
-    });
+    }
   }
 
   void acceptFiles() async {
@@ -203,7 +202,7 @@ class FileTransferProvider extends BaseModel {
       await ReceiveSharingIntent.getInitialMedia()
           .then((List<SharedMediaFile> value) {
         _sharedFiles = value;
-        if (_sharedFiles != null && _sharedFiles!.isNotEmpty) {
+        if ((_sharedFiles ?? []).isNotEmpty) {
           _sharedFiles!.forEach((element) async {
             var test = File(element.path);
             var length = await test.length();
@@ -250,22 +249,22 @@ class FileTransferProvider extends BaseModel {
       var _files = <File>[];
       var _atSigns = <String>[];
 
-      selectedFiles.forEach((element) {
+      for (var element in selectedFiles) {
         _files.add(File(element.path!));
-      });
+      }
 
-      contactList.forEach((groupContact) {
+      for (var groupContact in contactList) {
         if (groupContact!.contact != null) {
           var index =
               _atSigns.indexWhere((el) => el == groupContact.contact!.atSign);
           if (index == -1) _atSigns.add(groupContact.contact!.atSign!);
         } else if (groupContact.group != null) {
-          groupContact.group!.members!.forEach((member) {
+          for (var member in groupContact.group!.members!) {
             var index = _atSigns.indexWhere((el) => el == member.atSign);
             if (index == -1) _atSigns.add(member.atSign!);
-          });
+          }
         }
-      });
+      }
 
       notifProvider.updateCurrentFileShareStatus(
         FileTransfer(

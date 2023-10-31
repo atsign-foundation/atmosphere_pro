@@ -156,7 +156,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await ReceiveSharingIntent.getInitialMedia().then(
         (List<SharedMediaFile> value) async {
       _sharedFiles = value;
-      if (_sharedFiles != null && _sharedFiles!.isNotEmpty) {
+      if ((_sharedFiles ?? []).isNotEmpty) {
         _sharedFiles!.forEach((element) async {
           //Prevent error cause by missing removing prefix from path in package
           File file = File(element.path.contains('file://')

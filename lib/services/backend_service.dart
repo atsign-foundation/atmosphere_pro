@@ -182,7 +182,7 @@ class BackendService {
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != '') {
+      if (decryptedMessage.isNotEmpty) {
         DownloadAcknowledgement downloadAcknowledgement =
             DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
@@ -241,7 +241,7 @@ class BackendService {
         ..metadata!.ttr = -1
         ..metadata!.ttl = 518400000;
 
-      var notificationResult = await AtClientManager.getInstance()
+      await AtClientManager.getInstance()
           .atClient
           .notificationService
           .notify(

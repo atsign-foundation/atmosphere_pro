@@ -25,13 +25,13 @@ class DesktopCoverImagePicker extends StatelessWidget {
     return InkWell(
       onTap: () async {
         if (isEdit) {
-          var _imageBytes = await desktopImagePicker();
-          if (_imageBytes != null) {
-            onSelected(_imageBytes);
+          var imageBytes = await desktopImagePicker();
+          if (imageBytes != null) {
+            onSelected(imageBytes);
           }
         }
       },
-      child: selectedImage != null && selectedImage!.isNotEmpty
+      child: (selectedImage ?? []).isNotEmpty
           ? SizedBox(
               width: 360,
               height: 88,

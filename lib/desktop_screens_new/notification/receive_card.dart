@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 class ReceivedFileCard extends StatelessWidget {
   final FileHistory fileHistory;
+
   const ReceivedFileCard({
     Key? key,
     required this.fileHistory,
@@ -69,7 +70,7 @@ class ReceivedFileCard extends StatelessWidget {
                     ),
                   ),
                 ])),
-                fileHistory.fileTransferObject?.notes != "" &&
+                (fileHistory.fileTransferObject?.notes ?? '').isNotEmpty &&
                         fileHistory.fileTransferObject?.notes != null
                     ? Row(
                         children: [

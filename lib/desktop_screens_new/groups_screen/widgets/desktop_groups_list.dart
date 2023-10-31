@@ -54,7 +54,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
   Widget build(BuildContext context) {
     return Consumer<DesktopGroupsScreenProvider>(
         builder: (context, provider, child) {
-      if (provider.searchGroupText != '') {
+      if (provider.searchGroupText.isNotEmpty) {
         _filteredList = widget.groups.where((grp) {
           return grp.displayName!.contains(provider.searchGroupText);
         }).toList();
@@ -96,7 +96,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                                   horizontal: 28, vertical: 8),
                               border: InputBorder.none,
                               hintText: 'Search',
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                 color: ColorConstants.grey,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,

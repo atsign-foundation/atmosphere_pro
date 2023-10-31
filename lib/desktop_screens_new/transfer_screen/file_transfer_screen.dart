@@ -42,7 +42,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   late TextEditingController searchController;
   bool showFileSentCard = false;
 
-  var isSentFileEntrySaved;
+  bool isSentFileEntrySaved = false;
   var isFileShareFailed = false;
   bool isFileSending = false;
   String initialLetter = "";
@@ -101,7 +101,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         SnackbarService().showSnackbar(
           context,
           TextStrings().fileSentSuccessfully,
-          bgColor: Color(0xFF5FAA45),
+          bgColor: const Color(0xFF5FAA45),
         );
         _filePickerProvider.selectedContacts.clear();
         _filePickerProvider.selectedFiles.clear();
@@ -143,7 +143,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
     if (isInternetAvailable) {
       await openFileReceiptBottomSheet();
     } else {
-      Timer.periodic(Duration(seconds: 5), (timer) async {
+      Timer.periodic(const Duration(seconds: 5), (timer) async {
         await context.read<InternetConnectivityChecker>().checkConnectivity();
         final bool isInternetAvailable =
             context.read<InternetConnectivityChecker>().isInternetAvailable;
@@ -163,12 +163,12 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
     _filePickerProvider.selectedFileHistory = sentList[0];
 
     if (!(sentList[0].fileDetails?.files ?? [])
-        .any((element) => element.isUploaded == false)) {
+        .any((element) => element.isUploaded == false) && mounted) {
       await showDialog(
           context: context,
           barrierColor: Colors.transparent,
           barrierDismissible: true,
-          builder: (_context) {
+          builder: (context) {
             return StatefulBuilder(
               builder: (context, setDialogState) {
                 return Dialog(
@@ -181,9 +181,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(12.0),
-                        topRight: const Radius.circular(12.0),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12.0),
+                        topRight: Radius.circular(12.0),
                       ),
                     ),
                     child: FileRecipients(
@@ -212,7 +212,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -225,12 +225,12 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                   NotificationIcon()
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Divider(
                 thickness: 1,
                 color: Colors.black,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "SELECT FILES",
                 style: TextStyle(
@@ -287,8 +287,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white,
                                     ),
-                                    padding: EdgeInsets.all(2),
-                                    child: Icon(
+                                    padding: const EdgeInsets.all(2),
+                                    child: const Icon(
                                       Icons.clear,
                                       size: 14,
                                     ),
@@ -315,13 +315,14 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                           ? DottedBorder(
                               color: Theme.of(context).primaryColor,
                               padding: EdgeInsets.zero,
-                              dashPattern: [6, 4],
+                              dashPattern: const [6, 4],
                               strokeWidth: 1.5,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: ColorConstants.orangeColorDim,
                                     borderRadius: BorderRadius.circular(5)),
-                                padding: EdgeInsets.symmetric(vertical: 40),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 40),
                                 child: FractionallySizedBox(
                                   widthFactor: 0.7,
                                   child: Column(
@@ -370,7 +371,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                   color: ColorConstants.yellowDim,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 30),
                                 child: Row(
                                   mainAxisAlignment:
@@ -383,7 +384,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                         fontSize: 16.toFont,
                                       ),
                                     ),
-                                    Icon(
+                                    const Icon(
                                       Icons.add_circle_outline,
                                       color: ColorConstants.yellow,
                                       size: 25,
@@ -414,8 +415,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                   ? GridView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.zero,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         // number of items per row
                         crossAxisCount: 3,
                         mainAxisSpacing: 0,
@@ -427,9 +429,9 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                       itemBuilder: (context, index) {
                         var groupContactModel =
                             provider.selectedContacts[index];
-                        late var contact;
-                        var isTrusted;
-                        var byteImage;
+                        late AtContact? contact;
+                        late bool isTrusted;
+                        Uint8List? byteImage;
                         if (groupContactModel.contactType ==
                             ContactsType.CONTACT) {
                           contact = groupContactModel.contact;
@@ -444,7 +446,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                             (contact?.atSign ?? ""),
                           );
                         }
-                        return Container(
+                        return SizedBox(
                           height: 70,
                           child: groupContactModel.contactType ==
                                   ContactsType.CONTACT
@@ -472,7 +474,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         );
                       },
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               InkWell(
                 onTap: () {
                   showAtSignDialog(trustedContacts);
@@ -484,7 +486,8 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                       color: ColorConstants.orangeColorDim,
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 30),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -517,7 +520,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                   ),
                   child: TextField(
                     controller: messageController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Send Message (Optional)",
                         contentPadding:
@@ -545,14 +548,14 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                   isFileShareFailed
                                       ? "Failed to send file(s)"
                                       : "Sent successfully",
-                                  style: TextStyle(color: Colors.white)),
+                                  style: const TextStyle(color: Colors.white)),
                               InkWell(
                                 onTap: () {
                                   setState(() {
                                     showFileSentCard = false;
                                   });
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.close,
                                   size: 15,
                                   color: Colors.white,
@@ -563,7 +566,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               SizedBox(
                 height: 30.toHeight,
               ),
@@ -585,13 +588,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: provider.selectedFiles.isNotEmpty
-                            ? LinearGradient(
+                            ? const LinearGradient(
                                 colors: [
                                   Color.fromRGBO(240, 94, 63, 1),
                                   Color.fromRGBO(234, 167, 67, 0.65),
                                 ],
                               )
-                            : LinearGradient(
+                            : const LinearGradient(
                                 colors: [
                                   Color.fromRGBO(216, 216, 216, 1),
                                   Color.fromRGBO(216, 216, 216, 1),
@@ -599,11 +602,11 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               ),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
                       child: Text(
                         isFileSending == true ? text : "Transfer Now",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -650,7 +653,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
             elevation: 5.0,
             clipBehavior: Clip.hardEdge,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(20),
@@ -663,7 +666,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Row(
                           children: [
                             InkWell(
@@ -672,13 +675,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                   Navigator.pop(context);
                                 }
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.arrow_back_ios,
                                 size: 25,
                               ),
                             ),
-                            SizedBox(width: 15),
-                            Text(
+                            const SizedBox(width: 15),
+                            const Text(
                               "Add atSigns",
                               style: TextStyle(
                                 fontSize: 20,
@@ -687,7 +690,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
                         Row(
                           children: [
                             Expanded(
@@ -720,7 +723,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                     setDialogState(() {});
                                   },
                                   controller: searchController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     isDense: true,
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.symmetric(
@@ -734,7 +737,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             // InkWell(
                             //   onTap: () {},
                             //   child: CircleAvatar(
@@ -748,13 +751,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                           ],
                         ),
 
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
 
                         // contact list
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: filteredContactList.length,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             var groupContactModel = filteredContactList[index];
                             late AtContact contact;
@@ -794,28 +797,28 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
 
                             return Column(
                               children: [
-                                initialLetter != ""
+                                initialLetter.isNotEmpty
                                     ? Row(
                                         children: [
                                           Text(
                                             initialLetter,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
                                               color: Color(0xFF717171),
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20,
                                           ),
-                                          Expanded(
+                                          const Expanded(
                                             child: Divider(
                                               thickness: 1,
                                             ),
                                           ),
                                         ],
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 15, top: 5, bottom: 5),
@@ -854,7 +857,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                             );
                           },
                         ),
-                        SizedBox(height: 100),
+                        const SizedBox(height: 100),
                       ],
                     ),
                   ),
@@ -874,13 +877,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        margin: EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 20),
+                        margin: const EdgeInsets.only(bottom: 20),
                         width: double.maxFinite,
                         child: Text(
                           "Add atSigns ${selectedContacts.length}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                           ),

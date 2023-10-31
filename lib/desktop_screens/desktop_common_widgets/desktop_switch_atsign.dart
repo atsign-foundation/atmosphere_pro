@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 class DesktopSwitchAtsign extends StatefulWidget {
   final String atsign;
+
   const DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
 
   @override
@@ -89,7 +90,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                 ),
               ),
               const SizedBox(height: 5),
-              (name != '')
+              name.isNotEmpty
                   ? SizedBox(
                       width: 180,
                       child: Text(

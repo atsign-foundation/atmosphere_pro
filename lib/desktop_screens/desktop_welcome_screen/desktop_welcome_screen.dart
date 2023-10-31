@@ -641,7 +641,7 @@ class SideBarIcon extends StatelessWidget {
                     : null,
                 child: InkWell(
                   onTap: () {
-                    if (routeName != null && routeName != '') {
+                    if ((routeName ?? '').isNotEmpty) {
                       if (routeName == DesktopRoutes.DESKTOP_HOME) {
                         DesktopSetupRoutes.nested_pop();
                         return;
