@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_outline_input_border.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +10,7 @@ class InputWidget extends StatefulWidget {
   final Function(String value)? onSubmitted;
   final String? prefixText;
   final TextStyle? prefixStyle;
+  final bool? isRequired;
 
   const InputWidget({
     Key? key,
@@ -21,6 +21,7 @@ class InputWidget extends StatefulWidget {
     this.onSubmitted,
     this.prefixText,
     this.prefixStyle,
+    this.isRequired,
   }) : super(key: key);
 
   @override
@@ -28,50 +29,97 @@ class InputWidget extends StatefulWidget {
 }
 
 class _InputWidgetState extends State<InputWidget> {
+  bool isEdit = false;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 59.toHeight,
-      alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: TextFormField(
-        controller: widget.controller,
-        onChanged: (value) {
-          widget.onchange?.call(value);
-        },
-        onFieldSubmitted: (value) {
-          widget.onSubmitted?.call(value);
-        },
-        style: TextStyle(
-          fontSize: 14.toFont,
+    return FocusScope(
+      onFocusChange: (value) {
+        if (widget.prefixText != null) {
+          setState(() {
+            isEdit = value;
+          });
+        }
+      },
+      child: Container(
+        height: 59.toHeight,
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
         ),
-        decoration: InputDecoration(
-          prefixText: widget.prefixText,
-          prefixStyle: widget.prefixStyle,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide(
-              width: 1,
-              color: Colors.white,
-            ),
+        child: TextFormField(
+          controller: widget.controller,
+          onChanged: (value) {
+            widget.onchange?.call(value);
+          },
+          onFieldSubmitted: (value) {
+            widget.onSubmitted?.call(value);
+          },
+          style: TextStyle(
+            fontSize: 14.toFont,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide(
-              width: 1,
-              color: Colors.white,
-            ),
-          ),
-          hintText: widget.hintText,
-          hintStyle: widget.hintTextStyle ??
-              TextStyle(
-                fontSize: 14.toFont,
-                fontWeight: FontWeight.w400,
-                color: ColorConstants.grey,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            prefix: widget.prefixText != null
+                ? Container(
+                    constraints: BoxConstraints(
+                      maxWidth: isEdit ? double.infinity : 0,
+                    ),
+                    child: Text(
+                      widget.prefixText!,
+                      style: TextStyle(
+                        fontSize: 14.toFont,
+                      ),
+                    ),
+                  )
+                : null,
+            prefixStyle: widget.prefixStyle,
+            label: widget.isRequired ?? false
+                ? RichText(
+                    text: TextSpan(
+                      text: widget.hintText,
+                      style: TextStyle(
+                        fontSize: 14.toFont,
+                        fontWeight: FontWeight.w400,
+                        color: ColorConstants.grey,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(
+                            fontSize: 14.toFont,
+                            fontWeight: FontWeight.w400,
+                            color: ColorConstants.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(
+                width: 1,
+                color: Colors.white,
               ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(
+                width: 1,
+                color: Colors.white,
+              ),
+            ),
+            hintText: widget.hintText,
+            hintStyle: widget.hintTextStyle ??
+                TextStyle(
+                  fontSize: 14.toFont,
+                  fontWeight: FontWeight.w400,
+                  color: ColorConstants.grey,
+                ),
+          ),
         ),
       ),
     );

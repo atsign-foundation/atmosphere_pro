@@ -6,11 +6,14 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/labelled_circular_progress.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -19,17 +22,12 @@ import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../data_models/file_modal.dart';
-import '../data_models/file_transfer.dart';
-import '../screens/common_widgets/labelled_circular_progress.dart';
-import '../screens/my_files/widgets/downloads_folders.dart';
-import '../utils/vectors.dart';
 
 class CommonUtilityFunctions {
   static final CommonUtilityFunctions _singleton =
@@ -45,9 +43,7 @@ class CommonUtilityFunctions {
     Uint8List? image;
     AtContact contact = checkForCachedContactDetail(atsign);
 
-    if (contact != null &&
-        contact.tags != null &&
-        contact.tags!['image'] != null) {
+    if (contact.tags != null && contact.tags!['image'] != null) {
       try {
         return getContactImage(contact);
       } catch (e) {
@@ -73,9 +69,7 @@ class CommonUtilityFunctions {
     String? _name;
     AtContact contact = checkForCachedContactDetail(atsign);
 
-    if (contact != null &&
-        contact.tags != null &&
-        contact.tags!['name'] != null) {
+    if (contact.tags != null && contact.tags!['name'] != null) {
       _name = contact.tags!['name'].toString();
     }
 
@@ -92,203 +86,300 @@ class CommonUtilityFunctions {
     bool isSelectAtsign = false;
     bool? isSelectAll = false;
     var atsignsList = await KeychainUtil.getAtsignList();
-    if (atsignsList == null) {
-      atsignsList = [];
-    }
+    atsignsList ??= [];
     Map atsignMap = {};
     for (String atsign in atsignsList) {
       atsignMap[atsign] = false;
     }
     GlobalKey _one = GlobalKey();
-    BuildContext? myContext;
     await showDialog(
         barrierDismissible: true,
         context: NavService.navKey.currentContext!,
         builder: (BuildContext context) {
           return ShowCaseWidget(builder: Builder(builder: (context) {
-            myContext = context;
             return StatefulBuilder(builder: (context, stateSet) {
               return Dialog(
-                  child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  width: 600,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Showcase(
-                              key: _one,
-                              description:
-                                  'You can have more than one atSign associated with this app and can remove one or all of the atSigns from the app at any time.',
-                              shapeBorder: CircleBorder(),
-                              disableAnimation: true,
-                              radius: BorderRadius.all(Radius.circular(40)),
-                              showArrow: false,
-                              overlayPadding: EdgeInsets.all(5),
-                              blurValue: 2,
-                              child: Text(
-                                TextStrings.resetDescription,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Delete Your Keys',
+                              style: CustomTextStyles.primaryBold18,
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              ShowCaseWidget.of(myContext!)
-                                  .startShowCase([_one]);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
-                                  borderRadius: BorderRadius.circular(50)),
-                              margin: EdgeInsets.all(0),
-                              height: 20,
-                              width: 20,
-                              child: Icon(
-                                Icons.question_mark,
-                                size: 15,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Divider(
-                        thickness: 0.8,
-                      ),
-                      atsignsList!.isEmpty
-                          ? Column(mainAxisSize: MainAxisSize.min, children: [
-                              Text(TextStrings.noAtsignToReset,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal,
-                                  )),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    TextStrings().buttonClose,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      // color: AtTheme.themecolor,
+                            SizedBox(height: 15.toHeight),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Showcase(
+                                    key: _one,
+                                    description:
+                                        'You can have more than one atSign associated with this app and can remove one or all of the atSigns from the app at any time.',
+                                    targetShapeBorder: const CircleBorder(),
+                                    disableMovingAnimation: true,
+                                    disableScaleAnimation: true,
+                                    targetBorderRadius: const BorderRadius.all(
+                                        Radius.circular(40)),
+                                    showArrow: false,
+                                    targetPadding: const EdgeInsets.all(5),
+                                    blurValue: 2,
+                                    child: Text(
+                                      'This action will remove the selected atSign and its details from this app.',
+                                      style: TextStyle(
+                                        fontSize: 15.toFont,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              )
-                            ])
-                          : Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CheckboxListTile(
-                                  onChanged: (value) {
-                                    isSelectAll = value;
-                                    atsignMap.updateAll(
-                                        (key, value1) => value1 = value);
-                                    // atsignMap[atsign] = value;
-                                    stateSet(() {});
-                                  },
-                                  value: isSelectAll,
-                                  checkColor: Colors.white,
-                                  activeColor: Theme.of(context).primaryColor,
-                                  title: Text(TextStrings().selectAll,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                ),
-                                for (var atsign in atsignsList)
-                                  CheckboxListTile(
-                                    onChanged: (value) {
-                                      atsignMap[atsign] = value;
-                                      stateSet(() {});
-                                    },
-                                    value: atsignMap[atsign],
-                                    checkColor: Colors.white,
-                                    activeColor: Theme.of(context).primaryColor,
-                                    title: Text('$atsign'),
-                                  ),
-                                Divider(thickness: 0.8),
                               ],
                             ),
-                      if (isSelectAtsign)
-                        Text(TextStrings.resetErrorText,
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(TextStrings.resetWarningText,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            TextStrings().buttonCancel,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
+                            SizedBox(
+                              height: 10.toHeight,
                             ),
-                          ),
+                            RichText(
+                              text: TextSpan(
+                                text: 'Warning: ',
+                                style: TextStyle(
+                                  fontSize: 15.toFont,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "This action cannot be undone!",
+                                    style: TextStyle(
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.toHeight,
+                            ),
+                            atsignsList!.isEmpty
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                        Text(
+                                            'There are no atSigns paired with this device.',
+                                            style: TextStyle(
+                                              fontSize: 15.toFont,
+                                              fontWeight: FontWeight.normal,
+                                            )),
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              'Close',
+                                              style: TextStyle(
+                                                fontSize: 15.toFont,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ])
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      color: ColorConstants.bottomBlack,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CheckboxListTile(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(2.0),
+                                          ),
+                                          side: MaterialStateBorderSide
+                                              .resolveWith(
+                                            (states) => const BorderSide(
+                                                width: 2,
+                                                color: ColorConstants.orange),
+                                          ),
+                                          onChanged: (value) {
+                                            isSelectAll = value;
+                                            atsignMap.updateAll((key, value1) =>
+                                                value1 = value);
+                                            stateSet(() {});
+                                          },
+                                          value: isSelectAll,
+                                          activeColor: const Color(0x00473d24),
+                                          checkColor: ColorConstants.orange,
+                                          title: Text('Select All',
+                                              style: TextStyle(
+                                                fontSize: 16.toFont,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white,
+                                              )),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20.toWidth),
+                                          child: const Divider(
+                                            thickness: 0.8,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        for (var atsign in atsignsList)
+                                          CheckboxListTile(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(2.0),
+                                            ),
+                                            side: MaterialStateBorderSide
+                                                .resolveWith(
+                                              (states) => const BorderSide(
+                                                  width: 2,
+                                                  color: ColorConstants.orange),
+                                            ),
+                                            onChanged: (value) {
+                                              atsignMap[atsign] = value;
+                                              stateSet(() {});
+                                            },
+                                            value: atsignMap[atsign],
+                                            activeColor:
+                                                const Color(0x00473d24),
+                                            checkColor: ColorConstants.orange,
+                                            title: Text(
+                                              atsign,
+                                              style: TextStyle(
+                                                fontSize: 16.toFont,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        const Divider(thickness: 0.8),
+                                      ],
+                                    ),
+                                  ),
+                            if (isSelectAtsign)
+                              Text('Please select at least one atSign to reset',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14.toFont,
+                                    fontWeight: FontWeight.normal,
+                                  )),
+                            SizedBox(
+                              height: 10.toHeight,
+                            ),
+                            Row(children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                      side:
+                                          MaterialStateProperty.all<BorderSide>(
+                                        const BorderSide(color: Colors.black),
+                                      ),
+                                      textStyle:
+                                          MaterialStateProperty.all<TextStyle>(
+                                              TextStyle(
+                                        fontSize: 16.toFont,
+                                      )),
+                                      padding: MaterialStateProperty.all<
+                                              EdgeInsetsGeometry>(
+                                          EdgeInsets.symmetric(
+                                              horizontal: 15.toWidth,
+                                              vertical: 10.toHeight)),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        side: const BorderSide(
+                                            color: Colors.black),
+                                      ))),
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (Navigator.of(context).canPop()) {
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.black),
+                                    textStyle:
+                                        MaterialStateProperty.all<TextStyle>(
+                                            const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                    )),
+                                    padding: MaterialStateProperty.all<
+                                            EdgeInsetsGeometry>(
+                                        EdgeInsets.symmetric(
+                                            horizontal: 15.toWidth,
+                                            vertical: 10.toHeight)),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side:
+                                          const BorderSide(color: Colors.black),
+                                    ))),
+                                onPressed: () async {
+                                  var tempAtsignMap = {};
+                                  tempAtsignMap.addAll(atsignMap);
+                                  tempAtsignMap.removeWhere(
+                                      (key, value) => value == false);
+                                  int atsignsListLength =
+                                      tempAtsignMap.keys.toList().length;
+                                  if (tempAtsignMap.keys.toList().isEmpty) {
+                                    isSelectAtsign = true;
+                                    stateSet(() {});
+                                  } else {
+                                    showConfirmationDialog(() async {
+                                      isSelectAtsign = false;
+                                      await _resetDevice(
+                                          tempAtsignMap.keys.toList());
+                                      await _onboardNextAtsign();
+                                    }, 'Remove $atsignsListLength atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
+                                  }
+                                },
+                                child: Text('Remove',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.w700,
+                                    )),
+                              ),
+                            ])
+                          ],
                         ),
-                        Spacer(),
-                        TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).primaryColor)),
-                          onPressed: () async {
-                            var tempAtsignMap = {};
-                            tempAtsignMap.addAll(atsignMap);
-                            tempAtsignMap
-                                .removeWhere((key, value) => value == false);
-                            int atsignsListLength =
-                                tempAtsignMap.keys.toList().length;
-                            if (tempAtsignMap.keys.toList().isEmpty) {
-                              isSelectAtsign = true;
-                              stateSet(() {});
-                            } else {
-                              showConfirmationDialog(() async {
-                                isSelectAtsign = false;
-                                await _resetDevice(tempAtsignMap.keys.toList());
-                                await _onboardNextAtsign();
-                              }, 'Remove ${atsignsListLength} atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
-                            }
-                          },
-                          child: Text(TextStrings().remove,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                              )),
-                        ),
-                      ])
-                    ],
-                  ),
-                ),
-              ));
+                      ),
+                    ),
+                  ));
             });
           }));
         });
