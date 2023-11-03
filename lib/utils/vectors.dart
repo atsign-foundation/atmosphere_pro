@@ -89,4 +89,7 @@ class AppVectors {
   static String icContactUs = '$_basePath/ic_contact_us.svg';
   static String icContacts = '$_basePath/ic_contacts.svg';
   static String icTransferHistory = '$_basePath/ic_transfer_history.svg';
+  static String icSearchFill = '$_basePath/ic_search_fill.svg';
+  static String icSelectedSearchFill = '$_basePath/ic_selected_search_fill.svg';
+  static String icUncheckedAll = '$_basePath/ic_unchecked_all.svg';
 }

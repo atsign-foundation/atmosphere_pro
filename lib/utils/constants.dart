@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 class MixedConstants {
@@ -19,6 +20,7 @@ class MixedConstants {
   static const String TERMS_CONDITIONS = 'atsign.com/terms-conditions/';
 
   static const String FILEBIN_URL = 'https://ck6agzxiog6kmb.atsign.com/';
+
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
@@ -64,6 +66,18 @@ class MixedConstants {
 
   /// Appbar height
   static const double APPBAR_HEIGHT = 80;
+
+  ///Date labels
+  static const List<String> DATE_LABELS = [
+    'Today',
+    'Yesterday',
+    'This Week',
+    'Last Week',
+    'This Month',
+    'Last Month',
+    'This Year',
+    'Last Year'
+  ];
 
   /// we change the directory after successful login
   static setNewApplicationDocumentsDirectory(String? _atsign) async {
@@ -134,7 +148,7 @@ class MixedConstants {
         Platform.isLinux && sharedBy != null) {
       _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
           Platform.pathSeparator +
-          sharedBy!;
+          (sharedBy ?? '');
 
       return _downloadPath;
     } else {
@@ -154,5 +168,88 @@ class MixedConstants {
     } else {
       return BackendService.getInstance().atClientPreference.downloadPath!;
     }
+  }
+
+  /// returns sent-file location, creates one if does not exists
+  /// does not create the directory if does not exists
+  static String getFileSentLocationSync() {
+    String _sentPath = '';
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+          Platform.pathSeparator +
+          'sent-files';
+      return _sentPath;
+    } else {
+      return BackendService.getInstance().atClientPreference.downloadPath!;
+    }
+  }
+
+  ///Return true, if date is yesterday
+  static bool isToday(DateTime targetDate) {
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+
+    String formattedDate = dateFormat.format(targetDate);
+    String formattedToday = dateFormat.format(DateTime.now());
+    return formattedDate == formattedToday;
+  }
+
+  ///Return true, if date is yesterday
+  static bool isYesterday(DateTime targetDate) {
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+
+    String formattedDate = dateFormat.format(targetDate);
+    String formattedYesterday =
+        dateFormat.format(DateTime.now().subtract(Duration(days: 1)));
+    return formattedDate == formattedYesterday;
+  }
+
+  ///Return true, if date is in this week
+  static bool isThisWeek(DateTime targetDate) {
+    DateTime currentDate = DateTime.now();
+
+    DateTime startOfWeek =
+        currentDate.subtract(Duration(days: currentDate.weekday - 1));
+
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+
+    return targetDate.isAfter(startOfWeek) && targetDate.isBefore(endOfWeek);
+  }
+
+  ///Return true, if date is in the last week
+  static bool isLastWeek(DateTime targetDate) {
+    DateTime currentDate = DateTime.now().subtract(Duration(days: 7));
+
+    DateTime startOfWeek =
+        currentDate.subtract(Duration(days: currentDate.weekday - 1));
+
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+
+    return targetDate.isAfter(startOfWeek) && targetDate.isBefore(endOfWeek);
+  }
+
+  ///Return true, if date is in last month
+  static bool isLastMonth(DateTime targetDate) {
+    DateTime now = DateTime.now();
+    DateTime lastMonth = DateTime(now.year, now.month - 1);
+
+    DateFormat dateFormat = DateFormat('yyyy-MM');
+
+    String formattedDate = dateFormat.format(targetDate);
+    String formattedLastMonth = dateFormat.format(lastMonth);
+
+    return formattedDate == formattedLastMonth;
+  }
+
+  ///Return true, if date is in last month
+  static bool isLastYear(DateTime targetDate) {
+    DateTime now = DateTime.now();
+    DateTime lastYear = DateTime(now.year - 1);
+
+    DateFormat dateFormat = DateFormat('yyyy');
+
+    String formattedDate = dateFormat.format(targetDate);
+    String formattedLastYear = dateFormat.format(lastYear);
+
+    return formattedDate == formattedLastYear;
   }
 }

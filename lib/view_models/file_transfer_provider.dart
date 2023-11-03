@@ -537,7 +537,8 @@ class FileTransferProvider extends BaseModel {
     }
   }
 
-  reSendFileNotification(FileHistory fileHistory, String atsign) async {
+  Future<void> reSendFileNotification(
+      FileHistory fileHistory, String atsign) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
 
     Provider.of<HistoryProvider>(NavService.navKey.currentContext!,

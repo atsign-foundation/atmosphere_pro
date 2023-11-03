@@ -6,53 +6,35 @@ import 'package:flutter_svg/flutter_svg.dart';
 class FilterOptionItem extends StatelessWidget {
   final String? icon;
   final String? title;
-  final bool isOptional, isCheck;
+  final bool isCheck;
   final BorderRadiusGeometry? borderRadius;
   final Function()? onTap;
-  final Function()? allOptionOnTap;
   final bool isAllOption;
   final bool? isShowOptional;
 
   const FilterOptionItem({
     Key? key,
     this.icon,
-    this.isOptional = false,
     this.borderRadius,
     this.title,
-    this.isCheck = false,
+    this.isCheck = true,
     this.onTap,
     this.isAllOption = false,
-    this.allOptionOnTap,
     this.isShowOptional,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color color = isCheck
-        ? isOptional
-            ? Colors.black
-            : Colors.white
-        : isOptional
-            ? ColorConstants.unselectedFilterOptionColor
-            : Colors.black;
-
-    Color backgroundColor = isOptional
-        ? ColorConstants.unselectedFilterOptionBackgroundColor
-        : Colors.white;
-
-    Color checkedBackgroundColor = isOptional
-        ? ColorConstants.optionalFilterBackgroundColor
-        : ColorConstants.orange;
-
     return InkWell(
       onTap: () {
-        isAllOption ? allOptionOnTap?.call() : onTap?.call();
+        onTap?.call();
       },
       child: Container(
-        height: 44,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.fromLTRB(28, 8, 20, 8),
         decoration: BoxDecoration(
-          color: isCheck ? checkedBackgroundColor : backgroundColor,
+          color: isAllOption
+              ? ColorConstants.orange
+              : ColorConstants.optionalFilterBackgroundColor,
           borderRadius: borderRadius ?? BorderRadius.zero,
         ),
         child: Row(
@@ -61,20 +43,18 @@ class FilterOptionItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                (icon ?? '').isNotEmpty
-                    ? SvgPicture.asset(
-                        icon!,
-                        color: color,
-                        height: 16,
-                        width: 12,
-                        fit: BoxFit.cover,
-                      )
-                    : SizedBox(width: 12),
-                SizedBox(width: 16),
+                if ((icon ?? '').isNotEmpty) ...[
+                  SvgPicture.asset(
+                    icon!,
+                    color: Colors.black,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 12),
+                ],
                 Text(
                   title ?? '',
                   style: TextStyle(
-                    color: color,
+                    color: isAllOption ? Colors.white : Colors.black,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -84,28 +64,16 @@ class FilterOptionItem extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (isAllOption)
-                  SvgPicture.asset(
-                    isShowOptional ?? false
-                        ? AppVectors.icArrowUpOutline
-                        : AppVectors.icArrowDownOutline,
-                    width: 20,
-                    height: 20,
-                    color: color,
-                    fit: BoxFit.cover,
-                  ),
-                if (isAllOption) SizedBox(width: 16),
-                InkWell(
-                  onTap: () {
-                    isAllOption ? onTap?.call() : null;
-                  },
-                  child: SvgPicture.asset(
-                    isCheck ? AppVectors.icChecked : AppVectors.icUnchecked,
-                    width: 24,
-                    height: 24,
-                    color: color,
-                    fit: BoxFit.cover,
-                  ),
+                SvgPicture.asset(
+                  isCheck
+                      ? AppVectors.icChecked
+                      : isAllOption
+                          ? AppVectors.icUncheckedAll
+                          :  AppVectors.icUnchecked,
+                  width: 16,
+                  height: 16,
+                  color: isAllOption ? Colors.white : Colors.black,
+                  fit: BoxFit.cover,
                 ),
               ],
             ),

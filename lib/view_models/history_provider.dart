@@ -76,7 +76,7 @@ class HistoryProvider extends BaseModel {
   List<Widget> desktopTabs = [DesktopRecents()];
   Map sendFileHistory = {'history': []};
   String? app_lifecycle_state;
-  HistoryType typeSelected = HistoryType.all;
+  HistoryType typeSelected = HistoryType.received;
 
   resetData() {
     isSyncedDataFetched = false;
@@ -91,6 +91,7 @@ class HistoryProvider extends BaseModel {
     receivedFileHistory = [];
     allFilesHistory = [];
     displayFilesHistory = [];
+    listType = FileType.values.toList();
     notifyListeners();
   }
 
@@ -107,7 +108,7 @@ class HistoryProvider extends BaseModel {
   }
 
   void resetOptional() {
-    if (typeSelected == HistoryType.all && listType.isEmpty) {
+    if (listType.isEmpty) {
       listType = FileType.values.toList();
       notifyListeners();
     }
@@ -120,6 +121,11 @@ class HistoryProvider extends BaseModel {
 
   void setSelectedType(HistoryType type) {
     typeSelected = type;
+    notifyListeners();
+  }
+
+  void updateListType(List<FileType> newList) {
+    listType = newList;
     notifyListeners();
   }
 
@@ -297,8 +303,8 @@ class HistoryProvider extends BaseModel {
                 if ((filesModel.fileDetails?.files ?? []).isNotEmpty) {
                   Future.forEach(
                     filesModel.fileDetails!.files!,
-                    (dynamic file) async {
-                      String? fileExtension = file.displayName.split('.').last;
+                    (FileData file) async {
+                      String? fileExtension = file.name?.split('.').last;
                       for (int i = 0; i < listFileTypeSelect!.length; i++) {
                         if (FileTypes.ALL_TYPES.contains(fileExtension)) {
                           if (listFileTypeSelect[i]
@@ -761,9 +767,9 @@ class HistoryProvider extends BaseModel {
       receivedItemsId[atkey.key] = true;
     });
 
-    // if (!isNewKeyAvailable) {
-    //   return;
-    // }
+    if (!isNewKeyAvailable) {
+      return;
+    }
 
     for (var atKey in fileTransferAtkeys) {
       var isCurrentAtsign = compareAtSign(
@@ -794,8 +800,8 @@ class HistoryProvider extends BaseModel {
               if ((filesModel.files ?? []).isNotEmpty) {
                 await Future.forEach(
                   filesModel.files!,
-                  (dynamic file) async {
-                    String? fileExtension = file.displayName.split('.').last;
+                  (FileData file) async {
+                    String? fileExtension = file.name?.split('.').last;
                     for (int i = 0; i < listFileTypeSelect!.length; i++) {
                       if (FileTypes.ALL_TYPES.contains(fileExtension)) {
                         if (listFileTypeSelect[i]
@@ -892,7 +898,7 @@ class HistoryProvider extends BaseModel {
   }
 
   void changeFilterType(HistoryType type) {
-    if (typeSelected != type && type == HistoryType.all) {
+    if (typeSelected != type) {
       listType = FileType.values.toList();
     }
     typeSelected = type;

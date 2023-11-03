@@ -65,10 +65,12 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 130,
         title: "${BackendService.getInstance().currentAtSign ?? ''} ",
         description: '',
-        suffixIcon: Padding(
-          padding: EdgeInsets.only(right: 8),
-          child: NotificationIcon(),
-        ),
+        suffixIcon: [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: NotificationIcon(),
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
