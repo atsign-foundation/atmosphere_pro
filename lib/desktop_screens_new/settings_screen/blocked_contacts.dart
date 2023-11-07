@@ -45,7 +45,7 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      padding: EdgeInsets.all(40),
+      padding: const EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
       color: ColorConstants.background,
       child: Column(
@@ -55,14 +55,14 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Blocked Contacts",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               isSearchActive
                   ? Container(
                       width: 200,
@@ -76,7 +76,7 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
                             searchText = value;
                           });
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           isDense: true,
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
@@ -85,8 +85,8 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
                         ),
                       ),
                     )
-                  : SizedBox(),
-              SizedBox(
+                  : const SizedBox(),
+              const SizedBox(
                 width: 10,
               ),
               InkWell(
@@ -96,7 +96,7 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
                     searchText = "";
                   });
                 },
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   backgroundColor: Colors.white,
                   child: Icon(
                     Icons.search,
@@ -104,10 +104,10 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Icon(
                   Icons.refresh,
@@ -117,20 +117,20 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
             ],
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
-          Divider(
+          const Divider(
             thickness: 1,
             color: Colors.black,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
           // BODY
           Expanded(
-            child: Container(
+            child: SizedBox(
               width: SizeConfig().screenWidth,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,15 +169,15 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
                             ),
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),
                   ),
                   Expanded(
                     child: Container(
-                        padding: EdgeInsets.only(left: 30),
-                        child: Column(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(

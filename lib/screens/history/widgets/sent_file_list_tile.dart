@@ -28,8 +28,9 @@ class SentFilesListTile extends StatefulWidget {
     Key? key,
     this.sentHistory,
   }) : super(key: key);
+
   @override
-  _SentFilesListTileState createState() => _SentFilesListTileState();
+  State<SentFilesListTile> createState() => _SentFilesListTileState();
 }
 
 class _SentFilesListTileState extends State<SentFilesListTile> {
@@ -55,9 +56,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     }
     filesList = widget.sentHistory!.fileDetails!.files;
 
-    widget.sentHistory!.fileDetails!.files!.forEach((element) {
+    for (var element in widget.sentHistory!.fileDetails!.files!) {
       fileSize += element.size!;
-    });
+    }
 
     if (contactList[0] != null) {
       firstContactImage =
@@ -86,19 +87,19 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return Column(
       children: [
         Container(
-          color: (isOpen) ? Color(0xffEFEFEF) : null,
+          color: (isOpen) ? const Color(0xffEFEFEF) : null,
           child: ListTile(
             enableFeedback: true,
             onLongPress: deleteSentFile,
             leading: getListTileLeading(),
             title: Padding(
-              padding: EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.only(top: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   isFileSharedToGroup == false
                       ? getContactNickname()
-                      : SizedBox(),
+                      : const SizedBox(),
                   isFileSharedToGroup == false
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,10 +118,10 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                             },
                                           children: [
                                             contactList.length - 1 > 0
-                                                ? TextSpan(
+                                                ? const TextSpan(
                                                     text: 'and ',
                                                   )
-                                                : TextSpan(),
+                                                : const TextSpan(),
                                             contactList.length - 1 > 0
                                                 ? TextSpan(
                                                     text:
@@ -132,12 +133,12 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                                           ..onTap = () {
                                                             openFileReceiptBottomSheet();
                                                           })
-                                                : TextSpan()
+                                                : const TextSpan()
                                           ],
                                         ),
                                       ]),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ),
                           ],
                         )
@@ -155,29 +156,26 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                   SizedBox(
                     height: 8.toHeight,
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${filesList!.length} File(s)',
-                          style: CustomTextStyles.secondaryRegular12,
-                        ),
-                        SizedBox(width: 10.toHeight),
-                        Text(
-                          '.',
-                          style: CustomTextStyles.secondaryRegular12,
-                        ),
-                        SizedBox(width: 10.toHeight),
-                        Text(
-                          double.parse(fileSize.toString()) <= 1024
-                              ? '${fileSize} ' + TextStrings().kb
-                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                  TextStrings().mb,
-                          style: CustomTextStyles.secondaryRegular12,
-                        )
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${filesList!.length} File(s)',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Text(
+                        '.',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Text(
+                        double.parse(fileSize.toString()) <= 1024
+                            ? '$fileSize ${TextStrings().kb}'
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                        style: CustomTextStyles.secondaryRegular12,
+                      )
+                    ],
                   ),
                   SizedBox(
                     height: 10.toHeight,
@@ -207,39 +205,39 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                 : TextOverflow.ellipsis,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(
                     height: widget.sentHistory!.notes != null ? 5.toHeight : 0,
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        widget.sentHistory!.fileDetails!.date != null
-                            ? Text(
-                                '${DateFormat("MM-dd-yyyy").format(widget.sentHistory!.fileDetails!.date!)}',
-                                style: CustomTextStyles.secondaryRegular12,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : SizedBox(),
-                        SizedBox(width: 10.toHeight),
-                        Container(
-                          color: ColorConstants.fontSecondary,
-                          height: 14.toHeight,
-                          width: 1.toWidth,
-                        ),
-                        SizedBox(width: 10.toHeight),
-                        widget.sentHistory!.fileDetails!.date != null
-                            ? Text(
-                                '${DateFormat('kk:mm').format(widget.sentHistory!.fileDetails!.date!)}',
-                                style: CustomTextStyles.secondaryRegular12,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : SizedBox(),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      widget.sentHistory!.fileDetails!.date != null
+                          ? Text(
+                              DateFormat("MM-dd-yyyy").format(
+                                  widget.sentHistory!.fileDetails!.date!),
+                              style: CustomTextStyles.secondaryRegular12,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : const SizedBox(),
+                      SizedBox(width: 10.toHeight),
+                      Container(
+                        color: ColorConstants.fontSecondary,
+                        height: 14.toHeight,
+                        width: 1.toWidth,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      widget.sentHistory!.fileDetails!.date != null
+                          ? Text(
+                              DateFormat('kk:mm').format(
+                                  widget.sentHistory!.fileDetails!.date!),
+                              style: CustomTextStyles.secondaryRegular12,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : const SizedBox(),
+                    ],
                   ),
                   SizedBox(height: 3.toHeight),
                   (!isOpen)
@@ -249,25 +247,23 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                               isOpen = !isOpen;
                             });
                           },
-                          child: Container(
-                            child: Row(
-                              children: [
-                                Text(
-                                  TextStrings().seeFiles,
-                                  style: CustomTextStyles.primaryBlueBold14,
-                                ),
-                                Container(
-                                  width: 22.toWidth,
-                                  height: 22.toWidth,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.black,
-                                    ),
+                          child: Row(
+                            children: [
+                              Text(
+                                TextStrings().seeFiles,
+                                style: CustomTextStyles.primaryBlueBold14,
+                              ),
+                              SizedBox(
+                                width: 22.toWidth,
+                                height: 22.toWidth,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.black,
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       : Container(),
@@ -278,21 +274,21 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         ),
         (isOpen)
             ? SentItemFileView(widget.sentHistory!, onFileViewChange)
-            : SizedBox()
+            : const SizedBox()
       ],
     );
   }
 
   Widget getListTileLeading() {
     return contactList.isNotEmpty
-        ? Container(
+        ? SizedBox(
             width: 55.toHeight,
             height: 55.toHeight,
             child: Stack(
               children: [
                 InkWell(
                   onTap: openFileReceiptBottomSheet,
-                  child: Container(
+                  child: SizedBox(
                     width: 45.toHeight,
                     height: 45.toHeight,
                     child: (firstContactImage != null && !isFileSharedToGroup)
@@ -313,16 +309,16 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     ? Positioned(
                         right: 0,
                         bottom: 0,
-                        child: Container(
+                        child: SizedBox(
                           height: 35.toHeight,
                           width: 35.toHeight,
-                          child: ContactInitial(
+                          child: const ContactInitial(
                             initials: '  ',
                             background: Colors.grey,
                           ),
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 (contactList.length > 1 || isFileDownloadedForSingleAtsign())
                     ? Positioned(
                         right: 0,
@@ -348,17 +344,17 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                         fontSize: 10.toFont,
                                         fontWeight: FontWeight.normal,
                                       ))
-                                  : Icon(Icons.download_done,
+                                  : const Icon(Icons.download_done,
                                       color: Colors.white, size: 15),
                             ),
                           ),
                         ),
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget getContactNickname() {
@@ -370,7 +366,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 ? RichText(
                     text: TextSpan(children: [
                       TextSpan(
-                        text: '${nickName}',
+                        text: nickName,
                         style: CustomTextStyles.primaryRegular16,
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
@@ -379,20 +375,20 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                       ),
                     ]),
                   )
-                : SizedBox()),
+                : const SizedBox()),
       ],
     );
   }
 
   bool isFileDownloadedForSingleAtsign() {
-    bool _isDownloaded = false;
+    bool isDownloaded = false;
 
-    widget.sentHistory!.sharedWith!.forEach((element) {
+    for (var element in widget.sentHistory!.sharedWith!) {
       if (element.isFileDownloaded!) {
-        _isDownloaded = true;
+        isDownloaded = true;
       }
-    });
-    return _isDownloaded;
+    }
+    return isDownloaded;
   }
 
   Future<bool> isFilePresent(String filePath) async {
@@ -408,15 +404,15 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: StadiumBorder(),
-        builder: (_context) {
+        shape: const StadiumBorder(),
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: FileRecipients(
@@ -441,9 +437,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             ));
   }
 
-  onFileViewChange(bool _isOpen) {
+  onFileViewChange(bool isOpen) {
     setState(() {
-      isOpen = _isOpen;
+      isOpen = isOpen;
     });
   }
 }

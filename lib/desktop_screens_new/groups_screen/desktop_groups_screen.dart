@@ -140,7 +140,7 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
           },
         );
       default:
-        return SizedBox();
+        return const SizedBox();
     }
   }
 }

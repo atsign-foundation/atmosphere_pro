@@ -25,14 +25,14 @@ class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
 
   // static String initialRoute = DesktopRoutes.DESKTOP_WELCOME;
-  static var _provider = Provider.of<NestedRouteProvider>(
+  static final _provider = Provider.of<NestedRouteProvider>(
       NavService.navKey.currentContext!,
       listen: false);
 
   static Map<String, WidgetBuilder> get routes {
     return {
-      DesktopRoutes.DESKTOP_HOME: (context) => DesktopHome(),
-      DesktopRoutes.DESKTOP_WELCOME: (context) => HomeScreenDesktop(),
+      DesktopRoutes.DESKTOP_HOME: (context) => const DesktopHome(),
+      DesktopRoutes.DESKTOP_WELCOME: (context) => const HomeScreenDesktop(),
     };
   }
 
@@ -50,8 +50,8 @@ class DesktopSetupRoutes {
       BuildContext context, RouteSettings routeSettings) {
     return {
       DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL: (context) =>
-          FileTransferScreen(),
-      DesktopRoutes.DEKSTOP_MYFILES: (context) => MyFilesDesktop(),
+          const FileTransferScreen(),
+      DesktopRoutes.DEKSTOP_MYFILES: (context) => const MyFilesDesktop(),
       DesktopRoutes.DESKTOP_CATEGORY_FILES: (context) {
         Map<String, dynamic> args =
             routeSettings.arguments as Map<String, dynamic>;
@@ -69,22 +69,22 @@ class DesktopSetupRoutes {
             historyType: args?['historyType'] ?? HistoryType.send);
       },
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
-        return DesktopContactScreen();
+        return const DesktopContactScreen();
       },
       DesktopRoutes.DESKTOP_DOWNLOAD_ALL: (context) {
-        return DesktopDownloadAllFiles();
+        return const DesktopDownloadAllFiles();
       },
       DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
-        return DesktopBlockedContacts();
+        return const DesktopBlockedContacts();
       },
-      DesktopRoutes.DESKTOP_SETTINGS: (context) => SettingsScreenDesktop(),
-      DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedScreen(),
+      DesktopRoutes.DESKTOP_SETTINGS: (context) => const SettingsScreenDesktop(),
+      DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => const DesktopTrustedScreen(),
       DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
-          DesktopEmptySender(),
-      DesktopRoutes.DESKTOP_GROUP: (context) => DesktopGroupsScreen(),
+          const DesktopEmptySender(),
+      DesktopRoutes.DESKTOP_GROUP: (context) => const DesktopGroupsScreen(),
       // =>  DesktopEmptyGroup(),
 
-      DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
+      DesktopRoutes.DESKT_FAQ: (context) => const WebsiteScreen(
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
           ),
@@ -97,8 +97,8 @@ class DesktopSetupRoutes {
         context: NavService.nestedNavKey.currentContext!,
         onYesTap: () {
           if (_provider.current_route != null) {
-            var _res = nested_push_replacement(value!, arguments: arguments);
-            return _res;
+            var res = nested_push_replacement(value!, arguments: arguments);
+            return res;
           }
           _provider.update(value);
           return Navigator.of(NavService.nestedNavKey.currentContext!)

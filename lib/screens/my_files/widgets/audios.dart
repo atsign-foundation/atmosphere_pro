@@ -14,8 +14,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 
 class Audios extends StatefulWidget {
+  const Audios({Key? key}) : super(key: key);
+
   @override
-  _AudiosState createState() => _AudiosState();
+  State<Audios> createState() => _AudiosState();
 }
 
 class _AudiosState extends State<Audios> {
@@ -50,7 +52,7 @@ class _AudiosState extends State<Audios> {
                         borderRadius: BorderRadius.circular(3)),
                     title: Text(provider.receivedAudio[index].fileName!,
                         style: CustomTextStyles.primaryBold14),
-                    leading: Container(
+                    leading: SizedBox(
                       width: SizeConfig().isTablet(context)
                           ? 30.toWidth
                           : 50.toWidth,
@@ -60,7 +62,7 @@ class _AudiosState extends State<Audios> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.toHeight),
                         child: Container(
-                          padding: EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.only(left: 10),
                           height: 40.toHeight,
                           width: 40.toWidth,
                           child: Image.asset(
@@ -77,10 +79,8 @@ class _AudiosState extends State<Audios> {
                               double.parse(provider.receivedAudio[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.receivedAudio[index].size!.toStringAsFixed(2)} ' +
-                                      TextStrings().kb
-                                  : '${(provider.receivedAudio[index].size! / 1024).toStringAsFixed(2)} ' +
-                                      TextStrings().mb,
+                                  ? '${provider.receivedAudio[index].size!.toStringAsFixed(2)} ${TextStrings().kb}'
+                                  : '${(provider.receivedAudio[index].size! / 1024).toStringAsFixed(2)} ${TextStrings().mb}',
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

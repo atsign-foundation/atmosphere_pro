@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class SendingFileCard extends StatelessWidget {
   final FLUSHBAR_STATUS? flushbarStatus;
   final FileTransfer? fileTransfer;
+
   const SendingFileCard({
     Key? key,
     this.flushbarStatus,
@@ -19,9 +20,9 @@ class SendingFileCard extends StatelessWidget {
     return flushbarStatus == FLUSHBAR_STATUS.SENDING && fileTransfer != null
         ? Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-              color: Color(0xFFF4F4F4),
+              color: const Color(0xFFF4F4F4),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -31,7 +32,7 @@ class SendingFileCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: 'Sending ',
                         style: TextStyle(
                             fontSize: 15,
@@ -40,7 +41,8 @@ class SendingFileCard extends StatelessWidget {
                       ),
                       TextSpan(
                         text: '${fileTransfer!.files?.length ?? 0} files',
-                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        style:
+                            const TextStyle(fontSize: 15, color: Colors.black),
                       )
                     ],
                   ),
@@ -49,12 +51,13 @@ class SendingFileCard extends StatelessWidget {
                   width: (Platform.isAndroid || Platform.isIOS) ? 200 : 230,
                   child: Text(
                     getAtsignCountFromFileTransfer(fileTransfer!),
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
-                SizedBox(height: 5),
-                ProgressBarAnimation(
-                  gradient: const LinearGradient(
+                const SizedBox(height: 5),
+                const ProgressBarAnimation(
+                  gradient: LinearGradient(
                     colors: [
                       Color(0xFFFB6232),
                       Color(0xFFF05E3F),
@@ -66,7 +69,7 @@ class SendingFileCard extends StatelessWidget {
               ],
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   String getAtsignCountFromFileTransfer(FileTransfer fileTransfer) {

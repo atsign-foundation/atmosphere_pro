@@ -41,7 +41,7 @@ class ContactAttachmentCard extends StatefulWidget {
     this.margin,
     this.fromContact = false,
     this.onAction,
-  });
+  }) : super(key: key);
 
   @override
   State<ContactAttachmentCard> createState() => _ContactAttachmentCardState();
@@ -92,11 +92,11 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
           borderRadius: BorderRadius.circular(10),
         ),
         margin: widget.margin ??
-            EdgeInsets.symmetric(
+            const EdgeInsets.symmetric(
               horizontal: 25,
               vertical: 5,
             ),
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -114,7 +114,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                 ),
               ),
             ),
-            SizedBox(width: 15),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 children: <Widget>[
@@ -124,7 +124,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                         child: Text(
                           widget.singleFile.name ?? "",
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 10,
                           ),
@@ -135,7 +135,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                         child: Text(
                           CommonUtilityFunctions()
                               .formatDateTime(widget.fileTransfer.date!),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: ColorConstants.grey,
                             fontSize: 10,
                           ),
@@ -143,19 +143,19 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Consumer<FileProgressProvider>(
-                        builder: (_c, provider, _) {
+                        builder: (c, provider, _) {
                           var fileTransferProgress = provider
                               .receivedFileProgress[widget.fileTransfer.key];
                           print(fileTransferProgress?.percent);
                           if (fileTransferProgress?.percent == null &&
                               fileTransferProgress?.fileName ==
                                   widget.singleFile.name) {
-                             isDownloaded = true;
+                            isDownloaded = true;
                           }
 
                           return CommonUtilityFunctions()
@@ -202,7 +202,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                                             AppVectors.icDownloadFile,
                                           ),
                                         )
-                              : SizedBox();
+                              : const SizedBox();
                         },
                       ),
                       const SizedBox(
@@ -225,14 +225,13 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                                 AppVectors.icSendFile,
                               ),
                             )
-                          : SizedBox(),
-                      Spacer(),
+                          : const SizedBox(),
+                      const Spacer(),
                       Text(
                         double.parse(widget.singleFile.size.toString()) <= 1024
-                            ? '${widget.singleFile.size} ' + TextStrings().kb
-                            : '${(widget.singleFile.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                TextStrings().mb,
-                        style: TextStyle(
+                            ? '${widget.singleFile.size} ${TextStrings().kb}'
+                            : '${(widget.singleFile.size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                        style: const TextStyle(
                           color: ColorConstants.grey,
                           fontSize: 10,
                         ),
@@ -260,16 +259,14 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                   ? Image.file(
                       File(path),
                       fit: BoxFit.cover,
-                      errorBuilder: (BuildContext _context, _, __) {
-                        return Container(
-                          child: Icon(
-                            Icons.image,
-                            size: 30,
-                          ),
+                      errorBuilder: (BuildContext context, _, __) {
+                        return const Icon(
+                          Icons.image,
+                          size: 30,
                         );
                       },
                     )
-                  : Icon(
+                  : const Icon(
                       Icons.image,
                       size: 30,
                     ),
@@ -294,12 +291,10 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                         : Image.memory(
                             videoThumbnail!,
                             fit: BoxFit.cover,
-                            errorBuilder: (BuildContext _context, _, __) {
-                              return Container(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 30,
-                                ),
+                            errorBuilder: (BuildContext context, _, __) {
+                              return const Icon(
+                                Icons.image,
+                                size: 30,
                               );
                             },
                           ),
@@ -443,7 +438,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
           type: MaterialType.transparency,
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Align(
@@ -454,7 +449,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                     onTap: () {
                       Navigator.pop(NavService.navKey.currentContext!);
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.clear,
                       color: Colors.white,
                       size: 24,
@@ -462,14 +457,14 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Expanded(
                 child: Container(
                   // height: double.infinity,
                   width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 33),
+                  margin: const EdgeInsets.symmetric(horizontal: 33),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
@@ -481,7 +476,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Row(
@@ -495,7 +490,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                       width: 50,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Padding(
@@ -520,7 +515,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Padding(
@@ -550,7 +545,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Container(
@@ -558,8 +553,8 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(horizontal: 25),
                 width: double.infinity,
                 child: SingleChildScrollView(
                   child: Column(
@@ -571,8 +566,8 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              "$shortDate",
-                              style: TextStyle(
+                              shortDate,
+                              style: const TextStyle(
                                 fontSize: 10,
                                 color: ColorConstants.oldSliver,
                               ),
@@ -580,14 +575,14 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                             Container(
                               width: 1,
                               height: 8,
-                              color: Color(0xFFD7D7D7),
-                              margin: EdgeInsets.symmetric(
+                              color: const Color(0xFFD7D7D7),
+                              margin: const EdgeInsets.symmetric(
                                 horizontal: 3,
                               ),
                             ),
                             Text(
-                              "$time",
-                              style: TextStyle(
+                              time,
+                              style: const TextStyle(
                                 fontSize: 10,
                                 color: ColorConstants.oldSliver,
                               ),
@@ -595,43 +590,42 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                           ],
                         ),
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Text(
                         (widget.singleFile.name ?? ''),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         double.parse(widget.singleFile.size.toString()) <= 1024
-                            ? '${widget.singleFile.size} ' + TextStrings().kb
-                            : '${(widget.singleFile.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                TextStrings().mb,
-                        style: TextStyle(
+                            ? '${widget.singleFile.size} ${TextStrings().kb}'
+                            : '${(widget.singleFile.size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                        style: const TextStyle(
                           color: ColorConstants.grey,
                           fontSize: 10,
                         ),
                         textAlign: TextAlign.left,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       nickname.isNotEmpty
                           ? Text(
                               nickname,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             )
-                          : SizedBox(),
-                      SizedBox(height: 5),
+                          : const SizedBox(),
+                      const SizedBox(height: 5),
                       Text(
                         widget.fileTransfer.sender ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       // fileDetail.message.isNotNull
                       //     ?
-                      Text(
+                      const Text(
                         "Message",
                         style: TextStyle(
                           fontSize: 12,
@@ -639,10 +633,10 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                         ),
                       ),
                       // : SizedBox(),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         widget.fileTransfer.notes ?? "",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),

@@ -46,7 +46,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
-          margin: EdgeInsets.only(top: 60),
+          margin: const EdgeInsets.only(top: 60),
           decoration: BoxDecoration(
             color: ColorConstants.culturedColor,
             borderRadius: const BorderRadius.only(
@@ -71,7 +71,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       Navigator.of(context).pop();
                     },
                     child: Padding(
-                      padding: EdgeInsets.only(left: 31, top: 36),
+                      padding: const EdgeInsets.only(left: 31, top: 36),
                       child: SvgPicture.asset(
                         AppVectors.icBack,
                       ),
@@ -136,7 +136,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             borderColor: Colors.white,
                             backgroundColor: Colors.white,
                             hintText: "Search",
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                               color: ColorConstants.darkSliver,
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -237,7 +237,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 ],
               ),
               value.isLoading
-                  ? Align(
+                  ? const Align(
                       alignment: Alignment.center,
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -264,7 +264,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         margin: const EdgeInsets.fromLTRB(27, 14, 27, 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Color(0xFFECECEC),
+          color: const Color(0xFFECECEC),
         ),
         child: selectedImage != null
             ? ClipRRect(
@@ -278,7 +278,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       "Insert Cover Image",
                       style: TextStyle(
                         fontSize: 14,
@@ -286,7 +286,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         color: ColorConstants.grey,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Image.asset(
                       ImageConstants.icImage,
                     ),

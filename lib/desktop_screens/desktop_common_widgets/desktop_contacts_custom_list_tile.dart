@@ -31,7 +31,7 @@ class DesktopContactsCustomListTile extends StatelessWidget {
             color: Colors.black,
             shape: BoxShape.circle,
           ),
-          child: ContactInitial(
+          child: const ContactInitial(
             initials: 'Levina',
             size: 30,
             maxSize: (80.0 - 30.0),

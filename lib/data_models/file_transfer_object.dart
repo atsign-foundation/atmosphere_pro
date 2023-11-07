@@ -56,7 +56,7 @@ class FileTransferObject {
         ..sharedStatus = json['sharedStatus']
         ..error = json['error'];
     } catch (error) {
-      print('FileTransferObject.fromJson error: ' + error.toString());
+      print('FileTransferObject.fromJson error: $error');
     }
     return null;
   }
@@ -91,7 +91,7 @@ class FileStatus {
           size: json['size'],
           error: json['error']);
     } catch (error) {
-      print('FileStatus.fromJson error: ' + error.toString());
+      print('FileStatus.fromJson error: $error');
     }
     return null;
   }

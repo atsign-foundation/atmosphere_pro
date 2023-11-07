@@ -23,14 +23,13 @@ class _HomeScreenDesktopState extends State<HomeScreenDesktop> {
     return Scaffold(
       body: Stack(
         children: [
-          SideBarNew(),
+          const SideBarNew(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Consumer<SideBarProvider>(
-                  builder: (_context, _sideBarProvider, _) {
+              Consumer<SideBarProvider>(builder: (context, sideBarProvider, _) {
                 return SizedBox(
-                  width: _sideBarProvider.isSidebarExpanded
+                  width: sideBarProvider.isSidebarExpanded
                       ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                       : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
                 );
@@ -50,10 +49,10 @@ class _HomeScreenDesktopState extends State<HomeScreenDesktop> {
               ),
             ],
           ),
-          Consumer<SideBarProvider>(builder: (_context, _provider, _) {
+          Consumer<SideBarProvider>(builder: (context, provider, _) {
             return Positioned(
               top: 40,
-              left: _provider.isSidebarExpanded
+              left: provider.isSidebarExpanded
                   ? MixedConstants.SIDEBAR_WIDTH_EXPANDED - 20
                   : MixedConstants.SIDEBAR_WIDTH_COLLAPSED - 20,
               child: Builder(
@@ -69,9 +68,9 @@ class _HomeScreenDesktopState extends State<HomeScreenDesktop> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30.toWidth),
                           color: Colors.white),
-                      padding: EdgeInsets.only(left: 4),
+                      padding: const EdgeInsets.only(left: 4),
                       child: Icon(
-                          _provider.isSidebarExpanded
+                          provider.isSidebarExpanded
                               ? Icons.arrow_back_ios
                               : Icons.arrow_forward_ios_sharp,
                           size: 20,

@@ -1,5 +1,6 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/history_app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/received_file_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/sent_file_list_tile.dart';
@@ -12,13 +13,13 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../common_widgets/history_app_bar.dart';
-
 class HistoryScreen extends StatefulWidget {
   final int tabIndex;
-  HistoryScreen({this.tabIndex = 0});
+
+  const HistoryScreen({Key? key, this.tabIndex = 0}) : super(key: key);
+
   @override
-  _HistoryScreenState createState() => _HistoryScreenState();
+  State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen>
@@ -41,9 +42,9 @@ class _HistoryScreenState extends State<HistoryScreen>
   @override
   dispose() {
     // closing all open received files widgets widgets.
-    historyProvider!.receivedHistoryLogs.forEach((element) {
+    for (var element in historyProvider!.receivedHistoryLogs) {
       element.isWidgetOpen = false;
-    });
+    }
     super.dispose();
   }
 
@@ -55,11 +56,11 @@ class _HistoryScreenState extends State<HistoryScreen>
         title: TextStrings().history,
       ),
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: SizeConfig().screenHeight - 120.toHeight,
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 height: 40,
                 child: TabBar(
                   labelColor: ColorConstants.fontPrimary,
@@ -72,14 +73,14 @@ class _HistoryScreenState extends State<HistoryScreen>
                   tabs: [
                     Text(
                       TextStrings().sent,
-                      style: TextStyle(
+                      style: const TextStyle(
                         letterSpacing: 0.1,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
                     Text(
                       TextStrings().received,
-                      style: TextStyle(
+                      style: const TextStyle(
                         letterSpacing: 0.1,
                         fontWeight: FontWeight.normal,
                       ),
@@ -107,7 +108,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                           if ((provider.sentHistory.isEmpty)) {
                             return ListView.separated(
                               padding: EdgeInsets.only(bottom: 170.toHeight),
-                              physics: AlwaysScrollableScrollPhysics(),
+                              physics: const AlwaysScrollableScrollPhysics(),
                               separatorBuilder: (context, index) =>
                                   Divider(indent: 16.toWidth),
                               itemCount: 1,
@@ -130,7 +131,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                             );
                           } else {
                             List<FileHistory> filteredSentHistory = [];
-                            provider.sentHistory.forEach((element) {
+                            for (var element in provider.sentHistory) {
                               if (element.sharedWith!.any(
                                     (ShareStatus sharedStatus) => sharedStatus
                                         .atsign!
@@ -142,12 +143,12 @@ class _HistoryScreenState extends State<HistoryScreen>
                                               .toLowerCase()))) {
                                 filteredSentHistory.add(element);
                               }
-                            });
+                            }
 
                             if (filteredSentHistory.isNotEmpty) {
                               return getSentList(filteredSentHistory);
                             } else {
-                              return Center(
+                              return const Center(
                                 child: Text('No results found'),
                               );
                             }
@@ -155,7 +156,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         },
                         errorBuilder: (provider) => ListView.separated(
                           padding: EdgeInsets.only(bottom: 170.toHeight),
-                          physics: AlwaysScrollableScrollPhysics(),
+                          physics: const AlwaysScrollableScrollPhysics(),
                           separatorBuilder: (context, index) =>
                               Divider(indent: 16.toWidth),
                           itemCount: 1,
@@ -208,7 +209,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                             if ((provider.receivedHistoryLogs.isEmpty)) {
                               return ListView.separated(
                                 padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
+                                physics: const AlwaysScrollableScrollPhysics(),
                                 separatorBuilder: (context, index) =>
                                     Divider(indent: 16.toWidth),
                                 itemCount: 1,
@@ -231,18 +232,19 @@ class _HistoryScreenState extends State<HistoryScreen>
                               );
                             } else {
                               List<FileTransfer> filteredReceivedList = [];
-                              provider.receivedHistoryLogs.forEach((element) {
+                              for (var element
+                                  in provider.receivedHistoryLogs) {
                                 if (element.sender!.contains(
                                   provider.getSearchText,
                                 )) {
                                   filteredReceivedList.add(element);
                                 }
-                              });
+                              }
 
                               if (filteredReceivedList.isNotEmpty) {
                                 return getReceivedList(filteredReceivedList);
                               } else {
-                                return Center(
+                                return const Center(
                                   child: Text('No results found'),
                                 );
                               }
@@ -250,7 +252,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                           },
                           errorBuilder: (provider) => ListView.separated(
                                 padding: EdgeInsets.only(bottom: 170.toHeight),
-                                physics: AlwaysScrollableScrollPhysics(),
+                                physics: const AlwaysScrollableScrollPhysics(),
                                 separatorBuilder: (context, index) =>
                                     Divider(indent: 16.toWidth),
                                 itemCount: 1,
@@ -300,7 +302,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   Widget getSentList(List<FileHistory> filteredSentHistory) {
     return ListView.separated(
       padding: EdgeInsets.only(bottom: 170.toHeight),
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) {
         return Divider(
           indent: 16.toWidth,
@@ -319,7 +321,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   Widget getReceivedList(List<FileTransfer> filteredReceivedList) {
     return ListView.separated(
       padding: EdgeInsets.only(bottom: 170.toHeight),
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) => Divider(indent: 16.toWidth),
       itemCount: filteredReceivedList.length,
       itemBuilder: (context, index) => Padding(

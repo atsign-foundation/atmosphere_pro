@@ -32,7 +32,7 @@ class FileListTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
         key: UniqueKey(),
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -45,27 +45,27 @@ class FileListTile extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Center(
+              child: const Center(
                 child: Icon(Icons.file_copy_outlined, size: 30),
               ),
             ),
-            SizedBox(width: 14),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "${fileName}",
+                    fileName,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontSize: 6.toFont,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     "$shortDate $time",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 10,
                       color: ColorConstants.oldSliver,
                     ),
@@ -78,7 +78,7 @@ class FileListTile extends StatelessWidget {
                 bytes: fileSize,
                 decimals: 2,
               ),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
                 color: ColorConstants.oldSliver,
               ),

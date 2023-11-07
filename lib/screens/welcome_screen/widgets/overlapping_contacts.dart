@@ -24,12 +24,12 @@ class OverlappingContacts extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _OverlappingContactsState createState() => _OverlappingContactsState();
+  State<OverlappingContacts> createState() => _OverlappingContactsState();
 }
 
 class _OverlappingContactsState extends State<OverlappingContacts> {
   bool isExpanded = false;
-  Map _atsignImages = {};
+  final Map _atsignImages = {};
   late TrustedContactProvider trustedProvider;
   late WelcomeScreenProvider welcomeScreenProvider;
 

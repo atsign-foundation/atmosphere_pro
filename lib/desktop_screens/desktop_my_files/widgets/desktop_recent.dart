@@ -11,8 +11,10 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class DesktopRecents extends StatefulWidget {
+  const DesktopRecents({Key? key}) : super(key: key);
+
   @override
-  _DesktopRecentsState createState() => _DesktopRecentsState();
+  State<DesktopRecents> createState() => _DesktopRecentsState();
 }
 
 class _DesktopRecentsState extends State<DesktopRecents> {
@@ -82,7 +84,7 @@ class _DesktopRecentsState extends State<DesktopRecents> {
                           ),
                         );
                       } else {
-                        return SizedBox();
+                        return const SizedBox();
                       }
                     },
                   ),

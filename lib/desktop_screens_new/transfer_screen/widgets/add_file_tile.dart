@@ -16,25 +16,25 @@ class AddFileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 20, top: 20, bottom: 20),
+      padding: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
       child: Column(
         children: [
           Container(
             width: 300,
             height: 100,
-            child: thumbnail(file.extension ?? "", file.path ?? ""),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: ColorConstants.MILD_GREY,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
             ),
+            child: thumbnail(file.extension ?? "", file.path ?? ""),
           ),
           Container(
             width: 300,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(10),
@@ -51,7 +51,7 @@ class AddFileTile extends StatelessWidget {
                       Text(
                         file.name,
                         textAlign: TextAlign.start,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -60,7 +60,7 @@ class AddFileTile extends StatelessWidget {
                       Text(
                         DateTime.now().toString(),
                         textAlign: TextAlign.start,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: ColorConstants.gray,
                         ),
@@ -70,7 +70,7 @@ class AddFileTile extends StatelessWidget {
                 ),
                 Text(
                   AppUtils.getFileSizeString(bytes: file.size.toDouble()),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: ColorConstants.gray,
                   ),

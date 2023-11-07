@@ -7,7 +7,7 @@ class SideBarBackupItem extends StatelessWidget {
   final Widget? leadingIcon;
   final VoidCallback? onPressed;
 
-  SideBarBackupItem({
+  const SideBarBackupItem({
     Key? key,
     this.title,
     this.leadingIcon,
@@ -18,12 +18,12 @@ class SideBarBackupItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
-      child: Container(
+      child: SizedBox(
         height: 50.toHeight,
         child: Row(
           children: [
             if (leadingIcon != null) leadingIcon!,
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 title!,

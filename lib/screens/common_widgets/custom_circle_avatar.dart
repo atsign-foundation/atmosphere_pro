@@ -19,6 +19,7 @@ class CustomCircleAvatar extends StatelessWidget {
       this.nonAsset = false,
       this.byteImage})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,12 +34,10 @@ class CustomCircleAvatar extends StatelessWidget {
         backgroundImage: nonAsset
             ? Image.memory(
                 byteImage!,
-                errorBuilder: (BuildContext _context, _, __) {
-                  return Container(
-                    child: Icon(
-                      Icons.image,
-                      size: 30.toFont,
-                    ),
+                errorBuilder: (BuildContext context, _, __) {
+                  return Icon(
+                    Icons.image,
+                    size: 30.toFont,
                   );
                 },
               ).image
@@ -61,6 +60,7 @@ class CustomCircleAvatarV2 extends StatelessWidget {
     this.nonAsset = false,
     this.byteImage,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,18 +72,16 @@ class CustomCircleAvatarV2 extends StatelessWidget {
             image: nonAsset
                 ? Image.memory(
                     byteImage!,
-                    errorBuilder: (BuildContext _context, _, __) {
-                      return Container(
-                        child: Icon(
-                          Icons.image,
-                          size: size.toFont,
-                        ),
+                    errorBuilder: (BuildContext context, _, __) {
+                      return Icon(
+                        Icons.image,
+                        size: size.toFont,
                       );
                     },
                   ).image
                 : AssetImage(image!),
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: ColorConstants.light_grey,
               spreadRadius: 1,

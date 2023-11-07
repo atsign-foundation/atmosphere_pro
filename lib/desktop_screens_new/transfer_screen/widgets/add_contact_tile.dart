@@ -50,19 +50,17 @@ class AddContactTile extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius:
-                    BorderRadius.horizontal(left: Radius.circular(10)),
+                    const BorderRadius.horizontal(left: Radius.circular(10)),
                 child: showImage
                     ? Image.memory(
                         image!,
                         height: 60,
                         width: 60,
                         fit: BoxFit.fill,
-                        errorBuilder: (BuildContext _context, _, __) {
-                          return Container(
-                            child: Icon(
-                              Icons.image,
-                              size: 30.toFont,
-                            ),
+                        errorBuilder: (BuildContext context, _, __) {
+                          return Icon(
+                            Icons.image,
+                            size: 30.toFont,
                           );
                         },
                       )
@@ -74,7 +72,7 @@ class AddContactTile extends StatelessWidget {
                         borderRadius: 0,
                       ),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +81,7 @@ class AddContactTile extends StatelessWidget {
                     SizedBox(width: 10.toHeight),
                     Text(
                       title!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -98,20 +96,20 @@ class AddContactTile extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     SizedBox(width: 10.toHeight),
                   ],
                 ),
               ),
               if (isTrusted) ...[
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Icon(
                   Icons.verified_outlined,
                   color: Theme.of(context).primaryColor,
                   size: 24,
                 )
               ],
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               if (index != null)
                 InkWell(
                   onTap: () {
@@ -124,8 +122,8 @@ class AddContactTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
                     ),
-                    padding: EdgeInsets.all(2),
-                    child: Icon(
+                    padding: const EdgeInsets.all(2),
+                    child: const Icon(
                       Icons.clear,
                       size: 14,
                     ),
@@ -138,10 +136,10 @@ class AddContactTile extends StatelessWidget {
           ),
         ),
         showDivider
-            ? Divider(
+            ? const Divider(
                 thickness: 1,
               )
-            : SizedBox(),
+            : const SizedBox(),
       ],
     );
   }

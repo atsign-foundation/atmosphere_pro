@@ -15,8 +15,10 @@ import 'package:provider/provider.dart';
 import 'downloads_folders.dart';
 
 class APK extends StatefulWidget {
+  const APK({Key? key}) : super(key: key);
+
   @override
-  _APKState createState() => _APKState();
+  State<APK> createState() => _APKState();
 }
 
 class _APKState extends State<APK> {
@@ -69,10 +71,8 @@ class _APKState extends State<APK> {
                               double.parse(provider.receivedApk[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.receivedApk[index].size!.toStringAsFixed(2)} ' +
-                                      TextStrings().kb
-                                  : '${(provider.receivedApk[index].size! / 1024).toStringAsFixed(2)} ' +
-                                      TextStrings().mb,
+                                  ? '${provider.receivedApk[index].size!.toStringAsFixed(2)} ${TextStrings().kb}'
+                                  : '${(provider.receivedApk[index].size! / 1024).toStringAsFixed(2)} ${TextStrings().mb}',
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

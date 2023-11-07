@@ -15,8 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Recents extends StatefulWidget {
+  const Recents({Key? key}) : super(key: key);
+
   @override
-  _RecentsState createState() => _RecentsState();
+  State<Recents> createState() => _RecentsState();
 }
 
 class _RecentsState extends State<Recents> {
@@ -66,11 +68,11 @@ Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
     child: Column(
       children: <Widget>[
         filePath != null
-            ? Container(
+            ? SizedBox(
                 width: 80.toHeight,
                 height: 80.toHeight,
                 child: thumbnail(filePath.split('.').last, filePath))
-            : Container(
+            : SizedBox(
                 width: 80.toHeight,
                 height: 80.toHeight,
                 child: ClipRect(
@@ -79,7 +81,7 @@ Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
                 ),
               ),
         title != null
-            ? Container(
+            ? SizedBox(
                 width: 100.toHeight,
                 height: 30.toHeight,
                 child: Padding(
@@ -87,7 +89,7 @@ Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
                   child: Text(
                     title,
                     style: TextStyle(
-                      color: Color(0xFF8A8E95),
+                      color: const Color(0xFF8A8E95),
                       fontSize: 12.toFont,
                       fontWeight: FontWeight.normal,
                     ),
@@ -97,7 +99,7 @@ Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
                   ),
                 ),
               )
-            : SizedBox()
+            : const SizedBox()
       ],
     ),
   );
@@ -110,18 +112,16 @@ Widget thumbnail(String extension, String path) {
             onTap: () async {
               await openFilePath(path);
             },
-            child: Container(
+            child: SizedBox(
               height: 50.toHeight,
               width: 50.toWidth,
               child: Image.file(
                 File(path),
                 fit: BoxFit.cover,
-                errorBuilder: (BuildContext _context, _, __) {
-                  return Container(
-                    child: Icon(
-                      Icons.image,
-                      size: 30.toFont,
-                    ),
+                errorBuilder: (BuildContext context, _, __) {
+                  return Icon(
+                    Icons.image,
+                    size: 30.toFont,
                   );
                 },
               ),
@@ -140,7 +140,7 @@ Widget thumbnail(String extension, String path) {
                         await openFilePath(path);
                       },
                       child: Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         height: 50.toHeight,
                         width: 50.toWidth,
                         child: (snapshot.data == null || videoThumbnail == null)
@@ -153,16 +153,14 @@ Widget thumbnail(String extension, String path) {
                                     videoThumbnail!,
                                     fit: BoxFit.cover,
                                     errorBuilder:
-                                        (BuildContext _context, _, __) {
-                                      return Container(
-                                        child: Icon(
-                                          Icons.image,
-                                          size: 30.toFont,
-                                        ),
+                                        (BuildContext context, _, __) {
+                                      return Icon(
+                                        Icons.image,
+                                        size: 30.toFont,
                                       );
                                     },
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                       ),
                     ),
                   ),
@@ -175,12 +173,12 @@ Widget thumbnail(String extension, String path) {
                       onTap: () async {
                         await openFilePath(path);
                       },
-                      child: Container(
+                      child: SizedBox(
                         height: 50.toHeight,
                         width: 50.toWidth,
-                        child: (File(path + "_thumbnail.jpeg").existsSync() &&
+                        child: (File("${path}_thumbnail.jpeg").existsSync() &&
                                 File(path).existsSync())
-                            ? Image.file(File(path + "_thumbnail.jpeg"),
+                            ? Image.file(File("${path}_thumbnail.jpeg"),
                                 fit: BoxFit.cover)
                             : Image.asset(
                                 ImageConstants.videoLogo,
@@ -198,7 +196,7 @@ Widget thumbnail(String extension, String path) {
                     await openFilePath(path);
                     //   await openDownloadsFolder(context);
                   },
-                  child: Container(
+                  child: SizedBox(
                     // padding: EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
@@ -254,7 +252,7 @@ Future<dynamic> generateVideoThumbnail(String path) async {
   var fileNamewithExt = temp.removeLast();
   var parentPath = temp.join(seperator);
 
-  var file = File("${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg");
+  var file = File("$parentPath$seperator${fileNamewithExt}_thumbnail.jpeg");
   bool isExist = await file.exists();
 
   if (isExist) {
@@ -263,7 +261,7 @@ Future<dynamic> generateVideoThumbnail(String path) async {
 
   final thumbnailGenerated = await plugin.getVideoThumbnail(
     srcFile: path,
-    destFile: "${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg",
+    destFile: "$parentPath$seperator${fileNamewithExt}_thumbnail.jpeg",
     width: 300,
     height: 300,
     keepAspectRatio: true,

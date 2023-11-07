@@ -13,7 +13,7 @@ class DesktopFilterHistoryWidget extends StatefulWidget {
   final HistoryType? typeSelected;
   final List<FileType>? listFileType;
 
-  DesktopFilterHistoryWidget({
+  const DesktopFilterHistoryWidget({
     Key? key,
     this.position,
     this.onSelectedFilter,
@@ -70,18 +70,19 @@ class _DesktopFilterHistoryWidgetState
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     ),
                     color: Theme.of(context).primaryColor,
                   ),
                   width: 400,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "All File Types",
                         style: TextStyle(
                           color: Colors.white,
@@ -111,7 +112,7 @@ class _DesktopFilterHistoryWidgetState
                     ],
                   ),
                 ),
-                Divider(
+                const Divider(
                   color: ColorConstants.disableColor,
                   height: 0,
                   thickness: 1,
@@ -120,7 +121,7 @@ class _DesktopFilterHistoryWidgetState
                   width: 400,
                   child: ListView.separated(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
                     itemCount: optionalHistoryTypes.length,
                     separatorBuilder: (context, index) {
@@ -141,7 +142,7 @@ class _DesktopFilterHistoryWidgetState
                         isCheck:
                             listFileType.contains(optionalHistoryTypes[index]),
                         borderRadius: index == optionalHistoryTypes.length - 1
-                            ? BorderRadius.vertical(
+                            ? const BorderRadius.vertical(
                                 bottom: Radius.circular(13),
                               )
                             : null,

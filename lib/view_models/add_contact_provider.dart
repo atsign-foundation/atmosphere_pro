@@ -45,7 +45,7 @@ class AddContactProvider extends BaseModel {
   }) async {
     setStatus(addContactStatus, Status.Loading);
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       var response = await contactService.addAtSign(
         atSign: atSign,
         nickName: nickname,

@@ -1,6 +1,6 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import '../../utils/colors.dart';
 
 class SearchWidget extends StatelessWidget {
   final Color? backgroundColor, borderColor;
@@ -22,7 +22,9 @@ class SearchWidget extends StatelessWidget {
     this.hintStyle,
     this.margin,
     this.onChange,
-    this.readOnly, this.onTap, this.autoFocus,
+    this.readOnly,
+    this.onTap,
+    this.autoFocus,
   }) : super(key: key);
 
   @override
@@ -69,7 +71,7 @@ class SearchWidget extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
           suffixIcon: controller.text.isEmpty
-              ? Icon(
+              ? const Icon(
                   Icons.search,
                   color: ColorConstants.darkSliver,
                 )
@@ -78,7 +80,7 @@ class SearchWidget extends StatelessWidget {
                     controller.clear();
                     onChange?.call('');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.close,
                     color: ColorConstants.darkSliver,
                   ),

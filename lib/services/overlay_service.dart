@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
@@ -16,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
-import '../data_models/file_transfer_status.dart';
 
 class OverlayService {
   OverlayService._();
@@ -30,7 +30,7 @@ class OverlayService {
     hideOverlay();
     snackBarOverlayEntry = _buildSnackBarOverlayEntry();
     NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry!);
-    return null;
+    return;
   }
 
   void hideOverlay() {
@@ -50,7 +50,7 @@ class OverlayService {
             builder: (context, snapshot) {
               final flushbarStatus = snapshot.data ?? FLUSHBAR_STATUS.SENDING;
               return Consumer<FileProgressProvider>(
-                builder: (_context, provider, _) {
+                builder: (context, provider, _) {
                   String text = _getText(
                     flushbarStatus,
                     fileTransferProgress: provider.sentFileTransferProgress,
@@ -67,7 +67,8 @@ class OverlayService {
                             Align(
                               alignment: Alignment.topRight,
                               child: Padding(
-                                padding: EdgeInsets.only(top: 24, right: 14),
+                                padding:
+                                    const EdgeInsets.only(top: 24, right: 14),
                                 child: InkWell(
                                   onTap: () {
                                     hideOverlay();
@@ -93,9 +94,9 @@ class OverlayService {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Image.asset(icon),
-                                  SizedBox(height: 40),
+                                  const SizedBox(height: 40),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 3,
                                       horizontal: 15,
                                     ),
@@ -111,7 +112,7 @@ class OverlayService {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  const SizedBox(height: 30),
                                   flushbarStatus == FLUSHBAR_STATUS.SENDING
                                       ? getProgressBar()
                                       : _buildHistoryButton(),
@@ -134,7 +135,7 @@ class OverlayService {
 
   Widget _buildHistoryButton() {
     return Padding(
-      padding: EdgeInsets.only(top: 80),
+      padding: const EdgeInsets.only(top: 80),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () {
@@ -156,7 +157,7 @@ class OverlayService {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: ColorConstants.grey),
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               'See History',
               style: TextStyle(
@@ -238,11 +239,11 @@ class OverlayService {
     return SizedBox(
       width: 300.toWidth,
       height: 40,
-      child: ClipRRect(
+      child: const ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: ProgressBarAnimation(
           height: 45,
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             colors: [
               Color(0xFFF05E3F),
               Color(0xFFEAA743),
@@ -276,25 +277,25 @@ class OverlayService {
   openFileReceiptBottomSheet(context,
       {FileRecipientSection? fileRecipientSection =
           FileRecipientSection.FAILED}) {
-    var _historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     Provider.of<FileTransferProvider>(context, listen: false)
-        .selectedFileHistory = _historyProvider.sentHistory[0];
+        .selectedFileHistory = historyProvider.sentHistory[0];
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: StadiumBorder(),
-        builder: (_context) {
+        shape: const StadiumBorder(),
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: FileRecipients(
-              _historyProvider.sentHistory[0].sharedWith,
+              historyProvider.sentHistory[0].sharedWith,
               fileRecipientSection: fileRecipientSection,
               key: UniqueKey(),
             ),

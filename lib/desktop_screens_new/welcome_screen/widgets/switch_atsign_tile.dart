@@ -14,7 +14,6 @@ class SwitchAtSignTile extends StatefulWidget {
   final String atSign;
   final bool isExpanded;
 
-
   @override
   State<SwitchAtSignTile> createState() => _SwitchAtSignTileState();
 }
@@ -48,7 +47,7 @@ class _SwitchAtSignTileState extends State<SwitchAtSignTile> {
       color: currentAtSign == widget.atSign
           ? Theme.of(context).primaryColor
           : Colors.transparent,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 10,
       ),
@@ -67,29 +66,31 @@ class _SwitchAtSignTileState extends State<SwitchAtSignTile> {
           SizedBox(
             width: widget.isExpanded ? 20 : 0,
           ),
-          widget.isExpanded ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                nickname ?? widget.atSign,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: currentAtSign == widget.atSign
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-              Text(
-                widget.atSign,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: currentAtSign == widget.atSign
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-            ],
-          ) : SizedBox(),
+          widget.isExpanded
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nickname ?? widget.atSign,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: currentAtSign == widget.atSign
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                    Text(
+                      widget.atSign,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: currentAtSign == widget.atSign
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
         ],
       ),
     );

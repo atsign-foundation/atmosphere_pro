@@ -24,16 +24,16 @@ class _NotificationBodyState extends State<NotificationBody> {
   @override
   Widget build(BuildContext context) {
     return Consumer<notification_service.NotificationService>(
-      builder: (_context, provider, _) {
+      builder: (context, provider, _) {
         return Container(
-          margin: EdgeInsets.only(top: 80),
+          margin: const EdgeInsets.only(top: 80),
           child: Dialog(
-            insetPadding: EdgeInsets.symmetric(horizontal: 6),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 6),
             alignment: Alignment.topRight,
             elevation: 5.0,
             clipBehavior: Clip.hardEdge,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 30),
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(255, 255, 255, 0.7),
                 borderRadius: BorderRadius.circular(20),
@@ -46,7 +46,7 @@ class _NotificationBodyState extends State<NotificationBody> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Align(
+                    const Align(
                       alignment: Alignment.center,
                       child: Text(
                         'Notifications',
@@ -54,7 +54,7 @@ class _NotificationBodyState extends State<NotificationBody> {
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                     ),
-                    Center(
+                    const Center(
                       child: SizedBox(
                         width: 155,
                         child:
@@ -64,7 +64,7 @@ class _NotificationBodyState extends State<NotificationBody> {
                     provider.currentFileShareStatus[notification_service
                                 .NotificationService.fileObjectKey] !=
                             null
-                        ? Text(
+                        ? const Text(
                             'Sending Queue',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -72,14 +72,14 @@ class _NotificationBodyState extends State<NotificationBody> {
                               color: ColorConstants.buttonHighLightColor,
                             ),
                           )
-                        : SizedBox(),
-                    SizedBox(height: 5),
+                        : const SizedBox(),
+                    const SizedBox(height: 5),
                     sendingFileCard(provider),
                     provider.recentNotification.isEmpty &&
                             provider.currentFileShareStatus[notification_service
                                     .NotificationService.flushbarStatuskey] ==
                                 null
-                        ? Center(
+                        ? const Center(
                             child: Text('No notifications'),
                           )
                         : getNotificationList(provider)
@@ -110,36 +110,34 @@ class _NotificationBodyState extends State<NotificationBody> {
 
   Widget getNotificationList(
       notification_service.NotificationService provider) {
-    return Container(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: provider.recentNotification.length,
-        itemBuilder: (_, i) {
-          return provider.recentNotification[i].type == HistoryType.send
-              ? Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: isSuccess(provider.recentNotification[i])
-                      ? SuccessCard(fileHistory: provider.recentNotification[i])
-                      : FailCard(fileHistory: provider.recentNotification[i]),
-                )
-              : Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: ReceivedFileCard(
-                    fileHistory: provider.recentNotification[i],
-                  ),
-                );
-        },
-      ),
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: provider.recentNotification.length,
+      itemBuilder: (_, i) {
+        return provider.recentNotification[i].type == HistoryType.send
+            ? Container(
+                margin: const EdgeInsets.only(top: 15),
+                child: isSuccess(provider.recentNotification[i])
+                    ? SuccessCard(fileHistory: provider.recentNotification[i])
+                    : FailCard(fileHistory: provider.recentNotification[i]),
+              )
+            : Container(
+                margin: const EdgeInsets.only(top: 15),
+                child: ReceivedFileCard(
+                  fileHistory: provider.recentNotification[i],
+                ),
+              );
+      },
     );
   }
 
   bool isSuccess(FileHistory fileHistory) {
     bool isSuccess = true;
-    fileHistory.sharedWith!.forEach((ShareStatus element) {
+    for (var element in fileHistory.sharedWith!) {
       if (element.isNotificationSend == false) {
         isSuccess = false;
       }
-    });
+    }
 
     return isSuccess;
   }

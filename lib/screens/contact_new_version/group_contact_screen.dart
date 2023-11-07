@@ -106,7 +106,7 @@ class _GroupContactScreenState extends State<GroupContactScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 27),
+                      padding: const EdgeInsets.only(left: 27),
                       child: Text(
                         "My Groups",
                         style: TextStyle(

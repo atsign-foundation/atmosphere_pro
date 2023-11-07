@@ -23,7 +23,7 @@ class ReceivedFileCard extends StatelessWidget {
       onTap: cardNavigator,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
@@ -39,11 +39,11 @@ class ReceivedFileCard extends StatelessWidget {
                   width: (Platform.isAndroid || Platform.isIOS) ? 200 : 230,
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       children: [
                         TextSpan(
-                          text: '${fileHistory.fileDetails?.sender ?? ''}',
-                          style: TextStyle(
+                          text: fileHistory.fileDetails?.sender ?? '',
+                          style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -54,7 +54,7 @@ class ReceivedFileCard extends StatelessWidget {
                 ),
                 RichText(
                     text: TextSpan(children: [
-                  TextSpan(
+                  const TextSpan(
                     text: 'Sent ',
                     style: TextStyle(
                       fontSize: 12,
@@ -64,7 +64,7 @@ class ReceivedFileCard extends StatelessWidget {
                   ),
                   TextSpan(
                     text: '${fileHistory.fileDetails?.files?.length} files',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.black,
                     ),
@@ -82,15 +82,15 @@ class ReceivedFileCard extends StatelessWidget {
                               '"${fileHistory.fileTransferObject?.notes} "',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 9),
+                              style: const TextStyle(fontSize: 9),
                             ),
                           ),
                         ],
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ],
             ),
-            NotificationCardButton(
+            const NotificationCardButton(
                 backgroundColor: Color(0xFFF07C50),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,7 +121,7 @@ class ReceivedFileCard extends StatelessWidget {
       await Navigator.push(
         NavService.navKey.currentContext!,
         MaterialPageRoute(
-          builder: (_) => WelcomeScreen(indexBottomBarSelected: 3),
+          builder: (_) => const WelcomeScreen(indexBottomBarSelected: 3),
         ),
       );
     } else {

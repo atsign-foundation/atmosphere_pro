@@ -19,6 +19,7 @@ import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -29,7 +30,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path/path.dart' show basename;
-import '../../utils/text_strings.dart';
 
 class WelcomeScreen extends StatefulWidget {
   final int? indexBottomBarSelected;
@@ -40,7 +40,7 @@ class WelcomeScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _WelcomeScreenState createState() => _WelcomeScreenState();
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   // 0-Sending, 1-Success, 2-Error
   List<Widget> transferStatus = [
-    SizedBox(),
+    const SizedBox(),
     Icon(
       Icons.check_circle,
       size: 20.toFont,
@@ -110,16 +110,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await GroupService().fetchGroupsAndContacts();
   }
 
-  static List<Widget> _bottomSheetWidgetOptions = <Widget>[
-    WelcomeScreenHome(),
-    ContactScreen(),
-    MyFilesScreen(),
-    TransferHistoryScreen(),
-    SettingsScreen()
+  static final List<Widget> _bottomSheetWidgetOptions = <Widget>[
+    const WelcomeScreenHome(),
+    const ContactScreen(),
+    const MyFilesScreen(),
+    const TransferHistoryScreen(),
+    const SettingsScreen()
   ];
 
   void acceptFiles() async {
-    _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
+    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
         .listen((List<SharedMediaFile> value) async {
       _sharedFiles = value;
 
@@ -139,9 +139,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           );
           await filePickerProvider.setFiles();
         });
-        print("Shared:" + (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
+        print("Shared:${_sharedFiles?.map((f) => f.path).join(",") ?? ""}");
         // check to see if atsign is paired
-        var atsign = await _backendService.currentAtsign;
+        var atsign = _backendService.currentAtsign;
         if (atsign != null) {
           BuildContext c = NavService.navKey.currentContext!;
           await Navigator.pushNamedAndRemoveUntil(
@@ -171,8 +171,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           FileTransferProvider.appClosedSharedFiles.add(fileToBeAdded);
           filePickerProvider.setFiles();
         });
-        print("Shared second:" +
-            (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
+        print(
+            "Shared second:${_sharedFiles?.map((f) => f.path).join(",") ?? ""}");
       }
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
@@ -196,11 +196,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           children: [
             Consumer<WelcomeScreenProvider>(
-              builder: (_c, welcomeProvider, _) {
+              builder: (c, welcomeProvider, _) {
                 return !welcomeProvider.isShowOverlay
                     ? SafeArea(
                         bottom: false,
-                        child: Container(
+                        child: SizedBox(
                           height: 24,
                           width: double.infinity,
                           child: StreamBuilder<FLUSHBAR_STATUS>(
@@ -222,7 +222,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     width: double.infinity,
                                     height: double.infinity,
                                     color: ColorConstants.successGreen,
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                         'Success!🎉 ',
                                         style: TextStyle(
@@ -248,7 +248,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     width: double.infinity,
                                     height: double.infinity,
                                     color: ColorConstants.redAlert,
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                         'Something went wrong! ⚠️',
                                         style: TextStyle(
@@ -262,7 +262,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 );
                               } else {
                                 return Consumer<FileProgressProvider>(
-                                  builder: (_c, provider, _) {
+                                  builder: (c, provider, _) {
                                     var percent = (provider
                                                 .sentFileTransferProgress
                                                 ?.percent ??
@@ -290,18 +290,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ),
                         ),
                       )
-                    : SizedBox();
+                    : const SizedBox();
               },
             ),
             Expanded(
               child: Consumer<InternetConnectivityChecker>(
-                builder: (_c, provider, widget) {
+                builder: (c, provider, widget) {
                   if (provider.isInternetAvailable) {
                     return _bottomSheetWidgetOptions[context
                         .watch<WelcomeScreenProvider>()
                         .selectedBottomNavigationIndex];
                   } else {
-                    return ErrorScreen(
+                    return const ErrorScreen(
                       TextStrings.noInternet,
                     );
                   }
@@ -329,7 +329,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 16.toWidth,
                 16 + MediaQuery.of(context).padding.bottom,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(76),
@@ -420,13 +420,13 @@ class PainterOne extends CustomPainter {
     double h = size.height;
 
     var paint1 = Paint()
-      ..color = Color(0xffEAA743)
+      ..color = const Color(0xffEAA743)
       ..style = PaintingStyle.fill;
 
     RRect halfRect = RRect.fromRectAndCorners(
         Rect.fromCenter(center: Offset(w / 2, h / 2), width: w, height: h),
-        bottomLeft: Radius.circular(50),
-        bottomRight: Radius.circular(50));
+        bottomLeft: const Radius.circular(50),
+        bottomRight: const Radius.circular(50));
     canvas.drawRRect(halfRect, paint1);
   }
 

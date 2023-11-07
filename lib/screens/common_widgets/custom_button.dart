@@ -23,6 +23,7 @@ class CustomButton extends StatelessWidget {
       this.width,
       this.isOrange = false})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -37,7 +38,7 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.toWidth),
             color: (isOrange)
-                ? Color(0xffF05E3E)
+                ? const Color(0xffF05E3E)
                 : (isInverted)
                     ? Colors.white
                     : Colors.black),

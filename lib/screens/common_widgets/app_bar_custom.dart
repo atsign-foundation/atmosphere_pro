@@ -63,7 +63,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Text(
                           description ?? '',
                           textAlign: TextAlign.left,
@@ -77,7 +77,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
-                  suffixIcon ?? SizedBox(),
+                  suffixIcon ?? const SizedBox(),
                 ],
               ),
             ),

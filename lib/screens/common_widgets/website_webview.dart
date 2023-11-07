@@ -1,29 +1,30 @@
 import 'dart:io';
 
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../services/navigation_service.dart';
-import '../../view_models/internet_connectivity_checker.dart';
-
 class WebsiteScreen extends StatefulWidget {
   final String? title;
   final String? url;
 
   const WebsiteScreen({Key? key, this.title, this.url}) : super(key: key);
+
   @override
-  _WebsiteScreenState createState() => _WebsiteScreenState();
+  State<WebsiteScreen> createState() => _WebsiteScreenState();
 }
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
   late bool loading;
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: ColorConstants.fontPrimary,
             size: 22,
@@ -80,19 +81,19 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
             )
           },
           onPageFinished: (test1) {
-            this.setState(() {
+            setState(() {
               loading = false;
             });
           },
         ),
         loading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                   ColorConstants.blueText,
                 )),
               )
-            : SizedBox()
+            : const SizedBox()
       ]),
     );
   }

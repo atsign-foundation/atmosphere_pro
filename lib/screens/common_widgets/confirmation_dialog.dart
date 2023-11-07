@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 class ConfirmationDialog extends StatefulWidget {
   final String title;
   final Function onConfirmation;
-  ConfirmationDialog(this.title, this.onConfirmation);
+
+  const ConfirmationDialog(this.title, this.onConfirmation, {Key? key})
+      : super(key: key);
 
   @override
-  _ConfirmationDialogState createState() => _ConfirmationDialogState();
+  State<ConfirmationDialog> createState() => _ConfirmationDialogState();
 }
 
 class _ConfirmationDialogState extends State<ConfirmationDialog> {

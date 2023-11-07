@@ -145,7 +145,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   ) {
     return ListView.builder(
       itemCount: contactsForAlphabet.length,
-      padding: widget.padding ?? EdgeInsets.only(left: 24),
+      padding: widget.padding ?? const EdgeInsets.only(left: 24),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -184,16 +184,16 @@ class _ContactsWidgetState extends State<ContactsWidget> {
     );
   }
 
-  /// returns list of atsigns, that matches with [currentChar] in [_filteredList]
+  /// returns list of atsigns, that matches with [currentChar] in [filteredList]
   List<GroupContactsModel?> getContactsForAlphabets(
-      List<GroupContactsModel?> _filteredList,
+      List<GroupContactsModel?> filteredList,
       String currentChar,
       int alphabetIndex) {
     var contactsForAlphabet = <GroupContactsModel?>[];
 
     /// contacts, groups that does not starts with alphabets
     if (alphabetIndex == 26) {
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c?.contact != null &&
             !RegExp(r'^[a-z]+$').hasMatch(
               (c?.contact?.atSign?[1] ?? '').toLowerCase(),
@@ -201,7 +201,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
           contactsForAlphabet.add(c);
         }
       }
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c?.group != null && (c?.group?.displayName ?? '').isNotEmpty) {
           if (!RegExp(r'^[a-z]+$').hasMatch(
             (c?.group?.displayName?[0] ?? '').toLowerCase(),
@@ -211,7 +211,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         }
       }
     } else {
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c?.contact != null) {
           if (c?.contact?.atSign?[1].toUpperCase() == currentChar) {
             contactsForAlphabet.add(c);
@@ -219,7 +219,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         }
       }
 
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c?.group != null && (c?.group?.displayName ?? '').isNotEmpty) {
           if (c?.group?.displayName?[0].toUpperCase() == currentChar) {
             contactsForAlphabet.add(c);

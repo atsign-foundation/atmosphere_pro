@@ -10,12 +10,14 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class VersionService {
   VersionService._();
-  static VersionService _internal = VersionService._();
+
+  static final VersionService _internal = VersionService._();
+
   factory VersionService.getInstance() {
     return _internal;
   }
@@ -79,12 +81,12 @@ class VersionService {
       showDialog(
           context: NavService.navKey.currentContext!,
           barrierDismissible: isBackwardCompatible ? true : false,
-          builder: (BuildContext _context) {
+          builder: (BuildContext context) {
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
-              content: Container(
+              content: SizedBox(
                 width: 300.toWidth,
                 child: SingleChildScrollView(
                   child: Column(
@@ -111,7 +113,7 @@ class VersionService {
                         },
                         child: Text(TextStrings().mayBeLater),
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             );
           });
@@ -153,7 +155,7 @@ class VersionService {
       }
 
       print(
-        'isNewVersionAvailable : ${isNewVersionAvailable}, isback: ${isBackwardCompatible}',
+        'isNewVersionAvailable : $isNewVersionAvailable, isback: $isBackwardCompatible',
       );
     } catch (e) {
       print('error in comparing versions');
@@ -184,12 +186,8 @@ class VersionService {
       url = MixedConstants.LINUX_STORE_LINK;
     }
 
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
     }
   }
 }

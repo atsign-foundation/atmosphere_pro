@@ -27,7 +27,7 @@ class DesktopContactTile extends StatelessWidget {
         .removeTrustedContacts(AtContact(atSign: title));
 
     if (res == true) {
-      await ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: ColorConstants.successGreen,
           content: Text(
@@ -37,7 +37,7 @@ class DesktopContactTile extends StatelessWidget {
         ),
       );
     } else {
-      await ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: ColorConstants.red,
           content: Text(
@@ -62,18 +62,16 @@ class DesktopContactTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           showImage
-              ? Container(
+              ? SizedBox(
                   height: 60,
                   width: 60,
                   child: Image.memory(
                     image!,
                     fit: BoxFit.fill,
-                    errorBuilder: (BuildContext _context, _, __) {
-                      return Container(
-                        child: Icon(
-                          Icons.image,
-                          size: 30.toFont,
-                        ),
+                    errorBuilder: (BuildContext context, _, __) {
+                      return Icon(
+                        Icons.image,
+                        size: 30.toFont,
                       );
                     },
                   ),
@@ -85,7 +83,7 @@ class DesktopContactTile extends StatelessWidget {
                   minSize: 60,
                   borderRadius: 0,
                 ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +91,7 @@ class DesktopContactTile extends StatelessWidget {
               SizedBox(width: 10.toHeight),
               Text(
                 title!,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -108,11 +106,11 @@ class DesktopContactTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               SizedBox(width: 10.toHeight),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           // Icon(
           //   Icons.send_outlined,
           //   color: Theme.of(context).primaryColor,

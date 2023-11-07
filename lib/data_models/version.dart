@@ -13,7 +13,7 @@ class AppVersion {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['android'] = android?.toJson();
     data['ios'] = ios?.toJson();
     data['macOs'] = macOs?.toJson();
@@ -46,7 +46,7 @@ class Version {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['latestVersion'] = latestVersion;
     data['minVersion'] = minVersion;
     return data;

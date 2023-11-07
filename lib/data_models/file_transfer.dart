@@ -26,12 +26,10 @@ class FileTransfer {
       this.notes,
       required this.fileEncryptionKey,
       this.atSigns}) {
-    this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
-    this.date = date ?? DateTime.now();
+    expiry = expiry ?? DateTime.now().add(const Duration(days: 6));
+    date = date ?? DateTime.now();
 
-    if (files == null) {
-      this.files = platformFileToFileData(platformFiles);
-    }
+    files ??= platformFileToFileData(platformFiles);
   }
 
   FileTransfer.fromJson(Map<String, dynamic> json) {
@@ -54,20 +52,20 @@ class FileTransfer {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['isUpdate'] = isUpdate;
     data['isWidgetOpen'] = isWidgetOpen;
-    data['url'] = this.url;
-    data['sender'] = this.sender;
-    data['key'] = this.key;
+    data['url'] = url;
+    data['sender'] = sender;
+    data['key'] = key;
     data['files'] = [];
     data['notes'] = notes;
-    this.files!.forEach((element) {
+    for (var element in files!) {
       data['files'].add(jsonEncode(element.toJson()));
-    });
-    data['expiry'] = this.expiry!.toUtc().toString();
-    data['date'] = this.date!.toUtc().toString();
-    data['fileEncryptionKey'] = this.fileEncryptionKey;
+    }
+    data['expiry'] = expiry!.toUtc().toString();
+    data['date'] = date!.toUtc().toString();
+    data['fileEncryptionKey'] = fileEncryptionKey;
     return data;
   }
 
@@ -76,10 +74,10 @@ class FileTransfer {
     if (platformFiles == null) {
       return fileData;
     }
-    platformFiles.forEach((element) {
+    for (var element in platformFiles) {
       fileData.add(
           FileData(name: element.name, size: element.size, path: element.path));
-    });
+    }
 
     return fileData;
   }
@@ -115,14 +113,14 @@ class FileData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
-    data['size'] = this.size;
-    data['url'] = this.url;
-    data['path'] = this.path;
-    data['isUploaded'] = this.isUploaded;
-    data['isUploading'] = this.isUploading;
-    data['isDownloading'] = this.isDownloading;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['size'] = size;
+    data['url'] = url;
+    data['path'] = path;
+    data['isUploaded'] = isUploaded;
+    data['isUploading'] = isUploading;
+    data['isDownloading'] = isDownloading;
     return data;
   }
 }
@@ -166,12 +164,12 @@ class FileHistory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['fileDetails'] = this.fileDetails;
-    data['sharedWith'] = this.sharedWith;
-    data['type'] = this.type.toString();
-    data['fileTransferObject'] = jsonEncode(this.fileTransferObject!.toJson());
-    data['groupName'] = this.groupName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['fileDetails'] = fileDetails;
+    data['sharedWith'] = sharedWith;
+    data['type'] = type.toString();
+    data['fileTransferObject'] = jsonEncode(fileTransferObject!.toJson());
+    data['groupName'] = groupName;
     data['notes'] = notes;
     return data;
   }
@@ -195,10 +193,10 @@ class ShareStatus {
     isSendingNotification = json['isSendingNotification'] ?? false;
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['atsign'] = this.atsign;
-    data['isNotificationSend'] = this.isNotificationSend;
-    data['isFileDownloaded'] = this.isFileDownloaded;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['atsign'] = atsign;
+    data['isNotificationSend'] = isNotificationSend;
+    data['isFileDownloaded'] = isFileDownloaded;
     return data;
   }
 }
@@ -215,9 +213,9 @@ class DownloadAcknowledgement {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['isDownloaded'] = this.isDownloaded;
-    data['transferId'] = this.transferId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['isDownloaded'] = isDownloaded;
+    data['transferId'] = transferId;
     return data;
   }
 }

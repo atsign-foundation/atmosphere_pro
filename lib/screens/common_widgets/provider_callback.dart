@@ -12,29 +12,29 @@ Future providerCallback<T extends BaseModel>(BuildContext context,
     bool showLoader = true,
     Function? onErrorHandeling,
     Function? onError}) async {
-  final T _provider = Provider.of<T>(context, listen: false);
-  String _taskName = taskName(_provider);
+  final T provider = Provider.of<T>(context, listen: false);
+  String taskName0 = taskName(provider);
 
   if (showLoader) LoadingDialog().show();
-  await Future.microtask(() => task(_provider));
+  await Future.microtask(() => task(provider));
   if (showLoader) LoadingDialog().hide();
   print(
-      'status before=====>_provider.status[_taskName]====>${_provider.status[_taskName]}');
-  if (_provider.status[_taskName] == Status.Error) {
-    if (showDialog) {
+      'status before=====>_provider.status[_taskName]====>${provider.status[taskName0]}');
+  if (provider.status[taskName0] == Status.Error) {
+    if (showDialog && context.mounted) {
       ErrorDialog().show(
-        _provider.error[_taskName].toString(),
+        provider.error[taskName0].toString(),
         context: context,
         onButtonPressed: onErrorHandeling,
       );
     }
 
-    if (onError != null) onError(_provider);
+    if (onError != null) onError(provider);
 
-    _provider.reset(_taskName);
+    provider.reset(taskName0);
     print(
-        'status before=====>_provider.status[_taskName]====>${_provider.status[_taskName]}');
-  } else if (_provider.status[_taskName] == Status.Done) {
-    onSuccess(_provider);
+        'status before=====>_provider.status[_taskName]====>${provider.status[taskName0]}');
+  } else if (provider.status[taskName0] == Status.Done) {
+    onSuccess(provider);
   }
 }

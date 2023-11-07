@@ -11,25 +11,24 @@ import 'history_provider.dart';
 
 class FileDownloadChecker extends BaseModel {
   FileDownloadChecker();
+
   bool undownloadedFilesExist = false;
   HistoryProvider? historyProvider;
   late FileTransfer receivedHistory;
 
   void checkForUndownloadedFiles() async {
-    if (historyProvider == null) {
-      historyProvider = Provider.of<HistoryProvider>(
-          NavService.navKey.currentContext!,
-          listen: false);
-    }
+    historyProvider ??= Provider.of<HistoryProvider>(
+        NavService.navKey.currentContext!,
+        listen: false);
 
     for (var value in historyProvider!.receivedHistoryLogs) {
       receivedHistory = value;
-      var _isDownloadAvailable = _checkForDownloadAvailability();
+      var isDownloadAvailable = _checkForDownloadAvailability();
 
-      if (_isDownloadAvailable) {
-        var _isFilesAvailableOffline =
+      if (isDownloadAvailable) {
+        var isFilesAvailableOffline =
             await _isFilesAlreadyDownloaded(value.sender);
-        if (!_isFilesAvailableOffline) {
+        if (!isFilesAvailableOffline) {
           undownloadedFilesExist = true;
           notifyListeners();
           return;
@@ -42,24 +41,24 @@ class FileDownloadChecker extends BaseModel {
   }
 
   bool _checkForDownloadAvailability() {
-    bool _isDownloadAvailable = false;
-    var expiryDate = receivedHistory.date!.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
-      _isDownloadAvailable = true;
+    bool isDownloadAvailable = false;
+    var expiryDate = receivedHistory.date!.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
+      isDownloadAvailable = true;
     }
 
     var isFileUploaded = false;
-    receivedHistory.files!.forEach((FileData fileData) {
+    for (var fileData in receivedHistory.files!) {
       if (fileData.isUploaded!) {
         isFileUploaded = true;
       }
-    });
-
-    if (!isFileUploaded) {
-      _isDownloadAvailable = false;
     }
 
-    return _isDownloadAvailable;
+    if (!isFileUploaded) {
+      isDownloadAvailable = false;
+    }
+
+    return isDownloadAvailable;
   }
 
   Future<bool> _isFilesAlreadyDownloaded(String? sender) async {

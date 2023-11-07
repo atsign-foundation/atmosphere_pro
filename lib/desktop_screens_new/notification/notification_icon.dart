@@ -29,7 +29,7 @@ class _NotificationIconState extends State<NotificationIcon> {
         InkWell(
           onTap: showNotificationDialog,
           child: Container(
-            padding: EdgeInsets.all(4),
+            padding: const EdgeInsets.all(4),
             color: Colors.transparent,
             child: Icon(
               Icons.circle_notifications,
@@ -46,14 +46,14 @@ class _NotificationIconState extends State<NotificationIcon> {
           child: Consumer<notification_service.NotificationService>(
             builder: (_, provider, __) {
               return provider.notificationCount == 0
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Container(
                       height: 25,
                       width: 25,
                       decoration: BoxDecoration(
                         color: isNotificationSelected
-                            ? Color(0xFFF6DED5)
-                            : Color(0xFFDBDBDB),
+                            ? const Color(0xFFF6DED5)
+                            : const Color(0xFFDBDBDB),
                         borderRadius: BorderRadius.circular(13),
                       ),
                       child: Center(
@@ -92,8 +92,8 @@ class _NotificationIconState extends State<NotificationIcon> {
         barrierDismissible: true,
         builder: (context) {
           return Consumer<notification_service.NotificationService>(
-            builder: (_context, provider, _) {
-              return NotificationBody();
+            builder: (context, provider, _) {
+              return const NotificationBody();
             },
           );
         });

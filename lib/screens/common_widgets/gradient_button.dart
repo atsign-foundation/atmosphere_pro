@@ -22,16 +22,16 @@ class GradientButton extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      margin: EdgeInsets.symmetric(horizontal: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
             ColorConstants.orangeColor,
             ColorConstants.yellow,
           ],
         ),
         borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: ColorConstants.light_grey,
             spreadRadius: 0,

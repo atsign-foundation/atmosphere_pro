@@ -9,9 +9,13 @@ import 'package:at_common_flutter/services/size_config.dart';
 class EditBottomSheet extends StatefulWidget {
   final Function onConfirmation;
   final String deleteMessage;
-  EditBottomSheet({required this.onConfirmation, required this.deleteMessage});
+
+  const EditBottomSheet(
+      {Key? key, required this.onConfirmation, required this.deleteMessage})
+      : super(key: key);
+
   @override
-  _EditBottomSheetState createState() => _EditBottomSheetState();
+  State<EditBottomSheet> createState() => _EditBottomSheetState();
 }
 
 class _EditBottomSheetState extends State<EditBottomSheet> {
@@ -20,8 +24,8 @@ class _EditBottomSheetState extends State<EditBottomSheet> {
     return Container(
       width: double.infinity,
       height: 100,
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(15),
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(10)),
       ),

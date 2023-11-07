@@ -16,13 +16,14 @@ class OnboardedAtSignCard extends StatelessWidget {
   final Function() onTap;
 
   const OnboardedAtSignCard({
+    Key? key,
     required this.avatar,
     required this.displayName,
     required this.atSignKey,
     required this.isExpanded,
     required this.isSelected,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class OnboardedAtSignCard extends StatelessWidget {
                   ),
           ),
           if (isExpanded) ...[
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -77,7 +78,7 @@ class OnboardedAtSignCard extends StatelessWidget {
               ),
             ),
           ] else
-           SizedBox(width: 20),
+            const SizedBox(width: 20),
           InkWell(
             onTap: onTap,
             child: SvgPicture.asset(

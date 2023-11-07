@@ -21,11 +21,14 @@ import 'package:provider/provider.dart';
 
 class DesktopReceivedFileDetails extends StatefulWidget {
   final FileTransfer? fileTransfer;
-  final Key? key;
-  DesktopReceivedFileDetails({this.fileTransfer, this.key});
+
+  const DesktopReceivedFileDetails({
+    Key? key,
+    this.fileTransfer,
+  }) : super(key: key);
 
   @override
-  _DesktopReceivedFileDetailsState createState() =>
+  State<DesktopReceivedFileDetails> createState() =>
       _DesktopReceivedFileDetailsState();
 }
 
@@ -37,19 +40,19 @@ class _DesktopReceivedFileDetailsState
       isFilesAvailableOfline = true,
       isOverwrite = false;
   List<String?> existingFileNamesToOverwrite = [];
-  Map<String?, Future> _futureBuilder = {};
+  final Map<String?, Future> _futureBuilder = {};
 
   @override
   void initState() {
     super.initState();
 
     fileCount = widget.fileTransfer!.files!.length;
-    widget.fileTransfer!.files!.forEach((element) {
+    for (var element in widget.fileTransfer!.files!) {
       fileSize += element.size!;
-    });
+    }
 
-    var expiryDate = widget.fileTransfer!.date!.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+    var expiryDate = widget.fileTransfer!.date!.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
 
@@ -66,11 +69,11 @@ class _DesktopReceivedFileDetailsState
   }
 
   getFutureBuilders() {
-    widget.fileTransfer!.files!.forEach((element) {
+    for (var element in widget.fileTransfer!.files!) {
       _futureBuilder[element.name] = CommonUtilityFunctions().isFilePresent(
         getDownloadDirectory(element.name!),
       );
-    });
+    }
   }
 
   isFilesAlreadyDownloaded() async {
@@ -108,7 +111,7 @@ class _DesktopReceivedFileDetailsState
       color: ColorConstants.selago,
       height: SizeConfig().screenHeight,
       width: SizeConfig().screenWidth * 0.45,
-      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,31 +122,33 @@ class _DesktopReceivedFileDetailsState
               children: [
                 Text(
                   TextStrings().details,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     InkWell(
                       onTap: () async {
-                        var _downloadPath =
+                        var downloadPath =
                             (MixedConstants.ApplicationDocumentsDirectory ??
                                     '') +
                                 Platform.pathSeparator +
                                 (widget.fileTransfer!.sender ?? '');
                         BackendService.getInstance()
-                            .doesDirectoryExist(path: _downloadPath);
+                            .doesDirectoryExist(path: downloadPath);
 
-                        await OpenFile.open(_downloadPath);
+                        await OpenFile.open(downloadPath);
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.save_alt_outlined, color: Colors.black),
-                          SizedBox(width: 10),
+                          const Icon(Icons.save_alt_outlined,
+                              color: Colors.black),
+                          const SizedBox(width: 10),
                           Text(TextStrings().downloadsFolder,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
@@ -151,11 +156,11 @@ class _DesktopReceivedFileDetailsState
                         ],
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.only(right: 10.0),
                       child: Consumer<FileProgressProvider>(
-                          builder: (_c, provider, _) {
+                          builder: (c, provider, _) {
                         var fileTransferProgress = provider
                             .receivedFileProgress[widget.fileTransfer!.key];
 
@@ -170,10 +175,10 @@ class _DesktopReceivedFileDetailsState
                                               !isOverwrite)
                                           ? Icon(
                                               Icons.done,
-                                              color: Color(0xFF08CB21),
+                                              color: const Color(0xFF08CB21),
                                               size: 25.toFont,
                                             )
-                                          : Icon(
+                                          : const Icon(
                                               Icons.download,
                                               color: Color(0xFF08CB21),
                                               size: 30,
@@ -188,7 +193,7 @@ class _DesktopReceivedFileDetailsState
                                       },
                                     ),
                                   )
-                                : SizedBox();
+                                : const SizedBox();
                       }),
                     )
                   ],
@@ -207,7 +212,7 @@ class _DesktopReceivedFileDetailsState
                     spacing: 20.0,
                     children: List.generate(widget.fileTransfer!.files!.length,
                         (index) {
-                      return Container(
+                      return SizedBox(
                         width: 250,
                         child: ListTile(
                             title: Text(
@@ -225,9 +230,9 @@ class _DesktopReceivedFileDetailsState
                                           .fileTransfer!.files![index].size
                                           .toString()) <=
                                       1024
-                                  ? '${widget.fileTransfer!.files![index].size} ${TextStrings().kb}' +
+                                  ? '${widget.fileTransfer!.files![index].size} ${TextStrings().kb}'
                                       ' . ${widget.fileTransfer!.files![index].name!.split('.').last}'
-                                  : '${(widget.fileTransfer!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}' +
+                                  : '${(widget.fileTransfer!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}'
                                       ' . ${widget.fileTransfer!.files![index].name!.split('.').last}',
                               style: TextStyle(
                                 color: ColorConstants.fadedText,
@@ -264,9 +269,9 @@ class _DesktopReceivedFileDetailsState
                                                       ? false
                                                       : snapshot.data as bool),
                                         )
-                                      : SizedBox();
+                                      : const SizedBox();
                                 }),
-                            trailing: SizedBox()),
+                            trailing: const SizedBox()),
                       );
                     }),
                   ),
@@ -277,7 +282,7 @@ class _DesktopReceivedFileDetailsState
             Row(
               children: <Widget>[
                 Text(
-                  '${fileCount} File(s) . ',
+                  '$fileCount File(s) . ',
                   style: CustomTextStyles.greyText15,
                 ),
                 fileSize > 1024
@@ -291,7 +296,7 @@ class _DesktopReceivedFileDetailsState
             ),
             SizedBox(height: 15.toHeight),
             Consumer<FileProgressProvider>(
-              builder: (_context, provider, _widget) {
+              builder: (context, provider, child) {
                 var fileTransferProgress =
                     provider.receivedFileProgress[widget.fileTransfer!.key];
                 return Text.rich(
@@ -302,10 +307,9 @@ class _DesktopReceivedFileDetailsState
                       children: [
                         fileTransferProgress != null
                             ? TextSpan(
-                                text:
-                                    '${getFileStateMessage(fileTransferProgress)}',
+                                text: getFileStateMessage(fileTransferProgress),
                                 style: CustomTextStyles.blueRegular14)
-                            : TextSpan(text: ''),
+                            : const TextSpan(text: ''),
                       ]),
                 );
               },
@@ -325,7 +329,7 @@ class _DesktopReceivedFileDetailsState
                       ],
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
             SizedBox(height: 15.toHeight),
             SizedBox(height: 15.toHeight),
           ],
@@ -434,7 +438,7 @@ class _DesktopReceivedFileDetailsState
         ),
       ));
 
-      existingFileNamesToOverwrite.forEach((element) {
+      for (var element in existingFileNamesToOverwrite) {
         textSpansMessage.add(
           TextSpan(
             text: '\n$element',
@@ -445,7 +449,7 @@ class _DesktopReceivedFileDetailsState
                 height: 1.5),
           ),
         );
-      });
+      }
 
       textSpansMessage.add(
         TextSpan(
@@ -519,13 +523,13 @@ class _DesktopReceivedFileDetailsState
 
     if (index != -1) {
       fileState =
-          '${fileState} ${index + 1} of ${widget.fileTransfer!.files!.length} File(s)';
+          '$fileState ${index + 1} of ${widget.fileTransfer!.files!.length} File(s)';
     }
     return fileState;
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator(
+    Widget spinner = const CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(
         ColorConstants.orange,
       ),

@@ -8,7 +8,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 class LoadingDialog {
   LoadingDialog._();
 
-  static LoadingDialog _instance = LoadingDialog._();
+  static final LoadingDialog _instance = LoadingDialog._();
 
   factory LoadingDialog() => _instance;
   bool _showing = false;
@@ -23,7 +23,7 @@ class LoadingDialog {
                 return Center(
                   child: (text != null)
                       ? onlyText(text)
-                      : CircularProgressIndicator(
+                      : const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                             ColorConstants.orange,
                           ),
@@ -75,7 +75,7 @@ class LoadingDialog {
                     decoration: TextDecoration.none),
           ),
         ),
-        TypingIndicator(
+        const TypingIndicator(
           showIndicator: true,
           flashingCircleBrightColor: ColorConstants.dullText,
           flashingCircleDarkColor: ColorConstants.fadedText,

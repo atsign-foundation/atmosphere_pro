@@ -34,7 +34,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      padding: EdgeInsets.all(40),
+      padding: const EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
       color: ColorConstants.background,
       child: ProviderHandler<TrustedContactProvider>(
@@ -55,76 +55,76 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Trusted",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   isSearchActive
                       ? ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
-                        child: Container(
-                          height: 40,
-                          width: 308,
-                          color: Colors.white,
-                          child: TextField(
-                            controller: searchController,
-                            autofocus: true,
-                            onChanged: (value) {
-                              setState(() {
-                                searchText = value;
-                              });
-                            },
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 28, vertical: 8),
-                              border: InputBorder.none,
-                              hintText: 'Search',
-                              hintStyle: TextStyle(
-                                color: ColorConstants.grey,
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            height: 40,
+                            width: 308,
+                            color: Colors.white,
+                            child: TextField(
+                              controller: searchController,
+                              autofocus: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  searchText = value;
+                                });
+                              },
+                              style: const TextStyle(
+                                color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
-                              suffixIcon: InkWell(
-                                  onTap: () {
-                                    searchText.isEmpty
-                                        ? setState(() {
-                                            isSearchActive = false;
-                                          })
-                                        : setState(() {
-                                            searchText = '';
-                                            searchController.clear();
-                                          });
-                                  },
-                                  child: const Icon(Icons.close)),
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 28, vertical: 8),
+                                border: InputBorder.none,
+                                hintText: 'Search',
+                                hintStyle: const TextStyle(
+                                  color: ColorConstants.grey,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                suffixIcon: InkWell(
+                                    onTap: () {
+                                      searchText.isEmpty
+                                          ? setState(() {
+                                              isSearchActive = false;
+                                            })
+                                          : setState(() {
+                                              searchText = '';
+                                              searchController.clear();
+                                            });
+                                    },
+                                    child: const Icon(Icons.close)),
+                              ),
                             ),
                           ),
-                        ),
-                      )
+                        )
                       : IconButtonWidget(
-                        icon: AppVectors.icSearch,
-                        onTap: () {
-                          setState(() {
-                            isSearchActive = true;
-                          });
-                        },
-                      ),
-                  SizedBox(
+                          icon: AppVectors.icSearch,
+                          onTap: () {
+                            setState(() {
+                              isSearchActive = true;
+                            });
+                          },
+                        ),
+                  const SizedBox(
                     width: 10,
                   ),
                   Container(
                     width: 40,
                     height: 40,
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
@@ -137,20 +137,20 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                 ],
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              Divider(
+              const Divider(
                 thickness: 1,
                 color: Colors.black,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
 
               // BODY
               Expanded(
-                child: Container(
+                child: SizedBox(
                   width: SizeConfig().screenWidth,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,20 +184,20 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                                       ),
                                     );
                                   } else {
-                                    return SizedBox();
+                                    return const SizedBox();
                                   }
                                 },
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       provider.trustedContacts.isEmpty
                           ? Expanded(
                               child: Container(
-                                  padding: EdgeInsets.only(left: 30),
+                                  padding: const EdgeInsets.only(left: 30),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Add contacts to trusted by ",
                                         style: TextStyle(
                                           color: ColorConstants.grey,
@@ -208,7 +208,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "selecting ",
                                             style: TextStyle(
                                               color: ColorConstants.grey,
@@ -221,7 +221,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                                                 Theme.of(context).primaryColor,
                                             size: 25,
                                           ),
-                                          Text(
+                                          const Text(
                                             " next to their name!",
                                             style: TextStyle(
                                               color: ColorConstants.grey,
@@ -233,7 +233,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                                     ],
                                   )),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ],
                   ),
                 ),

@@ -56,8 +56,8 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
       appBar: AppBar(
         backgroundColor: ColorConstants.background,
         title: Text(
-          widget.type != null ? "${widget.type!.text}" : "All Files",
-          style: TextStyle(
+          widget.type != null ? widget.type!.text : "All Files",
+          style: const TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.w500,
             color: Colors.black,
@@ -66,11 +66,11 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
         centerTitle: false,
         actions: [
           Container(
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
               vertical: 6,
               horizontal: 21,
             ),
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 4,
               horizontal: 6,
             ),
@@ -95,7 +95,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                       color: isGridType ? Colors.white : Colors.transparent,
                       borderRadius: BorderRadius.circular(17),
                     ),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Image.asset(
                       isGridType
                           ? ImageConstants.icGridTypeActivate
@@ -118,7 +118,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                       color: isGridType ? Colors.transparent : Colors.white,
                       borderRadius: BorderRadius.circular(17),
                     ),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Image.asset(
                       isGridType
                           ? ImageConstants.icListType
@@ -136,7 +136,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 28),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 28),
               child: SearchWidget(
                 controller: searchController,
                 autoFocus: widget.autoFocus,
@@ -149,7 +149,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                     type: widget.type,
                   );
                 },
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: ColorConstants.darkSliver,
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -159,7 +159,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 75),
+                padding: const EdgeInsets.only(bottom: 75),
                 child: Consumer<MyFilesProvider>(
                   builder: (context, provider, _) {
                     final files = provider.displayFiles;
@@ -170,10 +170,10 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             ? _buildGridView(files)
                             : _buildListView(files),
                         Padding(
-                          padding: EdgeInsets.only(top: 75),
+                          padding: const EdgeInsets.only(top: 75),
                           child: Text(
                             "${files.length} items",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 13,
                               color: ColorConstants.textGrey,
                             ),
@@ -193,13 +193,14 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
 
   Widget _buildGridView(List<FilesDetail> files) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 36),
+      margin: const EdgeInsets.symmetric(horizontal: 36),
       child: GridView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         itemCount: files.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
           crossAxisCount: 4,
           crossAxisSpacing: 24,
           mainAxisSpacing: 22,
@@ -236,7 +237,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   },
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Flexible(
                 child: Text(
                   files[index].fileName ?? "",
@@ -258,10 +259,10 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
   Widget _buildListView(List<FilesDetail> files) {
     return ListView.separated(
       shrinkWrap: true,
-      padding: EdgeInsets.symmetric(horizontal: 32),
-      physics: NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: files.length,
-      separatorBuilder: (context, index) => SizedBox(height: 10),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
         final date = DateTime.parse(files[index].date ?? "").toLocal();
         final shortDate = DateFormat('MM/dd/yy').format(date);
@@ -279,7 +280,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
 
         return Slidable(
           endActionPane: ActionPane(
-            motion: ScrollMotion(),
+            motion: const ScrollMotion(),
             extentRatio: 0.11,
             children: [
               Padding(
@@ -380,7 +381,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
             },
             child: Container(
               key: UniqueKey(),
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -417,7 +418,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                       }),
                     ),
                   ),
-                  SizedBox(width: 14),
+                  const SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,17 +428,17 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             Expanded(
                               child: Text(
                                 "${files[index].fileName}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 10,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Text(
-                              "$shortDate",
-                              style: TextStyle(
+                              shortDate,
+                              style: const TextStyle(
                                 fontSize: 10,
                                 color: ColorConstants.oldSliver,
                               ),
@@ -445,36 +446,36 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             Container(
                               width: 1,
                               height: 8,
-                              color: Color(0xFFD7D7D7),
-                              margin: EdgeInsets.symmetric(
+                              color: const Color(0xFFD7D7D7),
+                              margin: const EdgeInsets.symmetric(
                                 horizontal: 3,
                               ),
                             ),
                             Text(
-                              "$time",
-                              style: TextStyle(
+                              time,
+                              style: const TextStyle(
                                 fontSize: 10,
                                 color: ColorConstants.oldSliver,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 7),
+                        const SizedBox(height: 7),
                         Text(
-                          "${(files[index].contactName)?.split("@")[1] ?? ''}",
-                          style: TextStyle(
+                          (files[index].contactName)?.split("@")[1] ?? '',
+                          style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                             fontSize: 10,
                           ),
                         ),
-                        SizedBox(height: 1),
+                        const SizedBox(height: 1),
                         Row(
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                "${files[index].contactName ?? ''}",
-                                style: TextStyle(
+                                files[index].contactName ?? '',
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 10,
                                 ),
@@ -485,7 +486,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                                 bytes: files[index].size ?? 0,
                                 decimals: 2,
                               ),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 10,
                                 color: ColorConstants.oldSliver,
                               ),

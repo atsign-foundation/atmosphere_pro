@@ -32,13 +32,14 @@ class BottomNavigationWidget extends StatelessWidget {
             height: title.isNotEmpty ? 25 : null,
           ),
           if (title.isNotEmpty) ...[
-            SizedBox(height: 3),
+            const SizedBox(height: 3),
             Text(
               title,
               style: TextStyle(
                 fontSize: 10.toFont,
-                color:
-                    indexSelected == index ? Colors.black : Color(0xFFAEAEAE),
+                color: indexSelected == index
+                    ? Colors.black
+                    : const Color(0xFFAEAEAE),
                 fontWeight: FontWeight.w500,
               ),
             ),

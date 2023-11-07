@@ -93,7 +93,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
           SafeArea(
             child: Column(
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 DesktopHeader(
                   title: TextStrings().sidebarSettings,
                   showBackIcon: false,
@@ -108,7 +108,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         'App Version ${_packageInfo.version} (${_packageInfo.buildNumber})',
                         style: CustomTextStyles.black12,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 28,
                       ),
                       SettingsButton(
@@ -116,7 +116,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         onPressed: switchAtsign,
                         image: optionIcons[0],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       SettingsButton(
@@ -130,7 +130,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         },
                         image: optionIcons[1],
                       ),
-                      Divider(
+                      const Divider(
                         height: 58,
                         color: ColorConstants.dividerGrey,
                       ),
@@ -143,7 +143,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         },
                         image: optionIcons[3],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 24,
                       ),
                       SettingsButton(
@@ -153,7 +153,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                         },
                         image: optionIcons[5],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                     ],

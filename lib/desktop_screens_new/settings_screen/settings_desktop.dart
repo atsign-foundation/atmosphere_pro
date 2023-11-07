@@ -38,13 +38,13 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      padding: EdgeInsets.all(40),
+      padding: const EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
       color: ColorConstants.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             "Settings",
             style: TextStyle(
               fontSize: 25,
@@ -52,14 +52,14 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
             ),
             textAlign: TextAlign.start,
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
-          Divider(
+          const Divider(
             thickness: 1,
             color: Colors.black,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
@@ -72,7 +72,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
-              padding: EdgeInsets.all(50),
+              padding: const EdgeInsets.all(50),
               child: Column(
                 children: [
                   Row(
@@ -109,7 +109,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Row(
                     children: [
                       Expanded(
@@ -141,7 +141,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Row(
                     children: [
                       DesktopSettingsCard(
@@ -149,7 +149,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                         subtitle: 'Share atSign between apps',
                         vectorIcon: AppVectors.icShare,
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Switch(
                           activeColor: ColorConstants.orange,
                           value: enableShareStSign,

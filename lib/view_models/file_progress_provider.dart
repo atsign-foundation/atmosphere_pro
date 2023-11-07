@@ -3,7 +3,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class FileProgressProvider extends BaseModel {
   FileTransferProgress? _sentFileTransferProgress;
-  Map<String, FileTransferProgress> _receivedFileProgress = {};
+  final Map<String, FileTransferProgress> _receivedFileProgress = {};
 
   FileTransferProgress? get sentFileTransferProgress =>
       _sentFileTransferProgress;

@@ -15,7 +15,7 @@ void main() {
 
   /// Functional test cases for Add contact widget
   group('Add Contact Widget Tests:', () {
-    final addContact = AddContact(
+    const addContact = AddContact(
       atSignName: '@bluebellrelated86',
       name: 'Blue bell',
     );

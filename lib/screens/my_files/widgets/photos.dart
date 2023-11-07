@@ -11,8 +11,10 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'downloads_folders.dart';
 
 class Photos extends StatefulWidget {
+  const Photos({Key? key}) : super(key: key);
+
   @override
-  _PhotosState createState() => _PhotosState();
+  State<Photos> createState() => _PhotosState();
 }
 
 class _PhotosState extends State<Photos> {
@@ -61,18 +63,16 @@ class _PhotosState extends State<Photos> {
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.toHeight),
-              child: Container(
+              child: SizedBox(
                 height: 100.toHeight,
                 width: 100.toHeight,
                 child: Image.file(
                   File(provider.receivedPhotos[index].filePath!),
                   fit: BoxFit.cover,
-                  errorBuilder: (BuildContext _context, _, __) {
-                    return Container(
-                      child: Icon(
-                        Icons.image,
-                        size: 30.toFont,
-                      ),
+                  errorBuilder: (BuildContext context, _, __) {
+                    return Icon(
+                      Icons.image,
+                      size: 30.toFont,
                     );
                   },
                 ),

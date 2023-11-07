@@ -79,7 +79,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator(
+    Widget spinner = const CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(
         ColorConstants.orange,
       ),
@@ -119,10 +119,10 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
         ),
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
           vertical: 5,
         ),
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -132,29 +132,28 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
               height: 35,
               width: 35,
             )),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Expanded(
               child: Text(
                 widget.singleFile.name ?? "",
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Text(
               double.parse(widget.singleFile.size.toString()) <= 1024
-                  ? '${widget.singleFile.size} ' + TextStrings().kb
-                  : '${(widget.singleFile.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                      TextStrings().mb,
-              style: TextStyle(
+                  ? '${widget.singleFile.size} ${TextStrings().kb}'
+                  : '${(widget.singleFile.size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+              style: const TextStyle(
                 color: ColorConstants.grey,
                 fontSize: 10,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             widget.fileHistory.type == HistoryType.received
@@ -162,7 +161,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Consumer<FileProgressProvider>(
-                        builder: (_c, provider, _) {
+                        builder: (c, provider, _) {
                           var fileTransferProgress = provider
                               .receivedFileProgress[widget.fileTransfer.key];
 
@@ -189,7 +188,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                                             AppVectors.icDownloadFile,
                                           ),
                                         )
-                              : SizedBox();
+                              : const SizedBox();
                         },
                       ),
                       const SizedBox(
@@ -215,7 +214,7 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                                 AppVectors.icSendNew,
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       isDownloaded
                           ? Padding(
                               padding: const EdgeInsets.only(left: 6.0),
@@ -254,10 +253,10 @@ class _HistoryFileCardState extends State<HistoryFileCard> {
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ],
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),

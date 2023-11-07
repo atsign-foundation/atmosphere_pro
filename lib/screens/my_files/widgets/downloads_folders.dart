@@ -7,7 +7,7 @@ import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 Future<void> openDownloadsFolder(BuildContext context) async {
   if (Platform.isAndroid) {
@@ -23,10 +23,10 @@ Future<void> openDownloadsFolder(BuildContext context) async {
           await Permission.storage.request().isGranted,
     );
   } else {
-    String url = 'shareddocuments://' +
-        BackendService.getInstance().atClientPreference.downloadPath!;
-    if (await canLaunch(url)) {
-      await launch(url);
+    String url =
+        'shareddocuments://${BackendService.getInstance().atClientPreference.downloadPath!}';
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
     } else {
       throw 'Could not launch $url';
     }
@@ -42,4 +42,3 @@ Future<void> openFilePath(String path) async {
     CommonUtilityFunctions().showNoFileDialog();
   }
 }
-

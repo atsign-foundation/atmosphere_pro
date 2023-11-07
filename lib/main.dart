@@ -17,10 +17,10 @@ void main() async {
   }
   // AtSignLogger.root_level = 'finer';
   if (Platform.isLinux || Platform.isMacOS) {
-    await DesktopWindow.setWindowSize(Size(1200, 700));
-    await DesktopWindow.setMinWindowSize(Size(1200, 700));
+    await DesktopWindow.setWindowSize(const Size(1200, 700));
+    await DesktopWindow.setMinWindowSize(const Size(1200, 700));
   } else if (Platform.isWindows) {
-    await DesktopWindow.setMinWindowSize(Size(1200, 700));
+    await DesktopWindow.setMinWindowSize(const Size(1200, 700));
   }
-  runApp(MyApp());
+  runApp(const MyApp());
 }

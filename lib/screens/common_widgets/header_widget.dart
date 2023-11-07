@@ -137,7 +137,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                   onChanged: widget.onSearch,
                 ),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               SizedBox(
                 width: 20,
                 height: 20,

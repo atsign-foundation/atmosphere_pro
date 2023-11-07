@@ -55,7 +55,7 @@ class _ProgressBarAnimationState extends State<ProgressBarAnimation>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
     );
 
     _controller.repeat();
@@ -168,8 +168,8 @@ class ProgressPainter extends CustomPainter {
         canvas.drawRRect(
           RRect.fromRectAndCorners(
             Offset(x, 0.0) & Size(width, size.height),
-            topRight: Radius.circular(16),
-            bottomRight: Radius.circular(16),
+            topRight: const Radius.circular(16),
+            bottomRight: const Radius.circular(16),
           ),
           paint,
         );

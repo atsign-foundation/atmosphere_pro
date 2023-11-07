@@ -87,13 +87,13 @@ class OptionDialog extends StatelessWidget {
         children: [
           Container(
             height: 44,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
             ),
             child: Center(
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 12,
                 ),
@@ -103,7 +103,7 @@ class OptionDialog extends StatelessWidget {
           Container(
             height: 1,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.black,
             ),
           )

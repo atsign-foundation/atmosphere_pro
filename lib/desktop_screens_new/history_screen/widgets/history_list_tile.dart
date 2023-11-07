@@ -54,11 +54,11 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
   void initState() {
     filesList = widget.fileHistory!.fileDetails!.files;
     if (widget.fileHistory!.sharedWith != null) {
-      widget.fileHistory!.sharedWith!.forEach((ShareStatus sharedWith) {
+      for (var sharedWith in widget.fileHistory!.sharedWith!) {
         if (sharedWith.isNotificationSend == false) {
           isFileSentSuccess = false;
         }
-      });
+      }
     }
     numberOfAllFiles = widget.fileHistory?.fileDetails?.files?.length ?? 0;
     super.initState();
@@ -79,12 +79,12 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
             ),
             decoration: BoxDecoration(
-              color: isExpanded ? Color(0xFFE9E9E9) : Colors.white,
+              color: isExpanded ? const Color(0xFFE9E9E9) : Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
             child: InkWell(
@@ -102,7 +102,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         flex: 1,
                         child: Text(
                           widget.fileHistory?.type == HistoryType.received
-                              ? "${widget.fileHistory?.fileDetails?.sender ?? ''}"
+                              ? widget.fileHistory?.fileDetails?.sender ?? ''
                               : (widget.fileHistory?.sharedWith ?? [])
                                   .map((shareStatus) => shareStatus.atsign)
                                   .join(",")
@@ -146,9 +146,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                             //     color: ColorConstants.textGreen,
                             //   ),
                             // ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                                 vertical: 5,
                               ),
@@ -184,7 +184,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                               : widget.fileHistory?.fileDetails?.notes ?? '',
                           style: TextStyle(
                             fontSize: 12.toFont,
-                            color: Color(0xFF747474),
+                            color: const Color(0xFF747474),
                           ),
                         ),
                       ),
@@ -193,7 +193,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         child: Column(
                           children: [
                             Text(
-                              '${DateFormat("MM/dd/yy").format(widget.fileHistory!.fileDetails!.date!)}',
+                              DateFormat("MM/dd/yy").format(
+                                  widget.fileHistory!.fileDetails!.date!),
                               style: TextStyle(
                                 fontSize: 11.toFont,
                                 color: ColorConstants.oldSliver,
@@ -201,7 +202,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                               ),
                             ),
                             Text(
-                              '${DateFormat('kk:mm').format(widget.fileHistory!.fileDetails!.date!)}',
+                              DateFormat('kk:mm').format(
+                                  widget.fileHistory!.fileDetails!.date!),
                               style: TextStyle(
                                 fontSize: 10.toFont,
                                 color: ColorConstants.oldSliver,
@@ -224,17 +226,17 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   color: ColorConstants.MILD_GREY,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 8),
                                 child: Text(
                                   tag.text,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color(0xFF909090),
                                     fontSize: 10,
                                   ),
                                 ),
                               );
-                            }).toList(),
+                            }),
                           ],
                         ),
                       ),
@@ -249,7 +251,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                     onTap: () {
                                       openFileReceiptBottomSheet();
                                     },
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.done_all,
                                       size: 14,
                                       color: Color(0xFF909090),
@@ -259,7 +261,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                           ],
                         ),
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       isExpanded
                           ? SvgPicture.asset(AppVectors.icArrowUpOutline)
                           : SvgPicture.asset(AppVectors.icArrowDownOutline),
@@ -274,8 +276,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                   shrinkWrap: true,
                   itemCount:
                       widget.fileHistory?.fileDetails?.files?.length ?? 0,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(top: 4),
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(top: 4),
                   itemBuilder: (context, index) {
                     return HistoryFileCard(
                       key: UniqueKey(),
@@ -283,7 +285,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                       singleFile:
                           widget.fileHistory!.fileDetails!.files![index],
                       isShowDate: false,
-                      margin: EdgeInsets.fromLTRB(36, 6, 20, 0),
+                      margin: const EdgeInsets.fromLTRB(36, 6, 20, 0),
                       onAction: () async {
                         await isFilesPresent(widget.fileHistory!.fileDetails!);
                       },
@@ -292,7 +294,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                     );
                   },
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       );
     });
@@ -300,7 +302,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
 
   Widget buildDownloadMultipleFilesButton() {
     return Consumer<FileProgressProvider>(
-      builder: (_c, provider, _) {
+      builder: (c, provider, _) {
         var fileTransferProgress =
             provider.receivedFileProgress[widget.fileHistory?.fileDetails?.key];
         return Row(
@@ -315,7 +317,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                             AppVectors.icCloudDownloaded,
                           )
                         : isDownloading
-                            ? CircularProgressIndicator(
+                            ? const CircularProgressIndicator(
                                 color: ColorConstants.orange)
                             : InkWell(
                                 onTap: () async {
@@ -326,8 +328,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   AppVectors.icDownloadFile,
                                 ),
                               )
-                : SizedBox(),
-            SizedBox(width: 12),
+                : const SizedBox(),
+            const SizedBox(width: 12),
             Text(
               '$numberOfFinished/$numberOfAllFiles',
               style: TextStyle(
@@ -350,7 +352,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
         context: context,
         barrierColor: Colors.transparent,
         barrierDismissible: true,
-        builder: (_context) {
+        builder: (context) {
           return StatefulBuilder(
             builder: (context, setDialogState) {
               return Dialog(
@@ -363,9 +365,9 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                   height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(12.0),
-                      topRight: const Radius.circular(12.0),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12.0),
+                      topRight: Radius.circular(12.0),
                     ),
                   ),
                   child: FileRecipients(
@@ -490,7 +492,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator(
+    Widget spinner = const CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(
         ColorConstants.orange,
       ),

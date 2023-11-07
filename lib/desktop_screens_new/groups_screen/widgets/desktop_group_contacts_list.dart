@@ -92,7 +92,9 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
             ],
           ),
           const SizedBox(height: 20),
-          widget.asSelectionScreen ? HorizontalCircularList() : Container(),
+          widget.asSelectionScreen
+              ? const HorizontalCircularList()
+              : Container(),
           (widget.initialData ?? []).isNotEmpty
               ? buildContactsList(provider.showTrustedContacts
                   ? widget.initialData
@@ -154,10 +156,10 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
 
   Widget buildContactsList(List<GroupContactsModel?>? data) {
     // filtering contacts and groups
-    var _filteredList = <GroupContactsModel?>[];
-    _filteredList = getAllContactList(data ?? []);
+    var filteredList = <GroupContactsModel?>[];
+    filteredList = getAllContactList(data ?? []);
 
-    if (_filteredList.isEmpty) {
+    if (filteredList.isEmpty) {
       return Center(
         child: Text(
           TextStrings().noContactsFound,
@@ -184,12 +186,12 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
         }
 
         contactsForAlphabet = getContactsForAlphabets(
-          _filteredList,
+          filteredList,
           currentChar,
           alphabetIndex,
         );
 
-        if (_filteredList.isEmpty) {
+        if (filteredList.isEmpty) {
           return Center(
             child: Text(TextStrings().noContactsFound),
           );
@@ -267,30 +269,30 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
 
   List<GroupContactsModel?> getAllContactList(
       List<GroupContactsModel?> allGroupContactData) {
-    var _filteredList = <GroupContactsModel?>[];
+    var filteredList = <GroupContactsModel?>[];
     for (var c in allGroupContactData) {
       if (c!.contact != null &&
           c.contact!.atSign
               .toString()
               .toUpperCase()
               .contains(groupProvider.searchContactText.toUpperCase())) {
-        _filteredList.add(c);
+        filteredList.add(c);
       }
     }
 
-    return _filteredList;
+    return filteredList;
   }
 
-  /// returns list of atsigns, that matches with [currentChar] in [_filteredList]
+  /// returns list of atsigns, that matches with [currentChar] in [filteredList]
   List<GroupContactsModel?> getContactsForAlphabets(
-      List<GroupContactsModel?> _filteredList,
+      List<GroupContactsModel?> filteredList,
       String currentChar,
       int alphabetIndex) {
     var contactsForAlphabet = <GroupContactsModel?>[];
 
     /// contacts, groups that does not starts with alphabets
     if (alphabetIndex == 26) {
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c!.contact != null &&
             !RegExp(r'^[a-z]+$').hasMatch(
               c.contact!.atSign![1].toLowerCase(),
@@ -299,13 +301,13 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
         }
       }
     } else {
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c!.contact != null &&
             c.contact?.atSign![1].toUpperCase() == currentChar) {
           contactsForAlphabet.add(c);
         }
       }
-      for (var c in _filteredList) {
+      for (var c in filteredList) {
         if (c!.group != null &&
             c.group?.displayName![0].toUpperCase() == currentChar) {
           contactsForAlphabet.add(c);
@@ -430,7 +432,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
         ),
       ),
     );
-    var _res = await ContactService()
+    var res = await ContactService()
         .blockUnblockContact(contact: contact, blockAction: true);
     await _groupService.fetchGroupsAndContacts();
     setState(() {
@@ -438,7 +440,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
       Navigator.pop(context);
     });
 
-    if (_res && closeBottomSheet) {
+    if (res && closeBottomSheet) {
       if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);
@@ -464,8 +466,8 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
         ),
       ),
     );
-    var _res = await ContactService().deleteAtSign(atSign: contact.atSign!);
-    if (_res) {
+    var res = await ContactService().deleteAtSign(atSign: contact.atSign!);
+    if (res) {
       await _groupService.removeContact(contact.atSign!);
     }
     setState(() {
@@ -473,7 +475,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
       Navigator.pop(context);
     });
 
-    if (_res && closeBottomSheet) {
+    if (res && closeBottomSheet) {
       if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);

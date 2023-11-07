@@ -15,8 +15,10 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
 import 'package:provider/provider.dart';
 
 class DesktopEmptySender extends StatefulWidget {
+  const DesktopEmptySender({Key? key}) : super(key: key);
+
   @override
-  _DesktopEmptySenderState createState() => _DesktopEmptySenderState();
+  State<DesktopEmptySender> createState() => _DesktopEmptySenderState();
 }
 
 class _DesktopEmptySenderState extends State<DesktopEmptySender> {
@@ -32,7 +34,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
     await Provider.of<TrustedContactProvider>(context, listen: false)
         .getTrustedContact();
     trustedContacts =
-        await Provider.of<TrustedContactProvider>(context, listen: false)
+        Provider.of<TrustedContactProvider>(context, listen: false)
             .trustedContacts;
 
     if (mounted) {
@@ -51,68 +53,65 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
       errorBuilder: (provider) => Container(),
       successBuilder: (provider) {
         if (provider.trustedContacts.isNotEmpty) {
-          return DesktopTrustedSender();
+          return const DesktopTrustedSender();
         }
-        return Container(
-            child: Row(
+        return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Container(
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                            color: Color(0xffFCF9F9),
-                            borderRadius: BorderRadius.circular(80.toHeight)),
-                        height: 160.toHeight,
-                        width: 160.toHeight,
-                        child: Image.asset(ImageConstants.emptyTrustedSenders),
-                      ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffFCF9F9),
+                          borderRadius: BorderRadius.circular(80.toHeight)),
+                      height: 160.toHeight,
+                      width: 160.toHeight,
+                      child: Image.asset(ImageConstants.emptyTrustedSenders),
                     ),
-                    SizedBox(height: 20.toHeight),
-                    Text(
-                      pro_text_strings.TextStrings().noTrustedSenders,
-                      style: CustomTextStyles.primaryBold18,
-                    ),
-                    SizedBox(height: 10.toHeight),
-                    Text(
-                      pro_text_strings.TextStrings().addTrustedSender,
-                      style: CustomTextStyles.secondaryRegular16,
-                    ),
-                    SizedBox(
-                      height: 25.toHeight,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isContactSelecttion = !isContactSelecttion;
-                        });
+                  ),
+                  SizedBox(height: 20.toHeight),
+                  Text(
+                    pro_text_strings.TextStrings().noTrustedSenders,
+                    style: CustomTextStyles.primaryBold18,
+                  ),
+                  SizedBox(height: 10.toHeight),
+                  Text(
+                    pro_text_strings.TextStrings().addTrustedSender,
+                    style: CustomTextStyles.secondaryRegular16,
+                  ),
+                  SizedBox(
+                    height: 25.toHeight,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isContactSelecttion = !isContactSelecttion;
+                      });
+                    },
+                    style: ButtonStyle(backgroundColor:
+                        MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        return ColorConstants.orangeColor;
                       },
-                      style: ButtonStyle(backgroundColor:
-                          MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return ColorConstants.orangeColor;
-                        },
-                      ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-                        (Set<MaterialState> states) {
-                          return Size(160, 40);
-                        },
-                      )),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal,
-                        ),
+                    ), fixedSize: MaterialStateProperty.resolveWith<Size>(
+                      (Set<MaterialState> states) {
+                        return const Size(160, 40);
+                      },
+                    )),
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             isContactSelecttion
@@ -123,10 +122,10 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                       showGroups: false,
                       showContacts: true,
                       isDesktop: true,
-                      selectedList: (_list) {
+                      selectedList: (list) {
                         providerCallback<TrustedContactProvider>(context,
                             task: (provider) async {
-                              _list.forEach((element) async {
+                              list.forEach((element) async {
                                 if (element!.contact != null) {
                                   await provider
                                       .addTrustedContacts(element.contact!);
@@ -149,9 +148,9 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                       onDoneTap: () {},
                     ),
                   )
-                : SizedBox()
+                : const SizedBox()
           ],
-        ));
+        );
       },
     );
   }

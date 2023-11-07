@@ -37,7 +37,7 @@ class ImageViewWidget extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              child: Icon(
+              child: const Icon(
                 Icons.close,
                 color: Colors.white,
                 size: 33,
@@ -48,7 +48,7 @@ class ImageViewWidget extends StatelessWidget {
             child: Container(
               // height: double.infinity,
               width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 33),
+              margin: const EdgeInsets.symmetric(horizontal: 33),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
@@ -60,7 +60,7 @@ class ImageViewWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Align(
             alignment: Alignment.center,
             child: Row(
@@ -95,12 +95,12 @@ class ImageViewWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           Container(
             height: 175,
             width: double.infinity,
-            padding: EdgeInsets.fromLTRB(24, 16, 18, 16),
-            margin: EdgeInsets.symmetric(horizontal: 33),
+            padding: const EdgeInsets.fromLTRB(24, 16, 18, 16),
+            margin: const EdgeInsets.symmetric(horizontal: 33),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
@@ -114,8 +114,8 @@ class ImageViewWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        "$shortDate",
-                        style: TextStyle(
+                        shortDate,
+                        style: const TextStyle(
                           fontSize: 10,
                           color: ColorConstants.oldSliver,
                         ),
@@ -123,14 +123,14 @@ class ImageViewWidget extends StatelessWidget {
                       Container(
                         width: 1,
                         height: 8,
-                        color: Color(0xFFD7D7D7),
-                        margin: EdgeInsets.symmetric(
+                        color: const Color(0xFFD7D7D7),
+                        margin: const EdgeInsets.symmetric(
                           horizontal: 3,
                         ),
                       ),
                       Text(
-                        "$time",
-                        style: TextStyle(
+                        time,
+                        style: const TextStyle(
                           fontSize: 10,
                           color: ColorConstants.oldSliver,
                         ),
@@ -140,42 +140,42 @@ class ImageViewWidget extends StatelessWidget {
                 ),
                 Text(
                   "${image.fileName}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   AppUtils.getFileSizeString(
                     bytes: image.size ?? 0,
                     decimals: 2,
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 10,
                     color: ColorConstants.oldSliver,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  "${(image.contactName ?? '').split("@")[1]}",
-                  style: TextStyle(
+                  (image.contactName ?? '').split("@")[1],
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
                 ),
-                SizedBox(height: 1),
+                const SizedBox(height: 1),
                 Text(
                   "${image.contactName}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 10,
                   ),
                 ),
-                SizedBox(height: 13),
-                Text(
+                const SizedBox(height: 13),
+                const Text(
                   "Message:",
                   style: TextStyle(
                     color: ColorConstants.textLightGray,
@@ -183,10 +183,10 @@ class ImageViewWidget extends StatelessWidget {
                     fontSize: 10,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   "${image.date}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: ColorConstants.textLightGray,
                     fontWeight: FontWeight.w500,
                     fontSize: 10,
@@ -195,7 +195,7 @@ class ImageViewWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
         ],
       ),
     );

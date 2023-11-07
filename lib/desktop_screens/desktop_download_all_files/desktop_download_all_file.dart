@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import '../../view_models/history_provider.dart';
 
 class DesktopDownloadAllFiles extends StatefulWidget {
+  const DesktopDownloadAllFiles({Key? key}) : super(key: key);
+
   @override
   _DesktopDownloadAllFilesState createState() =>
       _DesktopDownloadAllFilesState();
@@ -44,14 +46,14 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                 ),
                 SizedBox(height: 20.toHeight),
                 Container(
-                  padding: EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(5.0),
                   color: Colors.green,
                   child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(children: [
                         TextSpan(
                             text: TextStrings().selectedDownloadFolder,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(text: downloadFolder),
                       ])),
                 ),
@@ -73,7 +75,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                     isDownloading
                         ? TextStrings().downloadingFiles
                         : TextStrings().downloadAllFiles,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
@@ -87,25 +89,25 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
                           minHeight: 10,
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 isDownloadComplete
                     ? SizedBox(
                         width: 150,
                         child: Row(
                           children: [
                             Text(TextStrings().downloadComplete,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.normal,
                                 )),
-                            Icon(
+                            const Icon(
                               Icons.download_done,
                               color: Colors.green,
                             )
                           ],
                         ),
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             ),
           )),
@@ -189,10 +191,10 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
     List<FileTransfer> fileTransfer = [];
     for (int i = 0; i < historyProvider.receivedHistoryLogs.length; i++) {
       var expiryDate = historyProvider.receivedHistoryLogs[i].date!.add(
-        Duration(days: 6),
+        const Duration(days: 6),
       );
 
-      if (expiryDate.difference(DateTime.now()) < Duration(seconds: 0)) {
+      if (expiryDate.difference(DateTime.now()) < const Duration(seconds: 0)) {
         continue;
       } else {
         fileTransfer.add(historyProvider.receivedHistoryLogs[i]);

@@ -11,8 +11,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:open_file/open_file.dart';
 
 class DesktopAudios extends StatefulWidget {
+  const DesktopAudios({Key? key}) : super(key: key);
+
   @override
-  _DesktopAudiosState createState() => _DesktopAudiosState();
+  State<DesktopAudios> createState() => _DesktopAudiosState();
 }
 
 class _DesktopAudiosState extends State<DesktopAudios> {
@@ -89,7 +91,7 @@ class _DesktopAudiosState extends State<DesktopAudios> {
                             ),
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),

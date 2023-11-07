@@ -19,7 +19,7 @@ class SetupRoutes {
 
   static Map<String, WidgetBuilder> get routes {
     return {
-      Routes.HOME: (context) => Home(),
+      Routes.HOME: (context) => const Home(),
       Routes.WEBSITE_SCREEN: (context) {
         Map<String, dynamic> args =
             ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -38,9 +38,9 @@ class SetupRoutes {
             title: 'FAQ',
             url: '${MixedConstants.WEBSITE_URL}/faqs',
           ),
-      Routes.MY_FILES: (context) => MyFiles(),
-      Routes.MY_FILES_SCREEN: (context) => MyFilesScreen(),
-      Routes.HISTORY: (context) => HistoryScreen(tabIndex: 1),
+      Routes.MY_FILES: (context) => const MyFiles(),
+      Routes.MY_FILES_SCREEN: (context) => const MyFilesScreen(),
+      Routes.HISTORY: (context) => const HistoryScreen(tabIndex: 1),
       Routes.HISTORY_SCREEN: (context) => const TransferHistoryScreen(),
       Routes.BLOCKED_USERS: (context) => const BlockedScreen(),
       Routes.CONTACT_SCREEN: (context) {
@@ -58,7 +58,7 @@ class SetupRoutes {
       Routes.GROUPS: (context) {
         return const GroupList();
       },
-      Routes.TRUSTED_CONTACTS: (context) => TrustedContacts(),
+      Routes.TRUSTED_CONTACTS: (context) => const TrustedContacts(),
       Routes.SETTINGS: (context) => const SettingsScreen()
     };
   }

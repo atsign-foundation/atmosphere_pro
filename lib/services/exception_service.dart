@@ -7,23 +7,25 @@ import 'navigation_service.dart';
 
 class ExceptionService {
   ExceptionService._();
+
   static final ExceptionService _instance = ExceptionService._();
+
   static ExceptionService get instance => _instance;
   OverlayEntry? exceptionOverlayEntry;
 
   showGetExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = getExceptions(e);
-    _showExceptionOverlay(_error, onRetry: onRetry);
+    var error = getExceptions(e);
+    _showExceptionOverlay(error, onRetry: onRetry);
   }
 
   showPutExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = putExceptions(e);
-    _showExceptionOverlay(_error, onRetry: onRetry);
+    var error = putExceptions(e);
+    _showExceptionOverlay(error, onRetry: onRetry);
   }
 
   showNotifyExceptionOverlay(Object e, {Function? onRetry}) async {
-    var _error = notifyExceptions(e);
-    _showExceptionOverlay(_error, onRetry: onRetry);
+    var error = notifyExceptions(e);
+    _showExceptionOverlay(error, onRetry: onRetry);
   }
 
   /// exceptions for get method
@@ -82,7 +84,7 @@ class ExceptionService {
     );
     NavService.navKey.currentState?.overlay?.insert(exceptionOverlayEntry!);
 
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 5));
     hideOverlay();
   }
 
@@ -105,13 +107,13 @@ class ExceptionService {
             alignment: Alignment.center,
             color: bgColor,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(15, 3, 15, 10),
+              padding: const EdgeInsets.fromLTRB(15, 3, 15, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
-                      '$error',
+                      error,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -128,7 +130,7 @@ class ExceptionService {
                             onRetry();
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 7, horizontal: 7),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
@@ -144,7 +146,7 @@ class ExceptionService {
                             ),
                           ),
                         )
-                      : SizedBox()
+                      : const SizedBox()
                 ],
               ),
             ),

@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CustomOnboarding {
-  static BackendService _backendService = BackendService.getInstance();
+  static final BackendService _backendService = BackendService.getInstance();
 
   static onboard(
       {String? atSign,
@@ -30,10 +30,9 @@ class CustomOnboarding {
       bool isInit = false,
       Function? onError}) async {
     AtOnboardingResult result;
-    final OnboardingService _onboardingService =
-        OnboardingService.getInstance();
+    final OnboardingService onboardingService = OnboardingService.getInstance();
 
-    _onboardingService.setAtsign = atSign;
+    onboardingService.setAtsign = atSign;
 
     result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
@@ -49,9 +48,9 @@ class CustomOnboarding {
     switch (result.status) {
       case AtOnboardingResultStatus.success:
         final atsign = result.atsign!;
-        final OnboardingService _onboardingService =
+        final OnboardingService onboardingService =
             OnboardingService.getInstance();
-        final value = _onboardingService.atClientServiceMap;
+        final value = onboardingService.atClientServiceMap;
         await AtClientManager.getInstance().setCurrentAtSign(
             atsign, MixedConstants.appNamespace, atClientPrefernce);
 

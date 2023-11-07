@@ -9,8 +9,9 @@ class ReceiveItemsList extends StatefulWidget {
   final AtContact atContact;
 
   const ReceiveItemsList({
+    Key? key,
     required this.atContact,
-  });
+  }) : super(key: key);
 
   @override
   State<ReceiveItemsList> createState() => _ReceiveItemsListState();
@@ -42,7 +43,7 @@ class _ReceiveItemsListState extends State<ReceiveItemsList> {
         return ListView.builder(
           shrinkWrap: true,
           itemCount: files.length,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             List<Widget> list = [];
             for (var file in files[index].files ?? []) {

@@ -49,7 +49,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
           height: MediaQuery.of(context).size.height - 60,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Color(0xFFF4F4F4),
+            color: const Color(0xFFF4F4F4),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -82,7 +82,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                 borderColor: Colors.white,
                 backgroundColor: Colors.white,
                 hintText: "Search",
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: ColorConstants.darkSliver,
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -160,7 +160,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
               Navigator.of(context).pop();
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 6,
               ),
@@ -180,7 +180,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                   useRootNavigator: true,
                   backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
-                    return AddContactScreen();
+                    return const AddContactScreen();
                   },
                 );
                 if (result == true) {
@@ -189,15 +189,15 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
               },
               child: Container(
                 height: 34,
-                margin: EdgeInsets.only(top: 10, right: 8),
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.only(top: 10, right: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: ColorConstants.orange,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       "Add New",
                       style: TextStyle(
                         color: Colors.white,
@@ -205,7 +205,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(width: 9),
+                    const SizedBox(width: 9),
                     SvgPicture.asset(
                       AppVectors.icPlus11px,
                       color: Colors.white,

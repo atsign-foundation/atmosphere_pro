@@ -6,32 +6,30 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomToast {
   CustomToast._();
+
   static final CustomToast _instance = CustomToast._();
+
   factory CustomToast() => _instance;
 
   show(String text, BuildContext context,
       {Color? bgColor, Color? textColor, int duration = 3, int gravity = 0}) {
-    // ignore: always_declare_return_types
-    show(String text, BuildContext context,
-        {Color? bgColor, Color? textColor, int duration = 3, int gravity = 0}) {
-      if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-        FlutterToastr.show(text, context,
-            duration: FlutterToastr.lengthLong,
-            backgroundColor: bgColor ?? ColorConstants.orangeColor,
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.normal,
-            ));
-      } else {
-        Fluttertoast.showToast(
-            msg: text,
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: bgColor ?? ColorConstants.orangeColor,
-            textColor: textColor ?? Colors.white,
-            fontSize: 16.0);
-      }
+    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+      FlutterToastr.show(text, context,
+          duration: FlutterToastr.lengthLong,
+          backgroundColor: bgColor ?? ColorConstants.orangeColor,
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+          ));
+    } else {
+      Fluttertoast.showToast(
+          msg: text,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: bgColor ?? ColorConstants.orangeColor,
+          textColor: textColor ?? Colors.white,
+          fontSize: 16.0);
     }
   }
 }

@@ -14,7 +14,7 @@ class OptionHeaderWidget extends StatefulWidget {
   final Function()? searchOffCallBack;
   final EdgeInsetsGeometry? margin;
 
-  OptionHeaderWidget({
+  const OptionHeaderWidget({
     Key? key,
     this.onReloadCallback,
     this.onSearchCallback,
@@ -36,8 +36,8 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.margin ?? EdgeInsets.symmetric(horizontal: 28),
-      padding: EdgeInsets.fromLTRB(14, 11, 15, 14),
+      margin: widget.margin ?? const EdgeInsets.symmetric(horizontal: 28),
+      padding: const EdgeInsets.fromLTRB(14, 11, 15, 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: ColorConstants.textBoxBg,
@@ -54,7 +54,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
                     onTap: widget.onReloadCallback,
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 _buildButton(
                   title: "Search",
                   icon: AppVectors.icSearch,
@@ -65,7 +65,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
                     widget.onSearchCallback?.call();
                   },
                 ),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -79,7 +79,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
                           color: ColorConstants.sidebarTextUnselected,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Container(
                         height: 48,
                         margin: const EdgeInsets.only(right: 12),
@@ -119,7 +119,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
               color: ColorConstants.sidebarTextUnselected,
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             height: 48,
             width: 48,
@@ -157,7 +157,7 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
                   color: ColorConstants.sidebarTextUnselected,
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Container(
                 height: 48,
                 margin: const EdgeInsets.only(right: 12),

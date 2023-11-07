@@ -14,8 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyFiles extends StatefulWidget {
+  const MyFiles({Key? key}) : super(key: key);
+
   @override
-  _MyFilesState createState() => _MyFilesState();
+  State<MyFiles> createState() => _MyFilesState();
 }
 
 class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
@@ -25,7 +27,9 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
   List<String> tabNames = [];
 
   bool isLoading = false;
+  @override
   Type runtimeType = Videos;
+
   @override
   void initState() {
     getTabsInformation();
@@ -58,7 +62,7 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                     runtimeType == APK ||
                     runtimeType == Audios))
             ? PopupMenuButton(
-                icon: Icon(Icons.more_vert),
+                icon: const Icon(Icons.more_vert),
                 onSelected: (dynamic s) {
                   switch (s) {
                     case TextStrings.SORT_NAME:
@@ -139,25 +143,25 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
       ),
       body: SingleChildScrollView(
         child: (isLoading)
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
                   ColorConstants.orange,
                 ),
               ))
             : Consumer<MyFilesProvider>(
-                builder: (BuildContext _context, _provider, _) {
-                  if (_provider.tabs.length != tabs.length) {
+                builder: (BuildContext context, provider, _) {
+                  if (provider.tabs.length != tabs.length) {
                     getTabsInformation();
                   }
 
-                  return Container(
+                  return SizedBox(
                     // reducing size by 120 , so that last list item will be shown
                     height: SizeConfig().screenHeight - 120.toHeight,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 40,
                           child: TabBar(
                             onTap: (index) async {},
@@ -170,15 +174,15 @@ class _MyFilesState extends State<MyFiles> with TickerProviderStateMixin {
                             unselectedLabelStyle:
                                 CustomTextStyles.secondaryRegular14,
                             controller: _controller,
-                            tabs: List<Text>.generate(_provider.tabNames.length,
-                                (index) => Text(_provider.tabNames[index])),
+                            tabs: List<Text>.generate(provider.tabNames.length,
+                                (index) => Text(provider.tabNames[index])),
                           ),
                         ),
                         Expanded(
                           child: TabBarView(
                             controller: _controller,
-                            physics: AlwaysScrollableScrollPhysics(),
-                            children: _provider.tabs,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: provider.tabs,
                           ),
                         )
                       ],

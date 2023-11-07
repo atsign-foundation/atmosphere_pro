@@ -7,10 +7,13 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class TrustedContactProvider extends BaseModel {
   TrustedContactProvider._();
-  static TrustedContactProvider _instance = TrustedContactProvider._();
+
+  static final TrustedContactProvider _instance = TrustedContactProvider._();
+
   factory TrustedContactProvider() => _instance;
   String AddTrustedContacts = 'add_trusted_contacts';
   List<AtContact> _trustedContacts = [];
+
   List<AtContact> get trustedContacts => _trustedContacts;
 
   var jsonValue;
@@ -32,7 +35,7 @@ class TrustedContactProvider extends BaseModel {
   addTrustedContacts(AtContact trustedContact) async {
     trustedContactOperation = true;
     setStatus(AddTrustedContacts, Status.Loading);
-    String at_sign_name = trustedContact.atSign!.replaceAll("@", "");
+    String atSignName = trustedContact.atSign!.replaceAll("@", "");
 
     try {
       bool isAlreadyPresent = false;
@@ -44,7 +47,7 @@ class TrustedContactProvider extends BaseModel {
       }
       if (!isAlreadyPresent) {
         AtKey trustedContactsKey = AtKey()
-          ..key = 'trusted_contact_${at_sign_name}'
+          ..key = 'trusted_contact_$atSignName'
           ..metadata = Metadata();
         await AtClientManager.getInstance().atClient.put(
               trustedContactsKey,
@@ -62,10 +65,10 @@ class TrustedContactProvider extends BaseModel {
     }
   }
 
-  removeTrustedContacts(AtContact? trustedContact) async {
+  Future<bool?> removeTrustedContacts(AtContact? trustedContact) async {
     setStatus(AddTrustedContacts, Status.Loading);
     trustedContactOperation = true;
-    var res;
+    bool? res;
     try {
       for (AtContact? contact in _trustedContacts) {
         if (contact!.atSign == trustedContact!.atSign) {
@@ -85,11 +88,11 @@ class TrustedContactProvider extends BaseModel {
       }
       trustedContactOperation = false;
       setStatus(AddTrustedContacts, Status.Done);
-      return res;
     } catch (error) {
       trustedContactOperation = false;
       setError(AddTrustedContacts, error.toString());
     }
+    return res;
   }
 
   migrateTrustedContact() async {
@@ -98,19 +101,19 @@ class TrustedContactProvider extends BaseModel {
       AtKey trustedContactsKey = AtKey()
         ..key = 'trustedContactsKey'
         ..metadata = Metadata();
-      AtValue old_trustedContactsKeys =
+      AtValue oldTrustedcontactskeys =
           await AtClientManager.getInstance().atClient.get(trustedContactsKey);
-      jsonValue = jsonDecode(old_trustedContactsKeys.value);
+      jsonValue = jsonDecode(oldTrustedcontactskeys.value);
       for (var i = 0; i < jsonValue['trustedContacts'].length; i++) {
         var j = _trustedContacts.indexWhere((element) =>
             element.atSign == jsonValue['trustedContacts'][i]['atSign']);
         if (j == -1) {
-          AtKey new_trustedContactsKey = AtKey()
+          AtKey newTrustedcontactskey = AtKey()
             ..key =
                 'trusted_contact_${jsonValue['trustedContacts'][i]['atSign'].replaceAll("@", "")}'
             ..metadata = Metadata();
           await AtClientManager.getInstance().atClient.put(
-                new_trustedContactsKey,
+                newTrustedcontactskey,
                 jsonValue['trustedContacts'][i]['atSign'],
               );
 
@@ -157,9 +160,9 @@ class TrustedContactProvider extends BaseModel {
         fetchedTrustedContact.add(AtContact(atSign: keyValue.value));
       }
 
-      fetchedTrustedContact.forEach((element) {
+      for (var element in fetchedTrustedContact) {
         _trustedContacts.add(element);
-      });
+      }
       setStatus(GetTrustedContacts, Status.Done);
     } catch (e) {
       print('ERROR=====>$e');

@@ -141,13 +141,13 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                             buttonText: TextStrings().yes,
                             width: 200.toWidth,
                             onPressed: () async {
-                              var res =
+                              bool? res =
                                   await Provider.of<TrustedContactProvider>(
                                           context,
                                           listen: false)
                                       .removeTrustedContacts(widget.contact);
                               if (mounted) {
-                                if (res) {
+                                if (res ?? false) {
                                   Navigator.pop(context);
                                 } else {
                                   Navigator.pop(context);

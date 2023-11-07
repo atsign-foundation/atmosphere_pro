@@ -22,7 +22,7 @@ void main() {
 
   /// Functional test cases for Contact List Tile widget
   group('Contact List Tile Widget Tests:', () {
-    final contactListTile = ContactListTile(onAdd: () {}, onRemove: () {},name: 'Bluebellrelated86',atSign: '@bluebellrelated86',image: ContactInitial(initials: 'B'),onTileTap: (){},);
+    final contactListTile = ContactListTile(onAdd: () {}, onRemove: () {},name: 'Bluebellrelated86',atSign: '@bluebellrelated86',image: const ContactInitial(initials: 'B'),onTileTap: (){},);
     // Test Case to Check Contact List Tile is displayed
     testWidgets("Contact List Tile is displayed", (WidgetTester tester) async {
       await tester

@@ -20,7 +20,7 @@ void main() {
 
   /// Functional test cases for Contact Initial widget
   group('Contact Initial Widget Tests:', () {
-    final confirmationDialog = ContactInitial(initials: 'A',background: Colors.orange,);
+    const confirmationDialog = ContactInitial(initials: 'A',background: Colors.orange,);
     // Test Case to Check Contact Initial is displayed
     testWidgets("Contact Initial is displayed", (WidgetTester tester) async {
       await tester.pumpWidget(

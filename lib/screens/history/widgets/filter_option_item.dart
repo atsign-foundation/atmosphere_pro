@@ -50,7 +50,7 @@ class FilterOptionItem extends StatelessWidget {
       },
       child: Container(
         height: 44,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: isCheck ? checkedBackgroundColor : backgroundColor,
           borderRadius: borderRadius ?? BorderRadius.zero,
@@ -69,8 +69,8 @@ class FilterOptionItem extends StatelessWidget {
                         width: 12,
                         fit: BoxFit.cover,
                       )
-                    : SizedBox(width: 12),
-                SizedBox(width: 16),
+                    : const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 Text(
                   title ?? '',
                   style: TextStyle(
@@ -94,7 +94,7 @@ class FilterOptionItem extends StatelessWidget {
                     color: color,
                     fit: BoxFit.cover,
                   ),
-                if (isAllOption) SizedBox(width: 16),
+                if (isAllOption) const SizedBox(width: 16),
                 InkWell(
                   onTap: () {
                     isAllOption ? onTap?.call() : null;

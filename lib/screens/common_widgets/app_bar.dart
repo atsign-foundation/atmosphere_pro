@@ -21,7 +21,7 @@ import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
@@ -36,6 +36,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final onActionpressed;
   final bool isTrustedContactScreen;
   final double elevation;
+
   const CustomAppBar(
       {Key? key,
       this.title,
@@ -56,7 +57,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(70.toHeight);
 
   @override
-  _CustomAppBarState createState() => _CustomAppBarState();
+  State<CustomAppBar> createState() => _CustomAppBarState();
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
@@ -117,7 +118,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         Container(
           height: 22.toHeight,
           width: 22.toWidth,
-          margin: EdgeInsets.only(right: 30),
+          margin: const EdgeInsets.only(right: 30),
           child: (widget.showTitle)
               ? ((widget.showTrailingButton)
                   ? widget.showMenu
@@ -148,12 +149,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                           .isGranted,
                                 );
                               } else {
-                                String url = 'shareddocuments://' +
-                                    BackendService.getInstance()
-                                        .atClientPreference
-                                        .downloadPath!;
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                String url =
+                                    'shareddocuments://${BackendService.getInstance().atClientPreference.downloadPath!}';
+                                if (await canLaunchUrlString(url)) {
+                                  await launchUrlString(url);
                                 } else {
                                   throw 'Could not launch $url';
                                 }
@@ -164,7 +163,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 MaterialPageRoute(
                                   builder: (context) => ContactsScreen(
                                     asSelectionScreen: true,
-                                    selectedContactsHistory: [],
+                                    selectedContactsHistory: const [],
                                     selectedList: (s) async {
                                       for (var element in s) {
                                         await Provider.of<
@@ -181,7 +180,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                               await showDialog(
                                 context: context,
                                 barrierDismissible: true,
-                                builder: (context) => AddContactDialog(
+                                builder: (context) => const AddContactDialog(
                                     // onYesTap: (value) {
                                     //   onActionpressed(value);
                                     // },
@@ -200,13 +199,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   Widget menuBar(BuildContext context) {
     return Consumer<FileDownloadChecker>(
-      builder: (context, _fileDownloadChecker, _) {
+      builder: (context, fileDownloadChecker, _) {
         return IconButton(
           onPressed: () {
             Scaffold.of(context).openEndDrawer();
           },
           alignment: Alignment.topCenter,
-          tooltip: _fileDownloadChecker.undownloadedFilesExist
+          tooltip: fileDownloadChecker.undownloadedFilesExist
               ? 'Hamburger Menu & Dot'
               : 'Hamburger Menu',
           padding: EdgeInsets.zero,
@@ -223,12 +222,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   semanticLabel: '',
                 ),
               ),
-              _fileDownloadChecker.undownloadedFilesExist
+              fileDownloadChecker.undownloadedFilesExist
                   ? Positioned(
                       right: -4,
                       top: 2,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
@@ -239,7 +238,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         );

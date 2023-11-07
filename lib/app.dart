@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/theme.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_add_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
@@ -23,10 +24,10 @@ import 'dart:io';
 import 'routes/routes.dart';
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -70,6 +71,7 @@ class _MyAppState extends State<MyApp> {
             create: (context) => DesktopGroupsScreenProvider()),
         ChangeNotifierProvider(create: (context) => DesktopAddGroupProvider()),
         ChangeNotifierProvider(create: (context) => NotificationService()),
+        ChangeNotifierProvider(create: (context) => ContactProvider()),
       ],
       child: MaterialApp(
         builder: (BuildContext context, Widget? child) {
@@ -95,7 +97,7 @@ class _MyAppState extends State<MyApp> {
           highlightColor: ColorConstants.raisinBlack,
           fontFamily: 'Poppins',
         ).copyWith(
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
             elevation: 0,
             backgroundColor: ColorConstants.background,
             foregroundColor: ColorConstants.iconHeaderColor,

@@ -12,7 +12,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class SwitchingAtSignDialog extends StatefulWidget {
   final Function(String) onSwitchAtSign;
 
-  const SwitchingAtSignDialog({required this.onSwitchAtSign});
+  const SwitchingAtSignDialog({Key? key, required this.onSwitchAtSign})
+      : super(key: key);
 
   @override
   State<SwitchingAtSignDialog> createState() => _SwitchingAtSignDialogState();
@@ -46,7 +47,7 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           buildAtSignList(),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           buildAddNewCard(),
         ],
       ),
@@ -89,7 +90,7 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
                       borderRadius: 10,
                     ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
                 child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -111,18 +112,18 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
 
   Widget buildAtSignList() {
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(
+      borderRadius: const BorderRadius.vertical(
         top: Radius.circular(10),
       ),
       child: SizedBox(
         height: 196,
         child: ListView.separated(
-          physics: ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemBuilder: (context, index) {
             return buildAtSignCard(atSign: atSignList?[index] ?? '');
           },
           separatorBuilder: (context, index) {
-            return Divider(
+            return const Divider(
               height: 1,
             );
           },
@@ -144,7 +145,7 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
         });
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -154,7 +155,7 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
               height: 32,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Text(
                 'Add New',

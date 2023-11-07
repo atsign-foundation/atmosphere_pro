@@ -15,45 +15,43 @@ class DesktopSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Container(
-            height: 60,
-            width: 60,
-            clipBehavior: Clip.hardEdge,
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Color(0xFF363636),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: SvgPicture.asset(
-              vectorIcon,
-              color: Colors.grey,
-            ),
+    return Row(
+      children: [
+        Container(
+          height: 60,
+          width: 60,
+          clipBehavior: Clip.hardEdge,
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: const Color(0xFF363636),
+            borderRadius: BorderRadius.circular(5),
           ),
-          SizedBox(
-            width: 15,
+          child: SvgPicture.asset(
+            vectorIcon,
+            color: Colors.grey,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
               ),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 10,
-                ),
-              )
-            ],
-          )
-        ],
-      ),
+            ),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 10,
+              ),
+            )
+          ],
+        )
+      ],
     );
   }
 }

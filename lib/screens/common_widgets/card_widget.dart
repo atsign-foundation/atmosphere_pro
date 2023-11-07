@@ -41,7 +41,7 @@ class CardButton extends StatelessWidget {
             Text(
               title,
               style: style ??
-                  TextStyle(
+                  const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: ColorConstants.grey,

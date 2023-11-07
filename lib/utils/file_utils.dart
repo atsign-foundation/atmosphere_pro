@@ -96,7 +96,7 @@ class FileUtils {
           type: MaterialType.transparency,
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Align(
@@ -107,7 +107,7 @@ class FileUtils {
                     onTap: () {
                       Navigator.pop(NavService.navKey.currentContext!);
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.clear,
                       color: Colors.white,
                       size: 24,
@@ -115,14 +115,14 @@ class FileUtils {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Expanded(
                 child: Container(
                   // height: double.infinity,
                   width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 33),
+                  margin: const EdgeInsets.symmetric(horizontal: 33),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
@@ -134,7 +134,7 @@ class FileUtils {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Row(
@@ -148,7 +148,7 @@ class FileUtils {
                       width: 50,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Padding(
@@ -166,7 +166,7 @@ class FileUtils {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Padding(
@@ -184,7 +184,7 @@ class FileUtils {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Container(
@@ -192,8 +192,8 @@ class FileUtils {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(horizontal: 25),
                 width: double.infinity,
                 child: SingleChildScrollView(
                   child: Column(
@@ -205,19 +205,19 @@ class FileUtils {
                           Expanded(
                             child: Text(
                               fileDetail.fileName ?? "",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text(
-                                "$shortDate",
-                                style: TextStyle(
+                                shortDate,
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
@@ -225,14 +225,14 @@ class FileUtils {
                               Container(
                                 width: 1,
                                 height: 8,
-                                color: Color(0xFFD7D7D7),
-                                margin: EdgeInsets.symmetric(
+                                color: const Color(0xFFD7D7D7),
+                                margin: const EdgeInsets.symmetric(
                                   horizontal: 3,
                                 ),
                               ),
                               Text(
-                                "$time",
-                                style: TextStyle(
+                                time,
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
@@ -241,37 +241,36 @@ class FileUtils {
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         double.parse(fileDetail.size.toString()) <= 1024
-                            ? '${fileDetail.size} ' + TextStrings().kb
-                            : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                TextStrings().mb,
-                        style: TextStyle(
+                            ? '${fileDetail.size} ${TextStrings().kb}'
+                            : '${(fileDetail.size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                        style: const TextStyle(
                           color: ColorConstants.grey,
                           fontSize: 12,
                         ),
                         textAlign: TextAlign.left,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       nickname.isNotEmpty
                           ? Text(
                               nickname,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             )
-                          : SizedBox(),
-                      SizedBox(height: 5),
+                          : const SizedBox(),
+                      const SizedBox(height: 5),
                       Text(
                         fileDetail.contactName ?? "",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       // fileDetail.message.isNotNull
                       //     ?
-                      Text(
+                      const Text(
                         "Message",
                         style: TextStyle(
                           fontSize: 12,
@@ -279,10 +278,10 @@ class FileUtils {
                         ),
                       ),
                       // : SizedBox(),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         fileDetail.message ?? "",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                         ),
                       ),

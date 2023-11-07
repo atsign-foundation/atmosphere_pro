@@ -76,7 +76,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Header(),
-                      Divider(
+                      const Divider(
                         height: 35,
                         color: Colors.black,
                       ),
@@ -84,7 +84,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Container(
+                            child: SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height - 120,
                                 child: StreamBuilder<List<BaseContact?>>(
@@ -158,7 +158,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                                   showGroup = false;
                                                 });
                                               },
-                                              child: Container(
+                                              child: SizedBox(
                                                   width: double.infinity,
                                                   key: UniqueKey(),
                                                   child: DesktopContactCard(
@@ -181,7 +181,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                       }
                                     })),
                           ),
-                          SizedBox(width: 68),
+                          const SizedBox(width: 68),
                           showGroup
                               ? Expanded(
                                   child: SizedBox(
@@ -221,14 +221,14 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                       flex: 1,
                       child: getSidebarWidget(),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
           if (isLoading)
             Container(
               color: Colors.grey.withOpacity(0.4),
               alignment: Alignment.center,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 color: ColorConstants.orange,
               ),
             )
@@ -240,14 +240,14 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
   Widget Header() {
     return Row(
       children: [
-        Text(
+        const Text(
           'Contacts',
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.w600,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         sidebarView == null
             ? Row(
                 children: [
@@ -256,7 +256,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 4),
                       child: IconButtonWidget(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         icon: AppVectors.icTrustActivated,
                         isSelected: showTrusted,
                         onTap: () {
@@ -294,7 +294,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                       horizontal: 28, vertical: 8),
                                   border: InputBorder.none,
                                   hintText: 'Search',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     color: ColorConstants.grey,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
@@ -346,7 +346,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                           showGroup = false;
                         });
                       },
-                      color: Color(0xFFF07C50),
+                      color: const Color(0xFFF07C50),
                       border: 20,
                       height: 40,
                       width: 136,
@@ -356,7 +356,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                   )
                 ],
               )
-            : SizedBox(),
+            : const SizedBox(),
       ],
     );
   }
@@ -381,7 +381,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
         },
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 }

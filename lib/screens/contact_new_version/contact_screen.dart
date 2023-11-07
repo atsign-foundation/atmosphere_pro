@@ -82,7 +82,7 @@ class _ContactScreenState extends State<ContactScreen>
                     useRootNavigator: true,
                     backgroundColor: Colors.transparent,
                     builder: (BuildContext context) {
-                      return AddContactScreen();
+                      return const AddContactScreen();
                     },
                   );
 
@@ -96,13 +96,13 @@ class _ContactScreenState extends State<ContactScreen>
                   color: ColorConstants.orange,
                   borderRadius: BorderRadius.circular(46),
                 ),
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 13,
                   vertical: 8,
                 ),
                 child: Text(
                   provider.indexTab == 2 ? "Add Group" : "Add Contact",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -138,7 +138,7 @@ class _ContactScreenState extends State<ContactScreen>
               borderColor: Colors.white,
               backgroundColor: Colors.white,
               hintText: "Search",
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 color: ColorConstants.darkSliver,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -159,7 +159,7 @@ class _ContactScreenState extends State<ContactScreen>
                 color: ColorConstants.backgroundTab,
                 borderRadius: BorderRadius.circular(8),
               ),
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                 horizontal: 36,
                 vertical: 16,
               ),
@@ -185,7 +185,7 @@ class _ContactScreenState extends State<ContactScreen>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   ListContactWidget(
                     contactsType: ListContactType.contact,
@@ -212,7 +212,7 @@ class _ContactScreenState extends State<ContactScreen>
                         useRootNavigator: true,
                         backgroundColor: Colors.transparent,
                         builder: (BuildContext context) {
-                          return AddContactScreen();
+                          return const AddContactScreen();
                         },
                       );
                       if (result == true) {
@@ -310,7 +310,7 @@ class _ContactScreenState extends State<ContactScreen>
   }
 
   Future<void> reloadPage() async {
-    await Future.delayed(Duration(milliseconds: 500), () async {
+    await Future.delayed(const Duration(milliseconds: 500), () async {
       await _groupService.fetchGroupsAndContacts();
       contactProvider.notify();
     });

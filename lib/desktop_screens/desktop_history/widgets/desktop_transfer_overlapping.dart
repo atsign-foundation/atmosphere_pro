@@ -17,7 +17,7 @@ class DesktopTranferOverlappingContacts extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DesktopTranferOverlappingContactsState createState() =>
+  State<DesktopTranferOverlappingContacts> createState() =>
       _DesktopTranferOverlappingContactsState();
 }
 
@@ -44,7 +44,7 @@ class _DesktopTranferOverlappingContactsState
     downloadedByList = [];
     filedInDeliveringList = [];
 
-    widget.selectedList!.forEach((element) {
+    for (var element in widget.selectedList!) {
       if (element.isNotificationSend!) {
         deliveredToList.add(element);
       } else {
@@ -54,7 +54,7 @@ class _DesktopTranferOverlappingContactsState
       if (element.isFileDownloaded!) {
         downloadedByList.add(element);
       }
-    });
+    }
   }
 
   @override
@@ -76,15 +76,15 @@ class _DesktopTranferOverlappingContactsState
                           color: ColorConstants.blueText,
                           size: 15.toFont,
                         ),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(TextStrings().downloadedBy,
                             style: CustomTextStyles.grey15),
                       ],
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               downloadedByList.isNotEmpty
                   ? SizedBox(height: 15.toHeight)
-                  : SizedBox(),
+                  : const SizedBox(),
               Align(
                 alignment: Alignment.topLeft,
                 child: Wrap(
@@ -93,35 +93,33 @@ class _DesktopTranferOverlappingContactsState
                   runSpacing: 10.0,
                   spacing: 15.0,
                   children: List.generate(downloadedByList.length, (index) {
-                    return Container(
-                      child: CustomPersonVerticalTile(
-                        key: Key(downloadedByList[index].atsign!),
-                        shareStatus: downloadedByList[index],
-                        fileHistory: widget.fileHistory,
-                      ),
+                    return CustomPersonVerticalTile(
+                      key: Key(downloadedByList[index].atsign!),
+                      shareStatus: downloadedByList[index],
+                      fileHistory: widget.fileHistory,
                     );
                   }),
                 ),
               ),
-              downloadedByList.isNotEmpty ? Divider() : SizedBox(),
+              downloadedByList.isNotEmpty ? const Divider() : const SizedBox(),
               SizedBox(height: 18.toHeight),
               deliveredToList.isNotEmpty
                   ? Row(
                       children: [
                         Icon(
                           Icons.check_circle,
-                          color: Color(0xFF0ACB21),
+                          color: const Color(0xFF0ACB21),
                           size: 15.toFont,
                         ),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(TextStrings().deliveredTo,
                             style: CustomTextStyles.grey15),
                       ],
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               deliveredToList.isNotEmpty
                   ? SizedBox(height: 15.toHeight)
-                  : SizedBox(),
+                  : const SizedBox(),
               Align(
                 alignment: Alignment.topLeft,
                 child: Wrap(
@@ -130,17 +128,15 @@ class _DesktopTranferOverlappingContactsState
                   runSpacing: 10.0,
                   spacing: 15.0,
                   children: List.generate(deliveredToList.length, (index) {
-                    return Container(
-                      child: CustomPersonVerticalTile(
-                        key: Key(deliveredToList[index].atsign!),
-                        shareStatus: deliveredToList[index],
-                        fileHistory: widget.fileHistory,
-                      ),
+                    return CustomPersonVerticalTile(
+                      key: Key(deliveredToList[index].atsign!),
+                      shareStatus: deliveredToList[index],
+                      fileHistory: widget.fileHistory,
                     );
                   }),
                 ),
               ),
-              deliveredToList.isNotEmpty ? Divider() : SizedBox(),
+              deliveredToList.isNotEmpty ? const Divider() : const SizedBox(),
               SizedBox(height: 18.toHeight),
               filedInDeliveringList.isNotEmpty
                   ? Row(
@@ -153,7 +149,7 @@ class _DesktopTranferOverlappingContactsState
                               color: ColorConstants.redAlert,
                               size: 15.toFont,
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
                               TextStrings().failedToSend,
                               style: CustomTextStyles.grey15,
@@ -166,10 +162,10 @@ class _DesktopTranferOverlappingContactsState
                         ),
                       ],
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               filedInDeliveringList.isNotEmpty
                   ? SizedBox(height: 15.toHeight)
-                  : SizedBox(),
+                  : const SizedBox(),
               Align(
                 alignment: Alignment.topLeft,
                 child: Wrap(
@@ -179,17 +175,17 @@ class _DesktopTranferOverlappingContactsState
                   spacing: 15.0,
                   children:
                       List.generate(filedInDeliveringList.length, (index) {
-                    return Container(
-                      child: CustomPersonVerticalTile(
-                          key: Key(filedInDeliveringList[index].atsign!),
-                          shareStatus: filedInDeliveringList[index],
-                          fileHistory: widget.fileHistory,
-                          isFailedAtsignList: true),
-                    );
+                    return CustomPersonVerticalTile(
+                        key: Key(filedInDeliveringList[index].atsign!),
+                        shareStatus: filedInDeliveringList[index],
+                        fileHistory: widget.fileHistory,
+                        isFailedAtsignList: true);
                   }),
                 ),
               ),
-              filedInDeliveringList.isNotEmpty ? Divider() : SizedBox(),
+              filedInDeliveringList.isNotEmpty
+                  ? const Divider()
+                  : const SizedBox(),
             ],
           );
         },

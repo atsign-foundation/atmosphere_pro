@@ -73,7 +73,7 @@ class HistoryProvider extends BaseModel {
       sentDocument = [];
 
   List<FilesDetail> recentFile = [];
-  List<Widget> desktopTabs = [DesktopRecents()];
+  List<Widget> desktopTabs = [const DesktopRecents()];
   Map sendFileHistory = {'history': []};
   String? app_lifecycle_state;
   HistoryType typeSelected = HistoryType.all;

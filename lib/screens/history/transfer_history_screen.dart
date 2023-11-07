@@ -1,29 +1,28 @@
 import 'dart:io';
 
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_history_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_widget.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
-
-import '../../data_models/file_entity.dart';
-import '../../services/navigation_service.dart';
-import '../../utils/text_strings.dart';
-import '../../view_models/file_transfer_provider.dart';
-import '../common_widgets/confirmation_dialog.dart';
 
 class TransferHistoryScreen extends StatefulWidget {
   const TransferHistoryScreen({Key? key}) : super(key: key);
@@ -59,7 +58,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.background,
-      appBar: AppBarCustom(
+      appBar: const AppBarCustom(
         height: 130,
         title: "History",
       ),
@@ -88,7 +87,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                   onChange: (text) {
                     setState(() {});
                   },
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: ColorConstants.darkSliver,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -96,7 +95,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                   margin: EdgeInsets.zero,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               InkWell(
                 onTap: () {
                   _onTapFilterIcon();
@@ -133,7 +132,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                 if ((provider.displayFilesHistory.isEmpty)) {
                   return ListView.separated(
                     padding: EdgeInsets.only(bottom: 170.toHeight),
-                    physics: AlwaysScrollableScrollPhysics(),
+                    physics: const AlwaysScrollableScrollPhysics(),
                     separatorBuilder: (context, index) =>
                         Divider(indent: 16.toWidth),
                     itemCount: 1,
@@ -156,7 +155,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                 } else {
                   List<FileHistory> filteredFileHistory = [];
 
-                  provider.displayFilesHistory.forEach((element) {
+                  for (var element in provider.displayFilesHistory) {
                     if (element.type == HistoryType.send) {
                       if (element.sharedWith!.any(
                             (ShareStatus sharedStatus) => sharedStatus.atsign!
@@ -174,12 +173,12 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                         filteredFileHistory.add(element);
                       }
                     }
-                  });
+                  }
 
                   if (filteredFileHistory.isNotEmpty) {
                     return ListView.separated(
                       padding: EdgeInsets.only(bottom: 170.toHeight),
-                      physics: AlwaysScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       separatorBuilder: (context, index) {
                         return SizedBox(height: 10.toHeight);
                       },
@@ -195,7 +194,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                       },
                     );
                   } else {
-                    return Center(
+                    return const Center(
                       child: Text('No results found'),
                     );
                   }
@@ -203,7 +202,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
               },
               errorBuilder: (provider) => ListView.separated(
                 padding: EdgeInsets.only(bottom: 170.toHeight),
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 separatorBuilder: (context, index) =>
                     Divider(indent: 16.toWidth),
                 itemCount: 1,

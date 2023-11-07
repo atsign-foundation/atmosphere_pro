@@ -53,7 +53,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
   List<String?> existingFileNamesToOverwrite = [];
   List<String?> contactList = [];
   List<FileData>? filesList = [];
-  Map<String?, Future> _futureBuilder = {};
+  final Map<String?, Future> _futureBuilder = {};
   int numberOfFinished = 0;
 
   @override
@@ -75,11 +75,11 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
     if (widget.fileHistory!.sharedWith != null) {
       contactList =
           widget.fileHistory!.sharedWith!.map((e) => e.atsign).toList();
-      widget.fileHistory!.sharedWith!.forEach((ShareStatus sharedWith) {
+      for (var sharedWith in widget.fileHistory!.sharedWith!) {
         if (sharedWith.isNotificationSend == false) {
           isFileSentSuccess = false;
         }
-      });
+      }
       await getDisplayDetails();
     }
 
@@ -122,18 +122,18 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
 
   void checkForDownloadAvailability() {
     var expiryDate =
-        widget.fileHistory!.fileDetails!.date!.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+        widget.fileHistory!.fileDetails!.date!.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
 
     // if fileList is not having any file then download icon will not be shown
     var isFileUploaded = false;
-    widget.fileHistory!.fileDetails!.files!.forEach((FileData fileData) {
+    for (var fileData in widget.fileHistory!.fileDetails!.files!) {
       if (fileData.isUploaded!) {
         isFileUploaded = true;
       }
-    });
+    }
 
     if (!isFileUploaded) {
       isDownloadAvailable = false;
@@ -168,13 +168,13 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
   }
 
   void getFutureBuilders() {
-    widget.fileHistory!.fileDetails!.files!.forEach((element) {
+    for (var element in widget.fileHistory!.fileDetails!.files!) {
       String filePath = BackendService.getInstance().downloadDirectory!.path +
           Platform.pathSeparator +
           element.name!;
       _futureBuilder[element.name] =
           CommonUtilityFunctions().isFilePresent(filePath);
-    });
+    }
   }
 
   @override
@@ -190,13 +190,13 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              margin: EdgeInsets.only(left: 36, right: 18),
-              padding: EdgeInsets.symmetric(
+              margin: const EdgeInsets.only(left: 36, right: 18),
+              padding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 12,
               ),
               decoration: BoxDecoration(
-                color: isExpanded ? Color(0xFFE9E9E9) : Colors.white,
+                color: isExpanded ? const Color(0xFFE9E9E9) : Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: InkWell(
@@ -223,9 +223,10 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
-                          '${DateFormat("MM/dd/yy").format(widget.fileHistory!.fileDetails!.date!)}',
+                          DateFormat("MM/dd/yy")
+                              .format(widget.fileHistory!.fileDetails!.date!),
                           style: TextStyle(
                             fontSize: 10.toFont,
                             color: ColorConstants.oldSliver,
@@ -234,19 +235,20 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         Container(
                           width: 1,
                           height: 8,
-                          color: Color(0xFFD7D7D7),
-                          margin: EdgeInsets.symmetric(
+                          color: const Color(0xFFD7D7D7),
+                          margin: const EdgeInsets.symmetric(
                             horizontal: 3,
                           ),
                         ),
                         Text(
-                          '${DateFormat('kk:mm').format(widget.fileHistory!.fileDetails!.date!)}',
+                          DateFormat('kk:mm')
+                              .format(widget.fileHistory!.fileDetails!.date!),
                           style: TextStyle(
                             fontSize: 10.toFont,
                             color: ColorConstants.oldSliver,
                           ),
                         ),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         // Container(
                         //   height: 10,
                         //   width: 10,
@@ -260,7 +262,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         //     color: ColorConstants.textGreen,
                         //   ),
                         // ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Container(
                           height: 16,
                           padding: EdgeInsets.symmetric(
@@ -296,8 +298,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   openFileReceiptBottomSheet();
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.only(left: 8),
-                                  child: Icon(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: const Icon(
                                     Icons.done_all,
                                     size: 20,
                                     color: Color(0xFF909090),
@@ -305,14 +307,14 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                 ),
                               )
                             : Consumer<FileProgressProvider>(
-                                builder: (_c, provider, _) {
+                                builder: (c, provider, _) {
                                   var fileTransferProgress =
                                       provider.receivedFileProgress[
                                           widget.fileHistory?.fileDetails?.key];
                                   return Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       CommonUtilityFunctions()
                                               .checkForDownloadAvailability(
                                                   widget.fileHistory!
@@ -348,7 +350,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                                           .icCloudDownloaded,
                                                     )
                                                   : isDownloading
-                                                      ? SizedBox(
+                                                      ? const SizedBox(
                                                           width: 28,
                                                           height: 28,
                                                           child:
@@ -371,7 +373,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                                                 .icDownloadFile,
                                                           ),
                                                         )
-                                          : SizedBox(),
+                                          : const SizedBox(),
                                     ],
                                   );
                                 },
@@ -380,16 +382,16 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                     ),
                     Text(
                       widget.fileHistory?.type == HistoryType.received
-                          ? "${widget.fileHistory?.fileDetails?.sender ?? ''}"
+                          ? widget.fileHistory?.fileDetails?.sender ?? ''
                           : isFileSharedToGroup || contactList.isEmpty
                               ? ''
-                              : "${contactList[0] ?? ''}",
+                              : contactList[0] ?? '',
                       style: TextStyle(
                         fontSize: 8.toFont,
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 7),
+                    const SizedBox(height: 7),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -399,21 +401,21 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                 : widget.fileHistory?.fileDetails?.notes ?? '',
                             style: TextStyle(
                               fontSize: 8.toFont,
-                              color: Color(0xFF747474),
+                              color: const Color(0xFF747474),
                             ),
                           ),
                         ),
                         Text(
                           widget.fileHistory?.type == HistoryType.send
                               ? "${filesList!.length} Files"
-                              : "${numberOfFinished}/${filesList!.length} Files",
+                              : "$numberOfFinished/${filesList!.length} Files",
                           style: TextStyle(
                             fontSize: 8.toFont,
                             fontWeight: FontWeight.w500,
                             color: ColorConstants.textBlack,
                           ),
                         ),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         isExpanded
                             ? SvgPicture.asset(AppVectors.icArrowUpOutline)
                             : SvgPicture.asset(AppVectors.icArrowDownOutline),
@@ -428,8 +430,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                     shrinkWrap: true,
                     itemCount:
                         widget.fileHistory?.fileDetails?.files?.length ?? 0,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(top: 4),
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(top: 4),
                     itemBuilder: (context, index) {
                       return ContactAttachmentCard(
                         key: UniqueKey(),
@@ -437,7 +439,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         singleFile:
                             widget.fileHistory!.fileDetails!.files![index],
                         isShowDate: false,
-                        margin: EdgeInsets.fromLTRB(36, 6, 20, 0),
+                        margin: const EdgeInsets.fromLTRB(36, 6, 20, 0),
                         onAction: () async {
                           await isFilesPresent(
                               widget.fileHistory!.fileDetails!);
@@ -445,7 +447,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                       );
                     },
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         );
       },
@@ -459,15 +461,15 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: StadiumBorder(),
-        builder: (_context) {
+        shape: const StadiumBorder(),
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: FileRecipients(

@@ -12,7 +12,7 @@ class FilterHistoryWidget extends StatefulWidget {
   final HistoryType? typeSelected;
   final List<FileType>? listFileType;
 
-  FilterHistoryWidget({
+  const FilterHistoryWidget({
     Key? key,
     this.position,
     this.onSelectedFilter,
@@ -76,11 +76,11 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                   width: MediaQuery.of(context).size.width - 30.toWidth,
                   child: ListView.separated(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
                     itemCount: historyTypes.length,
                     separatorBuilder: (context, index) {
-                      return Divider(
+                      return const Divider(
                         color: ColorConstants.disableColor,
                         height: 0,
                         thickness: 1,
@@ -102,7 +102,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                           },
                           borderRadius: isShowOptional
                               ? null
-                              : BorderRadius.vertical(
+                              : const BorderRadius.vertical(
                                   bottom: Radius.circular(13),
                                 ),
                           onTap: () {
@@ -117,7 +117,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                         title: historyTypes[index].text,
                         isCheck: historyTypes[index] == widget.typeSelected,
                         borderRadius: index == 0
-                            ? BorderRadius.vertical(
+                            ? const BorderRadius.vertical(
                                 top: Radius.circular(13),
                               )
                             : null,
@@ -131,7 +131,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                   ),
                 ),
                 if (isShowOptional) ...[
-                  Divider(
+                  const Divider(
                     color: ColorConstants.disableColor,
                     height: 0,
                     thickness: 1,
@@ -141,15 +141,15 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                     width: MediaQuery.of(context).size.width - 30.toWidth,
                     child: ListView.separated(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       itemCount: optionalHistoryTypes.length,
                       separatorBuilder: (context, index) {
                         return Divider(
-                          color: listFileType
-                              .contains(optionalHistoryTypes[index])
-                              ? ColorConstants.orange
-                              : ColorConstants.disableColor,
+                          color:
+                              listFileType.contains(optionalHistoryTypes[index])
+                                  ? ColorConstants.orange
+                                  : ColorConstants.disableColor,
                           height: 0,
                           thickness: 1,
                           // thickness: 0.65,
@@ -163,7 +163,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
                           isCheck: listFileType
                               .contains(optionalHistoryTypes[index]),
                           borderRadius: index == optionalHistoryTypes.length - 1
-                              ? BorderRadius.vertical(
+                              ? const BorderRadius.vertical(
                                   bottom: Radius.circular(13),
                                 )
                               : null,

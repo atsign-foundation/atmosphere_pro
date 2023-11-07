@@ -19,6 +19,7 @@ class MixedConstants {
   static const String TERMS_CONDITIONS = 'atsign.com/terms-conditions/';
 
   static const String FILEBIN_URL = 'https://ck6agzxiog6kmb.atsign.com/';
+
   // static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String PRIVACY_POLICY =
       "https://atsign.com/apps/atmosphere/atmosphere-privacy/";
@@ -66,16 +67,13 @@ class MixedConstants {
   static const double APPBAR_HEIGHT = 80;
 
   /// we change the directory after successful login
-  static setNewApplicationDocumentsDirectory(String? _atsign) async {
-    late var _dir;
+  static setNewApplicationDocumentsDirectory(String? atsign) async {
+    late Directory dir;
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      _dir = await getApplicationDocumentsDirectory();
+      dir = await getApplicationDocumentsDirectory();
     }
-    final path = Directory(_dir.path +
-        Platform.pathSeparator +
-        '@mosphere-pro' +
-        Platform.pathSeparator +
-        (_atsign ?? ''));
+    final path = Directory(
+        '${dir.path}${Platform.pathSeparator}@mosphere-pro${Platform.pathSeparator}${atsign ?? ''}');
 
     /// we create directory if it does not exist
     if (!(await path.exists())) {
@@ -93,16 +91,11 @@ class MixedConstants {
   // static String path = '/Users/apple/Desktop/';
   // static String path = '/Users/apple/temp_atmosphere/';
 
-  static String DESKTOP_SENT_DIR = (ApplicationDocumentsDirectory ?? '') +
-      Platform.pathSeparator +
-      'sent-files' +
-      Platform.pathSeparator;
+  static String DESKTOP_SENT_DIR =
+      '${ApplicationDocumentsDirectory ?? ''}${Platform.pathSeparator}sent-files${Platform.pathSeparator}';
 
   static String get SENT_FILE_DIRECTORY =>
-      (ApplicationDocumentsDirectory ?? '') +
-      Platform.pathSeparator +
-      'sent-files' +
-      Platform.pathSeparator;
+      '${ApplicationDocumentsDirectory ?? ''}${Platform.pathSeparator}sent-files${Platform.pathSeparator}';
 
   // Onboarding API key - requires different key for production
   static String ONBOARD_API_KEY = '477b-876u-bcez-c42z-6a3d';
@@ -110,16 +103,15 @@ class MixedConstants {
   ///returns file download location
   ///creates the directory if does not exists one
   static Future<String> getFileDownloadLocation({String? sharedBy}) async {
-    String _downloadPath = '';
+    String downloadPath = '';
     if (Platform.isMacOS ||
         Platform.isWindows ||
         Platform.isLinux && sharedBy != null) {
-      _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+      downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
           Platform.pathSeparator +
           sharedBy!;
-      await BackendService.getInstance()
-          .doesDirectoryExist(path: _downloadPath);
-      return _downloadPath;
+      await BackendService.getInstance().doesDirectoryExist(path: downloadPath);
+      return downloadPath;
     } else {
       return BackendService.getInstance().atClientPreference.downloadPath!;
     }
@@ -128,15 +120,15 @@ class MixedConstants {
   /// returns file download location
   /// does not create the directory if does not exists
   static String getFileDownloadLocationSync({String? sharedBy}) {
-    String _downloadPath = '';
+    String downloadPath = '';
     if (Platform.isMacOS ||
         Platform.isWindows ||
         Platform.isLinux && sharedBy != null) {
-      _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+      downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
           Platform.pathSeparator +
           sharedBy!;
 
-      return _downloadPath;
+      return downloadPath;
     } else {
       return BackendService.getInstance().atClientPreference.downloadPath!;
     }
@@ -144,13 +136,12 @@ class MixedConstants {
 
   /// returns sent-file location, creates one if does not exists
   static Future<String> getFileSentLocation() async {
-    String _sentPath = '';
+    String sentPath = '';
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-          Platform.pathSeparator +
-          'sent-files';
-      await BackendService.getInstance().doesDirectoryExist(path: _sentPath);
-      return _sentPath;
+      sentPath =
+          '${MixedConstants.ApplicationDocumentsDirectory ?? ''}${Platform.pathSeparator}sent-files';
+      await BackendService.getInstance().doesDirectoryExist(path: sentPath);
+      return sentPath;
     } else {
       return BackendService.getInstance().atClientPreference.downloadPath!;
     }

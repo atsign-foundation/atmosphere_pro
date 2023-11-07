@@ -11,8 +11,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:open_file/open_file.dart';
 
 class DesktopDocuments extends StatefulWidget {
+  const DesktopDocuments({Key? key}) : super(key: key);
+
   @override
-  _DesktopDocumentsState createState() => _DesktopDocumentsState();
+  State<DesktopDocuments> createState() => _DesktopDocumentsState();
 }
 
 class _DesktopDocumentsState extends State<DesktopDocuments> {
@@ -90,7 +92,7 @@ class _DesktopDocumentsState extends State<DesktopDocuments> {
                             ),
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),

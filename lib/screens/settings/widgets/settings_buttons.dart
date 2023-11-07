@@ -34,7 +34,7 @@ class SettingsButton extends StatelessWidget {
               height: 27,
               width: 27,
             ),
-            SizedBox(width: 24),
+            const SizedBox(width: 24),
             Text(
               buttonText.toString(),
               style: CustomTextStyles.whiteMedium18.copyWith(

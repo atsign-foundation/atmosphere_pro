@@ -1,9 +1,10 @@
 class ImageConstants {
-  static String _basePath = 'assets/images';
+  static const String _basePath = 'assets/images';
 
   static String welcomeBackground = '$_basePath/new_welcome_bg.png';
   static String logoIcon = '$_basePath/logo.png';
   static String logoWhiteIcon = '$_basePath/logo_white.png';
+
   // static String myFiles = '$_basePath/myfiles.png';
   static String group = '$_basePath/group.png';
   static String trustedsenders = '$_basePath/trustedsenders.png';
@@ -44,6 +45,7 @@ class ImageConstants {
   static String groups = '$_basePath/groups.png';
   static String contactUs = '$_basePath/contactUs.png';
   static String settings = '$_basePath/settings.png';
+
   // TEST FILE DELETE WHEN IN PRODUCTION
   static String test = '$_basePath/test.jpg';
   static String iconSuccess = '$_basePath/icon_success.png';
@@ -106,7 +108,7 @@ class ImageConstants {
   static String icListType = '$_basePath/ic_list_type.png';
   static String icCloudDownloading = '$_basePath/ic_cloud_downloading.png';
 
-  // New UI tranfer screen 
+  // New UI tranfer screen
   static String uploadFile = '$_basePath/upload_file.png';
   static String transferHistory = '$_basePath/transfer_history.png';
   static String icGroups = '$_basePath/ic_groups.png';

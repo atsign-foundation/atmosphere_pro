@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 class SuccessCard extends StatelessWidget {
   final FileHistory fileHistory;
+
   const SuccessCard({Key? key, required this.fileHistory}) : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class SuccessCard extends StatelessWidget {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => WelcomeScreen(indexBottomBarSelected: 3),
+              builder: (_) => const WelcomeScreen(indexBottomBarSelected: 3),
             ),
           );
         } else {
@@ -34,9 +35,9 @@ class SuccessCard extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: Color(0xFFECF8FF),
+          color: const Color(0xFFECF8FF),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -49,7 +50,7 @@ class SuccessCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: 'Successfully sent ',
                         style: TextStyle(
                           fontSize: 15,
@@ -59,7 +60,7 @@ class SuccessCard extends StatelessWidget {
                       ),
                       TextSpan(
                         text: '${fileHistory.fileDetails?.files?.length} files',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                           color: Color(0xFF18A2EF),
                         ),
@@ -71,7 +72,7 @@ class SuccessCard extends StatelessWidget {
                   width: (Platform.isAndroid || Platform.isIOS) ? 200 : 230,
                   child: Text(
                     getAtsignCount(fileHistory),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Color(0xFF18A2EF),
                     ),
@@ -80,8 +81,8 @@ class SuccessCard extends StatelessWidget {
               ],
             ),
             NotificationCardButton(
-              backgroundColor: Color(0xFF18A2EF).withOpacity(0.2),
-              child: Row(
+              backgroundColor: const Color(0xFF18A2EF).withOpacity(0.2),
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(

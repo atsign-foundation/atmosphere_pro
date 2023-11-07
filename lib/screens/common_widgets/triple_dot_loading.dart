@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({
@@ -16,7 +15,7 @@ class TypingIndicator extends StatefulWidget {
   final Color flashingCircleBrightColor;
 
   @override
-  _TypingIndicatorState createState() => _TypingIndicatorState();
+  State<TypingIndicator> createState() => _TypingIndicatorState();
 }
 
 class _TypingIndicatorState extends State<TypingIndicator>

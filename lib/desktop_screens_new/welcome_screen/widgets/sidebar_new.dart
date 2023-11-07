@@ -127,24 +127,24 @@ class _SideBarNewState extends State<SideBarNew> {
   @override
   Widget build(BuildContext context) {
     return Consumer<SideBarProvider>(
-      builder: (_context, _sideBarProvider, _) {
+      builder: (context, sideBarProvider, _) {
         return Column(
           children: [
             Expanded(
               child: Stack(
                 children: [
                   Container(
-                    width: _sideBarProvider.isSidebarExpanded
+                    width: sideBarProvider.isSidebarExpanded
                         ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                         : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       color: Theme.of(context).highlightColor,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(10),
                       ),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: ColorConstants.light_grey,
                           spreadRadius: 0,
@@ -177,9 +177,9 @@ class _SideBarNewState extends State<SideBarNew> {
                                       height: 52.toHeight),
                                 ),
                                 SizedBox(width: 10.toWidth),
-                                _sideBarProvider.isSidebarExpanded
+                                sideBarProvider.isSidebarExpanded
                                     ? Text.rich(
-                                        TextSpan(
+                                        const TextSpan(
                                             text: "Atmosphere",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -211,7 +211,7 @@ class _SideBarNewState extends State<SideBarNew> {
                               onTap: () async {
                                 await DesktopSetupRoutes.nested_pop();
                               },
-                              child: _sideBarProvider.isSidebarExpanded
+                              child: sideBarProvider.isSidebarExpanded
                                   ? Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
@@ -232,7 +232,7 @@ class _SideBarNewState extends State<SideBarNew> {
                                             ),
                                           ),
                                           SizedBox(width: 8.toWidth),
-                                          Icon(
+                                          const Icon(
                                             Icons.send_outlined,
                                             size: 22,
                                             color: Colors.black,
@@ -240,7 +240,7 @@ class _SideBarNewState extends State<SideBarNew> {
                                         ],
                                       ),
                                     )
-                                  : CircleAvatar(
+                                  : const CircleAvatar(
                                       minRadius: 25,
                                       backgroundColor: Colors.white,
                                       child: Center(
@@ -263,10 +263,10 @@ class _SideBarNewState extends State<SideBarNew> {
                             SizedBox(height: 5.toHeight),
                             ListView.separated(
                               itemCount: generalMenuItems.length,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               separatorBuilder: (context, index) {
-                                return Divider(
+                                return const Divider(
                                   color: ColorConstants.sidebarTextUnselected,
                                   height: 0,
                                   indent: 12,
@@ -277,7 +277,7 @@ class _SideBarNewState extends State<SideBarNew> {
                                 return SidebarItem(
                                   menuItem: generalMenuItems[index],
                                   isSidebarExpanded:
-                                      _sideBarProvider.isSidebarExpanded,
+                                      sideBarProvider.isSidebarExpanded,
                                 );
                               }),
                             ),
@@ -292,10 +292,10 @@ class _SideBarNewState extends State<SideBarNew> {
                             SizedBox(height: 5.toHeight),
                             ListView.separated(
                               itemCount: helpCenterMenuItems.length,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               separatorBuilder: (context, index) {
-                                return Divider(
+                                return const Divider(
                                   height: 0,
                                   color: ColorConstants.sidebarTextUnselected,
                                   indent: 12,
@@ -306,26 +306,25 @@ class _SideBarNewState extends State<SideBarNew> {
                                 return SidebarItem(
                                   menuItem: helpCenterMenuItems[index],
                                   isSidebarExpanded:
-                                      _sideBarProvider.isSidebarExpanded,
+                                      sideBarProvider.isSidebarExpanded,
                                   isUrlLauncher:
-                                      helpCenterMenuItems[index].isUrl ??
-                                          false,
+                                      helpCenterMenuItems[index].isUrl ?? false,
                                   isEmailLauncher:
                                       helpCenterMenuItems[index].isEmail ??
                                           false,
                                 );
                               }),
                             ),
-                            SizedBox(height: 100),
+                            const SizedBox(height: 100),
                             SizedBox(
                               width: double.maxFinite,
                               child: SidebarItem(
                                 menuItem: settingsMenuItem,
                                 isSidebarExpanded:
-                                    _sideBarProvider.isSidebarExpanded,
+                                    sideBarProvider.isSidebarExpanded,
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
@@ -334,15 +333,15 @@ class _SideBarNewState extends State<SideBarNew> {
                       ),
                     ),
                   ),
-                  if (_sideBarProvider.isSwitchingAtSign &&
-                      _sideBarProvider.isSidebarExpanded)
+                  if (sideBarProvider.isSwitchingAtSign &&
+                      sideBarProvider.isSidebarExpanded)
                     Positioned(
                       left: 20,
                       right: 16,
                       bottom: 24,
                       child: SwitchingAtSignDialog(
                         onSwitchAtSign: (value) async {
-                          _sideBarProvider.changeIsSwitchingAtSign();
+                          sideBarProvider.changeIsSwitchingAtSign();
                           await getAtsignDetails(atSign: value);
                           await DesktopSetupRoutes.nested_pop();
                         },
@@ -355,10 +354,10 @@ class _SideBarNewState extends State<SideBarNew> {
               avatar: image,
               displayName: name,
               atSignKey: BackendService.getInstance().currentAtSign!,
-              isExpanded: _sideBarProvider.isSidebarExpanded,
-              isSelected: _sideBarProvider.isSwitchingAtSign,
+              isExpanded: sideBarProvider.isSidebarExpanded,
+              isSelected: sideBarProvider.isSwitchingAtSign,
               onTap: () {
-                _sideBarProvider.changeIsSwitchingAtSign();
+                sideBarProvider.changeIsSwitchingAtSign();
               },
             ),
           ],

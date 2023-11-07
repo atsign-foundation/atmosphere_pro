@@ -17,7 +17,7 @@ void main() {
   group('Side bar backup item Widget Tests:', () {
     final sideBarBackupItem = SideBarBackupItem(
       title: 'SideBar',
-      leadingIcon: Icon(Icons.menu),
+      leadingIcon: const Icon(Icons.menu),
       onPressed: () {
         print('Sidebar displayed');
       },

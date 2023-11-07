@@ -22,6 +22,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -29,8 +30,6 @@ import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../../../view_models/internet_connectivity_checker.dart';
 
 class ReceivedFilesListTile extends StatefulWidget {
   final FileTransfer? receivedHistory;
@@ -41,8 +40,9 @@ class ReceivedFilesListTile extends StatefulWidget {
     this.receivedHistory,
     this.isWidgetOpen = false,
   }) : super(key: key);
+
   @override
-  _ReceivedFilesListTileState createState() => _ReceivedFilesListTileState();
+  State<ReceivedFilesListTile> createState() => _ReceivedFilesListTileState();
 }
 
 class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
@@ -58,15 +58,15 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   int fileSize = 0;
   List<String?> existingFileNamesToOverwrite = [];
   String nickName = '';
-  Map<String?, Future> _futureBuilder = {};
+  final Map<String?, Future> _futureBuilder = {};
   bool isTextExpanded = false;
 
   Future<Uint8List?> videoThumbnailBuilder(String path) async {
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
       imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      maxWidth: 50,
+      // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
       quality: 100,
     );
     return videoThumbnail;
@@ -75,9 +75,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   @override
   void initState() {
     isOpen = widget.isWidgetOpen ?? false;
-    widget.receivedHistory!.files!.forEach((element) {
+    for (var element in widget.receivedHistory!.files!) {
       fileSize += element.size!;
-    });
+    }
 
     checkForDownloadAvailability();
     getAtSignDetail();
@@ -88,18 +88,18 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   checkForDownloadAvailability() {
-    var expiryDate = widget.receivedHistory!.date!.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+    var expiryDate = widget.receivedHistory!.date!.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
       isDownloadAvailable = true;
     }
 
     // if fileList is not having any file then download icon will not be shown
     var isFileUploaded = false;
-    widget.receivedHistory!.files!.forEach((FileData fileData) {
+    for (var fileData in widget.receivedHistory!.files!) {
       if (fileData.isUploaded!) {
         isFileUploaded = true;
       }
-    });
+    }
 
     if (!isFileUploaded) {
       isDownloadAvailable = false;
@@ -161,13 +161,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   getFutureBuilders() {
-    widget.receivedHistory!.files!.forEach((element) {
+    for (var element in widget.receivedHistory!.files!) {
       String filePath = BackendService.getInstance().downloadDirectory!.path +
           Platform.pathSeparator +
           element.name!;
       _futureBuilder[element.name] =
           CommonUtilityFunctions().isFilePresent(filePath);
-    });
+    }
   }
 
   @override
@@ -176,7 +176,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
     return Column(
       children: [
         Container(
-          color: isOpen ? Color(0xffEFEFEF) : null,
+          color: isOpen ? const Color(0xffEFEFEF) : null,
           child: ListTile(
             enableFeedback: true,
             onLongPress: deleteReceivedFile,
@@ -216,7 +216,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 : Container(
                                     height: 45.toHeight,
                                     width: 45.toHeight,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.black,
                                       shape: BoxShape.circle,
                                     ),
@@ -238,7 +238,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     child: Container(
                                       height: 25,
                                       width: 25,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Colors.white,
                                       ),
@@ -248,13 +248,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                       ),
                                     ),
                                   )
-                                : SizedBox()
+                                : const SizedBox()
                           ],
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
             title: Padding(
-              padding: EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -276,7 +276,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       InkWell(
@@ -288,9 +288,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             await downloadFiles(widget.receivedHistory);
                           },
                           child: Padding(
-                              padding: EdgeInsets.only(top: 5.0),
+                              padding: const EdgeInsets.only(top: 5.0),
                               child: Consumer<FileProgressProvider>(
-                                  builder: (_c, provider, _) {
+                                  builder: (c, provider, _) {
                                 var fileTransferProgress =
                                     provider.receivedFileProgress[
                                         widget.receivedHistory!.key];
@@ -303,14 +303,14 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                                 !isOverwrite)
                                             ? Icon(
                                                 Icons.done,
-                                                color: Color(0xFF08CB21),
+                                                color: const Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
                                             : Icon(
                                                 Icons.download_sharp,
                                                 size: 25.toFont,
                                               )
-                                    : SizedBox();
+                                    : const SizedBox();
                               })))
                     ],
                   ),
@@ -325,7 +325,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ),
                     ],
                   ),
@@ -333,61 +333,58 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   SizedBox(
                     height: 8.toHeight,
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${widget.receivedHistory!.files!.length} ${TextStrings().file_s}',
-                          style: CustomTextStyles.secondaryRegular12,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${widget.receivedHistory!.files!.length} ${TextStrings().file_s}',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Text(
+                        '.',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Text(
+                        double.parse(fileSize.toString()) <= 1024
+                            ? '$fileSize ${TextStrings().kb}'
+                            : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                        style: CustomTextStyles.secondaryRegular12,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      Expanded(
+                        child: Consumer<FileProgressProvider>(
+                          builder: (context, provider, child) {
+                            var fileTransferProgress =
+                                provider.receivedFileProgress[
+                                    widget.receivedHistory!.key];
+                            return fileTransferProgress != null
+                                ? Row(
+                                    children: [
+                                      Container(
+                                        color: ColorConstants.fontSecondary,
+                                        height: 14.toHeight,
+                                        width: 1.toWidth,
+                                      ),
+                                      SizedBox(width: 10.toHeight),
+                                      Expanded(
+                                        child: Text(
+                                            getFileStateMessage(
+                                                fileTransferProgress),
+                                            style: TextStyle(
+                                              fontSize: 11.toFont,
+                                              color: ColorConstants.blueText,
+                                              fontWeight: FontWeight.normal,
+                                            )),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox();
+                          },
                         ),
-                        SizedBox(width: 10.toHeight),
-                        Text(
-                          '.',
-                          style: CustomTextStyles.secondaryRegular12,
-                        ),
-                        SizedBox(width: 10.toHeight),
-                        Text(
-                          double.parse(fileSize.toString()) <= 1024
-                              ? '${fileSize} ' + TextStrings().kb
-                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                  TextStrings().mb,
-                          style: CustomTextStyles.secondaryRegular12,
-                        ),
-                        SizedBox(width: 10.toHeight),
-                        Expanded(
-                          child: Consumer<FileProgressProvider>(
-                            builder: (_context, provider, _widget) {
-                              var fileTransferProgress =
-                                  provider.receivedFileProgress[
-                                      widget.receivedHistory!.key];
-                              return fileTransferProgress != null
-                                  ? Row(
-                                      children: [
-                                        Container(
-                                          color: ColorConstants.fontSecondary,
-                                          height: 14.toHeight,
-                                          width: 1.toWidth,
-                                        ),
-                                        SizedBox(width: 10.toHeight),
-                                        Expanded(
-                                          child: Text(
-                                              getFileStateMessage(
-                                                  fileTransferProgress),
-                                              style: TextStyle(
-                                                fontSize: 11.toFont,
-                                                color: ColorConstants.blueText,
-                                                fontWeight: FontWeight.normal,
-                                              )),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox();
-                            },
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                   SizedBox(
                     height: 20.toHeight,
@@ -417,36 +414,36 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                 : TextOverflow.ellipsis,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(
                     height:
                         widget.receivedHistory!.notes != null ? 5.toHeight : 0,
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        widget.receivedHistory!.date != null
-                            ? Text(
-                                '${DateFormat('MM-dd-yyyy').format(widget.receivedHistory!.date!)}',
-                                style: CustomTextStyles.secondaryRegular12,
-                              )
-                            : SizedBox(),
-                        SizedBox(width: 10.toHeight),
-                        Container(
-                          color: ColorConstants.fontSecondary,
-                          height: 14.toHeight,
-                          width: 1.toWidth,
-                        ),
-                        SizedBox(width: 10.toHeight),
-                        widget.receivedHistory!.date != null
-                            ? Text(
-                                '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
-                                style: CustomTextStyles.secondaryRegular12,
-                              )
-                            : SizedBox(),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      widget.receivedHistory!.date != null
+                          ? Text(
+                              DateFormat('MM-dd-yyyy')
+                                  .format(widget.receivedHistory!.date!),
+                              style: CustomTextStyles.secondaryRegular12,
+                            )
+                          : const SizedBox(),
+                      SizedBox(width: 10.toHeight),
+                      Container(
+                        color: ColorConstants.fontSecondary,
+                        height: 14.toHeight,
+                        width: 1.toWidth,
+                      ),
+                      SizedBox(width: 10.toHeight),
+                      widget.receivedHistory!.date != null
+                          ? Text(
+                              DateFormat('kk:mm')
+                                  .format(widget.receivedHistory!.date!),
+                              style: CustomTextStyles.secondaryRegular12,
+                            )
+                          : const SizedBox(),
+                    ],
                   ),
                   SizedBox(
                     height: 3.toHeight,
@@ -465,25 +462,23 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                             }
                             updateIsWidgetOpen();
                           },
-                          child: Container(
-                            child: Row(
-                              children: [
-                                Text(
-                                  TextStrings().seeFiles,
-                                  style: CustomTextStyles.primaryBlueBold14,
-                                ),
-                                Container(
-                                  width: 22.toWidth,
-                                  height: 22.toWidth,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.black,
-                                    ),
+                          child: Row(
+                            children: [
+                              Text(
+                                TextStrings().seeFiles,
+                                style: CustomTextStyles.primaryBlueBold14,
+                              ),
+                              SizedBox(
+                                width: 22.toWidth,
+                                height: 22.toWidth,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.black,
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       : Container(),
@@ -494,11 +489,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         ),
         isOpen
             ? Container(
-                color: isOpen ? Color(0xffEFEFEF) : Colors.white,
+                color: isOpen ? const Color(0xffEFEFEF) : Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 70.0 *
                           (widget.receivedHistory!.files!.length -
                                   widget.receivedHistory!.files!
@@ -512,11 +507,11 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               ),
                           itemCount: int.parse(
                               widget.receivedHistory!.files!.length.toString()),
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (!widget
                                 .receivedHistory!.files![index].isUploaded!) {
-                              return SizedBox();
+                              return const SizedBox();
                             }
                             if (FileTypes.VIDEO_TYPES.contains(widget
                                 .receivedHistory!.files![index].name
@@ -540,7 +535,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
                                 File test = File(path);
                                 bool fileExists = await test.exists();
-                                print('fileExists: ${fileExists}');
+                                print('fileExists: $fileExists');
                                 if (fileExists) {
                                   await OpenFile.open(path);
                                 } else {
@@ -553,7 +548,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                   await OpenFile.open(path);
                                 }
                               },
-                              leading: Container(
+                              leading: SizedBox(
                                 height: 50.toHeight,
                                 width: 50.toHeight,
                                 child: FutureBuilder(
@@ -579,7 +574,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                                       ''),
                                               isFilePresent:
                                                   snapshot.data as bool)
-                                          : SizedBox();
+                                          : const SizedBox();
                                     }),
                               ),
                               title: Column(
@@ -603,80 +598,75 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                     ],
                                   ),
                                   SizedBox(width: 10.toHeight),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          double.parse(widget.receivedHistory!
-                                                      .files![index].size
-                                                      .toString()) <=
-                                                  1024
-                                              ? '${widget.receivedHistory!.files![index].size} Kb '
-                                              : '${(widget.receivedHistory!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                                          style: CustomTextStyles
-                                              .secondaryRegular12,
-                                        ),
-                                        SizedBox(width: 10.toHeight),
-                                        Text(
-                                          '.',
-                                          style: CustomTextStyles
-                                              .secondaryRegular12,
-                                        ),
-                                        SizedBox(width: 10.toHeight),
-                                        Text(
-                                          widget.receivedHistory!.files![index]
-                                              .name!
-                                              .split('.')
-                                              .last
-                                              .toString(),
-                                          style: CustomTextStyles
-                                              .secondaryRegular12,
-                                        ),
-                                        SizedBox(width: 10.toHeight),
-                                        Consumer<FileProgressProvider>(builder:
-                                            (_context, _provider, _widget) {
-                                          var fileTransferProgress =
-                                              _provider.receivedFileProgress[
-                                                  widget.receivedHistory!.key];
-                                          return Text(
-                                            (widget
-                                                        .receivedHistory!
-                                                        .files![index]
-                                                        .isDownloading ??
-                                                    false)
-                                                ? getSingleFileDownloadMessage(
-                                                    fileTransferProgress,
-                                                    widget.receivedHistory!
-                                                        .files![index].name!)
-                                                : '',
-                                            style: CustomTextStyles.redSmall12,
-                                          );
-                                        }),
-                                        (CommonUtilityFunctions()
-                                                    .isFileDownloadAvailable(
-                                                        widget.receivedHistory!
-                                                            .date!) ||
-                                                isFilesAvailableOfline)
-                                            ? SizedBox()
-                                            : Row(
-                                                children: [
-                                                  SizedBox(width: 10),
-                                                  Container(
-                                                    color: ColorConstants
-                                                        .fontSecondary,
-                                                    height: 14.toHeight,
-                                                    width: 1.toWidth,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Text(TextStrings().expired,
-                                                      style: CustomTextStyles
-                                                          .secondaryRegular12),
-                                                ],
-                                              )
-                                      ],
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        double.parse(widget.receivedHistory!
+                                                    .files![index].size
+                                                    .toString()) <=
+                                                1024
+                                            ? '${widget.receivedHistory!.files![index].size} Kb '
+                                            : '${(widget.receivedHistory!.files![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                        style:
+                                            CustomTextStyles.secondaryRegular12,
+                                      ),
+                                      SizedBox(width: 10.toHeight),
+                                      Text(
+                                        '.',
+                                        style:
+                                            CustomTextStyles.secondaryRegular12,
+                                      ),
+                                      SizedBox(width: 10.toHeight),
+                                      Text(
+                                        widget.receivedHistory!.files![index]
+                                            .name!
+                                            .split('.')
+                                            .last
+                                            .toString(),
+                                        style:
+                                            CustomTextStyles.secondaryRegular12,
+                                      ),
+                                      SizedBox(width: 10.toHeight),
+                                      Consumer<FileProgressProvider>(
+                                          builder: (context, provider, child) {
+                                        var fileTransferProgress =
+                                            provider.receivedFileProgress[
+                                                widget.receivedHistory!.key];
+                                        return Text(
+                                          (widget.receivedHistory!.files![index]
+                                                      .isDownloading ??
+                                                  false)
+                                              ? getSingleFileDownloadMessage(
+                                                  fileTransferProgress,
+                                                  widget.receivedHistory!
+                                                      .files![index].name!)
+                                              : '',
+                                          style: CustomTextStyles.redSmall12,
+                                        );
+                                      }),
+                                      (CommonUtilityFunctions()
+                                                  .isFileDownloadAvailable(
+                                                      widget.receivedHistory!
+                                                          .date!) ||
+                                              isFilesAvailableOfline)
+                                          ? const SizedBox()
+                                          : Row(
+                                              children: [
+                                                const SizedBox(width: 10),
+                                                Container(
+                                                  color: ColorConstants
+                                                      .fontSecondary,
+                                                  height: 14.toHeight,
+                                                  width: 1.toWidth,
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Text(TextStrings().expired,
+                                                    style: CustomTextStyles
+                                                        .secondaryRegular12),
+                                              ],
+                                            )
+                                    ],
                                   )
                                 ],
                               ),
@@ -705,10 +695,10 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                               TextStrings().hideFiles,
                               style: CustomTextStyles.primaryBlueBold14,
                             ),
-                            Container(
+                            SizedBox(
                               width: 22.toWidth,
                               height: 22.toWidth,
-                              child: Center(
+                              child: const Center(
                                 child: Icon(
                                   Icons.keyboard_arrow_up,
                                   color: Colors.black,
@@ -722,7 +712,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                   ],
                 ),
               )
-            : SizedBox()
+            : const SizedBox()
       ],
     );
   }
@@ -904,7 +894,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         ),
       ));
 
-      existingFileNamesToOverwrite.forEach((element) {
+      for (var element in existingFileNamesToOverwrite) {
         textSpansMessage.add(
           TextSpan(
             text: '\n$element',
@@ -915,7 +905,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 height: 1.5),
           ),
         );
-      });
+      }
 
       textSpansMessage.add(
         TextSpan(
@@ -947,7 +937,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
 
     if (index != -1) {
       fileState =
-          '${fileState} ${index + 1} of ${widget.receivedHistory!.files!.length} File(s)';
+          '$fileState ${index + 1} of ${widget.receivedHistory!.files!.length} File(s)';
     }
     return fileState;
   }
@@ -965,7 +955,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
   }
 
   Widget getDownloadStatus(FileTransferProgress? fileTransferProgress) {
-    Widget spinner = CircularProgressIndicator(
+    Widget spinner = const CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(
         ColorConstants.orange,
       ),

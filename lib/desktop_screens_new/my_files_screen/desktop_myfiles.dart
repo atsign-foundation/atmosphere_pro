@@ -40,7 +40,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
         successBuilder: (provider) {
           return SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.all(40),
+              padding: const EdgeInsets.all(40),
               height: SizeConfig().screenHeight,
               color: ColorConstants.background,
               child: Column(
@@ -49,14 +49,14 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "My Files",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       isSearchActive
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(40),
@@ -81,7 +81,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                                         horizontal: 28, vertical: 8),
                                     border: InputBorder.none,
                                     hintText: 'Search',
-                                    hintStyle: TextStyle(
+                                    hintStyle: const TextStyle(
                                       color: ColorConstants.grey,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
@@ -109,7 +109,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                                 });
                               },
                             ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       IconButtonWidget(
@@ -120,14 +120,14 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1,
                     color: Colors.black,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
 
@@ -143,8 +143,8 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                         color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       child: Row(
                         children: [
                           Text(
@@ -154,7 +154,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                               fontSize: 10.toFont,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Text(
@@ -164,8 +164,8 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                               fontSize: 10.toFont,
                             ),
                           ),
-                          Spacer(),
-                          Icon(
+                          const Spacer(),
+                          const Icon(
                             Icons.arrow_forward_ios,
                             size: 20,
                             color: Colors.white,
@@ -175,7 +175,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
 
@@ -185,7 +185,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                           style: TextStyle(
                               fontSize: 6.toFont, fontWeight: FontWeight.w600),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
 
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -195,7 +195,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                                 ?.toLowerCase()
                                 .contains(searchText.toLowerCase()) ==
                             false) {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                         return FileTile(
                             fileName: file.fileName ?? "",
@@ -208,7 +208,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
 
@@ -218,7 +218,7 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                         fontSize: 6.toFont, fontWeight: FontWeight.w600),
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -227,48 +227,48 @@ class _MyFilesDesktopState extends State<MyFilesDesktop> {
                         vectorIcon: AppVectors.icCategoryImage,
                         size: provider.receivedPhotos.length.toString(),
                         title: "Photos",
-                        gradientStartColor: Color(0xFFF07C50),
-                        gradientEndColor: Color(0xFFD86033),
+                        gradientStartColor: const Color(0xFFF07C50),
+                        gradientEndColor: const Color(0xFFD86033),
                         fileCategory: FileCategory.Photos,
                       ),
                       FilesCategoryWidget(
                         vectorIcon: AppVectors.icCategoryPlay,
                         size: provider.receivedVideos.length.toString(),
                         title: "Videos",
-                        gradientStartColor: Color(0xFFF07C50),
-                        gradientEndColor: Color(0xFFD86033),
+                        gradientStartColor: const Color(0xFFF07C50),
+                        gradientEndColor: const Color(0xFFD86033),
                         fileCategory: FileCategory.Videos,
                       ),
                       FilesCategoryWidget(
                         vectorIcon: AppVectors.icCategoryFiles,
                         size: provider.receivedDocument.length.toString(),
                         title: "Documents",
-                        gradientStartColor: Color(0xFFED8B44),
-                        gradientEndColor: Color(0xFFFC832C),
+                        gradientStartColor: const Color(0xFFED8B44),
+                        gradientEndColor: const Color(0xFFFC832C),
                         fileCategory: FileCategory.Documents,
                       ),
                       FilesCategoryWidget(
                         vectorIcon: AppVectors.icCategoryFolder,
                         size: provider.receivedZip.length.toString(),
                         title: "Zips",
-                        gradientStartColor: Color(0xFFED8B44),
-                        gradientEndColor: Color(0xFFFC832C),
+                        gradientStartColor: const Color(0xFFED8B44),
+                        gradientEndColor: const Color(0xFFFC832C),
                         fileCategory: FileCategory.Zips,
                       ),
                       FilesCategoryWidget(
                         vectorIcon: AppVectors.icCategoryVolume,
                         size: provider.receivedAudio.length.toString(),
                         title: "Audio",
-                        gradientStartColor: Color(0xFFFFB13C),
-                        gradientEndColor: Color(0xFFFFAE35),
+                        gradientStartColor: const Color(0xFFFFB13C),
+                        gradientEndColor: const Color(0xFFFFAE35),
                         fileCategory: FileCategory.Audios,
                       ),
                       FilesCategoryWidget(
                         vectorIcon: AppVectors.icCategoryOther,
                         size: provider.receivedUnknown.length.toString(),
                         title: "Others",
-                        gradientStartColor: Color(0xFFFFB13C),
-                        gradientEndColor: Color(0xFFFFAE35),
+                        gradientStartColor: const Color(0xFFFFB13C),
+                        gradientEndColor: const Color(0xFFFFAE35),
                         fileCategory: FileCategory.Others,
                       ),
                     ],

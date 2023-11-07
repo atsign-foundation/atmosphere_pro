@@ -20,7 +20,7 @@ class FilterItemWidget extends StatelessWidget {
     return Container(
       height: 30,
       padding: const EdgeInsets.fromLTRB(12, 7, 8, 8),
-      margin: EdgeInsets.symmetric(vertical: 12.5, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 12.5, horizontal: 16),
       decoration: BoxDecoration(
         color: backgroundColor,
         border: Border.all(
@@ -35,7 +35,7 @@ class FilterItemWidget extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),

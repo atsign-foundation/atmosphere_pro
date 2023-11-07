@@ -5,7 +5,7 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 class WelcomeScreenProvider extends BaseModel {
   WelcomeScreenProvider._();
 
-  static WelcomeScreenProvider _instance = WelcomeScreenProvider._();
+  static final WelcomeScreenProvider _instance = WelcomeScreenProvider._();
 
   factory WelcomeScreenProvider() => _instance;
   List<GroupContactsModel> selectedContacts = [];
@@ -30,8 +30,8 @@ class WelcomeScreenProvider extends BaseModel {
     notifyListeners();
   }
 
-  void _addtoContactsList(GroupContactsModel _obj) {
-      selectedContacts.add(_obj);
+  void _addtoContactsList(GroupContactsModel obj) {
+    selectedContacts.add(obj);
   }
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList,

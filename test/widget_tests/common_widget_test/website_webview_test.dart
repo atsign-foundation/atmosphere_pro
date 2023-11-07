@@ -15,7 +15,7 @@ void main() {
 
   /// Functional test cases for Website Screen widget
   group('Website Screen Widget Tests:', () {
-    final websiteScreen = WebsiteScreen(
+    const websiteScreen = WebsiteScreen(
       title: 'Redirect',
       url: 'url',
     );

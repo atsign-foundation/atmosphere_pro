@@ -12,12 +12,14 @@ class ErrorDialogWidget extends StatelessWidget {
   final Function? onButtonPress;
   final bool? includeCancel;
 
-  ErrorDialogWidget({
+  const ErrorDialogWidget({
+    Key? key,
     required this.text,
     this.buttonText,
     this.onButtonPress,
     this.includeCancel,
-  });
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -74,7 +76,7 @@ class ErrorDialogWidget extends StatelessWidget {
 class ErrorDialog {
   ErrorDialog._();
 
-  static ErrorDialog _instance = ErrorDialog._();
+  static final ErrorDialog _instance = ErrorDialog._();
 
   factory ErrorDialog() => _instance;
   bool _showing = false;

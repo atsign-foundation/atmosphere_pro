@@ -11,8 +11,10 @@ import 'package:open_file/open_file.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopAPK extends StatefulWidget {
+  const DesktopAPK({Key? key}) : super(key: key);
+
   @override
-  _DesktopAPKState createState() => _DesktopAPKState();
+  State<DesktopAPK> createState() => _DesktopAPKState();
 }
 
 class _DesktopAPKState extends State<DesktopAPK> {
@@ -93,7 +95,7 @@ class _DesktopAPKState extends State<DesktopAPK> {
                             ),
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),

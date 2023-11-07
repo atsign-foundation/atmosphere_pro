@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 class GroupList extends StatefulWidget {
   final Function() onBack;
 
-  const GroupList({required this.onBack});
+  const GroupList({Key? key, required this.onBack}) : super(key: key);
 
   @override
   State<GroupList> createState() => _GroupListState();
@@ -40,7 +40,7 @@ class _GroupListState extends State<GroupList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 24),
+      padding: const EdgeInsets.only(top: 24),
       width: 320,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -49,7 +49,7 @@ class _GroupListState extends State<GroupList> {
       child: Column(
         children: [
           header(),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Expanded(
             child: Consumer<DesktopGroupsScreenProvider>(
                 builder: (context, provider, child) {
@@ -86,7 +86,7 @@ class _GroupListState extends State<GroupList> {
                           );
                         } else {
                           return ListView.separated(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 12,
                                 horizontal: 16,
                               ),
@@ -96,7 +96,7 @@ class _GroupListState extends State<GroupList> {
                                 );
                               },
                               separatorBuilder: (context, index) {
-                                return SizedBox(height: 12);
+                                return const SizedBox(height: 12);
                               },
                               itemCount: snapshot.data!.length);
                         }
@@ -186,7 +186,7 @@ class _GroupListState extends State<GroupList> {
                           : 'UG',
                     ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -26,7 +26,7 @@ class FailCard extends StatelessWidget {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => WelcomeScreen(indexBottomBarSelected: 3),
+              builder: (_) => const WelcomeScreen(indexBottomBarSelected: 3),
             ),
           );
         } else {
@@ -38,9 +38,9 @@ class FailCard extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: Color(0xFFFFF5F5),
+          color: const Color(0xFFFFF5F5),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -53,7 +53,7 @@ class FailCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: 'Failed to send ',
                         style: TextStyle(
                           fontSize: 15,
@@ -63,7 +63,7 @@ class FailCard extends StatelessWidget {
                       ),
                       TextSpan(
                         text: '${fileHistory.fileDetails?.files?.length} files',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                           color: ColorConstants.buttonHighLightColor,
                         ),
@@ -75,7 +75,7 @@ class FailCard extends StatelessWidget {
                   width: 180,
                   child: Text(
                     getAtsignCount(fileHistory),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: ColorConstants.buttonHighLightColor,
                     ),
@@ -86,12 +86,12 @@ class FailCard extends StatelessWidget {
             Container(
               width: 25,
               height: 25,
-              padding: EdgeInsets.all(2),
+              padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
-                color: Color(0xFFFCDFD9),
+                color: const Color(0xFFFCDFD9),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   '!',
                   style: TextStyle(
@@ -103,12 +103,12 @@ class FailCard extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(7),
+              padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
-                color: Color(0xFFFCDFD9),
+                color: const Color(0xFFFCDFD9),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Text(
+              child: const Text(
                 'Error',
                 style: TextStyle(
                   fontSize: 10,
@@ -117,7 +117,7 @@ class FailCard extends StatelessWidget {
                 ),
               ),
             ),
-            NotificationCardButton(
+            const NotificationCardButton(
                 backgroundColor: Color(0xFFE1E1E1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

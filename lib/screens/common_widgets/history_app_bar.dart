@@ -1,25 +1,25 @@
 import 'dart:io';
 
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../services/backend_service.dart';
-import '../../utils/colors.dart';
-import '../../utils/text_styles.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HistoryAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
-  HistoryAppBar({required this.title});
+
+  const HistoryAppBar({Key? key, required this.title}) : super(key: key);
 
   @override
-  _HistoryAppBarState createState() => _HistoryAppBarState();
+  State<HistoryAppBar> createState() => _HistoryAppBarState();
 
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
@@ -99,7 +99,7 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
               Container(
                 height: 22.toHeight,
                 width: 22.toWidth,
-                margin: EdgeInsets.only(right: 15),
+                margin: const EdgeInsets.only(right: 15),
                 child: IconButton(
                   onPressed: () {
                     setState(() {
@@ -116,7 +116,7 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
               Container(
                 height: 22.toHeight,
                 width: 22.toWidth,
-                margin: EdgeInsets.only(right: 25),
+                margin: const EdgeInsets.only(right: 25),
                 child: IconButton(
                   onPressed: navigateToDownloads,
                   icon: Icon(
@@ -145,10 +145,10 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
             await Permission.storage.request().isGranted,
       );
     } else {
-      String url = 'shareddocuments://' +
-          BackendService.getInstance().atClientPreference.downloadPath!;
-      if (await canLaunch(url)) {
-        await launch(url);
+      String url =
+          'shareddocuments://${BackendService.getInstance().atClientPreference.downloadPath!}';
+      if (await canLaunchUrlString(url)) {
+        await launchUrlString(url);
       } else {
         throw 'Could not launch $url';
       }

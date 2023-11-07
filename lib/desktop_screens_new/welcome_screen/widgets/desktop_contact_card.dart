@@ -109,7 +109,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                 ),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           Row(
             children: [
               isTrusted
@@ -119,7 +119,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
                         AppVectors.icTrustActivated,
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               InkWell(
                 onTap: () async {
                   Provider.of<FileTransferProvider>(context, listen: false)
@@ -133,7 +133,7 @@ class _DesktopContactCardState extends State<DesktopContactCard> {
 
                   await DesktopSetupRoutes.nested_pop();
                 },
-                child: CircularIcon(
+                child: const CircularIcon(
                   icon: Icons.send_rounded,
                   iconColor: Color(0xFFEAA743),
                 ),

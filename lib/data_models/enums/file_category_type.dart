@@ -79,33 +79,33 @@ extension GenderTypeExtension on FileType {
     switch (this) {
       case FileType.photo:
         return [
-          Color(0xFFF07C50),
-          Color(0xFFD86033),
+          const Color(0xFFF07C50),
+          const Color(0xFFD86033),
         ];
       case FileType.file:
         return [
-          Color(0xFFE98C49),
-          Color(0xFFFE8228),
+          const Color(0xFFE98C49),
+          const Color(0xFFFE8228),
         ];
       case FileType.audio:
         return [
-          Color(0xFFFFB13D),
-          Color(0xFFFFAD33),
+          const Color(0xFFFFB13D),
+          const Color(0xFFFFAD33),
         ];
       case FileType.video:
         return [
-          Color(0xFFE47140),
-          Color(0xFFF67137),
+          const Color(0xFFE47140),
+          const Color(0xFFF67137),
         ];
       case FileType.zips:
         return [
-          Color(0xFFF09650),
-          Color(0xFFFD8E28),
+          const Color(0xFFF09650),
+          const Color(0xFFFD8E28),
         ];
       case FileType.other:
         return [
-          Color(0xFFF1B65C),
-          Color(0xFFFFB545),
+          const Color(0xFFF1B65C),
+          const Color(0xFFFFB545),
         ];
     }
   }

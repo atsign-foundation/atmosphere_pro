@@ -8,8 +8,10 @@ class LocalLocalNotificationService {
   LocalLocalNotificationService._() {
     init();
   }
-  static LocalLocalNotificationService _instace =
+
+  static final LocalLocalNotificationService _instace =
       LocalLocalNotificationService._();
+
   factory LocalLocalNotificationService() => _instace;
   late FlutterLocalNotificationsPlugin _notificationsPlugin;
   late InitializationSettings initializationSettings;
@@ -31,7 +33,7 @@ class LocalLocalNotificationService {
 
   initializePlatformSpecifics() {
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('notification_icon');
+        const AndroidInitializationSettings('notification_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -43,7 +45,7 @@ class LocalLocalNotificationService {
       },
     );
 
-    var initializationSettingsMacos = MacOSInitializationSettings(
+    var initializationSettingsMacos = const MacOSInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true);
@@ -79,7 +81,7 @@ class LocalLocalNotificationService {
         Platform.isAndroid ||
         Platform.isMacOS ||
         Platform.isLinux) {
-      var androidChannelSpecifics = AndroidNotificationDetails(
+      var androidChannelSpecifics = const AndroidNotificationDetails(
         'CHANNEL_ID',
         'CHANNEL_NAME',
         channelDescription: "CHANNEL_DESCRIPTION",
@@ -89,7 +91,7 @@ class LocalLocalNotificationService {
         timeoutAfter: 50000,
         styleInformation: DefaultStyleInformation(true, true),
       );
-      var iosChannelSpecifics = IOSNotificationDetails();
+      var iosChannelSpecifics = const IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           android: androidChannelSpecifics, iOS: iosChannelSpecifics);
       NotificationPayload payload = NotificationPayload(

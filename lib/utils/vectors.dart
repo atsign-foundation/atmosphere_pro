@@ -1,5 +1,5 @@
 class AppVectors {
-  static String _basePath = 'assets/svg';
+  static const String _basePath = 'assets/svg';
   static String appIcon = '$_basePath/app_icon.svg';
   static String icDeleteGray = '$_basePath/ic_delete_gray.svg';
   static String icFilterGray = '$_basePath/ic_filter_gray.svg';

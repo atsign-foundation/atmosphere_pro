@@ -1,32 +1,32 @@
 import 'dart:io';
 
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
-
-import '../../../data_models/file_transfer.dart';
-import '../../../data_models/file_transfer_status.dart';
-import '../../../services/common_utility_functions.dart';
-import '../../../services/navigation_service.dart';
-import '../../../utils/colors.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/text_strings.dart';
-import '../../../utils/text_styles.dart';
-import '../../../view_models/file_transfer_provider.dart';
-import '../../common_widgets/confirmation_dialog.dart';
-import '../../common_widgets/custom_button.dart';
-import '../../common_widgets/triple_dot_loading.dart';
 import 'file_recipients.dart';
 
 class SentItemFileView extends StatefulWidget {
   final FileHistory sentHistory;
   final Function(bool) isFileViewOpen;
 
-  SentItemFileView(this.sentHistory, this.isFileViewOpen);
+  const SentItemFileView(this.sentHistory, this.isFileViewOpen, {Key? key})
+      : super(key: key);
 
   @override
-  _SentItemFileViewState createState() => _SentItemFileViewState();
+  State<SentItemFileView> createState() => _SentItemFileViewState();
 }
 
 class _SentItemFileViewState extends State<SentItemFileView> {
@@ -45,11 +45,11 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
 
     return Container(
-      color: Color(0xffEFEFEF),
+      color: const Color(0xffEFEFEF),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             height: (SizeConfig().isTablet(context)
                     ? 80.0.toHeight
                     : 70.0.toHeight) *
@@ -59,22 +59,22 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                       indent: 80.toWidth,
                     ),
                 itemCount: filesList!.length,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ListTile(
                     onTap: () async {
-                      String _path = MixedConstants.SENT_FILE_DIRECTORY +
+                      String path = MixedConstants.SENT_FILE_DIRECTORY +
                           filesList![index].name!;
-                      File test = File(_path);
+                      File test = File(path);
                       bool fileExists = await test.exists();
 
                       if (fileExists) {
-                        await OpenFile.open(_path);
+                        await OpenFile.open(path);
                       } else {
                         _showNoFileDialog(deviceTextFactor);
                       }
                     },
-                    leading: Container(
+                    leading: SizedBox(
                         height: 50.toHeight,
                         width: 50.toHeight,
                         child: FutureBuilder(
@@ -91,7 +91,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                                       MixedConstants.SENT_FILE_DIRECTORY +
                                           filesList![index].name!,
                                       isFilePresent: snapshot.data)
-                                  : SizedBox();
+                                  : const SizedBox();
                             })),
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,50 +130,44 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                           ],
                         ),
                         SizedBox(width: 10.toHeight, height: 5),
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                double.parse(filesList![index]
-                                            .size
-                                            .toString()) <=
-                                        1024
-                                    ? '${filesList![index].size} ' +
-                                        TextStrings().kb
-                                    : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                        TextStrings().mb,
-                                style: CustomTextStyles.secondaryRegular12,
-                              ),
-                              SizedBox(width: 10.toHeight),
-                              Text(
-                                '.',
-                                style: CustomTextStyles.secondaryRegular12,
-                              ),
-                              SizedBox(width: 10.toHeight),
-                              Text(
-                                filesList![index].name!.split('.').last,
-                                style: CustomTextStyles.secondaryRegular12,
-                              ),
-                              CommonUtilityFunctions().isFileDownloadAvailable(
-                                      widget.sentHistory.fileDetails!.date!)
-                                  ? SizedBox()
-                                  : Row(
-                                      children: [
-                                        SizedBox(width: 10),
-                                        Container(
-                                          color: ColorConstants.fontSecondary,
-                                          height: 14.toHeight,
-                                          width: 1.toWidth,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(TextStrings().expired,
-                                            style: CustomTextStyles
-                                                .secondaryRegular12),
-                                      ],
-                                    ),
-                            ],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              double.parse(filesList![index].size.toString()) <=
+                                      1024
+                                  ? '${filesList![index].size} ${TextStrings().kb}'
+                                  : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
+                              style: CustomTextStyles.secondaryRegular12,
+                            ),
+                            SizedBox(width: 10.toHeight),
+                            Text(
+                              '.',
+                              style: CustomTextStyles.secondaryRegular12,
+                            ),
+                            SizedBox(width: 10.toHeight),
+                            Text(
+                              filesList![index].name!.split('.').last,
+                              style: CustomTextStyles.secondaryRegular12,
+                            ),
+                            CommonUtilityFunctions().isFileDownloadAvailable(
+                                    widget.sentHistory.fileDetails!.date!)
+                                ? const SizedBox()
+                                : Row(
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      Container(
+                                        color: ColorConstants.fontSecondary,
+                                        height: 14.toHeight,
+                                        width: 1.toWidth,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(TextStrings().expired,
+                                          style: CustomTextStyles
+                                              .secondaryRegular12),
+                                    ],
+                                  ),
+                          ],
                         )
                       ],
                     ),
@@ -197,10 +191,10 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                     TextStrings().hideFiles,
                     style: CustomTextStyles.primaryBlueBold14,
                   ),
-                  Container(
+                  SizedBox(
                     width: 22.toWidth,
                     height: 22.toWidth,
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.keyboard_arrow_up,
                         color: Colors.black,
@@ -223,18 +217,18 @@ class _SentItemFileViewState extends State<SentItemFileView> {
           return Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
+            child: SizedBox(
               height: 200.0.toHeight,
               width: 300.0.toWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  const Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
                     TextStrings().noFileFound,
                     style: CustomTextStyles.primaryBold16,
                   ),
-                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  const Padding(padding: EdgeInsets.only(top: 30.0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -254,7 +248,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
   }
 
   Widget typingIndicator() {
-    return SizedBox(
+    return const SizedBox(
       height: 10,
       child: TypingIndicator(
         showIndicator: true,
@@ -271,8 +265,8 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     }
 
     //  file share failed for any receiver
-    var _sharedWith = widget.sentHistory.sharedWith ?? [];
-    for (ShareStatus sharedWithAtsign in _sharedWith) {
+    var sharedWith = widget.sentHistory.sharedWith ?? [];
+    for (ShareStatus sharedWithAtsign in sharedWith) {
       if (sharedWithAtsign.isNotificationSend != null &&
           !sharedWithAtsign.isNotificationSend!) {
         return retryButton(fileData, index, FileOperation.RESEND_NOTIFICATION);
@@ -280,7 +274,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     }
 
     // file everyone received file
-    for (ShareStatus sharedWithAtsign in _sharedWith) {
+    for (ShareStatus sharedWithAtsign in sharedWith) {
       if (sharedWithAtsign.isFileDownloaded != null &&
           !sharedWithAtsign.isFileDownloaded!) {
         return sentConfirmation();
@@ -322,7 +316,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
         width: 60,
         child: Icon(
           Icons.refresh,
-          color: Color(0xFFF86061),
+          color: const Color(0xFFF86061),
           size: 25.toFont,
         ),
       ),
@@ -370,15 +364,15 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: StadiumBorder(),
-        builder: (_context) {
+        shape: const StadiumBorder(),
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: FileRecipients(

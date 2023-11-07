@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+
 // import 'package:atsign_atmosphere_pro/services/size_config.dart' ;
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -15,23 +16,23 @@ class CustomPersonVerticalTile extends StatefulWidget {
   final ShareStatus shareStatus;
   final bool isFailedAtsignList;
   final FileHistory? fileHistory;
-  @override
-  final Key? key;
 
-  CustomPersonVerticalTile(
-      {this.key,
+  const CustomPersonVerticalTile(
+      {Key? key,
       required this.shareStatus,
       required this.fileHistory,
-      this.isFailedAtsignList = false});
+      this.isFailedAtsignList = false})
+      : super(key: key);
 
   @override
-  _CustomPersonVerticalTileState createState() =>
+  State<CustomPersonVerticalTile> createState() =>
       _CustomPersonVerticalTileState();
 }
 
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   Uint8List? image;
   String? contactName;
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +66,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      padding: EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: Column(
         children: <Widget>[
           Stack(
@@ -84,12 +85,10 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                               width: 50.toFont,
                               height: 50.toFont,
                               fit: BoxFit.fill,
-                              errorBuilder: (BuildContext _context, _, __) {
-                                return Container(
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 30.toFont,
-                                  ),
+                              errorBuilder: (BuildContext context, _, __) {
+                                return Icon(
+                                  Icons.image,
+                                  size: 30.toFont,
                                 );
                               },
                             ),
@@ -118,17 +117,17 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                                       widget.shareStatus.atsign!);
                             },
                             child: widget.shareStatus.isSendingNotification!
-                                ? TypingIndicator(showIndicator: true)
+                                ? const TypingIndicator(showIndicator: true)
                                 : Icon(Icons.refresh,
                                     color: Colors.white, size: 30.toHeight),
                           ),
                         ))
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
           contactName != null
               ? SizedBox(
                   width: 100.toFont,
@@ -140,8 +139,8 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                     textAlign: TextAlign.center,
                   ),
                 )
-              : SizedBox(),
-          SizedBox(height: 2),
+              : const SizedBox(),
+          const SizedBox(height: 2),
           widget.shareStatus.atsign != null
               ? SizedBox(
                   width: 100.toFont,
@@ -153,8 +152,8 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                     textAlign: TextAlign.center,
                   ),
                 )
-              : SizedBox(),
-          SizedBox(height: 2),
+              : const SizedBox(),
+          const SizedBox(height: 2),
         ],
       ),
     );

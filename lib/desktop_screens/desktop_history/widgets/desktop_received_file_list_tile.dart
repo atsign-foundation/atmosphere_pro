@@ -36,8 +36,9 @@ class DesktopReceivedFilesListTile extends StatefulWidget {
   const DesktopReceivedFilesListTile(
       {Key? key, this.receivedHistory, this.isSelected = false})
       : super(key: key);
+
   @override
-  _DesktopReceivedFilesListTileState createState() =>
+  State<DesktopReceivedFilesListTile> createState() =>
       _DesktopReceivedFilesListTileState();
 }
 
@@ -63,9 +64,9 @@ class _DesktopReceivedFilesListTileState
 
     filesList = widget.receivedHistory!.files;
 
-    widget.receivedHistory!.files!.forEach((element) {
+    for (var element in widget.receivedHistory!.files!) {
       fileSize += element.size!;
-    });
+    }
 
     getContactImage();
   }
@@ -91,8 +92,8 @@ class _DesktopReceivedFilesListTileState
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
       imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      maxWidth: 50,
+      // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
       quality: 100,
     );
     return videoThumbnail;
@@ -100,8 +101,8 @@ class _DesktopReceivedFilesListTileState
 
   checkIfDownloadAvailable() async {
     bool isExpired = true;
-    var expiryDate = widget.receivedHistory!.date!.add(Duration(days: 6));
-    if (expiryDate.difference(DateTime.now()) > Duration(seconds: 0)) {
+    var expiryDate = widget.receivedHistory!.date!.add(const Duration(days: 6));
+    if (expiryDate.difference(DateTime.now()) > const Duration(seconds: 0)) {
       isExpired = false;
     }
 
@@ -163,14 +164,14 @@ class _DesktopReceivedFilesListTileState
           child: ListTile(
             leading: contactList.isNotEmpty
                 ? isResendingToFirstContact
-                    ? TypingIndicator(
+                    ? const TypingIndicator(
                         showIndicator: true,
                         flashingCircleBrightColor: ColorConstants.dullText,
                         flashingCircleDarkColor: ColorConstants.fadedText,
                       )
                     : Stack(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 50,
                             height: 50,
                             child: firstContactImage != null
@@ -186,7 +187,7 @@ class _DesktopReceivedFilesListTileState
                               ? Positioned(
                                   right: 1,
                                   child: Container(
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                     ),
@@ -198,7 +199,7 @@ class _DesktopReceivedFilesListTileState
                                     ),
                                   ),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           widget.receivedHistory!.sender != null
                               ? Positioned(
                                   right: 0,
@@ -241,7 +242,7 @@ class _DesktopReceivedFilesListTileState
                                         ? Container(
                                             height: 20,
                                             width: 20,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: Colors.white,
                                             ),
@@ -250,13 +251,13 @@ class _DesktopReceivedFilesListTileState
                                               size: 15.toFont,
                                             ),
                                           )
-                                        : SizedBox(),
+                                        : const SizedBox(),
                                   ),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                         ],
                       )
-                : SizedBox(),
+                : const SizedBox(),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -272,94 +273,93 @@ class _DesktopReceivedFilesListTileState
                                 contactName ?? '',
                                 style: CustomTextStyles.primaryRegularBold18,
                               )
-                            : SizedBox(),
-                        SizedBox(height: 10),
+                            : const SizedBox(),
+                        const SizedBox(height: 10),
                         contactList.isNotEmpty
                             ? Text(
                                 contactList[0]!,
                                 style: CustomTextStyles.primaryRegular18,
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     )),
                   ],
                 ),
                 SizedBox(height: 13.toHeight),
-                Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${fileLength} File(s)',
-                            style: CustomTextStyles.secondaryRegular14,
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '$fileLength File(s)',
+                          style: CustomTextStyles.secondaryRegular14,
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        Text(
+                          '.',
+                          style: CustomTextStyles.secondaryRegular14,
+                        ),
+                        SizedBox(width: 10.toHeight),
+                        Text(
+                          double.parse(fileSize.toString()) <= 1024
+                              ? '$fileSize Kb '
+                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                          style: CustomTextStyles.secondaryRegular14,
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              widget.isSelected
+                                  ? InkWell(
+                                      onTap: deleteReceivedItem,
+                                      child: const Icon(Icons.delete),
+                                    )
+                                  : Transform.rotate(
+                                      angle: 180 * math.pi / 340,
+                                      child:
+                                          const Icon(Icons.keyboard_arrow_up),
+                                    ),
+                            ],
                           ),
-                          SizedBox(width: 10.toHeight),
-                          Text(
-                            '.',
-                            style: CustomTextStyles.secondaryRegular14,
-                          ),
-                          SizedBox(width: 10.toHeight),
-                          Text(
-                            double.parse(fileSize.toString()) <= 1024
-                                ? '${fileSize} Kb '
-                                : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                            style: CustomTextStyles.secondaryRegular14,
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                widget.isSelected
-                                    ? InkWell(
-                                        onTap: deleteReceivedItem,
-                                        child: Icon(Icons.delete),
-                                      )
-                                    : Transform.rotate(
-                                        angle: 180 * math.pi / 340,
-                                        child: Icon(Icons.keyboard_arrow_up),
-                                      ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 20.toHeight,
                 ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      widget.receivedHistory!.date != null
-                          ? Text(
-                              '${DateFormat("MM-dd-yyyy").format(widget.receivedHistory!.date!)}',
-                              style: CustomTextStyles.secondaryRegular14,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : SizedBox(),
-                      SizedBox(width: 10.toHeight),
-                      Container(
-                        color: ColorConstants.fontSecondary,
-                        height: 14.toHeight,
-                        width: 1.toWidth,
-                      ),
-                      SizedBox(width: 10.toHeight),
-                      widget.receivedHistory!.date != null
-                          ? Text(
-                              '${DateFormat('kk:mm').format(widget.receivedHistory!.date!)}',
-                              style: CustomTextStyles.secondaryRegular14,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : SizedBox(),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    widget.receivedHistory!.date != null
+                        ? Text(
+                            DateFormat("MM-dd-yyyy")
+                                .format(widget.receivedHistory!.date!),
+                            style: CustomTextStyles.secondaryRegular14,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : const SizedBox(),
+                    SizedBox(width: 10.toHeight),
+                    Container(
+                      color: ColorConstants.fontSecondary,
+                      height: 14.toHeight,
+                      width: 1.toWidth,
+                    ),
+                    SizedBox(width: 10.toHeight),
+                    widget.receivedHistory!.date != null
+                        ? Text(
+                            DateFormat('kk:mm')
+                                .format(widget.receivedHistory!.date!),
+                            style: CustomTextStyles.secondaryRegular14,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : const SizedBox(),
+                  ],
                 ),
                 SizedBox(height: 3.toHeight),
               ],
@@ -368,18 +368,18 @@ class _DesktopReceivedFilesListTileState
         ),
         (isOpen)
             ? Container(
-                color: Color(0xffF86060).withAlpha(50),
+                color: const Color(0xffF86060).withAlpha(50),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 70.0 * widget.receivedHistory!.files!.length,
                       child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent: 80.toWidth,
                               ),
                           itemCount: fileLength,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             if (FileTypes.VIDEO_TYPES.contains(
                                 filesList![index].name?.split('.').last)) {
@@ -387,21 +387,21 @@ class _DesktopReceivedFilesListTileState
                             }
                             return ListTile(
                               onTap: () async {
-                                String _path =
+                                String path =
                                     MixedConstants.SENT_FILE_DIRECTORY +
                                         Platform.pathSeparator +
                                         (filesList![index].name ?? '');
-                                File test = File(_path);
+                                File test = File(path);
                                 bool fileExists = await test.exists();
                                 print(
-                                    'test file: ${test}, fileExists: ${fileExists}');
+                                    'test file: $test, fileExists: $fileExists');
                                 if (fileExists) {
-                                  await OpenFile.open(_path);
+                                  await OpenFile.open(path);
                                 } else {
                                   _showNoFileDialog(deviceTextFactor);
                                 }
                               },
-                              leading: Container(
+                              leading: SizedBox(
                                 height: 50.toHeight,
                                 width: 50.toHeight,
                                 child: FutureBuilder(
@@ -425,7 +425,7 @@ class _DesktopReceivedFilesListTileState
                                                       ''),
                                               isFilePresent:
                                                   snapshot.data as bool)
-                                          : SizedBox();
+                                          : const SizedBox();
                                     }),
                               ),
                               title: Column(
@@ -446,11 +446,11 @@ class _DesktopReceivedFilesListTileState
                                                 filesList![index].isUploaded!
                                             ? Icon(
                                                 Icons.done,
-                                                color: Color(0xFF08CB21),
+                                                color: const Color(0xFF08CB21),
                                                 size: 25.toFont,
                                               )
                                             : fileResending[index]
-                                                ? TypingIndicator(
+                                                ? const TypingIndicator(
                                                     showIndicator: true,
                                                     flashingCircleBrightColor:
                                                         ColorConstants.dullText,
@@ -470,7 +470,8 @@ class _DesktopReceivedFilesListTileState
                                                     },
                                                     child: Icon(
                                                       Icons.refresh,
-                                                      color: Color(0xFFF86061),
+                                                      color: const Color(
+                                                          0xFFF86061),
                                                       size: 25.toFont,
                                                     ),
                                                   ),
@@ -478,30 +479,27 @@ class _DesktopReceivedFilesListTileState
                                     ],
                                   ),
                                   SizedBox(width: 10.toHeight),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          double.parse(filesList![index]
-                                                      .size
-                                                      .toString()) <=
-                                                  1024
-                                              ? '${filesList![index].size} Kb '
-                                              : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                                          style: CustomTextStyles
-                                              .secondaryRegular14,
-                                        ),
-                                        SizedBox(width: 10.toHeight),
-                                        Text(
-                                          '.',
-                                          style: CustomTextStyles
-                                              .secondaryRegular14,
-                                        ),
-                                        SizedBox(width: 10.toHeight),
-                                      ],
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        double.parse(filesList![index]
+                                                    .size
+                                                    .toString()) <=
+                                                1024
+                                            ? '${filesList![index].size} Kb '
+                                            : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                        style:
+                                            CustomTextStyles.secondaryRegular14,
+                                      ),
+                                      SizedBox(width: 10.toHeight),
+                                      Text(
+                                        '.',
+                                        style:
+                                            CustomTextStyles.secondaryRegular14,
+                                      ),
+                                      SizedBox(width: 10.toHeight),
+                                    ],
                                   )
                                 ],
                               ),
@@ -542,10 +540,10 @@ class _DesktopReceivedFilesListTileState
                               'Lesser Details',
                               style: CustomTextStyles.primaryBold14,
                             ),
-                            Container(
+                            SizedBox(
                               width: 22.toWidth,
                               height: 22.toWidth,
-                              child: Center(
+                              child: const Center(
                                 child: Icon(
                                   Icons.keyboard_arrow_up,
                                   color: Colors.black,
@@ -569,19 +567,17 @@ class _DesktopReceivedFilesListTileState
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? ClipRRect(
             borderRadius: BorderRadius.circular(10.toHeight),
-            child: Container(
+            child: SizedBox(
               height: 50.toHeight,
               width: 50.toWidth,
               child: isFilePresent!
                   ? Image.file(
                       File(path),
                       fit: BoxFit.cover,
-                      errorBuilder: (BuildContext _context, _, __) {
-                        return Container(
-                          child: Icon(
-                            Icons.image,
-                            size: 30.toFont,
-                          ),
+                      errorBuilder: (BuildContext context, _, __) {
+                        return Icon(
+                          Icons.image,
+                          size: 30.toFont,
                         );
                       },
                     )
@@ -597,7 +593,7 @@ class _DesktopReceivedFilesListTileState
                 builder: (context, snapshot) => ClipRRect(
                   borderRadius: BorderRadius.circular(10.toHeight),
                   child: Container(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: (snapshot.data == null)
@@ -608,12 +604,10 @@ class _DesktopReceivedFilesListTileState
                         : Image.memory(
                             videoThumbnail!,
                             fit: BoxFit.cover,
-                            errorBuilder: (BuildContext _context, _, __) {
-                              return Container(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 30.toFont,
-                                ),
+                            errorBuilder: (BuildContext context, _, __) {
+                              return Icon(
+                                Icons.image,
+                                size: 30.toFont,
                               );
                             },
                           ),
@@ -623,7 +617,7 @@ class _DesktopReceivedFilesListTileState
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10.toHeight),
                 child: Container(
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   height: 50.toHeight,
                   width: 50.toWidth,
                   child: Image.asset(
@@ -651,18 +645,18 @@ class _DesktopReceivedFilesListTileState
           return Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
+            child: SizedBox(
               height: 200.0,
               width: 300.0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  const Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
                     TextStrings().noFileFound,
                     style: CustomTextStyles.primaryBold16,
                   ),
-                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  const Padding(padding: EdgeInsets.only(top: 30.0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -736,7 +730,7 @@ class _DesktopReceivedFilesListTileState
 
                   if (await CommonUtilityFunctions().isFilePresent(filePath)) {
                     var file = File(filePath);
-                    if (await file.existsSync()) {
+                    if (file.existsSync()) {
                       file.deleteSync();
                     }
                   }

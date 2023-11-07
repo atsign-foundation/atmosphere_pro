@@ -135,27 +135,27 @@ class CustomTextStyles {
     letterSpacing: 0.1,
   );
 
-  static TextStyle desktopPrimaryW400S14 = TextStyle(
+  static TextStyle desktopPrimaryW400S14 = const TextStyle(
     color: Colors.black,
     fontSize: 14,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w400,
   );
 
-  static TextStyle desktopPrimaryW500S15 = TextStyle(
+  static TextStyle desktopPrimaryW500S15 = const TextStyle(
     color: Colors.black,
     fontSize: 15,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle oldSliverW400S10 = TextStyle(
+  static TextStyle oldSliverW400S10 = const TextStyle(
     color: ColorConstants.oldSliver,
     fontSize: 10,
     fontWeight: FontWeight.w400,
   );
 
-  static TextStyle whiteBoldS12 =
-      TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700);
+  static TextStyle whiteBoldS12 = const TextStyle(
+      color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700);
 
   static TextStyle primaryBold16 = TextStyle(
     color: ColorConstants.fontPrimary,
@@ -180,7 +180,7 @@ class CustomTextStyles {
 
   //SEMIBOLD FONTS
   static TextStyle greySemiBold18 = TextStyle(
-    color: Color(0xFF939393),
+    color: const Color(0xFF939393),
     fontSize: 18.toFont,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w600,
@@ -225,22 +225,22 @@ class CustomTextStyles {
 
   /// Desktop
 
-  static TextStyle greyText16 = TextStyle(
+  static TextStyle greyText16 = const TextStyle(
       color: ColorConstants.greyText,
       fontSize: 16,
       fontWeight: FontWeight.normal);
 
-  static TextStyle greyText15 = TextStyle(
+  static TextStyle greyText15 = const TextStyle(
       color: ColorConstants.greyText,
       fontSize: 15,
       fontWeight: FontWeight.normal);
 
-  static TextStyle orangeext15 = TextStyle(
+  static TextStyle orangeext15 = const TextStyle(
       color: ColorConstants.orangeColor,
       fontSize: 15,
       fontWeight: FontWeight.normal);
 
-  static TextStyle greyText12 = TextStyle(
+  static TextStyle greyText12 = const TextStyle(
       color: ColorConstants.greyText,
       fontSize: 12,
       fontWeight: FontWeight.normal);
@@ -263,117 +263,117 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopSecondaryRegular18 = TextStyle(
+  static TextStyle desktopSecondaryRegular18 = const TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopSecondaryRegular16 = TextStyle(
+  static TextStyle desktopSecondaryRegular16 = const TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 16,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopSecondaryRegular14 = TextStyle(
+  static TextStyle desktopSecondaryRegular14 = const TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 14,
       letterSpacing: 0.1,
       fontWeight: FontWeight.w500);
 
-  static TextStyle desktopSecondaryRegular12 = TextStyle(
+  static TextStyle desktopSecondaryRegular12 = const TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 12,
       letterSpacing: 0.1,
       fontWeight: FontWeight.w500);
 
-  static TextStyle desktopSecondaryBold18 = TextStyle(
+  static TextStyle desktopSecondaryBold18 = const TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,
       letterSpacing: 0.1,
       fontWeight: FontWeight.bold);
 
-  static TextStyle desktopPrimaryBold12 = TextStyle(
+  static TextStyle desktopPrimaryBold12 = const TextStyle(
     color: Colors.black,
     fontSize: 10,
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle desktopPrimaryW50015 = TextStyle(
+  static TextStyle desktopPrimaryW50015 = const TextStyle(
     color: Colors.black,
     fontSize: 15,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle desktopPrimaryW50010 = TextStyle(
+  static TextStyle desktopPrimaryW50010 = const TextStyle(
     color: Colors.black,
     fontSize: 10,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle desktopPrimaryBold18 = TextStyle(
+  static TextStyle desktopPrimaryBold18 = const TextStyle(
       color: ColorConstants.fontPrimary,
       fontSize: 18,
       letterSpacing: 0.1,
       fontWeight: FontWeight.bold);
 
-  static TextStyle desktopSecondaryBold12 = TextStyle(
+  static TextStyle desktopSecondaryBold12 = const TextStyle(
       color: ColorConstants.sidebarTextHeading,
       fontSize: 10,
       letterSpacing: 0.1,
       fontWeight: FontWeight.w700);
 
-  static TextStyle desktopBlackPlayfairDisplay26 = TextStyle(
+  static TextStyle desktopBlackPlayfairDisplay26 = const TextStyle(
     fontFamily: 'PlayfairDisplay',
     fontSize: 44,
     color: Colors.black,
   );
 
-  static TextStyle desktopPrimaryRegular12 = TextStyle(
+  static TextStyle desktopPrimaryRegular12 = const TextStyle(
       color: Colors.black,
       fontSize: 12,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopPrimaryRegular14 = TextStyle(
+  static TextStyle desktopPrimaryRegular14 = const TextStyle(
       color: Colors.black,
       fontSize: 14,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopPrimaryRegular18 = TextStyle(
+  static TextStyle desktopPrimaryRegular18 = const TextStyle(
       color: Colors.black,
       fontSize: 18,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopPrimaryRegular16 = TextStyle(
+  static TextStyle desktopPrimaryRegular16 = const TextStyle(
       color: Colors.black,
       fontSize: 16,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopPrimaryRegular24 = TextStyle(
+  static TextStyle desktopPrimaryRegular24 = const TextStyle(
     color: Colors.black,
     fontSize: 24,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle desktopButton15 = TextStyle(
+  static TextStyle desktopButton15 = const TextStyle(
     color: Colors.white,
     fontSize: 15,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w700,
   );
 
-  static TextStyle orangeW50015 = TextStyle(
+  static TextStyle orangeW50015 = const TextStyle(
     color: ColorConstants.orange,
     fontSize: 15,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle whiteW50015 = TextStyle(
+  static TextStyle whiteW50015 = const TextStyle(
     color: Colors.white,
     fontSize: 15,
     fontWeight: FontWeight.w500,
@@ -385,7 +385,7 @@ class CustomTextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle orangeW50014 = TextStyle(
+  static TextStyle orangeW50014 = const TextStyle(
       color: ColorConstants.orange, fontSize: 14, fontWeight: FontWeight.w500);
 
   static TextStyle whiteBold12 = const TextStyle(
@@ -406,7 +406,7 @@ class CustomTextStyles {
     fontWeight: FontWeight.w400,
   );
 
-  static TextStyle darkSliverBold20 = TextStyle(
+  static TextStyle darkSliverBold20 = const TextStyle(
     color: ColorConstants.darkSliver,
     fontSize: 20,
     fontWeight: FontWeight.bold,
@@ -418,7 +418,7 @@ class CustomTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle darkSliverWW50015 = TextStyle(
+  static TextStyle darkSliverWW50015 = const TextStyle(
     color: ColorConstants.darkSliver,
     fontSize: 15,
     fontWeight: FontWeight.w500,

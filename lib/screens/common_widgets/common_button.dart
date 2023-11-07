@@ -11,7 +11,7 @@ class CommonButton extends StatelessWidget {
   final Widget? leading;
   const CommonButton(
     this.title,
-    this.onTap, {
+    this.onTap, {Key? key, 
     this.border,
     this.color = Colors.black,
     this.height,
@@ -20,7 +20,7 @@ class CommonButton extends StatelessWidget {
     this.fontSize,
     this.textColor,
     this.leading,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class CommonButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              leading ?? SizedBox(),
+              leading ?? const SizedBox(),
               SizedBox(
                 width: leading != null ? 5 : 0,
               ),

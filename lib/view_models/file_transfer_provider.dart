@@ -31,7 +31,7 @@ import 'package:path/path.dart' show basename;
 class FileTransferProvider extends BaseModel {
   FileTransferProvider._();
 
-  static FileTransferProvider _instance = FileTransferProvider._();
+  static final FileTransferProvider _instance = FileTransferProvider._();
 
   factory FileTransferProvider() => _instance;
   final String MEDIA = 'MEDIA';
@@ -161,7 +161,7 @@ class FileTransferProvider extends BaseModel {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
-              content: PermissionDeniedMessage(
+              content: const PermissionDeniedMessage(
                   TextStrings.permissionRequireMessage));
         });
   }
@@ -176,14 +176,14 @@ class FileTransferProvider extends BaseModel {
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
     try {
-      await ReceiveSharingIntent.getMediaStream().listen(
+      ReceiveSharingIntent.getMediaStream().listen(
           (List<SharedMediaFile> value) {
         _sharedFiles = value;
 
         if (value.isNotEmpty) {
           value.forEach((element) async {
             File file = File(element.path);
-            double length = double.parse(await file.length().toString());
+            double length = double.parse(file.length().toString());
 
             selectedFiles.add(PlatformFile(
                 name: basename(file.path),
@@ -242,26 +242,26 @@ class FileTransferProvider extends BaseModel {
         NavService.navKey.currentContext!,
         listen: false);
     try {
-      var _historyProvider = Provider.of<HistoryProvider>(
+      var historyProvider = Provider.of<HistoryProvider>(
           NavService.navKey.currentContext!,
           listen: false);
 
-      var _files = <File>[];
-      var _atSigns = <String>[];
+      var files = <File>[];
+      var atSigns = <String>[];
 
       for (var element in selectedFiles) {
-        _files.add(File(element.path!));
+        files.add(File(element.path!));
       }
 
       for (var groupContact in contactList) {
         if (groupContact!.contact != null) {
           var index =
-              _atSigns.indexWhere((el) => el == groupContact.contact!.atSign);
-          if (index == -1) _atSigns.add(groupContact.contact!.atSign!);
+              atSigns.indexWhere((el) => el == groupContact.contact!.atSign);
+          if (index == -1) atSigns.add(groupContact.contact!.atSign!);
         } else if (groupContact.group != null) {
           for (var member in groupContact.group!.members!) {
-            var index = _atSigns.indexWhere((el) => el == member.atSign);
-            if (index == -1) _atSigns.add(member.atSign!);
+            var index = atSigns.indexWhere((el) => el == member.atSign);
+            if (index == -1) atSigns.add(member.atSign!);
           }
         }
       }
@@ -272,26 +272,26 @@ class FileTransferProvider extends BaseModel {
           key: '',
           fileEncryptionKey: '',
           files:
-              _files.map((File e) => FileData(name: e.path, size: 0)).toList(),
-          atSigns: _atSigns,
+              files.map((File e) => FileData(name: e.path, size: 0)).toList(),
+          atSigns: atSigns,
         ),
         FLUSHBAR_STATUS.SENDING,
       );
 
       var uploadResult = await FileTransferService.getInstance().uploadFile(
-        _files,
-        _atSigns,
+        files,
+        atSigns,
         notes: notes,
       );
 
-      await _historyProvider.saveNewSentFileItem(
-        uploadResult[_atSigns[0]]!,
-        _atSigns,
+      await historyProvider.saveNewSentFileItem(
+        uploadResult[atSigns[0]]!,
+        atSigns,
         uploadResult,
         groupName: groupName,
       );
 
-      _historyProvider.changeIsUpcomingEvent();
+      historyProvider.changeIsUpcomingEvent();
 
       // checking if everyone received the notification or not.
       for (var atsignStatus in uploadResult.entries) {
@@ -312,9 +312,9 @@ class FileTransferProvider extends BaseModel {
       }
 
       FileHistory fileHistory =
-          _historyProvider.convertFileTransferObjectToFileHistory(
-        uploadResult[_atSigns[0]]!,
-        _atSigns,
+          historyProvider.convertFileTransferObjectToFileHistory(
+        uploadResult[atSigns[0]]!,
+        atSigns,
         uploadResult,
       );
       notifProvider.updateCurrentFileShareStatus(
@@ -353,7 +353,7 @@ class FileTransferProvider extends BaseModel {
     if (isInternetAvailable) {
       await openFileReceiptBottomSheet();
     } else {
-      Timer.periodic(Duration(seconds: 5), (timer) async {
+      Timer.periodic(const Duration(seconds: 5), (timer) async {
         await NavService.navKey.currentContext!
             .read<InternetConnectivityChecker>()
             .checkConnectivity();
@@ -384,16 +384,16 @@ class FileTransferProvider extends BaseModel {
       await showModalBottomSheet(
         context: NavService.navKey.currentContext!,
         isScrollControlled: true,
-        shape: StadiumBorder(),
-        builder: (_context) {
+        shape: const StadiumBorder(),
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
               color: Theme.of(NavService.navKey.currentContext!)
                   .scaffoldBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: FileRecipients(
@@ -415,12 +415,12 @@ class FileTransferProvider extends BaseModel {
 // when file share fails and user taps on resend button.
 // we would iterate over every atsigns and attempt to share the file again.
   Future<bool> reAttemptInSendingFiles() async {
-    var _historyProvider = Provider.of<HistoryProvider>(
+    var historyProvider = Provider.of<HistoryProvider>(
         NavService.navKey.currentContext!,
         listen: false);
-    FileHistory _fileHistory;
-    if (_historyProvider.sentHistory.isNotEmpty) {
-      _fileHistory = _historyProvider.sentHistory[0];
+    FileHistory fileHistory;
+    if (historyProvider.sentHistory.isNotEmpty) {
+      fileHistory = historyProvider.sentHistory[0];
     } else {
       return false;
     }
@@ -429,23 +429,23 @@ class FileTransferProvider extends BaseModel {
       flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
 
       //  reuploading files
-      for (var fileData in _fileHistory.fileDetails!.files!) {
+      for (var fileData in fileHistory.fileDetails!.files!) {
         if (fileData.isUploaded != null && !fileData.isUploaded!) {
-          await reuploadFiles([fileData], 0, _fileHistory);
+          await reuploadFiles([fileData], 0, fileHistory);
         }
       }
 
       //  resending notifications
-      for (var element in _fileHistory.sharedWith!) {
+      for (var element in fileHistory.sharedWith!) {
         if (element.isNotificationSend != null &&
             !element.isNotificationSend!) {
-          await reSendFileNotification(_fileHistory, element.atsign!);
+          await reSendFileNotification(fileHistory, element.atsign!);
         }
       }
 
       // checking if any notification didn't go through
-      _fileHistory = _historyProvider.sentHistory[0];
-      for (var element in _fileHistory.sharedWith!) {
+      fileHistory = historyProvider.sentHistory[0];
+      for (var element in fileHistory.sharedWith!) {
         if (element.isNotificationSend != null &&
             !element.isNotificationSend!) {
           flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
@@ -461,20 +461,20 @@ class FileTransferProvider extends BaseModel {
   }
 
   reuploadFiles(
-      List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
+      List<FileData> filesList, int index, FileHistory sentHistory) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
     Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
             listen: false)
         .updateFileSendingStatus(
       isUploading: true,
       isUploaded: false,
-      id: _sentHistory.fileDetails!.key,
-      filename: _filesList[_index].name,
+      id: sentHistory.fileDetails!.key,
+      filename: filesList[index].name,
     );
 
     try {
       File file =
-          File(MixedConstants.DESKTOP_SENT_DIR + _filesList[_index].name!);
+          File(MixedConstants.DESKTOP_SENT_DIR + filesList[index].name!);
 
       bool fileExists = await file.exists();
       if (!fileExists) {
@@ -482,26 +482,26 @@ class FileTransferProvider extends BaseModel {
       }
 
       var uploadStatus = await FileTransferService.getInstance()
-          .reuploadFiles([file], _sentHistory.fileTransferObject!);
+          .reuploadFiles([file], sentHistory.fileTransferObject!);
 
       if (uploadStatus.isNotEmpty && uploadStatus[0].isUploaded!) {
-        var index = _sentHistory.fileDetails!.files!
-            .indexWhere((element) => element.name == _filesList[_index].name);
+        var resultIndex = sentHistory.fileDetails!.files!
+            .indexWhere((element) => element.name == filesList[index].name);
 
-        if (index > -1) {
-          _sentHistory.fileDetails!.files![index].isUploaded = true;
+        if (resultIndex > -1) {
+          sentHistory.fileDetails!.files![resultIndex].isUploaded = true;
         }
 
-        var i = _sentHistory.fileTransferObject!.fileStatus.indexWhere(
-            (element) => element.fileName == _filesList[_index].name);
+        var i = sentHistory.fileTransferObject!.fileStatus.indexWhere(
+            (element) => element.fileName == filesList[resultIndex].name);
         if (i > -1) {
-          _sentHistory.fileTransferObject!.fileStatus[i].isUploaded = true;
+          sentHistory.fileTransferObject!.fileStatus[i].isUploaded = true;
         }
 
         // sending file upload notification to every atsign
-        await Future.forEach(_sentHistory.sharedWith!,
+        await Future.forEach(sentHistory.sharedWith!,
             (ShareStatus sharedWith) async {
-          await reSendFileNotification(_sentHistory, sharedWith.atsign!);
+          await reSendFileNotification(sentHistory, sharedWith.atsign!);
         });
 
         Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -509,8 +509,8 @@ class FileTransferProvider extends BaseModel {
             .updateFileSendingStatus(
           isUploading: false,
           isUploaded: true,
-          id: _sentHistory.fileDetails!.key,
-          filename: _filesList[_index].name,
+          id: sentHistory.fileDetails!.key,
+          filename: filesList[resultIndex].name,
         );
       } else {
         Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -518,8 +518,8 @@ class FileTransferProvider extends BaseModel {
             .updateFileSendingStatus(
           isUploading: false,
           isUploaded: false,
-          id: _sentHistory.fileDetails!.key,
-          filename: _filesList[_index].name,
+          id: sentHistory.fileDetails!.key,
+          filename: filesList[index].name,
         );
       }
       setStatus(RETRY_NOTIFICATION, Status.Done);
@@ -530,8 +530,8 @@ class FileTransferProvider extends BaseModel {
           .updateFileSendingStatus(
         isUploading: false,
         isUploaded: true,
-        id: _sentHistory.fileDetails!.key,
-        filename: _filesList[_index].name,
+        id: sentHistory.fileDetails!.key,
+        filename: filesList[index].name,
       );
     }
   }

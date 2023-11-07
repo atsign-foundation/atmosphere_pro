@@ -12,13 +12,13 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
   final IconData? icon;
   List<dynamic>? image;
 
-  DesktopCustomPersonHorizontalTile({
+  DesktopCustomPersonHorizontalTile({Key? key, 
     this.image,
     this.title,
     this.subTitle,
     this.isTopRight = false,
     this.icon,
-  }) {
+  }) : super(key: key) {
     if (image != null) {
       var intList = image!.cast<int>();
       image = Uint8List.fromList(intList);
@@ -41,7 +41,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                         width: 50.toWidth,
                         height: 50.toWidth,
                         fit: BoxFit.fill,
-                        errorBuilder: (BuildContext _context, _, __) {
+                        errorBuilder: (BuildContext context, _, __) {
                           return Container(
                             child: Icon(
                               Icons.image,
@@ -63,7 +63,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                       right: 0,
                       bottom: !isTopRight ? 0 : null,
                       child: Icon(icon))
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
           SizedBox(width: 10.toHeight),
@@ -81,7 +81,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ),
                 SizedBox(height: 5.toHeight),
                 subTitle != null
@@ -91,7 +91,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ],
             ),
           )

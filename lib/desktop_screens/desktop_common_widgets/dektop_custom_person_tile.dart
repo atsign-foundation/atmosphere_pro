@@ -11,13 +11,13 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
   final Uint8List? image;
   final double size;
 
-  DesktopCustomPersonVerticalTile(
-      {required this.title,
+  const DesktopCustomPersonVerticalTile(
+      {Key? key, required this.title,
       required this.subTitle,
       this.showCancelIcon = true,
       this.showImage = false,
       this.image,
-      this.size = 50});
+      this.size = 50}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,7 +32,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                     backgroundImage: Image.memory(
                       image!,
-                      errorBuilder: (BuildContext _context, _, __) {
+                      errorBuilder: (BuildContext context, _, __) {
                         return Container(
                           child: Icon(
                             Icons.image,
@@ -49,17 +49,17 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                     minSize: 50,
                   ),
             showCancelIcon
-                ? Positioned(
+                ? const Positioned(
                     top: 0,
                     right: 0,
                     child: Icon(Icons.cancel),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
         SizedBox(width: 10.toHeight),
         Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,7 +78,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         )

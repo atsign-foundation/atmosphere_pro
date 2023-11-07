@@ -71,7 +71,7 @@ class _FileTileState extends State<FileTile> {
     final time = DateFormat('HH:mm').format(date);
 
     return Padding(
-      padding: EdgeInsets.only(right: 20, top: 20, bottom: 20),
+      padding: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -87,12 +87,8 @@ class _FileTileState extends State<FileTile> {
             Container(
               width: 300,
               height: 100,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                child: thumbnail(widget.fileExt, _filePath),
-              ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
@@ -100,11 +96,15 @@ class _FileTileState extends State<FileTile> {
                     ? Theme.of(context).primaryColor
                     : ColorConstants.MILD_GREY,
               ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: thumbnail(widget.fileExt, _filePath),
+              ),
             ),
             Container(
               width: 300,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(10),
@@ -121,7 +121,7 @@ class _FileTileState extends State<FileTile> {
                         Text(
                           widget.fileName,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -130,7 +130,7 @@ class _FileTileState extends State<FileTile> {
                         Text(
                           "$shortDate $time",
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             color: ColorConstants.gray,
                           ),
@@ -140,7 +140,7 @@ class _FileTileState extends State<FileTile> {
                   ),
                   Text(
                     AppUtils.getFileSizeString(bytes: widget.fileSize),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: ColorConstants.gray,
                     ),

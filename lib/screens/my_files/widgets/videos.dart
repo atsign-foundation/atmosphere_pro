@@ -17,8 +17,10 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'downloads_folders.dart';
 
 class Videos extends StatefulWidget {
+  const Videos({Key? key}) : super(key: key);
+
   @override
-  _VideosState createState() => _VideosState();
+  State<Videos> createState() => _VideosState();
 }
 
 class _VideosState extends State<Videos> {
@@ -90,7 +92,7 @@ class _VideosState extends State<Videos> {
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(10.toHeight),
                   child: Container(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     height: 50.toHeight,
                     width: 50.toWidth,
                     child: (videos == null ||
@@ -103,12 +105,10 @@ class _VideosState extends State<Videos> {
                         : Image.memory(
                             videos[index],
                             fit: BoxFit.cover,
-                            errorBuilder: (BuildContext _context, _, __) {
-                              return Container(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 30.toFont,
-                                ),
+                            errorBuilder: (BuildContext context, _, __) {
+                              return Icon(
+                                Icons.image,
+                                size: 30.toFont,
                               );
                             },
                           ),

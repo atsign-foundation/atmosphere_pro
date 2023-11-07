@@ -35,7 +35,7 @@ class DesktopAddGroup extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DesktopAddGroupState createState() => _DesktopAddGroupState();
+  State<DesktopAddGroup> createState() => _DesktopAddGroupState();
 }
 
 class _DesktopAddGroupState extends State<DesktopAddGroup> {
@@ -145,7 +145,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
                     },
                   ),
                   SizedBox(height: 20.toHeight),
-                  DesktopGroupContactsList(
+                  const DesktopGroupContactsList(
                     asSelectionScreen: true,
                   ),
                 ],
@@ -257,7 +257,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
         ),
       ),
     );
-    var _res = await _contactService.blockUnblockContact(
+    var res = await _contactService.blockUnblockContact(
         contact: contact, blockAction: true);
     await _groupService.fetchGroupsAndContacts();
     setState(() {
@@ -265,7 +265,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
       Navigator.pop(context);
     });
 
-    if (_res && closeBottomSheet) {
+    if (res && closeBottomSheet) {
       if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);
@@ -291,8 +291,8 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
         ),
       ),
     );
-    var _res = await _contactService.deleteAtSign(atSign: contact.atSign!);
-    if (_res) {
+    var res = await _contactService.deleteAtSign(atSign: contact.atSign!);
+    if (res) {
       await _groupService.removeContact(contact.atSign!);
     }
     setState(() {
@@ -300,7 +300,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
       Navigator.pop(context);
     });
 
-    if (_res && closeBottomSheet) {
+    if (res && closeBottomSheet) {
       if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);

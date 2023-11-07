@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 
 class HistoryDesktopScreen extends StatefulWidget {
   final HistoryType? historyType;
+
   const HistoryDesktopScreen({Key? key, this.historyType}) : super(key: key);
 
   @override
@@ -53,7 +54,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.all(40),
+        padding: const EdgeInsets.all(40),
         color: ColorConstants.background,
         child: ProviderHandler<HistoryProvider>(
           functionName: context.read<HistoryProvider>().GET_ALL_FILE_HISTORY,
@@ -67,14 +68,14 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Transfer History",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   InkWell(
                     onTap: () {
                       context
@@ -83,7 +84,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                     },
                     child: Container(
                       width: 150,
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: typeSelected == HistoryType.send
                             ? Theme.of(context).primaryColor
@@ -100,7 +101,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                       )),
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   InkWell(
                     onTap: () async {
                       context
@@ -109,7 +110,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                     },
                     child: Container(
                       width: 150,
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: typeSelected == HistoryType.received
                             ? Theme.of(context).primaryColor
@@ -126,7 +127,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                       )),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   isSearchActive
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(40),
@@ -152,7 +153,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                                     horizontal: 28, vertical: 8),
                                 border: InputBorder.none,
                                 hintText: 'Search',
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   color: ColorConstants.grey,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
@@ -180,11 +181,11 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                             });
                           },
                         ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   screenWidth < 1250
-                      ? SizedBox()
+                      ? const SizedBox()
                       : InkWell(
                           onTap: () {
                             _onTapFilterIcon();
@@ -192,25 +193,25 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                               isFilterOpened = true;
                             });
                           },
+                          key: filterKey,
                           child: SvgPicture.asset(
                             isFilterOpened
                                 ? AppVectors.icFilterOpened
                                 : AppVectors.icFilterGray,
                           ),
-                          key: filterKey,
                         ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   screenWidth < 1250
-                      ? SizedBox()
+                      ? const SizedBox()
                       : InkWell(
                           onTap: () async {
                             var provider = context.read<HistoryProvider>();
                             await provider.getAllFileTransferHistory();
                             filteredFiles = provider.allFilesHistory;
                           },
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             backgroundColor: Colors.white,
                             child: Icon(
                               Icons.refresh,
@@ -220,14 +221,14 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              Divider(
+              const Divider(
                 thickness: 1,
                 color: Colors.black,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
 
@@ -238,7 +239,8 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                 child: Row(
                   children: [
                     Expanded(
@@ -249,12 +251,12 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                             typeSelected == HistoryType.received
                                 ? "From"
                                 : "To",
-                            style: TextStyle(color: Color(0xFF909090)),
+                            style: const TextStyle(color: Color(0xFF909090)),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 5,
                           ),
-                          Icon(
+                          const Icon(
                             Icons.arrow_drop_down,
                             size: 14,
                             color: Color(0xFF909090),
@@ -262,10 +264,10 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ],
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 0,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
                             Text(
@@ -281,7 +283,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ),
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 1,
                       child: Row(
                         children: [
@@ -297,7 +299,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ],
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 2,
                       child: Row(
                         children: [
@@ -313,7 +315,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ],
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 1,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -330,7 +332,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                         ],
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 1,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -356,21 +358,21 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                             typeSelected == HistoryType.send
                                 ? "Receipt"
                                 : "Download",
-                            style: TextStyle(color: Color(0xFF909090)),
+                            style: const TextStyle(color: Color(0xFF909090)),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: filteredFiles.length,
                 itemBuilder: (context, index) {
                   var file = filteredFiles[index];
@@ -383,7 +385,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                             tags: getFileTags(filteredFiles[index]),
                           ),
                         )
-                      : SizedBox();
+                      : const SizedBox();
                 },
               )
             ],

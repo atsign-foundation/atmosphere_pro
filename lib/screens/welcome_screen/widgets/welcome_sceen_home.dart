@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
@@ -16,6 +17,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -25,13 +27,13 @@ import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/images.dart';
-import '../../common_widgets/app_bar_custom.dart';
 import 'choice_contacts_widget.dart';
 
 class WelcomeScreenHome extends StatefulWidget {
+  const WelcomeScreenHome({Key? key}) : super(key: key);
+
   @override
-  _WelcomeScreenHomeState createState() => _WelcomeScreenHomeState();
+  State<WelcomeScreenHome> createState() => _WelcomeScreenHomeState();
 }
 
 class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
@@ -65,13 +67,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 130,
         title: "${BackendService.getInstance().currentAtSign ?? ''} ",
         description: '',
-        suffixIcon: Padding(
+        suffixIcon: const Padding(
           padding: EdgeInsets.only(right: 8),
           child: NotificationIcon(),
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: ColorConstants.background,
         ),
         width: double.infinity,
@@ -149,7 +151,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: EdgeInsets.all(2),
+                        padding: const EdgeInsets.all(2),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
@@ -214,7 +216,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                               }
                             },
                           )
-                        : SizedBox();
+                        : const SizedBox();
                   },
                 ),
                 _buildChoiceContact(),
@@ -226,7 +228,8 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
                   child: TextField(
                     controller: noteController,
                     maxLines: 5,
@@ -257,7 +260,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(247),
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [Color(0xffF05E3F), Color(0xffe9a642)],
                         stops: [0.1, 0.8],
                       ),
@@ -296,7 +299,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 56.toHeight,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Color(0xFFF6DED5),
+          color: const Color(0xFFF6DED5),
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.centerLeft,
@@ -313,7 +316,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.add_circle_outline,
                 size: 27,
                 color: ColorConstants.orange,
@@ -358,7 +361,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.add_circle_outline,
                 size: 27,
                 color: ColorConstants.yellow,
@@ -406,11 +409,11 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   scrollToBottom() {
     Timer(
-      Duration(milliseconds: 200),
+      const Duration(milliseconds: 200),
       () {
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
           curve: Curves.fastOutSlowIn,
         );
         _welcomeScreenProvider.scrollToBottom = false;
@@ -514,7 +517,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
   openFile(PlatformFile file) async {
     final result = await OpenFile.open(file.path);
 
-    if (result.type != ResultType.done) {
+    if (result.type != ResultType.done && context.mounted) {
       SnackbarService().showSnackbar(
         context,
         result.message,

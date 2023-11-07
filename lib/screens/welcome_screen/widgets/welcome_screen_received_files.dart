@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeScreenReceivedFiles extends StatefulWidget {
+  const WelcomeScreenReceivedFiles({Key? key}) : super(key: key);
+
   @override
-  _WelcomeScreenReceivedFilesState createState() =>
+  State<WelcomeScreenReceivedFiles> createState() =>
       _WelcomeScreenReceivedFilesState();
 }
 
@@ -35,7 +37,7 @@ class _WelcomeScreenReceivedFilesState
             )
           : ListView.separated(
               padding: EdgeInsets.only(bottom: 170.toHeight),
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               separatorBuilder: (context, index) => Divider(indent: 16.toWidth),
               itemCount: provider.receivedHistoryLogs.length,
               itemBuilder: (context, index) => Padding(

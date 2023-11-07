@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/apk.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/audios.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/documents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/photos.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/unknowns.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -23,8 +24,6 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
-
-import '../screens/my_files/widgets/recents.dart';
 
 class MyFilesProvider extends BaseModel {
   var myFiles = <FileTransfer>[];
@@ -49,7 +48,7 @@ class MyFilesProvider extends BaseModel {
   String FETCH_AND_SORT = "fetch_and_sort";
   String fileSearchText = '';
 
-  List<Widget> tabs = [Recents()];
+  List<Widget> tabs = [const Recents()];
 
   Map<String, List<FilesDetail>> filesByAlpha = {};
   FileType? typeSelected;
@@ -70,7 +69,7 @@ class MyFilesProvider extends BaseModel {
     recentFile = [];
     receivedUnknown = [];
     allFiles = [];
-    tabs = [Recents()];
+    tabs = [const Recents()];
     tabNames = ['Recents'];
   }
 
@@ -363,44 +362,44 @@ class MyFilesProvider extends BaseModel {
       isDesktop = true;
     }
     tabs = [];
-    tabs = [isDesktop ? DesktopRecents() : Recents()];
+    tabs = [isDesktop ? const DesktopRecents() : const Recents()];
 
     try {
       setStatus(POPULATE_TABS, Status.Loading);
 
       if (receivedApk.isNotEmpty) {
         if (!tabs.contains(APK)) {
-          tabs.add(isDesktop ? DesktopAPK() : APK());
+          tabs.add(isDesktop ? const DesktopAPK() : const APK());
           tabNames.add('APK');
         }
       }
       if (receivedAudio.isNotEmpty) {
         if (!tabs.contains(Audios)) {
-          tabs.add(isDesktop ? DesktopAudios() : Audios());
+          tabs.add(isDesktop ? const DesktopAudios() : const Audios());
           tabNames.add('Audios');
         }
       }
       if (receivedDocument.isNotEmpty) {
         if (!tabs.contains(Documents)) {
-          tabs.add(isDesktop ? DesktopDocuments() : Documents());
+          tabs.add(isDesktop ? const DesktopDocuments() : const Documents());
           tabNames.add('Documents');
         }
       }
       if (receivedPhotos.isNotEmpty) {
         if (!tabs.contains(Photos)) {
-          tabs.add(isDesktop ? DesktopPhotos() : Photos());
+          tabs.add(isDesktop ? const DesktopPhotos() : const Photos());
           tabNames.add('Photos');
         }
       }
       if (receivedVideos.isNotEmpty) {
         if (!tabs.contains(Videos)) {
-          tabs.add(isDesktop ? DesktopVideos() : Videos());
+          tabs.add(isDesktop ? const DesktopVideos() : const Videos());
           tabNames.add('Videos');
         }
       }
       if (receivedUnknown.isNotEmpty) {
-        if (!tabs.contains(Unknowns())) {
-          tabs.add(isDesktop ? DesktopUnknowns() : Unknowns());
+        if (!tabs.contains(const Unknowns())) {
+          tabs.add(isDesktop ? const DesktopUnknowns() : const Unknowns());
           tabNames.add('Unknowns');
         }
       }
@@ -630,13 +629,13 @@ class MyFilesProvider extends BaseModel {
       }
     }
 
-    var _atClient = AtClientManager.getInstance().atClient;
-    var _keyStore = _atClient.getLocalSecondary()!.keyStore!;
+    var atClient = AtClientManager.getInstance().atClient;
+    var keyStore = atClient.getLocalSecondary()!.keyStore!;
 
     var fileAtKey = formMyFileAtKey(fileTransfer.key);
 
-    if (!_keyStore.isKeyExists(fileAtKey.key!)) {
-      var res = await _atClient.put(
+    if (!keyStore.isKeyExists(fileAtKey.key!)) {
+      var res = await atClient.put(
         fileAtKey,
         jsonEncode(fileTransfer.toJson()),
       );
@@ -733,10 +732,10 @@ class MyFilesProvider extends BaseModel {
   }
 
   Future<bool> updateMyFilesData(FileTransfer fileTransfer) async {
-    var _atClient = AtClientManager.getInstance().atClient;
+    var atClient = AtClientManager.getInstance().atClient;
     var fileAtKey = formMyFileAtKey(fileTransfer.key);
 
-    return await _atClient.put(fileAtKey, jsonEncode(fileTransfer.toJson()));
+    return await atClient.put(fileAtKey, jsonEncode(fileTransfer.toJson()));
   }
 
   AtKey formMyFileAtKey(String fileTransferId) {
@@ -750,9 +749,9 @@ class MyFilesProvider extends BaseModel {
   }
 
   Future<bool> deletMyFileRecord(String fileTransferId) async {
-    var _atClient = AtClientManager.getInstance().atClient;
+    var atClient = AtClientManager.getInstance().atClient;
     var myFileAtKey = formMyFileAtKey(fileTransferId);
-    var res = await _atClient.delete(myFileAtKey);
+    var res = await atClient.delete(myFileAtKey);
     if (res) {
       var i = myFiles.indexWhere((element) => element.key == fileTransferId);
       if (i != -1) {
@@ -774,7 +773,7 @@ class MyFilesProvider extends BaseModel {
 
     await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
       var deleted = await atClient.delete(atkey);
-      print('deleted : ${deleted}');
+      print('deleted : $deleted');
     });
 
     await sortFiles();

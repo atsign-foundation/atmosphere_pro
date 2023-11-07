@@ -11,6 +11,7 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -21,11 +22,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/backend_service.dart';
-
 class MyFilesScreen extends StatefulWidget {
+  const MyFilesScreen({Key? key}) : super(key: key);
+
   @override
-  _MyFilesScreenState createState() => _MyFilesScreenState();
+  State<MyFilesScreen> createState() => _MyFilesScreenState();
 }
 
 class _MyFilesScreenState extends State<MyFilesScreen> {
@@ -34,6 +35,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
   List<String> tabNames = [];
 
   bool isLoading = false;
+  @override
   Type runtimeType = Videos;
   late MyFilesProvider provider;
   late TextEditingController searchController;
@@ -49,7 +51,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.background,
-      appBar: AppBarCustom(
+      appBar: const AppBarCustom(
         height: 130,
         title: "Files",
       ),
@@ -59,8 +61,8 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
 
   Widget _buildBody() {
     return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
-      padding: EdgeInsets.only(left: 34, bottom: 32),
+      physics: const ClampingScrollPhysics(),
+      padding: const EdgeInsets.only(left: 34, bottom: 32),
       child: ProviderHandler<MyFilesProvider>(
         load: (provider) async {
           await provider.getAllFiles();
@@ -87,7 +89,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                   onTap: () {
                     navigateToFilesDetail(autoFocus: true);
                   },
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: ColorConstants.darkSliver,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -95,8 +97,8 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                   margin: EdgeInsets.zero,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
                   "Recent",
                   style: TextStyle(
@@ -114,9 +116,9 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: provider.recentFile.length,
-                          padding: EdgeInsets.only(right: 32),
-                          physics: ClampingScrollPhysics(),
-                          separatorBuilder: (context, index) => SizedBox(
+                          padding: const EdgeInsets.only(right: 32),
+                          physics: const ClampingScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(
                             width: 16,
                           ),
                           itemBuilder: (context, index) {
@@ -156,13 +158,15 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8),
                                     child: Text(
-                                      "${provider.recentFile[index].filePath!.split(Platform.pathSeparator).last}",
-                                      style: TextStyle(
+                                      provider.recentFile[index].filePath!
+                                          .split(Platform.pathSeparator)
+                                          .last,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500,
@@ -178,8 +182,8 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                         ),
                       ),
                     )
-                  : SizedBox(),
-              Text(
+                  : const SizedBox(),
+              const Text(
                 "Category",
                 style: TextStyle(
                   fontSize: 15,
@@ -193,12 +197,12 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                   children: _generateChildren(),
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Container(
                 height: 56,
                 width: double.infinity,
-                margin: EdgeInsets.only(left: 2, right: 36),
-                padding: EdgeInsets.symmetric(
+                margin: const EdgeInsets.only(left: 2, right: 36),
+                padding: const EdgeInsets.symmetric(
                   horizontal: 28,
                   vertical: 18,
                 ),
@@ -212,7 +216,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                   },
                   child: Row(
                     children: <Widget>[
-                      Text(
+                      const Text(
                         "All Files",
                         style: TextStyle(
                           fontSize: 15,
@@ -220,16 +224,16 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
                         "${context.watch<MyFilesProvider>().allFiles.length}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
                           color: ColorConstants.gray2,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       SvgPicture.asset(
                         AppVectors.icArrowRight,
                       ),
@@ -252,7 +256,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
       child: Container(
         width: (MediaQuery.of(context).size.width - 110) / 3,
         height: 100,
-        margin: EdgeInsets.only(right: 20, top: 20),
+        margin: const EdgeInsets.only(right: 20, top: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           gradient: LinearGradient(
@@ -338,7 +342,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                     isExpanded: true,
                     underline: null,
                     alignment: AlignmentDirectional.bottomEnd,
-                    hint: Text(
+                    hint: const Text(
                       "All",
                       style: TextStyle(
                         fontSize: 16,
@@ -363,7 +367,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                     Expanded(
                                       child: Text(
                                         key.text,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
                                           color: ColorConstants.grey,
@@ -453,7 +457,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                   : Scrollbar(
                       child: ListView.builder(
                         itemCount: listFile.length,
-                        physics: AlwaysScrollableScrollPhysics(),
+                        physics: const AlwaysScrollableScrollPhysics(),
                         padding: EdgeInsets.only(
                           top: 24.toHeight,
                           left: 28,
@@ -480,11 +484,11 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                   color: ColorConstants.sidebarTextUnselected,
                                 ),
                               ),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 24,
                                 vertical: 16,
                               ),
-                              margin: EdgeInsets.only(bottom: 12),
+                              margin: const EdgeInsets.only(bottom: 12),
                               child: Row(
                                 children: <Widget>[
                                   Expanded(
@@ -504,7 +508,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 2),
+                                        const SizedBox(height: 2),
                                         Text(
                                           AppUtils.getFileSizeString(
                                             bytes: listFile[index].size ?? 0,
@@ -520,7 +524,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                       ],
                                     ),
                                   ),
-                                  Icon(Icons.remove_red_eye_outlined),
+                                  const Icon(Icons.remove_red_eye_outlined),
                                 ],
                               ),
                             ),

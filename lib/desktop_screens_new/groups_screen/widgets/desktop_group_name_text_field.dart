@@ -19,14 +19,13 @@ class DesktopGroupNameTextField extends StatelessWidget {
         fontWeight: FontWeight.w500,
       ),
       onChanged: onChanged,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Group Name',
-        enabledBorder: const UnderlineInputBorder(),
+        enabledBorder: UnderlineInputBorder(),
         filled: true,
         fillColor: ColorConstants.textFieldFillColor,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-        border: const UnderlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+        border: UnderlineInputBorder(),
         hintStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,

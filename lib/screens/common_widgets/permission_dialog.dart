@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 class PermissionDeniedMessage extends StatefulWidget {
   final String title;
 
-  PermissionDeniedMessage(this.title);
+  const PermissionDeniedMessage(this.title, {Key? key}) : super(key: key);
 
   @override
-  _PermissionDeniedMessageState createState() =>
+  State<PermissionDeniedMessage> createState() =>
       _PermissionDeniedMessageState();
 }
 

@@ -11,7 +11,7 @@ class FileCard extends StatelessWidget {
   final Function? deleteFunc;
   final Function? onTap;
 
-  FileCard({
+  const FileCard({
     Key? key,
     required this.fileDetail,
     this.deleteFunc,

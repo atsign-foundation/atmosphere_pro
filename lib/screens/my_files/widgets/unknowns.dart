@@ -16,8 +16,10 @@ import 'package:provider/provider.dart';
 import 'downloads_folders.dart';
 
 class Unknowns extends StatefulWidget {
+  const Unknowns({Key? key}) : super(key: key);
+
   @override
-  _UnknownsState createState() => _UnknownsState();
+  State<Unknowns> createState() => _UnknownsState();
 }
 
 class _UnknownsState extends State<Unknowns> {
@@ -52,7 +54,7 @@ class _UnknownsState extends State<Unknowns> {
                         borderRadius: BorderRadius.circular(3)),
                     title: Text(provider.receivedUnknown[index].fileName!,
                         style: CustomTextStyles.primaryBold14),
-                    leading: Container(
+                    leading: SizedBox(
                       width: SizeConfig().isTablet(context)
                           ? 30.toWidth
                           : 50.toWidth,
@@ -62,7 +64,7 @@ class _UnknownsState extends State<Unknowns> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.toHeight),
                         child: Container(
-                          padding: EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.only(left: 10),
                           height: 50.toHeight,
                           width: 50.toWidth,
                           child: Image.asset(
@@ -100,10 +102,8 @@ class _UnknownsState extends State<Unknowns> {
                               double.parse(provider.receivedUnknown[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.receivedUnknown[index].size!.toStringAsFixed(2)} ' +
-                                      TextStrings().kb
-                                  : '${(provider.receivedUnknown[index].size! / 1024).toStringAsFixed(2)} ' +
-                                      TextStrings().mb,
+                                  ? '${provider.receivedUnknown[index].size!.toStringAsFixed(2)} ${TextStrings().kb}'
+                                  : '${(provider.receivedUnknown[index].size! / 1024).toStringAsFixed(2)} ${TextStrings().mb}',
                               style: CustomTextStyles.secondaryRegular12),
                           SizedBox(
                             width: 12.toWidth,

@@ -11,8 +11,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:open_file/open_file.dart';
 
 class DesktopUnknowns extends StatefulWidget {
+  const DesktopUnknowns({Key? key}) : super(key: key);
+
   @override
-  _DesktopUnknownsState createState() => _DesktopUnknownsState();
+  State<DesktopUnknowns> createState() => _DesktopUnknownsState();
 }
 
 class _DesktopUnknownsState extends State<DesktopUnknowns> {
@@ -89,7 +91,7 @@ class _DesktopUnknownsState extends State<DesktopUnknowns> {
                             ),
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),

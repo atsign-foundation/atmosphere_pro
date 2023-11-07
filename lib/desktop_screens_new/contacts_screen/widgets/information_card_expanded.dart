@@ -26,7 +26,7 @@ class InformationCardExpanded extends StatefulWidget {
     Key? key,
     required this.atContact,
     required this.onBack,
-  });
+  }) : super(key: key);
 
   @override
   State<InformationCardExpanded> createState() =>
@@ -63,13 +63,13 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
 
   void getContactState() {
     isTrusted = false;
-    trustedContactProvider.trustedContacts.forEach((element) {
+    for (var element in trustedContactProvider.trustedContacts) {
       if (element.atSign == widget.atContact.atSign) {
         setState(() {
           isTrusted = true;
         });
       }
-    });
+    }
     setState(() {
       isBlocked = widget.atContact.blocked ?? false;
     });
@@ -101,19 +101,19 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 40, horizontal: 32),
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildAppBarRow(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             buildOptionsRow(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             buildTransferFileButton(),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             buildAttachmentsTitle(),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ReceiveItemsList(atContact: widget.atContact)
           ],
         ),
@@ -163,7 +163,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
               : Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       widget.atContact.tags?['nickname'] ??
                           widget.atContact.atSign?.substring(1),
@@ -202,7 +202,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
           },
           icon: AppVectors.icTrust,
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         OptionsIconButton(
           isSelected: isEdit,
           onTap: () {
@@ -212,7 +212,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
           },
           icon: AppVectors.icEdit,
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         OptionsIconButton(
           onTap: () async {
             await showConfirmationDialog(
@@ -230,7 +230,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
           },
           icon: AppVectors.icDelete,
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         OptionsIconButton(
           isSelected: isBlocked,
           onTap: () async {
@@ -268,7 +268,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
         await DesktopSetupRoutes.nested_pop();
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: ColorConstants.raisinBlack,
           borderRadius: BorderRadius.circular(5),
@@ -280,7 +280,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
               'Transfer File',
               style: CustomTextStyles.whiteBoldS12,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             SvgPicture.asset(
               AppVectors.icArrow,
               width: 16,
@@ -313,19 +313,20 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         TextField(
           controller: controller,
           style: CustomTextStyles.desktopPrimaryRegular14,
           cursorColor: Colors.black,
           decoration: InputDecoration(
-            enabledBorder: UnderlineInputBorder(
+            enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.black),
             ),
-            focusedBorder: UnderlineInputBorder(
+            focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.black),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             suffix: InkWell(
               onTap: () {
                 controller.clear();
@@ -340,7 +341,7 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
             ),
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         InkWell(
           onTap: () async {
             if (!isLoading) {
@@ -348,14 +349,14 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
             }
           },
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: Colors.black,
             ),
             child: isLoading
-                ? SizedBox(
+                ? const SizedBox(
                     height: 12,
                     width: 12,
                     child: CircularProgressIndicator(color: Colors.white),

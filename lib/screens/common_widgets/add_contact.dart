@@ -14,11 +14,12 @@ import 'contact_initial.dart';
 class AddContact extends StatefulWidget {
   final String? atSignName, name;
   final Uint8List? image;
+
   const AddContact({Key? key, this.atSignName, this.name, this.image})
       : super(key: key);
 
   @override
-  _AddContactState createState() => _AddContactState();
+  State<AddContact> createState() => _AddContactState();
 }
 
 class _AddContactState extends State<AddContact> {
@@ -29,7 +30,7 @@ class _AddContactState extends State<AddContact> {
   Widget build(BuildContext context) {
     final isKeyBoard = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    return Container(
+    return SizedBox(
       height: 100,
       width: 100,
       child: AlertDialog(
@@ -77,7 +78,7 @@ class _AddContactState extends State<AddContact> {
                       widget.name!,
                       style: CustomTextStyles.primaryBold16,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               SizedBox(
                 height: (widget.name != null) ? 2.toHeight : 0,
               ),
@@ -88,14 +89,14 @@ class _AddContactState extends State<AddContact> {
             ],
           ),
         ),
-        actionsPadding: EdgeInsets.only(left: 20, right: 20),
+        actionsPadding: const EdgeInsets.only(left: 20, right: 20),
         actions: [
           TextFormField(
             autofocus: true,
             onChanged: (value) {
               nickName = value;
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter nickname (optional)',
             ),
             style: TextStyle(
@@ -107,7 +108,7 @@ class _AddContactState extends State<AddContact> {
             height: 10.toHeight,
           ),
           isContactAdding
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                       ColorConstants.orange,
@@ -143,7 +144,7 @@ class _AddContactState extends State<AddContact> {
             height: 10.toHeight,
           ),
           isContactAdding
-              ? SizedBox()
+              ? const SizedBox()
               : Container(
                   alignment: Alignment.center,
                   child: SizedBox(
