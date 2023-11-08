@@ -556,10 +556,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_keychain
-      sha256: "777ea8d3e1f55536bc8489a9ced73a912da4065645d9a1f751aae3548825b140"
+      sha256: de6f2d09ce2a006013db799ad37d6ae49b10530d6841de1c0c0525c4d3ec22a4
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.4.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -600,6 +600,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  flutter_staggered_grid_view:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_grid_view
+      sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   flutter_svg:
     dependency: "direct main"
     description:

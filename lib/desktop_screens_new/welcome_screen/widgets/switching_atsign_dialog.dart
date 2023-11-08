@@ -84,7 +84,7 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
                       fit: BoxFit.cover,
                     )
                   : ContactInitial(
-                      initials: atSign,
+                      initials: atSign.replaceFirst('@', ''),
                       size: 48,
                       borderRadius: 10,
                     ),

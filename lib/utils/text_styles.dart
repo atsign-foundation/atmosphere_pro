@@ -423,4 +423,40 @@ class CustomTextStyles {
     fontSize: 15,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle blackW60012 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 12,
+  );
+
+  static TextStyle blackW40010 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+    fontSize: 10,
+  );
+
+  static TextStyle raisinBlackW40010 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle blackW60010 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 10,
+  );
+
+  static TextStyle blackW50014 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w500,
+    fontSize: 14,
+  );
+
+  static TextStyle raisinBlackW4009 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 9,
+    fontWeight: FontWeight.w400,
+  );
 }

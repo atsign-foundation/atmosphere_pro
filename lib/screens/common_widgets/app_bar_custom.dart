@@ -11,7 +11,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final double? marginRightAction;
   final double? height;
   final bool isContent;
-  final Widget? suffixIcon;
+  final List<Widget>? suffixIcon;
   final TextStyle? titleStyle;
 
   const AppBarCustom({
@@ -77,8 +77,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
-                  suffixIcon ?? SizedBox(),
-                ],
+                ]..addAll(suffixIcon ?? []),
               ),
             ),
           ),

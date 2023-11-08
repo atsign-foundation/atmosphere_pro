@@ -2,13 +2,10 @@ import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart'
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_filter_option_item.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class DesktopFilterHistoryWidget extends StatefulWidget {
   final Offset? position;
-  final Function(HistoryType historyType)? onSelectedFilter;
   final Function(List<FileType> fileTypes)? onSelectedOptionalFilter;
   final HistoryType? typeSelected;
   final List<FileType>? listFileType;
@@ -16,7 +13,6 @@ class DesktopFilterHistoryWidget extends StatefulWidget {
   DesktopFilterHistoryWidget({
     Key? key,
     this.position,
-    this.onSelectedFilter,
     this.typeSelected,
     this.onSelectedOptionalFilter,
     this.listFileType,
@@ -31,7 +27,6 @@ class _DesktopFilterHistoryWidgetState
     extends State<DesktopFilterHistoryWidget> {
   bool isShowOptional = false;
   List<FileType> listFileType = [];
-  bool isCheck = true;
 
   final List<FileType> optionalHistoryTypes = [
     FileType.photo,
@@ -63,86 +58,44 @@ class _DesktopFilterHistoryWidgetState
             ),
           ),
           Positioned(
-            right: 15,
+            right: 80,
             top: 100,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+            child: SizedBox(
+              width: 360,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DesktopFilterOptionItem(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(10),
                     ),
-                    color: Theme.of(context).primaryColor,
+                    isAllOption: true,
+                    title: 'All File Types',
+                    isCheck: optionalHistoryTypes
+                        .every((element) => listFileType.contains(element)),
                   ),
-                  width: 400,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "All File Types",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            isCheck = !isCheck;
-                            isCheck
-                                ? listFileType.addAll(optionalHistoryTypes)
-                                : listFileType = [];
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          isCheck
-                              ? AppVectors.icChecked
-                              : AppVectors.icUnchecked,
-                          width: 24,
-                          height: 24,
-                          color: Colors.white,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  color: ColorConstants.disableColor,
-                  height: 0,
-                  thickness: 1,
-                ),
-                SizedBox(
-                  width: 400,
-                  child: ListView.separated(
+                  ListView.separated(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
                     itemCount: optionalHistoryTypes.length,
                     separatorBuilder: (context, index) {
                       return Divider(
-                        color:
-                            listFileType.contains(optionalHistoryTypes[index])
-                                ? ColorConstants.orange
-                                : ColorConstants.disableColor,
+                        color: ColorConstants.orange,
                         height: 0,
                         thickness: 1,
+                        // thickness: 0.65,
                       );
                     },
                     itemBuilder: (context, index) {
                       return DesktopFilterOptionItem(
                         icon: optionalHistoryTypes[index].icon,
                         title: optionalHistoryTypes[index].text,
-                        isOptional: true,
                         isCheck:
                             listFileType.contains(optionalHistoryTypes[index]),
                         borderRadius: index == optionalHistoryTypes.length - 1
                             ? BorderRadius.vertical(
-                                bottom: Radius.circular(13),
+                                bottom: Radius.circular(10),
                               )
                             : null,
                         onTap: () {
@@ -158,8 +111,8 @@ class _DesktopFilterHistoryWidgetState
                       );
                     },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
