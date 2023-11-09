@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 
 class HistoryDesktopScreen extends StatefulWidget {
   final HistoryType? historyType;
+
   const HistoryDesktopScreen({Key? key, this.historyType}) : super(key: key);
 
   @override
@@ -42,8 +43,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     historyProvider.reset("get_all_file_history");
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-     historyProvider
-          .setSelectedType(widget.historyType ?? HistoryType.all);
+      historyProvider.setSelectedType(widget.historyType ?? HistoryType.all);
     });
   }
 
@@ -322,7 +322,6 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
   void _onTapFilterIcon() async {
     RenderBox box = filterKey.currentContext!.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
-    historyProvider.resetOptional();
 
     await showDialog(
       barrierColor: Colors.transparent,
@@ -337,6 +336,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
               typeSelected: provider.typeSelected,
               onSelectedOptionalFilter: (value) async {
                 provider.updateListType(value);
+                filteredFiles = getDisplayFileData(provider.allFilesHistory);
               },
               listFileType: provider.listType,
             );
@@ -347,6 +347,10 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
       setState(() {
         isFilterOpened = false;
       });
+      if (historyProvider.listType.isEmpty) {
+        historyProvider.resetOptional();
+        filteredFiles = getDisplayFileData(historyProvider.allFilesHistory);
+      }
     });
   }
 

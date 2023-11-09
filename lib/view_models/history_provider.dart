@@ -110,10 +110,8 @@ class HistoryProvider extends BaseModel {
   }
 
   void resetOptional() {
-    if (listType.isEmpty) {
-      listType = FileType.values.toList();
-      notifyListeners();
-    }
+    listType = FileType.values.toList();
+    notifyListeners();
   }
 
   void resetIsDownloadDone() {

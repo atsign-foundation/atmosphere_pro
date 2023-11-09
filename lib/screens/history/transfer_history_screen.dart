@@ -380,7 +380,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
   void _onTapFilterIcon() async {
     RenderBox box = filterKey.currentContext!.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
-    historyProvider.resetOptional();
 
     await showDialog(
       barrierColor: Colors.transparent,
@@ -405,6 +404,9 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
       setState(() {
         isFilterOpened = false;
       });
+      if (historyProvider.listType.isEmpty) {
+        historyProvider.resetOptional();
+      }
     });
   }
 
