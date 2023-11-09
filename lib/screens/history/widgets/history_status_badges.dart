@@ -1,27 +1,25 @@
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class HistoryStatusBadges extends StatefulWidget {
-  final HistoryType? type;
-  final List<String> fileNameList;
-  final List<ShareStatus>? shareWith;
-  final Function() onOpenRetryCard;
+  final FileHistory fileHistory;
 
   const HistoryStatusBadges({
     Key? key,
-    required this.type,
-    required this.fileNameList,
-    required this.shareWith,
-    required this.onOpenRetryCard,
+    required this.fileHistory,
   });
 
   @override
@@ -31,7 +29,10 @@ class HistoryStatusBadges extends StatefulWidget {
 class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
   int get numberFileUnread {
     int result = 0;
-    for (String i in widget.fileNameList) {
+    List<String> listFileName = (widget.fileHistory.fileDetails?.files ?? [])
+        .map((e) => e.name ?? '')
+        .toList();
+    for (String i in listFileName) {
       final filePath = BackendService.getInstance().downloadDirectory!.path +
           Platform.pathSeparator +
           i;
@@ -47,15 +48,18 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
     return Consumer<HistoryProvider>(
       builder: (context, value, child) {
         if (numberFileUnread != 0) {
-          if (widget.type == HistoryType.received) {
+          if (widget.fileHistory.type == HistoryType.received) {
             return buildUnreadBadge();
           } else {
-            if (widget.shareWith!
-                .every((element) => element.isNotificationSend ?? false)) {
-              return buildDeliveredBadge();
-            } else {
-              return buildErrorBadges();
-            }
+            return InkWell(
+              onTap: () {
+                openFileReceiptBottomSheet();
+              },
+              child: (widget.fileHistory.sharedWith ?? [])
+                      .every((element) => element.isNotificationSend ?? false)
+                  ? buildDeliveredBadge()
+                  : buildErrorBadges(),
+            );
           }
         } else {
           return buildReadAllBadges();
@@ -189,37 +193,61 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
           ),
         ),
         SizedBox(width: 4),
-        InkWell(
-          onTap: widget.onOpenRetryCard,
-          child: Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(49.5),
-              color: ColorConstants.retryButtonColor,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Retry',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    color: ColorConstants.iconHeaderColor,
-                  ),
-                ),
-                SizedBox(width: 4),
-                SvgPicture.asset(
-                  AppVectors.icRefresh,
-                  width: 8,
-                  height: 8,
+        Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(49.5),
+            color: ColorConstants.retryButtonColor,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Retry',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
                   color: ColorConstants.iconHeaderColor,
-                )
-              ],
-            ),
+                ),
+              ),
+              SizedBox(width: 4),
+              SvgPicture.asset(
+                AppVectors.icRefresh,
+                width: 8,
+                height: 8,
+                color: ColorConstants.iconHeaderColor,
+              )
+            ],
           ),
         )
       ],
     );
+  }
+
+  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
+    Provider.of<FileTransferProvider>(context, listen: false)
+        .selectedFileHistory = widget.fileHistory;
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: StadiumBorder(),
+        builder: (_context) {
+          return Container(
+            height: SizeConfig().screenHeight * 0.8,
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12.0),
+                topRight: const Radius.circular(12.0),
+              ),
+            ),
+            child: FileRecipients(
+              widget.fileHistory.sharedWith,
+              fileRecipientSection: fileRecipientSection,
+              key: UniqueKey(),
+            ),
+          );
+        });
   }
 }

@@ -65,15 +65,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           mainAxisSize: MainAxisSize.min,
           children: [
             HistoryCardHeader(
-              type: widget.fileHistory.type,
-              sender: widget.fileHistory.fileDetails?.sender,
-              groupName: widget.fileHistory.groupName,
-              sharedWith: widget.fileHistory.sharedWith ?? [],
-              note: widget.fileHistory.fileDetails?.notes ?? '',
-              date: widget.fileHistory.fileDetails!.date!,
-              fileNameList: widget.fileHistory.fileDetails!.files!
-                  .map((e) => e.name ?? '')
-                  .toList(),
+              fileHistory: widget.fileHistory,
             ),
             SizedBox(height: 12),
             Flexible(

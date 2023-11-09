@@ -1,6 +1,5 @@
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_retry_card.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_status_badges.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -13,22 +12,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class HistoryCardHeader extends StatefulWidget {
-  final HistoryType? type;
-  final String? sender;
-  final String? groupName;
-  final List<ShareStatus> sharedWith;
-  final String note;
-  final DateTime date;
-  final List<String> fileNameList;
+  final FileHistory fileHistory;
 
   const HistoryCardHeader({
-    required this.type,
-    required this.sender,
-    required this.groupName,
-    required this.sharedWith,
-    required this.note,
-    required this.date,
-    required this.fileNameList,
+    required this.fileHistory,
   });
 
   @override
@@ -49,22 +36,23 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
   }
 
   void getNickname() async {
-    final String result =
-        await CommonUtilityFunctions().getNickname(widget.sender ?? '');
+    final String result = await CommonUtilityFunctions()
+        .getNickname(widget.fileHistory.fileDetails?.sender ?? '');
     nickname = result;
   }
 
   @override
   Widget build(BuildContext context) {
-    final String title = widget.type == HistoryType.received
+    final String title = widget.fileHistory.type == HistoryType.received
         ? nickname.isNotEmpty
             ? nickname
-            : widget.sender ?? ''
-        : widget.groupName ?? '${widget.sharedWith.length} Contacts';
+            : widget.fileHistory.fileDetails?.sender ?? ''
+        : widget.fileHistory.groupName ??
+            '${widget.fileHistory.sharedWith?.length} Contacts';
 
-    final String subTitle = widget.type == HistoryType.received
-        ? widget.sender ?? ''
-        : widget.sharedWith
+    final String subTitle = widget.fileHistory.type == HistoryType.received
+        ? widget.fileHistory.fileDetails?.sender ?? ''
+        : (widget.fileHistory.sharedWith ?? [])
             .map((shareStatus) => shareStatus.atsign)
             .join(", ")
             .toString();
@@ -88,7 +76,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
                           style: CustomTextStyles.blackW60012,
                         ),
                         if (nickname.isNotEmpty ||
-                            widget.type != HistoryType.received)
+                            widget.fileHistory.type != HistoryType.received)
                           Text(
                             subTitle,
                             style: CustomTextStyles.blackW40010,
@@ -96,13 +84,15 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
                       ],
                     ),
                   ),
-                  if (trustedContactProvider.trustedContacts
-                          .any((element) => element.atSign == widget.sender) ||
-                      (widget.sharedWith.length == 1 &&
+                  if (trustedContactProvider.trustedContacts.any((element) =>
+                          element.atSign ==
+                          widget.fileHistory.fileDetails?.sender) ||
+                      (widget.fileHistory.sharedWith?.length == 1 &&
                           trustedContactProvider.trustedContacts.any(
                               (element) =>
                                   element.atSign ==
-                                  widget.sharedWith.single.atsign))) ...[
+                                  widget.fileHistory.sharedWith?.single
+                                      .atsign))) ...[
                     SizedBox(width: 8),
                     SvgPicture.asset(
                       AppVectors.icTrust,
@@ -119,46 +109,30 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  DateFormat(MixedConstants.isToday(widget.date)
+                  DateFormat(MixedConstants.isToday(
+                              widget.fileHistory.fileDetails?.date ??
+                                  DateTime.now())
                           ? 'HH:mm'
                           : 'dd/MM/yyyy HH:mm')
-                      .format(widget.date),
+                      .format(widget.fileHistory.fileDetails?.date ??
+                          DateTime.now()),
                   style: CustomTextStyles.raisinBlackW40010,
                 ),
                 SizedBox(height: 4),
-                if (!isOpenRetryCard)
-                  HistoryStatusBadges(
-                    key: UniqueKey(),
-                    type: widget.type,
-                    fileNameList: widget.fileNameList,
-                    shareWith: widget.sharedWith,
-                    onOpenRetryCard: () {
-                      setState(() {
-                        isOpenRetryCard = true;
-                      });
-                    },
-                  ),
+                HistoryStatusBadges(
+                  key: UniqueKey(),
+                  fileHistory: widget.fileHistory,
+                ),
               ],
             )
           ],
         ),
-        if (widget.note.isNotEmpty) ...[
+        if ((widget.fileHistory.fileDetails?.notes ?? '').isNotEmpty) ...[
           SizedBox(height: 8),
           Text(
-            '"${widget.note}"',
+            '"${widget.fileHistory.fileDetails?.notes}"',
             style: CustomTextStyles.raisinBlackW4009,
           )
-        ],
-        if (isOpenRetryCard) ...[
-          SizedBox(height: 4),
-          HistoryRetryCard(
-            sharedWith: widget.sharedWith,
-            onCancelRetryCard: () {
-              setState(() {
-                isOpenRetryCard = false;
-              });
-            },
-          ),
         ],
       ],
     );
