@@ -195,7 +195,10 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                 );
               },
             );
-          }).then((value) => _filePickerProvider.resetData());
+          }).then((value) {
+        messageController.clear();
+        _filePickerProvider.resetData();
+      });
     }
   }
 

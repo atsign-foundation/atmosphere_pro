@@ -14,18 +14,21 @@ class FileTransfer {
   String? notes;
   String? fileEncryptionKey;
   List<String>? atSigns;
-  FileTransfer(
-      {required this.url,
-      this.files,
-      this.expiry,
-      this.platformFiles,
-      this.date,
-      required this.key,
-      this.isUpdate = false,
-      this.isWidgetOpen = false,
-      this.notes,
-      required this.fileEncryptionKey,
-      this.atSigns}) {
+
+  FileTransfer({
+    required this.url,
+    this.files,
+    this.expiry,
+    this.platformFiles,
+    this.date,
+    required this.key,
+    this.isUpdate = false,
+    this.isWidgetOpen = false,
+    this.notes,
+    this.sender,
+    required this.fileEncryptionKey,
+    this.atSigns,
+  }) {
     this.expiry = expiry ?? DateTime.now().add(Duration(days: 6));
     this.date = date ?? DateTime.now();
 
@@ -133,6 +136,7 @@ class FileHistory {
   HistoryType? type;
   FileTransferObject? fileTransferObject;
   String? groupName;
+
   // used to determine whether any opearation is running over this file or not
   // only for front end used , this value is not saved.
   bool? isOperating;
@@ -141,6 +145,7 @@ class FileHistory {
   FileHistory(
       this.fileDetails, this.sharedWith, this.type, this.fileTransferObject,
       {this.isOperating, this.groupName, this.notes});
+
   FileHistory.fromJson(Map<String, dynamic> data) {
     if (data['fileDetails'] != null) {
       fileDetails = FileTransfer.fromJson(data['fileDetails']);
@@ -194,6 +199,7 @@ class ShareStatus {
     isFileDownloaded = json['isFileDownloaded'] ?? false;
     isSendingNotification = json['isSendingNotification'] ?? false;
   }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['atsign'] = this.atsign;
@@ -227,6 +233,7 @@ class FileTransferProgress {
   double? percent;
   String? fileName;
   double? fileSize;
+
   FileTransferProgress(
       this.fileState, this.percent, this.fileName, this.fileSize);
 }

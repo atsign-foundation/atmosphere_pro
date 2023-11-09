@@ -55,6 +55,7 @@ class HistoryProvider extends BaseModel {
 
   Map<String?, Map<String, bool>> downloadedFileAcknowledgement = {};
   Map<String?, bool> individualSentFileId = {}, receivedItemsId = {};
+  List<String> downloadingFilesList = [];
   String? state;
   String _historySearchText = '';
   bool isDesc = true;
@@ -76,7 +77,7 @@ class HistoryProvider extends BaseModel {
   List<Widget> desktopTabs = [DesktopRecents()];
   Map sendFileHistory = {'history': []};
   String? app_lifecycle_state;
-  HistoryType typeSelected = HistoryType.all;
+  HistoryType typeSelected = HistoryType.received;
 
   resetData() {
     isSyncedDataFetched = false;
@@ -84,6 +85,7 @@ class HistoryProvider extends BaseModel {
     receivedHistoryLogs = [];
     sendFileHistory = {'history': []};
     downloadedFileAcknowledgement = {};
+    downloadingFilesList = [];
     recentFile = [];
     individualSentFileId = {};
     receivedItemsId = {};
@@ -91,6 +93,7 @@ class HistoryProvider extends BaseModel {
     receivedFileHistory = [];
     allFilesHistory = [];
     displayFilesHistory = [];
+    listType = FileType.values.toList();
     notifyListeners();
   }
 
@@ -107,10 +110,8 @@ class HistoryProvider extends BaseModel {
   }
 
   void resetOptional() {
-    if (typeSelected == HistoryType.all && listType.isEmpty) {
-      listType = FileType.values.toList();
-      notifyListeners();
-    }
+    listType = FileType.values.toList();
+    notifyListeners();
   }
 
   void resetIsDownloadDone() {
@@ -120,6 +121,29 @@ class HistoryProvider extends BaseModel {
 
   void setSelectedType(HistoryType type) {
     typeSelected = type;
+    notifyListeners();
+  }
+
+  void updateListType(List<FileType> newList) {
+    listType = newList;
+    notifyListeners();
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
+  void addDownloadingState(String key) {
+    if (!downloadingFilesList.contains(key)) {
+      downloadingFilesList.add(key);
+    }
+    notifyListeners();
+  }
+
+  void removeDownloadingState(String key) {
+    if (downloadingFilesList.contains(key)) {
+      downloadingFilesList.remove(key);
+    }
     notifyListeners();
   }
 
@@ -297,8 +321,8 @@ class HistoryProvider extends BaseModel {
                 if ((filesModel.fileDetails?.files ?? []).isNotEmpty) {
                   Future.forEach(
                     filesModel.fileDetails!.files!,
-                    (dynamic file) async {
-                      String? fileExtension = file.displayName.split('.').last;
+                    (FileData file) async {
+                      String? fileExtension = file.name?.split('.').last;
                       for (int i = 0; i < listFileTypeSelect!.length; i++) {
                         if (FileTypes.ALL_TYPES.contains(fileExtension)) {
                           if (listFileTypeSelect[i]
@@ -761,9 +785,9 @@ class HistoryProvider extends BaseModel {
       receivedItemsId[atkey.key] = true;
     });
 
-    // if (!isNewKeyAvailable) {
-    //   return;
-    // }
+    if (!isNewKeyAvailable) {
+      return;
+    }
 
     for (var atKey in fileTransferAtkeys) {
       var isCurrentAtsign = compareAtSign(
@@ -794,8 +818,8 @@ class HistoryProvider extends BaseModel {
               if ((filesModel.files ?? []).isNotEmpty) {
                 await Future.forEach(
                   filesModel.files!,
-                  (dynamic file) async {
-                    String? fileExtension = file.displayName.split('.').last;
+                  (FileData file) async {
+                    String? fileExtension = file.name?.split('.').last;
                     for (int i = 0; i < listFileTypeSelect!.length; i++) {
                       if (FileTypes.ALL_TYPES.contains(fileExtension)) {
                         if (listFileTypeSelect[i]
@@ -892,7 +916,7 @@ class HistoryProvider extends BaseModel {
   }
 
   void changeFilterType(HistoryType type) {
-    if (typeSelected != type && type == HistoryType.all) {
+    if (typeSelected != type) {
       listType = FileType.values.toList();
     }
     typeSelected = type;

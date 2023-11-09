@@ -52,65 +52,67 @@ class _ContactScreenState extends State<ContactScreen>
         resizeToAvoidBottomInset: false,
         appBar: AppBarCustom(
           title: "Contacts",
-          suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 30),
-            child: InkWell(
-              onTap: () async {
-                if (provider.indexTab == 2) {
-                  final result = await showModalBottomSheet<bool?>(
-                    context: context,
-                    isScrollControlled: true,
-                    useRootNavigator: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (BuildContext context) {
-                      return CreateGroupScreen(
-                        trustContacts: trustedProvider.trustedContacts,
-                      );
-                    },
-                  );
-                  if (createGroupProvider.selectedImageByteData != null) {
-                    createGroupProvider.removeSelectedImage();
-                  }
-                  if (result ?? false) {
-                    await _groupService.fetchGroupsAndContacts();
-                    provider.notify();
-                  }
-                } else {
-                  final result = await showModalBottomSheet<bool?>(
-                    context: context,
-                    isScrollControlled: true,
-                    useRootNavigator: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (BuildContext context) {
-                      return AddContactScreen();
-                    },
-                  );
+          suffixIcon: [
+            Padding(
+              padding: const EdgeInsets.only(right: 30),
+              child: InkWell(
+                onTap: () async {
+                  if (provider.indexTab == 2) {
+                    final result = await showModalBottomSheet<bool?>(
+                      context: context,
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return CreateGroupScreen(
+                          trustContacts: trustedProvider.trustedContacts,
+                        );
+                      },
+                    );
+                    if (createGroupProvider.selectedImageByteData != null) {
+                      createGroupProvider.removeSelectedImage();
+                    }
+                    if (result ?? false) {
+                      await _groupService.fetchGroupsAndContacts();
+                      provider.notify();
+                    }
+                  } else {
+                    final result = await showModalBottomSheet<bool?>(
+                      context: context,
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return AddContactScreen();
+                      },
+                    );
 
-                  if (result == true) {
-                    await reloadPage();
+                    if (result == true) {
+                      await reloadPage();
+                    }
                   }
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: ColorConstants.orange,
-                  borderRadius: BorderRadius.circular(46),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 13,
-                  vertical: 8,
-                ),
-                child: Text(
-                  provider.indexTab == 2 ? "Add Group" : "Add Contact",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.orange,
+                    borderRadius: BorderRadius.circular(46),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 13,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    provider.indexTab == 2 ? "Add Group" : "Add Contact",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            )
+          ],
         ),
         body: buildBody(),
       );
