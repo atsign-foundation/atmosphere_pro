@@ -28,6 +28,7 @@ class ColorConstants {
   static const Color successGreen = Color(0xFF0ACB21);
   static const Color lightGreen = Color(0xFFE1EDCC);
   static const Color textGreen = Color(0xFF67A700);
+  static const Color shadowGreen = Color(0xFFE3ECD3);
   static const Color selago = Color(0xFFFFFAFA);
   static const Color mildGrey = Color(0xFFE4E4E4);
   static const Color selected_list = Color(0xFFFEF7F7);
@@ -88,6 +89,17 @@ class ColorConstants {
   static const Color greyTextColor = Color(0xFF949494);
   static const Color iconHeaderColor = Color(0xFF231F20);
   static const Color downloadIndicatorColor = Color(0xFF67A700);
+  static const Color fileItemColor = Color(0xFFFEFEFE);
+  static const Color retryButtonColor = Color(0xFFE1E1E1);
+  static const Color errorBackgroundColor = Color(0xFFFCDFD9);
+  static const Color deliveredColor = Color(0xFF18A2EF);
+  static const Color deliveredBackgroundColor = Color(0xFFD7F1FF);
+  static const Color dividerContextMenuColor = Color(0xFFECECEC);
+  static const Color retryBackgroundColor = Color(0xFFFFEEEB);
+  static const Color unreadBackgroundColor = Color(0xFFF6F9F0);
+  static const Color inActiveIndicatorColor = Color(0xFFCCCCCC);
+  static const Color dateLabelColor = Color(0xFFADADAD);
+  static const Color moreFilesBackgroundColor = Color(0xFFF6DED5);
   static const Color bottomBlack = Color(0xFF212121);
 }
 

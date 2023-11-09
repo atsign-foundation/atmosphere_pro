@@ -52,7 +52,7 @@ class OnboardedAtSignCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   )
                 : ContactInitial(
-                    initials: atSignKey,
+                    initials: atSignKey.replaceFirst('@', ''),
                     size: 48,
                     borderRadius: 10,
                   ),
@@ -77,7 +77,7 @@ class OnboardedAtSignCard extends StatelessWidget {
               ),
             ),
           ] else
-           SizedBox(width: 20),
+            SizedBox(width: 20),
           InkWell(
             onTap: onTap,
             child: SvgPicture.asset(

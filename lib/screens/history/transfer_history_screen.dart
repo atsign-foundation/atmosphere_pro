@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
@@ -8,9 +9,11 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_history_widget.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_tab_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_item.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -32,15 +35,22 @@ class TransferHistoryScreen extends StatefulWidget {
   State<TransferHistoryScreen> createState() => _TransferHistoryScreenState();
 }
 
-class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
+class _TransferHistoryScreenState extends State<TransferHistoryScreen>
+    with TickerProviderStateMixin {
   bool isFilterOpened = false;
   late HistoryProvider historyProvider;
   late TextEditingController searchController;
   bool isRefresh = true;
   GlobalKey filterKey = GlobalKey();
+  bool isSearching = false;
+  late TabController tabController;
+  final GlobalKey _one = GlobalKey();
+  final GlobalKey _two = GlobalKey();
 
   @override
   void initState() {
+    tabController =
+        TabController(length: HistoryType.values.length - 1, vsync: this);
     historyProvider = context.read<HistoryProvider>();
     searchController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -63,6 +73,37 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
       appBar: AppBarCustom(
         height: 130,
         title: "History",
+        suffixIcon: [
+          buildIconButton(
+            onTap: () {
+              if (isSearching) {
+                searchController.clear();
+              }
+              setState(() {
+                isSearching = !isSearching;
+              });
+            },
+            icon: isSearching
+                ? AppVectors.icSelectedSearchFill
+                : AppVectors.icSearchFill,
+          ),
+          SizedBox(width: 12),
+          Padding(
+            padding: const EdgeInsets.only(right: 36),
+            child: buildIconButton(
+              onTap: () {
+                _onTapFilterIcon();
+                setState(() {
+                  isFilterOpened = true;
+                });
+              },
+              icon: isFilterOpened
+                  ? AppVectors.icFilterOpened
+                  : AppVectors.icFilter,
+              key: filterKey,
+            ),
+          )
+        ],
       ),
       body: _buildBody(),
     );
@@ -71,50 +112,25 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
   Widget _buildBody() {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(
-            top: 18.toHeight,
-            right: 22.toWidth,
-            left: 34.toWidth,
-            bottom: 16.toHeight,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: SearchWidget(
-                  controller: searchController,
-                  borderColor: Colors.white,
-                  backgroundColor: Colors.white,
-                  hintText: "Search",
-                  onChange: (text) {
-                    setState(() {});
-                  },
-                  hintStyle: TextStyle(
-                    color: ColorConstants.darkSliver,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  margin: EdgeInsets.zero,
-                ),
+        if (isSearching)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(36, 4, 36, 8),
+            child: SearchWidget(
+              controller: searchController,
+              borderColor: Colors.white,
+              backgroundColor: Colors.white,
+              hintText: "Search",
+              onChange: (text) {
+                setState(() {});
+              },
+              hintStyle: TextStyle(
+                color: ColorConstants.darkSliver,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-              SizedBox(width: 16),
-              InkWell(
-                onTap: () {
-                  _onTapFilterIcon();
-                  setState(() {
-                    isFilterOpened = true;
-                  });
-                },
-                child: SvgPicture.asset(
-                  isFilterOpened
-                      ? AppVectors.icFilterOpened
-                      : AppVectors.icFilter,
-                  key: filterKey,
-                ),
-              ),
-            ],
+              margin: EdgeInsets.zero,
+            ),
           ),
-        ),
         Expanded(
           child: RefreshIndicator(
             color: ColorConstants.orange,
@@ -150,7 +166,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                         height: SizeConfig().screenHeight - 120.toHeight,
                         child: Center(
                           child: Text(
-                            'No files sent',
+                            'No files',
                             style: TextStyle(
                               fontSize: 15.toFont,
                               fontWeight: FontWeight.normal,
@@ -165,41 +181,70 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
 
                   provider.displayFilesHistory.forEach((element) {
                     if (element.type == HistoryType.send) {
-                      if (element.sharedWith!.any(
+                      if ((element.sharedWith ?? []).any(
                             (ShareStatus sharedStatus) => sharedStatus.atsign!
                                 .contains(searchController.text),
                           ) ||
                           (element.groupName != null &&
                               element.groupName!.toLowerCase().contains(
                                   searchController.text.toLowerCase()))) {
-                        filteredFileHistory.add(element);
+                        final FileHistory? filteredFile =
+                            getFilterFiles(element);
+                        if (filteredFile != null) {
+                          filteredFileHistory.add(filteredFile);
+                        }
                       }
                     } else {
-                      if (element.fileDetails!.sender!.contains(
+                      if ((element.fileDetails?.sender ?? '').contains(
                         searchController.text,
                       )) {
-                        filteredFileHistory.add(element);
+                        final FileHistory? filteredFile =
+                            getFilterFiles(element);
+                        if (filteredFile != null) {
+                          filteredFileHistory.add(filteredFile);
+                        }
                       }
                     }
                   });
+                  filteredFileHistory.sort(
+                    (a, b) {
+                      return b.fileDetails!.date!
+                          .compareTo(a.fileDetails!.date!);
+                    },
+                  );
 
                   if (filteredFileHistory.isNotEmpty) {
-                    return ListView.separated(
-                      padding: EdgeInsets.only(bottom: 170.toHeight),
-                      physics: AlwaysScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 10.toHeight);
-                      },
-                      itemCount: filteredFileHistory.length,
-                      itemBuilder: (context, index) {
-                        return HistoryCardWidget(
-                          key: UniqueKey(),
-                          fileHistory: filteredFileHistory[index],
-                          onDownloaded: () async {
-                            await provider.getAllFileTransferHistory();
+                    return Column(
+                      children: [
+                        FilterTabBar(
+                          tabController: tabController,
+                          setType: (value) {
+                            provider.changeFilterType(
+                                HistoryType.values[value + 1]);
                           },
-                        );
-                      },
+                          currentFilter: provider.typeSelected,
+                        ),
+                        SizedBox(height: 8),
+                        Expanded(
+                          child: ListView.separated(
+                            key: provider.typeSelected == HistoryType.received
+                                ? _one
+                                : _two,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 36, vertical: 4),
+                            physics: AlwaysScrollableScrollPhysics(),
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: 12.toHeight);
+                            },
+                            itemCount:
+                                buildHistoryList(filteredFileHistory).length,
+                            itemBuilder: (context, index) {
+                              return buildHistoryList(
+                                  filteredFileHistory)[index];
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   } else {
                     return Center(
@@ -250,28 +295,112 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
     );
   }
 
+  Widget buildIconButton({
+    required Function() onTap,
+    required String icon,
+    Key? key,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: SvgPicture.asset(
+        icon,
+        width: 40,
+        height: 40,
+        key: key,
+      ),
+    );
+  }
+
+  Widget buildDateLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: ColorConstants.dateLabelColor,
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+      ),
+    );
+  }
+
+  List<Widget> buildHistoryList(List<FileHistory> data) {
+    List<Widget> result = [];
+
+    final DateTime current = DateTime.now();
+
+    final Widget todayLabel = buildDateLabel(MixedConstants.DATE_LABELS[0]);
+    final Widget yesterdayLabel = buildDateLabel(MixedConstants.DATE_LABELS[1]);
+    final Widget thisWeekLabel = buildDateLabel(MixedConstants.DATE_LABELS[2]);
+    final Widget lastWeekLabel = buildDateLabel(MixedConstants.DATE_LABELS[3]);
+    final Widget thisMonthLabel = buildDateLabel(MixedConstants.DATE_LABELS[4]);
+    final Widget lastMonthLabel = buildDateLabel(MixedConstants.DATE_LABELS[5]);
+    final Widget thisYearLabel = buildDateLabel(MixedConstants.DATE_LABELS[6]);
+    final Widget lastYearLabel = buildDateLabel(MixedConstants.DATE_LABELS[7]);
+
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].type == historyProvider.typeSelected) {
+        final DateTime date = data[i].fileDetails!.date!;
+        if (MixedConstants.isToday(date)) {
+          if (!result.contains(todayLabel)) {
+            result.add(todayLabel);
+          }
+        } else if (MixedConstants.isYesterday(date)) {
+          if (!result.contains(yesterdayLabel)) {
+            result.add(yesterdayLabel);
+          }
+        } else if (MixedConstants.isThisWeek(date)) {
+          if (!result.contains(thisWeekLabel)) {
+            result.add(thisWeekLabel);
+          }
+        } else if (MixedConstants.isLastWeek(date)) {
+          if (!result.contains(lastWeekLabel)) {
+            result.add(lastWeekLabel);
+          }
+        } else if ((date.year == current.year) &&
+            (date.month == current.month)) {
+          if (!result.contains(thisMonthLabel)) {
+            result.add(thisMonthLabel);
+          }
+        } else if (MixedConstants.isLastMonth(date)) {
+          if (!result.contains(lastMonthLabel)) {
+            result.add(lastMonthLabel);
+          }
+        } else if (date.year == current.year) {
+          if (!result.contains(thisYearLabel)) {
+            result.add(thisYearLabel);
+          }
+        } else /* if (MixedConstants.isLastYear(date))*/ {
+          if (!result.contains(lastYearLabel)) {
+            result.add(lastYearLabel);
+          }
+        }
+        result.add(
+          HistoryCardItem(
+            key: UniqueKey(),
+            fileHistory: data[i],
+          ),
+        );
+      }
+    }
+    return result;
+  }
+
   void _onTapFilterIcon() async {
     RenderBox box = filterKey.currentContext!.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
 
     await showDialog(
+      barrierColor: Colors.transparent,
       barrierDismissible: true,
       useRootNavigator: true,
       context: context,
       builder: (context) {
         return Consumer<HistoryProvider>(
           builder: (context, provider, _) {
-            provider.resetOptional();
             return FilterHistoryWidget(
               position: position,
               typeSelected: provider.typeSelected,
-              onSelectedFilter: (value) {
-                provider.changeFilterType(value);
-                print(value);
-              },
-              onSelectedOptionalFilter: (value) async {
-                print(value);
-                await provider.filterByFileType(value);
+              onSelectedOptionalFilter: (value) {
+                provider.updateListType(value);
               },
               listFileType: provider.listType,
             );
@@ -282,6 +411,9 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
       setState(() {
         isFilterOpened = false;
       });
+      if (historyProvider.listType.isEmpty) {
+        historyProvider.resetOptional();
+      }
     });
   }
 
@@ -343,5 +475,51 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
     if (fileExists) {
       await OpenFile.open(path);
     }
+  }
+
+  FileHistory? getFilterFiles(FileHistory data) {
+    List<FileData> listFile = [];
+
+    data.fileDetails?.files?.forEach((element) {
+      String? fileExtension = element.name?.split('.').last;
+      for (int i = 0; i < historyProvider.listType.length; i++) {
+        if (FileTypes.ALL_TYPES.contains(fileExtension)) {
+          if (historyProvider.listType[i].suffixName.contains(fileExtension)) {
+            listFile.add(element);
+          }
+          continue;
+        }
+        if (historyProvider.listType[i] == FileType.other) {
+          listFile.add(element);
+          continue;
+        }
+      }
+    });
+
+    if (listFile.isNotEmpty) {
+      final FileTransfer fileDetails = FileTransfer(
+        url: data.fileDetails!.url,
+        key: data.fileDetails!.key,
+        fileEncryptionKey: data.fileDetails!.fileEncryptionKey,
+        date: data.fileDetails!.date,
+        expiry: data.fileDetails!.expiry,
+        files: listFile,
+        isUpdate: data.fileDetails!.isUpdate,
+        isWidgetOpen: data.fileDetails!.isWidgetOpen,
+        notes: data.fileDetails!.notes,
+        platformFiles: data.fileDetails!.platformFiles,
+        sender: data.fileDetails!.sender,
+      );
+      return FileHistory(
+        fileDetails,
+        data.sharedWith,
+        data.type,
+        data.fileTransferObject,
+        notes: data.notes,
+        groupName: data.groupName,
+        isOperating: data.isOperating,
+      );
+    }
+    return null;
   }
 }
