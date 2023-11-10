@@ -86,7 +86,7 @@ class _InputWidgetState extends State<InputWidget> {
                       ),
                       children: [
                         TextSpan(
-                          text: ' *',
+                          text: '*',
                           style: TextStyle(
                             fontSize: 14.toFont,
                             fontWeight: FontWeight.w400,
