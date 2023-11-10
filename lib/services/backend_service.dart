@@ -568,10 +568,10 @@ class BackendService {
   }
 
   String? state;
-  late LocalLocalNotificationService _notificationService;
+  late LocalNotificationService _notificationService;
 
   void initLocalNotification() async {
-    _notificationService = LocalLocalNotificationService();
+    _notificationService = LocalNotificationService();
     _notificationService.cancelNotifications();
     _notificationService.setOnNotificationClick(onNotificationClick);
 

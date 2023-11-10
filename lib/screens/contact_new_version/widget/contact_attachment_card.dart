@@ -155,7 +155,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                           if (fileTransferProgress?.percent == null &&
                               fileTransferProgress?.fileName ==
                                   widget.singleFile.name) {
-                             isDownloaded = true;
+                            isDownloaded = true;
                           }
 
                           return CommonUtilityFunctions()
@@ -628,24 +628,26 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                           fontSize: 12,
                         ),
                       ),
-                      SizedBox(height: 10),
                       // fileDetail.message.isNotNull
                       //     ?
-                      Text(
-                        "Message",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                      if ((widget.fileTransfer.notes ?? '').isNotEmpty) ...[
+                        SizedBox(height: 10),
+                        Text(
+                          "Message",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      // : SizedBox(),
-                      SizedBox(height: 5),
-                      Text(
-                        widget.fileTransfer.notes ?? "",
-                        style: TextStyle(
-                          fontSize: 12,
+                        // : SizedBox(),
+                        SizedBox(height: 5),
+                        Text(
+                          widget.fileTransfer.notes ?? "",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
+                      ]
                     ],
                   ),
                 ),

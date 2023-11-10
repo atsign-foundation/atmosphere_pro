@@ -45,7 +45,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
         state = context.watch<AddContactProvider>();
         return Scaffold(
           backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false,
           body: Container(
             margin: EdgeInsets.only(top: 60),
             width: double.infinity,
@@ -104,6 +103,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                 hintText: 'Enter atSign',
                                 controller: atSignController,
                                 prefixText: "@",
+                                isRequired: true,
                                 prefixStyle: TextStyle(
                                   fontSize: 14.toFont,
                                   color: Colors.black,

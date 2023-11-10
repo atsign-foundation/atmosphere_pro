@@ -40,6 +40,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
   bool isFilterOpened = false;
   late HistoryProvider historyProvider;
   late TextEditingController searchController;
+  bool isRefresh = true;
   GlobalKey filterKey = GlobalKey();
   bool isSearching = false;
   late TabController tabController;
@@ -136,10 +137,16 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
             onRefresh: () async {
               if (historyProvider.status[historyProvider.PERIODIC_REFRESH] !=
                   Status.Loading) {
-                await historyProvider.getAllFileTransferHistory();
+                setState(() {
+                  isRefresh = false;
+                });
+                await historyProvider
+                    .getAllFileTransferHistory()
+                    .whenComplete(() => isRefresh = true);
               }
             },
             child: ProviderHandler<HistoryProvider>(
+              showIndicator: isRefresh,
               functionName: historyProvider.GET_ALL_FILE_HISTORY,
               showError: false,
               load: (provider) async {

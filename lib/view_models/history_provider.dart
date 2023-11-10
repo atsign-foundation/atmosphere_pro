@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
@@ -657,21 +658,28 @@ class HistoryProvider extends BaseModel {
         }
       }
     } else {
+      String nickName = '';
+      var displayDetails = await getAtSignDetails(sharedBy);
+      if (displayDetails.tags != null) {
+        nickName = displayDetails.tags!['nickname'] ??
+            displayDetails.tags!['name'] ??
+            sharedBy;
+      }
       // showing notification for new recieved file
       switch (app_lifecycle_state) {
         case 'AppLifecycleState.resumed':
         case 'AppLifecycleState.inactive':
         case 'AppLifecycleState.detached':
-          await LocalLocalNotificationService()
-              .showNotification(sharedBy, 'Download and view the file(s).');
+          await LocalNotificationService()
+              .showNotification(nickName, 'Download and view the file(s).');
           break;
         case 'AppLifecycleState.paused':
-          await LocalLocalNotificationService().showNotification(
-              sharedBy, 'Open the app to download and view the file(s).');
+          await LocalNotificationService().showNotification(
+              nickName, 'Open the app to download and view the file(s).');
           break;
         default:
-          await LocalLocalNotificationService()
-              .showNotification(sharedBy, 'Download and view the file(s).');
+          await LocalNotificationService()
+              .showNotification(nickName, 'Download and view the file(s).');
       }
 
       var fileHistory = FileHistory(

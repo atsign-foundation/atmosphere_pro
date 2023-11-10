@@ -4,13 +4,13 @@ import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
-class LocalLocalNotificationService {
-  LocalLocalNotificationService._() {
+class LocalNotificationService {
+  LocalNotificationService._() {
     init();
   }
-  static LocalLocalNotificationService _instace =
-      LocalLocalNotificationService._();
-  factory LocalLocalNotificationService() => _instace;
+  static LocalNotificationService _instace =
+      LocalNotificationService._();
+  factory LocalNotificationService() => _instace;
   late FlutterLocalNotificationsPlugin _notificationsPlugin;
   late InitializationSettings initializationSettings;
   final BehaviorSubject<ReceivedNotification>

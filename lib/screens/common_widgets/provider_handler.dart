@@ -16,28 +16,33 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   final String? functionName;
   final bool showError;
   final Function(T)? load;
+  final bool showIndicator;
 
-  const ProviderHandler(
-      {Key? key,
-      this.successBuilder,
-      this.errorBuilder,
-      this.functionName,
-      this.showError = true,
-      this.load})
-      : super(key: key);
+  const ProviderHandler({
+    Key? key,
+    this.successBuilder,
+    this.errorBuilder,
+    this.functionName,
+    this.showError = true,
+    this.load,
+    this.showIndicator = true,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
       if (_provider.status[functionName!] == Status.Loading) {
         return Center(
-          child: Container(
+          child: SizedBox(
             height: 50.toHeight,
             width: 50.toHeight,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                ColorConstants.orange,
-              ),
-            ),
+            child: showIndicator
+                ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      ColorConstants.orange,
+                    ),
+                  )
+                : null,
           ),
         );
       } else if (_provider.status[functionName!] == Status.Error) {

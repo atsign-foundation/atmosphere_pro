@@ -4,11 +4,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:flutter/material.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../view_models/history_provider.dart';
 
 class DesktopDownloadAllFiles extends StatefulWidget {
   @override
@@ -113,7 +112,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
   }
 
   _setDownloadFolder() async {
-    String path = (await getSavePath()) ?? Platform.pathSeparator;
+    String path = (await getSaveLocation())?.path ?? Platform.pathSeparator;
     if (mounted) {
       setState(() {
         downloadFolder = path;
