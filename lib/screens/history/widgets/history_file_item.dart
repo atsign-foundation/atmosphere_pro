@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -272,21 +274,23 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                       SizedBox(height: 10),
                       // fileDetail.message.isNotNull
                       //     ?
-                      Text(
-                        "Message",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                      if ((widget.fileTransfer?.notes ?? '').isNotEmpty) ...[
+                        Text(
+                          "Message",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      // : SizedBox(),
-                      SizedBox(height: 5),
-                      Text(
-                        widget.fileTransfer?.notes ?? "",
-                        style: TextStyle(
-                          fontSize: 12,
+                        // : SizedBox(),
+                        SizedBox(height: 5),
+                        Text(
+                          widget.fileTransfer?.notes ?? "",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
+                      ]
                     ],
                   ),
                 ),
@@ -300,6 +304,43 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
           Platform.pathSeparator +
           (widget.data.name ?? ''));
     }
+  }
+
+  void showNoFileDialog(double deviceTextFactor) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Text(
+                    TextStrings().noFileFound,
+                    style: CustomTextStyles.primaryBold16,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
+                        isInverted: false,
+                        buttonText: TextStrings().buttonClose,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -331,6 +372,8 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
               onTap: () async {
                 if (File(path).existsSync()) {
                   await openPreview();
+                } else {
+                  showNoFileDialog(MediaQuery.of(context).textScaleFactor);
                 }
               },
               child: Stack(
