@@ -47,8 +47,9 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           Expanded(
             child: isLoading
                 ? Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 12, right: 72,),
                     child: SkeletonLoadingWidget(
+                      height: 48,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   )

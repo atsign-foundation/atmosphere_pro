@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
-import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/pick_file_dialog.dart';
@@ -31,6 +31,11 @@ import '../../common_widgets/app_bar_custom.dart';
 import 'choice_contacts_widget.dart';
 
 class WelcomeScreenHome extends StatefulWidget {
+  final bool isLoading;
+
+  const WelcomeScreenHome({Key? key, required this.isLoading})
+      : super(key: key);
+
   @override
   _WelcomeScreenHomeState createState() => _WelcomeScreenHomeState();
 }
@@ -61,277 +66,308 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<AtSyncUIStatus>(
-     stream: AtSyncUIService().atSyncUIListener,
-      builder: (context, snapshot) {
-        return Scaffold(
-          appBar: AppBarCustom(
-            isLoading: snapshot.data == AtSyncUIStatus.syncing,
-            height: 130,
-            title: "${BackendService.getInstance().currentAtSign ?? ''} ",
-            description: '',
-            suffixIcon: [
-              Padding(
-                padding: EdgeInsets.only(right: 8),
-                child: NotificationIcon(),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBarCustom(
+        isLoading: widget.isLoading,
+        height: 130,
+        title: "${BackendService.getInstance().currentAtSign ?? ''} ",
+        description: '',
+        suffixIcon: [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: NotificationIcon(),
           ),
-          body: Container(
-            decoration: BoxDecoration(
-              color: ColorConstants.background,
+        ],
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: ColorConstants.background,
+        ),
+        width: double.infinity,
+        height: SizeConfig().screenHeight,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          padding: EdgeInsets.only(bottom: 100.toHeight),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 30.toWidth,
+              vertical: 20.toHeight,
             ),
-            width: double.infinity,
-            height: SizeConfig().screenHeight,
-            child: SingleChildScrollView(
-              controller: scrollController,
-              padding: EdgeInsets.only(bottom: 100.toHeight),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 30.toWidth,
-                  vertical: 20.toHeight,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig().isTablet(context) ? 33.toWidth : 0,
-                      ),
-                      child: Text(
-                        TextStrings().selectFiles,
-                        style: TextStyle(
-                          fontSize: 15.toFont,
-                          fontWeight: FontWeight.w600,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig().isTablet(context) ? 33.toWidth : 0,
+                  ),
+                  child: widget.isLoading
+                      ? SkeletonLoadingWidget(
+                          height: 24,
+                          width: 132,
+                          borderRadius: BorderRadius.circular(54),
+                        )
+                      : Text(
+                          TextStrings().selectFiles,
+                          style: TextStyle(
+                            fontSize: 15.toFont,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Consumer<FileTransferProvider>(builder: (context, provider, _) {
-                      if (provider.selectedFiles.isNotEmpty) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Wrap(
-                              alignment: WrapAlignment.start,
-                              runAlignment: WrapAlignment.start,
-                              children: List.generate(
-                                provider.selectedFiles.length,
-                                (index) {
-                                  return FileCard(
-                                    fileDetail: provider.selectedFiles[index],
-                                    deleteFunc: () {
-                                      provider.deleteFiles(index);
-                                      provider.calculateSize();
-                                    },
-                                    onTap: () {
-                                      openFile(
-                                        provider.selectedFiles[index],
-                                      );
-                                    },
+                ),
+                const SizedBox(height: 10),
+                widget.isLoading
+                    ? SkeletonLoadingWidget(
+                        height: 136,
+                        borderRadius: BorderRadius.circular(10),
+                      )
+                    : Consumer<FileTransferProvider>(
+                        builder: (context, provider, _) {
+                        if (provider.selectedFiles.isNotEmpty) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Wrap(
+                                alignment: WrapAlignment.start,
+                                runAlignment: WrapAlignment.start,
+                                children: List.generate(
+                                  provider.selectedFiles.length,
+                                  (index) {
+                                    return FileCard(
+                                      fileDetail: provider.selectedFiles[index],
+                                      deleteFunc: () {
+                                        provider.deleteFiles(index);
+                                        provider.calculateSize();
+                                      },
+                                      onTap: () {
+                                        openFile(
+                                          provider.selectedFiles[index],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              _buildAddFilesOption()
+                            ],
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () async {
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return PickFileDialog(
+                                    selectFiles: selectFiles,
                                   );
                                 },
-                              ),
-                            ),
-                            _buildAddFilesOption()
-                          ],
-                        );
-                      } else {
-                        return InkWell(
-                          onTap: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return PickFileDialog(
-                                  selectFiles: selectFiles,
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            height: 142.toHeight,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.all(2),
+                              );
+                            },
                             child: Container(
+                              height: 142.toHeight,
+                              width: double.infinity,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      ImageConstants.uploadIcon,
-                                    ),
-                                    SizedBox(height: 10.toHeight),
-                                    Text(
-                                      'Upload your file(s)',
-                                      style: TextStyle(
-                                        color: ColorConstants.gray,
-                                        fontSize: 15.toFont,
-                                        fontWeight: FontWeight.w500,
+                              padding: EdgeInsets.all(2),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        ImageConstants.uploadIcon,
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(height: 10.toHeight),
+                                      Text(
+                                        'Upload your file(s)',
+                                        style: TextStyle(
+                                          color: ColorConstants.gray,
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      }
-                    }),
-                    SizedBox(height: 27.toHeight),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: SizeConfig().isTablet(context) ? 30.toWidth : 0,
-                            ),
-                            child: Text(
-                              TextStrings().selectContacts,
-                              style: TextStyle(
-                                fontSize: 15.toFont,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.toHeight),
-                    Consumer<WelcomeScreenProvider>(
-                      builder: (context, provider, _) {
-                        if (provider.scrollToBottom) {
-                          scrollToBottom();
+                          );
                         }
-
-                        return provider.selectedContacts.isNotEmpty
-                            ? OverlappingContacts(
-                                onchange: (bool value) {
-                                  if (value) {
-                                    listContacts = provider.selectedContacts;
-                                  }
-                                },
-                              )
-                            : SizedBox();
-                      },
-                    ),
-                    _buildChoiceContact(),
-                    SizedBox(height: 27.toHeight),
-                    Container(
-                      height: 94.toHeight,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-                      child: TextField(
-                        controller: noteController,
-                        maxLines: 5,
-                        style: TextStyle(
-                          fontSize: 14.toFont,
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Send Message (Optional)',
-                          hintStyle: TextStyle(
-                            fontSize: 15.toFont,
-                            fontWeight: FontWeight.w500,
-                            color: ColorConstants.textBlack,
-                          ),
-                          border: InputBorder.none,
-                          labelStyle: TextStyle(fontSize: 15.toFont),
-                          fillColor: Colors.white,
-                        ),
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.done,
-                      ),
-                    ),
-                    SizedBox(height: 40.toHeight),
-                    InkWell(
-                      onTap: sendFileWithFileBin,
-                      child: Container(
-                        height: 67.toHeight,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(247),
-                          gradient: LinearGradient(
-                            colors: [Color(0xffF05E3F), Color(0xffe9a642)],
-                            stops: [0.1, 0.8],
-                          ),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Transfer Now',
+                      }),
+                SizedBox(height: 27.toHeight),
+                widget.isLoading
+                    ? SkeletonLoadingWidget(
+                        height: 24,
+                        width: 132,
+                        borderRadius: BorderRadius.circular(54),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: SizeConfig().isTablet(context)
+                                    ? 30.toWidth
+                                    : 0,
+                              ),
+                              child: Text(
+                                TextStrings().selectContacts,
                                 style: TextStyle(
-                                  fontSize: 20.toFont,
-                                  color: Colors.white,
+                                  fontSize: 15.toFont,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ],
+                            ),
+                          ),
+                        ],
+                      ),
+                SizedBox(height: 10.toHeight),
+                Consumer<WelcomeScreenProvider>(
+                  builder: (context, provider, _) {
+                    if (provider.scrollToBottom) {
+                      scrollToBottom();
+                    }
+
+                    return provider.selectedContacts.isNotEmpty
+                        ? OverlappingContacts(
+                            onchange: (bool value) {
+                              if (value) {
+                                listContacts = provider.selectedContacts;
+                              }
+                            },
+                          )
+                        : SizedBox();
+                  },
+                ),
+                _buildChoiceContact(),
+                SizedBox(height: 27.toHeight),
+                widget.isLoading
+                    ? SkeletonLoadingWidget(
+                        height: 136,
+                        borderRadius: BorderRadius.circular(10),
+                      )
+                    : Container(
+                        height: 94.toHeight,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                        child: TextField(
+                          controller: noteController,
+                          maxLines: 5,
+                          style: TextStyle(
+                            fontSize: 14.toFont,
+                            color: Colors.black,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Send Message (Optional)',
+                            hintStyle: TextStyle(
+                              fontSize: 15.toFont,
+                              fontWeight: FontWeight.w500,
+                              color: ColorConstants.textBlack,
+                            ),
+                            border: InputBorder.none,
+                            labelStyle: TextStyle(fontSize: 15.toFont),
+                            fillColor: Colors.white,
+                          ),
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.done,
+                        ),
+                      ),
+                SizedBox(height: 40.toHeight),
+                widget.isLoading
+                    ? SkeletonLoadingWidget(
+                        height: 68,
+                        borderRadius: BorderRadius.circular(45),
+                      )
+                    : InkWell(
+                        onTap: sendFileWithFileBin,
+                        child: Container(
+                          height: 67.toHeight,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(247),
+                            gradient: LinearGradient(
+                              colors: [Color(0xffF05E3F), Color(0xffe9a642)],
+                              stops: [0.1, 0.8],
+                            ),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Transfer Now',
+                                  style: TextStyle(
+                                    fontSize: 20.toFont,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          ),
-        );
-      }
-    );
-  }
-
-  Widget _buildChoiceContact() {
-    return InkWell(
-      onTap: () {
-        _choiceContact(clearSelectedContact: false);
-      },
-      child: Container(
-        height: 56.toHeight,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Color(0xFFF6DED5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: EdgeInsets.only(left: 20.toWidth, right: 20.toWidth),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Add atSigns',
-                style: TextStyle(
-                  color: ColorConstants.orange,
-                  fontSize: 15.toFont,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Icon(
-                Icons.add_circle_outline,
-                size: 27,
-                color: ColorConstants.orange,
-              )
-            ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildChoiceContact() {
+    return widget.isLoading
+        ? SkeletonLoadingWidget(
+            height: 56,
+            borderRadius: BorderRadius.circular(10),
+          )
+        : InkWell(
+            onTap: () {
+              _choiceContact(clearSelectedContact: false);
+            },
+            child: Container(
+              height: 56.toHeight,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Color(0xFFF6DED5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.toWidth, right: 20.toWidth),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Add atSigns',
+                      style: TextStyle(
+                        color: ColorConstants.orange,
+                        fontSize: 15.toFont,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Icon(
+                      Icons.add_circle_outline,
+                      size: 27,
+                      color: ColorConstants.orange,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 
   Widget _buildAddFilesOption() {

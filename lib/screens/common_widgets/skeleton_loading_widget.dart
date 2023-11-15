@@ -16,13 +16,16 @@ class SkeletonLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(borderRadius: borderRadius),
-      ),
       baseColor: ColorConstants.dividerGrey,
       highlightColor: ColorConstants.background,
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          color: ColorConstants.dividerGrey,
+          borderRadius: borderRadius,
+        ),
+      ),
     );
   }
 }
