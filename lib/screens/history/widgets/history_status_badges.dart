@@ -78,7 +78,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
       child: Text(
         'Delivered',
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: FontWeight.w500,
           color: ColorConstants.deliveredColor,
         ),
@@ -100,7 +100,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
             text: numberFileUnread.toString(),
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 10,
+              fontSize: 11,
               color: ColorConstants.textGreen,
             ),
           ),
@@ -108,7 +108,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
             text: ' Unread',
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 10,
+              fontSize: 11,
               color: ColorConstants.textGreen,
             ),
           )
@@ -145,7 +145,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
           child: Text(
             'Read',
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
               color: ColorConstants.textGreen,
             ),
@@ -170,7 +170,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
               '!',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
+                fontSize: 17,
                 color: ColorConstants.orangeColor,
               ),
             ),
@@ -186,7 +186,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
           child: Text(
             'Error',
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
               color: ColorConstants.orangeColor,
             ),
@@ -205,7 +205,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
               Text(
                 'Retry',
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w500,
                   color: ColorConstants.iconHeaderColor,
                 ),

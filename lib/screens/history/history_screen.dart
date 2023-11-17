@@ -66,8 +66,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                   indicatorWeight: 5.toHeight,
                   indicatorColor: Colors.black,
                   indicatorSize: TabBarIndicatorSize.tab,
-                  labelStyle: CustomTextStyles.primaryBold14,
-                  unselectedLabelStyle: CustomTextStyles.secondaryRegular14,
+                  labelStyle: CustomTextStyles.primaryBold15,
+                  unselectedLabelStyle: CustomTextStyles.secondaryRegular16,
                   controller: _controller,
                   tabs: [
                     Text(
@@ -120,7 +120,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                     child: Text(
                                       'No files sent',
                                       style: TextStyle(
-                                        fontSize: 15.toFont,
+                                        fontSize: 16.toFont,
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
@@ -169,7 +169,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                   Text(
                                     'Some error occured',
                                     style: TextStyle(
-                                      fontSize: 15.toFont,
+                                      fontSize: 16.toFont,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
@@ -221,7 +221,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                       child: Text(
                                         'No files received',
                                         style: TextStyle(
-                                          fontSize: 15.toFont,
+                                          fontSize: 16.toFont,
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
@@ -266,7 +266,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                                         Text(
                                           'Some error occured',
                                           style: TextStyle(
-                                            fontSize: 15.toFont,
+                                            fontSize: 16.toFont,
                                             fontWeight: FontWeight.normal,
                                           ),
                                         ),

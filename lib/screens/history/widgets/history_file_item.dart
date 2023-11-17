@@ -216,7 +216,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                             Text(
                               "$shortDate",
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 11,
                                 color: ColorConstants.oldSliver,
                               ),
                             ),
@@ -231,7 +231,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                             Text(
                               "$time",
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 11,
                                 color: ColorConstants.oldSliver,
                               ),
                             ),
@@ -242,7 +242,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                       Text(
                         (widget.data.name ?? ''),
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 17, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 5),
                       Text(
@@ -252,7 +252,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                 TextStrings().mb,
                         style: TextStyle(
                           color: ColorConstants.grey,
-                          fontSize: 10,
+                          fontSize: 11,
                         ),
                         textAlign: TextAlign.left,
                       ),
@@ -261,14 +261,14 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                           ? Text(
                               nickname,
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             )
                           : SizedBox(),
                       SizedBox(height: 5),
                       Text(
                         widget.fileTransfer?.sender ?? '',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                       SizedBox(height: 10),
@@ -278,7 +278,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                         Text(
                           "Message",
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             color: Colors.grey,
                           ),
                         ),
@@ -287,7 +287,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                         Text(
                           widget.fileTransfer?.notes ?? "",
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                           ),
                         ),
                       ]
@@ -322,7 +322,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                   Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
                     TextStrings().noFileFound,
-                    style: CustomTextStyles.primaryBold16,
+                    style: CustomTextStyles.primaryBold17,
                   ),
                   Padding(padding: EdgeInsets.only(top: 30.0)),
                   Row(
@@ -402,11 +402,11 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                         TextSpan(
                                           text: widget.data.name
                                               ?.replaceAll(fileFormat, ''),
-                                          style: CustomTextStyles.blackW60010,
+                                          style: CustomTextStyles.blackW60011,
                                         ),
                                         TextSpan(
                                           text: fileFormat,
-                                          style: CustomTextStyles.blackW40010,
+                                          style: CustomTextStyles.blackW40011,
                                         )
                                       ],
                                     ),
@@ -415,7 +415,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                 SizedBox(width: 4),
                                 Text(
                                   '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                                  style: CustomTextStyles.oldSliverW400S10,
+                                  style: CustomTextStyles.oldSliverW400S12,
                                 ),
                               ],
                             ),
