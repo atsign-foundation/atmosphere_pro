@@ -154,8 +154,27 @@ class CustomTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static TextStyle oldSliverW400S11 = TextStyle(
+    color: ColorConstants.oldSliver,
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle oldSliverW400S12 = TextStyle(
+    color: ColorConstants.oldSliver,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+
   static TextStyle whiteBoldS12 =
       TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700);
+
+  static TextStyle primaryBold17 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontSize: 17.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
 
   static TextStyle primaryBold16 = TextStyle(
     color: ColorConstants.fontPrimary,
@@ -167,6 +186,13 @@ class CustomTextStyles {
   static TextStyle primaryBold14 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontSize: 14.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
+
+  static TextStyle primaryBold15 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontSize: 15.toFont,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w700,
   );
@@ -430,10 +456,22 @@ class CustomTextStyles {
     fontSize: 12,
   );
 
+  static TextStyle blackW60014 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 14,
+  );
+
   static TextStyle blackW40010 = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
     fontSize: 10,
+  );
+
+  static TextStyle blackW40012 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+    fontSize: 12,
   );
 
   static TextStyle raisinBlackW40010 = TextStyle(
@@ -442,10 +480,22 @@ class CustomTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static TextStyle raisinBlackW40012 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+
   static TextStyle blackW60010 = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w600,
     fontSize: 10,
+  );
+
+  static TextStyle blackW60011 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 11,
   );
 
   static TextStyle blackW50014 = TextStyle(
@@ -457,6 +507,12 @@ class CustomTextStyles {
   static TextStyle raisinBlackW4009 = TextStyle(
     color: ColorConstants.raisinBlack,
     fontSize: 9,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle raisinBlackW40011 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
   );
 }

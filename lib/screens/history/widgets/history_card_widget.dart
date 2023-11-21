@@ -217,7 +217,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                     "${contactList.isNotEmpty ? " and ${contactList.length} others" : ""}"
                                 : nickName,
                             style: TextStyle(
-                              fontSize: 10.toFont,
+                              fontSize: 11.toFont,
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                             ),
@@ -227,7 +227,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         Text(
                           '${DateFormat("MM/dd/yy").format(widget.fileHistory!.fileDetails!.date!)}',
                           style: TextStyle(
-                            fontSize: 10.toFont,
+                            fontSize: 11.toFont,
                             color: ColorConstants.oldSliver,
                           ),
                         ),
@@ -242,7 +242,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         Text(
                           '${DateFormat('kk:mm').format(widget.fileHistory!.fileDetails!.date!)}',
                           style: TextStyle(
-                            fontSize: 10.toFont,
+                            fontSize: 11.toFont,
                             color: ColorConstants.oldSliver,
                           ),
                         ),
@@ -285,7 +285,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                 color: isFileSentSuccess
                                     ? ColorConstants.textGreen
                                     : Colors.red,
-                                fontSize: 8.toFont,
+                                fontSize: 9.toFont,
                               ),
                             ),
                           ),
@@ -385,7 +385,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                               ? ''
                               : "${contactList[0] ?? ''}",
                       style: TextStyle(
-                        fontSize: 8.toFont,
+                        fontSize: 9.toFont,
                         color: Colors.black,
                       ),
                     ),
@@ -398,7 +398,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                 ? widget.fileHistory?.notes ?? ''
                                 : widget.fileHistory?.fileDetails?.notes ?? '',
                             style: TextStyle(
-                              fontSize: 8.toFont,
+                              fontSize: 9.toFont,
                               color: Color(0xFF747474),
                             ),
                           ),
@@ -408,7 +408,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                               ? "${filesList!.length} Files"
                               : "${numberOfFinished}/${filesList!.length} Files",
                           style: TextStyle(
-                            fontSize: 8.toFont,
+                            fontSize: 9.toFont,
                             fontWeight: FontWeight.w500,
                             color: ColorConstants.textBlack,
                           ),

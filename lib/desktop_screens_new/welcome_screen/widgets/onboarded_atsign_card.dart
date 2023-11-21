@@ -85,8 +85,8 @@ class OnboardedAtSignCard extends StatelessWidget {
               width: 20,
               height: 20,
               color: isSelected
-                  ? ColorConstants.raisinBlack
-                  : ColorConstants.disableIconButton,
+                  ? ColorConstants.orange
+                  : ColorConstants.raisinBlack,
               fit: BoxFit.cover,
             ),
           )
