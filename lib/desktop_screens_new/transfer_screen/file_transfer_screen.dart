@@ -103,6 +103,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
           TextStrings().fileSentSuccessfully,
           bgColor: Color(0xFF5FAA45),
         );
+        messageController.clear();
         _filePickerProvider.selectedContacts.clear();
         _filePickerProvider.selectedFiles.clear();
         _filePickerProvider.notify();

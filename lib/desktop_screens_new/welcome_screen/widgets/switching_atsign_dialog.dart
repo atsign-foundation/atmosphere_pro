@@ -1,12 +1,9 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/atsign_card_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SwitchingAtSignDialog extends StatefulWidget {
@@ -53,62 +50,6 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
     );
   }
 
-  Widget buildAtSignCard({required String atSign}) {
-    Uint8List? image = CommonUtilityFunctions().getCachedContactImage(atSign);
-    bool currentAtSign = BackendService.getInstance().currentAtSign! == atSign;
-
-    return InkWell(
-      onTap: () async {
-        await BackendService.getInstance()
-            .checkToOnboard(
-          atSign: atSign,
-        )
-            .then((value) {
-          widget.onSwitchAtSign(atSign);
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-        color: currentAtSign ? ColorConstants.orange : Colors.white,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: image != null
-                  ? Image.memory(
-                      image,
-                      width: 48,
-                      height: 48,
-                      fit: BoxFit.cover,
-                    )
-                  : ContactInitial(
-                      initials: atSign.replaceFirst('@', ''),
-                      size: 48,
-                      borderRadius: 10,
-                    ),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  atSign,
-                  style: currentAtSign
-                      ? CustomTextStyles.whiteW50015
-                      : CustomTextStyles.desktopPrimaryW50015,
-                ),
-              ],
-            ))
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget buildAtSignList() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
@@ -119,7 +60,11 @@ class _SwitchingAtSignDialogState extends State<SwitchingAtSignDialog> {
         child: ListView.separated(
           physics: ClampingScrollPhysics(),
           itemBuilder: (context, index) {
-            return buildAtSignCard(atSign: atSignList?[index] ?? '');
+            return AtSignCardWidget(
+              key: UniqueKey(),
+              atSign: atSignList?[index] ?? '',
+              onSwitchAtSign: widget.onSwitchAtSign,
+            );
           },
           separatorBuilder: (context, index) {
             return Divider(
