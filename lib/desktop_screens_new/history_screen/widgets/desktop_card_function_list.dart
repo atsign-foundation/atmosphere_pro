@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -92,7 +93,11 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
   }
 
   Widget buildSaveButton() {
-    print(historyProvider.downloadingFilesList);
+    /// check if download expired
+    if (!CommonUtilityFunctions()
+        .isFileDownloadAvailable(widget.fileTransfer.date!)) {
+      return SizedBox.shrink();
+    }
     return Consumer<FileProgressProvider>(
       builder: (context, provider, child) {
         var fileTransferProgress =

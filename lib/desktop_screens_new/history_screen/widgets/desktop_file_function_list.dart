@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -194,7 +195,7 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
                 ],
               )
             : isDownloaded
-                ? SizedBox()
+                ? SizedBox.shrink()
                 : isDownloading
                     ? SizedBox(
                         width: 28,
@@ -204,17 +205,21 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
                           color: ColorConstants.downloadIndicatorColor,
                         ),
                       )
-                    : InkWell(
-                        onTap: () async {
-                          await downloadFiles(widget.data);
-                        },
-                        child: SvgPicture.asset(
-                          AppVectors.icDownloadFile,
-                          width: 28,
-                          height: 28,
-                          fit: BoxFit.cover,
-                        ),
-                      );
+                    : (CommonUtilityFunctions().isFileDownloadAvailable(
+                        widget.fileTransfer.date!,
+                      ))
+                        ? InkWell(
+                            onTap: () async {
+                              await downloadFiles(widget.data);
+                            },
+                            child: SvgPicture.asset(
+                              AppVectors.icDownloadFile,
+                              width: 28,
+                              height: 28,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : SizedBox.shrink();
       },
     );
   }
