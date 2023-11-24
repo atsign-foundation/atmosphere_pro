@@ -2,34 +2,39 @@ import 'dart:io';
 
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart';
+import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_history_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/filter_tab_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_item.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
-import '../../data_models/file_entity.dart';
-import '../../services/navigation_service.dart';
-import '../../utils/text_strings.dart';
-import '../../view_models/file_transfer_provider.dart';
-import '../common_widgets/confirmation_dialog.dart';
-
 class TransferHistoryScreen extends StatefulWidget {
-  const TransferHistoryScreen({Key? key}) : super(key: key);
+  final bool isLoading;
+
+  const TransferHistoryScreen({
+    Key? key,
+    required this.isLoading,
+  }) : super(key: key);
 
   @override
   State<TransferHistoryScreen> createState() => _TransferHistoryScreenState();
@@ -71,6 +76,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
     return Scaffold(
       backgroundColor: ColorConstants.background,
       appBar: AppBarCustom(
+        isLoading: widget.isLoading,
         height: 130,
         title: "History",
         suffixIcon: [
@@ -104,6 +110,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
             ),
           )
         ],
+        skeletonLoading: _buildSkeletonLoadingAppBar(),
       ),
       body: _buildBody(),
     );
@@ -146,7 +153,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
               }
             },
             child: ProviderHandler<HistoryProvider>(
-              showIndicator: isRefresh,
               functionName: historyProvider.GET_ALL_FILE_HISTORY,
               showError: false,
               load: (provider) async {
@@ -288,6 +294,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                   ),
                 ),
               ),
+              showSkeletonLoading: widget.isLoading,
             ),
           ),
         ),
@@ -318,6 +325,36 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
         color: ColorConstants.dateLabelColor,
         fontWeight: FontWeight.w500,
         fontSize: 12,
+      ),
+    );
+  }
+
+  Widget _buildSkeletonLoadingAppBar() {
+    return Padding(
+      padding: EdgeInsets.only(right: 32, bottom: 12),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: SkeletonLoadingWidget(
+              height: 48,
+              borderRadius: BorderRadius.circular(47),
+            ),
+          ),
+          SizedBox(width: 20),
+          SkeletonLoadingWidget(
+            height: 44,
+            width: 44,
+            borderRadius: BorderRadius.circular(48),
+          ),
+          SizedBox(width: 8),
+          SkeletonLoadingWidget(
+            height: 44,
+            width: 44,
+            borderRadius: BorderRadius.circular(48),
+          ),
+        ],
       ),
     );
   }
@@ -389,8 +426,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
     Offset position = box.localToGlobal(Offset.zero);
 
     await showDialog(
-      barrierColor: Colors.transparent,
-      barrierDismissible: true,
       useRootNavigator: true,
       context: context,
       builder: (context) {

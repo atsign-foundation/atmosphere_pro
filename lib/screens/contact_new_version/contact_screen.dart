@@ -4,6 +4,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
@@ -16,7 +17,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ContactScreen extends StatefulWidget {
-  const ContactScreen({Key? key}) : super(key: key);
+  final bool isLoading;
+
+  const ContactScreen({
+    Key? key,
+    required this.isLoading,
+  }) : super(key: key);
 
   @override
   State<ContactScreen> createState() => _ContactScreenState();
@@ -51,6 +57,7 @@ class _ContactScreenState extends State<ContactScreen>
         backgroundColor: ColorConstants.background,
         resizeToAvoidBottomInset: false,
         appBar: AppBarCustom(
+          isLoading: widget.isLoading,
           title: "Contacts",
           suffixIcon: [
             Padding(
@@ -113,6 +120,7 @@ class _ContactScreenState extends State<ContactScreen>
               ),
             )
           ],
+          skeletonLoading: _buildSkeletonLoadingAppBar(),
         ),
         body: buildBody(),
       );
@@ -307,6 +315,32 @@ class _ContactScreenState extends State<ContactScreen>
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSkeletonLoadingAppBar() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 12,
+        right: 32,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SkeletonLoadingWidget(
+            height: 48,
+            width: 152,
+            borderRadius: BorderRadius.circular(56),
+          ),
+          SizedBox(width: 20),
+          Flexible(
+            child: SkeletonLoadingWidget(
+              height: 48,
+              borderRadius: BorderRadius.circular(56),
+            ),
+          ),
+        ],
       ),
     );
   }

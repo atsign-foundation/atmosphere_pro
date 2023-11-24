@@ -5,12 +5,14 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart
 import 'package:atsign_atmosphere_pro/screens/common_widgets/option_header_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/files_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -21,9 +23,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/backend_service.dart';
-
 class MyFilesScreen extends StatefulWidget {
+  final bool isLoading;
+
+  const MyFilesScreen({
+    Key? key,
+    required this.isLoading,
+  }) : super(key: key);
+
   @override
   _MyFilesScreenState createState() => _MyFilesScreenState();
 }
@@ -50,8 +57,16 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
     return Scaffold(
       backgroundColor: ColorConstants.background,
       appBar: AppBarCustom(
+        isLoading: widget.isLoading,
         height: 130,
         title: "Files",
+        skeletonLoading: Padding(
+          padding: EdgeInsets.only(bottom: 12, right: 148),
+          child: SkeletonLoadingWidget(
+            height: 48,
+            borderRadius: BorderRadius.circular(47),
+          ),
+        ),
       ),
       body: _buildBody(),
     );

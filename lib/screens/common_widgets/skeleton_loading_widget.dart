@@ -4,13 +4,13 @@ import 'package:shimmer/shimmer.dart';
 
 class SkeletonLoadingWidget extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
   const SkeletonLoadingWidget({
     this.borderRadius = const BorderRadius.all(Radius.zero),
-    this.width = double.infinity,
-    this.height = double.infinity,
+    this.width,
+    this.height,
   });
 
   @override

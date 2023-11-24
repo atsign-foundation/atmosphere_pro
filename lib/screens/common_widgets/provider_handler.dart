@@ -16,7 +16,7 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   final String? functionName;
   final bool showError;
   final Function(T)? load;
-  final bool showIndicator;
+  final bool showSkeletonLoading;
 
   const ProviderHandler({
     Key? key,
@@ -25,26 +25,14 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
     this.functionName,
     this.showError = true,
     this.load,
-    this.showIndicator = true,
+    this.showSkeletonLoading = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
       if (_provider.status[functionName!] == Status.Loading) {
-        return Center(
-          child: SizedBox(
-            height: 50.toHeight,
-            width: 50.toHeight,
-            child: showIndicator
-                ? CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      ColorConstants.orange,
-                    ),
-                  )
-                : null,
-          ),
-        );
+        return SizedBox(child: _buildSkeletonLoading());
       } else if (_provider.status[functionName!] == Status.Error) {
         if (showError) {
           print('IN SHOW ERROR');
@@ -75,5 +63,13 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
         );
       }
     });
+  }
+
+  Widget? _buildSkeletonLoading() {
+    if (showSkeletonLoading) {
+      if (functionName ==) {
+
+      }
+    }
   }
 }

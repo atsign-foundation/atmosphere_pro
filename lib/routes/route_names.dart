@@ -15,5 +15,4 @@ class Routes {
   static const String MY_FILES = 'myFiles';
   static const String MY_FILES_SCREEN = 'myFilesScreen';
   static const String GROUPS = 'groups';
-  static const String SETTINGS = 'settings';
 }

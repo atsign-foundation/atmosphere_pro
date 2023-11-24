@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/file_card.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
@@ -17,6 +18,7 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
@@ -26,8 +28,6 @@ import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/images.dart';
-import '../../common_widgets/app_bar_custom.dart';
 import 'choice_contacts_widget.dart';
 
 class WelcomeScreenHome extends StatefulWidget {
@@ -78,6 +78,13 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
             child: NotificationIcon(),
           ),
         ],
+        skeletonLoading: Padding(
+          padding: const EdgeInsets.only(bottom: 12, right: 72),
+          child: SkeletonLoadingWidget(
+            height: 48,
+            borderRadius: BorderRadius.circular(47),
+          ),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(

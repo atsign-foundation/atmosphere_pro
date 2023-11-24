@@ -115,10 +115,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   static List<Widget> _bottomSheetWidgetOptions(bool isLoading) {
     return [
       WelcomeScreenHome(isLoading: isLoading),
-      ContactScreen(),
-      MyFilesScreen(),
-      TransferHistoryScreen(),
-      SettingsScreen()
+      ContactScreen(isLoading: isLoading),
+      MyFilesScreen(isLoading: isLoading),
+      TransferHistoryScreen(isLoading: isLoading),
+      SettingsScreen(isLoading: isLoading),
     ];
   }
 

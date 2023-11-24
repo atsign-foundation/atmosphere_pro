@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? suffixIcon;
   final TextStyle? titleStyle;
   final bool isLoading;
+  final Widget skeletonLoading;
 
   const AppBarCustom({
     Key? key,
@@ -26,7 +26,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     this.isContent = false,
     this.suffixIcon,
     this.titleStyle,
-    this.isLoading = false,
+    this.isLoading = false, required this.skeletonLoading,
   }) : super(key: key);
 
   @override
@@ -46,13 +46,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           ),
           Expanded(
             child: isLoading
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 12, right: 72,),
-                    child: SkeletonLoadingWidget(
-                      height: 48,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  )
+                ? skeletonLoading
                 : Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
