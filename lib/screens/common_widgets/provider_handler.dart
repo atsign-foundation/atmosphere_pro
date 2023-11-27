@@ -4,8 +4,12 @@
 /// [Status.Loading] renders a CircularProgressIndicator whereas
 /// [Status.Error] renders [errorBuilder]
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_skeleton_loading_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/files_skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -31,8 +35,9 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
-      if (_provider.status[functionName!] == Status.Loading) {
-        return SizedBox(child: _buildSkeletonLoading());
+      if (_provider.status[functionName!] == Status.Loading ||
+          showSkeletonLoading) {
+        return _buildSkeletonLoading(context);
       } else if (_provider.status[functionName!] == Status.Error) {
         if (showError) {
           print('IN SHOW ERROR');
@@ -65,11 +70,23 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
     });
   }
 
-  Widget? _buildSkeletonLoading() {
-    if (showSkeletonLoading) {
-      if (functionName ==) {
-
-      }
+  Widget _buildSkeletonLoading(BuildContext context) {
+    if (functionName == context.read<HistoryProvider>().GET_ALL_FILE_HISTORY) {
+      return HistorySkeletonLoadingWidget();
+    } else if (functionName == context.read<MyFilesProvider>().ALL_FILES) {
+      return FilesSkeletonLoadingWidget();
+    } else {
+      return Center(
+        child: SizedBox(
+          height: 50.toHeight,
+          width: 50.toHeight,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              ColorConstants.orange,
+            ),
+          ),
+        ),
+      );
     }
   }
 }

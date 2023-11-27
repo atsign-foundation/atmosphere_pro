@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_wi
 import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/files_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/files_skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/videos.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -75,7 +76,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
   Widget _buildBody() {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
-      padding: EdgeInsets.only(left: 34, bottom: 32),
+      padding: EdgeInsets.only(left: 36, bottom: 32),
       child: ProviderHandler<MyFilesProvider>(
         load: (provider) async {
           await provider.getAllFiles();

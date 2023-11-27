@@ -155,6 +155,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
             child: ProviderHandler<HistoryProvider>(
               functionName: historyProvider.GET_ALL_FILE_HISTORY,
               showError: false,
+              showSkeletonLoading: widget.isLoading,
               load: (provider) async {
                 await historyProvider.getAllFileTransferHistory();
               },
@@ -294,7 +295,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                   ),
                 ),
               ),
-              showSkeletonLoading: widget.isLoading,
             ),
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_wi
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
@@ -129,168 +130,176 @@ class _ContactScreenState extends State<ContactScreen>
 
   Widget buildBody() {
     return Consumer<ContactProvider>(builder: (context, provider, child) {
-      return InkWell(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        overlayColor: MaterialStateColor.resolveWith(
-          (states) => Colors.transparent,
-        ),
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Column(
-          children: <Widget>[
-            SearchWidget(
-              controller: searchController,
-              borderColor: Colors.white,
-              backgroundColor: Colors.white,
-              hintText: "Search",
-              hintStyle: TextStyle(
-                color: ColorConstants.darkSliver,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
+      return widget.isLoading
+          ? ContactSkeletonLoadingWidget()
+          : InkWell(
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              overlayColor: MaterialStateColor.resolveWith(
+                (states) => Colors.transparent,
               ),
-              margin: EdgeInsets.fromLTRB(
-                36.toWidth,
-                24.toHeight,
-                36.toWidth,
-                0,
-              ),
-              onChange: (value) {
-                provider.notify();
+              onTap: () {
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
               },
-            ),
-            Container(
-              height: 56.toHeight,
-              decoration: BoxDecoration(
-                color: ColorConstants.backgroundTab,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              margin: EdgeInsets.symmetric(
-                horizontal: 36,
-                vertical: 16,
-              ),
-              child: TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 13.toWidth,
-                  vertical: 7.toHeight,
-                ),
-                labelPadding: EdgeInsets.zero,
-                physics: const ClampingScrollPhysics(),
-                tabs: [
-                  _buildTabBarItem(index: 0, currentIndex: provider.indexTab),
-                  _buildTabBarItem(index: 1, currentIndex: provider.indexTab),
-                  _buildTabBarItem(index: 2, currentIndex: provider.indexTab),
-                ],
-                onTap: (index) {
-                  provider.setIndexTab(index);
-                },
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  ListContactWidget(
-                    contactsType: ListContactType.contact,
-                    trustedContacts: trustedProvider.trustedContacts,
-                    searchKeywords: searchController.text,
-                    onTapContact: (contact) async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ContactDetailScreen(
-                            contact: contact,
-                          ),
-                        ),
-                      );
+              child: Column(
+                children: <Widget>[
+                  SearchWidget(
+                    controller: searchController,
+                    borderColor: Colors.white,
+                    backgroundColor: Colors.white,
+                    hintText: "Search",
+                    hintStyle: TextStyle(
+                      color: ColorConstants.darkSliver,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    margin: EdgeInsets.fromLTRB(
+                      36.toWidth,
+                      24.toHeight,
+                      36.toWidth,
+                      0,
+                    ),
+                    onChange: (value) {
+                      provider.notify();
+                    },
+                  ),
+                  Container(
+                    height: 56.toHeight,
+                    decoration: BoxDecoration(
+                      color: ColorConstants.backgroundTab,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 36,
+                      vertical: 16,
+                    ),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicatorColor: Colors.transparent,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 13.toWidth,
+                        vertical: 7.toHeight,
+                      ),
+                      labelPadding: EdgeInsets.zero,
+                      physics: const ClampingScrollPhysics(),
+                      tabs: [
+                        _buildTabBarItem(
+                            index: 0, currentIndex: provider.indexTab),
+                        _buildTabBarItem(
+                            index: 1, currentIndex: provider.indexTab),
+                        _buildTabBarItem(
+                            index: 2, currentIndex: provider.indexTab),
+                      ],
+                      onTap: (index) {
+                        provider.setIndexTab(index);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        ListContactWidget(
+                          contactsType: ListContactType.contact,
+                          trustedContacts: trustedProvider.trustedContacts,
+                          searchKeywords: searchController.text,
+                          onTapContact: (contact) async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactDetailScreen(
+                                  contact: contact,
+                                ),
+                              ),
+                            );
 
-                      if (result != false) {
-                        await reloadPage();
-                      }
-                    },
-                    onTapAddButton: () async {
-                      final result = await showModalBottomSheet<bool?>(
-                        context: context,
-                        isScrollControlled: true,
-                        useRootNavigator: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (BuildContext context) {
-                          return AddContactScreen();
-                        },
-                      );
-                      if (result == true) {
-                        await reloadPage();
-                      }
-                    },
-                  ),
-                  ListContactWidget(
-                    contactsType: ListContactType.trusted,
-                    trustedContacts: trustedProvider.trustedContacts,
-                    searchKeywords: searchController.text,
-                    onTapContact: (contact) async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ContactDetailScreen(
-                            contact: contact,
-                            onTrustFunc: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
+                            if (result != false) {
+                              await reloadPage();
+                            }
+                          },
+                          onTapAddButton: () async {
+                            final result = await showModalBottomSheet<bool?>(
+                              context: context,
+                              isScrollControlled: true,
+                              useRootNavigator: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (BuildContext context) {
+                                return AddContactScreen();
+                              },
+                            );
+                            if (result == true) {
+                              await reloadPage();
+                            }
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  ListContactWidget(
-                    contactsType: ListContactType.groups,
-                    searchKeywords: searchController.text,
-                    onTapGroup: (group) async {
-                      WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        _groupService.groupViewSink.add(group);
-                      });
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GroupView(
-                            group: group,
-                          ),
+                        ListContactWidget(
+                          contactsType: ListContactType.trusted,
+                          trustedContacts: trustedProvider.trustedContacts,
+                          searchKeywords: searchController.text,
+                          onTapContact: (contact) async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactDetailScreen(
+                                  contact: contact,
+                                  onTrustFunc: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                    onTapAddButton: () async {
-                      final result = await showModalBottomSheet<bool?>(
-                        context: context,
-                        isScrollControlled: true,
-                        useRootNavigator: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (BuildContext context) {
-                          return CreateGroupScreen(
-                            trustContacts: trustedProvider.trustedContacts,
-                          );
-                        },
-                      );
-                      if (createGroupProvider.selectedImageByteData != null) {
-                        createGroupProvider.removeSelectedImage();
-                      }
-                      if (result ?? false) {
-                        await _groupService.fetchGroupsAndContacts();
-                        provider.notify();
-                      }
-                    },
+                        ListContactWidget(
+                          contactsType: ListContactType.groups,
+                          searchKeywords: searchController.text,
+                          onTapGroup: (group) async {
+                            WidgetsBinding.instance
+                                .addPostFrameCallback((_) async {
+                              _groupService.groupViewSink.add(group);
+                            });
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GroupView(
+                                  group: group,
+                                ),
+                              ),
+                            );
+                          },
+                          onTapAddButton: () async {
+                            final result = await showModalBottomSheet<bool?>(
+                              context: context,
+                              isScrollControlled: true,
+                              useRootNavigator: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (BuildContext context) {
+                                return CreateGroupScreen(
+                                  trustContacts:
+                                      trustedProvider.trustedContacts,
+                                );
+                              },
+                            );
+                            if (createGroupProvider.selectedImageByteData !=
+                                null) {
+                              createGroupProvider.removeSelectedImage();
+                            }
+                            if (result ?? false) {
+                              await _groupService.fetchGroupsAndContacts();
+                              provider.notify();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-      );
+            );
     });
   }
 

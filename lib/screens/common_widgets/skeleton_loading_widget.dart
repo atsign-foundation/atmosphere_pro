@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SkeletonLoadingWidget extends StatelessWidget {
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadiusGeometry? borderRadius;
   final double? width;
   final double? height;
+  final BoxShape shape;
 
   const SkeletonLoadingWidget({
-    this.borderRadius = const BorderRadius.all(Radius.zero),
+    this.borderRadius,
     this.width,
     this.height,
+    this.shape = BoxShape.rectangle,
   });
 
   @override
@@ -24,6 +26,7 @@ class SkeletonLoadingWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: ColorConstants.dividerGrey,
           borderRadius: borderRadius,
+          shape: shape,
         ),
       ),
     );
