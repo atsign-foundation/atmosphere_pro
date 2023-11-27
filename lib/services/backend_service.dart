@@ -225,34 +225,6 @@ class BackendService {
     }
   }
 
-  sendNotificationAck(String key, String fromAtsign) async {
-    try {
-      String transferId = key.split(':')[1];
-      transferId = transferId.split('@')[0];
-      transferId = transferId.replaceAll('.mospherepro', '');
-      transferId = transferId.replaceAll('file_transfer_', '');
-      AtKey atKey = AtKey()
-        ..key = 'receive_ack_$transferId'
-        ..sharedWith = fromAtsign
-        ..metadata = Metadata()
-        ..metadata!.ttr = -1
-        ..metadata!.ttl = 518400000;
-
-      var notificationResult = await AtClientManager.getInstance()
-          .atClient
-          .notificationService
-          .notify(
-            NotificationParams.forUpdate(
-              atKey,
-              value: 'receive_ack_$key',
-            ),
-          );
-    } catch (e) {
-      print('error in ack: $e');
-      ExceptionService.instance.showNotifyExceptionOverlay(e);
-    }
-  }
-
   downloadFiles(BuildContext context, String key, String fromAtSign) async {
     var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     var result = await historyProvider.downloadFiles(

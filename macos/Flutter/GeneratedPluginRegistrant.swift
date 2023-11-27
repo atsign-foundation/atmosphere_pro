@@ -9,6 +9,7 @@ import at_file_saver
 import biometric_storage
 import desktop_drop
 import desktop_window
+import device_info_plus
 import emoji_picker_flutter
 import fc_native_video_thumbnail
 import file_selector_macos
@@ -16,7 +17,7 @@ import flutter_local_notifications
 import local_notifier
 import package_info_plus
 import path_provider_foundation
-import share_plus_macos
+import share_plus
 import shared_preferences_foundation
 import url_launcher_macos
 import video_compress
@@ -26,6 +27,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   BiometricStorageMacOSPlugin.register(with: registry.registrar(forPlugin: "BiometricStorageMacOSPlugin"))
   DesktopDropPlugin.register(with: registry.registrar(forPlugin: "DesktopDropPlugin"))
   DesktopWindowPlugin.register(with: registry.registrar(forPlugin: "DesktopWindowPlugin"))
+  DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
   EmojiPickerFlutterPlugin.register(with: registry.registrar(forPlugin: "EmojiPickerFlutterPlugin"))
   FcNativeVideoThumbnailPlugin.register(with: registry.registrar(forPlugin: "FcNativeVideoThumbnailPlugin"))
   FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
