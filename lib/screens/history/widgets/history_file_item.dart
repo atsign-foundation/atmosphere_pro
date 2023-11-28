@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -612,12 +613,15 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   }) {
     return InkWell(
       onTap: onTap,
-      child: SvgPicture.asset(
-        icon,
-        width: 32,
-        height: 32,
-        fit: BoxFit.cover,
-      ),
+      child: CommonUtilityFunctions()
+              .isFileDownloadAvailable(widget.fileTransfer!.date!)
+          ? SvgPicture.asset(
+              icon,
+              width: 32,
+              height: 32,
+              fit: BoxFit.cover,
+            )
+          : SizedBox.shrink(),
     );
   }
 
