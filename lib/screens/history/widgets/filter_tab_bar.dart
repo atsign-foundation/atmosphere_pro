@@ -60,7 +60,7 @@ class FilterTabBar extends StatelessWidget {
             HistoryType.values[index].text,
             style: TextStyle(
               color: isCurrentTab ? Colors.white : Colors.black,
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
           ),

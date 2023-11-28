@@ -73,13 +73,13 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
                       children: [
                         Text(
                           title,
-                          style: CustomTextStyles.blackW60012,
+                          style: CustomTextStyles.blackW60013,
                         ),
                         if (nickname.isNotEmpty ||
                             widget.fileHistory.type != HistoryType.received)
                           Text(
                             subTitle,
-                            style: CustomTextStyles.blackW40010,
+                            style: CustomTextStyles.blackW40011,
                           ),
                       ],
                     ),
@@ -116,7 +116,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
                           : 'dd/MM/yyyy HH:mm')
                       .format(widget.fileHistory.fileDetails?.date ??
                           DateTime.now()),
-                  style: CustomTextStyles.raisinBlackW40010,
+                  style: CustomTextStyles.raisinBlackW40011,
                 ),
                 SizedBox(height: 4),
                 HistoryStatusBadges(
@@ -131,7 +131,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
           SizedBox(height: 8),
           Text(
             '"${widget.fileHistory.fileDetails?.notes}"',
-            style: CustomTextStyles.raisinBlackW4009,
+            style: CustomTextStyles.raisinBlackW40010,
           )
         ],
       ],

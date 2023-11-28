@@ -168,7 +168,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                           child: Text(
                             'No files',
                             style: TextStyle(
-                              fontSize: 15.toFont,
+                              fontSize: 16.toFont,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
@@ -269,7 +269,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                         Text(
                           'Some error occured',
                           style: TextStyle(
-                            fontSize: 15.toFont,
+                            fontSize: 16.toFont,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -317,7 +317,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
       style: TextStyle(
         color: ColorConstants.dateLabelColor,
         fontWeight: FontWeight.w500,
-        fontSize: 12,
+        fontSize: 13,
       ),
     );
   }

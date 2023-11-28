@@ -55,7 +55,7 @@ class FilterOptionItem extends StatelessWidget {
                   title ?? '',
                   style: TextStyle(
                     color: isAllOption ? Colors.white : Colors.black,
-                    fontSize: 13,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

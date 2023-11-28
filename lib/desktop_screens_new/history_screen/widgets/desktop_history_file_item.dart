@@ -83,7 +83,7 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 44),
+              SizedBox(width: 50),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(12, 12, 12, 16),
@@ -102,9 +102,9 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
               left: Radius.circular(7),
             ),
             child: SizedBox(
-              width: 44,
+              width: 50,
               child: thumbnail(
-                fileFormat,
+                fileFormat.substring(1),
                 filePath,
               ),
             ),

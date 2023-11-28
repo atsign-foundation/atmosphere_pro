@@ -108,76 +108,69 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
               ),
               provider.recentFile.isNotEmpty
                   ? Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: SizedBox(
-                        height: 112,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: provider.recentFile.length,
-                          padding: EdgeInsets.only(right: 32),
-                          physics: ClampingScrollPhysics(),
-                          separatorBuilder: (context, index) => SizedBox(
-                            width: 16,
-                          ),
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-                              width: 66,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        height: 85,
-                                        width: 66,
-                                        decoration: BoxDecoration(
-                                          color: ColorConstants.lightSliver,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: thumbnail(
-                                          provider.recentFile[index].fileName
-                                                  ?.split(".")
-                                                  .last ??
-                                              "",
-                                          BackendService.getInstance()
-                                                  .downloadDirectory!
-                                                  .path +
-                                              Platform.pathSeparator +
-                                              provider
-                                                  .recentFile[index].fileName!,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: SvgPicture.asset(
-                                          AppVectors.icBannerOverlay,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: Text(
-                                      "${provider.recentFile[index].filePath!.split(Platform.pathSeparator).last}",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                padding: const EdgeInsets.only(bottom: 20),
+                child: SizedBox(
+                  height: 112,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: provider.recentFile.length,
+                    padding: EdgeInsets.only(right: 32),
+                    physics: ClampingScrollPhysics(),
+                    separatorBuilder: (context, index) =>
+                        SizedBox(
+                          width: 16,
                         ),
-                      ),
-                    )
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                        width: 66,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              height: 85,
+                              width: 66,
+                              decoration: BoxDecoration(
+                                color: ColorConstants.lightSliver,
+                                borderRadius:
+                                BorderRadius.circular(5),
+                              ),
+                              child: thumbnail(
+                                provider.recentFile[index].fileName
+                                    ?.split(".")
+                                    .last ??
+                                    "",
+                                BackendService
+                                    .getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                    Platform.pathSeparator +
+                                    provider
+                                        .recentFile[index].fileName!,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8),
+                              child: Text(
+                                "${provider.recentFile[index].filePath!.split(
+                                    Platform.pathSeparator).last}",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
                   : SizedBox(),
               Text(
                 "Category",
@@ -222,7 +215,10 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "${context.watch<MyFilesProvider>().allFiles.length}",
+                        "${context
+                            .watch<MyFilesProvider>()
+                            .allFiles
+                            .length}",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -250,7 +246,10 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
         navigateToFilesDetail(type: fileType);
       },
       child: Container(
-        width: (MediaQuery.of(context).size.width - 110) / 3,
+        width: (MediaQuery
+            .of(context)
+            .size
+            .width - 110) / 3,
         height: 100,
         margin: EdgeInsets.only(right: 20, top: 20),
         decoration: BoxDecoration(
@@ -301,10 +300,11 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => FilesDetailScreen(
-          type: type,
-          autoFocus: autoFocus,
-        ),
+        builder: (_) =>
+            FilesDetailScreen(
+              type: type,
+              autoFocus: autoFocus,
+            ),
       ),
     );
   }
@@ -347,7 +347,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                       ),
                     ),
                     items: FileType.values.map(
-                      (key) {
+                          (key) {
                         return DropdownMenuItem<FileType>(
                           value: key,
                           child: Column(
@@ -372,11 +372,11 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                     ),
                                     provider.typeSelected == key
                                         ? SvgPicture.asset(
-                                            AppVectors.icCheck,
-                                          )
+                                      AppVectors.icCheck,
+                                    )
                                         : SvgPicture.asset(
-                                            AppVectors.icUnCheck,
-                                          ),
+                                      AppVectors.icUnCheck,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -392,7 +392,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                     ).toList(),
                     selectedItemBuilder: (BuildContext context) {
                       return FileType.values.map(
-                        (key) {
+                            (key) {
                           return DropdownMenuItem<FileType>(
                             value: key,
                             child: Column(
@@ -433,7 +433,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
             showError: false,
             successBuilder: (provider) {
               final listFile = provider.displayFiles.where(
-                (element) {
+                    (element) {
                   return (element.fileName?.toLowerCase() ?? '').contains(
                     provider.fileSearchText.toLowerCase(),
                   );
@@ -442,92 +442,92 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
 
               return (listFile.isEmpty)
                   ? Center(
-                      child: Text(
-                        TextStrings().noFilesRecieved,
-                        style: TextStyle(
-                          fontSize: 15.toFont,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    )
+                child: Text(
+                  TextStrings().noFilesRecieved,
+                  style: TextStyle(
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              )
                   : Scrollbar(
-                      child: ListView.builder(
-                        itemCount: listFile.length,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.only(
-                          top: 24.toHeight,
-                          left: 28,
-                          right: 28,
-                          bottom: 100,
+                child: ListView.builder(
+                  itemCount: listFile.length,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(
+                    top: 24.toHeight,
+                    left: 28,
+                    right: 28,
+                    bottom: 100,
+                  ),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () async {
+                        await openFilePath(
+                          listFile[index].filePath!,
+                        );
+                      },
+                      onLongPress: () {
+                        deleteFile(
+                          listFile[index].filePath!,
+                          fileTransferId: listFile[index].fileTransferId,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: ColorConstants.sidebarTextUnselected,
+                          ),
                         ),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () async {
-                              await openFilePath(
-                                listFile[index].filePath!,
-                              );
-                            },
-                            onLongPress: () {
-                              deleteFile(
-                                listFile[index].filePath!,
-                                fileTransferId: listFile[index].fileTransferId,
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: ColorConstants.sidebarTextUnselected,
-                                ),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 16,
-                              ),
-                              margin: EdgeInsets.only(bottom: 12),
-                              child: Row(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        margin: EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: Text(
-                                            "${listFile[index].fileName}",
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: ColorConstants.grayText,
-                                              fontSize: 12.toFont,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          AppUtils.getFileSizeString(
-                                            bytes: listFile[index].size ?? 0,
-                                            decimals: 2,
-                                          ),
-                                          style: TextStyle(
-                                            color: ColorConstants
-                                                .sidebarTextUnselected,
-                                            fontSize: 9.toFont,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        )
-                                      ],
+                                  Flexible(
+                                    child: Text(
+                                      "${listFile[index].fileName}",
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: ColorConstants.grayText,
+                                        fontSize: 12.toFont,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
-                                  Icon(Icons.remove_red_eye_outlined),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    AppUtils.getFileSizeString(
+                                      bytes: listFile[index].size ?? 0,
+                                      decimals: 2,
+                                    ),
+                                    style: TextStyle(
+                                      color: ColorConstants
+                                          .sidebarTextUnselected,
+                                      fontSize: 9.toFont,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                          );
-                        },
+                            Icon(Icons.remove_red_eye_outlined),
+                          ],
+                        ),
                       ),
                     );
+                  },
+                ),
+              );
             },
           ),
         ),
@@ -539,23 +539,26 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
       backgroundColor: Colors.white,
-      builder: (context) => EditBottomSheet(
-        onConfirmation: () async {
-          var file = File(filePath);
-          if (await file.exists()) {
-            file.deleteSync();
-          }
-          if (fileTransferId != null) {
-            await Provider.of<MyFilesProvider>(
+      builder: (context) =>
+          EditBottomSheet(
+            onConfirmation: () async {
+              var file = File(filePath);
+              if (await file.exists()) {
+                file.deleteSync();
+              }
+              if (fileTransferId != null) {
+                await Provider.of<MyFilesProvider>(
                     NavService.navKey.currentContext!,
                     listen: false)
-                .removeParticularFile(fileTransferId,
-                    filePath.split(Platform.pathSeparator).last);
-          }
-          await provider.getAllFiles();
-        },
-        deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
-      ),
+                    .removeParticularFile(fileTransferId,
+                    filePath
+                        .split(Platform.pathSeparator)
+                        .last);
+              }
+              await provider.getAllFiles();
+            },
+            deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
+          ),
     );
   }
 }
