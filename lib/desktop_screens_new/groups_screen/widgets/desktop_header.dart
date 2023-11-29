@@ -44,7 +44,6 @@ class DesktopHeader extends StatelessWidget {
                 ),
                 const SizedBox(width: 32),
               ],
-
               title != null
                   ? Expanded(
                       child: isTitleCentered
@@ -63,7 +62,7 @@ class DesktopHeader extends StatelessWidget {
                             ),
                     )
                   : const SizedBox(),
-              const SizedBox(width: 15),
+              const SizedBox(width: 16),
               // !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
               actions != null
                   ? Row(
@@ -72,9 +71,9 @@ class DesktopHeader extends StatelessWidget {
                   : const SizedBox()
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
           const Divider(
-            height: 0.5,
+            thickness: 1,
             color: Colors.black,
           )
         ],

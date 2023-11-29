@@ -108,9 +108,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(40),
+      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 40),
       height: SizeConfig().screenHeight,
-      color: ColorConstants.fadedBlue,
+      color: ColorConstants.background,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

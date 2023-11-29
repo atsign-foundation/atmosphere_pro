@@ -190,7 +190,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                       context);
                                 } else if (result.runtimeType ==
                                     InvalidAtSignException) {
-                                  CustomToast().show(result.message, context);
+                                  CustomToast().show(result.content, context);
                                 } else {
                                   if (!mounted) return;
                                   CustomToast().show(
