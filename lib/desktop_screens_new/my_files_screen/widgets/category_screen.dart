@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
@@ -16,6 +17,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -110,7 +112,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Container(
       padding: EdgeInsets.all(40),
       height: SizeConfig().screenHeight,
-      color: ColorConstants.fadedBlue,
+      color: ColorConstants.background,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,45 +141,61 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 Spacer(),
                 isSearchActive
                     ? Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            setState(() {
-                              searchText = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
-                            hintText: "Search...",
+                        margin: const EdgeInsets.only(left: 13.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            height: 40,
+                            width: 308,
+                            color: Colors.white,
+                            child: TextField(
+                              autofocus: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  searchText = value;
+                                });
+                              },
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 28, vertical: 8),
+                                border: InputBorder.none,
+                                hintText: 'Search',
+                                hintStyle: TextStyle(
+                                  color: ColorConstants.grey,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                suffixIcon: InkWell(
+                                    onTap: () {
+                                      searchText.isEmpty
+                                          ? setState(() {
+                                              isSearchActive = false;
+                                            })
+                                          : setState(() {
+                                              searchText = '';
+                                            });
+                                    },
+                                    child: const Icon(Icons.close)),
+                              ),
+                            ),
                           ),
                         ),
                       )
-                    : SizedBox(),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      isSearchActive = !isSearchActive;
-                      searchText = "";
-                    });
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.search,
-                      size: 25,
-                    ),
-                  ),
-                ),
+                    : Container(
+                        child: IconButtonWidget(
+                          icon: AppVectors.icSearch,
+                          onTap: () {
+                            setState(() {
+                              isSearchActive = true;
+                            });
+                          },
+                        ),
+                      ),
                 SizedBox(
                   width: 10,
                 ),
@@ -261,48 +279,64 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
 
             // body
-            Wrap(
-              children: files.map((file) {
-                if ((file.fileName ?? "")
-                        .toLowerCase()
-                        .contains(searchText.toLowerCase()) ==
-                    false) {
-                  return SizedBox();
-                }
-                return InkWell(
-                  onTap: () {
-                    showFileDetailsDialog(file);
-                    setSelectedFileName(file);
-                  },
-                  child: isGridType
-                      ? FileTile(
-                          fileName: file.fileName ?? "",
-                          fileSize: file.size ?? 0,
-                          filePath: BackendService.getInstance()
-                                  .downloadDirectory!
-                                  .path +
-                              Platform.pathSeparator +
-                              (file.fileName ?? ""),
-                          fileExt: file.fileName?.split(".").last ?? "",
-                          fileDate: file.date ?? "",
-                          selectedFile: selectedFile == file,
-                          id: file.fileTransferId,
-                        )
-                      : FileListTile(
-                          fileName: file.fileName ?? "",
-                          fileSize: file.size ?? 0,
-                          filePath: BackendService.getInstance()
-                                  .downloadDirectory!
-                                  .path +
-                              Platform.pathSeparator +
-                              (file.fileName ?? ""),
-                          fileExt: file.fileName?.split(".").last ?? "",
-                          fileDate: file.date ?? "",
-                          selectedFile: selectedFile == file,
-                        ),
-                );
-              }).toList(),
-            ),
+            files.isNotEmpty &
+                    files.any(
+                      (element) => (element.fileName ?? '').contains(
+                        searchText.toLowerCase(),
+                      ),
+                    )
+                ? Wrap(
+                    children: files.map((file) {
+                      if ((file.fileName ?? "")
+                              .toLowerCase()
+                              .contains(searchText.toLowerCase()) ==
+                          false) {
+                        return SizedBox();
+                      }
+                      return InkWell(
+                        onTap: () {
+                          showFileDetailsDialog(file);
+                          setSelectedFileName(file);
+                        },
+                        child: isGridType
+                            ? FileTile(
+                                fileName: file.fileName ?? "",
+                                fileSize: file.size ?? 0,
+                                filePath: BackendService.getInstance()
+                                        .downloadDirectory!
+                                        .path +
+                                    Platform.pathSeparator +
+                                    (file.fileName ?? ""),
+                                fileExt: file.fileName?.split(".").last ?? "",
+                                fileDate: file.date ?? "",
+                                selectedFile: selectedFile == file,
+                                id: file.fileTransferId,
+                              )
+                            : FileListTile(
+                                fileName: file.fileName ?? "",
+                                fileSize: file.size ?? 0,
+                                filePath: BackendService.getInstance()
+                                        .downloadDirectory!
+                                        .path +
+                                    Platform.pathSeparator +
+                                    (file.fileName ?? ""),
+                                fileExt: file.fileName?.split(".").last ?? "",
+                                fileDate: file.date ?? "",
+                                selectedFile: selectedFile == file,
+                              ),
+                      );
+                    }).toList(),
+                  )
+                : Center(
+                    child: Text(
+                      'No Data',
+                      style: TextStyle(
+                        color: ColorConstants.greyTextColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
