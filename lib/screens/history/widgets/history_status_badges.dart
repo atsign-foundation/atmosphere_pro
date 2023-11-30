@@ -62,7 +62,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
             );
           }
         } else {
-          return buildReadAllBadges();
+          return SizedBox.shrink();
         }
       },
     );
@@ -117,43 +117,44 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
     );
   }
 
-  Widget buildReadAllBadges() {
-    return Row(
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: ColorConstants.lightGreen,
-          ),
-          child: Center(
-            child: Icon(
-              Icons.done_all,
-              size: 20,
-              color: ColorConstants.textGreen,
-            ),
-          ),
-        ),
-        SizedBox(width: 4),
-        Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(49.5),
-            color: ColorConstants.lightGreen,
-          ),
-          child: Text(
-            'Read',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: ColorConstants.textGreen,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  /// shows file read number
+  // Widget buildReadAllBadges() {
+  //   return Row(
+  //     children: [
+  //       Container(
+  //         width: 32,
+  //         height: 32,
+  //         decoration: BoxDecoration(
+  //           shape: BoxShape.circle,
+  //           color: ColorConstants.lightGreen,
+  //         ),
+  //         child: Center(
+  //           child: Icon(
+  //             Icons.done_all,
+  //             size: 20,
+  //             color: ColorConstants.textGreen,
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(width: 4),
+  //       Container(
+  //         padding: EdgeInsets.all(8),
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(49.5),
+  //           color: ColorConstants.lightGreen,
+  //         ),
+  //         child: Text(
+  //           'Read',
+  //           style: TextStyle(
+  //             fontSize: 11,
+  //             fontWeight: FontWeight.w500,
+  //             color: ColorConstants.textGreen,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget buildErrorBadges() {
     return Row(

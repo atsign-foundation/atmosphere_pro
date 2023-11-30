@@ -150,19 +150,13 @@ class BackendService {
   // called again if outbound connection is dropped
   startMonitor() async {
     await AtClientManager.getInstance()
+        .atClient
         .notificationService
         .subscribe(regex: MixedConstants.appNamespace, shouldDecrypt: true)
         .listen((AtNotification notification) async {
       await _notificationCallBack(notification);
     });
   }
-
-  // setPeriodicFileHistoryRefresh() {
-  //   periodicHistoryRefresh?.cancel();
-  //   periodicHistoryRefresh = Timer.periodic(Duration(minutes: 1), (timer) {
-  //     refreshHistoryScreen();
-  //   });
-  // }
 
   Future<void> _notificationCallBack(AtNotification response) async {
     print('response => $response');
@@ -602,16 +596,16 @@ class BackendService {
     ErrorDialog().show(msg, context: NavService.navKey.currentContext);
   }
 
-  refreshHistoryScreen() async {
-    var historyProvider = Provider.of<HistoryProvider>(
-        NavService.navKey.currentContext!,
-        listen: false);
-    historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
+  // refreshHistoryScreen() async {
+  //   var historyProvider = Provider.of<HistoryProvider>(
+  //       NavService.navKey.currentContext!,
+  //       listen: false);
+  //   historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
 
-    if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
-        Status.Loading) {
-      await historyProvider.refreshReceivedFile(setLoading: false);
-    }
-    historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Done);
-  }
+  //   if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+  //       Status.Loading) {
+  //     await historyProvider.refreshReceivedFile(setLoading: false);
+  //   }
+  //   historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Done);
+  // }
 }

@@ -35,9 +35,21 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
-      if (_provider.status[functionName!] == Status.Loading ||
-          showSkeletonLoading) {
-        return _buildSkeletonLoading(context);
+      if (_provider.status[functionName!] == Status.Loading) {
+        if (showSkeletonLoading) {
+          return _buildSkeletonLoading(context);
+        }
+        return Center(
+          child: Container(
+            height: 50.toHeight,
+            width: 50.toHeight,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                ColorConstants.orange,
+              ),
+            ),
+          ),
+        );
       } else if (_provider.status[functionName!] == Status.Error) {
         if (showError) {
           print('IN SHOW ERROR');

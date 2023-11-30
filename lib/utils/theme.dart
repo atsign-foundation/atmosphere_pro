@@ -8,6 +8,7 @@ class Themes {
     String? fontFamily,
   }) {
     return ThemeData(
+      useMaterial3: false,
       brightness: Brightness.light,
       primaryColor: ColorConstants.desktopPrimary,
       primaryColorDark: ColorConstants.raisinBlack,
