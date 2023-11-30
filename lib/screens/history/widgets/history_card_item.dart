@@ -4,6 +4,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -45,7 +46,10 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 16),
-            child: buildDownloadButton(),
+            child: CommonUtilityFunctions().isFileDownloadAvailable(
+                    widget.fileHistory.fileTransferObject!.date!)
+                ? buildDownloadButton()
+                : SizedBox.shrink(),
           ),
           if (isFilesPresent(widget.fileHistory.fileDetails!)) ...[
             SizedBox(width: 12),

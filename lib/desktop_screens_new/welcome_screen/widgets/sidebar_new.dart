@@ -60,7 +60,7 @@ class _SideBarNewState extends State<SideBarNew> {
   List<MenuItem> helpCenterMenuItems = [
     MenuItem(
       title: TextStrings().sidebarFaqs,
-      image: ImageConstants.faqs,
+      image: ImageConstants.faqsIcon,
       routeName: MixedConstants.FAQ,
       isUrl: true,
     ),
@@ -71,7 +71,7 @@ class _SideBarNewState extends State<SideBarNew> {
     ),
     MenuItem(
       title: TextStrings().termsAndConditions,
-      image: ImageConstants.termsAndConditions,
+      image: ImageConstants.termsAndConditionsIcon,
       routeName: MixedConstants.TERMS_CONDITIONS,
       isUrl: true,
     ),
@@ -256,8 +256,8 @@ class _SideBarNewState extends State<SideBarNew> {
                             Text(
                               "GENERAL",
                               style: TextStyle(
-                                fontSize: 8.toFont,
-                                color: ColorConstants.lightGray,
+                                fontSize: 10.toFont,
+                                color: ColorConstants.darkGray,
                               ),
                             ),
                             SizedBox(height: 5.toHeight),
@@ -285,8 +285,8 @@ class _SideBarNewState extends State<SideBarNew> {
                             Text(
                               "HELP CENTER",
                               style: TextStyle(
-                                fontSize: 8.toFont,
-                                color: ColorConstants.lightGray,
+                                fontSize: 10.toFont,
+                                color: ColorConstants.darkGray,
                               ),
                             ),
                             SizedBox(height: 5.toHeight),
@@ -308,8 +308,7 @@ class _SideBarNewState extends State<SideBarNew> {
                                   isSidebarExpanded:
                                       _sideBarProvider.isSidebarExpanded,
                                   isUrlLauncher:
-                                      helpCenterMenuItems[index].isUrl ??
-                                          false,
+                                      helpCenterMenuItems[index].isUrl ?? false,
                                   isEmailLauncher:
                                       helpCenterMenuItems[index].isEmail ??
                                           false,
