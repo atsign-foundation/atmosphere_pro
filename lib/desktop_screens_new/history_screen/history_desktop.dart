@@ -215,7 +215,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 12,
                   ),
                   Divider(
                     thickness: 1,

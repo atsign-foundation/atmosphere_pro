@@ -4,7 +4,6 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/add_contacts_screen.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/group_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/information_card_expanded.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/desktop_contact_card.dart';
@@ -85,131 +84,98 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                         children: [
                           Expanded(
                             child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height - 120,
-                                child: StreamBuilder<List<BaseContact?>>(
-                                    stream: ContactService().contactStream,
-                                    initialData:
-                                        ContactService().baseContactList,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      } else if ((snapshot.data == null ||
-                                          snapshot.data!.isEmpty)) {
-                                        return Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              TextStrings().noContacts,
-                                              style: CustomTextStyles
-                                                  .primaryBold16,
-                                            ),
-                                          ],
-                                        );
-                                      } else {
-                                        // adding trusted contact array in a map for faster access
-                                        var trustedContactsMap = {};
-                                        for (AtContact contact
-                                            in trustedProvider
-                                                .trustedContacts) {
-                                          trustedContactsMap[contact.atSign] =
-                                              true;
-                                        }
+                              height: MediaQuery.of(context).size.height - 120,
+                              child: StreamBuilder<List<BaseContact?>>(
+                                stream: ContactService().contactStream,
+                                initialData: ContactService().baseContactList,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if ((snapshot.data == null ||
+                                      snapshot.data!.isEmpty)) {
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          TextStrings().noContacts,
+                                          style: CustomTextStyles.primaryBold16,
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    // adding trusted contact array in a map for faster access
+                                    var trustedContactsMap = {};
+                                    for (AtContact contact
+                                        in trustedProvider.trustedContacts) {
+                                      trustedContactsMap[contact.atSign] = true;
+                                    }
 
-                                        _filteredList = <BaseContact>[];
+                                    _filteredList = <BaseContact>[];
 
-                                        for (BaseContact contact in snapshot
-                                            .data! as List<BaseContact>) {
-                                          if (contact.contact!.atSign!
-                                              .contains(searchText)) {
-                                            /// Filtering trusted contacts
-                                            if (showTrusted) {
-                                              if (trustedContactsMap[contact
-                                                          .contact!.atSign] !=
-                                                      null ||
-                                                  trustedContactsMap[contact
-                                                          .contact!.atSign] ==
-                                                      true) {
-                                                _filteredList.add(contact);
-                                              }
-                                            } else {
-                                              _filteredList.add(contact);
-                                            }
+                                    for (BaseContact contact in snapshot.data!
+                                        as List<BaseContact>) {
+                                      if (contact.contact!.atSign!
+                                          .contains(searchText)) {
+                                        /// Filtering trusted contacts
+                                        if (showTrusted) {
+                                          if (trustedContactsMap[contact
+                                                      .contact!.atSign] !=
+                                                  null ||
+                                              trustedContactsMap[contact
+                                                      .contact!.atSign] ==
+                                                  true) {
+                                            _filteredList.add(contact);
                                           }
+                                        } else {
+                                          _filteredList.add(contact);
                                         }
-
-                                        return ListView.separated(
-                                          itemCount: _filteredList.length,
-                                          itemBuilder: (context, index) {
-                                            var contact = _filteredList[index];
-
-                                            return InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedContact = contact;
-                                                  sidebarView = contactSidebar
-                                                      .contactDetails;
-                                                  showGroup = false;
-                                                });
-                                              },
-                                              child: Container(
-                                                  width: double.infinity,
-                                                  key: UniqueKey(),
-                                                  child: DesktopContactCard(
-                                                    contact: contact.contact!,
-                                                  )),
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) {
-                                            var contact =
-                                                snapshot.data![index]!;
-                                            if (contact.contact!.atSign!
-                                                .contains(searchText)) {
-                                              return const Divider(
-                                                thickness: 0.2,
-                                              );
-                                            }
-                                            return const SizedBox();
-                                          },
-                                        );
                                       }
-                                    })),
-                          ),
-                          SizedBox(width: 68),
-                          showGroup
-                              ? Expanded(
-                                  child: SizedBox(
-                                    height: MediaQuery.of(context).size.height -
-                                        120,
-                                    child: GroupList(
-                                      onBack: () {
-                                        setState(() {
-                                          showGroup = !showGroup;
-                                        });
+                                    }
+
+                                    return ListView.separated(
+                                      itemCount: _filteredList.length,
+                                      itemBuilder: (context, index) {
+                                        var contact = _filteredList[index];
+
+                                        return InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedContact = contact;
+                                              sidebarView =
+                                                  contactSidebar.contactDetails;
+                                              showGroup = false;
+                                            });
+                                          },
+                                          child: Container(
+                                              width: double.infinity,
+                                              key: UniqueKey(),
+                                              child: DesktopContactCard(
+                                                contact: contact.contact!,
+                                              )),
+                                        );
                                       },
-                                    ),
-                                  ),
-                                )
-                              : TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showGroup = !showGroup;
-                                    });
-                                  },
-                                  child: Text(
-                                    'Show Groups',
-                                    style: CustomTextStyles.darkSliverWW50015
-                                        .copyWith(
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
+                                      separatorBuilder: (context, index) {
+                                        var contact = snapshot.data![index]!;
+                                        if (contact.contact!.atSign!
+                                            .contains(searchText)) {
+                                          return const Divider(
+                                            thickness: 0.2,
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],

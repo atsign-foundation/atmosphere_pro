@@ -101,6 +101,9 @@ class ColorConstants {
   static const Color dateLabelColor = Color(0xFFADADAD);
   static const Color moreFilesBackgroundColor = Color(0xFFF6DED5);
   static const Color bottomBlack = Color(0xFF212121);
+  static const Color dividerGrayColor = Color(0xFFE8E8E8);
+  static const Color tooltipBackground = Color(0xFFFFEFEC);
+  static const Color disableTooltipColor = Color(0xFFC4C4C4);
 }
 
 class ContactInitialsColors {

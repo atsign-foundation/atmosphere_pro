@@ -354,7 +354,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
                   content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
             } else if (result.runtimeType == InvalidAtSignException) {
               ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(result.message)));
+                  .showSnackBar(SnackBar(content: Text(result.content)));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
