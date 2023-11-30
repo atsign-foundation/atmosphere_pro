@@ -6,6 +6,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/blocked_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
@@ -21,7 +22,12 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  final bool isLoading;
+
+  const SettingsScreen({
+    Key? key,
+    required this.isLoading,
+  }) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -90,9 +96,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             content: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
               width:
-              (Platform.isMacOS || Platform.isWindows || Platform.isLinux)
-                  ? 600
-                  : null,
+                  (Platform.isMacOS || Platform.isWindows || Platform.isLinux)
+                      ? 600
+                      : null,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -109,27 +115,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           TextButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                MaterialStateProperty.all<Color>(
-                                    Colors.white),
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
                                 side: MaterialStateProperty.all<BorderSide>(
                                   const BorderSide(color: Colors.black),
                                 ),
                                 textStyle: MaterialStateProperty.all<TextStyle>(
                                     TextStyle(
-                                      fontSize: 16.toFont,
-                                    )),
+                                  fontSize: 16.toFont,
+                                )),
                                 padding: MaterialStateProperty.all<
-                                    EdgeInsetsGeometry>(
+                                        EdgeInsetsGeometry>(
                                     EdgeInsets.symmetric(
                                         horizontal: 15.toWidth,
                                         vertical: 10.toHeight)),
                                 shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      side: const BorderSide(
-                                          color: Colors.black),
-                                    ))),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: const BorderSide(color: Colors.black),
+                                ))),
                             child: const Text(
                               "Cancel",
                               style: TextStyle(
@@ -148,25 +153,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           TextButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                MaterialStateProperty.all<Color>(
-                                    Colors.black),
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
                                 textStyle: MaterialStateProperty.all<TextStyle>(
                                     TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16.toFont,
-                                    )),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16.toFont,
+                                )),
                                 padding: MaterialStateProperty.all<
-                                    EdgeInsetsGeometry>(
+                                        EdgeInsetsGeometry>(
                                     EdgeInsets.symmetric(
                                         horizontal: 15.toWidth,
                                         vertical: 10.toHeight)),
                                 shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      side: const BorderSide(
-                                          color: Colors.black),
-                                    ))),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: const BorderSide(color: Colors.black),
+                                ))),
                             child: const Text(
                               "Backup",
                               style: TextStyle(color: Colors.white),
@@ -220,8 +224,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: ColorConstants.background,
       // extendBodyBehindAppBar: true,
       appBar: AppBarCustom(
+        isLoading: widget.isLoading,
         height: 330,
         title: "Settings",
+        skeletonLoading: Padding(
+          padding: EdgeInsets.only(bottom: 12, right: 72),
+          child: SkeletonLoadingWidget(
+            height: 48,
+            borderRadius: BorderRadius.circular(47),
+          ),
+        ),
       ),
       // extendBody: true,
       // drawerScrimColor: Colors.transparent,
@@ -233,7 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.fromLTRB(31, 0, 31, 24),
           children: [
             SizedBox(height: 28),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[0],
               onPressed: () async {
                 await Navigator.push(
@@ -248,7 +260,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               image: optionIcons[0],
             ),
             SizedBox(height: 32),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[1],
               onPressed: () async {
                 await showBackupDialog(context);
@@ -256,13 +268,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               image: optionIcons[1],
             ),
             SizedBox(height: 16),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[2],
               onPressed: switchAtsign,
               image: optionIcons[2],
             ),
             SizedBox(height: 16),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[3],
               onPressed: () async {
                 CommonUtilityFunctions().showResetAtsignDialog();
@@ -270,7 +282,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               image: optionIcons[3],
             ),
             SizedBox(height: 33),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[4],
               onPressed: () {
                 Navigator.pushNamed(
@@ -281,7 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               image: optionIcons[4],
             ),
             SizedBox(height: 16),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[5],
               onPressed: () async {
                 await launchUrl(
@@ -294,7 +306,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               image: optionIcons[5],
             ),
             SizedBox(height: 16),
-            SettingsButton(
+            _buildSettingButton(
               buttonText: optionTitle[6],
               onPressed: () {
                 Navigator.pushNamed(
@@ -319,6 +331,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSettingButton({
+    required String buttonText,
+    required VoidCallback onPressed,
+    required String image,
+  }) {
+    return Visibility(
+      visible: !widget.isLoading,
+      replacement: SkeletonLoadingWidget(
+        height: 60,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: SettingsButton(
+        buttonText: buttonText,
+        onPressed: onPressed,
+        image: image,
       ),
     );
   }

@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
@@ -105,18 +107,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   initPackages() async {
-    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     GroupService().init(MixedConstants.ROOT_DOMAIN, MixedConstants.ROOT_PORT);
     await GroupService().fetchGroupsAndContacts();
   }
 
-  static List<Widget> _bottomSheetWidgetOptions = <Widget>[
-    WelcomeScreenHome(),
-    ContactScreen(),
-    MyFilesScreen(),
-    TransferHistoryScreen(),
-    SettingsScreen()
-  ];
+  static List<Widget> _bottomSheetWidgetOptions(bool isLoading) {
+    return [
+      WelcomeScreenHome(isLoading: isLoading),
+      ContactScreen(isLoading: isLoading),
+      MyFilesScreen(isLoading: isLoading),
+      TransferHistoryScreen(isLoading: isLoading),
+      SettingsScreen(isLoading: isLoading),
+    ];
+  }
 
   void acceptFiles() async {
     _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
@@ -182,234 +186,256 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: customBottomNavigationBar(),
-      key: _scaffoldKey,
-      backgroundColor: ColorConstants.background,
-      // extendBody: true,
-      // drawerScrimColor: Colors.transparent,
-      // endDrawer: SideBarWidget(
-      //   isExpanded: true,
-      // ),
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Consumer<WelcomeScreenProvider>(
-              builder: (_c, welcomeProvider, _) {
-                return !welcomeProvider.isShowOverlay
-                    ? SafeArea(
-                        bottom: false,
-                        child: Container(
-                          height: 24,
-                          width: double.infinity,
-                          child: StreamBuilder<FLUSHBAR_STATUS>(
-                            stream: FileTransferProvider().flushBarStatusStream,
-                            builder: (context, snapshot) {
-                              final flushbarStatus =
-                                  snapshot.data ?? FLUSHBAR_STATUS.SENDING;
+    return StreamBuilder<AtSyncUIStatus>(
+        stream: AtSyncUIService().atSyncUIListener,
+        builder: (context, snapshot) {
+          final bool isLoading = snapshot.data != AtSyncUIStatus.completed;
+          return Scaffold(
+            bottomNavigationBar: customBottomNavigationBar(isLoading),
+            key: _scaffoldKey,
+            backgroundColor: ColorConstants.background,
+            // extendBody: true,
+            // drawerScrimColor: Colors.transparent,
+            // endDrawer: SideBarWidget(
+            //   isExpanded: true,
+            // ),
+            body: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  Consumer<WelcomeScreenProvider>(
+                    builder: (_c, welcomeProvider, _) {
+                      return !welcomeProvider.isShowOverlay
+                          ? SafeArea(
+                              bottom: false,
+                              child: Container(
+                                height: 24,
+                                width: double.infinity,
+                                child: StreamBuilder<FLUSHBAR_STATUS>(
+                                  stream: FileTransferProvider()
+                                      .flushBarStatusStream,
+                                  builder: (context, snapshot) {
+                                    final flushbarStatus = snapshot.data ??
+                                        FLUSHBAR_STATUS.SENDING;
 
-                              if (flushbarStatus == FLUSHBAR_STATUS.DONE) {
-                                Future.delayed(
-                                  const Duration(seconds: 3),
-                                  () {
-                                    welcomeScreenProvider
-                                        .changeOverlayStatus(true);
-                                  },
-                                );
-                                return Material(
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    color: ColorConstants.successGreen,
-                                    child: Center(
-                                      child: Text(
-                                        'Success!🎉 ',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                                    if (flushbarStatus ==
+                                        FLUSHBAR_STATUS.DONE) {
+                                      Future.delayed(
+                                        const Duration(seconds: 3),
+                                        () {
+                                          welcomeScreenProvider
+                                              .changeOverlayStatus(true);
+                                        },
+                                      );
+                                      return Material(
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          color: ColorConstants.successGreen,
+                                          child: Center(
+                                            child: Text(
+                                              'Success!🎉 ',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              } else if (flushbarStatus ==
-                                  FLUSHBAR_STATUS.FAILED) {
-                                Future.delayed(
-                                  const Duration(seconds: 3),
-                                  () {
-                                    welcomeScreenProvider
-                                        .changeOverlayStatus(true);
-                                  },
-                                );
-                                return Material(
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    color: ColorConstants.redAlert,
-                                    child: Center(
-                                      child: Text(
-                                        'Something went wrong! ⚠️',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                                      );
+                                    } else if (flushbarStatus ==
+                                        FLUSHBAR_STATUS.FAILED) {
+                                      Future.delayed(
+                                        const Duration(seconds: 3),
+                                        () {
+                                          welcomeScreenProvider
+                                              .changeOverlayStatus(true);
+                                        },
+                                      );
+                                      return Material(
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          color: ColorConstants.redAlert,
+                                          child: Center(
+                                            child: Text(
+                                              'Something went wrong! ⚠️',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return Consumer<FileProgressProvider>(
-                                  builder: (_c, provider, _) {
-                                    var percent = (provider
-                                                .sentFileTransferProgress
-                                                ?.percent ??
-                                            30) /
-                                        100;
-                                    return InkWell(
-                                      onTap: () {
-                                        OverlayService.instance.showOverlay();
-                                      },
-                                      child: ProgressBarAnimation(
-                                        value: percent,
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color(0xFFF05E3F),
-                                            Color(0xFFEAA743),
-                                          ],
-                                        ),
-                                        // backgroundColor: Colors.red,
-                                      ),
-                                    );
+                                      );
+                                    } else {
+                                      return Consumer<FileProgressProvider>(
+                                        builder: (_c, provider, _) {
+                                          var percent = (provider
+                                                      .sentFileTransferProgress
+                                                      ?.percent ??
+                                                  30) /
+                                              100;
+                                          return InkWell(
+                                            onTap: () {
+                                              OverlayService.instance
+                                                  .showOverlay();
+                                            },
+                                            child: ProgressBarAnimation(
+                                              value: percent,
+                                              gradient: const LinearGradient(
+                                                colors: [
+                                                  Color(0xFFF05E3F),
+                                                  Color(0xFFEAA743),
+                                                ],
+                                              ),
+                                              // backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      )
-                    : SizedBox();
-              },
-            ),
-            Expanded(
-              child: Consumer<InternetConnectivityChecker>(
-                builder: (_c, provider, widget) {
-                  if (provider.isInternetAvailable) {
-                    return _bottomSheetWidgetOptions[context
-                        .watch<WelcomeScreenProvider>()
-                        .selectedBottomNavigationIndex];
-                  } else {
-                    return ErrorScreen(
-                      TextStrings.noInternet,
-                    );
-                  }
-                },
+                                ),
+                              ),
+                            )
+                          : SizedBox();
+                    },
+                  ),
+                  Expanded(
+                    child: Consumer<InternetConnectivityChecker>(
+                      builder: (_c, provider, widget) {
+                        if (provider.isInternetAvailable) {
+                          return _bottomSheetWidgetOptions(isLoading)[context
+                              .watch<WelcomeScreenProvider>()
+                              .selectedBottomNavigationIndex];
+                        } else {
+                          return ErrorScreen(
+                            TextStrings.noInternet,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
-  Widget customBottomNavigationBar() {
-    return Consumer<WelcomeScreenProvider>(
-      builder: (context, provider, _) {
-        return Selector<WelcomeScreenProvider, int>(
-          selector: (context, provider) =>
-              provider.selectedBottomNavigationIndex,
-          builder: (context, selectedBottomNavigationIndex, _) {
-            return Container(
-              height: 74,
-              margin: EdgeInsets.fromLTRB(
-                16.toWidth,
-                0,
-                16.toWidth,
-                16 + MediaQuery.of(context).padding.bottom,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(76),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icUserActivate,
-                        iconInactivate: ImageConstants.icUserInactivate,
-                        title: "Contacts",
-                        index: 1,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
+  Widget customBottomNavigationBar(bool isLoading) {
+    return isLoading
+        ? Padding(
+            padding: const EdgeInsets.only(
+              left: 36,
+              right: 36,
+              bottom: 48,
+            ),
+            child: SkeletonLoadingWidget(
+              height: 68,
+              borderRadius: BorderRadius.circular(45),
+            ),
+          )
+        : Consumer<WelcomeScreenProvider>(
+            builder: (context, provider, _) {
+              return Selector<WelcomeScreenProvider, int>(
+                selector: (context, provider) =>
+                    provider.selectedBottomNavigationIndex,
+                builder: (context, selectedBottomNavigationIndex, _) {
+                  return Container(
+                    height: 74,
+                    margin: EdgeInsets.fromLTRB(
+                      16.toWidth,
+                      0,
+                      16.toWidth,
+                      16 + MediaQuery.of(context).padding.bottom,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(76),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icUserActivate,
+                              iconInactivate: ImageConstants.icUserInactivate,
+                              title: "Contacts",
+                              index: 1,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icFileActivate,
+                              iconInactivate: ImageConstants.icFileInactivate,
+                              title: "Files",
+                              index: 2,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icSendActivate,
+                              iconInactivate: ImageConstants.icSendInactivate,
+                              index: 0,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icHistoryActivate,
+                              iconInactivate:
+                                  ImageConstants.icHistoryInactivate,
+                              title: "History",
+                              index: 3,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icSettingActivate,
+                              iconInactivate:
+                                  ImageConstants.icSettingInactivate,
+                              title: "Settings",
+                              index: 4,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icFileActivate,
-                        iconInactivate: ImageConstants.icFileInactivate,
-                        title: "Files",
-                        index: 2,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icSendActivate,
-                        iconInactivate: ImageConstants.icSendInactivate,
-                        index: 0,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icHistoryActivate,
-                        iconInactivate: ImageConstants.icHistoryInactivate,
-                        title: "History",
-                        index: 3,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icSettingActivate,
-                        iconInactivate: ImageConstants.icSettingInactivate,
-                        title: "Settings",
-                        index: 4,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+                  );
+                },
+              );
+            },
+          );
   }
 }
 
