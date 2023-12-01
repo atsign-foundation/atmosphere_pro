@@ -643,7 +643,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
       barrierDismissible: true,
       builder: (context) {
         return StatefulBuilder(builder: (context, setDialogState) {
-          if (searchController.text.isEmpty && filteredContactList.isEmpty) {
+          if (searchController.text.isEmpty) {
             filteredContactList = [...GroupService().allContacts];
             setDialogState(() {});
           }

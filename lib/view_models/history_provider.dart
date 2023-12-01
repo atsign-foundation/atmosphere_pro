@@ -235,7 +235,8 @@ class HistoryProvider extends BaseModel {
           }
         }
       }
-      allFilesHistory.insert(0, fileHistory);
+      allFilesHistory.insert(0, fileHistory); // for desktop
+      displayFilesHistory.insert(0, fileHistory);
       notifyListeners();
       return res;
     } catch (e) {

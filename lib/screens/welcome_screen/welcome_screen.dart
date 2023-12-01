@@ -112,13 +112,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await GroupService().fetchGroupsAndContacts();
   }
 
-  static List<Widget> _bottomSheetWidgetOptions(bool isLoading) {
+  static List<Widget> _bottomSheetWidgetOptions() {
     return [
-      WelcomeScreenHome(isLoading: isLoading),
-      ContactScreen(isLoading: isLoading),
-      MyFilesScreen(isLoading: isLoading),
-      TransferHistoryScreen(isLoading: isLoading),
-      SettingsScreen(isLoading: isLoading),
+      WelcomeScreenHome(isLoading: false),
+      ContactScreen(isLoading: false),
+      MyFilesScreen(isLoading: false),
+      TransferHistoryScreen(isLoading: false),
+      SettingsScreen(isLoading: false),
     ];
   }
 
@@ -189,10 +189,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return StreamBuilder<AtSyncUIStatus>(
         stream: AtSyncUIService().atSyncUIListener,
         builder: (context, snapshot) {
-          final bool isLoading = (snapshot.data ?? AtSyncUIStatus.syncing) ==
-              AtSyncUIStatus.syncing;
           return Scaffold(
-            bottomNavigationBar: customBottomNavigationBar(isLoading),
+            bottomNavigationBar: customBottomNavigationBar(),
             key: _scaffoldKey,
             backgroundColor: ColorConstants.background,
             // extendBody: true,
@@ -309,7 +307,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Consumer<InternetConnectivityChecker>(
                       builder: (_c, provider, widget) {
                         if (provider.isInternetAvailable) {
-                          return _bottomSheetWidgetOptions(isLoading)[context
+                          return _bottomSheetWidgetOptions()[context
                               .watch<WelcomeScreenProvider>()
                               .selectedBottomNavigationIndex];
                         } else {
@@ -327,116 +325,102 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         });
   }
 
-  Widget customBottomNavigationBar(bool isLoading) {
-    return isLoading
-        ? Padding(
-            padding: const EdgeInsets.only(
-              left: 36,
-              right: 36,
-              bottom: 48,
-            ),
-            child: SkeletonLoadingWidget(
-              height: 68,
-              borderRadius: BorderRadius.circular(45),
-            ),
-          )
-        : Consumer<WelcomeScreenProvider>(
-            builder: (context, provider, _) {
-              return Selector<WelcomeScreenProvider, int>(
-                selector: (context, provider) =>
-                    provider.selectedBottomNavigationIndex,
-                builder: (context, selectedBottomNavigationIndex, _) {
-                  return Container(
-                    height: 74,
-                    margin: EdgeInsets.fromLTRB(
-                      16.toWidth,
-                      0,
-                      16.toWidth,
-                      16 + MediaQuery.of(context).padding.bottom,
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(76),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: BottomNavigationWidget(
-                              iconActivate: ImageConstants.icUserActivate,
-                              iconInactivate: ImageConstants.icUserInactivate,
-                              title: "Contacts",
-                              index: 1,
-                              indexSelected: selectedBottomNavigationIndex,
-                              onTap: (index) {
-                                welcomeScreenProvider
-                                    .changeBottomNavigationIndex(index);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: BottomNavigationWidget(
-                              iconActivate: ImageConstants.icFileActivate,
-                              iconInactivate: ImageConstants.icFileInactivate,
-                              title: "Files",
-                              index: 2,
-                              indexSelected: selectedBottomNavigationIndex,
-                              onTap: (index) {
-                                welcomeScreenProvider
-                                    .changeBottomNavigationIndex(index);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: BottomNavigationWidget(
-                              iconActivate: ImageConstants.icSendActivate,
-                              iconInactivate: ImageConstants.icSendInactivate,
-                              index: 0,
-                              indexSelected: selectedBottomNavigationIndex,
-                              onTap: (index) {
-                                welcomeScreenProvider
-                                    .changeBottomNavigationIndex(index);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: BottomNavigationWidget(
-                              iconActivate: ImageConstants.icHistoryActivate,
-                              iconInactivate:
-                                  ImageConstants.icHistoryInactivate,
-                              title: "History",
-                              index: 3,
-                              indexSelected: selectedBottomNavigationIndex,
-                              onTap: (index) {
-                                welcomeScreenProvider
-                                    .changeBottomNavigationIndex(index);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: BottomNavigationWidget(
-                              iconActivate: ImageConstants.icSettingActivate,
-                              iconInactivate:
-                                  ImageConstants.icSettingInactivate,
-                              title: "Settings",
-                              index: 4,
-                              indexSelected: selectedBottomNavigationIndex,
-                              onTap: (index) {
-                                welcomeScreenProvider
-                                    .changeBottomNavigationIndex(index);
-                              },
-                            ),
-                          ),
-                        ],
+  Widget customBottomNavigationBar() {
+    return Consumer<WelcomeScreenProvider>(
+      builder: (context, provider, _) {
+        return Selector<WelcomeScreenProvider, int>(
+          selector: (context, provider) =>
+              provider.selectedBottomNavigationIndex,
+          builder: (context, selectedBottomNavigationIndex, _) {
+            return Container(
+              height: 74,
+              margin: EdgeInsets.fromLTRB(
+                16.toWidth,
+                0,
+                16.toWidth,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(76),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icUserActivate,
+                        iconInactivate: ImageConstants.icUserInactivate,
+                        title: "Contacts",
+                        index: 1,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
                       ),
                     ),
-                  );
-                },
-              );
-            },
-          );
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icFileActivate,
+                        iconInactivate: ImageConstants.icFileInactivate,
+                        title: "Files",
+                        index: 2,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icSendActivate,
+                        iconInactivate: ImageConstants.icSendInactivate,
+                        index: 0,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icHistoryActivate,
+                        iconInactivate: ImageConstants.icHistoryInactivate,
+                        title: "History",
+                        index: 3,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: BottomNavigationWidget(
+                        iconActivate: ImageConstants.icSettingActivate,
+                        iconInactivate: ImageConstants.icSettingInactivate,
+                        title: "Settings",
+                        index: 4,
+                        indexSelected: selectedBottomNavigationIndex,
+                        onTap: (index) {
+                          welcomeScreenProvider
+                              .changeBottomNavigationIndex(index);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
 
