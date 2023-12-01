@@ -341,6 +341,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
     } else if (sidebarView == contactSidebar.addContact) {
       return DesktopAddContactScreen(
         onBack: () {
+          GroupService().fetchGroupsAndContacts();
           setState(() {
             sidebarView = null;
           });
