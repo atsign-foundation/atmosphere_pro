@@ -3,6 +3,8 @@
 /// a [successBuilder] which tells what to render is status is [Status.Done]
 /// [Status.Loading] renders a CircularProgressIndicator whereas
 /// [Status.Error] renders [errorBuilder]
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/files_skeleton_loading_widget.dart';
@@ -35,9 +37,8 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
-      if (_provider.status[functionName!] == Status.Loading ||
-          showSkeletonLoading) {
-        return _buildSkeletonLoading(context);
+      if (_provider.status[functionName!] == Status.Loading) {
+        return _buildLoading(context);
       } else if (_provider.status[functionName!] == Status.Error) {
         if (showError) {
           print('IN SHOW ERROR');
@@ -70,23 +71,27 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
     });
   }
 
-  Widget _buildSkeletonLoading(BuildContext context) {
-    if (functionName == context.read<HistoryProvider>().GET_ALL_FILE_HISTORY) {
-      return HistorySkeletonLoadingWidget();
-    } else if (functionName == context.read<MyFilesProvider>().ALL_FILES) {
-      return FilesSkeletonLoadingWidget();
-    } else {
-      return Center(
-        child: SizedBox(
-          height: 50.toHeight,
-          width: 50.toHeight,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              ColorConstants.orange,
-            ),
+  Widget _buildLoading(BuildContext context) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (functionName ==
+              context.read<HistoryProvider>().GET_ALL_FILE_HISTORY ||
+          showSkeletonLoading) {
+        return HistorySkeletonLoadingWidget();
+      } else if (functionName == context.read<MyFilesProvider>().ALL_FILES ||
+          showSkeletonLoading) {
+        return FilesSkeletonLoadingWidget();
+      }
+    }
+    return Center(
+      child: SizedBox(
+        height: 50.toHeight,
+        width: 50.toHeight,
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+            ColorConstants.orange,
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 }

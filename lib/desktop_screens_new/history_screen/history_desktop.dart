@@ -40,10 +40,10 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
   void initState() {
     super.initState();
     historyProvider = context.read<HistoryProvider>();
-    historyProvider.reset("get_all_file_history");
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       historyProvider.setSelectedType(widget.historyType ?? HistoryType.all);
+      filteredFiles = getDisplayFileData(historyProvider.allFilesHistory);
     });
   }
 
@@ -64,6 +64,8 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
               filteredFiles = getDisplayFileData(provider.allFilesHistory);
             },
             successBuilder: (provider) {
+              filteredFiles = getDisplayFileData(provider.allFilesHistory);
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
