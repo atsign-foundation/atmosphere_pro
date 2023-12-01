@@ -25,9 +25,10 @@ class HistoryDesktopScreen extends StatefulWidget {
 }
 
 class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
-  String searchText = '';
   bool isSearchActive = false;
   bool isSentSelected = true;
+
+  late TextEditingController searchController = TextEditingController();
 
   GlobalKey filterKey = GlobalKey();
   bool isFilterOpened = false;
@@ -65,6 +66,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
             },
             successBuilder: (provider) {
               filteredFiles = getDisplayFileData(provider.allFilesHistory);
+              filterSearchFiles();
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,10 +142,11 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                                 width: screenWidth <= 1380 ? 200 : 308,
                                 color: Colors.white,
                                 child: TextField(
+                                  controller: searchController,
                                   autofocus: true,
                                   onChanged: (value) {
                                     setState(() {
-                                      searchText = value;
+                                      searchController.text = value;
                                     });
                                     filterSearchFiles();
                                   },
@@ -163,16 +166,17 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                     suffixIcon: InkWell(
-                                        onTap: () {
-                                          searchText.isEmpty
-                                              ? setState(() {
-                                                  isSearchActive = false;
-                                                })
-                                              : setState(() {
-                                                  searchText = '';
-                                                });
-                                        },
-                                        child: const Icon(Icons.close)),
+                                      onTap: () {
+                                        searchController.text.isEmpty
+                                            ? setState(() {
+                                                isSearchActive = false;
+                                              })
+                                            : setState(() {
+                                                searchController.clear();
+                                              });
+                                      },
+                                      child: const Icon(Icons.close),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -265,10 +269,8 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
   }
 
   void filterSearchFiles() async {
-    if (searchText.trim().isEmpty) {
-      setState(() {
-        filteredFiles = context.read<HistoryProvider>().allFilesHistory;
-      });
+    if (searchController.text.trim().isEmpty) {
+      filteredFiles = context.read<HistoryProvider>().allFilesHistory;
       return;
     }
 
@@ -276,7 +278,9 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     List<FileHistory> tempFiles = [];
     for (var filehistory in files) {
       for (FileData file in filehistory.fileDetails?.files ?? []) {
-        if (file.name?.toLowerCase().contains(searchText.toLowerCase()) ??
+        if (file.name
+                ?.toLowerCase()
+                .contains(searchController.text.toLowerCase()) ??
             false) {
           final FileHistory? filteredFile = getFilterFiles(filehistory);
           if (filteredFile != null) {
@@ -286,10 +290,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
         }
       }
     }
-
-    setState(() {
-      filteredFiles = tempFiles;
-    });
+    filteredFiles = tempFiles;
   }
 
   // used to get the fileTypes (tags) in a group
