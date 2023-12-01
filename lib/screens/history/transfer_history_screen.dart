@@ -160,104 +160,99 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                 await historyProvider.getAllFileTransferHistory();
               },
               successBuilder: (provider) {
-                if ((provider.displayFilesHistory.isEmpty)) {
-                  return ListView.separated(
-                    padding: EdgeInsets.only(bottom: 170.toHeight),
-                    physics: AlwaysScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) =>
-                        Divider(indent: 16.toWidth),
-                    itemCount: 1,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: SizeConfig().screenHeight - 120.toHeight,
-                        child: Center(
-                          child: Text(
-                            'No files',
-                            style: TextStyle(
-                              fontSize: 16.toFont,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  List<FileHistory> filteredFileHistory = [];
+                // if ((provider.displayFilesHistory.isEmpty)) {
+                // return ListView.separated(
+                //   padding: EdgeInsets.only(bottom: 170.toHeight),
+                //   physics: AlwaysScrollableScrollPhysics(),
+                //   separatorBuilder: (context, index) =>
+                //       Divider(indent: 16.toWidth),
+                //   itemCount: 1,
+                //   itemBuilder: (context, index) => Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: SizedBox(
+                //       height: SizeConfig().screenHeight - 120.toHeight,
+                //       child: Center(
+                //         child: Text(
+                //           'No files',
+                //           style: TextStyle(
+                //             fontSize: 16.toFont,
+                //             fontWeight: FontWeight.normal,
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // );
+                // } else {
+                List<FileHistory> filteredFileHistory = [];
 
-                  provider.displayFilesHistory.forEach((element) {
-                    if (element.type == HistoryType.send) {
-                      if ((element.sharedWith ?? []).any(
-                            (ShareStatus sharedStatus) => sharedStatus.atsign!
-                                .contains(searchController.text),
-                          ) ||
-                          (element.groupName != null &&
-                              element.groupName!.toLowerCase().contains(
-                                  searchController.text.toLowerCase()))) {
-                        final FileHistory? filteredFile =
-                            getFilterFiles(element);
-                        if (filteredFile != null) {
-                          filteredFileHistory.add(filteredFile);
-                        }
-                      }
-                    } else {
-                      if ((element.fileDetails?.sender ?? '').contains(
-                        searchController.text,
-                      )) {
-                        final FileHistory? filteredFile =
-                            getFilterFiles(element);
-                        if (filteredFile != null) {
-                          filteredFileHistory.add(filteredFile);
-                        }
+                provider.displayFilesHistory.forEach((element) {
+                  if (element.type == HistoryType.send) {
+                    if ((element.sharedWith ?? []).any(
+                          (ShareStatus sharedStatus) => sharedStatus.atsign!
+                              .contains(searchController.text),
+                        ) ||
+                        (element.groupName != null &&
+                            element.groupName!.toLowerCase().contains(
+                                searchController.text.toLowerCase()))) {
+                      final FileHistory? filteredFile = getFilterFiles(element);
+                      if (filteredFile != null) {
+                        filteredFileHistory.add(filteredFile);
                       }
                     }
-                  });
-                  filteredFileHistory.sort(
-                    (a, b) {
-                      return b.fileDetails!.date!
-                          .compareTo(a.fileDetails!.date!);
-                    },
-                  );
+                  } else {
+                    if ((element.fileDetails?.sender ?? '').contains(
+                      searchController.text,
+                    )) {
+                      final FileHistory? filteredFile = getFilterFiles(element);
+                      if (filteredFile != null) {
+                        filteredFileHistory.add(filteredFile);
+                      }
+                    }
+                  }
+                });
+                filteredFileHistory.sort(
+                  (a, b) {
+                    return b.fileDetails!.date!.compareTo(a.fileDetails!.date!);
+                  },
+                );
 
-                  return Column(
-                    children: [
-                      FilterTabBar(
-                        tabController: tabController,
-                        setType: (value) {
-                          provider
-                              .changeFilterType(HistoryType.values[value + 1]);
-                        },
-                        currentFilter: provider.typeSelected,
-                      ),
-                      SizedBox(height: 8),
-                      (filteredFileHistory.isNotEmpty)
-                          ? Expanded(
-                              child: ListView.separated(
-                                key: provider.typeSelected ==
-                                        HistoryType.received
-                                    ? _one
-                                    : _two,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 36, vertical: 4),
-                                physics: AlwaysScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(height: 12.toHeight);
-                                },
-                                itemCount: buildHistoryList(filteredFileHistory)
-                                    .length,
-                                itemBuilder: (context, index) {
-                                  return buildHistoryList(
-                                      filteredFileHistory)[index];
-                                },
-                              ),
-                            )
-                          : Center(
-                              child: Text('No results found'),
+                return Column(
+                  children: [
+                    FilterTabBar(
+                      tabController: tabController,
+                      setType: (value) {
+                        provider
+                            .changeFilterType(HistoryType.values[value + 1]);
+                      },
+                      currentFilter: provider.typeSelected,
+                    ),
+                    SizedBox(height: 8),
+                    (filteredFileHistory.isNotEmpty)
+                        ? Expanded(
+                            child: ListView.separated(
+                              key: provider.typeSelected == HistoryType.received
+                                  ? _one
+                                  : _two,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 36, vertical: 4),
+                              physics: AlwaysScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: 12.toHeight);
+                              },
+                              itemCount:
+                                  buildHistoryList(filteredFileHistory).length,
+                              itemBuilder: (context, index) {
+                                return buildHistoryList(
+                                    filteredFileHistory)[index];
+                              },
                             ),
-                    ],
-                  );
-                }
+                          )
+                        : Center(
+                            child: Text('No results found'),
+                          ),
+                  ],
+                );
               },
               errorBuilder: (provider) => ListView.separated(
                 padding: EdgeInsets.only(bottom: 170.toHeight),
