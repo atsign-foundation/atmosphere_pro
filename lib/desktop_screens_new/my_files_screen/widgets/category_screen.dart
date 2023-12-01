@@ -281,9 +281,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
             // body
             files.isNotEmpty &
                     files.any(
-                      (element) => (element.fileName ?? '').contains(
-                        searchText.toLowerCase(),
-                      ),
+                      (element) =>
+                          (element.fileName ?? '').toLowerCase().contains(
+                                searchText.toLowerCase(),
+                              ),
                     )
                 ? Wrap(
                     children: files.map((file) {
