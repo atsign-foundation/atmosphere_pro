@@ -189,7 +189,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return StreamBuilder<AtSyncUIStatus>(
         stream: AtSyncUIService().atSyncUIListener,
         builder: (context, snapshot) {
-          final bool isLoading = snapshot.data != AtSyncUIStatus.completed;
+          final bool isLoading = (snapshot.data ?? AtSyncUIStatus.syncing) ==
+              AtSyncUIStatus.syncing;
           return Scaffold(
             bottomNavigationBar: customBottomNavigationBar(isLoading),
             key: _scaffoldKey,
