@@ -220,44 +220,43 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                     },
                   );
 
-                  if (filteredFileHistory.isNotEmpty) {
-                    return Column(
-                      children: [
-                        FilterTabBar(
-                          tabController: tabController,
-                          setType: (value) {
-                            provider.changeFilterType(
-                                HistoryType.values[value + 1]);
-                          },
-                          currentFilter: provider.typeSelected,
-                        ),
-                        SizedBox(height: 8),
-                        Expanded(
-                          child: ListView.separated(
-                            key: provider.typeSelected == HistoryType.received
-                                ? _one
-                                : _two,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 36, vertical: 4),
-                            physics: AlwaysScrollableScrollPhysics(),
-                            separatorBuilder: (context, index) {
-                              return SizedBox(height: 12.toHeight);
-                            },
-                            itemCount:
-                                buildHistoryList(filteredFileHistory).length,
-                            itemBuilder: (context, index) {
-                              return buildHistoryList(
-                                  filteredFileHistory)[index];
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                      child: Text('No results found'),
-                    );
-                  }
+                  return Column(
+                    children: [
+                      FilterTabBar(
+                        tabController: tabController,
+                        setType: (value) {
+                          provider
+                              .changeFilterType(HistoryType.values[value + 1]);
+                        },
+                        currentFilter: provider.typeSelected,
+                      ),
+                      SizedBox(height: 8),
+                      (filteredFileHistory.isNotEmpty)
+                          ? Expanded(
+                              child: ListView.separated(
+                                key: provider.typeSelected ==
+                                        HistoryType.received
+                                    ? _one
+                                    : _two,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 36, vertical: 4),
+                                physics: AlwaysScrollableScrollPhysics(),
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(height: 12.toHeight);
+                                },
+                                itemCount: buildHistoryList(filteredFileHistory)
+                                    .length,
+                                itemBuilder: (context, index) {
+                                  return buildHistoryList(
+                                      filteredFileHistory)[index];
+                                },
+                              ),
+                            )
+                          : Center(
+                              child: Text('No results found'),
+                            ),
+                    ],
+                  );
                 }
               },
               errorBuilder: (provider) => ListView.separated(
