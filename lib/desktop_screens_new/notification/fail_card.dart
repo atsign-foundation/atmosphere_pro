@@ -83,6 +83,7 @@ class FailCard extends StatelessWidget {
                 ),
               ],
             ),
+            Spacer(),
             Container(
               width: 25,
               height: 25,
@@ -117,22 +118,22 @@ class FailCard extends StatelessWidget {
                 ),
               ),
             ),
-            NotificationCardButton(
-                backgroundColor: Color(0xFFE1E1E1),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Retry',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                    Icon(
-                      Icons.refresh,
-                      color: Colors.black,
-                      size: 12,
-                    )
-                  ],
-                ))
+            // NotificationCardButton(
+            //     backgroundColor: Color(0xFFE1E1E1),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         Text(
+            //           'Retry',
+            //           style: TextStyle(color: Colors.black, fontSize: 8),
+            //         ),
+            //         Icon(
+            //           Icons.refresh,
+            //           color: Colors.black,
+            //           size: 8,
+            //         )
+            //       ],
+            //     ))
           ],
         ),
       ),
