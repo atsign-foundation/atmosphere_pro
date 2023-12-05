@@ -278,10 +278,21 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     List<FileHistory> tempFiles = [];
     for (var filehistory in files) {
       for (FileData file in filehistory.fileDetails?.files ?? []) {
-        if (file.name
+        final isFileContained = file.name
                 ?.toLowerCase()
                 .contains(searchController.text.toLowerCase()) ??
-            false) {
+            false;
+        final isAtSignContained =
+            (historyProvider.typeSelected == HistoryType.received
+                    ? filehistory.fileDetails?.sender
+                        ?.toLowerCase()
+                        .contains(searchController.text.toLowerCase())
+                    : filehistory.sharedWith?.any((element) =>
+                        (element.atsign ?? '')
+                            .toLowerCase()
+                            .contains(searchController.text.toLowerCase()))) ??
+                false;
+        if (isFileContained || isAtSignContained) {
           final FileHistory? filteredFile = getFilterFiles(filehistory);
           if (filteredFile != null) {
             tempFiles.add(filteredFile);
