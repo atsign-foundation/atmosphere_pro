@@ -510,6 +510,9 @@ class BackendService {
     Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .resetData();
+    await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
+        listen: false)
+        .getAllFileTransferHistory();
     await Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
             listen: false)
         .getMyFilesRecords();
