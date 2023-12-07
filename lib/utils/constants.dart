@@ -159,15 +159,11 @@ class MixedConstants {
   /// returns sent-file location, creates one if does not exists
   static Future<String> getFileSentLocation() async {
     String _sentPath = '';
-    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-          Platform.pathSeparator +
-          'sent-files';
-      await BackendService.getInstance().doesDirectoryExist(path: _sentPath);
-      return _sentPath;
-    } else {
-      return BackendService.getInstance().atClientPreference.downloadPath!;
-    }
+    _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+        Platform.pathSeparator +
+        'sent-files';
+    await BackendService.getInstance().doesDirectoryExist(path: _sentPath);
+    return _sentPath;
   }
 
   /// returns sent-file location, creates one if does not exists
