@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -61,10 +62,15 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
     super.initState();
   }
 
-  void getFilePath() {
-    path = BackendService.getInstance().downloadDirectory!.path +
-        Platform.pathSeparator +
-        (widget.data.name ?? '');
+  void getFilePath() async {
+    path = widget.type == HistoryType.received
+        ? BackendService.getInstance().downloadDirectory!.path +
+            Platform.pathSeparator +
+            (widget.data.name ?? '')
+        : await MixedConstants.getFileSentLocation() +
+            Platform.pathSeparator +
+            (widget.data.name ?? '');
+    setState(() {});
   }
 
   Future<String> imageToBase64(String imagePath) async {
@@ -77,9 +83,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   Future<void> openPreview() async {
     if (FileTypes.IMAGE_TYPES.contains(widget.data.name?.split(".").last)) {
       String nickname = "";
-      String filePath = BackendService.getInstance().downloadDirectory!.path +
-          Platform.pathSeparator +
-          widget.data.name!;
+      String filePath = path;
       Uint8List imageBytes = base64Decode(await imageToBase64(filePath));
       final date = (widget.fileTransfer?.date ?? DateTime.now()).toLocal();
       final shortDate = DateFormat('dd/MM/yy').format(date);
@@ -364,7 +368,9 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
               children: [
                 if (!File(path).existsSync()) ...[
                   SizedBox(width: 4),
-                  buildDownloadButton(),
+                  widget.type == HistoryType.received
+                      ? buildDownloadButton()
+                      : SizedBox.shrink(),
                 ],
                 if (File(path).existsSync()) ...[
                   SizedBox(width: 4),
@@ -539,7 +545,8 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
       builder: (context, provider, child) {
         var fileTransferProgress =
             provider.receivedFileProgress[widget.fileTransfer?.key];
-        return fileTransferProgress != null
+        return fileTransferProgress != null &&
+                fileTransferProgress.fileName == widget.data.name
             ? Stack(
                 children: [
                   Center(

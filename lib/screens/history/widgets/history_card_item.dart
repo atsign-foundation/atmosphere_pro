@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
@@ -48,28 +49,29 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   @override
   Widget build(BuildContext context) {
     return Slidable(
-      endActionPane:
-          isFilesPresent(widget.fileHistory.fileDetails!) || canDownload
-              ? ActionPane(
-                  motion: ScrollMotion(),
-                  extentRatio: 0.6,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: CommonUtilityFunctions().isFileDownloadAvailable(
-                              widget.fileHistory.fileTransferObject!.date!)
-                          ? buildDownloadButton()
-                          : SizedBox.shrink(),
-                    ),
-                    if (isFilesPresent(widget.fileHistory.fileDetails!)) ...[
-                      SizedBox(width: 12),
-                      buildTransferButton(),
-                      SizedBox(width: 12),
-                      buildDeleteButton(),
-                    ]
-                  ],
-                )
-              : null,
+      endActionPane: isFilesPresent(widget.fileHistory.fileDetails!) ||
+              canDownload
+          ? ActionPane(
+              motion: ScrollMotion(),
+              extentRatio: 0.6,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: CommonUtilityFunctions().isFileDownloadAvailable(
+                              widget.fileHistory.fileTransferObject!.date!) &&
+                          widget.fileHistory.type == HistoryType.received
+                      ? buildDownloadButton()
+                      : SizedBox.shrink(),
+                ),
+                if (isFilesPresent(widget.fileHistory.fileDetails!)) ...[
+                  SizedBox(width: 12),
+                  buildTransferButton(),
+                  SizedBox(width: 12),
+                  buildDeleteButton(),
+                ]
+              ],
+            )
+          : null,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
