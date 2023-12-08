@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -8,10 +10,12 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/widget
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreenDesktop extends StatefulWidget {
@@ -30,6 +34,23 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
   void initState() {
     super.initState();
     getShareAtSign();
+    _initPackageInfo();
+  }
+
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _packageInfo = info;
+      });
+    }
   }
 
   void getShareAtSign() async {
@@ -75,7 +96,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
-              padding: EdgeInsets.all(50),
+              padding: EdgeInsets.fromLTRB(52, 52, 52, 16),
               child: Column(
                 children: [
                   Row(
@@ -181,6 +202,16 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                             });
                           })
                     ],
+                  ),
+                  SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      'App Version ${_packageInfo.version}${Platform.isWindows ? '' : ' (${_packageInfo.buildNumber})'}',
+                      style: CustomTextStyles.black12.copyWith(
+                        color: ColorConstants.oldSliver,
+                      ),
+                    ),
                   )
                 ],
               ),
