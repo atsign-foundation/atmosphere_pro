@@ -62,15 +62,10 @@ class _InputWidgetState extends State<InputWidget> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             prefix: widget.prefixText != null
-                ? Container(
-                    constraints: BoxConstraints(
-                      maxWidth: isEdit ? double.infinity : 0,
-                    ),
-                    child: Text(
-                      widget.prefixText!,
-                      style: TextStyle(
-                        fontSize: 14.toFont,
-                      ),
+                ? Text(
+                    widget.prefixText!,
+                    style: TextStyle(
+                      fontSize: 14.toFont,
                     ),
                   )
                 : null,
