@@ -37,28 +37,39 @@ class HistoryCardItem extends StatefulWidget {
 class _HistoryCardItemState extends State<HistoryCardItem> {
   bool isDownloading = false;
 
+  late bool canDownload = CommonUtilityFunctions()
+      .isFileDownloadAvailable(widget.fileHistory.fileTransferObject!.date!);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
-      endActionPane: ActionPane(
-        motion: ScrollMotion(),
-        extentRatio: 0.6,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: CommonUtilityFunctions().isFileDownloadAvailable(
-                    widget.fileHistory.fileTransferObject!.date!)
-                ? buildDownloadButton()
-                : SizedBox.shrink(),
-          ),
-          if (isFilesPresent(widget.fileHistory.fileDetails!)) ...[
-            SizedBox(width: 12),
-            buildTransferButton(),
-            SizedBox(width: 12),
-            buildDeleteButton(),
-          ]
-        ],
-      ),
+      endActionPane:
+          isFilesPresent(widget.fileHistory.fileDetails!) || canDownload
+              ? ActionPane(
+                  motion: ScrollMotion(),
+                  extentRatio: 0.6,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: CommonUtilityFunctions().isFileDownloadAvailable(
+                              widget.fileHistory.fileTransferObject!.date!)
+                          ? buildDownloadButton()
+                          : SizedBox.shrink(),
+                    ),
+                    if (isFilesPresent(widget.fileHistory.fileDetails!)) ...[
+                      SizedBox(width: 12),
+                      buildTransferButton(),
+                      SizedBox(width: 12),
+                      buildDeleteButton(),
+                    ]
+                  ],
+                )
+              : null,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(

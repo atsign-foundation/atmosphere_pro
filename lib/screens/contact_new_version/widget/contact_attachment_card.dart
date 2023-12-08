@@ -466,17 +466,24 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                 height: 10,
               ),
               Expanded(
-                child: Container(
-                  // height: double.infinity,
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 33),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: MemoryImage(
-                        imageBytes,
+                child: InkWell(
+                  onTap: () async {
+                    await OpenFile.open(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          (widget.singleFile.name ?? ''),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 33),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: MemoryImage(
+                          imageBytes,
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

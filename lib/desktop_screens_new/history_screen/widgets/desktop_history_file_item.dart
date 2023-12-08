@@ -212,9 +212,14 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
             ? FutureBuilder(
                 future: videoThumbnailBuilder(path),
                 builder: (context, snapshot) => snapshot.data == null
-                    ? Image.asset(
-                        ImageConstants.videoLogo,
-                        fit: BoxFit.cover,
+                    ? Center(
+                        child: Image.asset(
+                          ImageConstants.videoLogo,
+                          width: 24,
+                          height: 24,
+                          color: Colors.black,
+                          fit: BoxFit.cover,
+                        ),
                       )
                     : Image.memory(
                         videoThumbnail!,

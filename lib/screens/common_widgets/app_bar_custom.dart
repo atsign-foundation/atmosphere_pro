@@ -26,7 +26,8 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     this.isContent = false,
     this.suffixIcon,
     this.titleStyle,
-    this.isLoading = false, required this.skeletonLoading,
+    this.isLoading = false,
+    required this.skeletonLoading,
   }) : super(key: key);
 
   @override
@@ -52,7 +53,8 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Flexible(
@@ -68,17 +70,17 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              SizedBox(width: 12),
-                              Text(
-                                description ?? '',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 15.toFont,
-                                  fontWeight: FontWeight.w500,
+                              if ((description ?? '').isNotEmpty)
+                                Text(
+                                  description ?? '',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 13.toFont,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
                             ],
                           ),
                         ),

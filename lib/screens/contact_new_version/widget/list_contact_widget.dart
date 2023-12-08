@@ -111,25 +111,47 @@ class _ListContactWidgetState extends State<ListContactWidget>
         }
 
         // renders contacts according to the initial alphabet
-        return Scrollbar(
-          controller: scrollController,
-          radius: const Radius.circular(11),
-          child: ContactsWidget(
-            scrollController: scrollController,
-            contacts: _filteredList,
-            contactsType: widget.contactsType,
-            isShowAlpha: widget.isShowAlpha,
-            isSelectMultiContacts: widget.isSelectMultiContacts,
-            onTapContact: widget.onTapContact,
-            onTapGroup: widget.onTapGroup,
-            onSelectContacts: widget.onSelectContacts,
-            onRefresh: () async {
-              await _groupService.fetchGroupsAndContacts();
-            },
-            contactPadding: EdgeInsets.only(left: 18, right: 28),
-            selectedContacts: widget.selectedContacts,
-            trustedContacts: widget.trustedContacts,
-          ),
+        return Column(
+          children: [
+            if (widget.contactsType == ListContactType.trusted) ...[
+              SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 60),
+                child: Text(
+                  'Files that are sent from contacts you ‘trust’ will automatically be downloaded in History',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: ColorConstants.darkSliver,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 8),
+            ],
+            Expanded(
+              child: Scrollbar(
+                controller: scrollController,
+                radius: const Radius.circular(11),
+                child: ContactsWidget(
+                  scrollController: scrollController,
+                  contacts: _filteredList,
+                  contactsType: widget.contactsType,
+                  isShowAlpha: widget.isShowAlpha,
+                  isSelectMultiContacts: widget.isSelectMultiContacts,
+                  onTapContact: widget.onTapContact,
+                  onTapGroup: widget.onTapGroup,
+                  onSelectContacts: widget.onSelectContacts,
+                  onRefresh: () async {
+                    await _groupService.fetchGroupsAndContacts();
+                  },
+                  contactPadding: EdgeInsets.only(left: 18, right: 28),
+                  selectedContacts: widget.selectedContacts,
+                  trustedContacts: widget.trustedContacts,
+                ),
+              ),
+            ),
+          ],
         );
         // }
       },

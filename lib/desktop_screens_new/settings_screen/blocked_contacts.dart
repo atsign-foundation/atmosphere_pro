@@ -3,11 +3,15 @@ import 'dart:typed_data';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/widgets/desktop_blocked_contact_tile.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DesktopBlockedContacts extends StatefulWidget {
   const DesktopBlockedContacts({Key? key}) : super(key: key);
@@ -55,6 +59,25 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              InkWell(
+                onTap: () async {
+                  await DesktopSetupRoutes.nested_push(
+                    DesktopRoutes.DESKTOP_SETTINGS,
+                  );
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset(
+                    AppVectors.icBack,
+                    width: 8,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 28),
               Text(
                 "Blocked Contacts",
                 style: TextStyle(

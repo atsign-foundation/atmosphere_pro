@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -144,7 +145,8 @@ class _HomeState extends State<Home> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: paddingSmall * 4.toHeight),
+                      padding:
+                          EdgeInsets.only(bottom: paddingSmall * 4.toHeight),
                       child: Container(
                         width: SizeConfig().screenWidth,
                         child: Image.asset(
@@ -158,7 +160,8 @@ class _HomeState extends State<Home> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: paddingSmall * 3.toHeight),
+                      padding:
+                          EdgeInsets.only(bottom: paddingSmall * 3.toHeight),
                       child: Container(
                         width: SizeConfig().screenWidth,
                         child: Image.asset(
@@ -252,7 +255,26 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: InkWell(
+                              onTap: () async {
+                                await CommonUtilityFunctions()
+                                    .showResetAtsignDialog();
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Text(
+                                  "Reset",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18.toFont,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

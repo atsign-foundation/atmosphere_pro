@@ -41,50 +41,61 @@ class _NotificationBodyState extends State<NotificationBody> {
               clipBehavior: Clip.hardEdge,
               width: getNotificationDialogWidth(),
               // height: getNotificationDialogHeight(),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Notifications',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Notifications',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
+                  Center(
+                    child: SizedBox(
+                      width: 155,
+                      child:
+                          Divider(color: ColorConstants.buttonHighLightColor),
+                    ),
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          provider.currentFileShareStatus[notification_service
+                                      .NotificationService.fileObjectKey] !=
+                                  null
+                              ? Text(
+                                  'Sending Queue',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: ColorConstants.buttonHighLightColor,
+                                  ),
+                                )
+                              : SizedBox(),
+                          SizedBox(height: 5),
+                          sendingFileCard(provider),
+                          provider.recentNotification.isEmpty &&
+                                  provider.currentFileShareStatus[
+                                          notification_service
+                                              .NotificationService
+                                              .flushbarStatuskey] ==
+                                      null
+                              ? Center(
+                                  child: Text('No notifications'),
+                                )
+                              : getNotificationList(provider),
+                        ],
                       ),
                     ),
-                    Center(
-                      child: SizedBox(
-                        width: 155,
-                        child:
-                            Divider(color: ColorConstants.buttonHighLightColor),
-                      ),
-                    ),
-                    provider.currentFileShareStatus[notification_service
-                                .NotificationService.fileObjectKey] !=
-                            null
-                        ? Text(
-                            'Sending Queue',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: ColorConstants.buttonHighLightColor,
-                            ),
-                          )
-                        : SizedBox(),
-                    SizedBox(height: 5),
-                    sendingFileCard(provider),
-                    provider.recentNotification.isEmpty &&
-                            provider.currentFileShareStatus[notification_service
-                                    .NotificationService.flushbarStatuskey] ==
-                                null
-                        ? Center(
-                            child: Text('No notifications'),
-                          )
-                        : getNotificationList(provider)
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),
@@ -113,6 +124,7 @@ class _NotificationBodyState extends State<NotificationBody> {
     return Container(
       child: ListView.builder(
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         itemCount: provider.recentNotification.length,
         itemBuilder: (_, i) {
           return provider.recentNotification[i].type == HistoryType.send
