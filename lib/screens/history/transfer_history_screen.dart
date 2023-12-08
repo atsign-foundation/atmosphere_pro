@@ -187,14 +187,21 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                 List<FileHistory> filteredFileHistory = [];
 
                 provider.displayFilesHistory.forEach((element) {
+                  final isFileNameContained = (element.fileDetails?.files ?? [])
+                      .any((element) => (element.name ?? '')
+                          .toLowerCase()
+                          .contains(searchController.text.toLowerCase()));
                   if (element.type == HistoryType.send) {
-                    if ((element.sharedWith ?? []).any(
-                          (ShareStatus sharedStatus) => sharedStatus.atsign!
-                              .contains(searchController.text),
-                        ) ||
-                        (element.groupName != null &&
-                            element.groupName!.toLowerCase().contains(
-                                searchController.text.toLowerCase()))) {
+                    final isAtSignNameContained = (element.sharedWith ?? [])
+                        .any((ShareStatus sharedStatus) => sharedStatus.atsign!
+                            .contains(searchController.text));
+                    final isGroupNameContained = (element.groupName != null &&
+                        element.groupName!
+                            .toLowerCase()
+                            .contains(searchController.text.toLowerCase()));
+                    if (isAtSignNameContained ||
+                        isGroupNameContained ||
+                        isFileNameContained) {
                       final FileHistory? filteredFile = getFilterFiles(element);
                       if (filteredFile != null) {
                         filteredFileHistory.add(filteredFile);
@@ -202,8 +209,9 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                     }
                   } else {
                     if ((element.fileDetails?.sender ?? '').contains(
-                      searchController.text,
-                    )) {
+                          searchController.text,
+                        ) ||
+                        isFileNameContained) {
                       final FileHistory? filteredFile = getFilterFiles(element);
                       if (filteredFile != null) {
                         filteredFileHistory.add(filteredFile);

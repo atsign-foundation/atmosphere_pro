@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart'
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -126,6 +127,24 @@ class _DesktopHomeState extends State<DesktopHome> {
               width: 349.toWidth,
               fontSize: authenticating ? 17 : 20,
               removePadding: true,
+            ),
+          ),
+          SizedBox(height: 18.toHeight),
+          Center(
+            child: InkWell(
+              onTap: () async {
+                await CommonUtilityFunctions().showResetAtsignDialog();
+              },
+              child: Container(
+                width: 200,
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  "Reset",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 18.toFont, fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ),
           SizedBox(height: 48.toHeight),

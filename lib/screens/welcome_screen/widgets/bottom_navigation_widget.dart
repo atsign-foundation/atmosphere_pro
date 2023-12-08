@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
@@ -27,12 +28,20 @@ class BottomNavigationWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            indexSelected == index ? iconActivate : iconInactivate,
-            height: title.isNotEmpty ? 25 : null,
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            child: Image.asset(
+              indexSelected == index ? iconActivate : iconInactivate,
+              height: title.isNotEmpty ? 32 : null,
+              color: indexSelected == index
+                  ? null
+                  : ColorConstants.inactiveIconColor,
+              fit: BoxFit.cover,
+            ),
           ),
-          if (title.isNotEmpty) ...[
-            SizedBox(height: 3),
+          if (title.isNotEmpty)
             Text(
               title,
               style: TextStyle(
@@ -42,7 +51,6 @@ class BottomNavigationWidget extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-          ],
         ],
       ),
     );

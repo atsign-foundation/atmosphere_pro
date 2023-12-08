@@ -10,7 +10,7 @@ extension GenderTypeExtension on FileType {
       case FileType.photo:
         return 'Photos';
       case FileType.file:
-        return 'Files';
+        return 'Documents';
       case FileType.audio:
         return 'Audio';
       case FileType.video:

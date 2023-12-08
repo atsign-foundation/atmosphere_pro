@@ -1,6 +1,8 @@
 class TextStrings {
   TextStrings._();
+
   static TextStrings _instance = TextStrings._();
+
   factory TextStrings() => _instance;
 
   // home screen texts
@@ -72,6 +74,7 @@ class TextStrings {
       'Are you sure you want to delete all data associated with';
   String typeAtsignAbove = 'Type the atSign above to proceed';
   String actionCannotUndone = "Caution: this action can't be undone";
+
   //FAQs texts
   String faqs = 'FAQ';
 
@@ -81,6 +84,7 @@ class TextStrings {
   String contactSearchResults = 'Search Results';
   String addContact = 'Add Contact';
   String addtoContact = 'Add to Contacts';
+
   // buttons text
   String buttonStart = 'Start';
   String buttonSend = 'Send';
@@ -133,6 +137,7 @@ class TextStrings {
   String no = 'No';
   String add = 'Add';
   String done = 'Done';
+
   //my files
   String myFiles = 'My Files';
   String recents = 'Recents';
@@ -173,6 +178,7 @@ class TextStrings {
   // terms and conditions texts
   String termsAppBar = 'Privacy Policy';
   String termsAndConditions = 'Terms & Conditions';
+
   // scan qr texts
   String scanQrTitle = 'Scan QR Code';
   String scanQrMessage = 'Just scan the QR Code displayed at my.atsign.com';
@@ -198,6 +204,7 @@ class TextStrings {
 
   String unknownAtsign(String atSign) =>
       '$atSign is not found. Please check and try again.';
+
   String atsignExists(String atSign) => '$atSign already exists';
   String emptyAtsign = 'Please enter an atSign';
 
@@ -226,6 +233,7 @@ class TextStrings {
   String and = 'and';
   String other = 'other';
   String others = 'others';
+
   // desktop text constants
   String addNewAtsign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
@@ -338,7 +346,7 @@ class TextStrings {
   String contactUs = 'Contact Us';
   String deleteAtsigns = 'Remove Your Key';
   String deleteAtsignsSubtitle = 'Delete your active atkey';
-  String blockedAtSign = 'Blocked atSign';
+  String blockedAtSign = 'Blocked Contacts';
   String blockedAtSignSubtitle = 'View list of blocked atSign';
 
   static final String resetButton = 'Reset';

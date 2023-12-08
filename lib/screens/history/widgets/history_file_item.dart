@@ -53,6 +53,8 @@ class HistoryFileItem extends StatefulWidget {
 class _HistoryFileItemState extends State<HistoryFileItem> {
   String path = '';
   bool isDownloading = false;
+  late bool canDownload = CommonUtilityFunctions()
+      .isFileDownloadAvailable(widget.fileTransfer?.date ?? DateTime.now());
 
   @override
   void initState() {
@@ -121,17 +123,24 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                 height: 10,
               ),
               Expanded(
-                child: Container(
-                  // height: double.infinity,
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 33),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: MemoryImage(
-                        imageBytes,
+                child: InkWell(
+                  onTap: () async {
+                    await OpenFile.open(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          (widget.data.name ?? ''),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 33),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: MemoryImage(
+                          imageBytes,
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -352,24 +361,26 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   Widget build(BuildContext context) {
     final String fileFormat = '.${widget.data.name?.split('.').last}';
     return Slidable(
-      endActionPane: ActionPane(
-        motion: ScrollMotion(),
-        extentRatio: 0.4,
-        children: [
-          if (!File(path).existsSync()) ...[
-            SizedBox(width: 4),
-            widget.type == HistoryType.received
-                ? buildDownloadButton()
-                : SizedBox.shrink(),
-          ],
-          if (File(path).existsSync()) ...[
-            SizedBox(width: 4),
-            buildTransferButton(),
-            SizedBox(width: 4),
-            buildDeleteButton(),
-          ]
-        ],
-      ),
+      endActionPane: canDownload || File(path).existsSync()
+          ? ActionPane(
+              motion: ScrollMotion(),
+              extentRatio: 0.4,
+              children: [
+                if (!File(path).existsSync()) ...[
+                  SizedBox(width: 4),
+                  widget.type == HistoryType.received
+                      ? buildDownloadButton()
+                      : SizedBox.shrink(),
+                ],
+                if (File(path).existsSync()) ...[
+                  SizedBox(width: 4),
+                  buildTransferButton(),
+                  SizedBox(width: 4),
+                  buildDeleteButton(),
+                ]
+              ],
+            )
+          : null,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -494,9 +505,14 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
             ? FutureBuilder(
                 future: videoThumbnailBuilder(path),
                 builder: (context, snapshot) => snapshot.data == null
-                    ? Image.asset(
-                        ImageConstants.videoLogo,
-                        fit: BoxFit.cover,
+                    ? Center(
+                        child: Image.asset(
+                          ImageConstants.videoLogo,
+                          width: 24,
+                          height: 24,
+                          color: Colors.black,
+                          fit: BoxFit.cover,
+                        ),
                       )
                     : Image.memory(
                         videoThumbnail!,
