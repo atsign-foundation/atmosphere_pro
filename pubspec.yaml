@@ -199,7 +199,7 @@ msix_config:
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
-  msix_version: 1.0.13.0
+  msix_version: 1.0.15.0
   logo_path: app-icon.png
   capabilities: internetClient
   store: true
