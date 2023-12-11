@@ -301,6 +301,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         },
                         child: isGridType
                             ? FileTile(
+                                key: UniqueKey(),
                                 fileName: file.fileName ?? "",
                                 fileSize: file.size ?? 0,
                                 filePath: BackendService.getInstance()
@@ -314,6 +315,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 id: file.fileTransferId,
                               )
                             : FileListTile(
+                                key: UniqueKey(),
                                 fileName: file.fileName ?? "",
                                 fileSize: file.size ?? 0,
                                 filePath: BackendService.getInstance()
@@ -469,6 +471,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 String filePath = BackendService.getInstance()
                                         .downloadDirectory!
                                         .path +
+                                    Platform.pathSeparator +
+                                    (file.contactName ?? '') +
                                     Platform.pathSeparator +
                                     (file.fileName ?? "");
 
