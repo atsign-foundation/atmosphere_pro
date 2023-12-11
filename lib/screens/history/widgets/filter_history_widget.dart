@@ -28,7 +28,7 @@ class _FilterHistoryWidgetState extends State<FilterHistoryWidget> {
 
   final List<FileType> optionalHistoryTypes = [
     FileType.photo,
-    FileType.file,
+    FileType.document,
     FileType.audio,
     FileType.video,
     FileType.zips,

@@ -65,7 +65,6 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
               filteredFiles = getDisplayFileData(provider.allFilesHistory);
             },
             successBuilder: (provider) {
-              filteredFiles = getDisplayFileData(provider.allFilesHistory);
               filterSearchFiles();
 
               return Column(
@@ -268,13 +267,12 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     return result;
   }
 
-  void filterSearchFiles() async {
+  void filterSearchFiles() {
+    var files = getDisplayFileData(historyProvider.allFilesHistory);
     if (searchController.text.trim().isEmpty) {
-      filteredFiles = context.read<HistoryProvider>().allFilesHistory;
+      filteredFiles = files;
       return;
     }
-
-    var files = context.read<HistoryProvider>().allFilesHistory;
     List<FileHistory> tempFiles = [];
     for (var filehistory in files) {
       for (FileData file in filehistory.fileDetails?.files ?? []) {
@@ -293,44 +291,12 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
                             .contains(searchController.text.toLowerCase()))) ??
                 false;
         if (isFileContained || isAtSignContained) {
-          final FileHistory? filteredFile = getFilterFiles(filehistory);
-          if (filteredFile != null) {
-            tempFiles.add(filteredFile);
-          }
-          break;
+          tempFiles.add(filehistory);
+          continue;
         }
       }
     }
     filteredFiles = tempFiles;
-  }
-
-  // used to get the fileTypes (tags) in a group
-  List<FileType> getFileTags(FileHistory files) {
-    List<FileType> tags = [];
-    for (FileData file in files.fileDetails?.files ?? []) {
-      FileType type = getHistoryType(file);
-      if (!tags.contains(type)) {
-        tags.add(type);
-      }
-    }
-    return tags;
-  }
-
-  FileType getHistoryType(FileData file) {
-    var fileExt = file.name?.split(".").last ?? "";
-    if (FileTypes.IMAGE_TYPES.contains(fileExt)) {
-      return FileType.photo;
-    } else if (FileTypes.DOCUMENT_TYPES.contains(fileExt)) {
-      return FileType.file;
-    } else if (FileTypes.AUDIO_TYPES.contains(fileExt)) {
-      return FileType.audio;
-    } else if (FileTypes.VIDEO_TYPES.contains(fileExt)) {
-      return FileType.video;
-    } else if (FileTypes.ZIP_TYPES.contains(fileExt)) {
-      return FileType.zips;
-    } else {
-      return FileType.other;
-    }
   }
 
   void _onTapFilterIcon() async {
