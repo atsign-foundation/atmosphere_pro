@@ -89,7 +89,7 @@ class MyFilesProvider extends BaseModel {
         return receivedAudio;
       case FileType.zips:
         return receivedZip;
-      case FileType.file:
+      case FileType.document:
         return receivedDocument;
       case FileType.other:
         return receivedUnknown;

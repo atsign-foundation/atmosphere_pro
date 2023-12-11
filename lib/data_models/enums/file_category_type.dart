@@ -2,14 +2,14 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 
-enum FileType { photo, file, audio, video, zips, other }
+enum FileType { photo, document, audio, video, zips, other }
 
 extension GenderTypeExtension on FileType {
   String get text {
     switch (this) {
       case FileType.photo:
         return 'Photos';
-      case FileType.file:
+      case FileType.document:
         return 'Documents';
       case FileType.audio:
         return 'Audio';
@@ -26,7 +26,7 @@ extension GenderTypeExtension on FileType {
     switch (this) {
       case FileType.photo:
         return AppVectors.icCategoryImage;
-      case FileType.file:
+      case FileType.document:
         return AppVectors.icCategoryFiles;
       case FileType.audio:
         return AppVectors.icCategoryVolume;
@@ -43,7 +43,7 @@ extension GenderTypeExtension on FileType {
     switch (this) {
       case FileType.photo:
         return AppVectors.icPhotos;
-      case FileType.file:
+      case FileType.document:
         return AppVectors.icFiles;
       case FileType.audio:
         return AppVectors.icAudio;
@@ -60,10 +60,8 @@ extension GenderTypeExtension on FileType {
     switch (this) {
       case FileType.photo:
         return FileTypes.IMAGE_TYPES;
-      case FileType.file:
-        return FileTypes.PDF_TYPES +
-            FileTypes.WORD_TYPES +
-            FileTypes.EXEL_TYPES;
+      case FileType.document:
+        return FileTypes.DOCUMENT_TYPES;
       case FileType.audio:
         return FileTypes.AUDIO_TYPES;
       case FileType.video:
@@ -82,7 +80,7 @@ extension GenderTypeExtension on FileType {
           Color(0xFFF07C50),
           Color(0xFFD86033),
         ];
-      case FileType.file:
+      case FileType.document:
         return [
           Color(0xFFE98C49),
           Color(0xFFFE8228),
