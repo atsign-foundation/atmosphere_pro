@@ -47,8 +47,7 @@ class HistoryProvider extends BaseModel {
   List<FileHistory> sentHistory = [],
       tempSentHistory = [],
       receivedFileHistory = [],
-      allFilesHistory = [],
-      displayFilesHistory = [];
+      allFilesHistory = [];
 
   List<FileType> listType = FileType.values.toList();
 
@@ -93,7 +92,6 @@ class HistoryProvider extends BaseModel {
     tempSentHistory = [];
     receivedFileHistory = [];
     allFilesHistory = [];
-    displayFilesHistory = [];
     listType = FileType.values.toList();
     notifyListeners();
   }
@@ -234,7 +232,6 @@ class HistoryProvider extends BaseModel {
             }
           }
           allFilesHistory.insert(0, fileHistory); // for desktop
-          displayFilesHistory.insert(0, fileHistory);
         }
       }
 
@@ -905,7 +902,6 @@ class HistoryProvider extends BaseModel {
           .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
 
       allFilesHistory = tempFileHistoryLogs;
-      displayFilesHistory = allFilesHistory;
       changeFilterType(typeSelected);
 
       setStatus(GET_ALL_FILE_HISTORY, Status.Done);
@@ -914,38 +910,12 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  void changeDesc(bool desc) {
-    isDesc = desc;
-    if (desc) {
-      displayFilesHistory
-          .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
-    } else {
-      displayFilesHistory
-          .sort((a, b) => a.fileDetails!.date!.compareTo(b.fileDetails!.date!));
-    }
-    notifyListeners();
-  }
-
   void changeFilterType(HistoryType type) {
     if (typeSelected != type) {
       listType = FileType.values.toList();
     }
     typeSelected = type;
-    displayFilesHistory = filterFileHistory(type);
     notifyListeners();
-  }
-
-  List<FileHistory> filterFileHistory(HistoryType type) {
-    switch (type) {
-      case HistoryType.all:
-        return allFilesHistory;
-      case HistoryType.received:
-        return receivedFileHistory;
-      case HistoryType.send:
-        return sentHistory;
-      default:
-        return [];
-    }
   }
 
   updateFileType(List<FileType> fileType) {
@@ -967,7 +937,6 @@ class HistoryProvider extends BaseModel {
       tempFileHistoryLogs
           .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
 
-      displayFilesHistory = tempFileHistoryLogs;
       setStatus(GET_ALL_FILE_HISTORY, Status.Done);
     } catch (e) {
       setStatus(GET_ALL_FILE_HISTORY, Status.Error);

@@ -58,17 +58,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
         TabController(length: HistoryType.values.length - 1, vsync: this);
     historyProvider = context.read<HistoryProvider>();
     searchController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      reloadView();
-    });
     super.initState();
-  }
-
-  void reloadView() async {
-    if (context.read<HistoryProvider>().hadNewFile) {
-      await historyProvider.getAllFileTransferHistory();
-      historyProvider.changeIsUpcomingEvent();
-    }
   }
 
   @override
