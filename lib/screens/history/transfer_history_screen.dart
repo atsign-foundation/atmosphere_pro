@@ -186,7 +186,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                 // } else {
                 List<FileHistory> filteredFileHistory = [];
 
-                provider.displayFilesHistory.forEach((element) {
+                provider.allFilesHistory.forEach((element) {
                   final isFileNameContained = (element.fileDetails?.files ?? [])
                       .any((element) => (element.name ?? '')
                           .toLowerCase()

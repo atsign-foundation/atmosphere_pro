@@ -546,19 +546,16 @@ class FileTransferProvider extends BaseModel {
         .updateSendingNotificationStatus(
             fileHistory.fileTransferObject!.transferId, atsign, true);
 
-    Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-            listen: false)
-        .updateSendingNotificationStatus(
-            fileHistory.fileTransferObject!.transferId, atsign, true);
     try {
       var sendResponse = await FileTransferService.getInstance().shareFiles(
-          [atsign],
-          fileHistory.fileTransferObject!.transferId,
-          fileHistory.fileTransferObject!.fileUrl,
-          fileHistory.fileTransferObject!.fileEncryptionKey,
-          fileHistory.fileTransferObject!.fileStatus,
-          date: fileHistory.fileTransferObject!.date,
-          notes: fileHistory.notes);
+        [atsign],
+        fileHistory.fileTransferObject!.transferId,
+        fileHistory.fileTransferObject!.fileUrl,
+        fileHistory.fileTransferObject!.fileEncryptionKey,
+        fileHistory.fileTransferObject!.fileStatus,
+        date: fileHistory.fileTransferObject!.date,
+        notes: fileHistory.notes,
+      );
 
       if (sendResponse[atsign]!.sharedStatus!) {
         var indexToUpdate = fileHistory.sharedWith!.indexWhere(
