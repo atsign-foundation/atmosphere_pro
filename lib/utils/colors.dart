@@ -104,7 +104,7 @@ class ColorConstants {
   static const Color dividerGrayColor = Color(0xFFE8E8E8);
   static const Color tooltipBackground = Color(0xFFFFEFEC);
   static const Color disableTooltipColor = Color(0xFFC4C4C4);
-  static const Color inactiveIconColor = Color(0xFFE6E6E6);
+  static const Color inactiveIconColor = Color(0xFFC5C5C5);
 }
 
 class ContactInitialsColors {
