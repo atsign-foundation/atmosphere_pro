@@ -335,7 +335,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
-                    TextStrings().noFileFound,
+                    TextStrings().fileNotDownload,
                     style: CustomTextStyles.primaryBold17,
                   ),
                   Padding(padding: EdgeInsets.only(top: 30.0)),
