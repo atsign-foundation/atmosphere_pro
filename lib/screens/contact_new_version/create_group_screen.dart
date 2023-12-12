@@ -63,6 +63,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           child: Stack(
             children: [
               Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
@@ -93,76 +94,73 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     ),
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.zero,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 27,
-                            ),
-                            child: InputWidget(
-                              hintText: 'Group Name',
-                              controller: groupNameController,
-                              hintTextStyle: TextStyle(
-                                fontSize: 14.toFont,
-                                fontWeight: FontWeight.w500,
-                                color: ColorConstants.grey,
-                              ),
-                              onchange: (value) {
-                                _provider.setGroupName(value);
-                              },
-                            ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 27,
                           ),
-                          _buildImage(value.selectedImageByteData),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 22,
-                              left: 31,
-                            ),
-                            child: Text(
-                              "Select Members ${value.listContact.isNotEmpty ? value.listContact.length : ''}",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          SearchWidget(
-                            controller: searchController,
-                            borderColor: Colors.white,
-                            backgroundColor: Colors.white,
-                            hintText: "Search",
-                            hintStyle: TextStyle(
-                              color: ColorConstants.darkSliver,
-                              fontSize: 15,
+                          child: InputWidget(
+                            hintText: 'Group Name',
+                            controller: groupNameController,
+                            hintTextStyle: TextStyle(
+                              fontSize: 14.toFont,
                               fontWeight: FontWeight.w500,
+                              color: ColorConstants.grey,
                             ),
-                            margin: EdgeInsets.fromLTRB(
-                              28.toWidth,
-                              8.toHeight,
-                              28.toWidth,
-                              14.toHeight,
-                            ),
-                            onChange: (value) {
-                              _provider.setSearchKeyword(value);
+                            onchange: (value) {
+                              _provider.setGroupName(value);
                             },
                           ),
-                          Flexible(
-                            child: ListContactWidget(
-                              searchKeywords: value.searchKeyword,
-                              trustedContacts: widget.trustContacts,
-                              isSelectMultiContacts: true,
-                              onSelectContacts: (contacts) {
-                                _provider.addGroupContacts(contacts);
-                              },
+                        ),
+                        _buildImage(value.selectedImageByteData),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 22,
+                            left: 31,
+                          ),
+                          child: Text(
+                            "Select Members ${value.listContact.isNotEmpty ? value.listContact.length : ''}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        SearchWidget(
+                          controller: searchController,
+                          borderColor: Colors.white,
+                          backgroundColor: Colors.white,
+                          hintText: "Search",
+                          hintStyle: TextStyle(
+                            color: ColorConstants.darkSliver,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          margin: EdgeInsets.fromLTRB(
+                            28.toWidth,
+                            8.toHeight,
+                            28.toWidth,
+                            14.toHeight,
+                          ),
+                          onChange: (value) {
+                            _provider.setSearchKeyword(value);
+                          },
+                        ),
+                        Flexible(
+                          child: ListContactWidget(
+                            searchKeywords: value.searchKeyword,
+                            trustedContacts: widget.trustContacts,
+                            isSelectMultiContacts: true,
+                            onSelectContacts: (contacts) {
+                              _provider.addGroupContacts(contacts);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SafeArea(

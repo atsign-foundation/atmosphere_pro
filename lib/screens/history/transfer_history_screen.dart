@@ -160,30 +160,6 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
                 await historyProvider.getAllFileTransferHistory();
               },
               successBuilder: (provider) {
-                // if ((provider.displayFilesHistory.isEmpty)) {
-                // return ListView.separated(
-                //   padding: EdgeInsets.only(bottom: 170.toHeight),
-                //   physics: AlwaysScrollableScrollPhysics(),
-                //   separatorBuilder: (context, index) =>
-                //       Divider(indent: 16.toWidth),
-                //   itemCount: 1,
-                //   itemBuilder: (context, index) => Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: SizedBox(
-                //       height: SizeConfig().screenHeight - 120.toHeight,
-                //       child: Center(
-                //         child: Text(
-                //           'No files',
-                //           style: TextStyle(
-                //             fontSize: 16.toFont,
-                //             fontWeight: FontWeight.normal,
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // );
-                // } else {
                 List<FileHistory> filteredFileHistory = [];
 
                 provider.displayFilesHistory.forEach((element) {
