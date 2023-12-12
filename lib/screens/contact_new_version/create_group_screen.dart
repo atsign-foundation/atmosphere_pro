@@ -44,6 +44,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     return Consumer<CreateGroupProvider>(builder: (context, value, child) {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Container(
           margin: EdgeInsets.only(top: 60),
@@ -95,7 +96,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                   Expanded(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
