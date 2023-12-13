@@ -37,6 +37,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'navigation_service.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
+import 'package:version/version.dart';
 
 class BackendService {
   static final BackendService _singleton = BackendService._internal();
@@ -109,6 +110,7 @@ class BackendService {
       ..namespace = MixedConstants.appNamespace
       ..rootDomain = MixedConstants.ROOT_DOMAIN
       ..syncRegex = MixedConstants.regex
+      ..atProtocolEmitted = Version(2, 0, 0)
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
       ..monitorHeartbeatInterval = Duration(minutes: 1)
       ..hiveStoragePath = path;
@@ -511,7 +513,7 @@ class BackendService {
             listen: false)
         .resetData();
     await Provider.of<HistoryProvider>(NavService.navKey.currentState!.context,
-        listen: false)
+            listen: false)
         .getAllFileTransferHistory();
     await Provider.of<MyFilesProvider>(NavService.navKey.currentState!.context,
             listen: false)

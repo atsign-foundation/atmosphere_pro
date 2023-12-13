@@ -46,8 +46,6 @@ class _ReceiveItemsListState extends State<ReceiveItemsList> {
           itemBuilder: (context, index) {
             List<Widget> list = [];
             for (var file in files[index].files ?? []) {
-              print("path: ${file.path}");
-
               list.add(
                 ContactAttachmentCard(
                   fileTransfer: files[index],
