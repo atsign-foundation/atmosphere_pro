@@ -58,17 +58,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
         TabController(length: HistoryType.values.length - 1, vsync: this);
     historyProvider = context.read<HistoryProvider>();
     searchController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      reloadView();
-    });
     super.initState();
-  }
-
-  void reloadView() async {
-    if (context.read<HistoryProvider>().hadNewFile) {
-      await historyProvider.getAllFileTransferHistory();
-      historyProvider.changeIsUpcomingEvent();
-    }
   }
 
   @override
@@ -162,7 +152,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
               successBuilder: (provider) {
                 List<FileHistory> filteredFileHistory = [];
 
-                provider.displayFilesHistory.forEach((element) {
+                provider.allFilesHistory.forEach((element) {
                   final isFileNameContained = (element.fileDetails?.files ?? [])
                       .any((element) => (element.name ?? '')
                           .toLowerCase()
