@@ -112,9 +112,11 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
             SizedBox(height: 20),
             buildTransferFileButton(),
             SizedBox(height: 24),
-            buildAttachmentsTitle(),
-            SizedBox(height: 8),
-            ReceiveItemsList(atContact: widget.atContact)
+
+            /// Hiding file attachment screen
+            // buildAttachmentsTitle(),
+            // SizedBox(height: 8),
+            // ReceiveItemsList(atContact: widget.atContact)
           ],
         ),
       ),
