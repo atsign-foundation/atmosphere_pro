@@ -39,7 +39,8 @@ class SendingFileCard extends StatelessWidget {
                             color: Colors.black),
                       ),
                       TextSpan(
-                        text: '${fileTransfer!.files?.length ?? 0} files',
+                        text:
+                            '${fileTransfer!.files?.length ?? 0} ${fileTransfer!.files!.length > 1 ? 'files' : 'file'}',
                         style: TextStyle(fontSize: 15, color: Colors.black),
                       )
                     ],

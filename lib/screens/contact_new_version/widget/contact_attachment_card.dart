@@ -9,6 +9,7 @@ import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
@@ -51,6 +52,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
     with TickerProviderStateMixin {
   bool isDownloaded = false;
   bool isDownloading = false;
+  String filePath = '';
 
   @override
   void initState() {
@@ -66,7 +68,8 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
   }
 
   Future<bool> isFilePresent(String fileName) async {
-    String filePath = BackendService.getInstance().downloadDirectory!.path +
+    filePath = await MixedConstants.getFileDownloadLocation(
+            sharedBy: widget.fileTransfer.sender) +
         Platform.pathSeparator +
         fileName;
 
@@ -81,6 +84,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
       onTap: isDownloading
           ? null
           : () async {
+              print('fsfs');
               bool isExist = await isFilePresent(widget.singleFile.name ?? '');
               if (isExist) {
                 await openPreview().whenComplete(() => widget.onAction?.call());
@@ -108,9 +112,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
               child: Center(
                 child: thumbnail(
                   widget.singleFile.name?.split(".").last,
-                  BackendService.getInstance().downloadDirectory!.path +
-                      Platform.pathSeparator +
-                      widget.singleFile.name!,
+                  filePath,
                 ),
               ),
             ),
@@ -424,9 +426,6 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
     if (FileTypes.IMAGE_TYPES
         .contains(widget.singleFile.name?.split(".").last)) {
       String nickname = "";
-      String filePath = BackendService.getInstance().downloadDirectory!.path +
-          Platform.pathSeparator +
-          widget.singleFile.name!;
       Uint8List imageBytes = base64Decode(await imageToBase64(filePath));
       final date = (widget.fileTransfer.date ?? DateTime.now()).toLocal();
       final shortDate = DateFormat('dd/MM/yy').format(date);
