@@ -39,14 +39,8 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
     List<String> listFileName = (widget.fileHistory.fileDetails?.files ?? [])
         .map((e) => e.name ?? '')
         .toList();
-    for (String i in listFileName) {
-      final filePath = BackendService.getInstance().downloadDirectory!.path +
-          Platform.pathSeparator +
-          i;
-      if (!(File(filePath).existsSync())) {
-        result++;
-      }
-    }
+
+    result = listFileName.length;
     return result;
   }
 
