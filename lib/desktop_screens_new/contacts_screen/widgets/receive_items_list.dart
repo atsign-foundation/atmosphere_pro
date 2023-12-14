@@ -51,6 +51,7 @@ class _ReceiveItemsListState extends State<ReceiveItemsList> {
                   fileTransfer: files[index],
                   singleFile: file,
                   fromContact: true,
+                  margin: EdgeInsets.zero,
                 ),
               );
             }

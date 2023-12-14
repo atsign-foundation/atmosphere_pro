@@ -825,17 +825,22 @@ class CommonUtilityFunctions {
                             height: 10,
                           ),
                           Expanded(
-                            child: Container(
-                              // height: double.infinity,
-                              width: double.infinity,
-                              margin: EdgeInsets.symmetric(horizontal: 33),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: FileImage(
-                                    File(path),
+                            child: InkWell(
+                              onTap: () async {
+                                await openFilePath(path);
+                              },
+                              child: Container(
+                                // height: double.infinity,
+                                width: double.infinity,
+                                margin: EdgeInsets.symmetric(horizontal: 33),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: FileImage(
+                                      File(path),
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
