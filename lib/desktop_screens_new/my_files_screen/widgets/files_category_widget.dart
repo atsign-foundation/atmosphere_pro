@@ -54,7 +54,7 @@ class FilesCategoryWidget extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 7.toFont),
               ),
               Text(
-                "$size items",
+                "$size item(s)",
                 style: TextStyle(color: Colors.white, fontSize: 5.toFont),
               ),
             ],

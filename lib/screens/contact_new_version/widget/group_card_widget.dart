@@ -105,7 +105,7 @@ class _GroupCardWidgetState extends State<GroupCardWidget> {
                       ),
                     ),
                     Text(
-                      '${widget.group.members?.length ?? 0} Members',
+                      '${widget.group.members?.length ?? 0} Member(s)',
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w400,

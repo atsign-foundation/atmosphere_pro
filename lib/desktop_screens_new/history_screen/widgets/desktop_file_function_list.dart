@@ -146,16 +146,21 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
               SizedBox(width: 4),
               buildOptionButton(
                 onTap: () {
-                  File(widget.filePath).deleteSync();
-                  SnackbarService().showSnackbar(
-                    context,
-                    "Successfully deleted the file",
-                    bgColor: ColorConstants.successColor,
+                  CommonUtilityFunctions().showConfirmationDialog(
+                    () {
+                      File(widget.filePath).deleteSync();
+                      SnackbarService().showSnackbar(
+                        context,
+                        "Successfully deleted the file",
+                        bgColor: ColorConstants.successColor,
+                      );
+                      Provider.of<HistoryProvider>(
+                              NavService.navKey.currentContext!,
+                              listen: false)
+                          .notify();
+                    },
+                    'Are you sure you want to delete the file(s)?',
                   );
-                  Provider.of<HistoryProvider>(
-                          NavService.navKey.currentContext!,
-                          listen: false)
-                      .notify();
                 },
                 icon: AppVectors.icDeleteFile,
               ),

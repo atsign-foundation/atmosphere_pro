@@ -43,7 +43,8 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     historyProvider = context.read<HistoryProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      historyProvider.setSelectedType(widget.historyType ?? HistoryType.all);
+      historyProvider
+          .setSelectedType(widget.historyType ?? HistoryType.received);
       filteredFiles = getDisplayFileData(historyProvider.allFilesHistory);
     });
   }

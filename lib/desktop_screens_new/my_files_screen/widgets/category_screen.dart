@@ -11,14 +11,16 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -430,14 +432,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         children: <Widget>[
                           InkWell(
                             onTap: () async {
-                              await FileUtils.moveToSendFile(
-                                  BackendService.getInstance()
-                                          .downloadDirectory!
-                                          .path +
-                                      Platform.pathSeparator +
-                                      (file.fileName ?? ""));
+                              FileTransferProvider.appClosedSharedFiles.add(
+                                PlatformFile(
+                                  name: file.fileName ?? '',
+                                  size: (file.size ?? 0).round(),
+                                  path: _filePath,
+                                  bytes: File(_filePath).readAsBytesSync(),
+                                ),
+                              );
+
+                              Provider.of<FileTransferProvider>(context,
+                                      listen: false)
+                                  .setFiles();
+
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+
                               await DesktopSetupRoutes.nested_pop();
-                              Navigator.pop(context);
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -459,44 +471,42 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           InkWell(
                             onTap: () async {
                               if (isDeleting == false) {
-                                setDialogState(() {
-                                  isDeleting = true;
-                                });
-                                var res = await context
-                                    .read<MyFilesProvider>()
-                                    .removeParticularFile(
-                                        file.fileTransferId ?? "",
-                                        file.fileName ?? "");
+                                CommonUtilityFunctions().showConfirmationDialog(
+                                  () async {
+                                    setDialogState(() {
+                                      isDeleting = true;
+                                    });
 
-                                String filePath = BackendService.getInstance()
-                                        .downloadDirectory!
-                                        .path +
-                                    Platform.pathSeparator +
-                                    (file.contactName ?? '') +
-                                    Platform.pathSeparator +
-                                    (file.fileName ?? "");
+                                    var res = await context
+                                        .read<MyFilesProvider>()
+                                        .removeParticularFile(
+                                            file.fileTransferId ?? "",
+                                            file.fileName ?? "");
 
-                                File localFile = File(filePath);
-                                bool fileExists = await localFile.exists();
-                                if (fileExists && res) {
-                                  localFile.deleteSync();
-                                }
+                                    File localFile = File(_filePath);
+                                    bool fileExists = await localFile.exists();
+                                    if (fileExists && res) {
+                                      localFile.deleteSync();
+                                    }
 
-                                await SnackbarService().showSnackbar(
-                                    context,
-                                    res
-                                        ? "Successfully deleted the file"
-                                        : "failed to delete the file",
-                                    bgColor: res
-                                        ? ColorConstants.successGreen
-                                        : ColorConstants.redAlert);
+                                    await SnackbarService().showSnackbar(
+                                        context,
+                                        res
+                                            ? "Successfully deleted the file"
+                                            : "failed to delete the file",
+                                        bgColor: res
+                                            ? ColorConstants.successGreen
+                                            : ColorConstants.redAlert);
 
-                                if (res) {
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  }
-                                  setSelectedFileName(null);
-                                }
+                                    if (res) {
+                                      if (Navigator.canPop(context)) {
+                                        Navigator.pop(context);
+                                      }
+                                      setSelectedFileName(null);
+                                    }
+                                  },
+                                  'Are you sure you want to delete ${file.fileName}?',
+                                );
                               }
 
                               setDialogState(() {

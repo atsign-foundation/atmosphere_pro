@@ -618,13 +618,18 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   Widget buildDeleteButton() {
     return buildIconButton(
       onTap: () {
-        File(path).deleteSync();
-        SnackbarService().showSnackbar(
-          context,
-          "Successfully deleted the file",
-          bgColor: ColorConstants.successColor,
+        CommonUtilityFunctions().showConfirmationDialog(
+          () {
+            File(path).deleteSync();
+            SnackbarService().showSnackbar(
+              context,
+              "Successfully deleted the file",
+              bgColor: ColorConstants.successColor,
+            );
+            Provider.of<HistoryProvider>(context, listen: false).notify();
+          },
+          'Are you sure you want to delete ${widget.data.name}?',
         );
-        Provider.of<HistoryProvider>(context, listen: false).notify();
       },
       icon: AppVectors.icDeleteFile,
     );

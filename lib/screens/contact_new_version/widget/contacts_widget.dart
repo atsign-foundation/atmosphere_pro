@@ -152,6 +152,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         final contact = contactsForAlphabet[index]!.contact;
         return (contactsForAlphabet[index]!.contact != null)
             ? ContactCardWidget(
+                key: UniqueKey(),
                 contact: contact!,
                 isTrusted: _checkTrustedContact(contact),
                 isSelected: _checkContactSelected(

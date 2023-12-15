@@ -62,7 +62,7 @@ class ReceivedFileCard extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${fileHistory.fileDetails?.files?.length} files',
+                    text: '${fileHistory.fileDetails?.files?.length} file(s)',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.black,
