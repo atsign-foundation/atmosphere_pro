@@ -73,17 +73,23 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
           SizedBox(width: 12),
           buildOptionButton(
             onTap: () {
-              widget.fileTransfer.files!.forEach((e) {
-                File(getFilePath(name: e.name ?? '')).deleteSync();
-              });
-              SnackbarService().showSnackbar(
-                context,
-                "Successfully deleted the file",
-                bgColor: ColorConstants.successColor,
+              CommonUtilityFunctions().showConfirmationDialog(
+                () {
+                  widget.fileTransfer.files!.forEach((e) {
+                    File(getFilePath(name: e.name ?? '')).deleteSync();
+                  });
+                  SnackbarService().showSnackbar(
+                    context,
+                    "Successfully deleted the file",
+                    bgColor: ColorConstants.successColor,
+                  );
+                  Provider.of<HistoryProvider>(
+                          NavService.navKey.currentContext!,
+                          listen: false)
+                      .notify();
+                },
+                'Are you sure you want to delete the file(s)?',
               );
-              Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-                      listen: false)
-                  .notify();
             },
             icon: AppVectors.icDeleteFile,
           )

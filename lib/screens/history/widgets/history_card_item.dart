@@ -179,15 +179,20 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   Widget buildDeleteButton() {
     return buildIconButton(
       onTap: () {
-        widget.fileHistory.fileDetails!.files!.forEach((e) {
-          File(getFilePath(e.name ?? '')).deleteSync();
-        });
-        SnackbarService().showSnackbar(
-          context,
-          "Successfully deleted the file",
-          bgColor: ColorConstants.successColor,
+        CommonUtilityFunctions().showConfirmationDialog(
+          () {
+            widget.fileHistory.fileDetails!.files!.forEach((e) {
+              File(getFilePath(e.name ?? '')).deleteSync();
+            });
+            SnackbarService().showSnackbar(
+              context,
+              "Successfully deleted the file",
+              bgColor: ColorConstants.successColor,
+            );
+            Provider.of<HistoryProvider>(context, listen: false).notify();
+          },
+          'Are you sure you want to delete the file(s)?',
         );
-        Provider.of<HistoryProvider>(context, listen: false).notify();
       },
       icon: AppVectors.icDeleteFile,
     );

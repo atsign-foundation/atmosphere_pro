@@ -122,9 +122,8 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                 IconButtonWidget(
                   icon: AppVectors.icRefresh,
                   onTap: () {
-                    setState(() {
-                      GroupService().getAllGroupsDetails();
-                    });
+                    GroupService().getAllGroupsDetails();
+                    setState(() {});
                   },
                 ),
                 const SizedBox(width: 12),
@@ -247,7 +246,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                       style: CustomTextStyles.blackW60013,
                     ),
                     Text(
-                      '${data.members?.length} Members',
+                      '${data.members?.length} Member(s)',
                       style: CustomTextStyles.blackW40011,
                     ),
                   ],

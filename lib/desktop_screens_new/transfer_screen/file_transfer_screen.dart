@@ -466,7 +466,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               : AddContactTile(
                                   title: groupContactModel.group?.groupName,
                                   subTitle:
-                                      '${groupContactModel.group?.members?.length} members',
+                                      '${groupContactModel.group?.members?.length} member(s)',
                                   image: byteImage,
                                   showImage: byteImage != null,
                                   hasBackground: true,
@@ -637,6 +637,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   }
 
   void showAtSignDialog(List<AtContact> trustedContacts) async {
+    await GroupService().fetchGroupsAndContacts(isDesktop: true);
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
@@ -844,7 +845,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                             title: groupContactModel
                                                 ?.group?.groupName,
                                             subTitle:
-                                                '${groupContactModel?.group?.members?.length} members',
+                                                '${groupContactModel?.group?.members?.length} member(s)',
                                             image: byteImage,
                                             showImage: byteImage != null,
                                             isSelected:

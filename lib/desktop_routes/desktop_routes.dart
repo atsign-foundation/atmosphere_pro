@@ -66,7 +66,7 @@ class DesktopSetupRoutes {
         }
 
         return HistoryDesktopScreen(
-            historyType: args?['historyType'] ?? HistoryType.send);
+            historyType: args?['historyType'] ?? HistoryType.received);
       },
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactScreen();
