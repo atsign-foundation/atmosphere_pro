@@ -63,7 +63,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
       },
       child: ListView.builder(
         controller: widget.scrollController,
-        physics: const ClampingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: 27,
         shrinkWrap: true,
         itemBuilder: (context, alphabetIndex) {

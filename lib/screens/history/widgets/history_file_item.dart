@@ -641,15 +641,12 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   }) {
     return InkWell(
       onTap: onTap,
-      child: CommonUtilityFunctions()
-              .isFileDownloadAvailable(widget.fileTransfer!.date!)
-          ? SvgPicture.asset(
-              icon,
-              width: 32,
-              height: 32,
-              fit: BoxFit.cover,
-            )
-          : SizedBox.shrink(),
+      child: SvgPicture.asset(
+        icon,
+        width: 32,
+        height: 32,
+        fit: BoxFit.cover,
+      ),
     );
   }
 

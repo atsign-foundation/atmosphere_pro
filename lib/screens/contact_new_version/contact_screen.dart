@@ -37,6 +37,7 @@ class _ContactScreenState extends State<ContactScreen>
   late GroupService _groupService;
   late TabController _tabController;
   late TextEditingController searchController;
+  bool isReloading = false;
 
   @override
   void initState() {
@@ -130,7 +131,7 @@ class _ContactScreenState extends State<ContactScreen>
 
   Widget buildBody() {
     return Consumer<ContactProvider>(builder: (context, provider, child) {
-      return widget.isLoading
+      return isReloading
           ? ContactSkeletonLoadingWidget()
           : InkWell(
               highlightColor: Colors.transparent,
@@ -207,6 +208,8 @@ class _ContactScreenState extends State<ContactScreen>
                           contactsType: ListContactType.contact,
                           trustedContacts: trustedProvider.trustedContacts,
                           searchKeywords: searchController.text,
+                          onRefresh: () =>
+                              setState(() => isReloading = !isReloading),
                           onTapContact: (contact) async {
                             final result = await Navigator.push(
                               context,
@@ -240,6 +243,8 @@ class _ContactScreenState extends State<ContactScreen>
                           contactsType: ListContactType.trusted,
                           trustedContacts: trustedProvider.trustedContacts,
                           searchKeywords: searchController.text,
+                          onRefresh: () =>
+                              setState(() => isReloading = !isReloading),
                           onTapContact: (contact) async {
                             await Navigator.push(
                               context,
@@ -257,6 +262,8 @@ class _ContactScreenState extends State<ContactScreen>
                         ListContactWidget(
                           contactsType: ListContactType.groups,
                           searchKeywords: searchController.text,
+                          onRefresh: () =>
+                              setState(() => isReloading = !isReloading),
                           onTapGroup: (group) async {
                             WidgetsBinding.instance
                                 .addPostFrameCallback((_) async {
@@ -355,8 +362,14 @@ class _ContactScreenState extends State<ContactScreen>
   }
 
   Future<void> reloadPage() async {
+    setState(() {
+      isReloading = true;
+    });
     await Future.delayed(Duration(milliseconds: 500), () async {
       await _groupService.fetchGroupsAndContacts();
+      setState(() {
+        isReloading = false;
+      });
       contactProvider.notify();
     });
   }
