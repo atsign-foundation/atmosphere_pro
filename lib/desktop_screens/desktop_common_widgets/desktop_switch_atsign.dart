@@ -11,51 +11,55 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
-class DesktopSwitchAtsign extends StatefulWidget {
-  String atsign;
-  DesktopSwitchAtsign({Key? key, required this.atsign}) : super(key: key);
+class DesktopSwitchAtSign extends StatefulWidget {
+  final String atSign;
+
+  DesktopSwitchAtSign({
+    Key? key,
+    required this.atSign,
+  }) : super(key: key);
 
   @override
-  State<DesktopSwitchAtsign> createState() => _DesktopSwitchAtsignState();
+  State<DesktopSwitchAtSign> createState() => _DesktopSwitchAtSignState();
 }
 
-class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
+class _DesktopSwitchAtSignState extends State<DesktopSwitchAtSign> {
   BackendService backendService = BackendService.getInstance();
-  bool isCurrentAtsign = false;
-  var atClientPrefernce;
+  bool isCurrentAtSign = false;
+  var atClientPreference;
   AtClient atClient = AtClientManager.getInstance().atClient;
-  String? atsignName = '';
+  String? atSignName = '';
 
   @override
   void initState() {
-    if (widget.atsign == atClient.getCurrentAtSign()) {
-      isCurrentAtsign = true;
+    if (widget.atSign == atClient.getCurrentAtSign()) {
+      isCurrentAtSign = true;
     }
-    getAtsignDetails();
+    getAtSignDetails();
     super.initState();
   }
 
-  getAtsignDetails() {
-    atsignName = CommonUtilityFunctions().getCachedContactName(widget.atsign);
+  getAtSignDetails() {
+    atSignName = CommonUtilityFunctions().getCachedContactName(widget.atSign);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.atsign == TextStrings().addNewAtsign) {
+    if (widget.atSign == TextStrings().addNewAtSign) {
       return addNewContactRow();
-    } else if (widget.atsign == TextStrings().saveBackupKey) {
+    } else if (widget.atSign == TextStrings().saveBackupKey) {
       return saveBackupKeyRow();
     } else {
-      return _contactRow(widget.atsign, atsignName ?? '',
-          isCurrentAtsign: isCurrentAtsign);
+      return _contactRow(widget.atSign, atSignName ?? '',
+          isCurrentAtSign: isCurrentAtSign);
     }
   }
 
-  Widget _contactRow(String _atsign, String _name,
-      {bool isCurrentAtsign = false}) {
+  Widget _contactRow(String _atSign, String _name,
+      {bool isCurrentAtSign = false}) {
     Uint8List? image =
-        CommonUtilityFunctions().getCachedContactImage(widget.atsign);
+        CommonUtilityFunctions().getCachedContactImage(widget.atSign);
 
     return Row(
       children: <Widget>[
@@ -63,18 +67,18 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
             ? CustomCircleAvatar(
                 byteImage: image,
                 nonAsset: true,
-                size: isCurrentAtsign ? 40 : 40,
+                size: isCurrentAtSign ? 40 : 40,
               )
             : ContactInitial(
-                initials: _atsign,
-                size: isCurrentAtsign ? 40 : 40,
-                maxSize: isCurrentAtsign ? 50 : 40,
-                minSize: isCurrentAtsign ? 40 : 30,
+                initials: _atSign,
+                size: isCurrentAtSign ? 40 : 40,
+                maxSize: isCurrentAtSign ? 50 : 40,
+                minSize: isCurrentAtSign ? 40 : 30,
               ),
         SizedBox(width: 10),
         Container(
           child: Tooltip(
-            message: _atsign,
+            message: _atSign,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,8 +86,8 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                 SizedBox(
                   width: 180,
                   child: Text(
-                    _atsign,
-                    style: isCurrentAtsign
+                    _atSign,
+                    style: isCurrentAtSign
                         ? CustomTextStyles.blackBold()
                         : CustomTextStyles.desktopSecondaryRegular14,
                     maxLines: 1,
@@ -91,12 +95,12 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   ),
                 ),
                 SizedBox(height: 5),
-                (_name != null && _name != '')
+                _name.isNotEmpty
                     ? SizedBox(
                         width: 180,
                         child: Text(
                           _name,
-                          style: isCurrentAtsign
+                          style: isCurrentAtSign
                               ? CustomTextStyles.greyText16
                               : CustomTextStyles.desktopSecondaryRegular14,
                           maxLines: 1,
@@ -115,7 +119,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   onTap: () {
                     Navigator.of(NavService.navKey.currentContext!)
                         .pop(); // this is to close the popup menu button
-                    CommonUtilityFunctions().deleteAtSign(widget.atsign);
+                    CommonUtilityFunctions().deleteAtSign(widget.atSign);
                   },
                   child: Icon(Icons.delete))),
         )

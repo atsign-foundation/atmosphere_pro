@@ -379,7 +379,7 @@ class _DesktopSentFilesListTileState extends State<DesktopSentFilesListTile> {
                                                                   FileTransferProvider>(
                                                               context,
                                                               listen: false)
-                                                          .reuploadFiles(
+                                                          .reUploadFiles(
                                                               filesList!,
                                                               index,
                                                               widget

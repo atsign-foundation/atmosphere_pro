@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SnackbarService {
-  static final SnackbarService _singleton = SnackbarService._internal();
-  SnackbarService._internal();
-  factory SnackbarService() {
+class SnackBarService {
+  static final SnackBarService _singleton = SnackBarService._internal();
+  SnackBarService._internal();
+  factory SnackBarService() {
     return _singleton;
   }
-  showSnackbar(BuildContext context, String title, {Color? bgColor}) {
+  showSnackBar(BuildContext context, String title, {Color? bgColor}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: bgColor,

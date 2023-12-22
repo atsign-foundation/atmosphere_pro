@@ -499,7 +499,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
 
   sendFileWithFileBin() async {
     if (filePickerModel.selectedFiles.isEmpty) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         context,
         'No files selected',
         bgColor: ColorConstants.redAlert,
@@ -527,7 +527,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
 
     if (_welcomeScreenProvider.selectedContacts.isEmpty) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         context,
         'No atSign selected',
         bgColor: ColorConstants.redAlert,
@@ -587,7 +587,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     final result = await OpenFile.open(file.path);
 
     if (result.type != ResultType.done) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         context,
         result.message,
       );

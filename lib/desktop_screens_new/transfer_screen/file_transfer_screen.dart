@@ -119,7 +119,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
       });
 
       if (!isFileShareFailed) {
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           context,
           TextStrings().fileSentSuccessfully,
           bgColor: Color(0xFF5FAA45),
@@ -129,7 +129,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         _filePickerProvider.selectedFiles.clear();
         _filePickerProvider.notify();
       } else {
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           context,
           TextStrings().oopsSomethingWentWrong,
           bgColor: ColorConstants.redAlert,
@@ -137,7 +137,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
         await showRetrySending();
       }
     } else if (res == null) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         context,
         TextStrings().oopsSomethingWentWrong,
         bgColor: ColorConstants.redAlert,

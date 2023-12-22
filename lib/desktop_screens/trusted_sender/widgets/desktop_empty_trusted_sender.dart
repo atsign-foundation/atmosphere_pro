@@ -20,7 +20,7 @@ class DesktopEmptySender extends StatefulWidget {
 }
 
 class _DesktopEmptySenderState extends State<DesktopEmptySender> {
-  bool isContactSelecttion = false, isLoading = true;
+  bool isContactSelection = false, isLoading = true;
   List<AtContact?> trustedContacts = [];
 
   @override
@@ -90,7 +90,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          isContactSelecttion = !isContactSelecttion;
+                          isContactSelection = !isContactSelection;
                         });
                       },
                       style: ButtonStyle(backgroundColor:
@@ -115,7 +115,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                 ),
               ),
             ),
-            isContactSelecttion
+            isContactSelection
                 ? Expanded(
                     child: GroupContactView(
                       asSelectionScreen: true,
@@ -132,7 +132,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                                       .addTrustedContacts(element.contact!);
                                 }
                               });
-                              isContactSelecttion = false;
+                              isContactSelection = false;
                             },
                             taskName: (provider) => provider.AddTrustedContacts,
                             onSuccess: (provider) {},
@@ -142,7 +142,7 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                       onBackArrowTap: (selectedGroupContacts) {
                         if (mounted) {
                           setState(() {
-                            isContactSelecttion = !isContactSelecttion;
+                            isContactSelection = !isContactSelection;
                           });
                         }
                       },

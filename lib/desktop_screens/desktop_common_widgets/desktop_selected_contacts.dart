@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DesktopSelectedContacts extends StatefulWidget {
-  ValueChanged<bool> onChange;
-  bool showCancelIcon;
+  final ValueChanged<bool> onChange;
+  final bool showCancelIcon;
+
   DesktopSelectedContacts(this.onChange, {this.showCancelIcon = false});
 
   @override
@@ -58,10 +59,10 @@ class _DesktopSelectedContactsState extends State<DesktopSelectedContacts> {
           runSpacing: 10.0,
           spacing: 30.0,
           children: List.generate(selectedContacts.length, (index) {
-            return customPersonVerticalTile(
-              selectedContacts[index]!.contact!.atSign!,
-              selectedContacts[index]!.contact!.atSign,
-              () {
+            return CustomPersonVerticalTile(
+              title: selectedContacts[index]!.contact!.atSign!,
+              subTitle: selectedContacts[index]!.contact!.atSign,
+              onCancel: () {
                 welcomeScreenProvider.removeContacts(selectedContacts[index]);
                 welcomeScreenProvider.isSelectionItemChanged = true;
                 widget.onChange(true);

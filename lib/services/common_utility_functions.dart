@@ -39,9 +39,9 @@ class CommonUtilityFunctions {
     return _singleton;
   }
 
-  Uint8List? getCachedContactImage(String atsign) {
+  Uint8List? getCachedContactImage(String atSign) {
     Uint8List? image;
-    AtContact contact = checkForCachedContactDetail(atsign);
+    AtContact contact = checkForCachedContactDetail(atSign);
 
     if (contact.tags != null && contact.tags!['image'] != null) {
       try {
@@ -65,9 +65,9 @@ class CommonUtilityFunctions {
     return name;
   }
 
-  getCachedContactName(String atsign) {
+  getCachedContactName(String atSign) {
     String? _name;
-    AtContact contact = checkForCachedContactDetail(atsign);
+    AtContact contact = checkForCachedContactDetail(atSign);
 
     if (contact.tags != null && contact.tags!['name'] != null) {
       _name = contact.tags!['name'].toString();
@@ -82,14 +82,14 @@ class CommonUtilityFunctions {
     return fileExists;
   }
 
-  showResetAtsignDialog() async {
-    bool isSelectAtsign = false;
+  showResetAtSignDialog() async {
+    bool isSelectAtSign = false;
     bool? isSelectAll = false;
-    var atsignsList = await KeychainUtil.getAtsignList();
-    atsignsList ??= [];
-    Map atsignMap = {};
-    for (String atsign in atsignsList) {
-      atsignMap[atsign] = false;
+    var atSignsList = await KeychainUtil.getAtsignList();
+    atSignsList ??= [];
+    Map atSignMap = {};
+    for (String atSign in atSignsList) {
+      atSignMap[atSign] = false;
     }
     GlobalKey _one = GlobalKey();
     await showDialog(
@@ -166,7 +166,7 @@ class CommonUtilityFunctions {
                             SizedBox(
                               height: 15.toHeight,
                             ),
-                            atsignsList!.isEmpty
+                            atSignsList!.isEmpty
                                 ? Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -213,7 +213,7 @@ class CommonUtilityFunctions {
                                           ),
                                           onChanged: (value) {
                                             isSelectAll = value;
-                                            atsignMap.updateAll((key, value1) =>
+                                            atSignMap.updateAll((key, value1) =>
                                                 value1 = value);
                                             stateSet(() {});
                                           },
@@ -235,7 +235,7 @@ class CommonUtilityFunctions {
                                             color: Colors.white,
                                           ),
                                         ),
-                                        for (var atsign in atsignsList)
+                                        for (var atsign in atSignsList)
                                           CheckboxListTile(
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -248,10 +248,10 @@ class CommonUtilityFunctions {
                                                   color: ColorConstants.orange),
                                             ),
                                             onChanged: (value) {
-                                              atsignMap[atsign] = value;
+                                              atSignMap[atsign] = value;
                                               stateSet(() {});
                                             },
-                                            value: atsignMap[atsign],
+                                            value: atSignMap[atsign],
                                             activeColor:
                                                 const Color(0x00473d24),
                                             checkColor: ColorConstants.orange,
@@ -268,7 +268,7 @@ class CommonUtilityFunctions {
                                       ],
                                     ),
                                   ),
-                            if (isSelectAtsign)
+                            if (isSelectAtSign)
                               Text('Please select at least one atSign to reset',
                                   style: TextStyle(
                                     color: Colors.red,
@@ -350,20 +350,20 @@ class CommonUtilityFunctions {
                                     ))),
                                 onPressed: () async {
                                   var tempAtsignMap = {};
-                                  tempAtsignMap.addAll(atsignMap);
+                                  tempAtsignMap.addAll(atSignMap);
                                   tempAtsignMap.removeWhere(
                                       (key, value) => value == false);
                                   int atsignsListLength =
                                       tempAtsignMap.keys.toList().length;
                                   if (tempAtsignMap.keys.toList().isEmpty) {
-                                    isSelectAtsign = true;
+                                    isSelectAtSign = true;
                                     stateSet(() {});
                                   } else {
                                     await showConfirmationDialog(() async {
                                       isSelectAtsign = false;
                                       await _resetDevice(
                                           tempAtsignMap.keys.toList());
-                                      await _onboardNextAtsign();
+                                      await _onboardNextAtSign();
                                     }, 'Remove $atsignsListLength atSign${atsignsListLength > 1 ? 's' : ''} from this device?');
                                   }
                                 },
@@ -396,7 +396,7 @@ class CommonUtilityFunctions {
     });
   }
 
-  _onboardNextAtsign() async {
+  _onboardNextAtSign() async {
     var _backendService = BackendService.getInstance();
     var atSignList = await KeychainUtil.getAtsignList();
     if (atSignList != null &&
@@ -773,7 +773,7 @@ class CommonUtilityFunctions {
     return res['nickname'] ?? "";
   }
 
-  Widget interactableThumbnail(String extension, String path,
+  Widget interactThumbnail(String extension, String path,
       FilesDetail fileDetail, Function onDelete) {
     GroupService().allContacts;
     String nickname = "";

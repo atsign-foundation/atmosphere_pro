@@ -8,9 +8,9 @@ class LocalNotificationService {
   LocalNotificationService._() {
     init();
   }
-  static LocalNotificationService _instace =
+  static LocalNotificationService _instance =
       LocalNotificationService._();
-  factory LocalNotificationService() => _instace;
+  factory LocalNotificationService() => _instance;
   late FlutterLocalNotificationsPlugin _notificationsPlugin;
   late InitializationSettings initializationSettings;
   final BehaviorSubject<ReceivedNotification>
@@ -99,15 +99,7 @@ class LocalNotificationService {
       await _notificationsPlugin.show(
           0, '$from sent you a file', message, platformChannelSpecifics,
           payload: jsonEncode(payload));
-    } /*else if (Platform.isWindows) {
-      final localNotifier = LocalNotifier.instance;
-      LocalNotification notification = LocalNotification(
-        identifier: 'identifier',
-        title: '$from sent you a file',
-        subtitle: message,
-      );
-      await localNotifier.notify(notification);
-    }*/
+    }
   }
 
   cancelNotifications() async {

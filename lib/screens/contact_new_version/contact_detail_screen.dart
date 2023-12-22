@@ -88,11 +88,11 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     contact.tags!['nickname'] = nicknameController.text;
     var res = await _contactService.atContactImpl.add(contact);
     if (res == true) {
-      await SnackbarService()
-          .showSnackbar(context, "Successfully updated nickname");
+      await SnackBarService()
+          .showSnackBar(context, "Successfully updated nickname");
     } else {
-      await SnackbarService()
-          .showSnackbar(context, "Failed to update nickname");
+      await SnackBarService()
+          .showSnackBar(context, "Failed to update nickname");
     }
     setState(() {
       isEditNickname = false;

@@ -16,8 +16,12 @@ import 'package:provider/provider.dart';
 
 class DesktopHistoryScreen extends StatefulWidget {
   final int tabIndex;
-  Key? key;
-  DesktopHistoryScreen({this.tabIndex = 0, this.key});
+
+  DesktopHistoryScreen({
+    Key? key,
+    this.tabIndex = 0,
+  });
+
   @override
   _DesktopHistoryScreenState createState() => _DesktopHistoryScreenState();
 }
@@ -102,9 +106,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (historyProvider == null) {
-      historyProvider = Provider.of<HistoryProvider>(context);
-    }
+    historyProvider = Provider.of<HistoryProvider>(context);
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,
@@ -214,7 +216,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             }
                           },
                           errorBuilder: (provider) => Center(
-                            child: Text(TextStrings().errorOccured),
+                            child: Text(TextStrings().errorOccurred),
                           ),
                           load: (provider) async {
                             provider.getSentHistory();
@@ -263,7 +265,7 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
                             }
                           },
                           errorBuilder: (provider) => Center(
-                            child: Text(TextStrings().errorOccured),
+                            child: Text(TextStrings().errorOccurred),
                           ),
                         ),
                       ],

@@ -78,7 +78,7 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
                   widget.fileTransfer.files!.forEach((e) {
                     File(getFilePath(name: e.name ?? '')).deleteSync();
                   });
-                  SnackbarService().showSnackbar(
+                  SnackBarService().showSnackBar(
                     context,
                     "Successfully deleted the file",
                     bgColor: ColorConstants.successColor,
@@ -212,7 +212,7 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
         .isInternetAvailable;
 
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
@@ -233,7 +233,7 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
         );
         if (result is bool && !result) {
           historyProvider.removeDownloadingState(file.key);
-          SnackbarService().showSnackbar(
+          SnackBarService().showSnackBar(
             NavService.navKey.currentContext!,
             TextStrings().downloadFailed,
             bgColor: ColorConstants.redAlert,
@@ -244,9 +244,9 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
       }
     }
     historyProvider.removeDownloadingState(file.key);
-    SnackbarService().showSnackbar(
+    SnackBarService().showSnackBar(
       NavService.navKey.currentContext!,
-      TextStrings().fileDownloadd,
+      TextStrings().fileDownload,
       bgColor: ColorConstants.successGreen,
     );
     await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,

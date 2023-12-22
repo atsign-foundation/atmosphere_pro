@@ -17,8 +17,11 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSentFileDetails extends StatefulWidget {
   final FileHistory? selectedFileData;
-  Key? key;
-  DesktopSentFileDetails({this.key, this.selectedFileData});
+
+  DesktopSentFileDetails({
+    Key? key,
+    this.selectedFileData,
+  });
 
   @override
   _DesktopSentFileDetailsState createState() => _DesktopSentFileDetailsState();
@@ -183,7 +186,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                             onPressed: () async {
                               await Provider.of<FileTransferProvider>(context,
                                       listen: false)
-                                  .reuploadFiles(
+                                  .reUploadFiles(
                                       widget.selectedFileData!.fileDetails!
                                           .files!,
                                       index,
@@ -241,7 +244,7 @@ class _DesktopSentFileDetailsState extends State<DesktopSentFileDetails> {
                 : SizedBox(),
             SizedBox(height: 15.toHeight),
             widget.selectedFileData != null
-                ? DesktopTranferOverlappingContacts(
+                ? DesktopTransferOverlappingContacts(
                     key: Key(widget
                         .selectedFileData!.fileTransferObject!.transferId),
                     selectedList: widget.selectedFileData!.sharedWith,

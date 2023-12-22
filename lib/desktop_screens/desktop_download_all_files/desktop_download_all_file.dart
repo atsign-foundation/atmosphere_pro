@@ -35,7 +35,7 @@ class _DesktopDownloadAllFilesState extends State<DesktopDownloadAllFiles> {
             child: Column(
               children: [
                 Text(
-                  TextStrings().recievedFileDownloadMsg,
+                  TextStrings().receivedFileDownloadMsg,
                   style: TextStyle(
                       fontSize: 20.toFont,
                       fontWeight: FontWeight.bold,

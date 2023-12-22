@@ -6,7 +6,7 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 
 class SendingFileCard extends StatelessWidget {
-  final FLUSHBAR_STATUS? flushbarStatus;
+  final FlushBarStatus? flushbarStatus;
   final FileTransfer? fileTransfer;
   const SendingFileCard({
     Key? key,
@@ -16,7 +16,7 @@ class SendingFileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return flushbarStatus == FLUSHBAR_STATUS.SENDING && fileTransfer != null
+    return flushbarStatus == FlushBarStatus.SENDING && fileTransfer != null
         ? Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

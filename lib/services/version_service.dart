@@ -15,7 +15,9 @@ import 'package:http/http.dart' as http;
 
 class VersionService {
   VersionService._();
+
   static VersionService _internal = VersionService._();
+
   factory VersionService.getInstance() {
     return _internal;
   }
@@ -46,13 +48,13 @@ class VersionService {
           minVersion: decodedResponse['minimumVersion'],
         );
       } else {
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           NavService.navKey.currentContext!,
           TextStrings.appVersionFetchError,
         );
       }
     } catch (e) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.releaseTagError,
       );
@@ -67,7 +69,7 @@ class VersionService {
         desktopUpgradeDialog();
       }
     } catch (e) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.upgradeDialogShowError,
       );
@@ -175,20 +177,19 @@ class VersionService {
   }
 
   desktopUpdateHandler() async {
-    late String url;
+    late String path;
     if (Platform.isMacOS) {
-      url = MixedConstants.MACOS_STORE_LINK;
+      path = MixedConstants.MACOS_STORE_LINK;
     } else if (Platform.isWindows) {
-      url = MixedConstants.WINDOWS_STORE_LINK;
+      path = MixedConstants.WINDOWS_STORE_LINK;
     } else if (Platform.isLinux) {
-      url = MixedConstants.LINUX_STORE_LINK;
+      path = MixedConstants.LINUX_STORE_LINK;
     }
+    final url = Uri.parse(path);
 
-    if (await canLaunch(url)) {
-      await launch(
+    if (await canLaunchUrl(url)) {
+      await launchUrl(
         url,
-        forceSafariVC: false,
-        forceWebView: false,
       );
     }
   }

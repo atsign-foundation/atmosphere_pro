@@ -34,7 +34,7 @@ class _DesktopReceivedFileDetailsState
   int fileCount = 0, fileSize = 0;
   bool isDownloadAvailable = false,
       isDownloaded = false,
-      isFilesAvailableOfline = true,
+      isFilesAvailableOffline = true,
       isOverwrite = false;
   List<String?> existingFileNamesToOverwrite = [];
   Map<String?, Future> _futureBuilder = {};
@@ -85,7 +85,7 @@ class _DesktopReceivedFileDetailsState
       if (fileExists == false) {
         if (mounted) {
           setState(() {
-            isFilesAvailableOfline = false;
+            isFilesAvailableOffline = false;
           });
         }
       } else {
@@ -166,7 +166,7 @@ class _DesktopReceivedFileDetailsState
                                     padding: const EdgeInsets.only(right: 10.0),
                                     child: IconButton(
                                       icon: ((isDownloaded ||
-                                                  isFilesAvailableOfline) &&
+                                                  isFilesAvailableOffline) &&
                                               !isOverwrite)
                                           ? Icon(
                                               Icons.done,
@@ -477,13 +477,13 @@ class _DesktopReceivedFileDetailsState
         setState(() {
           isDownloaded = true;
           isOverwrite = false;
-          isFilesAvailableOfline = true;
+          isFilesAvailableOffline = true;
         });
       }
 
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
-        TextStrings().fileDownloadd,
+        TextStrings().fileDownload,
         bgColor: ColorConstants.successGreen,
       );
 
@@ -495,7 +495,7 @@ class _DesktopReceivedFileDetailsState
               listen: false)
           .sendFileDownloadAcknowledgement(widget.fileTransfer!);
     } else {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,

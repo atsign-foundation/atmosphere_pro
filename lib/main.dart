@@ -15,7 +15,6 @@ void main() async {
       }
     });
   }
-  // AtSignLogger.root_level = 'finer';
   if (Platform.isLinux || Platform.isMacOS) {
     await DesktopWindow.setWindowSize(Size(1280, 832));
     await DesktopWindow.setMinWindowSize(Size(1280, 832));

@@ -454,7 +454,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen>
               }
 
               await Provider.of<FileTransferProvider>(context, listen: false)
-                  .reuploadFiles([fileData], 0, sentHistory);
+                  .reUploadFiles([fileData], 0, sentHistory);
             },
           ),
         );

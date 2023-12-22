@@ -23,9 +23,9 @@ class DesktopHome extends StatefulWidget {
 
 class _DesktopHomeState extends State<DesktopHome> {
   BackendService backendService = BackendService.getInstance();
-  late var atClientPrefernce;
+  late var atClientPreference;
   bool authenticating = false, onboardError = false;
-  String? currentatSign;
+  String? currentAtSign;
 
   @override
   void initState() {
@@ -48,32 +48,29 @@ class _DesktopHomeState extends State<DesktopHome> {
   }
 
   void _checkToOnboard() async {
-    currentatSign = await backendService.getAtSign();
+    currentAtSign = await backendService.getAtSign();
 
-    if (currentatSign == '') {
-      currentatSign = null;
+    if (currentAtSign == '') {
+      currentAtSign = null;
     }
 
     if (mounted) {
       setState(() {});
     }
-    print('currentatSign $currentatSign, ${(currentatSign != null)}');
+    print('currentAtSign $currentAtSign, ${(currentAtSign != null)}');
     await backendService
         .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) {
-      print(e);
-    });
+        .then((value) => atClientPreference = value);
 
-    if (currentatSign != null) {
-      await _onBoard(currentatSign);
+    if (currentAtSign != null) {
+      await _onBoard(currentAtSign);
     }
   }
 
-  Future<void> _onBoard(String? _atsign) async {
+  Future<void> _onBoard(String? _atSign) async {
     await CustomOnboarding.onboard(
-        atSign: _atsign,
-        atClientPrefernce: atClientPrefernce,
+        atSign: _atSign,
+        atClientPreference: atClientPreference,
         isInit: true,
         onError: onOnboardError);
   }
@@ -110,16 +107,16 @@ class _DesktopHomeState extends State<DesktopHome> {
           Center(
             child: CommonButton(
               authenticating
-                  ? '${TextStrings().initialisingFor} $currentatSign...'
-                  : (currentatSign != null && !onboardError
+                  ? '${TextStrings().initialisingFor} $currentAtSign...'
+                  : (currentAtSign != null && !onboardError
                       ? TextStrings().authenticating
                       : 'Upload atSign'),
-              (currentatSign != null && !onboardError)
+              (currentAtSign != null && !onboardError)
                   ? null
                   : () {
                       _onBoard('');
                     },
-              color: (currentatSign != null && !onboardError)
+              color: (currentAtSign != null && !onboardError)
                   ? ColorConstants.dullText
                   : ColorConstants.raisinBlack,
               border: 252,
@@ -133,7 +130,7 @@ class _DesktopHomeState extends State<DesktopHome> {
           Center(
             child: InkWell(
               onTap: () async {
-                await CommonUtilityFunctions().showResetAtsignDialog();
+                await CommonUtilityFunctions().showResetAtSignDialog();
               },
               child: Container(
                 width: 200,

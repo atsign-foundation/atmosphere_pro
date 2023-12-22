@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+
 // import 'package:atsign_atmosphere_pro/services/size_config.dart' ;
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -13,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class CustomPersonVerticalTile extends StatefulWidget {
   final ShareStatus shareStatus;
-  final bool isFailedAtsignList;
+  final bool isFailedAtSignList;
   final FileHistory? fileHistory;
   @override
   final Key? key;
@@ -22,7 +23,7 @@ class CustomPersonVerticalTile extends StatefulWidget {
       {this.key,
       required this.shareStatus,
       required this.fileHistory,
-      this.isFailedAtsignList = false});
+      this.isFailedAtSignList = false});
 
   @override
   _CustomPersonVerticalTileState createState() =>
@@ -32,14 +33,15 @@ class CustomPersonVerticalTile extends StatefulWidget {
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   Uint8List? image;
   String? contactName;
+
   @override
   void initState() {
     super.initState();
-    getAtsignImage();
+    getAtSignImage();
   }
 
   // ignore: always_declare_return_types
-  getAtsignImage() async {
+  getAtSignImage() async {
     if (widget.shareStatus.atsign == null) return;
     var contact = await getAtSignDetails(widget.shareStatus.atsign!);
 
@@ -98,7 +100,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             initials: widget.shareStatus.atsign ?? ' ',
                           ),
                   ),
-                  widget.isFailedAtsignList
+                  widget.isFailedAtSignList
                       ? Positioned(
                           child: Container(
                           height: 50.toHeight,
@@ -110,7 +112,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                           child: InkWell(
                             onTap: () async {
                               print(
-                                  'selectedFileHistory : ${widget.fileHistory!.fileTransferObject!.transferId}, atsign: ${widget.shareStatus.atsign}');
+                                  'selectedFileHistory : ${widget.fileHistory!.fileTransferObject!.transferId}, atSign: ${widget.shareStatus.atsign}');
 
                               await Provider.of<FileTransferProvider>(context,
                                       listen: false)

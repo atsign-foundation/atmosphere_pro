@@ -3,11 +3,12 @@ import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopCustomPersonVerticalTile extends StatefulWidget {
-  final String? imageLocation, title, subTitle, atsign;
+  final String? imageLocation, title, subTitle, atSign;
   final bool isTopRight, isAssetImage;
   final IconData? icon;
   final Function? onCrossPressed;
@@ -22,7 +23,7 @@ class DesktopCustomPersonVerticalTile extends StatefulWidget {
       this.onCrossPressed,
       this.isAssetImage = true,
       this.imageIntList,
-      this.atsign});
+      this.atSign});
 
   @override
   _DesktopCustomPersonVerticalTileState createState() =>
@@ -33,6 +34,7 @@ class _DesktopCustomPersonVerticalTileState
     extends State<DesktopCustomPersonVerticalTile> {
   Uint8List? image;
   String? contactName;
+
   @override
   void initState() {
     super.initState();

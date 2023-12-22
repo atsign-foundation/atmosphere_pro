@@ -8,7 +8,6 @@ import 'package:atsign_atmosphere_pro/data_models/file_entity.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/desktop_recent.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
@@ -26,7 +25,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart'
-    as notificationService;
+    as notification_service;
 import 'trusted_sender_view_model.dart';
 
 class HistoryProvider extends BaseModel {
@@ -74,7 +73,6 @@ class HistoryProvider extends BaseModel {
       sentDocument = [];
 
   List<FilesDetail> recentFile = [];
-  List<Widget> desktopTabs = [DesktopRecents()];
   Map sendFileHistory = {'history': []};
   String? app_lifecycle_state;
   HistoryType typeSelected = HistoryType.received;
@@ -261,25 +259,20 @@ class HistoryProvider extends BaseModel {
 
     // checking, if new keys are available to show in sent history
     AtClient atClient = AtClientManager.getInstance().atClient;
-    List<AtKey> sentFileAtkeys = await atClient.getAtKeys(
+    List<AtKey> sentFileAtKeys = await atClient.getAtKeys(
       regex: MixedConstants.FILE_TRANSFER_KEY,
       sharedBy: atClient.getCurrentAtSign(),
     );
 
-    sentFileAtkeys.retainWhere(
+    sentFileAtKeys.retainWhere(
       (element) =>
           !element.key!
               .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
 
-    bool isNewKeyAvailable = false;
-
-    sentFileAtkeys.forEach((AtKey atkey) {
-      if (individualSentFileId[atkey.key] == null) {
-        isNewKeyAvailable = true;
-      }
-      individualSentFileId[atkey.key] = true;
+    sentFileAtKeys.forEach((AtKey atKey) {
+      individualSentFileId[atKey.key] = true;
     });
 
     // if (!isNewKeyAvailable) {
@@ -302,7 +295,7 @@ class HistoryProvider extends BaseModel {
         return AtValue();
       });
 
-      if (keyValue != null && keyValue.value != null) {
+      if (keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
@@ -311,7 +304,7 @@ class HistoryProvider extends BaseModel {
             (value) {
               FileHistory filesModel = FileHistory.fromJson(value);
               // checking for download acknowledged
-              filesModel.sharedWith = checkIfileDownloaded(
+              filesModel.sharedWith = checkIfFileDownloaded(
                 filesModel.sharedWith,
                 filesModel.fileTransferObject!.transferId,
               );
@@ -374,20 +367,20 @@ class HistoryProvider extends BaseModel {
 
   getIndividuallySavedSentFileItems() async {
     AtClient atClient = AtClientManager.getInstance().atClient;
-    List<AtKey> sentFileAtkeys = await atClient.getAtKeys(
+    List<AtKey> sentFileAtKeys = await atClient.getAtKeys(
       regex: MixedConstants.FILE_TRANSFER_KEY,
       sharedBy: atClient.getCurrentAtSign(),
     );
 
-    sentFileAtkeys.retainWhere(
+    sentFileAtKeys.retainWhere(
       (element) =>
           !element.key!
               .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
 
-    await Future.forEach(sentFileAtkeys, (AtKey atkey) async {
-      AtValue atvalue =
+    await Future.forEach(sentFileAtKeys, (AtKey atkey) async {
+      AtValue atValue =
           await AtClientManager.getInstance().atClient.get(atkey).catchError(
         (e) {
           print("Exception in getting atValue: $e");
@@ -397,10 +390,10 @@ class HistoryProvider extends BaseModel {
         },
       );
 
-      if (atvalue != null && atvalue.value != null) {
+      if (atValue.value != null) {
         try {
           FileHistory fileHistory = FileHistory.fromJson(
-            jsonDecode(atvalue.value),
+            jsonDecode(atValue.value),
           );
           individualSentFileId[fileHistory.fileDetails!.key] = true;
           tempSentHistory.insert(0, fileHistory);
@@ -441,7 +434,7 @@ class HistoryProvider extends BaseModel {
         .sort((a, b) => b.fileDetails!.date!.compareTo(a.fileDetails!.date!));
   }
 
-  List<ShareStatus>? checkIfileDownloaded(
+  List<ShareStatus>? checkIfFileDownloaded(
       List<ShareStatus>? shareStatus, String transferId) {
     if (downloadedFileAcknowledgement[transferId] != null) {
       for (int i = 0; i < shareStatus!.length; i++) {
@@ -538,10 +531,10 @@ class HistoryProvider extends BaseModel {
                   downloadAcknowledgement.transferId] !=
               null) {
             downloadedFileAcknowledgement[downloadAcknowledgement.transferId]![
-                formatAtsign(atKey.sharedBy!)] = true;
+                formatAtSign(atKey.sharedBy!)] = true;
           } else {
             downloadedFileAcknowledgement[downloadAcknowledgement.transferId] =
-                {formatAtsign(atKey.sharedBy!): true};
+                {formatAtSign(atKey.sharedBy!): true};
           }
         }
       } catch (e) {
@@ -629,7 +622,7 @@ class HistoryProvider extends BaseModel {
     FileTransferObject fileTransferObject =
         FileTransferObject.fromJson((jsonDecode(decodedMsg)))!;
     FileTransfer filesModel =
-        convertFiletransferObjectToFileTransfer(fileTransferObject);
+        convertFileTransferObjectToFileTransfer(fileTransferObject);
     filesModel.sender = sharedBy;
 
     //check id data with same key already present
@@ -689,7 +682,7 @@ class HistoryProvider extends BaseModel {
         fileTransferObject,
       );
 
-      Provider.of<notificationService.NotificationService>(
+      Provider.of<notification_service.NotificationService>(
               NavService.navKey.currentContext!,
               listen: false)
           .addRecentNotifications(fileHistory);
@@ -798,10 +791,10 @@ class HistoryProvider extends BaseModel {
     }
 
     for (var atKey in fileTransferAtkeys) {
-      var isCurrentAtsign = compareAtSign(
+      var isCurrentAtSign = compareAtSign(
           atKey.sharedBy!, BackendService.getInstance().currentAtSign!);
 
-      if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
+      if (!isCurrentAtSign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
         AtValue atvalue =
@@ -817,7 +810,7 @@ class HistoryProvider extends BaseModel {
             FileTransferObject fileTransferObject =
                 FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
             FileTransfer filesModel =
-                convertFiletransferObjectToFileTransfer(fileTransferObject);
+                convertFileTransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = atKey.sharedBy!;
 
             if ((listFileTypeSelect ?? []).isNotEmpty) {
@@ -861,20 +854,14 @@ class HistoryProvider extends BaseModel {
                 tempReceivedFiles.insert(0, file);
               }
             } else {
-              if (filesModel.key != null) {
-                tempReceivedHistoryLogs.insert(0, filesModel);
-              }
-
+              tempReceivedHistoryLogs.insert(0, filesModel);
               final file = FileHistory(
                 filesModel,
                 [],
                 HistoryType.received,
                 fileTransferObject,
               );
-
-              if (filesModel.key != null) {
-                tempReceivedFiles.insert(0, file);
-              }
+              tempReceivedFiles.insert(0, file);
             }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
@@ -943,7 +930,7 @@ class HistoryProvider extends BaseModel {
     }
   }
 
-  getrecentHistoryFiles() async {
+  getRecentHistoryFiles() async {
     // finding last 15 received files data for recent tab
     setStatus(RECENT_HISTORY, Status.Loading);
     try {
@@ -1006,7 +993,7 @@ class HistoryProvider extends BaseModel {
     return isBlocked;
   }
 
-  FileTransfer convertFiletransferObjectToFileTransfer(
+  FileTransfer convertFileTransferObjectToFileTransfer(
       FileTransferObject fileTransferObject) {
     List<FileData> files = [];
     fileTransferObject.fileStatus.forEach((fileDetail) {
@@ -1059,12 +1046,12 @@ class HistoryProvider extends BaseModel {
 
   FileHistory convertFileTransferObjectToFileHistory(
     FileTransferObject fileTransferObject,
-    List<String> sharedWithAtsigns,
+    List<String> sharedWithAtSigns,
     Map<String, FileTransferObject> fileShareResult, {
     String? groupName,
   }) {
     List<FileData> files = [];
-    var sthareStatus = <ShareStatus>[];
+    var shareStatus = <ShareStatus>[];
 
     fileTransferObject.fileStatus.forEach((fileDetail) {
       files.add(FileData(
@@ -1081,14 +1068,14 @@ class HistoryProvider extends BaseModel {
       fileEncryptionKey: fileTransferObject.fileEncryptionKey,
     );
 
-    sharedWithAtsigns.forEach((atsign) {
-      sthareStatus
+    sharedWithAtSigns.forEach((atsign) {
+      shareStatus
           .add(ShareStatus(atsign, fileShareResult[atsign]!.sharedStatus));
     });
 
     return FileHistory(
       fileTransfer,
-      sthareStatus,
+      shareStatus,
       HistoryType.send,
       fileTransferObject,
       groupName: groupName,
@@ -1118,7 +1105,7 @@ class HistoryProvider extends BaseModel {
         Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .removeReceiveProgressItem(transferId);
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           NavService.navKey.currentContext!,
           e.toString(),
           bgColor: ColorConstants.redAlert,
@@ -1128,7 +1115,7 @@ class HistoryProvider extends BaseModel {
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
-          .checkForUndownloadedFiles();
+          .checkForUnDownloadedFiles();
 
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
               listen: false)
@@ -1171,25 +1158,19 @@ class HistoryProvider extends BaseModel {
       }
       notifyListeners();
 
-      var files =
-          await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
+      await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
       allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
           false;
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
-          .checkForUndownloadedFiles();
+          .checkForUnDownloadedFiles();
 
-      if (files is List<File>) {
-        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return true;
-      } else {
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return false;
-      }
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
+      setStatus(DOWNLOAD_FILE, Status.Done);
+      return true;
     } catch (e) {
       print('error in downloading file: $e');
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
@@ -1208,9 +1189,6 @@ class HistoryProvider extends BaseModel {
     downloadPath ??= await MixedConstants.getFileDownloadLocation(
       sharedBy: sharedByAtSign,
     );
-    if (downloadPath == null) {
-      throw Exception('downloadPath not found');
-    }
 
     FileTransferObject? fileTransferObject;
 
@@ -1326,37 +1304,37 @@ class HistoryProvider extends BaseModel {
   }
 
   updateSendingNotificationStatus(
-      String transferId, String atsign, bool isSending) {
+      String transferId, String atSign, bool isSending) {
     var index = sentHistory.indexWhere(
         (element) => element.fileTransferObject!.transferId == transferId);
     if (index != -1) {
-      var atsignIndex = sentHistory[index]
+      var atSignIndex = sentHistory[index]
           .sharedWith!
-          .indexWhere((element) => element.atsign == atsign);
-      if (atsignIndex != -1) {
-        sentHistory[index].sharedWith![atsignIndex].isSendingNotification =
+          .indexWhere((element) => element.atsign == atSign);
+      if (atSignIndex != -1) {
+        sentHistory[index].sharedWith![atSignIndex].isSendingNotification =
             isSending;
       }
     }
     notifyListeners();
   }
 
-  bool compareAtSign(String atsign1, String atsign2) {
-    if (atsign1[0] != '@') {
-      atsign1 = '@' + atsign1;
+  bool compareAtSign(String atSign1, String atSign2) {
+    if (atSign1[0] != '@') {
+      atSign1 = '@' + atSign1;
     }
-    if (atsign2[0] != '@') {
-      atsign2 = '@' + atsign2;
+    if (atSign2[0] != '@') {
+      atSign2 = '@' + atSign2;
     }
 
-    return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;
+    return atSign1.toLowerCase() == atSign2.toLowerCase() ? true : false;
   }
 
-  String formatAtsign(String atsign) {
-    if (atsign[0] != '@') {
-      atsign = '@' + atsign;
+  String formatAtSign(String atSign) {
+    if (atSign[0] != '@') {
+      atSign = '@' + atSign;
     }
-    return atsign;
+    return atSign;
   }
 
   Future<bool> updateSentHistory() async {
@@ -1462,22 +1440,22 @@ class HistoryProvider extends BaseModel {
       setStatus(RECEIVED_HISTORY, Status.Loading);
     }
 
-    List<AtKey> fileTransferAtkeys =
+    List<AtKey> fileTransferAtKeys =
         await AtClientManager.getInstance().atClient.getAtKeys(
               regex: MixedConstants.FILE_TRANSFER_KEY,
             );
 
-    fileTransferAtkeys.retainWhere((element) =>
+    fileTransferAtKeys.retainWhere((element) =>
         !element.key!.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
         receivedItemsId[element.key] != true);
 
-    for (var atKey in fileTransferAtkeys) {
-      var isCurrentAtsign = compareAtSign(
+    for (var atKey in fileTransferAtKeys) {
+      var isCurrentAtSign = compareAtSign(
           atKey.sharedBy!, BackendService.getInstance().currentAtSign!);
-      if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
+      if (!isCurrentAtSign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
-        AtValue atvalue = await AtClientManager.getInstance()
+        AtValue atValue = await AtClientManager.getInstance()
             .atClient
             .get(atKey)
             // ignore: return_of_invalid_type_from_catch_error
@@ -1488,12 +1466,12 @@ class HistoryProvider extends BaseModel {
           return AtValue();
         });
 
-        if (atvalue.value != null) {
+        if (atValue.value != null) {
           try {
             FileTransferObject fileTransferObject =
-                FileTransferObject.fromJson(jsonDecode(atvalue.value))!;
+                FileTransferObject.fromJson(jsonDecode(atValue.value))!;
             FileTransfer filesModel =
-                convertFiletransferObjectToFileTransfer(fileTransferObject);
+                convertFileTransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = atKey.sharedBy!;
 
             receivedHistoryLogs.insert(0, filesModel);
@@ -1510,15 +1488,4 @@ class HistoryProvider extends BaseModel {
 
     setStatus(RECEIVED_HISTORY, Status.Done);
   }
-
-// save file in gallery function is not in use as of now.
-// saveFilesInGallery(List<File> files) async {
-//   for (var file in files) {
-//     if (FileTypes.IMAGE_TYPES.contains(file.path.split('.').last) ||
-//         FileTypes.VIDEO_TYPES.contains(file.path.split('.').last)) {
-//       // saving image,video in gallery.
-//       await ImageGallerySaver.saveFile(file.path);
-//     }
-//   }
-// }
 }

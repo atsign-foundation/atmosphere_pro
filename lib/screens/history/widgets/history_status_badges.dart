@@ -340,7 +340,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
         .isInternetAvailable;
 
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
@@ -375,7 +375,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
                   listen: false)
               .sendFileDownloadAcknowledgement(file);
         } else if (result is bool && !result) {
-          SnackbarService().showSnackbar(
+          SnackBarService().showSnackBar(
             NavService.navKey.currentContext!,
             TextStrings().downloadFailed,
             bgColor: ColorConstants.redAlert,
@@ -396,9 +396,9 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
       });
       Provider.of<HistoryProvider>(context, listen: false).notify();
       isFilesPresent(widget.fileHistory.fileDetails!);
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
-        TextStrings().fileDownloadd,
+        TextStrings().fileDownload,
         bgColor: ColorConstants.successGreen,
       );
     }

@@ -10,23 +10,26 @@ import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSelectedFiles extends StatefulWidget {
-  ValueChanged<bool> onChange;
+  final ValueChanged<bool> onChange;
   final bool showCancelIcon;
-  DesktopSelectedFiles(this.onChange, {this.showCancelIcon = true});
+
+  DesktopSelectedFiles(
+    this.onChange, {
+    this.showCancelIcon = true,
+  });
+
   @override
   _DesktopSelectedFilesState createState() => _DesktopSelectedFilesState();
 }
 
 class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
-  FileTransferProvider? _filePickerProvider;
   late WelcomeScreenProvider welcomeScreenProvider;
+
   @override
   void initState() {
     welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
         NavService.navKey.currentContext!,
         listen: false);
-    _filePickerProvider =
-        Provider.of<FileTransferProvider>(context, listen: false);
     super.initState();
   }
 

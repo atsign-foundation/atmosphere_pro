@@ -16,6 +16,7 @@ import '../../utils/text_styles.dart';
 
 class HistoryAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
+
   HistoryAppBar({required this.title});
 
   @override
@@ -145,10 +146,11 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
             await Permission.storage.request().isGranted,
       );
     } else {
-      String url = 'shareddocuments://' +
+      final path = 'shareddocuments://' +
           BackendService.getInstance().atClientPreference.downloadPath!;
-      if (await canLaunch(url)) {
-        await launch(url);
+      final url = Uri.parse(path);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
       } else {
         throw 'Could not launch $url';
       }

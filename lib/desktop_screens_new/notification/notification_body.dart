@@ -139,9 +139,9 @@ class _NotificationBodyState extends State<NotificationBody> {
     FileTransfer? fileTransfer =
         notificationServiceprovider.currentFileShareStatus[
             notification_service.NotificationService.fileObjectKey];
-    FLUSHBAR_STATUS? flushbarStatus =
+    FlushBarStatus? flushbarStatus =
         notificationServiceprovider.currentFileShareStatus[
-            notification_service.NotificationService.flushbarStatuskey];
+            notification_service.NotificationService.flushBarStatusKey];
 
     return SendingFileCard(
       flushbarStatus: flushbarStatus,

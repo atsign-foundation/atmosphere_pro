@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => TrustedContactProvider()),
         ChangeNotifierProvider(create: (context) => AddContactProvider()),
         ChangeNotifierProvider(create: (context) => NestedRouteProvider()),
-        ChangeNotifierProvider(create: (context) => SwitchAtsignProvider()),
+        ChangeNotifierProvider(create: (context) => SwitchAtSignProvider()),
         ChangeNotifierProvider(create: (context) => FileDownloadChecker()),
         ChangeNotifierProvider(create: (context) => FileProgressProvider()),
         ChangeNotifierProvider(
@@ -77,10 +77,6 @@ class _MyAppState extends State<MyApp> {
         builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
           return GestureDetector(
-            onVerticalDragDown: (__) {
-              // When running in iOS, dismiss the keyboard when when user scrolls
-              // if (Platform.isIOS) hideKeyboard(context);
-            },
             child: MediaQuery(
               data: data.copyWith(
                   textScaleFactor:
@@ -103,18 +99,6 @@ class _MyAppState extends State<MyApp> {
             foregroundColor: ColorConstants.iconHeaderColor,
           ),
         ),
-        // theme: ThemeData(
-        //     fontFamily: 'Poppins',
-        //     scaffoldBackgroundColor: Colors.white,
-        //     primaryColor: Color.fromARGB(255, 240, 94, 62),
-        //     appBarTheme: AppBarTheme(
-        //       color: Colors.white,
-        //       elevation: 0,
-        //       iconTheme: IconThemeData(color: Colors.black),
-        //     ),
-        //     buttonBarTheme: ButtonBarThemeData(
-        //       alignment: MainAxisAlignment.center,
-        //     )),
         routes: routes,
       ),
     );

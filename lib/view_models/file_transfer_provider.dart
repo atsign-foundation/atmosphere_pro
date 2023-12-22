@@ -5,7 +5,6 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
@@ -47,7 +46,7 @@ class FileTransferProvider extends BaseModel {
   List<SharedMediaFile>? _sharedFiles;
   FilePickerResult? result;
   PlatformFile? file;
-  FLUSHBAR_STATUS? flushbarStatus;
+  FlushBarStatus? flushBarStatus;
   List<PlatformFile> selectedFiles = [];
   List<GroupContactsModel> selectedContacts = [];
   List<FileTransferStatus> transferStatus = [];
@@ -59,11 +58,11 @@ class FileTransferProvider extends BaseModel {
   List<AtContact> temporaryContactList = [];
   bool hasSelectedFilesChanged = false, scrollToBottom = false;
 
-  final _flushBarStream = StreamController<FLUSHBAR_STATUS>.broadcast();
+  final _flushBarStream = StreamController<FlushBarStatus>.broadcast();
 
-  Stream<FLUSHBAR_STATUS> get flushBarStatusStream => _flushBarStream.stream;
+  Stream<FlushBarStatus> get flushBarStatusStream => _flushBarStream.stream;
 
-  StreamSink<FLUSHBAR_STATUS> get flushBarStatusSink => _flushBarStream.sink;
+  StreamSink<FlushBarStatus> get flushBarStatusSink => _flushBarStream.sink;
 
   FileHistory? _selectedFileHistory;
 
@@ -232,7 +231,7 @@ class FileTransferProvider extends BaseModel {
   Future<dynamic> sendFileWithFileBin(
       List<PlatformFile> selectedFiles, List<GroupContactsModel?> contactList,
       {String? groupName, String? notes}) async {
-    flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
+    flushBarStatusSink.add(FlushBarStatus.SENDING);
     var notifProvider = Provider.of<NotificationService>(
         NavService.navKey.currentContext!,
         listen: false);
@@ -276,7 +275,7 @@ class FileTransferProvider extends BaseModel {
               _files.map((File e) => FileData(name: e.path, size: 0)).toList(),
           atSigns: _atSigns,
         ),
-        FLUSHBAR_STATUS.SENDING,
+        FlushBarStatus.SENDING,
       );
 
       var uploadResult = await FileTransferService.getInstance().uploadFile(
@@ -295,18 +294,18 @@ class FileTransferProvider extends BaseModel {
       _historyProvider.changeIsUpcomingEvent();
 
       // checking if everyone received the notification or not.
-      for (var atsignStatus in uploadResult.entries) {
-        if (atsignStatus.value.sharedStatus != null &&
-            !atsignStatus.value.sharedStatus!) {
+      for (var atSignStatus in uploadResult.entries) {
+        if (atSignStatus.value.sharedStatus != null &&
+            !atSignStatus.value.sharedStatus!) {
           fileUploadProvider.removeSentFileProgress();
           setStatus(SEND_FILES, Status.Error);
           setError(
             SEND_FILES,
             ExceptionService.instance.notifyExceptions(
-              atsignStatus.value.atClientException ?? Exception(),
+              atSignStatus.value.atClientException ?? Exception(),
             ),
           );
-          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          flushBarStatusSink.add(FlushBarStatus.FAILED);
           await showRetrySending();
           shareStatus = false;
         }
@@ -320,26 +319,26 @@ class FileTransferProvider extends BaseModel {
       );
       notifProvider.updateCurrentFileShareStatus(
         null,
-        FLUSHBAR_STATUS.DONE,
+        FlushBarStatus.DONE,
       );
       notifProvider.addRecentNotifications(fileHistory);
 
       fileUploadProvider.removeSentFileProgress();
-      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+      flushBarStatusSink.add(FlushBarStatus.DONE);
       setStatus(SEND_FILES, Status.Done);
       return shareStatus;
     } catch (e) {
       fileUploadProvider.removeSentFileProgress();
       notifProvider.updateCurrentFileShareStatus(
         null,
-        FLUSHBAR_STATUS.FAILED,
+        FlushBarStatus.FAILED,
       );
       setStatus(SEND_FILES, Status.Error);
       setError(
         SEND_FILES,
         'Something went wrong',
       );
-      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      flushBarStatusSink.add(FlushBarStatus.FAILED);
       await showRetrySending();
     }
   }
@@ -427,12 +426,12 @@ class FileTransferProvider extends BaseModel {
     }
 
     try {
-      flushBarStatusSink.add(FLUSHBAR_STATUS.SENDING);
+      flushBarStatusSink.add(FlushBarStatus.SENDING);
 
       //  reuploading files
       for (var fileData in _fileHistory.fileDetails!.files!) {
         if (fileData.isUploaded != null && !fileData.isUploaded!) {
-          await reuploadFiles([fileData], 0, _fileHistory);
+          await reUploadFiles([fileData], 0, _fileHistory);
         }
       }
 
@@ -449,19 +448,19 @@ class FileTransferProvider extends BaseModel {
       for (var element in _fileHistory.sharedWith!) {
         if (element.isNotificationSend != null &&
             !element.isNotificationSend!) {
-          flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+          flushBarStatusSink.add(FlushBarStatus.FAILED);
           return false;
         }
       }
-      flushBarStatusSink.add(FLUSHBAR_STATUS.DONE);
+      flushBarStatusSink.add(FlushBarStatus.DONE);
       return true;
     } catch (e) {
-      flushBarStatusSink.add(FLUSHBAR_STATUS.FAILED);
+      flushBarStatusSink.add(FlushBarStatus.FAILED);
       return false;
     }
   }
 
-  reuploadFiles(
+  reUploadFiles(
       List<FileData> _filesList, int _index, FileHistory _sentHistory) async {
     setStatus(RETRY_NOTIFICATION, Status.Loading);
     Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
@@ -604,4 +603,4 @@ class FileTransferProvider extends BaseModel {
   }
 }
 
-enum FLUSHBAR_STATUS { IDLE, SENDING, FAILED, DONE }
+enum FlushBarStatus { IDLE, SENDING, FAILED, DONE }

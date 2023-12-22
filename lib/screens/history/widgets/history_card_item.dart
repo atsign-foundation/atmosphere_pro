@@ -184,7 +184,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
             widget.fileHistory.fileDetails!.files!.forEach((e) {
               File(getFilePath(e.name ?? '')).deleteSync();
             });
-            SnackbarService().showSnackbar(
+            SnackBarService().showSnackBar(
               context,
               "Successfully deleted the file",
               bgColor: ColorConstants.successColor,
@@ -232,7 +232,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
         .isInternetAvailable;
 
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
@@ -267,7 +267,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
                   listen: false)
               .sendFileDownloadAcknowledgement(file);
         } else if (result is bool && !result) {
-          SnackbarService().showSnackbar(
+          SnackBarService().showSnackBar(
             NavService.navKey.currentContext!,
             TextStrings().downloadFailed,
             bgColor: ColorConstants.redAlert,
@@ -288,9 +288,9 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
       });
       Provider.of<HistoryProvider>(context, listen: false).notify();
       isFilesPresent(widget.fileHistory.fileDetails!);
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
-        TextStrings().fileDownloadd,
+        TextStrings().fileDownload,
         bgColor: ColorConstants.successGreen,
       );
     }

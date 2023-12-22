@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recent.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -373,7 +373,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
         .isInternetAvailable;
 
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
@@ -403,14 +403,14 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
 
           isDownloaded = true;
         });
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           NavService.navKey.currentContext!,
-          TextStrings().fileDownloadd,
+          TextStrings().fileDownload,
           bgColor: ColorConstants.successGreen,
         );
       }
     } else if (result is bool && !result) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,

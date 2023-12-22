@@ -8,38 +8,38 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
-class DesktopTranferOverlappingContacts extends StatefulWidget {
+class DesktopTransferOverlappingContacts extends StatefulWidget {
   final List<ShareStatus>? selectedList;
   final FileHistory? fileHistory;
 
-  const DesktopTranferOverlappingContacts(
+  const DesktopTransferOverlappingContacts(
       {Key? key, this.selectedList, this.fileHistory})
       : super(key: key);
 
   @override
-  _DesktopTranferOverlappingContactsState createState() =>
-      _DesktopTranferOverlappingContactsState();
+  _DesktopTransferOverlappingContactsState createState() =>
+      _DesktopTransferOverlappingContactsState();
 }
 
-class _DesktopTranferOverlappingContactsState
-    extends State<DesktopTranferOverlappingContacts> {
+class _DesktopTransferOverlappingContactsState
+    extends State<DesktopTransferOverlappingContacts> {
   bool isExpanded = false;
   int noOfContactsRow = 0;
-  List<bool> atsignResharing = [];
+  List<bool> atSignReSharing = [];
   List<ShareStatus> deliveredToList = [];
   List<ShareStatus> downloadedByList = [];
   List<ShareStatus> filedInDeliveringList = [];
 
   @override
   void initState() {
-    atsignResharing =
+    atSignReSharing =
         List<bool>.generate(widget.selectedList!.length, (i) => false);
     noOfContactsRow = (widget.selectedList!.length / 5).ceil();
-    sortAtsigns();
+    sortAtSigns();
     super.initState();
   }
 
-  sortAtsigns() {
+  sortAtSigns() {
     deliveredToList = [];
     downloadedByList = [];
     filedInDeliveringList = [];
@@ -64,7 +64,7 @@ class _DesktopTranferOverlappingContactsState
           EdgeInsets.symmetric(horizontal: 20.toHeight, vertical: 5.toHeight),
       child: Consumer<HistoryProvider>(
         builder: (context, provider, _) {
-          sortAtsigns();
+          sortAtSigns();
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -184,7 +184,7 @@ class _DesktopTranferOverlappingContactsState
                           key: Key(filedInDeliveringList[index].atsign!),
                           shareStatus: filedInDeliveringList[index],
                           fileHistory: widget.fileHistory,
-                          isFailedAtsignList: true),
+                          isFailedAtSignList: true),
                     );
                   }),
                 ),

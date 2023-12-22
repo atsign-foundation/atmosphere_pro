@@ -71,24 +71,24 @@ class _HomeState extends State<Home> {
     MixedConstants.ApplicationDocumentsDirectory = _dir.path;
   }
 
-  var atClientPrefernce;
+  var atClientPreference;
+
   void _checkToOnboard() async {
     setState(() {
       authenticating = true;
     });
-    String? currentatSign = await _backendService.getAtSign();
+    String? currentAtSign = await _backendService.getAtSign();
     await _backendService
         .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
+        .then((value) => atClientPreference = value);
 
-    if (currentatSign == null || currentatSign == '') {
+    if (currentAtSign == null || currentAtSign == '') {
       setState(() {
         authenticating = false;
       });
     } else {
       await Provider.of<WelcomeScreenProvider>(context, listen: false)
-          .onboardingLoad(atSign: currentatSign);
+          .onboardingLoad(atSign: currentAtSign);
     }
   }
 
@@ -112,9 +112,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    // var cardHeight = SizeConfig().screenHeight / 0.3;
-    // var paddingSmall = SizeConfig().screenHeight / 0.1;
-    // var paddingLarge = SizeConfig().screenHeight / 0.2;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -260,7 +258,7 @@ class _HomeState extends State<Home> {
                             child: InkWell(
                               onTap: () async {
                                 await CommonUtilityFunctions()
-                                    .showResetAtsignDialog();
+                                    .showResetAtSignDialog();
                               },
                               child: Container(
                                 width: double.infinity,

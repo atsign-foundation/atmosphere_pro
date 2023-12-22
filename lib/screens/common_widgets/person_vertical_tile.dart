@@ -4,7 +4,6 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -15,13 +14,13 @@ import 'package:provider/provider.dart';
 
 class CustomPersonVerticalTile extends StatefulWidget {
   final ShareStatus shareStatus;
-  final bool isFailedAtsignList;
+  final bool isFailedAtSignList;
 
   @override
   final Key? key;
 
   CustomPersonVerticalTile(
-      {this.key, required this.shareStatus, this.isFailedAtsignList = false});
+      {this.key, required this.shareStatus, this.isFailedAtSignList = false});
 
   @override
   _CustomPersonVerticalTileState createState() =>
@@ -93,7 +92,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             initials: widget.shareStatus.atsign ?? ' ',
                           ),
                   ),
-                  widget.isFailedAtsignList
+                  widget.isFailedAtSignList
                       ? Positioned(
                           child: Container(
                           height: 50.toHeight,
@@ -164,7 +163,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           .reSendFileNotification(
               selectedFileHistory, widget.shareStatus.atsign!);
     } else {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         'Please upload file first.',
       );

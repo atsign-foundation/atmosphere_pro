@@ -213,7 +213,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                 ),
-                child: CommonUtilityFunctions().interactableThumbnail(
+                child: CommonUtilityFunctions().interactThumbnail(
                   files[index].fileName?.split(".").last ?? "",
                   BackendService.getInstance().downloadDirectory!.path +
                       Platform.pathSeparator +
@@ -359,62 +359,58 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
             //   ),
             // ),
 
-            ,
-            child: InkWell(
-              onTap: () async {
-                await FileUtils.openFile(
-                  path: BackendService.getInstance().downloadDirectory!.path +
-                      Platform.pathSeparator +
-                      files[index].fileName!,
-                  extension: files[index].fileName?.split(".").last ?? "",
-                  onDelete: () async {
-                    await FileUtils.deleteFile(
-                        BackendService.getInstance().downloadDirectory!.path +
-                            Platform.pathSeparator +
-                            files[index].fileName!);
-                    if (mounted) {
-                      Navigator.pop(context);
-                    }
-                    setState(() {});
-                  },
-                  fileDetail: files[index],
-                );
-              },
-              child: Container(
-                key: UniqueKey(),
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      height: 49,
-                      width: 38,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Center(
-                        child: CommonUtilityFunctions().interactableThumbnail(
-                            files[index].fileName?.split(".").last ?? "",
-                            BackendService.getInstance()
-                                    .downloadDirectory!
-                                    .path +
-                                Platform.pathSeparator +
-                                files[index].fileName!,
-                            files[index], () async {
-                          await FileUtils.deleteFile(
-                            BackendService.getInstance()
-                                    .downloadDirectory!
-                                    .path +
-                                Platform.pathSeparator +
-                                files[index].fileName!,
-                            fileTransferId: files[index].fileTransferId,
-                            onComplete: () {
-                              files.removeAt(index);
-                            },
-                          );
+          ,
+          child: InkWell(
+            onTap: () async {
+              await FileUtils.openFile(
+                path: BackendService.getInstance().downloadDirectory!.path +
+                    Platform.pathSeparator +
+                    files[index].fileName!,
+                extension: files[index].fileName?.split(".").last ?? "",
+                onDelete: () async {
+                  await FileUtils.deleteFile(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!);
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
+                  setState(() {});
+                },
+                fileDetail: files[index],
+              );
+            },
+            child: Container(
+              key: UniqueKey(),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    height: 49,
+                    width: 38,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: CommonUtilityFunctions().interactThumbnail(
+                          files[index].fileName?.split(".").last ?? "",
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!,
+                          files[index], () async {
+                        await FileUtils.deleteFile(
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!,
+                          fileTransferId: files[index].fileTransferId,
+                          onComplete: () {
+                            files.removeAt(index);
+                          },
+                        );
 
                           if (mounted) {
                             Navigator.pop(context);

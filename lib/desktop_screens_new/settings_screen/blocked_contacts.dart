@@ -38,7 +38,7 @@ class _DesktopBlockedContactsState extends State<DesktopBlockedContacts> {
         .blockUnblockContact(contact: contact, blockAction: false);
     await ContactService().fetchBlockContactList();
     setState(() {});
-    SnackbarService().showSnackbar(
+    SnackBarService().showSnackBar(
       context,
       res ? "Succesfully unblocked the contact" : "Failed to unblock contact",
       bgColor: res ? ColorConstants.successGreen : ColorConstants.redAlert,

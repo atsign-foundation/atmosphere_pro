@@ -45,18 +45,18 @@ class OverlayService {
       builder: (context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: StreamBuilder<FLUSHBAR_STATUS>(
+          child: StreamBuilder<FlushBarStatus>(
             stream: FileTransferProvider().flushBarStatusStream,
             builder: (context, snapshot) {
-              final flushbarStatus = snapshot.data ?? FLUSHBAR_STATUS.SENDING;
+              final flushBarStatus = snapshot.data ?? FlushBarStatus.SENDING;
               return Consumer<FileProgressProvider>(
                 builder: (_context, provider, _) {
                   String text = _getText(
-                    flushbarStatus,
+                    flushBarStatus,
                     fileTransferProgress: provider.sentFileTransferProgress,
                   );
 
-                  String icon = getImage(flushbarStatus);
+                  String icon = getImage(flushBarStatus);
                   return Scaffold(
                     backgroundColor: bgColor.withOpacity(0.7),
                     body: SafeArea(
@@ -71,10 +71,10 @@ class OverlayService {
                                 child: InkWell(
                                   onTap: () {
                                     hideOverlay();
-                                    if (flushbarStatus !=
-                                            FLUSHBAR_STATUS.DONE &&
-                                        flushbarStatus !=
-                                            FLUSHBAR_STATUS.FAILED) {
+                                    if (flushBarStatus !=
+                                            FlushBarStatus.DONE &&
+                                        flushBarStatus !=
+                                            FlushBarStatus.FAILED) {
                                       WelcomeScreenProvider()
                                           .changeOverlayStatus(false);
                                     }
@@ -112,7 +112,7 @@ class OverlayService {
                                     ),
                                   ),
                                   SizedBox(height: 30),
-                                  flushbarStatus == FLUSHBAR_STATUS.SENDING
+                                  flushBarStatus == FlushBarStatus.SENDING
                                       ? getProgressBar()
                                       : _buildHistoryButton(),
                                 ],
@@ -171,10 +171,10 @@ class OverlayService {
     );
   }
 
-  String _getText(FLUSHBAR_STATUS flushbarStatus,
+  String _getText(FlushBarStatus flushBarStatus,
       {FileTransferProgress? fileTransferProgress}) {
-    switch (flushbarStatus) {
-      case FLUSHBAR_STATUS.SENDING:
+    switch (flushBarStatus) {
+      case FlushBarStatus.SENDING:
         String sendingMessage = transferMessages[0];
         if (fileTransferProgress != null) {
           if (fileTransferProgress.fileState == FileState.encrypt) {
@@ -186,22 +186,22 @@ class OverlayService {
           }
         }
         return sendingMessage;
-      case FLUSHBAR_STATUS.DONE:
+      case FlushBarStatus.DONE:
         return transferMessages[1];
-      case FLUSHBAR_STATUS.FAILED:
+      case FlushBarStatus.FAILED:
         return transferMessages[2];
       default:
         return '';
     }
   }
 
-  String getImage(FLUSHBAR_STATUS flushbarStatus) {
-    switch (flushbarStatus) {
-      case FLUSHBAR_STATUS.SENDING:
+  String getImage(FlushBarStatus flushBarStatus) {
+    switch (flushBarStatus) {
+      case FlushBarStatus.SENDING:
         return ImageConstants.sendFileIcon;
-      case FLUSHBAR_STATUS.DONE:
+      case FlushBarStatus.DONE:
         return ImageConstants.iconSuccess;
-      case FLUSHBAR_STATUS.FAILED:
+      case FlushBarStatus.FAILED:
         return ImageConstants.iconWarning;
       default:
         return ImageConstants.sendFileIcon;

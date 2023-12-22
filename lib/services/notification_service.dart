@@ -1,19 +1,18 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/foundation.dart';
 
 class NotificationService extends ChangeNotifier {
-  NotificationService._() {}
-  static NotificationService _instace = NotificationService._();
-  factory NotificationService() => _instace;
+  NotificationService._();
+  static NotificationService _instance = NotificationService._();
+  factory NotificationService() => _instance;
   static final fileObjectKey = 'fileObject';
-  static final flushbarStatuskey = 'flushbarStatus';
+  static final flushBarStatusKey = 'flushbarStatus';
 
   List<FileHistory> _recentNotifications = [];
   Map<String, dynamic> _currentFileShareStatus = {
     fileObjectKey: null,
-    flushbarStatuskey: null
+    flushBarStatusKey: null
   };
 
   List<FileHistory> get recentNotification => _recentNotifications;
@@ -28,10 +27,10 @@ class NotificationService extends ChangeNotifier {
   }
 
   updateCurrentFileShareStatus(
-      FileTransfer? fileObject, FLUSHBAR_STATUS flushbar_status) {
+      FileTransfer? fileObject, FlushBarStatus flushBarStatus) {
     _currentFileShareStatus = {
       fileObjectKey: fileObject,
-      flushbarStatuskey: flushbar_status
+      flushBarStatusKey: flushBarStatus
     };
     notifyListeners();
   }

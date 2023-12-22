@@ -33,9 +33,12 @@ class DesktopReceivedFilesListTile extends StatefulWidget {
   final FileTransfer? receivedHistory;
   final bool isSelected;
 
-  const DesktopReceivedFilesListTile(
-      {Key? key, this.receivedHistory, this.isSelected = false})
-      : super(key: key);
+  const DesktopReceivedFilesListTile({
+    Key? key,
+    this.receivedHistory,
+    this.isSelected = false,
+  }) : super(key: key);
+
   @override
   _DesktopReceivedFilesListTileState createState() =>
       _DesktopReceivedFilesListTileState();
@@ -91,8 +94,8 @@ class _DesktopReceivedFilesListTileState
     videoThumbnail = await VideoThumbnail.thumbnailData(
       video: path,
       imageFormat: ImageFormat.JPEG,
-      maxWidth:
-          50, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      maxWidth: 50,
+      // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
       quality: 100,
     );
     return videoThumbnail;
@@ -702,13 +705,13 @@ class _DesktopReceivedFilesListTileState
                         .deleteReceivedItem(widget.receivedHistory!);
 
                 if (res) {
-                  SnackbarService().showSnackbar(
+                  SnackBarService().showSnackBar(
                       NavService.navKey.currentContext!,
                       'Removed from received items list',
                       bgColor: ColorConstants.successGreen);
                   await deleteFileWhenRecevedItemRemoved();
                 } else {
-                  SnackbarService().showSnackbar(
+                  SnackBarService().showSnackBar(
                       NavService.navKey.currentContext!, 'Failed',
                       bgColor: ColorConstants.redAlert);
                 }
@@ -745,7 +748,7 @@ class _DesktopReceivedFilesListTileState
                 await Provider.of<MyFilesProvider>(
                         NavService.navKey.currentContext!,
                         listen: false)
-                    .deletMyFileRecord(widget.receivedHistory!.key);
+                    .deleteMyFileRecord(widget.receivedHistory!.key);
               }));
         });
   }

@@ -40,7 +40,7 @@ class ErrorDialogWidget extends StatelessWidget {
             children: <Widget>[
               SizedBox(height: 20.toHeight),
               Text(
-                TextStrings().errorOccured,
+                TextStrings().errorOccurred,
                 style: CustomTextStyles.primaryBold18,
               ),
               SizedBox(height: 10.toHeight),

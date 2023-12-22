@@ -11,11 +11,11 @@ import 'history_provider.dart';
 
 class FileDownloadChecker extends BaseModel {
   FileDownloadChecker();
-  bool undownloadedFilesExist = false;
+  bool unDownloadedFilesExist = false;
   HistoryProvider? historyProvider;
   late FileTransfer receivedHistory;
 
-  void checkForUndownloadedFiles() async {
+  void checkForUnDownloadedFiles() async {
     if (historyProvider == null) {
       historyProvider = Provider.of<HistoryProvider>(
           NavService.navKey.currentContext!,
@@ -30,14 +30,14 @@ class FileDownloadChecker extends BaseModel {
         var _isFilesAvailableOffline =
             await _isFilesAlreadyDownloaded(value.sender);
         if (!_isFilesAvailableOffline) {
-          undownloadedFilesExist = true;
+          unDownloadedFilesExist = true;
           notifyListeners();
           return;
         }
       }
     }
 
-    undownloadedFilesExist = false;
+    unDownloadedFilesExist = false;
     notifyListeners();
   }
 

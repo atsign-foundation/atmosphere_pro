@@ -13,7 +13,6 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/local_notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
@@ -87,7 +86,7 @@ class BackendService {
       print("paths => $downloadDirectory $appSupportDirectory");
     }
     await atClientServiceInstance.onboard(
-        atClientPreference: atClientPreference, atsign: atsign);
+        atClientPreference: atClientPreference, atSign: atsign);
     // atClientInstance = atClientServiceInstance.atClient;
   }
 
@@ -177,7 +176,7 @@ class BackendService {
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
             DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
@@ -194,14 +193,14 @@ class BackendService {
       var atKey = notificationKey.split(':')[1];
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);
 
         Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
                 listen: false)
-            .checkForUndownloadedFiles();
+            .checkForUnDownloadedFiles();
 
         BuildContext context = NavService.navKey.currentContext!;
         bool trustedSender = false;
@@ -309,7 +308,7 @@ class BackendService {
 
       Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
               listen: false)
-          .checkForUndownloadedFiles();
+          .checkForUnDownloadedFiles();
 
       // setPeriodicFileHistoryRefresh();
     }
@@ -402,19 +401,18 @@ class BackendService {
               value, result.atsign!, atClientPrefernce);
           break;
         case AtOnboardingResultStatus.error:
-          SnackbarService().showSnackbar(
+          SnackBarService().showSnackBar(
             NavService.navKey.currentContext!,
             (result.message ?? '').isNotEmpty ? '' : 'Onboarding failed.',
             bgColor: ColorConstants.redAlert,
           );
           break;
         case AtOnboardingResultStatus.cancel:
-          // TODO: Handle this case.
           break;
       }
     } else {
       CustomOnboarding.onboard(
-          atSign: tempAtsign, atClientPrefernce: atClientPrefernce);
+          atSign: tempAtsign, atClientPreference: atClientPrefernce);
     }
   }
 
@@ -432,10 +430,7 @@ class BackendService {
 
       _onboardingService.setAtsign = atSign;
 
-      //  await getAtClientPreference();
-      await getAtClientPreference()
-          .then((value) => atClientPrefernce = value)
-          .catchError((e) => print(e));
+      await getAtClientPreference().then((value) => atClientPrefernce = value);
 
       authenticating = false;
       isAuthuneticatingSink.add(authenticating);
@@ -467,7 +462,7 @@ class BackendService {
                   listen: false)
               .isInternetAvailable;
 
-          SnackbarService().showSnackbar(NavService.navKey.currentContext!,
+          SnackBarService().showSnackBar(NavService.navKey.currentContext!,
               !isConnected ? TextStrings.noInternetMsg : 'Onboarding failed.',
               bgColor: ColorConstants.redAlert);
           authenticating = false;
@@ -528,7 +523,7 @@ class BackendService {
 
     // start monitor and package initializations.
     initLocalNotification();
-    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
 
     await Navigator.pushNamedAndRemoveUntil(
@@ -585,7 +580,7 @@ class BackendService {
         },
       );
     } else if (Platform.isMacOS) {
-      DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
+      await DesktopSetupRoutes.nested_push(DesktopRoutes.DESKTOP_HISTORY);
     }
   }
 
@@ -601,16 +596,16 @@ class BackendService {
     ErrorDialog().show(msg, context: NavService.navKey.currentContext);
   }
 
-  // refreshHistoryScreen() async {
-  //   var historyProvider = Provider.of<HistoryProvider>(
-  //       NavService.navKey.currentContext!,
-  //       listen: false);
-  //   historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
+// refreshHistoryScreen() async {
+//   var historyProvider = Provider.of<HistoryProvider>(
+//       NavService.navKey.currentContext!,
+//       listen: false);
+//   historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Loading);
 
-  //   if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
-  //       Status.Loading) {
-  //     await historyProvider.refreshReceivedFile(setLoading: false);
-  //   }
-  //   historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Done);
-  // }
+//   if (historyProvider.status[historyProvider.RECEIVED_HISTORY] !=
+//       Status.Loading) {
+//     await historyProvider.refreshReceivedFile(setLoading: false);
+//   }
+//   historyProvider.setStatus(historyProvider.PERIODIC_REFRESH, Status.Done);
+// }
 }
