@@ -73,6 +73,21 @@ class _DesktopFilterHistoryWidgetState
                     title: 'All File Types',
                     isCheck: optionalHistoryTypes
                         .every((element) => listFileType.contains(element)),
+                    onTap: () {
+                      if (optionalHistoryTypes
+                          .every((element) => listFileType.contains(element))) {
+                        listFileType.clear();
+                      } else {
+                        optionalHistoryTypes.forEach(
+                          (element) {
+                            if (!listFileType.contains(element)) {
+                              listFileType.add(element);
+                            }
+                          },
+                        );
+                      }
+                      widget.onSelectedOptionalFilter?.call(listFileType);
+                    },
                   ),
                   ListView.separated(
                     shrinkWrap: true,

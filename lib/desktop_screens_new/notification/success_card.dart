@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 class SuccessCard extends StatelessWidget {
   final FileHistory fileHistory;
+
   const SuccessCard({Key? key, required this.fileHistory}) : super(key: key);
 
   @override
@@ -58,7 +59,8 @@ class SuccessCard extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: '${fileHistory.fileDetails?.files?.length} files',
+                        text:
+                            '${fileHistory.fileDetails?.files?.length} files(s)',
                         style: TextStyle(
                           fontSize: 15,
                           color: Color(0xFF18A2EF),

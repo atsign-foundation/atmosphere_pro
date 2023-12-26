@@ -256,251 +256,258 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
   }
 
   Widget _buildListView(List<FilesDetail> files) {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.symmetric(horizontal: 32),
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: files.length,
-      separatorBuilder: (context, index) => SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final date = DateTime.parse(files[index].date ?? "").toLocal();
-        final shortDate = DateFormat('MM/dd/yy').format(date);
-        final time = DateFormat('kk:mm').format(date);
+    return SlidableAutoCloseBehavior(
+      child: ListView.separated(
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(horizontal: 32),
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: files.length,
+        separatorBuilder: (context, index) => SizedBox(height: 10),
+        itemBuilder: (context, index) {
+          final date = DateTime.parse(files[index].date ?? "").toLocal();
+          final shortDate = DateFormat('MM/dd/yy').format(date);
+          final time = DateFormat('kk:mm').format(date);
 
-        // late FileTransfer fileTransfer;
-        // bool isDownloaded = false;
+          // late FileTransfer fileTransfer;
+          // bool isDownloaded = false;
 
-        // for (var filetransfer in provider.myFiles) {
-        //   if (filetransfer.key == files[index].fileTransferId) {
-        //     fileTransfer = filetransfer;
-        //     break;
-        //   }
-        // }
+          // for (var filetransfer in provider.myFiles) {
+          //   if (filetransfer.key == files[index].fileTransferId) {
+          //     fileTransfer = filetransfer;
+          //     break;
+          //   }
+          // }
 
-        return Slidable(
-          endActionPane: ActionPane(
-            motion: ScrollMotion(),
-            extentRatio: 0.11,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await openFilePath(
+          return Slidable(
+            key: UniqueKey(),
+            endActionPane: ActionPane(
+              motion: ScrollMotion(),
+              extentRatio: 0.24,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await openFilePath(
+                          BackendService.getInstance().downloadDirectory!.path +
+                              Platform.pathSeparator +
+                              files[index].fileName!);
+                    },
+                    child: SvgPicture.asset(
+                      AppVectors.icSendFile,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await FileUtils.deleteFile(
+                        BackendService.getInstance().downloadDirectory!.path +
+                            Platform.pathSeparator +
+                            files[index].fileName!,
+                        fileTransferId: files[index].fileTransferId,
+                        onComplete: () {
+                          files.removeAt(index);
+                        },
+                      );
+                      setState(() {});
+                    },
+                    child: SvgPicture.asset(
+                      AppVectors.icDeleteFile,
+                    ),
+                  ),
+                ),
+              ],
+            )
+
+            // Consumer<FileProgressProvider>(
+            //   builder: (_c, provider, _) {
+            //     var fileTransferProgress =
+            //         provider.receivedFileProgress[fileTransfer.key];
+
+            //     return CommonUtilityFunctions()
+            //             .checkForDownloadAvailability(fileTransfer)
+            //         ? fileTransferProgress != null
+            //             ? CommonUtilityFunctions().getDownloadStatus(
+            //                 fileTransferProgress,
+            //               )
+            //             : isDownloaded
+            //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
+            //                 : InkWell(
+            //                     onTap: () async {
+            //                       var res = await downloadFiles(
+            //                         fileTransfer,
+            //                         fileName: files[index].fileName,
+            //                       );
+
+            //                       setState(() {
+            //                         isDownloaded = res;
+            //                       });
+            //                     },
+            //                     child: SvgPicture.asset(
+            //                       AppVectors.icDownloadFile,
+            //                     ),
+            //                   )
+            //         : SizedBox();
+            //   },
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 6.0),
+            //   child: SvgPicture.asset(
+            //     AppVectors.icDownloadFile,
+            //   ),
+            // ),
+
+            ,
+            child: InkWell(
+              onTap: () async {
+                await FileUtils.openFile(
+                  path: BackendService.getInstance().downloadDirectory!.path +
+                      Platform.pathSeparator +
+                      files[index].fileName!,
+                  extension: files[index].fileName?.split(".").last ?? "",
+                  onDelete: () async {
+                    await FileUtils.deleteFile(
                         BackendService.getInstance().downloadDirectory!.path +
                             Platform.pathSeparator +
                             files[index].fileName!);
-                  },
-                  child: SvgPicture.asset(
-                    AppVectors.icSendFile,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await FileUtils.deleteFile(
-                      BackendService.getInstance().downloadDirectory!.path +
-                          Platform.pathSeparator +
-                          files[index].fileName!,
-                      fileTransferId: files[index].fileTransferId,
-                      onComplete: () {
-                        files.removeAt(index);
-                      },
-                    );
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
                     setState(() {});
                   },
-                  child: SvgPicture.asset(
-                    AppVectors.icDeleteFile,
-                  ),
+                  fileDetail: files[index],
+                );
+              },
+              child: Container(
+                key: UniqueKey(),
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: 49,
+                      width: 38,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: CommonUtilityFunctions().interactableThumbnail(
+                            files[index].fileName?.split(".").last ?? "",
+                            BackendService.getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                Platform.pathSeparator +
+                                files[index].fileName!,
+                            files[index], () async {
+                          await FileUtils.deleteFile(
+                            BackendService.getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                Platform.pathSeparator +
+                                files[index].fileName!,
+                            fileTransferId: files[index].fileTransferId,
+                            onComplete: () {
+                              files.removeAt(index);
+                            },
+                          );
+
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
+                          setState(() {});
+                        }),
+                      ),
+                    ),
+                    SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  "${files[index].fileName}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                "$shortDate",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: ColorConstants.oldSliver,
+                                ),
+                              ),
+                              Container(
+                                width: 1,
+                                height: 8,
+                                color: Color(0xFFD7D7D7),
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                ),
+                              ),
+                              Text(
+                                "$time",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: ColorConstants.oldSliver,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 7),
+                          Text(
+                            "${(files[index].contactName)?.split("@")[1] ?? ''}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10,
+                            ),
+                          ),
+                          SizedBox(height: 1),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  "${files[index].contactName ?? ''}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                AppUtils.getFileSizeString(
+                                  bytes: files[index].size ?? 0,
+                                  decimals: 2,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: ColorConstants.oldSliver,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ],
-          )
-
-          // Consumer<FileProgressProvider>(
-          //   builder: (_c, provider, _) {
-          //     var fileTransferProgress =
-          //         provider.receivedFileProgress[fileTransfer.key];
-
-          //     return CommonUtilityFunctions()
-          //             .checkForDownloadAvailability(fileTransfer)
-          //         ? fileTransferProgress != null
-          //             ? CommonUtilityFunctions().getDownloadStatus(
-          //                 fileTransferProgress,
-          //               )
-          //             : isDownloaded
-          //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
-          //                 : InkWell(
-          //                     onTap: () async {
-          //                       var res = await downloadFiles(
-          //                         fileTransfer,
-          //                         fileName: files[index].fileName,
-          //                       );
-
-          //                       setState(() {
-          //                         isDownloaded = res;
-          //                       });
-          //                     },
-          //                     child: SvgPicture.asset(
-          //                       AppVectors.icDownloadFile,
-          //                     ),
-          //                   )
-          //         : SizedBox();
-          //   },
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 6.0),
-          //   child: SvgPicture.asset(
-          //     AppVectors.icDownloadFile,
-          //   ),
-          // ),
-
-          ,
-          child: InkWell(
-            onTap: () async {
-              await FileUtils.openFile(
-                path: BackendService.getInstance().downloadDirectory!.path +
-                    Platform.pathSeparator +
-                    files[index].fileName!,
-                extension: files[index].fileName?.split(".").last ?? "",
-                onDelete: () async {
-                  await FileUtils.deleteFile(
-                      BackendService.getInstance().downloadDirectory!.path +
-                          Platform.pathSeparator +
-                          files[index].fileName!);
-                  if (mounted) {
-                    Navigator.pop(context);
-                  }
-                  setState(() {});
-                },
-                fileDetail: files[index],
-              );
-            },
-            child: Container(
-              key: UniqueKey(),
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: 49,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: CommonUtilityFunctions().interactableThumbnail(
-                          files[index].fileName?.split(".").last ?? "",
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              files[index].fileName!,
-                          files[index], () async {
-                        await FileUtils.deleteFile(
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              files[index].fileName!,
-                          fileTransferId: files[index].fileTransferId,
-                          onComplete: () {
-                            files.removeAt(index);
-                          },
-                        );
-
-                        if (mounted) {
-                          Navigator.pop(context);
-                        }
-                        setState(() {});
-                      }),
-                    ),
-                  ),
-                  SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                "${files[index].fileName}",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 12),
-                            Text(
-                              "$shortDate",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: ColorConstants.oldSliver,
-                              ),
-                            ),
-                            Container(
-                              width: 1,
-                              height: 8,
-                              color: Color(0xFFD7D7D7),
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 3,
-                              ),
-                            ),
-                            Text(
-                              "$time",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: ColorConstants.oldSliver,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 7),
-                        Text(
-                          "${(files[index].contactName)?.split("@")[1] ?? ''}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10,
-                          ),
-                        ),
-                        SizedBox(height: 1),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                "${files[index].contactName ?? ''}",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              AppUtils.getFileSizeString(
-                                bytes: files[index].size ?? 0,
-                                decimals: 2,
-                              ),
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: ColorConstants.oldSliver,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

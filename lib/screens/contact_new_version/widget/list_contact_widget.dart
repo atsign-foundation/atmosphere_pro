@@ -20,6 +20,7 @@ class ListContactWidget extends StatefulWidget {
   final ListContactType? contactsType;
   final String searchKeywords;
   final Function()? onTapAddButton;
+  final Function()? onRefresh;
 
   const ListContactWidget({
     Key? key,
@@ -33,6 +34,7 @@ class ListContactWidget extends StatefulWidget {
     this.contactsType,
     this.searchKeywords = '',
     this.onTapAddButton,
+    this.onRefresh,
   }) : super(key: key);
 
   @override
@@ -143,7 +145,9 @@ class _ListContactWidgetState extends State<ListContactWidget>
                   onTapGroup: widget.onTapGroup,
                   onSelectContacts: widget.onSelectContacts,
                   onRefresh: () async {
+                    widget.onRefresh?.call();
                     await _groupService.fetchGroupsAndContacts();
+                    widget.onRefresh?.call();
                   },
                   contactPadding: EdgeInsets.only(left: 18, right: 28),
                   selectedContacts: widget.selectedContacts,
