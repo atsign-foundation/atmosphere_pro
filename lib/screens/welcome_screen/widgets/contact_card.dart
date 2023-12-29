@@ -120,7 +120,7 @@ class _ContactCardState extends State<ContactCard> {
                     widget.contact.tags?['name'] ??
                         widget.contact.atSign!.substring(1),
                     style: TextStyle(
-                      fontSize: 11.toFont,
+                      fontSize: 12.toFont,
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
                     ),

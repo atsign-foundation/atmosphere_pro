@@ -168,7 +168,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                       "${provider.recentFile[index].filePath!.split(Platform.pathSeparator).last}",
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
                                       maxLines: 1,
@@ -276,7 +276,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                 fileType.text,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 8.toFont,
+                  fontSize: 12.toFont,
                 ),
               ),
             ],
@@ -517,7 +517,7 @@ class _MyFilesScreenState extends State<MyFilesScreen> {
                                           style: TextStyle(
                                             color: ColorConstants
                                                 .sidebarTextUnselected,
-                                            fontSize: 9.toFont,
+                                            fontSize: 12.toFont,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         )

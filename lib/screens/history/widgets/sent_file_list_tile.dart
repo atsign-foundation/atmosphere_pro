@@ -345,7 +345,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                           : '+${contactList.length - 1}',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 10.toFont,
+                                        fontSize: 12.toFont,
                                         fontWeight: FontWeight.normal,
                                       ))
                                   : Icon(Icons.download_done,

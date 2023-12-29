@@ -375,7 +375,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                                               getFileStateMessage(
                                                   fileTransferProgress),
                                               style: TextStyle(
-                                                fontSize: 11.toFont,
+                                                fontSize: 12.toFont,
                                                 color: ColorConstants.blueText,
                                                 fontWeight: FontWeight.normal,
                                               )),

@@ -24,7 +24,7 @@ class LabelledCircularProgressIndicator extends StatelessWidget {
                     padding: EdgeInsets.only(left: 7),
                     child: Text((value! * 100).toStringAsFixed(0) + '%',
                         style: TextStyle(
-                          fontSize: 8.toFont,
+                          fontSize: 12.toFont,
                           fontWeight: FontWeight.bold,
                           color: ColorConstants.blueText,
                         )),

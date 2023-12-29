@@ -79,7 +79,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
       child: Text(
         'Delivered',
         style: TextStyle(
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: FontWeight.w500,
           color: ColorConstants.deliveredColor,
         ),
@@ -241,7 +241,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
           child: Text(
             'Error',
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
               color: ColorConstants.orangeColor,
             ),
@@ -260,7 +260,7 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
               Text(
                 'Retry',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: ColorConstants.iconHeaderColor,
                 ),

@@ -66,7 +66,7 @@ class FileCard extends StatelessWidget {
                       decimals: 2,
                     ),
                     style: TextStyle(
-                      fontSize: 9.toFont,
+                      fontSize: 12.toFont,
                       color: ColorConstants.sidebarTextUnselected,
                     ),
                   ),

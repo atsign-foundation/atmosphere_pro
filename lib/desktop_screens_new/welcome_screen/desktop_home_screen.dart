@@ -52,10 +52,10 @@ class _HomeScreenDesktopState extends State<HomeScreenDesktop> {
           ),
           Consumer<SideBarProvider>(builder: (_context, _provider, _) {
             return Positioned(
-              top: 40,
+              bottom: 96,
               left: _provider.isSidebarExpanded
-                  ? MixedConstants.SIDEBAR_WIDTH_EXPANDED - 20
-                  : MixedConstants.SIDEBAR_WIDTH_COLLAPSED - 20,
+                  ? MixedConstants.SIDEBAR_WIDTH_EXPANDED - 16
+                  : MixedConstants.SIDEBAR_WIDTH_COLLAPSED - 16,
               child: Builder(
                 builder: (context) {
                   return InkWell(
@@ -64,17 +64,25 @@ class _HomeScreenDesktopState extends State<HomeScreenDesktop> {
                           .updateSidebarWidth();
                     },
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.toWidth),
-                          color: Colors.white),
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 4),
+                            blurRadius: 12,
+                            color: Colors.black.withOpacity(0.25),
+                          )
+                        ],
+                      ),
                       padding: EdgeInsets.only(left: 4),
                       child: Icon(
                           _provider.isSidebarExpanded
                               ? Icons.arrow_back_ios
                               : Icons.arrow_forward_ios_sharp,
-                          size: 20,
+                          size: 16,
                           color: Colors.black),
                     ),
                   );

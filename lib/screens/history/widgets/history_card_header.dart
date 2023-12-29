@@ -79,7 +79,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
                             widget.fileHistory.type != HistoryType.received)
                           Text(
                             subTitle,
-                            style: CustomTextStyles.blackW40011,
+                            style: CustomTextStyles.blackW40012,
                           ),
                       ],
                     ),
@@ -116,7 +116,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
                           : 'dd/MM/yyyy HH:mm')
                       .format(widget.fileHistory.fileDetails?.date ??
                           DateTime.now()),
-                  style: CustomTextStyles.raisinBlackW40011,
+                  style: CustomTextStyles.raisinBlackW40012,
                 ),
                 SizedBox(height: 4),
                 HistoryStatusBadges(
@@ -131,7 +131,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
           SizedBox(height: 8),
           Text(
             '"${widget.fileHistory.fileDetails?.notes}"',
-            style: CustomTextStyles.raisinBlackW40010,
+            style: CustomTextStyles.raisinBlackW40012,
           )
         ],
       ],

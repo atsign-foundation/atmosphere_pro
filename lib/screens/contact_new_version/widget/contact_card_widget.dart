@@ -119,7 +119,7 @@ class _ContactCardWidgetState extends State<ContactCardWidget> {
                       widget.contact.tags?['nickname'] ??
                           widget.contact.atSign!.substring(1),
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
                       ),
