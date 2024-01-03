@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
@@ -72,6 +73,26 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
   }
 
   sendFileWithFileBin(List<GroupContactsModel> contactList) async {
+
+    bool isFilesReady = true;
+    for (int i = 0; i < _filePickerProvider.selectedFiles.length; i++) {
+      final isExist =
+      File(_filePickerProvider.selectedFiles[i].path ?? '').existsSync();
+      if (!isExist) {
+        _filePickerProvider.deleteFiles(i);
+        isFilesReady = false;
+      }
+    }
+
+    if (!isFilesReady) {
+      SnackbarService().showSnackbar(
+        context,
+        'File(s) not found and removed',
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+
     setState(() {
       showFileSentCard = false;
     });
