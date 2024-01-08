@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/edit_bottomsheet.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -25,31 +26,27 @@ class FileUtils {
     String? fileTransferId,
     Function()? onComplete,
   }) async {
-    await showModalBottomSheet(
-      context: NavService.navKey.currentContext!,
-      backgroundColor: Colors.white,
-      builder: (context) => EditBottomSheet(
-        onConfirmation: () async {
-          var file = File(filePath);
-          if (await file.exists()) {
-            await file.delete();
-          }
-          if (fileTransferId != null) {
-            await Provider.of<MyFilesProvider>(
-                    NavService.navKey.currentContext!,
-                    listen: false)
-                .removeParticularFile(fileTransferId,
-                    filePath.split(Platform.pathSeparator).last);
+    await CommonUtilityFunctions().showConfirmationDialog(
+      () async {
+        if (File(filePath).existsSync()) File(filePath).deleteSync();
+        if (fileTransferId != null) {
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .removeParticularFile(
+                  fileTransferId, filePath.split(Platform.pathSeparator).last);
 
-            await Provider.of<MyFilesProvider>(
-                    NavService.navKey.currentContext!,
-                    listen: false)
-                .getAllFiles();
-          }
-          onComplete?.call();
-        },
-        deleteMessage: TextStrings.deleteFileConfirmationMsgMyFiles,
-      ),
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .getAllFiles();
+        }
+        onComplete?.call();
+        SnackbarService().showSnackbar(
+          NavService.navKey.currentContext!,
+          "Successfully deleted the file(s)",
+          bgColor: ColorConstants.successColor,
+        );
+      },
+      'Are you sure you want to delete the file(s)?',
     );
   }
 

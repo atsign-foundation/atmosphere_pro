@@ -60,7 +60,7 @@ class SuccessCard extends StatelessWidget {
                       ),
                       TextSpan(
                         text:
-                            '${fileHistory.fileDetails?.files?.length} files(s)',
+                            '${fileHistory.fileDetails?.files?.length} file(s)',
                         style: TextStyle(
                           fontSize: 15,
                           color: Color(0xFF18A2EF),

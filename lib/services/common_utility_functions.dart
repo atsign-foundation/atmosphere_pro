@@ -359,7 +359,7 @@ class CommonUtilityFunctions {
                                     isSelectAtsign = true;
                                     stateSet(() {});
                                   } else {
-                                    showConfirmationDialog(() async {
+                                    await showConfirmationDialog(() async {
                                       isSelectAtsign = false;
                                       await _resetDevice(
                                           tempAtsignMap.keys.toList());
@@ -540,8 +540,8 @@ class CommonUtilityFunctions {
     return image;
   }
 
-  showConfirmationDialog(Function onSuccess, String title) {
-    showDialog(
+  Future<void> showConfirmationDialog(Function onSuccess, String title) async {
+    await showDialog(
         context: NavService.navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
@@ -885,8 +885,8 @@ class CommonUtilityFunctions {
                               Padding(
                                 padding: const EdgeInsets.only(left: 6.0),
                                 child: GestureDetector(
-                                  onTap: () async {
-                                    await onDelete();
+                                  onTap: () {
+                                    onDelete.call();
                                   },
                                   child: SvgPicture.asset(
                                     AppVectors.icDeleteFile,
@@ -988,13 +988,14 @@ class CommonUtilityFunctions {
                                   SizedBox(height: 10),
                                   // fileDetail.message.isNotNull
                                   //     ?
-                                  Text(
-                                    "Message",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
+                                  if ((fileDetail.message ?? '').isNotEmpty)
+                                    Text(
+                                      "Message",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
                                     ),
-                                  ),
                                   // : SizedBox(),
                                   SizedBox(height: 5),
                                   Text(

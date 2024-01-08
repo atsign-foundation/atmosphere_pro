@@ -48,7 +48,7 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
             ? nickname
             : widget.fileHistory.fileDetails?.sender ?? ''
         : widget.fileHistory.groupName ??
-            '${widget.fileHistory.sharedWith?.length} Contacts';
+            '${widget.fileHistory.sharedWith?.length} Contact(s)';
 
     final String subTitle = widget.fileHistory.type == HistoryType.received
         ? widget.fileHistory.fileDetails?.sender ?? ''
