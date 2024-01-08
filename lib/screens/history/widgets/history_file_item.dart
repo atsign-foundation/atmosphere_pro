@@ -230,7 +230,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                             Text(
                               "$shortDate",
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 12,
                                 color: ColorConstants.oldSliver,
                               ),
                             ),
@@ -245,7 +245,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                             Text(
                               "$time",
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 12,
                                 color: ColorConstants.oldSliver,
                               ),
                             ),
@@ -266,7 +266,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                 TextStrings().mb,
                         style: TextStyle(
                           color: ColorConstants.grey,
-                          fontSize: 11,
+                          fontSize: 12,
                         ),
                         textAlign: TextAlign.left,
                       ),
@@ -420,11 +420,11 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                         TextSpan(
                                           text: widget.data.name
                                               ?.replaceAll(fileFormat, ''),
-                                          style: CustomTextStyles.blackW60011,
+                                          style: CustomTextStyles.blackW60012,
                                         ),
                                         TextSpan(
                                           text: fileFormat,
-                                          style: CustomTextStyles.blackW40011,
+                                          style: CustomTextStyles.blackW40012,
                                         )
                                       ],
                                     ),

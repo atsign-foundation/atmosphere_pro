@@ -43,7 +43,7 @@ class _BlockedContactScreenState extends State<BlockedContactScreen> {
       appBar: AppBar(
         backgroundColor: ColorConstants.background,
         title: Text(
-          "Blocked atSigns",
+          "Blocked Contacts",
           style: TextStyle(
             color: Colors.black,
           ),

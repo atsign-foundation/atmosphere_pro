@@ -436,7 +436,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
@@ -444,7 +444,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                               Text(
                                 "$shortDate",
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
                               ),
@@ -459,7 +459,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                               Text(
                                 "$time",
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
                               ),
@@ -471,7 +471,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
-                              fontSize: 10,
+                              fontSize: 12,
                             ),
                           ),
                           SizedBox(height: 1),
@@ -482,7 +482,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                                   "${files[index].contactName ?? ''}",
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
@@ -492,7 +492,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                                   decimals: 2,
                                 ),
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
                               )

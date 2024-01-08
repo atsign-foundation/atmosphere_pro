@@ -113,7 +113,7 @@ class _HistoryFileListState extends State<HistoryFileList> {
               isExpanded ? 'Show Less' : '${fileListLength - 2} More File(s)',
               style: TextStyle(
                 color: ColorConstants.orangeColor,
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),

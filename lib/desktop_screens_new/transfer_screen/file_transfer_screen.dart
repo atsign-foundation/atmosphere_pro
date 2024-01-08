@@ -514,7 +514,7 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Add atSigns",
+                          "Add Contacts or Groups",
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontSize: 16.toFont,

@@ -86,7 +86,7 @@ class _ContactListTileState extends State<ContactListTile> {
                 Text(
                   widget.name ?? '',
                   style: TextStyle(
-                    fontSize: 11.toFont,
+                    fontSize: 12.toFont,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),

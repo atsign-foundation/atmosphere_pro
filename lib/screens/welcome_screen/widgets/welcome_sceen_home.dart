@@ -359,7 +359,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Add atSigns',
+                      'Add Contacts or Groups',
                       style: TextStyle(
                         color: ColorConstants.orange,
                         fontSize: 15.toFont,
