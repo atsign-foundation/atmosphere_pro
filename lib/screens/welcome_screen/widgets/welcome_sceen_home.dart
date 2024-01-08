@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
@@ -501,6 +502,25 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
       SnackbarService().showSnackbar(
         context,
         'No files selected',
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+
+    bool isFilesReady = true;
+    for (int i = 0; i < filePickerModel.selectedFiles.length; i++) {
+      final isExist =
+          File(filePickerModel.selectedFiles[i].path ?? '').existsSync();
+      if (!isExist) {
+        filePickerModel.deleteFiles(i);
+        isFilesReady = false;
+      }
+    }
+
+    if (!isFilesReady) {
+      SnackbarService().showSnackbar(
+        context,
+        'File(s) not found and removed',
         bgColor: ColorConstants.redAlert,
       );
       return;
