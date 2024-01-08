@@ -213,11 +213,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   stream: FileTransferProvider()
                                       .flushBarStatusStream,
                                   builder: (context, snapshot) {
-                                    final flushbarStatus = snapshot.data ??
-                                        FlushBarStatus.SENDING;
+                                    final flushbarStatus =
+                                        snapshot.data ?? FlushBarStatus.SENDING;
 
-                                    if (flushbarStatus ==
-                                        FlushBarStatus.DONE) {
+                                    if (flushbarStatus == FlushBarStatus.DONE) {
                                       Future.delayed(
                                         const Duration(seconds: 3),
                                         () {

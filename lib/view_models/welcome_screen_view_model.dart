@@ -31,7 +31,7 @@ class WelcomeScreenProvider extends BaseModel {
   }
 
   void _addToContactsList(GroupContactsModel _obj) {
-      selectedContacts.add(_obj);
+    selectedContacts.add(_obj);
   }
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList,

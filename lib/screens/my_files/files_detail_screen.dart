@@ -227,12 +227,12 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                       fileTransferId: files[index].fileTransferId,
                       onComplete: () {
                         files.removeAt(index);
+                        setState(() {});
                       },
                     );
                     if (mounted) {
                       Navigator.pop(context);
                     }
-                    setState(() {});
                   },
                 ),
               ),
@@ -268,16 +268,6 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
           final shortDate = DateFormat('MM/dd/yy').format(date);
           final time = DateFormat('kk:mm').format(date);
 
-          // late FileTransfer fileTransfer;
-          // bool isDownloaded = false;
-
-          // for (var filetransfer in provider.myFiles) {
-          //   if (filetransfer.key == files[index].fileTransferId) {
-          //     fileTransfer = filetransfer;
-          //     break;
-          //   }
-          // }
-
           return Slidable(
             key: UniqueKey(),
             endActionPane: ActionPane(
@@ -309,9 +299,9 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                         fileTransferId: files[index].fileTransferId,
                         onComplete: () {
                           files.removeAt(index);
+                          setState(() {});
                         },
                       );
-                      setState(() {});
                     },
                     child: SvgPicture.asset(
                       AppVectors.icDeleteFile,
@@ -319,103 +309,67 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   ),
                 ),
               ],
-            )
-
-            // Consumer<FileProgressProvider>(
-            //   builder: (_c, provider, _) {
-            //     var fileTransferProgress =
-            //         provider.receivedFileProgress[fileTransfer.key];
-
-            //     return CommonUtilityFunctions()
-            //             .checkForDownloadAvailability(fileTransfer)
-            //         ? fileTransferProgress != null
-            //             ? CommonUtilityFunctions().getDownloadStatus(
-            //                 fileTransferProgress,
-            //               )
-            //             : isDownloaded
-            //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
-            //                 : InkWell(
-            //                     onTap: () async {
-            //                       var res = await downloadFiles(
-            //                         fileTransfer,
-            //                         fileName: files[index].fileName,
-            //                       );
-
-            //                       setState(() {
-            //                         isDownloaded = res;
-            //                       });
-            //                     },
-            //                     child: SvgPicture.asset(
-            //                       AppVectors.icDownloadFile,
-            //                     ),
-            //                   )
-            //         : SizedBox();
-            //   },
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 6.0),
-            //   child: SvgPicture.asset(
-            //     AppVectors.icDownloadFile,
-            //   ),
-            // ),
-
-          ,
-          child: InkWell(
-            onTap: () async {
-              await FileUtils.openFile(
-                path: BackendService.getInstance().downloadDirectory!.path +
-                    Platform.pathSeparator +
-                    files[index].fileName!,
-                extension: files[index].fileName?.split(".").last ?? "",
-                onDelete: () async {
-                  await FileUtils.deleteFile(
-                      BackendService.getInstance().downloadDirectory!.path +
-                          Platform.pathSeparator +
-                          files[index].fileName!);
-                  if (mounted) {
-                    Navigator.pop(context);
-                  }
-                  setState(() {});
-                },
-                fileDetail: files[index],
-              );
-            },
-            child: Container(
-              key: UniqueKey(),
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: 49,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: CommonUtilityFunctions().interactThumbnail(
-                          files[index].fileName?.split(".").last ?? "",
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              files[index].fileName!,
-                          files[index], () async {
-                        await FileUtils.deleteFile(
-                          BackendService.getInstance().downloadDirectory!.path +
-                              Platform.pathSeparator +
-                              files[index].fileName!,
-                          fileTransferId: files[index].fileTransferId,
-                          onComplete: () {
-                            files.removeAt(index);
-                          },
-                        );
+            ),
+            child: InkWell(
+              onTap: () async {
+                await FileUtils.openFile(
+                  path: BackendService.getInstance().downloadDirectory!.path +
+                      Platform.pathSeparator +
+                      files[index].fileName!,
+                  extension: files[index].fileName?.split(".").last ?? "",
+                  onDelete: () async {
+                    await FileUtils.deleteFile(
+                        BackendService.getInstance().downloadDirectory!.path +
+                            Platform.pathSeparator +
+                            files[index].fileName!);
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
+                    setState(() {});
+                  },
+                  fileDetail: files[index],
+                );
+              },
+              child: Container(
+                key: UniqueKey(),
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: 49,
+                      width: 38,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: CommonUtilityFunctions().interactThumbnail(
+                            files[index].fileName?.split(".").last ?? "",
+                            BackendService.getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                Platform.pathSeparator +
+                                files[index].fileName!,
+                            files[index], () async {
+                          await FileUtils.deleteFile(
+                            BackendService.getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                Platform.pathSeparator +
+                                files[index].fileName!,
+                            fileTransferId: files[index].fileTransferId,
+                            onComplete: () {
+                              files.removeAt(index);
+                              setState(() {});
+                            },
+                          );
 
                           if (mounted) {
                             Navigator.pop(context);
                           }
-                          setState(() {});
                         }),
                       ),
                     ),

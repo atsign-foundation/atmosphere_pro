@@ -1,1 +1,1 @@
-enum GroupCardState {disable, expanded, add}
+enum GroupCardState { disable, expanded, add }

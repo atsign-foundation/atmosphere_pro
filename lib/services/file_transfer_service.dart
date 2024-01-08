@@ -258,8 +258,8 @@ class FileTransferService {
       ..sharedBy = sharedByAtSign;
     var result =
         await AtClientManager.getInstance().atClient.get(atKey).catchError(
-      (e) => ExceptionService.instance.showGetExceptionOverlay(e),
-    );
+              (e) => ExceptionService.instance.showGetExceptionOverlay(e),
+            );
 
     FileTransferObject fileTransferObject;
     try {
@@ -281,7 +281,8 @@ class FileTransferService {
     if (fileDownloadResponse.isError) {
       throw Exception('download fail');
     }
-    var encryptedFileList = Directory(fileDownloadResponse.filePath!).listSync();
+    var encryptedFileList =
+        Directory(fileDownloadResponse.filePath!).listSync();
     try {
       for (var encryptedFile in encryptedFileList) {
         updateFileTransferState(

@@ -96,7 +96,7 @@ class _NotificationBodyState extends State<NotificationBody> {
                                         provider.currentFileShareStatus[
                                                 notification_service
                                                     .NotificationService
-                                                    .flushbarStatuskey] ==
+                                                    .flushBarStatusKey] ==
                                             null
                                     ? Center(
                                         child: Text('No notifications'),

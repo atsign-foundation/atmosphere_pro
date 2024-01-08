@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -26,6 +27,7 @@ import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -360,7 +362,7 @@ class CommonUtilityFunctions {
                                     stateSet(() {});
                                   } else {
                                     await showConfirmationDialog(() async {
-                                      isSelectAtsign = false;
+                                      isSelectAtSign = false;
                                       await _resetDevice(
                                           tempAtsignMap.keys.toList());
                                       await _onboardNextAtSign();
@@ -851,17 +853,6 @@ class CommonUtilityFunctions {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // Padding(
-                              //   padding: const EdgeInsets.only(left: 6.0),
-                              //   child: SvgPicture.asset(
-                              //     AppVectors.icDownloadFile,
-                              //     height: 50,
-                              //     width: 50,
-                              //   ),
-                              // ),
-                              // SizedBox(
-                              //   width: 10,
-                              // ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 6.0),
                                 child: GestureDetector(
@@ -1108,7 +1099,10 @@ class CommonUtilityFunctions {
               );
   }
 
-  void showNoFileDialog({double deviceTextFactor = 1}) {
+  void showNoFileDialog({
+    double deviceTextFactor = 1,
+    bool isFileNotFound = true,
+  }) {
     showDialog(
         context: NavService.navKey.currentContext!,
         builder: (BuildContext context) {
@@ -1123,7 +1117,9 @@ class CommonUtilityFunctions {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 15.0)),
                   Text(
-                    TextStrings().noFileFound,
+                    isFileNotFound
+                        ? TextStrings().noFileFound
+                        : TextStrings().fileNotDownload,
                     style: CustomTextStyles.primaryBold16,
                   ),
                   Padding(padding: EdgeInsets.only(top: 30.0)),
@@ -1143,5 +1139,260 @@ class CommonUtilityFunctions {
             ),
           );
         });
+  }
+
+  Future<void> openPreview({
+    required BuildContext context,
+    required String fileName,
+    required String filePath,
+    required DateTime date,
+    required String sender,
+    required String key,
+    required int size,
+    required String note,
+  }) async {
+    if (FileTypes.IMAGE_TYPES.contains(fileName.split(".").last)) {
+      String nickname = "";
+      Uint8List imageBytes = base64Decode(await imageToBase64(filePath));
+      final localDate = date.toLocal();
+      final shortDate = DateFormat('dd/MM/yy').format(localDate);
+      final time = DateFormat('HH:mm').format(localDate);
+      for (var contact in GroupService().allContacts) {
+        if (contact?.contact?.atSign == sender) {
+          nickname = contact?.contact?.tags?["nickname"] ?? "";
+          break;
+        }
+      }
+      await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (_) => Material(
+          type: MaterialType.transparency,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 32),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(NavService.navKey.currentContext!);
+                    },
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () async {
+                    await OpenFile.open(
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          fileName,
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 33),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: MemoryImage(
+                          imageBytes,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: SvgPicture.asset(
+                      AppVectors.icCloudDownloaded,
+                      height: 50,
+                      width: 50,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: GestureDetector(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        await FileUtils.moveToSendFile(
+                            BackendService.getInstance()
+                                    .downloadDirectory!
+                                    .path +
+                                Platform.pathSeparator +
+                                fileName);
+                      },
+                      child: SvgPicture.asset(
+                        AppVectors.icSendFile,
+                        height: 50,
+                        width: 50,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await FileUtils.deleteFile(
+                          filePath,
+                          fileTransferId: key,
+                          onComplete: () {
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        AppVectors.icDeleteFile,
+                        height: 50,
+                        width: 50,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                padding: EdgeInsets.all(20),
+                margin: EdgeInsets.symmetric(horizontal: 25),
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              "$shortDate",
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: ColorConstants.oldSliver,
+                              ),
+                            ),
+                            Container(
+                              width: 1,
+                              height: 8,
+                              color: Color(0xFFD7D7D7),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 3,
+                              ),
+                            ),
+                            Text(
+                              "$time",
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: ColorConstants.oldSliver,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        fileName,
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        double.parse(size.toString()) <= 1024
+                            ? '${size} ' + TextStrings().kb
+                            : '${(size / (1024 * 1024)).toStringAsFixed(2)} ' +
+                                TextStrings().mb,
+                        style: TextStyle(
+                          color: ColorConstants.grey,
+                          fontSize: 11,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 10),
+                      nickname.isNotEmpty
+                          ? Text(
+                              nickname,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            )
+                          : SizedBox(),
+                      SizedBox(height: 5),
+                      Text(
+                        sender,
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      // fileDetail.message.isNotNull
+                      //     ?
+                      if (note.isNotEmpty) ...[
+                        Text(
+                          "Message",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        // : SizedBox(),
+                        SizedBox(height: 5),
+                        Text(
+                          note,
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      await OpenFile.open(BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          fileName);
+    }
+  }
+
+  Future<String> imageToBase64(String imagePath) async {
+    File imageFile = File(imagePath);
+    List<int> imageBytes = await imageFile.readAsBytes();
+    String base64Image = base64Encode(imageBytes);
+    return base64Image;
   }
 }

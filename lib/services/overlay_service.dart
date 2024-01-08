@@ -71,8 +71,7 @@ class OverlayService {
                                 child: InkWell(
                                   onTap: () {
                                     hideOverlay();
-                                    if (flushBarStatus !=
-                                            FlushBarStatus.DONE &&
+                                    if (flushBarStatus != FlushBarStatus.DONE &&
                                         flushBarStatus !=
                                             FlushBarStatus.FAILED) {
                                       WelcomeScreenProvider()

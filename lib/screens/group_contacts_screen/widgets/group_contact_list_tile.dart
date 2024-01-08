@@ -94,7 +94,6 @@ class _ContactListTileState extends State<ContactListTile> {
               ],
             ),
           ),
-
           InkWell(
             onTap: () {
               widget.onRemove.call();

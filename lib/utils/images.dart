@@ -106,7 +106,7 @@ class ImageConstants {
   static String icListType = '$_basePath/ic_list_type.png';
   static String icCloudDownloading = '$_basePath/ic_cloud_downloading.png';
 
-  // New UI tranfer screen 
+  // New UI tranfer screen
   static String uploadFile = '$_basePath/upload_file.png';
   static String transferHistory = '$_basePath/transfer_history.png';
   static String icGroups = '$_basePath/ic_groups.png';

@@ -8,8 +8,7 @@ class LocalNotificationService {
   LocalNotificationService._() {
     init();
   }
-  static LocalNotificationService _instance =
-      LocalNotificationService._();
+  static LocalNotificationService _instance = LocalNotificationService._();
   factory LocalNotificationService() => _instance;
   late FlutterLocalNotificationsPlugin _notificationsPlugin;
   late InitializationSettings initializationSettings;

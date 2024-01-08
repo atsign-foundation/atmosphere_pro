@@ -186,7 +186,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
             });
             SnackBarService().showSnackBar(
               context,
-              "Successfully deleted the file",
+              "Successfully deleted the file(s)",
               bgColor: ColorConstants.successColor,
             );
             Provider.of<HistoryProvider>(context, listen: false).notify();

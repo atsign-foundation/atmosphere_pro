@@ -518,7 +518,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
 
     if (!isFilesReady) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         context,
         'File(s) not found and removed',
         bgColor: ColorConstants.redAlert,

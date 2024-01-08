@@ -471,7 +471,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           InkWell(
                             onTap: () async {
                               if (isDeleting == false) {
-                                CommonUtilityFunctions().showConfirmationDialog(
+                                await CommonUtilityFunctions()
+                                    .showConfirmationDialog(
                                   () async {
                                     setDialogState(() {
                                       isDeleting = true;

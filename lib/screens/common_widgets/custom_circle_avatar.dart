@@ -46,4 +46,3 @@ class CustomCircleAvatar extends StatelessWidget {
     );
   }
 }
-

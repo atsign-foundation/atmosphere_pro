@@ -22,7 +22,9 @@ class SearchWidget extends StatelessWidget {
     this.hintStyle,
     this.margin,
     this.onChange,
-    this.readOnly, this.onTap, this.autoFocus,
+    this.readOnly,
+    this.onTap,
+    this.autoFocus,
   }) : super(key: key);
 
   @override
