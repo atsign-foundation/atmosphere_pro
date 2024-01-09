@@ -41,6 +41,7 @@ class AppVectors {
   static String icSettingFAQ = '$_basePath/ic_setting_faq.svg';
   static String icSettingContactUs = '$_basePath/ic_setting_contact_us.svg';
   static String icSettingPrivacy = '$_basePath/ic_setting_privacy.svg';
+  static String icSettingUpdate = '$_basePath/ic_setting_update.svg';
   static String icFilter = '$_basePath/ic_filter.svg';
   static String icFilterOpened = '$_basePath/ic_filter_opened.svg';
   static String icBannerOverlay = '$_basePath/ic_banner_overlay.svg';
@@ -93,5 +94,5 @@ class AppVectors {
   static String icSelectedSearchFill = '$_basePath/ic_selected_search_fill.svg';
   static String icUncheckedAll = '$_basePath/ic_unchecked_all.svg';
   static String icTooltip = '$_basePath/ic_tooltip.svg';
-  static String icApp = '$_basePath/ic_app.svg';
+
 }

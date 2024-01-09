@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/screens/contact_new_version/blocked_contac
 import 'package:atsign_atmosphere_pro/screens/settings/widgets/settings_buttons.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -42,6 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     TextStrings().faqs,
     TextStrings().contactUs,
     TextStrings().termsAppBar,
+    TextStrings().updateYourApp,
   ];
 
   final List<String> optionIcons = [
@@ -52,6 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     AppVectors.icSettingFAQ,
     AppVectors.icSettingContactUs,
     AppVectors.icSettingPrivacy,
+    AppVectors.icSettingUpdate,
   ];
 
   void switchAtsign() async {
@@ -319,6 +322,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
               image: optionIcons[6],
+            ),
+            SizedBox(height: 32),
+            _buildSettingButton(
+              buttonText: optionTitle[7],
+              onPressed: () async {
+                await VersionService.getInstance().updateHandler();
+              },
+              image: optionIcons[7],
             ),
             SizedBox(
               height: 12,

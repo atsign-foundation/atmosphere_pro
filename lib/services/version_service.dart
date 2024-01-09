@@ -142,6 +142,9 @@ class VersionService {
       } else if (int.parse(latestPackageNumbers[2]) >
           int.parse(currentPackageNumbers[2])) {
         isNewVersionAvailable = true;
+      } else if (int.parse(latestPackageNumbers[3]) >
+          int.parse(packageInfo.buildNumber)) {
+        isNewVersionAvailable = true;
       }
 
       // checking for backward compatibility
@@ -153,6 +156,9 @@ class VersionService {
         isBackwardCompatible = false;
       } else if (int.parse(minPackageNumbers[2]) >
           int.parse(currentPackageNumbers[2])) {
+        isBackwardCompatible = false;
+      } else if (int.parse(minPackageNumbers[3]) >
+          int.parse(packageInfo.buildNumber)) {
         isBackwardCompatible = false;
       }
 
@@ -198,7 +204,6 @@ class VersionService {
   }
 
   Future<void> updateHandler() async {
-    compareVersions();
     if (isNewVersionAvailable && version != null) {
       await OpenStore.instance.open(
         appStoreId: MixedConstants.APPSTORE_ID,

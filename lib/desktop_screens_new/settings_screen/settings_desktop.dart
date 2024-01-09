@@ -217,7 +217,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                           child: DesktopSettingsCard(
                             title: TextStrings().updateYourApp,
                             subtitle: TextStrings().updateYourAppSubtitle,
-                            vectorIcon: AppVectors.icApp,
+                            vectorIcon: AppVectors.icSettingUpdate,
                           ),
                         ),
                       ),
