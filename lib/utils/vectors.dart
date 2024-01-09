@@ -93,4 +93,5 @@ class AppVectors {
   static String icSelectedSearchFill = '$_basePath/ic_selected_search_fill.svg';
   static String icUncheckedAll = '$_basePath/ic_unchecked_all.svg';
   static String icTooltip = '$_basePath/ic_tooltip.svg';
+  static String icApp = '$_basePath/ic_app.svg';
 }

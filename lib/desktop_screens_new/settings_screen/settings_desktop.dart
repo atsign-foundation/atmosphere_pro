@@ -8,6 +8,7 @@ import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/widgets/desktop_settings_card.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/widgets/desktop_tooltip.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/version_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -181,26 +182,45 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                   SizedBox(height: 40),
                   Row(
                     children: [
-                      DesktopSettingsCard(
-                        title: 'Sharing atSign',
-                        subtitle: 'Share atSign between apps',
-                        vectorIcon: AppVectors.icShare,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            DesktopSettingsCard(
+                              title: 'Sharing atSign',
+                              subtitle: 'Share atSign between apps',
+                              vectorIcon: AppVectors.icShare,
+                            ),
+                            SizedBox(width: 16),
+                            Switch(
+                                activeColor: ColorConstants.orange,
+                                value: enableShareStSign,
+                                onChanged: (check) async {
+                                  if (check) {
+                                    await _keyChainManager
+                                        .enableUsingSharedStorage();
+                                  } else {
+                                    await _keyChainManager
+                                        .disableUsingSharedStorage();
+                                  }
+                                  setState(() {
+                                    enableShareStSign = check;
+                                  });
+                                })
+                          ],
+                        ),
                       ),
-                      SizedBox(width: 16),
-                      Switch(
-                          activeColor: ColorConstants.orange,
-                          value: enableShareStSign,
-                          onChanged: (check) async {
-                            if (check) {
-                              await _keyChainManager.enableUsingSharedStorage();
-                            } else {
-                              await _keyChainManager
-                                  .disableUsingSharedStorage();
-                            }
-                            setState(() {
-                              enableShareStSign = check;
-                            });
-                          })
+                      Expanded(
+                        child: InkWell(
+                          onTap: () async {
+                            await VersionService.getInstance().updateHandler();
+                          },
+                          child: DesktopSettingsCard(
+                            title: TextStrings().updateYourApp,
+                            subtitle: TextStrings().updateYourAppSubtitle,
+                            vectorIcon: AppVectors.icApp,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 16),

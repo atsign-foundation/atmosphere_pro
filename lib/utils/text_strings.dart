@@ -349,6 +349,8 @@ class TextStrings {
   String deleteAtsignsSubtitle = 'Delete your active atkey';
   String blockedAtSign = 'Blocked Contacts';
   String blockedAtSignSubtitle = 'View list of blocked atSign';
+  String updateYourApp = 'Update your app';
+  String updateYourAppSubtitle = 'Update to the latest version';
 
   static final String resetButton = 'Reset';
   static const String resetDescription =
