@@ -5,17 +5,21 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/version.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:new_version/new_version.dart';
+import 'package:open_store/open_store.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 class VersionService {
   VersionService._();
+
   static VersionService _internal = VersionService._();
+
   factory VersionService.getInstance() {
     return _internal;
   }
@@ -138,6 +142,9 @@ class VersionService {
       } else if (int.parse(latestPackageNumbers[2]) >
           int.parse(currentPackageNumbers[2])) {
         isNewVersionAvailable = true;
+      } else if (int.parse(latestPackageNumbers[3]) >
+          int.parse(packageInfo.buildNumber)) {
+        isNewVersionAvailable = true;
       }
 
       // checking for backward compatibility
@@ -149,6 +156,9 @@ class VersionService {
         isBackwardCompatible = false;
       } else if (int.parse(minPackageNumbers[2]) >
           int.parse(currentPackageNumbers[2])) {
+        isBackwardCompatible = false;
+      } else if (int.parse(minPackageNumbers[3]) >
+          int.parse(packageInfo.buildNumber)) {
         isBackwardCompatible = false;
       }
 
@@ -189,6 +199,23 @@ class VersionService {
         url,
         forceSafariVC: false,
         forceWebView: false,
+      );
+    }
+  }
+
+  Future<void> updateHandler() async {
+    if (isNewVersionAvailable && version != null) {
+      await OpenStore.instance.open(
+        appStoreId: MixedConstants.APPSTORE_ID,
+        appStoreIdMacOS: MixedConstants.APPSTORE_ID_MACOS,
+        androidAppBundleId: MixedConstants.ANDROID_APP_BUNDLE_ID,
+        windowsProductId: MixedConstants.WINDOWS_PRODUCT_ID,
+      );
+    } else {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        "App is up to date!",
+        bgColor: ColorConstants.successColor,
       );
     }
   }

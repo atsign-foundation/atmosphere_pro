@@ -36,6 +36,14 @@ class MixedConstants {
 
   static const LINUX_STORE_LINK = 'https://atsign.com/apps/';
 
+  static const APPSTORE_ID = '1550936444';
+
+  static const APPSTORE_ID_MACOS = '1550936444';
+
+  static const ANDROID_APP_BUNDLE_ID = 'com.atsign.atsign_atmosphere_pro';
+
+  static const WINDOWS_PRODUCT_ID = '9NK4DHFXDNM1';
+
   // the time to await for file transfer acknowledgement in milliseconds
   static const int TIME_OUT = 60000;
 
