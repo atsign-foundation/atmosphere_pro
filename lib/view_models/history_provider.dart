@@ -298,7 +298,6 @@ class HistoryProvider extends BaseModel {
       var keyValue =
           await AtClientManager.getInstance().atClient.get(key).catchError((e) {
         print('error in getSentHistory : $e');
-        ExceptionService.instance.showGetExceptionOverlay(e);
         return AtValue();
       });
 

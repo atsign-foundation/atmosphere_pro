@@ -7,8 +7,6 @@ import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
-import 'package:atsign_atmosphere_pro/utils/file_types.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -189,61 +187,5 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
         ],
       ),
     );
-  }
-
-  Widget thumbnail(String? extension, String path) {
-    return FileTypes.IMAGE_TYPES.contains(extension)
-        ? File(path).existsSync()
-            ? Image.file(
-                File(path),
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext _context, _, __) {
-                  return Container(
-                    child: Icon(
-                      Icons.image,
-                    ),
-                  );
-                },
-              )
-            : Icon(
-                Icons.image,
-              )
-        : FileTypes.VIDEO_TYPES.contains(extension)
-            ? FutureBuilder(
-                future: videoThumbnailBuilder(path),
-                builder: (context, snapshot) => snapshot.data == null
-                    ? Center(
-                        child: Image.asset(
-                          ImageConstants.videoLogo,
-                          width: 24,
-                          height: 24,
-                          color: Colors.black,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Image.memory(
-                        videoThumbnail!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (BuildContext _context, _, __) {
-                          return Icon(
-                            Icons.image,
-                          );
-                        },
-                      ),
-              )
-            : Image.asset(
-                FileTypes.PDF_TYPES.contains(extension)
-                    ? ImageConstants.pdfLogo
-                    : FileTypes.AUDIO_TYPES.contains(extension)
-                        ? ImageConstants.musicLogo
-                        : FileTypes.WORD_TYPES.contains(extension)
-                            ? ImageConstants.wordLogo
-                            : FileTypes.EXEL_TYPES.contains(extension)
-                                ? ImageConstants.exelLogo
-                                : FileTypes.TEXT_TYPES.contains(extension)
-                                    ? ImageConstants.txtLogo
-                                    : ImageConstants.unknownLogo,
-                fit: BoxFit.cover,
-              );
   }
 }
