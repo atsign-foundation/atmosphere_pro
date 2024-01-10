@@ -151,10 +151,11 @@ packages:
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: "C:\\Web Dev\\at_widgets\\packages\\at_onboarding_flutter"
-      relative: false
-    source: path
-    version: "6.1.5"
+      name: at_onboarding_flutter
+      sha256: "80620df158e698db1a41b9f5522ca236da0ba5118a8e16af94625812209b8be0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.6"
   at_persistence_secondary_server:
     dependency: transitive
     description:

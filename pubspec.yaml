@@ -67,7 +67,7 @@ dependencies:
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.10
   at_client_mobile: ^3.2.12
-  at_onboarding_flutter: ^5.0.2
+  at_onboarding_flutter: ^6.1.6
   at_backupkey_flutter: ^4.0.5
   at_contacts_flutter: ^4.0.7
   at_contacts_group_flutter: ^4.0.9
@@ -108,8 +108,6 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: packages/at_backupkey_flutter
       ref: trunk
-  at_onboarding_flutter:
-    path: C:\Web Dev\at_widgets\packages\at_onboarding_flutter
   http: ^1.1.0
   webview_flutter: ^4.2.4
   at_contacts_group_flutter:
