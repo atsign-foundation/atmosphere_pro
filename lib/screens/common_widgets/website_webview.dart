@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -16,30 +14,44 @@ import '../../view_models/internet_connectivity_checker.dart';
 class WebsiteScreen extends StatefulWidget {
   final String? title;
   final String? url;
-
   const WebsiteScreen({Key? key, this.title, this.url}) : super(key: key);
   @override
   _WebsiteScreenState createState() => _WebsiteScreenState();
 }
-
 class _WebsiteScreenState extends State<WebsiteScreen> {
   late bool loading;
+  late WebViewController webViewController;
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
+    Factory(() => EagerGestureRecognizer())
+  };
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            setState(() {
+              loading = false;
+            });
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url ?? ''));
+    loading = true;
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     loading = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForNetwork();
     });
   }
-
   checkForNetwork() {
     var isConnected = Provider.of<InternetConnectivityChecker>(
             NavService.navKey.currentContext!,
             listen: false)
         .isInternetAvailable;
-
     if (!isConnected) {
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
@@ -48,7 +60,6 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,19 +82,9 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
         ),
       ),
       body: Stack(children: [
-        WebView(
-          initialUrl: widget.url,
-          javascriptMode: JavascriptMode.unrestricted,
-          gestureRecognizers: {
-            Factory<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer()..onUpdate = (_) {},
-            )
-          },
-          onPageFinished: (test1) {
-            this.setState(() {
-              loading = false;
-            });
-          },
+        WebViewWidget(
+          controller: webViewController,
+          gestureRecognizers: gestureRecognizers,
         ),
         loading
             ? Center(

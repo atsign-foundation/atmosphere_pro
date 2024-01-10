@@ -108,6 +108,10 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: packages/at_backupkey_flutter
       ref: trunk
+  at_onboarding_flutter:
+    path: C:\Web Dev\at_widgets\packages\at_onboarding_flutter
+  http: ^1.1.0
+  webview_flutter: ^4.2.4
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets/
