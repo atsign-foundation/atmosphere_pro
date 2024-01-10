@@ -43,9 +43,11 @@ class ExceptionService {
         return 'SelfKeyNotFoundException: Decryption failed';
       case AtClientException:
         return 'AtClientException: Cloud secondary is invalid or not reachable';
+      case SecondaryNotFoundException:
+        return 'SecondaryNotFoundException: Make sure your atsign is activated';
 
       default:
-        return 'Something went wrong !!!';
+        return 'Something went wrong';
     }
   }
 
