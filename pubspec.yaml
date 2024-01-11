@@ -76,7 +76,7 @@ dependencies:
   showcaseview: ^1.1.5
   biometric_storage: ^5.0.0+4
   flutter_svg: ^1.1.5
-  image_picker: 0.8.6
+  image_picker: ^1.0.7
   dotted_border: ^2.0.0+3
   expandable: ^5.0.1
   desktop_drop: ^0.4.3
@@ -87,6 +87,7 @@ dependencies:
   shimmer: ^3.0.0
   version: ^3.0.2
   open_store: ^0.5.0
+  flutter_image_compress: ^2.1.0
 
 dev_dependencies:
   flutter_test:

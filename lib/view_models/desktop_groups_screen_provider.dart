@@ -1,5 +1,6 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/group_card_state.dart';
+import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -80,8 +81,13 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
   }
 
   void setSelectedGroupImage(Uint8List data) {
-    selectedGroupImage = data;
-    notifyListeners();
+    AppUtils.checkGroupImageSize(
+      image: data,
+      onSatisfy: (value) {
+        selectedGroupImage = value;
+        notifyListeners();
+      },
+    );
   }
 
   void setSelectedGroupName(String name) {

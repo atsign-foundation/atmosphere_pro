@@ -36,5 +36,7 @@
 	<string>NSApplication</string>
 	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
+	<key>com.apple.security.files.user-selected.read-only</key>
+    <true/>
 </dict>
 </plist>

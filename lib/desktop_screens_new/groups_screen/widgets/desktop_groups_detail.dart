@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_commons/at_commons.dart';
@@ -15,11 +16,15 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_group_contacts_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_group_name_text_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
+import 'package:atsign_atmosphere_pro/services/picker_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -139,15 +144,37 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
                     ),
                     const SizedBox(height: 16),
                   ],
-                  DesktopCoverImagePicker(
-                    selectedImage: provider.selectedGroupImage,
-                    isEdit: provider.isEditing,
-                    onSelected: (value) {
-                      provider.setSelectedGroupImage(value);
-                    },
-                    onCancel: () {
-                      provider.setSelectedGroupImage(Uint8List(0));
-                    },
+                  DropTarget(
+                    onDragDone: provider.isEditing
+                        ? (details) async {
+                            if (details.files.length > 1) {
+                              SnackbarService().showSnackbar(
+                                context,
+                                TextStrings.dropOneFileWarning,
+                                bgColor: ColorConstants.redAlert,
+                              );
+                            } else {
+                              provider.setSelectedGroupImage(
+                                await File(details.files.first.path)
+                                    .readAsBytes(),
+                              );
+                            }
+                          }
+                        : null,
+                    child: DesktopCoverImagePicker(
+                      selectedImage: provider.selectedGroupImage,
+                      isEdit: provider.isEditing,
+                      onPickImage: () async {
+                        await PickerService.pickImage(
+                          onPickedImage: (result) {
+                            provider.setSelectedGroupImage(result);
+                          },
+                        );
+                      },
+                      onCancel: () {
+                        provider.setSelectedGroupImage(Uint8List(0));
+                      },
+                    ),
                   ),
                   SizedBox(height: provider.isEditing ? 16 : 20),
                   buildDetailOptions(

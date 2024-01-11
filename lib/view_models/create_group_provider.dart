@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:atsign_atmosphere_pro/services/picker_service.dart';
+import 'package:atsign_atmosphere_pro/utils/app_utils.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 
 class CreateGroupProvider extends BaseModel {
   bool isLoading = false;
@@ -16,13 +15,17 @@ class CreateGroupProvider extends BaseModel {
   String searchKeyword = '';
 
   Future<void> selectCoverImage() async {
-    var image = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+    await PickerService.pickImage(
+      onPickedImage: (result) {
+        AppUtils.checkGroupImageSize(
+          image: result,
+          onSatisfy: (value) {
+            selectedImageByteData = value;
+            notifyListeners();
+          },
+        );
+      },
     );
-    if (image != null) {
-      selectedImageByteData = await File(image.path).readAsBytes();
-      notifyListeners();
-    }
   }
 
   void resetData() {
