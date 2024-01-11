@@ -1,10 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart' as contacts;
 
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -16,10 +17,14 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_floating_add_contact_button.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_group_contacts_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_group_name_text_field.dart';
+import 'package:atsign_atmosphere_pro/services/picker_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_add_group_provider.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -134,15 +139,34 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
                     },
                   ),
                   SizedBox(height: 20.toHeight),
-                  DesktopCoverImagePicker(
-                    selectedImage: provider.selectedImageByteData,
-                    onSelected: (value) {
-                      provider.setSelectedImageByteData(value);
+                  DropTarget(
+                    onDragDone: (details) async {
+                      if (details.files.length > 1) {
+                        SnackbarService().showSnackbar(
+                          context,
+                          TextStrings.dropOneFileWarning,
+                          bgColor: ColorConstants.redAlert,
+                        );
+                      } else {
+                        provider.setSelectedImageByteData(
+                          await File(details.files.first.path).readAsBytes(),
+                        );
+                      }
                     },
-                    isEdit: true,
-                    onCancel: () {
-                      provider.setSelectedImageByteData(Uint8List(0));
-                    },
+                    child: DesktopCoverImagePicker(
+                      selectedImage: provider.selectedImageByteData,
+                      isEdit: true,
+                      onCancel: () {
+                        provider.setSelectedImageByteData(Uint8List(0));
+                      },
+                      onPickImage: () async {
+                        await PickerService.pickImage(
+                          onPickedImage: (result) {
+                            provider.setSelectedImageByteData(result);
+                          },
+                        );
+                      },
+                    ),
                   ),
                   SizedBox(height: 20.toHeight),
                   DesktopGroupContactsList(
@@ -247,7 +271,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
       context: context,
       builder: (context) => AlertDialog(
         title: Center(
-          child: Text(TextStrings().blockContact),
+          child: Text(contacts.TextStrings().blockContact),
         ),
         content: SizedBox(
           height: 100.toHeight,
@@ -281,7 +305,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
       context: context,
       builder: (context) => AlertDialog(
         title: Center(
-          child: Text(TextStrings().deleteContact),
+          child: Text(contacts.TextStrings().deleteContact),
         ),
         content: SizedBox(
           height: 100.toHeight,

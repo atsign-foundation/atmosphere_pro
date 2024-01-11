@@ -374,6 +374,8 @@ class TextStrings {
       'Do you also want to delete the downloaded items?';
   static const delete = 'Delete';
   static const fileSizeLimit = 'File size can not exceed 50 Mb.';
+  static const groupImageFileSizeLimit =
+      'Group image file size can not exceed 150 Kb.';
   static const releaseTagError = 'Error in fetching release tag.';
   static const upgradeDialogShowError =
       'Error in showing app upgrade dialog box.';
@@ -382,6 +384,7 @@ class TextStrings {
   static const noInternetMsg = 'No internet available';
   static const permissionRequireMessage =
       'This action cannot be completed because the app does not have permission to access the required items. Please change the app permission settings to continue.';
+  static const dropOneFileWarning = 'Drop only 1 file per time';
   String noContactsFound = 'No results';
   String contactEmpty = 'Empty contact';
   String serviceError = 'Something went wrong, please try again.';

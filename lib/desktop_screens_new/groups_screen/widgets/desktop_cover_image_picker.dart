@@ -1,4 +1,3 @@
-import 'package:at_contacts_group_flutter/services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -8,14 +7,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class DesktopCoverImagePicker extends StatelessWidget {
   final Uint8List? selectedImage;
-  final Function(Uint8List) onSelected;
+  final Function() onPickImage;
   final bool isEdit;
   final Function() onCancel;
 
   const DesktopCoverImagePicker({
     Key? key,
     this.selectedImage,
-    required this.onSelected,
+    required this.onPickImage,
     required this.isEdit,
     required this.onCancel,
   }) : super(key: key);
@@ -25,10 +24,7 @@ class DesktopCoverImagePicker extends StatelessWidget {
     return InkWell(
       onTap: () async {
         if (isEdit) {
-          var _imageBytes = await desktopImagePicker();
-          if (_imageBytes != null) {
-            onSelected(_imageBytes);
-          }
+          onPickImage.call();
         }
       },
       child: selectedImage != null && selectedImage!.isNotEmpty
