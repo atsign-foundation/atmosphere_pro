@@ -487,8 +487,8 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   Widget thumbnail(String? extension, String path) {
     return FileTypes.IMAGE_TYPES.contains(extension)
         ? File(path).existsSync()
-            ? Image.file(
-                File(path),
+            ? Image.memory(
+                File(path).readAsBytesSync(),
                 fit: BoxFit.cover,
                 errorBuilder: (BuildContext _context, _, __) {
                   return Container(

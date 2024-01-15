@@ -105,29 +105,28 @@ Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
 
 Widget thumbnail(String extension, String path) {
   return FileTypes.IMAGE_TYPES.contains(extension)
-      ? ClipRRect(
-          child: GestureDetector(
-            onTap: () async {
-              await openFilePath(path);
-            },
-            child: Container(
-              height: 50.toHeight,
-              width: 50.toWidth,
-              child: Image.file(
-                File(path),
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext _context, _, __) {
-                  return Container(
-                    child: Icon(
-                      Icons.image,
-                      size: 30.toFont,
-                    ),
-                  );
+      ? File(path).existsSync()
+          ? ClipRRect(
+              child: GestureDetector(
+                onTap: () async {
+                  await openFilePath(path);
                 },
+                child: Container(
+                  height: 50.toHeight,
+                  width: 50.toWidth,
+                  child: Image.memory(
+                    File(path).readAsBytesSync(),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-          ),
-        )
+            )
+          : Container(
+              child: Icon(
+                Icons.image,
+                size: 30.toFont,
+              ),
+            )
       : FileTypes.VIDEO_TYPES.contains(extension)
           ? (Platform.isAndroid || Platform.isIOS)
               ? FutureBuilder(
