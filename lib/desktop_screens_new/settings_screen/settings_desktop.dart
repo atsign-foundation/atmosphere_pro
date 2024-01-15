@@ -158,8 +158,8 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                                 .changeIsSwitchingAtSign();
                           },
                           child: DesktopSettingsCard(
-                            title: TextStrings().switchatSign,
-                            subtitle: TextStrings().switchatSignSubtitle,
+                            title: TextStrings().switchAtSign,
+                            subtitle: TextStrings().switchAtSignSubtitle,
                             vectorIcon: AppVectors.icSettingSwitch,
                           ),
                         ),
@@ -168,11 +168,11 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                         child: InkWell(
                           onTap: () async {
                             await CommonUtilityFunctions()
-                                .showResetAtsignDialog();
+                                .showResetAtSignDialog();
                           },
                           child: DesktopSettingsCard(
-                            title: TextStrings().deleteAtsigns,
-                            subtitle: TextStrings().deleteAtsignsSubtitle,
+                            title: TextStrings().deleteAtSigns,
+                            subtitle: TextStrings().deleteAtSignsSubtitle,
                             vectorIcon: AppVectors.icSettingDelete,
                           ),
                         ),

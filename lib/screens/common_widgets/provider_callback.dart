@@ -10,7 +10,7 @@ Future providerCallback<T extends BaseModel>(BuildContext context,
     required Function(T) onSuccess,
     bool showDialog = true,
     bool showLoader = true,
-    Function? onErrorHandeling,
+    Function? onErrorHandling,
     Function? onError}) async {
   final T _provider = Provider.of<T>(context, listen: false);
   String _taskName = taskName(_provider);
@@ -25,7 +25,7 @@ Future providerCallback<T extends BaseModel>(BuildContext context,
       ErrorDialog().show(
         _provider.error[_taskName].toString(),
         context: context,
-        onButtonPressed: onErrorHandeling,
+        onButtonPressed: onErrorHandling,
       );
     }
 

@@ -310,7 +310,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                         () async {
                       await Provider.of<FileTransferProvider>(context,
                               listen: false)
-                          .reuploadFiles(filesList!, index, widget.sentHistory);
+                          .reUploadFiles(filesList!, index, widget.sentHistory);
                     }));
               });
         } else {

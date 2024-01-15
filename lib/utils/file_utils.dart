@@ -40,7 +40,7 @@ class FileUtils {
               .getAllFiles();
         }
         onComplete?.call();
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           NavService.navKey.currentContext!,
           "Successfully deleted the file(s)",
           bgColor: ColorConstants.successColor,

@@ -30,8 +30,8 @@ class WelcomeScreenProvider extends BaseModel {
     notifyListeners();
   }
 
-  void _addtoContactsList(GroupContactsModel _obj) {
-      selectedContacts.add(_obj);
+  void _addToContactsList(GroupContactsModel _obj) {
+    selectedContacts.add(_obj);
   }
 
   updateSelectedContacts(List<GroupContactsModel?> updatedList,
@@ -44,7 +44,7 @@ class WelcomeScreenProvider extends BaseModel {
       }
 
       for (var _obj in updatedList) {
-        _addtoContactsList(_obj!);
+        _addToContactsList(_obj!);
       }
 
       hasSelectedContactsChanged = true;

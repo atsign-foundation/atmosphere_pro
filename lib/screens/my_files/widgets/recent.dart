@@ -14,12 +14,12 @@ import 'package:fc_native_video_thumbnail/fc_native_video_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-class Recents extends StatefulWidget {
+class Recent extends StatefulWidget {
   @override
-  _RecentsState createState() => _RecentsState();
+  _RecentState createState() => _RecentState();
 }
 
-class _RecentsState extends State<Recents> {
+class _RecentState extends State<Recent> {
   @override
   Widget build(BuildContext context) {
     return ProviderHandler<MyFilesProvider>(

@@ -83,7 +83,7 @@ class TextStrings {
   String addContactSearch = 'Search atSign';
   String contactSearchResults = 'Search Results';
   String addContact = 'Add Contact';
-  String addtoContact = 'Add to Contacts';
+  String addToContact = 'Add to Contacts';
 
   // buttons text
   String buttonStart = 'Start';
@@ -140,7 +140,7 @@ class TextStrings {
 
   //my files
   String myFiles = 'My Files';
-  String recents = 'Recents';
+  String recent = 'Recents';
   String photos = 'Photos';
   String videos = 'Videos';
   String audio = 'Audio';
@@ -150,7 +150,7 @@ class TextStrings {
 
   // trusted sender screens
   String trustedSenders = 'Trusted Senders';
-  String selectperson = 'Select Person';
+  String selectPerson = 'Select Person';
   String noTrustedSenders = 'No Trusted Senders';
   String addTrustedSender =
       'Would you like to add people to your trusted senders list?';
@@ -163,7 +163,7 @@ class TextStrings {
   String groups = 'Groups';
   String downloadAllFiles = 'Download all files';
   String downloadFailed = 'Download failed, please try again.';
-  String fileDownloadd = 'File(s) downloaded';
+  String fileDownload = 'File(s) downloaded';
   String noGroups = 'No Groups';
   String newGroup = 'New Group';
   String addGroups = 'Would you like to create a group';
@@ -186,7 +186,7 @@ class TextStrings {
   String websiteTitle = 'Atsign';
 
   //error texts
-  String errorOccured = 'An Error Occurred';
+  String errorOccurred = 'An Error Occurred';
 
   // File choice dialog texts
   String fileChoiceQuestion = 'What would you like to send?';
@@ -203,11 +203,11 @@ class TextStrings {
     'image.persona',
   ];
 
-  String unknownAtsign(String atSign) =>
+  String unknownAtSign(String atSign) =>
       '$atSign is not found. Please check and try again.';
 
-  String atsignExists(String atSign) => '$atSign already exists';
-  String emptyAtsign = 'Please enter an atSign';
+  String atSignExists(String atSign) => '$atSign already exists';
+  String emptyAtSign = 'Please enter an atSign';
 
   // sort strings
   static const String SORT_NAME = 'Sort By Name';
@@ -236,7 +236,7 @@ class TextStrings {
   String others = 'others';
 
   // desktop text constants
-  String addNewAtsign = 'add_new_atsign';
+  String addNewAtSign = 'add_new_atsign';
   String saveBackupKey = 'save_backup_key';
   String contactSelectionConfirmation =
       'Your contact selection will be cleared if you leave this screen. Would you like to continue with your new action?';
@@ -245,7 +245,7 @@ class TextStrings {
   String selectedFiles = 'Selected files';
 
   // Desktop download all files
-  String recievedFileDownloadMsg =
+  String receivedFileDownloadMsg =
       'All the files you have received will be downloaded in the folder you select.';
   String selectedDownloadFolder = 'Selected download folder: ';
   static const String selectDownloadFolder = 'Select download folder';
@@ -265,7 +265,7 @@ class TextStrings {
   String overWriteMsg = '\nDo you want to overwrite them?';
 
   // Desktop sent file details
-  String successfullyTransfered = 'Successfully transfered';
+  String successfullyTransfer = 'Successfully transfered';
   String file_s = 'File(s) . ';
 
   // Desktop transfer overlapping
@@ -340,13 +340,13 @@ class TextStrings {
   String to = 'to';
 
   //New UI Setting Screen
-  String switchatSign = 'Switch atSign';
-  String switchatSignSubtitle = 'Toggle between your atSigns';
+  String switchAtSign = 'Switch atSign';
+  String switchAtSignSubtitle = 'Toggle between your atSigns';
   String backUpKeys = 'Backup Your Keys';
   String backUpKeysSubtitle = "Save a Pair of your atKeys";
   String contactUs = 'Contact Us';
-  String deleteAtsigns = 'Remove Your Key';
-  String deleteAtsignsSubtitle = 'Delete your active atkey';
+  String deleteAtSigns = 'Remove Your Key';
+  String deleteAtSignsSubtitle = 'Delete your active atkey';
   String blockedAtSign = 'Blocked Contacts';
   String blockedAtSignSubtitle = 'View list of blocked atSign';
   String updateYourApp = 'Update your app';

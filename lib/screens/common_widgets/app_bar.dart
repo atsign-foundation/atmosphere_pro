@@ -27,28 +27,29 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
   final bool showTitle;
   final bool showBackButton;
-  final bool showLeadingicon;
+  final bool showLeadingIcon;
   final bool showTrailingButton;
   final bool showMenu;
   final bool showClosedBtnText;
   final IconData trailingIcon;
   final bool isHistory;
-  final onActionpressed;
+  final onActionPressed;
   final bool isTrustedContactScreen;
   final double elevation;
+
   const CustomAppBar(
       {Key? key,
       this.title,
       this.showTitle = false,
       this.showBackButton = false,
-      this.showLeadingicon = false,
+      this.showLeadingIcon = false,
       this.showTrailingButton = false,
       this.showClosedBtnText = true,
       this.showMenu = false,
       this.trailingIcon = Icons.add,
       this.isHistory = false,
       this.elevation = 0,
-      this.onActionpressed,
+      this.onActionPressed,
       this.isTrustedContactScreen = false})
       : super(key: key);
 
@@ -65,7 +66,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return AppBar(
       elevation: widget.elevation,
       centerTitle: false,
-      leading: (widget.showLeadingicon)
+      leading: (widget.showLeadingIcon)
           ? Image.asset(ImageConstants.logoIcon)
           : (widget.showBackButton)
               ? IconButton(
@@ -86,7 +87,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             height: 40.toHeight,
             margin: EdgeInsets.only(top: 5.toHeight),
             child: (!widget.showBackButton &&
-                    !widget.showLeadingicon &&
+                    !widget.showLeadingIcon &&
                     widget.showClosedBtnText)
                 ? Center(
                     child: GestureDetector(
@@ -148,12 +149,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                           .isGranted,
                                 );
                               } else {
-                                String url = 'shareddocuments://' +
+                                final path = 'shareddocuments://' +
                                     BackendService.getInstance()
                                         .atClientPreference
                                         .downloadPath!;
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                final url = Uri.parse(path);
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
                                 } else {
                                   throw 'Could not launch $url';
                                 }
@@ -206,7 +208,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             Scaffold.of(context).openEndDrawer();
           },
           alignment: Alignment.topCenter,
-          tooltip: _fileDownloadChecker.undownloadedFilesExist
+          tooltip: _fileDownloadChecker.unDownloadedFilesExist
               ? 'Hamburger Menu & Dot'
               : 'Hamburger Menu',
           padding: EdgeInsets.zero,
@@ -223,7 +225,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   semanticLabel: '',
                 ),
               ),
-              _fileDownloadChecker.undownloadedFilesExist
+              _fileDownloadChecker.unDownloadedFilesExist
                   ? Positioned(
                       right: -4,
                       top: 2,

@@ -69,7 +69,7 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
         .isInternetAvailable;
 
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
@@ -99,14 +99,14 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
 
           isDownloaded = true;
         });
-        SnackbarService().showSnackbar(
+        SnackBarService().showSnackBar(
           NavService.navKey.currentContext!,
-          TextStrings().fileDownloadd,
+          TextStrings().fileDownload,
           bgColor: ColorConstants.successGreen,
         );
       }
     } else if (result is bool && !result) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,
@@ -149,7 +149,7 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
                   CommonUtilityFunctions().showConfirmationDialog(
                     () {
                       File(widget.filePath).deleteSync();
-                      SnackbarService().showSnackbar(
+                      SnackBarService().showSnackBar(
                         context,
                         "Successfully deleted the file",
                         bgColor: ColorConstants.successColor,

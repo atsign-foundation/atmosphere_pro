@@ -1,4 +1,3 @@
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';

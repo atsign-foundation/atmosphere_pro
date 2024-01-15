@@ -7,7 +7,8 @@ import 'package:at_common_flutter/services/size_config.dart';
 /// This is a custom app bar.
 ///
 /// used to reduce the common widgets that are passed to the material appbar.
-class DesktopCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class DesktopCustomAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   /// A string to display the title of the appbar.
   final String? titleText;
 
@@ -92,18 +93,18 @@ class DesktopCustomAppBar extends StatelessWidget implements PreferredSizeWidget
       leadingWidth: 90,
       leading: (showLeadingIcon)
           ? (showBackButton)
-          ? IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: ColorConstants.fontPrimary,
-            size: 25.toFont,
-          ),
-          onPressed: () {
-            if (onLeadingIconPressed != null) {
-              onLeadingIconPressed!();
-            }
-          })
-          : leadingIcon
+              ? IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: ColorConstants.fontPrimary,
+                    size: 25.toFont,
+                  ),
+                  onPressed: () {
+                    if (onLeadingIconPressed != null) {
+                      onLeadingIconPressed!();
+                    }
+                  })
+              : leadingIcon
           : Container(),
       title: Row(
         children: [
@@ -124,17 +125,17 @@ class DesktopCustomAppBar extends StatelessWidget implements PreferredSizeWidget
           Expanded(
             child: (showTitle)
                 ? centerTitle
-                ? Center(
-              child: Text(
-                titleText!,
-                style:
-                titleTextStyle ?? CustomTextStyles.primaryBold18,
-              ),
-            )
-                : Text(
-              titleText!,
-              style: titleTextStyle ?? CustomTextStyles.primaryBold18,
-            )
+                    ? Center(
+                        child: Text(
+                          titleText!,
+                          style:
+                              titleTextStyle ?? CustomTextStyles.primaryBold18,
+                        ),
+                      )
+                    : Text(
+                        titleText!,
+                        style: titleTextStyle ?? CustomTextStyles.primaryBold18,
+                      )
                 : Container(),
           ),
         ],
@@ -142,35 +143,35 @@ class DesktopCustomAppBar extends StatelessWidget implements PreferredSizeWidget
       actions: [
         (closeOnRight)
             ? Center(
-          child: Container(
-            padding: EdgeInsets.only(right: 20.toHeight),
-            child: MaterialButton(
-              padding: EdgeInsets.zero,
-              child: Text(
-                TextStrings().buttonClose,
-                style: backTextStyle ??
-                    TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'HelveticaNeu',
-                      fontSize: 22.toFont,
-                      fontWeight: FontWeight.normal,
+                child: Container(
+                  padding: EdgeInsets.only(right: 20.toHeight),
+                  child: MaterialButton(
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      TextStrings().buttonClose,
+                      style: backTextStyle ??
+                          TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'HelveticaNeu',
+                            fontSize: 22.toFont,
+                            fontWeight: FontWeight.normal,
+                          ),
                     ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        )
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              )
             : (showTrailingIcon)
-            ? MaterialButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            onTrailingIconPressed?.call();
-          },
-          child: trailingIcon,
-        )
-            : Container()
+                ? MaterialButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      onTrailingIconPressed?.call();
+                    },
+                    child: trailingIcon,
+                  )
+                : Container()
       ],
       automaticallyImplyLeading: false,
       backgroundColor: appBarColor ?? ColorConstants.appBarColor,

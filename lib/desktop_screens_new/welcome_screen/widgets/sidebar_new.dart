@@ -329,7 +329,7 @@ class _SideBarNewState extends State<SideBarNew> {
                         ),
                       ),
                       errorBuilder: (provider) => Center(
-                        child: Text(TextStrings().errorOccured),
+                        child: Text(TextStrings().errorOccurred),
                       ),
                     ),
                   ),

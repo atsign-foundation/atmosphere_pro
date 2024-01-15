@@ -743,7 +743,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
         .isInternetAvailable;
 
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
@@ -786,9 +786,9 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               listen: false)
           .saveNewDataInMyFiles(widget.receivedHistory!);
 
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
-        TextStrings().fileDownloadd,
+        TextStrings().fileDownload,
         bgColor: ColorConstants.successGreen,
       );
       // send download acknowledgement
@@ -796,7 +796,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
               listen: false)
           .sendFileDownloadAcknowledgement(receivedHistory!);
     } else if (result is bool && !result) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings().downloadFailed,
         bgColor: ColorConstants.redAlert,
@@ -995,13 +995,13 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                         .deleteReceivedItem(widget.receivedHistory!);
 
                 if (res) {
-                  SnackbarService().showSnackbar(
+                  SnackBarService().showSnackBar(
                       NavService.navKey.currentContext!,
                       'Removed from received items list',
                       bgColor: ColorConstants.successGreen);
                   await deleteFileWhenRecevedItemRemoved();
                 } else {
-                  SnackbarService().showSnackbar(
+                  SnackBarService().showSnackBar(
                       NavService.navKey.currentContext!, 'Failed',
                       bgColor: ColorConstants.redAlert);
                 }
@@ -1035,7 +1035,7 @@ class _ReceivedFilesListTileState extends State<ReceivedFilesListTile> {
                 await Provider.of<MyFilesProvider>(
                         NavService.navKey.currentContext!,
                         listen: false)
-                    .deletMyFileRecord(widget.receivedHistory!.key);
+                    .deleteMyFileRecord(widget.receivedHistory!.key);
               }));
         });
   }

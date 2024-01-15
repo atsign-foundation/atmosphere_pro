@@ -1,6 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';

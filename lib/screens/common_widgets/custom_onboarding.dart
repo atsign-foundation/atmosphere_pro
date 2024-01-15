@@ -25,7 +25,7 @@ class CustomOnboarding {
 
   static onboard(
       {String? atSign,
-      required atClientPrefernce,
+      required atClientPreference,
       Function? showLoader,
       bool isInit = false,
       Function? onError}) async {
@@ -38,7 +38,7 @@ class CustomOnboarding {
     result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
+          atClientPreference: atClientPreference!,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
@@ -53,7 +53,7 @@ class CustomOnboarding {
             OnboardingService.getInstance();
         final value = _onboardingService.atClientServiceMap;
         await AtClientManager.getInstance().setCurrentAtSign(
-            atsign, MixedConstants.appNamespace, atClientPrefernce);
+            atsign, MixedConstants.appNamespace, atClientPreference);
 
         _backendService.atClientServiceInstance = value[atsign];
         _backendService.currentAtSign =
@@ -89,7 +89,7 @@ class CustomOnboarding {
 
         if (!isInit) {
           // if it is not init then we re-render the welcome screen
-          Provider.of<SwitchAtsignProvider>(NavService.navKey.currentContext!,
+          Provider.of<SwitchAtSignProvider>(NavService.navKey.currentContext!,
                   listen: false)
               .update();
           Provider.of<FileTransferProvider>(NavService.navKey.currentContext!,
@@ -118,13 +118,12 @@ class CustomOnboarding {
         }
         break;
       case AtOnboardingResultStatus.cancel:
-        // TODO: Handle this case.
         break;
     }
   }
 
   static initServices() async {
-    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    await initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
@@ -153,6 +152,6 @@ class CustomOnboarding {
 
     Provider.of<FileDownloadChecker>(NavService.navKey.currentContext!,
             listen: false)
-        .checkForUndownloadedFiles();
+        .checkForUnDownloadedFiles();
   }
 }

@@ -8,10 +8,6 @@ Future<List<PlatformFile>?> desktopImagePicker() async {
     final XTypeGroup typeGroup = XTypeGroup();
     final List<XFile> files = await openFiles(acceptedTypeGroups: [typeGroup]);
 
-    if (files == null) {
-      return null;
-    }
-
     await Future.forEach(files, (XFile f) async {
       selectedFiles.add(
         PlatformFile(

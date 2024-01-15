@@ -6,7 +6,7 @@ class ImageConstants {
   static String logoWhiteIcon = '$_basePath/logo_white.png';
   // static String myFiles = '$_basePath/myfiles.png';
   static String group = '$_basePath/group.png';
-  static String trustedsenders = '$_basePath/trustedsenders.png';
+  static String trustedSenders = '$_basePath/trustedsenders.png';
   static String drawerIcon = '$_basePath/menu.png';
   static String contactsIcon = '$_basePath/contacts.png';
   static String blockedIcon = '$_basePath/blocked.png';
@@ -62,7 +62,7 @@ class ImageConstants {
   static String faqs = '$_basePath/faq.png';
   static String contactUsLogo = '$_basePath/contact_us.png';
   static String termsAndConditions = '$_basePath/terms.png';
-  static String deleteAtsigns = '$_basePath/delete_atsigns.png';
+  static String deleteAtSigns = '$_basePath/delete_atsigns.png';
 
   // Sample profile pictures
   static String barbara = '$_basePath/barbara.jpg';
@@ -78,9 +78,9 @@ class ImageConstants {
   static String homeIcon = '$_basePath/home_icon.png';
   static String backgroundDesktop = '$_basePath/desktop_bg.png';
 
-  static String homeCaraousel1 = '$_basePath/home_caraousel_2.png';
-  static String homeCaraousel2 = '$_basePath/home_caraousel_1.png';
-  static String homeCaraousel3 = '$_basePath/home_caraousel_3.png';
+  static String homeCarousel1 = '$_basePath/home_caraousel_2.png';
+  static String homeCarousel2 = '$_basePath/home_caraousel_1.png';
+  static String homeCarousel3 = '$_basePath/home_caraousel_3.png';
 
   static String sidebarSelectedTile = '$_basePath/selected_sidebar.png';
   static String sidebarSettings = '$_basePath/settings.png';
@@ -106,7 +106,7 @@ class ImageConstants {
   static String icListType = '$_basePath/ic_list_type.png';
   static String icCloudDownloading = '$_basePath/ic_cloud_downloading.png';
 
-  // New UI tranfer screen 
+  // New UI tranfer screen
   static String uploadFile = '$_basePath/upload_file.png';
   static String transferHistory = '$_basePath/transfer_history.png';
   static String icGroups = '$_basePath/ic_groups.png';

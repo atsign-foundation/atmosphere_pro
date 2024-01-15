@@ -88,7 +88,7 @@ class MixedConstants {
   ];
 
   /// we change the directory after successful login
-  static setNewApplicationDocumentsDirectory(String? _atsign) async {
+  static setNewApplicationDocumentsDirectory(String? _atSign) async {
     late var _dir;
     if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       _dir = await getApplicationDocumentsDirectory();
@@ -97,7 +97,7 @@ class MixedConstants {
         Platform.pathSeparator +
         '@mosphere-pro' +
         Platform.pathSeparator +
-        (_atsign ?? ''));
+        (_atSign ?? ''));
 
     /// we create directory if it does not exist
     if (!(await path.exists())) {

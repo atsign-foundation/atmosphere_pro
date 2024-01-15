@@ -10,12 +10,12 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
-class DesktopRecents extends StatefulWidget {
+class DesktopRecent extends StatefulWidget {
   @override
-  _DesktopRecentsState createState() => _DesktopRecentsState();
+  _DesktopRecentState createState() => _DesktopRecentState();
 }
 
-class _DesktopRecentsState extends State<DesktopRecents> {
+class _DesktopRecentState extends State<DesktopRecent> {
   String? onHoverFileName;
 
   @override

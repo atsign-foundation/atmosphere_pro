@@ -38,8 +38,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final List<String> optionTitle = [
     TextStrings().blockedAtSign,
     TextStrings().backUpKeys,
-    TextStrings().switchatSign,
-    TextStrings().deleteAtsigns,
+    TextStrings().switchAtSign,
+    TextStrings().deleteAtSigns,
     TextStrings().faqs,
     TextStrings().contactUs,
     TextStrings().termsAppBar,
@@ -57,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     AppVectors.icSettingUpdate,
   ];
 
-  void switchAtsign() async {
+  void switchAtSign() async {
     var atSignList = await KeychainUtil.getAtsignList();
     await showModalBottomSheet(
       isScrollControlled: true,
@@ -273,14 +273,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: 16),
             _buildSettingButton(
               buttonText: optionTitle[2],
-              onPressed: switchAtsign,
+              onPressed: switchAtSign,
               image: optionIcons[2],
             ),
             SizedBox(height: 16),
             _buildSettingButton(
               buttonText: optionTitle[3],
               onPressed: () async {
-                CommonUtilityFunctions().showResetAtsignDialog();
+                CommonUtilityFunctions().showResetAtSignDialog();
               },
               image: optionIcons[3],
             ),

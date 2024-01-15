@@ -1,12 +1,9 @@
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files/desktop_download_all_file.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/desktop_contact_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/desktop_groups_screen.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/blocked_contacts.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/settings_desktop.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/desktop_myfiles.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/category_screen.dart';
@@ -14,12 +11,10 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/history
 import 'package:atsign_atmosphere_pro/desktop_screens_new/trusted_senders_screen/desktop_trusted.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/file_transfer_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/desktop_home_screen.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/website_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 
 class DesktopSetupRoutes {
   static String initialRoute = DesktopRoutes.DESKTOP_HOME;
@@ -35,16 +30,6 @@ class DesktopSetupRoutes {
       DesktopRoutes.DESKTOP_WELCOME: (context) => HomeScreenDesktop(),
     };
   }
-
-  // // ignore: missing_return
-  // static MaterialPageRoute<dynamic> nested_routes(name) {
-  //   switch (name) {
-  //     case DesktopRoutes.DESKTOP_HOME_NESTED_INITIAL:
-  //       return MaterialPageRoute(builder: (context) => DesktopWelcomeScreen());
-  //     case DesktopRoutes.DESKTOP_HISTORY:
-  //       return MaterialPageRoute(builder: (context) => DesktopHistoryScreen());
-  //   }
-  // }
 
   static Map<String, WidgetBuilder> routeBuilders(
       BuildContext context, RouteSettings routeSettings) {
@@ -71,23 +56,10 @@ class DesktopSetupRoutes {
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactScreen();
       },
-      DesktopRoutes.DESKTOP_DOWNLOAD_ALL: (context) {
-        return DesktopDownloadAllFiles();
-      },
-      DesktopRoutes.DEKSTOP_BLOCKED_CONTACTS_SCREEN: (context) {
-        return DesktopBlockedContacts();
-      },
       DesktopRoutes.DESKTOP_SETTINGS: (context) => SettingsScreenDesktop(),
       DesktopRoutes.DESKTOP_TRUSTED_SENDER: (context) => DesktopTrustedScreen(),
-      DesktopRoutes.DESKTOP_EMPTY_TRUSTED_SENDER: (context) =>
-          DesktopEmptySender(),
       DesktopRoutes.DESKTOP_GROUP: (context) => DesktopGroupsScreen(),
       // =>  DesktopEmptyGroup(),
-
-      DesktopRoutes.DESKT_FAQ: (context) => WebsiteScreen(
-            title: 'FAQ',
-            url: '${MixedConstants.WEBSITE_URL}/faqs',
-          ),
     };
   }
 

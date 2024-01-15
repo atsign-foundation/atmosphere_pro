@@ -3,8 +3,6 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
-    as pro_text_strings;
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';

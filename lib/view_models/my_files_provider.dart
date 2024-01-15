@@ -24,7 +24,7 @@ import 'package:atsign_atmosphere_pro/utils/file_types.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/my_files/widgets/recents.dart';
+import '../screens/my_files/widgets/recent.dart';
 
 class MyFilesProvider extends BaseModel {
   var myFiles = <FileTransfer>[];
@@ -49,7 +49,7 @@ class MyFilesProvider extends BaseModel {
   String FETCH_AND_SORT = "fetch_and_sort";
   String fileSearchText = '';
 
-  List<Widget> tabs = [Recents()];
+  List<Widget> tabs = [Recent()];
 
   Map<String, List<FilesDetail>> filesByAlpha = {};
   FileType? typeSelected;
@@ -70,7 +70,7 @@ class MyFilesProvider extends BaseModel {
     recentFile = [];
     receivedUnknown = [];
     allFiles = [];
-    tabs = [Recents()];
+    tabs = [Recent()];
     tabNames = ['Recents'];
   }
 
@@ -106,18 +106,18 @@ class MyFilesProvider extends BaseModel {
     var myFilesAtKeys =
         await atClient.getAtKeys(regex: MixedConstants.MY_FILES_KEY);
 
-    await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
-      AtValue atvalue = await atClient.get(atkey).catchError(
+    await Future.forEach(myFilesAtKeys, (AtKey atKey) async {
+      AtValue atValue = await atClient.get(atKey).catchError(
         (e) {
           print("Exception in getting my files atValue: $e");
           return AtValue();
         },
       );
 
-      if (atvalue.value != null) {
+      if (atValue.value != null) {
         try {
           FileTransfer fileTransferObject =
-              FileTransfer.fromJson(jsonDecode(atvalue.value));
+              FileTransfer.fromJson(jsonDecode(atValue.value));
 
           myFilesRecord.insert(0, fileTransferObject);
         } catch (e) {
@@ -141,17 +141,17 @@ class MyFilesProvider extends BaseModel {
         await atClient.getAtKeys(regex: MixedConstants.MY_FILES_KEY);
 
     await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
-      AtValue atvalue = await atClient.get(atkey).catchError(
+      AtValue atValue = await atClient.get(atkey).catchError(
         (e) {
           print("Exception in getting my files atValue: $e");
           return AtValue();
         },
       );
 
-      if (atvalue.value != null) {
+      if (atValue.value != null) {
         try {
           FileTransfer fileTransferObject =
-              FileTransfer.fromJson(jsonDecode(atvalue.value));
+              FileTransfer.fromJson(jsonDecode(atValue.value));
 
           myFilesRecord.insert(0, fileTransferObject);
         } catch (e) {
@@ -182,20 +182,20 @@ class MyFilesProvider extends BaseModel {
       recentFile = [];
 
       await Future.forEach(allFiles, (FilesDetail file) async {
-        var fileExtention = file.fileName?.split('.').last ?? "";
-        if (FileTypes.AUDIO_TYPES.contains(fileExtention)) {
+        var fileExtension = file.fileName?.split('.').last ?? "";
+        if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
           int index = receivedAudio
               .indexWhere((element) => element.fileName == file.fileName);
           if (index == -1) {
             receivedAudio.add(file);
           }
-        } else if (FileTypes.VIDEO_TYPES.contains(fileExtention)) {
+        } else if (FileTypes.VIDEO_TYPES.contains(fileExtension)) {
           int index = receivedVideos
               .indexWhere((element) => element.fileName == file.fileName);
           if (index == -1) {
             receivedVideos.add(file);
           }
-        } else if (FileTypes.IMAGE_TYPES.contains(fileExtention)) {
+        } else if (FileTypes.IMAGE_TYPES.contains(fileExtension)) {
           int index = receivedPhotos
               .indexWhere((element) => element.fileName == file.fileName);
           if (index == -1) {
@@ -208,16 +208,16 @@ class MyFilesProvider extends BaseModel {
             receivedPhotos.add(file);
             // }
           }
-        } else if (FileTypes.TEXT_TYPES.contains(fileExtention) ||
-            FileTypes.PDF_TYPES.contains(fileExtention) ||
-            FileTypes.WORD_TYPES.contains(fileExtention) ||
-            FileTypes.EXEL_TYPES.contains(fileExtention)) {
+        } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
+            FileTypes.PDF_TYPES.contains(fileExtension) ||
+            FileTypes.WORD_TYPES.contains(fileExtension) ||
+            FileTypes.EXEL_TYPES.contains(fileExtension)) {
           int index = receivedDocument
               .indexWhere((element) => element.fileName == file.fileName);
           if (index == -1) {
             receivedDocument.add(file);
           }
-        } else if (FileTypes.ZIP_TYPES.contains(fileExtention)) {
+        } else if (FileTypes.ZIP_TYPES.contains(fileExtension)) {
           int index = receivedZip
               .indexWhere((element) => element.fileName == file.fileName);
           if (index == -1) {
@@ -278,11 +278,6 @@ class MyFilesProvider extends BaseModel {
               message: fileData.notes,
               fileTransferId: fileData.key);
 
-          // check if file exists
-          // File tempFile = File(fileDetail.filePath!);
-          // bool isFileDownloaded = await tempFile.exists();
-
-          // if (isFileDownloaded) {
           if (FileTypes.AUDIO_TYPES.contains(fileExtension)) {
             int index = receivedAudio.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
@@ -299,14 +294,7 @@ class MyFilesProvider extends BaseModel {
             int index = receivedPhotos.indexWhere(
                 (element) => element.fileName == fileDetail.fileName);
             if (index == -1) {
-              // checking is photo is downloaded or not
-              //if photo is downloaded then only it's shown in my files screen
-              // File file = File(fileDetail.filePath!);
-              // bool isFileDownloaded = await file.exists();
-
-              // if (isFileDownloaded) {
               receivedPhotos.add(fileDetail);
-              // }
             }
           } else if (FileTypes.TEXT_TYPES.contains(fileExtension) ||
               FileTypes.PDF_TYPES.contains(fileExtension) ||
@@ -363,7 +351,7 @@ class MyFilesProvider extends BaseModel {
       isDesktop = true;
     }
     tabs = [];
-    tabs = [isDesktop ? DesktopRecents() : Recents()];
+    tabs = [isDesktop ? DesktopRecent() : Recent()];
 
     try {
       setStatus(POPULATE_TABS, Status.Loading);
@@ -588,44 +576,9 @@ class MyFilesProvider extends BaseModel {
     notifyListeners();
   }
 
-  /// loops over receivedHistoryData and checks if my files is saved for a particular item.
-  // saveMyFilesItems(List<FileTransfer> receivedHistoryLogs) async {
-  //   var _atClient = AtClientManager.getInstance().atClient;
-  //   var keyStore = _atClient.getLocalSecondary()!.keyStore!;
-  //   bool _isNewKeyAdded = false;
-
-  //   for (int i = 0; i < receivedHistoryLogs.length; i++) {
-  //     String transferUniqueId = receivedHistoryLogs[i]
-  //         .key
-  //         .replaceAll(MixedConstants.FILE_TRANSFER_KEY, '');
-  //     var fileAtKey = formMyFileAtKey(transferUniqueId);
-
-  //     print(
-  //         'transferId : ${transferUniqueId}: ${_atClient.getLocalSecondary()!.keyStore!.isKeyExists(fileAtKey.key!)}');
-  //     if (!keyStore.isKeyExists(fileAtKey.key!)) {
-  //       _isNewKeyAdded = true;
-  //       var res = await _atClient.put(
-  //         fileAtKey,
-  //         jsonEncode(receivedHistoryLogs[i].toJson()),
-  //       );
-
-  //       if (res) {
-  //         myFiles.insert(0, receivedHistoryLogs[i]);
-  //       }
-
-  //       print('res: ${res}');
-  //     }
-  //   }
-
-  //   if (_isNewKeyAdded) {
-  //     await sortFiles();
-  //     populateTabs();
-  //   }
-  // }
-
   saveNewDataInMyFiles(FileTransfer fileTransfer) async {
-    for (FileTransfer myfile in myFiles) {
-      if (myfile.key == fileTransfer.key) {
+    for (FileTransfer myFile in myFiles) {
+      if (myFile.key == fileTransfer.key) {
         return;
       }
     }
@@ -719,7 +672,7 @@ class MyFilesProvider extends BaseModel {
 
     bool res = false;
     if (myFiles[myFileIndex].files!.isEmpty) {
-      res = await deletMyFileRecord(fileTransferId);
+      res = await deleteMyFileRecord(fileTransferId);
     } else {
       res = await updateMyFilesData(myFiles[myFileIndex]);
     }
@@ -749,7 +702,7 @@ class MyFilesProvider extends BaseModel {
       ..metadata!.ttr = -1;
   }
 
-  Future<bool> deletMyFileRecord(String fileTransferId) async {
+  Future<bool> deleteMyFileRecord(String fileTransferId) async {
     var _atClient = AtClientManager.getInstance().atClient;
     var myFileAtKey = formMyFileAtKey(fileTransferId);
     var res = await _atClient.delete(myFileAtKey);
@@ -767,13 +720,13 @@ class MyFilesProvider extends BaseModel {
   }
 
   /// for testing only
-  deleteMyfilekeys() async {
+  deleteMyFileKeys() async {
     var atClient = AtClientManager.getInstance().atClient;
     var myFilesAtKeys =
         await atClient.getAtKeys(regex: MixedConstants.MY_FILES_KEY);
 
-    await Future.forEach(myFilesAtKeys, (AtKey atkey) async {
-      var deleted = await atClient.delete(atkey);
+    await Future.forEach(myFilesAtKeys, (AtKey atKey) async {
+      var deleted = await atClient.delete(atKey);
       print('deleted : ${deleted}');
     });
 

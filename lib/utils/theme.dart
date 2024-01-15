@@ -12,7 +12,6 @@ class Themes {
       brightness: Brightness.light,
       primaryColor: ColorConstants.desktopPrimary,
       primaryColorDark: ColorConstants.raisinBlack,
-      backgroundColor: getBackgroundColor(highlightColor),
       canvasColor: Colors.white,
       highlightColor: highlightColor,
       scaffoldBackgroundColor: ColorConstants.scaffoldBackgroundColor,
@@ -21,6 +20,7 @@ class Themes {
       colorScheme: ThemeData.dark().colorScheme.copyWith(
             brightness: Brightness.light,
             primary: ColorConstants.desktopPrimary,
+            background: getBackgroundColor(highlightColor),
           ),
     );
   }

@@ -4,7 +4,6 @@ import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/options_icon_button.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/receive_items_list.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -84,11 +83,11 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
     contact.tags!['nickname'] = controller.text;
     var res = await ContactService().atContactImpl.add(contact);
     if (res == true) {
-      await SnackbarService()
-          .showSnackbar(context, "Successfully updated nickname");
+      await SnackBarService()
+          .showSnackBar(context, "Successfully updated nickname");
     } else {
-      await SnackbarService()
-          .showSnackbar(context, "Failed to update nickname");
+      await SnackBarService()
+          .showSnackBar(context, "Failed to update nickname");
     }
     setState(() {
       isLoading = false;
@@ -112,11 +111,6 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
             SizedBox(height: 20),
             buildTransferFileButton(),
             SizedBox(height: 24),
-
-            /// Hiding file attachment screen
-            // buildAttachmentsTitle(),
-            // SizedBox(height: 8),
-            // ReceiveItemsList(atContact: widget.atContact)
           ],
         ),
       ),

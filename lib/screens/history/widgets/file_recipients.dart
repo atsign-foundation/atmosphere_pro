@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FileRecipients extends StatefulWidget {
-  final List<ShareStatus>? filesharedWith;
-  FileRecipientSection? fileRecipientSection;
+  final List<ShareStatus>? fileSharedWith;
+  final FileRecipientSection? fileRecipientSection;
 
   FileRecipients(
-    this.filesharedWith, {
+    this.fileSharedWith, {
     this.fileRecipientSection,
     Key? key,
   });
@@ -32,7 +32,7 @@ class _FileRecipientsState extends State<FileRecipients> {
 
   @override
   void initState() {
-    sortAtsigns();
+    sortAtSigns();
 
     if (widget.fileRecipientSection == FileRecipientSection.DOWNLOADED) {
       color = ColorConstants.blueText.withOpacity(0.5);
@@ -50,12 +50,12 @@ class _FileRecipientsState extends State<FileRecipients> {
     super.initState();
   }
 
-  sortAtsigns() {
+  sortAtSigns() {
     deliveredToList = [];
     downloadedByList = [];
     filedInDeliveringList = [];
 
-    widget.filesharedWith!.forEach((element) {
+    widget.fileSharedWith!.forEach((element) {
       if (element.isNotificationSend!) {
         deliveredToList.add(element);
       } else {
@@ -75,7 +75,7 @@ class _FileRecipientsState extends State<FileRecipients> {
           padding: EdgeInsets.symmetric(
               horizontal: 20.toHeight, vertical: 25.toHeight),
           child: Consumer<HistoryProvider>(builder: (context, provider, _) {
-            sortAtsigns();
+            sortAtSigns();
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -218,7 +218,7 @@ class _FileRecipientsState extends State<FileRecipients> {
                           child: CustomPersonVerticalTile(
                             key: UniqueKey(),
                             shareStatus: filedInDeliveringList[index],
-                            isFailedAtsignList: true,
+                            isFailedAtSignList: true,
                           ),
                         );
                       }),

@@ -53,7 +53,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
             listen: false)
         .isInternetAvailable;
     if (!isConnected) {
-      SnackbarService().showSnackbar(
+      SnackBarService().showSnackBar(
         NavService.navKey.currentContext!,
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,

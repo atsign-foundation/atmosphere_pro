@@ -78,7 +78,7 @@ class ExceptionService {
   _showExceptionOverlay(String error, {Function? onRetry}) async {
     hideOverlay();
 
-    exceptionOverlayEntry = _buildexceptionOverlayEntry(
+    exceptionOverlayEntry = _buildExceptionOverlayEntry(
       error,
       onRetry: onRetry,
     );
@@ -93,7 +93,7 @@ class ExceptionService {
     exceptionOverlayEntry = null;
   }
 
-  OverlayEntry _buildexceptionOverlayEntry(String error, {Function? onRetry}) {
+  OverlayEntry _buildExceptionOverlayEntry(String error, {Function? onRetry}) {
     Color bgColor = ColorConstants.redAlert;
 
     return OverlayEntry(builder: (context) {

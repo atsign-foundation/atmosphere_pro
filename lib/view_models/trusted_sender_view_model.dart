@@ -7,10 +7,13 @@ import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 
 class TrustedContactProvider extends BaseModel {
   TrustedContactProvider._();
+
   static TrustedContactProvider _instance = TrustedContactProvider._();
+
   factory TrustedContactProvider() => _instance;
   String AddTrustedContacts = 'add_trusted_contacts';
   List<AtContact> _trustedContacts = [];
+
   List<AtContact> get trustedContacts => _trustedContacts;
 
   var jsonValue;

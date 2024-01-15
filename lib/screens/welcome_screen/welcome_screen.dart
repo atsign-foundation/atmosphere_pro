@@ -7,7 +7,6 @@ import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
@@ -145,8 +144,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         });
         print("Shared:" + (_sharedFiles?.map((f) => f.path).join(",") ?? ""));
         // check to see if atsign is paired
-        var atsign = await _backendService.currentAtsign;
-        if (atsign != null) {
+        var atSign = await _backendService.currentAtsign;
+        if (atSign != null) {
           BuildContext c = NavService.navKey.currentContext!;
           await Navigator.pushNamedAndRemoveUntil(
               c, Routes.WELCOME_SCREEN, (route) => false);
@@ -210,15 +209,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               child: Container(
                                 height: 24,
                                 width: double.infinity,
-                                child: StreamBuilder<FLUSHBAR_STATUS>(
+                                child: StreamBuilder<FlushBarStatus>(
                                   stream: FileTransferProvider()
                                       .flushBarStatusStream,
                                   builder: (context, snapshot) {
-                                    final flushbarStatus = snapshot.data ??
-                                        FLUSHBAR_STATUS.SENDING;
+                                    final flushbarStatus =
+                                        snapshot.data ?? FlushBarStatus.SENDING;
 
-                                    if (flushbarStatus ==
-                                        FLUSHBAR_STATUS.DONE) {
+                                    if (flushbarStatus == FlushBarStatus.DONE) {
                                       Future.delayed(
                                         const Duration(seconds: 3),
                                         () {
@@ -244,7 +242,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                         ),
                                       );
                                     } else if (flushbarStatus ==
-                                        FLUSHBAR_STATUS.FAILED) {
+                                        FlushBarStatus.FAILED) {
                                       Future.delayed(
                                         const Duration(seconds: 3),
                                         () {

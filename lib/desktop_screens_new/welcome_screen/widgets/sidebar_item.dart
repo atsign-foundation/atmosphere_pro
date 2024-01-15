@@ -115,8 +115,7 @@ class SidebarItem extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 4),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          final MenuItem item =
-                              menuItem.children![index];
+                          final MenuItem item = menuItem.children![index];
                           return Container(
                             color: ColorConstants.raisinBlack,
                             child: Padding(
@@ -128,8 +127,7 @@ class SidebarItem extends StatelessWidget {
                                 child: BuildSidebarIconTitle(
                                   image: item.image,
                                   route: item.routeName ?? "",
-                                  isSidebarExpanded:
-                                      isSidebarExpanded,
+                                  isSidebarExpanded: isSidebarExpanded,
                                   isChildTile: true,
                                   title: item.title,
                                   nestedProvider: nestedProvider,

@@ -213,7 +213,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                 ),
-                child: CommonUtilityFunctions().interactableThumbnail(
+                child: CommonUtilityFunctions().interactThumbnail(
                   files[index].fileName?.split(".").last ?? "",
                   BackendService.getInstance().downloadDirectory!.path +
                       Platform.pathSeparator +
@@ -227,12 +227,12 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                       fileTransferId: files[index].fileTransferId,
                       onComplete: () {
                         files.removeAt(index);
+                        setState(() {});
                       },
                     );
                     if (mounted) {
                       Navigator.pop(context);
                     }
-                    setState(() {});
                   },
                 ),
               ),
@@ -268,16 +268,6 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
           final shortDate = DateFormat('MM/dd/yy').format(date);
           final time = DateFormat('kk:mm').format(date);
 
-          // late FileTransfer fileTransfer;
-          // bool isDownloaded = false;
-
-          // for (var filetransfer in provider.myFiles) {
-          //   if (filetransfer.key == files[index].fileTransferId) {
-          //     fileTransfer = filetransfer;
-          //     break;
-          //   }
-          // }
-
           return Slidable(
             key: UniqueKey(),
             endActionPane: ActionPane(
@@ -309,9 +299,9 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                         fileTransferId: files[index].fileTransferId,
                         onComplete: () {
                           files.removeAt(index);
+                          setState(() {});
                         },
                       );
-                      setState(() {});
                     },
                     child: SvgPicture.asset(
                       AppVectors.icDeleteFile,
@@ -319,47 +309,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   ),
                 ),
               ],
-            )
-
-            // Consumer<FileProgressProvider>(
-            //   builder: (_c, provider, _) {
-            //     var fileTransferProgress =
-            //         provider.receivedFileProgress[fileTransfer.key];
-
-            //     return CommonUtilityFunctions()
-            //             .checkForDownloadAvailability(fileTransfer)
-            //         ? fileTransferProgress != null
-            //             ? CommonUtilityFunctions().getDownloadStatus(
-            //                 fileTransferProgress,
-            //               )
-            //             : isDownloaded
-            //                 ? SvgPicture.asset(AppVectors.icCloudDownloaded)
-            //                 : InkWell(
-            //                     onTap: () async {
-            //                       var res = await downloadFiles(
-            //                         fileTransfer,
-            //                         fileName: files[index].fileName,
-            //                       );
-
-            //                       setState(() {
-            //                         isDownloaded = res;
-            //                       });
-            //                     },
-            //                     child: SvgPicture.asset(
-            //                       AppVectors.icDownloadFile,
-            //                     ),
-            //                   )
-            //         : SizedBox();
-            //   },
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 6.0),
-            //   child: SvgPicture.asset(
-            //     AppVectors.icDownloadFile,
-            //   ),
-            // ),
-
-            ,
+            ),
             child: InkWell(
               onTap: () async {
                 await FileUtils.openFile(
@@ -396,7 +346,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Center(
-                        child: CommonUtilityFunctions().interactableThumbnail(
+                        child: CommonUtilityFunctions().interactThumbnail(
                             files[index].fileName?.split(".").last ?? "",
                             BackendService.getInstance()
                                     .downloadDirectory!
@@ -413,13 +363,13 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             fileTransferId: files[index].fileTransferId,
                             onComplete: () {
                               files.removeAt(index);
+                              setState(() {});
                             },
                           );
 
                           if (mounted) {
                             Navigator.pop(context);
                           }
-                          setState(() {});
                         }),
                       ),
                     ),

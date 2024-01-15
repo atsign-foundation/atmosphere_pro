@@ -15,7 +15,7 @@ import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum contactSidebar { contactDetails, addContact }
+enum ContactSidebar { contactDetails, addContact }
 
 class DesktopContactScreen extends StatefulWidget {
   const DesktopContactScreen({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class DesktopContactScreen extends StatefulWidget {
 }
 
 class _DesktopContactScreenState extends State<DesktopContactScreen> {
-  contactSidebar? sidebarView;
+  ContactSidebar? sidebarView;
   var _filteredList = <BaseContact>[];
   String searchText = '';
   BaseContact? selectedContact;
@@ -148,7 +148,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                             setState(() {
                                               selectedContact = contact;
                                               sidebarView =
-                                                  contactSidebar.contactDetails;
+                                                  ContactSidebar.contactDetails;
                                               showGroup = false;
                                             });
                                           },
@@ -308,7 +308,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                       'Add contact',
                       () {
                         setState(() {
-                          sidebarView = contactSidebar.addContact;
+                          sidebarView = ContactSidebar.addContact;
                           showGroup = false;
                         });
                       },
@@ -328,7 +328,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
   }
 
   Widget getSidebarWidget() {
-    if (sidebarView == contactSidebar.contactDetails) {
+    if (sidebarView == ContactSidebar.contactDetails) {
       return InformationCardExpanded(
         key: UniqueKey(),
         atContact: selectedContact!.contact!,
@@ -338,7 +338,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
           });
         },
       );
-    } else if (sidebarView == contactSidebar.addContact) {
+    } else if (sidebarView == ContactSidebar.addContact) {
       return DesktopAddContactScreen(
         onBack: () {
           GroupService().fetchGroupsAndContacts();

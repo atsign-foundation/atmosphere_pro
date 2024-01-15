@@ -9,7 +9,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_ti
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/utils/file_category.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/my_files_screen/widgets/file_list_tile_widget.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recent.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
@@ -471,7 +471,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           InkWell(
                             onTap: () async {
                               if (isDeleting == false) {
-                                CommonUtilityFunctions().showConfirmationDialog(
+                                await CommonUtilityFunctions()
+                                    .showConfirmationDialog(
                                   () async {
                                     setDialogState(() {
                                       isDeleting = true;
@@ -489,7 +490,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       localFile.deleteSync();
                                     }
 
-                                    await SnackbarService().showSnackbar(
+                                    await SnackBarService().showSnackBar(
                                         context,
                                         res
                                             ? "Successfully deleted the file"
