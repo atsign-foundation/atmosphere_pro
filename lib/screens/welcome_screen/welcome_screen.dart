@@ -7,7 +7,6 @@ import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
@@ -333,88 +332,113 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               provider.selectedBottomNavigationIndex,
           builder: (context, selectedBottomNavigationIndex, _) {
             return Container(
-              height: 74,
+              height: 72,
               margin: EdgeInsets.fromLTRB(
-                16.toWidth,
+                28.toWidth,
                 0,
-                16.toWidth,
-                16 + MediaQuery.of(context).padding.bottom,
+                28.toWidth,
+                32 + MediaQuery.of(context).padding.bottom,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(76),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icUserActivate,
-                        iconInactivate: ImageConstants.icUserInactivate,
-                        title: "Contacts",
-                        index: 1,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(74),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icUserActivate,
+                              iconInactivate: ImageConstants.icUserInactivate,
+                              index: 1,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icFileActivate,
+                              iconInactivate: ImageConstants.icFileInactivate,
+                              index: 2,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icHistoryActivate,
+                              iconInactivate:
+                                  ImageConstants.icHistoryInactivate,
+                              index: 3,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: BottomNavigationWidget(
+                              iconActivate: ImageConstants.icSettingActivate,
+                              iconInactivate:
+                                  ImageConstants.icSettingInactivate,
+                              index: 4,
+                              indexSelected: selectedBottomNavigationIndex,
+                              onTap: (index) {
+                                welcomeScreenProvider
+                                    .changeBottomNavigationIndex(index);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icFileActivate,
-                        iconInactivate: ImageConstants.icFileInactivate,
-                        title: "Files",
-                        index: 2,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
+                  ),
+                  SizedBox(width: 12),
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment(-1.00, 0.00),
+                        end: Alignment(1, 0),
+                        colors: selectedBottomNavigationIndex == 0
+                            ? [
+                                ColorConstants.orange.withOpacity(0.25),
+                                ColorConstants.navBarButtonLinearColor
+                                    .withOpacity(0.25),
+                              ]
+                            : [
+                                Colors.white,
+                                Colors.white,
+                              ],
                       ),
                     ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icSendActivate,
-                        iconInactivate: ImageConstants.icSendInactivate,
-                        index: 0,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
+                    child: BottomNavigationWidget(
+                      iconActivate: ImageConstants.icSendActivate,
+                      iconInactivate: ImageConstants.icSendActivate,
+                      index: 0,
+                      indexSelected: selectedBottomNavigationIndex,
+                      onTap: (index) {
+                        welcomeScreenProvider
+                            .changeBottomNavigationIndex(index);
+                      },
                     ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icHistoryActivate,
-                        iconInactivate: ImageConstants.icHistoryInactivate,
-                        title: "History",
-                        index: 3,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: BottomNavigationWidget(
-                        iconActivate: ImageConstants.icSettingActivate,
-                        iconInactivate: ImageConstants.icSettingInactivate,
-                        title: "Settings",
-                        index: 4,
-                        indexSelected: selectedBottomNavigationIndex,
-                        onTap: (index) {
-                          welcomeScreenProvider
-                              .changeBottomNavigationIndex(index);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
             );
           },

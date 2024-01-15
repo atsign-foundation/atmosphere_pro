@@ -106,6 +106,7 @@ class ColorConstants {
   static const Color disableTooltipColor = Color(0xFFC4C4C4);
   static const Color inactiveIconColor = Color(0xFFC5C5C5);
   static const Color closeButtonColor = Color(0xFFE6E6E6);
+  static const Color navBarButtonLinearColor = Color(0xFFE9A743);
 }
 
 class ContactInitialsColors {
