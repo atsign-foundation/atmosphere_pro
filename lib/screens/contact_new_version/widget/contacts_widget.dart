@@ -43,16 +43,6 @@ class ContactsWidget extends StatefulWidget {
 }
 
 class _ContactsWidgetState extends State<ContactsWidget> {
-  List<GroupContactsModel> listContactSelected = [];
-
-  @override
-  void initState() {
-    if ((widget.selectedContacts ?? []).isNotEmpty) {
-      listContactSelected.addAll(widget.selectedContacts!);
-    }
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -233,44 +223,41 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   }
 
   void _onSelectContact(GroupContactsModel contact) {
-    if (listContactSelected.isEmpty) {
-      listContactSelected.add(contact);
+    List<GroupContactsModel> list = List.from(widget.selectedContacts ?? []);
+    if (list.isEmpty) {
+      list.add(contact);
     } else {
-      bool isAdd = true;
-      GroupContactsModel? contactExists;
+      bool isAdded = true;
 
-      for (var element in listContactSelected) {
-        contactExists = element;
+      for (var element in list) {
         if (contact.contactType == ContactsType.CONTACT) {
           if (contact.contact?.atSign == element.contact?.atSign) {
-            isAdd = false;
+            isAdded = false;
             break;
           }
         } else {
           if (contact.group?.groupId == element.group?.groupId) {
-            isAdd = false;
+            isAdded = false;
             break;
           }
         }
       }
 
-      if (!isAdd) {
-        listContactSelected.remove(contactExists);
+      if (!isAdded) {
+        list.remove(contact);
       } else {
-        listContactSelected.add(contact);
+        list.add(contact);
       }
     }
 
-    widget.onSelectContacts?.call(
-      listContactSelected,
-    );
+    widget.onSelectContacts?.call(list);
 
     setState(() {});
   }
 
   bool _checkContactSelected(GroupContactsModel contact) {
     bool isSelected = false;
-    for (var element in listContactSelected) {
+    for (var element in widget.selectedContacts ?? []) {
       if (contact.contactType == ContactsType.CONTACT) {
         if (contact.contact?.atSign == element.contact?.atSign) {
           isSelected = true;

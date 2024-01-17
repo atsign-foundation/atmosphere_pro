@@ -32,11 +32,11 @@ import 'package:provider/provider.dart';
 /// This widget gives a screen view for displaying contacts and group details
 // ignore: must_be_immutable
 class DesktopAddGroup extends StatefulWidget {
-  Function()? onDoneTap;
+  Function(bool) onDoneTap;
 
   DesktopAddGroup({
     Key? key,
-    this.onDoneTap,
+    required this.onDoneTap,
   }) : super(key: key);
 
   @override
@@ -94,7 +94,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
           titleText: 'Add New Group',
           titleTextStyle: CustomTextStyles.blackW50020,
           leadingIcon: InkWell(
-            onTap: widget.onDoneTap,
+            onTap: widget.onDoneTap(false),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: SvgPicture.asset(
@@ -368,7 +368,7 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
             processing = false;
           });
 
-          widget.onDoneTap?.call();
+          widget.onDoneTap.call(true);
 
           GroupService().emptySelectedGroupContact();
         } else if (result != null) {

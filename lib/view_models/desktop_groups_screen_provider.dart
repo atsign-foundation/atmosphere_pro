@@ -36,9 +36,9 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedAtGroup(AtGroup atGroup) {
+  void setSelectedAtGroup(AtGroup? atGroup) {
     selectedAtGroup = atGroup;
-    setSelectedGroupName(selectedAtGroup!.groupName!);
+    setSelectedGroupName(selectedAtGroup?.groupName ?? '');
     if (selectedAtGroup?.groupPicture != null) {
       setSelectedGroupImage(
         Uint8List.fromList(selectedAtGroup?.groupPicture.cast<int>()),

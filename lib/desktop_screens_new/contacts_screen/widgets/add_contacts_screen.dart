@@ -1,6 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -11,10 +10,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class DesktopAddContactScreen extends StatefulWidget {
-  final Function() onBack;
+  final Function(bool) onBack;
 
-  const DesktopAddContactScreen({Key? key, required this.onBack})
-      : super(key: key);
+  const DesktopAddContactScreen({
+    Key? key,
+    required this.onBack,
+  }) : super(key: key);
 
   @override
   State<DesktopAddContactScreen> createState() =>
@@ -74,7 +75,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                     children: [
                       InkWell(
                         onTap: () {
-                          widget.onBack();
+                          widget.onBack(false);
                         },
                         child: Padding(
                           padding: EdgeInsets.only(
@@ -221,7 +222,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                           );
 
                           if (response ?? false) {
-                            widget.onBack();
+                            widget.onBack(true);
                           }
                         }
                       },

@@ -41,6 +41,7 @@ class DesktopGroupsList extends StatefulWidget {
 class _DesktopGroupsListState extends State<DesktopGroupsList> {
   late TextEditingController searchController;
   List<AtGroup> _filteredList = [];
+  bool isRefreshing = false;
 
   @override
   void initState() {
@@ -121,9 +122,12 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
                 const SizedBox(width: 12),
                 IconButtonWidget(
                   icon: AppVectors.icRefresh,
-                  onTap: () {
-                    GroupService().getAllGroupsDetails();
-                    setState(() {});
+                  onTap: () async {
+                    if (!isRefreshing) {
+                      isRefreshing = !isRefreshing;
+                      await GroupService().getAllGroupsDetails();
+                      isRefreshing = !isRefreshing;
+                    }
                   },
                 ),
                 const SizedBox(width: 12),

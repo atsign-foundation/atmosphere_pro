@@ -9,6 +9,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
+import 'package:atsign_atmosphere_pro/data_models/enums/group_card_state.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_cover_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_custom_app_bar.dart';
@@ -32,7 +33,7 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DesktopGroupsDetail extends StatefulWidget {
-  Function() onBackArrowTap;
+  Function(bool) onBackArrowTap;
 
   DesktopGroupsDetail({
     Key? key,
@@ -98,7 +99,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
                       }
                       resetGroupName();
                     }
-                  : () => widget.onBackArrowTap(),
+                  : () => widget.onBackArrowTap(false),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: SvgPicture.asset(
@@ -329,6 +330,8 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
             if (!mounted) return;
             if (result != null && result) {
               Navigator.of(context).pop();
+              groupProvider.setSelectedAtGroup(null);
+              groupProvider.setGroupCardState(GroupCardState.disable);
             } else {
               CustomToast().show(TextConstants().SERVICE_ERROR, context);
             }
@@ -375,7 +378,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
         var result = await GroupService().updateGroup(group);
         if (result is AtGroup) {
           if (mounted) {
-            widget.onBackArrowTap.call();
+            widget.onBackArrowTap.call(true);
 
             GroupService().emptySelectedGroupContact();
           }
