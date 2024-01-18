@@ -1,8 +1,22 @@
+import 'dart:io';
+
+import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_item.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_image_preview.dart';
+import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 
 class HistoryFileList extends StatefulWidget {
   final HistoryType? type;
@@ -19,6 +33,16 @@ class HistoryFileList extends StatefulWidget {
 
 class _HistoryFileListState extends State<HistoryFileList> {
   bool isExpanded = false;
+
+  String getFilePath(String name) {
+    return widget.type == HistoryType.received
+        ? BackendService.getInstance().downloadDirectory!.path +
+            Platform.pathSeparator +
+            name
+        : MixedConstants.getFileSentLocationSync() +
+            Platform.pathSeparator +
+            name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +82,25 @@ class _HistoryFileListState extends State<HistoryFileList> {
                   physics: NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(4, 12, 8, 12),
                   itemBuilder: (context, index) {
-                    return HistoryFileItem(
-                      key: UniqueKey(),
-                      type: widget.type,
-                      fileTransfer: widget.fileTransfer,
-                      data: widget.fileTransfer!.files![index],
+                    final FileData file = widget.fileTransfer!.files![index];
+                    return InkWell(
+                      onTap: () async {
+                        if (File(getFilePath(file.name ?? '')).existsSync()) {
+                          await openPreview(
+                            name: file.name ?? '',
+                            size: file.size ?? 0,
+                          );
+                        } else {
+                          showNoFileDialog(
+                              MediaQuery.of(context).textScaleFactor);
+                        }
+                      },
+                      child: HistoryFileItem(
+                        key: UniqueKey(),
+                        type: widget.type,
+                        fileTransfer: widget.fileTransfer,
+                        data: widget.fileTransfer!.files![index],
+                      ),
                     );
                   },
                   itemCount:
@@ -121,5 +159,99 @@ class _HistoryFileListState extends State<HistoryFileList> {
         ),
       ),
     );
+  }
+
+  Future<void> openPreview({
+    required String name,
+    required int size,
+  }) async {
+    if (FileTypes.IMAGE_TYPES.contains(name.split(".").last)) {
+      String nickname = "";
+      final date = (widget.fileTransfer?.date ?? DateTime.now()).toLocal();
+      final shortDate = DateFormat('dd/MM/yy').format(date);
+      final time = DateFormat('HH:mm').format(date);
+      final List<FileData> dataList = (widget.fileTransfer?.files ?? [])
+          .where((e) =>
+              FileTypes.IMAGE_TYPES.contains(e.name?.split(".").last) &&
+              File(getFilePath(e.name ?? '')).existsSync())
+          .map((e) => FileData(
+                size: e.size,
+                path: getFilePath(e.name ?? ''),
+                name: e.name,
+                isDownloading: e.isDownloading,
+                isUploaded: e.isUploaded,
+                isUploading: e.isUploading,
+                url: e.url,
+              ))
+          .toList();
+      for (var contact in GroupService().allContacts) {
+        if (contact?.contact?.atSign == widget.fileTransfer?.sender) {
+          nickname = contact?.contact?.tags?["nickname"] ?? "";
+          break;
+        }
+      }
+      final newIndex = dataList.indexWhere((element) => element.name == name);
+      await showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (_) => Material(
+          color: Colors.transparent,
+          child: HistoryImagePreview(
+            data: dataList,
+            index: newIndex,
+            fileTransferId: widget.fileTransfer?.key,
+            nickname: nickname,
+            sender: widget.fileTransfer?.sender ?? '',
+            notes: widget.fileTransfer?.notes ?? '',
+            shortDate: shortDate,
+            time: time,
+            type: widget.type,
+            onDelete: () {
+              setState(() {});
+            },
+          ),
+        ),
+      );
+    } else {
+      await OpenFile.open(BackendService.getInstance().downloadDirectory!.path +
+          Platform.pathSeparator +
+          name);
+    }
+  }
+
+  void showNoFileDialog(double deviceTextFactor) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Text(
+                    TextStrings().fileNotDownload,
+                    style: CustomTextStyles.primaryBold17,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
+                        isInverted: false,
+                        buttonText: TextStrings().buttonClose,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
