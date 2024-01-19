@@ -1,10 +1,10 @@
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_group_flutter/desktop_screens/desktop_empty_group.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/group_card_state.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_add_group.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_group_empty.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_groups_detail.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_groups_list.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -31,13 +31,15 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
 
   @override
   void initState() {
+    super.initState();
     groupsProvider = context.read<DesktopGroupsScreenProvider>();
-    try {
-      super.initState();
-      GroupService().getAllGroupsDetails();
-    } catch (e) {
-      atSignLogger.severe('Error in init of Group_list $e');
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await GroupService().getAllGroupsDetails();
+      } catch (e) {
+        atSignLogger.severe('Error in init of Group_list $e');
+      }
+    });
   }
 
   @override
@@ -71,11 +73,11 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
 
                       if (snapshot.data!.isEmpty) {
                         return Center(
-                          child: DesktopEmptyGroup(
-                              provider.groupCardState == GroupCardState.add,
-                              onCreateBtnTap: () {
-                            provider.setGroupCardState(GroupCardState.add);
-                          }),
+                          child: DesktopGroupEmpty(
+                            onTap: () {
+                              provider.setGroupCardState(GroupCardState.add);
+                            },
+                          ),
                         );
                       } else {
                         return DesktopGroupsList(
@@ -93,11 +95,11 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
                       }
                     } else {
                       return Center(
-                        child: DesktopEmptyGroup(
-                            provider.groupCardState == GroupCardState.add,
-                            onCreateBtnTap: () {
-                          provider.setGroupCardState(GroupCardState.add);
-                        }),
+                        child: DesktopGroupEmpty(
+                          onTap: () {
+                            provider.setGroupCardState(GroupCardState.add);
+                          },
+                        ),
                       );
                     }
                   }
@@ -110,7 +112,9 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        provider.reset();
+                        groupsProvider.setSelectedAtGroup(null);
+                        groupsProvider
+                            .setGroupCardState(GroupCardState.disable);
                       },
                     ),
                   ),
@@ -129,14 +133,18 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
     switch (state) {
       case GroupCardState.add:
         return DesktopAddGroup(
-          onDoneTap: () {
-            groupsProvider.reset();
+          onDoneTap: (value) async {
+            if (value) await GroupService().getAllGroupsDetails();
+            groupsProvider.setSelectedAtGroup(null);
+            groupsProvider.setGroupCardState(GroupCardState.disable);
           },
         );
       case GroupCardState.expanded:
         return DesktopGroupsDetail(
-          onBackArrowTap: () {
-            groupsProvider.reset();
+          onBackArrowTap: (value) async {
+            if (value) await GroupService().getAllGroupsDetails();
+            groupsProvider.setSelectedAtGroup(null);
+            groupsProvider.setGroupCardState(GroupCardState.disable);
           },
         );
       default:

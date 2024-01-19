@@ -14,3 +14,17 @@ extension ContactsTypeExtension on ListContactType {
     }
   }
 }
+
+
+enum SortedListContactType {contact, groups}
+
+extension SortedContactsTypeExtension on SortedListContactType {
+  String get display {
+    switch (this) {
+      case SortedListContactType.contact:
+        return "Contacts";
+      case SortedListContactType.groups:
+        return "Groups";
+    }
+  }
+}

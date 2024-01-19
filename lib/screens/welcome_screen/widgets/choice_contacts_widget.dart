@@ -1,12 +1,14 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/add_contact_screen.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
+import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/contact_list_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,11 +26,17 @@ class ChoiceContactsWidget extends StatefulWidget {
   State<ChoiceContactsWidget> createState() => _ChoiceContactsWidgetState();
 }
 
-class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
+class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget>
+    with TickerProviderStateMixin {
   late TrustedContactProvider trustedProvider;
   late List<GroupContactsModel> listContact;
   late GroupService _groupService;
   late TextEditingController searchController;
+  late final createGroupProvider = context.read<CreateGroupProvider>();
+  late final contactProvider = context.read<ContactProvider>();
+  late final TabController _tabController =
+      TabController(length: 2, initialIndex: currentTab, vsync: this);
+  int currentTab = 0;
 
   @override
   void initState() {
@@ -98,15 +106,26 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                 },
               ),
               Expanded(
-                child: ListContactWidget(
-                  trustedContacts: trustedProvider.trustedContacts,
-                  isSelectMultiContacts: true,
-                  contactsType: ListContactType.all,
-                  selectedContacts: listContact,
-                  searchKeywords: searchController.text,
+                child: ContactListWidget(
+                  searchText: searchController.text,
+                  tabController: _tabController,
+                  trustContactList: trustedProvider.trustedContacts,
+                  selectedGroupImage: createGroupProvider.selectedImageByteData,
+                  onCreateGroupClose: () {
+                    if (createGroupProvider.selectedImageByteData != null) {
+                      createGroupProvider.removeSelectedImage();
+                    }
+                    createGroupProvider.resetData();
+                  },
                   onSelectContacts: (contacts) {
                     setState(() {
                       listContact = contacts;
+                    });
+                  },
+                  listContact: listContact,
+                  onChangeTab: (value) {
+                    setState(() {
+                      currentTab = value;
                     });
                   },
                 ),
@@ -174,17 +193,40 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
             alignment: Alignment.topRight,
             child: InkWell(
               onTap: () async {
-                final result = await showModalBottomSheet<bool?>(
-                  context: context,
-                  isScrollControlled: true,
-                  useRootNavigator: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return AddContactScreen();
-                  },
-                );
-                if (result == true) {
-                  _groupService.fetchGroupsAndContacts();
+                if (currentTab == 1) {
+                  final result = await showModalBottomSheet<bool?>(
+                    context: context,
+                    isScrollControlled: true,
+                    useRootNavigator: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (BuildContext context) {
+                      return CreateGroupScreen(
+                        trustContacts: trustedProvider.trustedContacts,
+                      );
+                    },
+                  ).whenComplete(() {
+                    if (createGroupProvider.selectedImageByteData != null) {
+                      createGroupProvider.removeSelectedImage();
+                    }
+                    createGroupProvider.resetData();
+                  });
+                  if (result ?? false) {
+                    await _groupService.fetchGroupsAndContacts();
+                  }
+                } else {
+                  final result = await showModalBottomSheet<bool?>(
+                    context: context,
+                    isScrollControlled: true,
+                    useRootNavigator: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (BuildContext context) {
+                      return AddContactScreen();
+                    },
+                  );
+
+                  if (result ?? false) {
+                    await GroupService().fetchGroupsAndContacts();
+                  }
                 }
               },
               child: Container(
@@ -198,7 +240,7 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      "Add New",
+                      "Add New ${currentTab == 0 ? 'Contact' : 'Group'}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,

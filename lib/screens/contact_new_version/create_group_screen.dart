@@ -1,6 +1,7 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
@@ -69,7 +70,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      _provider.removeSelectedImage();
                       Navigator.of(context).pop();
                     },
                     child: Padding(
@@ -155,6 +155,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             searchKeywords: value.searchKeyword,
                             trustedContacts: widget.trustContacts,
                             isSelectMultiContacts: true,
+                            selectedContacts: _provider.listContact
+                                .map((e) => GroupContactsModel(
+                                      contact: e,
+                                      contactType: ContactsType.CONTACT,
+                                    ))
+                                .toList(),
                             onSelectContacts: (contacts) {
                               _provider.addGroupContacts(contacts);
                             },
@@ -176,8 +182,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 if (!mounted) return;
                                 searchController.clear();
                                 groupNameController.clear();
-                                _provider.removeSelectedImage();
-                                _provider.resetData();
                                 Navigator.of(context).pop(true);
                               } else if (result != null) {
                                 if (result.runtimeType ==

@@ -77,10 +77,12 @@ class _ContactScreenState extends State<ContactScreen>
                           trustContacts: trustedProvider.trustedContacts,
                         );
                       },
-                    );
-                    if (createGroupProvider.selectedImageByteData != null) {
-                      createGroupProvider.removeSelectedImage();
-                    }
+                    ).whenComplete(() {
+                      if (createGroupProvider.selectedImageByteData != null) {
+                        createGroupProvider.removeSelectedImage();
+                      }
+                      createGroupProvider.resetData();
+                    });
                     if (result ?? false) {
                       await _groupService.fetchGroupsAndContacts();
                       provider.notify();
@@ -290,11 +292,13 @@ class _ContactScreenState extends State<ContactScreen>
                                       trustedProvider.trustedContacts,
                                 );
                               },
-                            );
-                            if (createGroupProvider.selectedImageByteData !=
-                                null) {
-                              createGroupProvider.removeSelectedImage();
-                            }
+                            ).whenComplete(() {
+                              if (createGroupProvider.selectedImageByteData !=
+                                  null) {
+                                createGroupProvider.removeSelectedImage();
+                              }
+                              createGroupProvider.resetData();
+                            });
                             if (result ?? false) {
                               await _groupService.fetchGroupsAndContacts();
                               provider.notify();
