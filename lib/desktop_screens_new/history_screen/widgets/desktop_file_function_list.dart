@@ -147,8 +147,20 @@ class _DesktopFileFunctionListState extends State<DesktopFileFunctionList> {
               buildOptionButton(
                 onTap: () {
                   CommonUtilityFunctions().showConfirmationDialog(
-                    () {
-                      File(widget.filePath).deleteSync();
+                    () async {
+                      await File(widget.filePath).delete();
+                      await Provider.of<MyFilesProvider>(
+                              NavService.navKey.currentContext!,
+                              listen: false)
+                          .removeParticularFile(
+                        widget.fileTransfer.key,
+                        widget.filePath.split(Platform.pathSeparator).last,
+                      );
+
+                      await Provider.of<MyFilesProvider>(
+                              NavService.navKey.currentContext!,
+                              listen: false)
+                          .getAllFiles();
                       SnackbarService().showSnackbar(
                         context,
                         "Successfully deleted the file",

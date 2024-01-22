@@ -100,17 +100,16 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                 currentIndex.value = value;
               },
               itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 33),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: MemoryImage(
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 33),
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.memory(
                         base64Decode(
                           imageToBase64(widget.data[index].path ?? ''),
                         ),
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 );
@@ -166,6 +165,7 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                       Navigator.pop(context);
                       widget.onDelete.call();
                     },
+                    type: widget.type ?? HistoryType.send,
                   );
                 },
                 child: SvgPicture.asset(
@@ -257,8 +257,7 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                               Text(
                                 (widget.data[value].name ?? ''),
                                 style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 17, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 5),
                               Text(

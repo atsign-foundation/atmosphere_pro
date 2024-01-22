@@ -196,6 +196,7 @@ class TextStrings {
   // history no file to open
   String noFileFound = 'Sorry, file not found';
   String fileNotDownload = 'Sorry, file not downloaded';
+  String fileHasExpired = 'File can no longer be downloaded as it has expired';
 
   List<String> contactFields = [
     'firstname.persona',

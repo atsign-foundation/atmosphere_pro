@@ -181,8 +181,20 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
       onTap: () {
         CommonUtilityFunctions().showConfirmationDialog(
           () {
-            widget.fileHistory.fileDetails!.files!.forEach((e) {
-              File(getFilePath(e.name ?? '')).deleteSync();
+            widget.fileHistory.fileDetails!.files!.forEach((e) async {
+              await File(getFilePath(e.name ?? '')).delete();
+              await Provider.of<MyFilesProvider>(
+                      NavService.navKey.currentContext!,
+                      listen: false)
+                  .removeParticularFile(
+                widget.fileHistory.fileDetails?.key ?? '',
+                getFilePath(e.name ?? '').split(Platform.pathSeparator).last,
+              );
+
+              await Provider.of<MyFilesProvider>(
+                      NavService.navKey.currentContext!,
+                      listen: false)
+                  .getAllFiles();
             });
             SnackbarService().showSnackbar(
               context,

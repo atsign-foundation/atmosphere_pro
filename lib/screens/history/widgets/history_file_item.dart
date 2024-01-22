@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
@@ -10,6 +12,7 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -44,6 +47,7 @@ class HistoryFileItem extends StatefulWidget {
 
 class _HistoryFileItemState extends State<HistoryFileItem> {
   String path = '';
+  String sentPath = '';
   bool isDownloading = false;
   late bool canDownload = CommonUtilityFunctions()
       .isFileDownloadAvailable(widget.fileTransfer?.date ?? DateTime.now());
@@ -55,13 +59,12 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   }
 
   void getFilePath() async {
-    path = widget.type == HistoryType.received
-        ? BackendService.getInstance().downloadDirectory!.path +
-            Platform.pathSeparator +
-            (widget.data.name ?? '')
-        : await MixedConstants.getFileSentLocation() +
-            Platform.pathSeparator +
-            (widget.data.name ?? '');
+    path = BackendService.getInstance().downloadDirectory!.path +
+        Platform.pathSeparator +
+        (widget.data.name ?? '');
+    sentPath = await MixedConstants.getFileSentLocation() +
+        Platform.pathSeparator +
+        (widget.data.name ?? '');
     setState(() {});
   }
 
@@ -69,26 +72,18 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   Widget build(BuildContext context) {
     final String fileFormat = '.${widget.data.name?.split('.').last}';
     return Slidable(
-      endActionPane: canDownload || File(path).existsSync()
-          ? ActionPane(
-              motion: ScrollMotion(),
-              extentRatio: 0.4,
-              children: [
-                if (!File(path).existsSync()) ...[
-                  SizedBox(width: 4),
-                  widget.type == HistoryType.received
-                      ? buildDownloadButton()
-                      : SizedBox.shrink(),
-                ],
-                if (File(path).existsSync()) ...[
-                  SizedBox(width: 4),
-                  buildTransferButton(),
-                  SizedBox(width: 4),
-                  buildDeleteButton(),
-                ]
-              ],
-            )
-          : null,
+      endActionPane: ActionPane(
+        motion: ScrollMotion(),
+        extentRatio: 0.4,
+        children: [
+          SizedBox(width: 4),
+          buildDownloadButton(),
+          SizedBox(width: 4),
+          buildTransferButton(),
+          SizedBox(width: 4),
+          buildDeleteButton(),
+        ],
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -153,7 +148,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                       width: 44,
                       child: thumbnail(
                         fileFormat.substring(1),
-                        path,
+                        File(path).existsSync() ? path : sentPath,
                       ),
                     ),
                   ),
@@ -162,7 +157,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
             ),
           ),
           SizedBox(width: File(path).existsSync() ? 8 : 12),
-          if (File(path).existsSync())
+          if (File(path).existsSync() || File(sentPath).existsSync())
             Container(
               width: 32,
               height: 32,
@@ -270,28 +265,29 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                   ),
                 ],
               )
-            : File(path).existsSync()
-                ? SvgPicture.asset(
-                    AppVectors.icCloudDownloaded,
+            : isDownloading
+                ? SizedBox(
                     width: 32,
                     height: 32,
-                    fit: BoxFit.cover,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                      color: ColorConstants.downloadIndicatorColor,
+                    ),
                   )
-                : isDownloading
-                    ? SizedBox(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          color: ColorConstants.downloadIndicatorColor,
-                        ),
-                      )
-                    : buildIconButton(
+                : !(File(path).existsSync() || File(sentPath).existsSync())
+                    ? buildIconButton(
                         onTap: () async {
                           await downloadFiles();
                         },
-                        icon: AppVectors.icDownloadFile,
-                      );
+                        onDisableTap: () {
+                          showFileHasExpiredDialog(
+                              MediaQuery.of(context).textScaleFactor);
+                        },
+                        activeIcon: AppVectors.icDownloadFile,
+                        disableIcon: AppVectors.icDownloadDisable,
+                        isActive: canDownload,
+                      )
+                    : SizedBox.shrink();
       },
     );
   }
@@ -304,44 +300,47 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
             .add(PlatformFile(
               name: widget.data.name ?? '',
               size: widget.data.size ?? 0,
-              path: path,
+              path: File(path).existsSync() ? path : sentPath,
             ));
         Provider.of<FileTransferProvider>(context, listen: false).notify();
         Provider.of<WelcomeScreenProvider>(context, listen: false)
             .changeBottomNavigationIndex(0);
       },
-      icon: AppVectors.icSendFile,
+      activeIcon: AppVectors.icSendFile,
+      disableIcon: AppVectors.icSendDisable,
+      isActive: File(path).existsSync() || File(sentPath).existsSync(),
     );
   }
 
   Widget buildDeleteButton() {
     return buildIconButton(
-      onTap: () {
-        CommonUtilityFunctions().showConfirmationDialog(
-          () {
-            File(path).deleteSync();
-            SnackbarService().showSnackbar(
-              context,
-              "Successfully deleted the file",
-              bgColor: ColorConstants.successColor,
-            );
+      onTap: () async {
+        await FileUtils.deleteFile(
+          File(path).existsSync() ? path : sentPath,
+          fileTransferId: widget.fileTransfer?.key,
+          onComplete: () {
             Provider.of<HistoryProvider>(context, listen: false).notify();
           },
-          'Are you sure you want to delete ${widget.data.name}?',
+          type: widget.type ?? HistoryType.send,
         );
       },
-      icon: AppVectors.icDeleteFile,
+      activeIcon: AppVectors.icDeleteFile,
+      disableIcon: AppVectors.icDeleteDisable,
+      isActive: File(path).existsSync() || File(sentPath).existsSync(),
     );
   }
 
   Widget buildIconButton({
     required Function() onTap,
-    required String icon,
+    required String activeIcon,
+    required String disableIcon,
+    required bool isActive,
+    Function()? onDisableTap,
   }) {
     return InkWell(
-      onTap: onTap,
+      onTap: isActive ? onTap : onDisableTap,
       child: SvgPicture.asset(
-        icon,
+        isActive ? activeIcon : disableIcon,
         width: 32,
         height: 32,
         fit: BoxFit.cover,
@@ -433,10 +432,44 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
     }
   }
 
-  Future<bool> checkFileExist() async {
-    String filePath = path;
-
-    File file = File(filePath);
-    return await file.exists();
+  void showFileHasExpiredDialog(double deviceTextFactor) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      TextStrings().fileHasExpired,
+                      style: CustomTextStyles.primaryBold17,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
+                        isInverted: false,
+                        buttonText: TextStrings().buttonClose,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

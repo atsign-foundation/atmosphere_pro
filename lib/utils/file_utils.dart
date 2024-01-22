@@ -25,11 +25,12 @@ class FileUtils {
     String filePath, {
     String? fileTransferId,
     Function()? onComplete,
+    HistoryType type = HistoryType.received,
   }) async {
     await CommonUtilityFunctions().showConfirmationDialog(
       () async {
-        if (File(filePath).existsSync()) File(filePath).deleteSync();
-        if (fileTransferId != null) {
+        if (await File(filePath).exists()) await File(filePath).delete();
+        if (fileTransferId != null && type == HistoryType.received) {
           await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                   listen: false)
               .removeParticularFile(

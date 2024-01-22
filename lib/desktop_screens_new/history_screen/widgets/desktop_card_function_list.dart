@@ -75,8 +75,22 @@ class _DesktopCardFunctionListState extends State<DesktopCardFunctionList> {
             onTap: () {
               CommonUtilityFunctions().showConfirmationDialog(
                 () {
-                  widget.fileTransfer.files!.forEach((e) {
-                    File(getFilePath(name: e.name ?? '')).deleteSync();
+                  widget.fileTransfer.files!.forEach((e) async {
+                    await File(getFilePath(name: e.name ?? '')).delete();
+                    await Provider.of<MyFilesProvider>(
+                            NavService.navKey.currentContext!,
+                            listen: false)
+                        .removeParticularFile(
+                      widget.fileTransfer.key,
+                      getFilePath(name: e.name ?? '')
+                          .split(Platform.pathSeparator)
+                          .last,
+                    );
+
+                    await Provider.of<MyFilesProvider>(
+                            NavService.navKey.currentContext!,
+                            listen: false)
+                        .getAllFiles();
                   });
                   SnackbarService().showSnackbar(
                     context,

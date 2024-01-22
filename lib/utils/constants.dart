@@ -178,14 +178,10 @@ class MixedConstants {
   /// does not create the directory if does not exists
   static String getFileSentLocationSync() {
     String _sentPath = '';
-    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-          Platform.pathSeparator +
-          'sent-files';
-      return _sentPath;
-    } else {
-      return BackendService.getInstance().atClientPreference.downloadPath!;
-    }
+    _sentPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
+        Platform.pathSeparator +
+        'sent-files';
+    return _sentPath;
   }
 
   ///Return true, if date is yesterday

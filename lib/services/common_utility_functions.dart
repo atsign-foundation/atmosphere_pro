@@ -829,17 +829,14 @@ class CommonUtilityFunctions {
                               onTap: () async {
                                 await openFilePath(path);
                               },
-                              child: Container(
-                                // height: double.infinity,
-                                width: double.infinity,
-                                margin: EdgeInsets.symmetric(horizontal: 33),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: FileImage(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 33),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(
                                       File(path),
                                     ),
-                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),

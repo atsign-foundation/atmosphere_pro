@@ -1,5 +1,4 @@
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
-import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -23,40 +22,48 @@ class EmptyContactsWidget extends StatelessWidget {
         ? _buildEmptyImage()
         : contactsType == ListContactType.trusted
             ? Padding(
-                padding: const EdgeInsets.only(top: 100),
+                padding: const EdgeInsets.only(top: 76),
                 child: SizedBox(
                   width: double.infinity,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Add contacts to trusted by",
+                        "Add contacts to trusted by selecting",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
                           color: ColorConstants.grey,
                         ),
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            "selecting",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: ColorConstants.grey,
+                      SizedBox(height: 8),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 52, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: ColorConstants.unbleachedSilk,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              "Add To Trusted",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: ColorConstants.portlandOrange,
+                              ),
                             ),
-                          ),
-                          SvgPicture.asset(
-                            AppVectors.icBigTrustActivated,
-                          ),
-                          Text(
-                            "next to their name!",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: ColorConstants.grey,
+                            SizedBox(width: 16),
+                            SvgPicture.asset(
+                              AppVectors.icBigTrustActivated,
+                              color: ColorConstants.portlandOrange,
+                              width: 20,
+                              height: 20,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

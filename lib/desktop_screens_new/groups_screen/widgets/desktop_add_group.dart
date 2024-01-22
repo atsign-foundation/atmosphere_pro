@@ -68,9 +68,9 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
     groupNameController = TextEditingController();
     _groupService = GroupService();
     _contactService = ContactService();
-    _groupService.fetchGroupsAndContacts(isDesktop: true);
     addGroupProvider = context.read<DesktopAddGroupProvider>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _groupService.fetchGroupsAndContacts(isDesktop: true);
       addGroupProvider.setGroupName('');
       addGroupProvider.setSelectedImageByteData(Uint8List(0));
     });
@@ -94,7 +94,9 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
           titleText: 'Add New Group',
           titleTextStyle: CustomTextStyles.blackW50020,
           leadingIcon: InkWell(
-            onTap: widget.onDoneTap(false),
+            onTap: () {
+              widget.onDoneTap.call(false);
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: SvgPicture.asset(
