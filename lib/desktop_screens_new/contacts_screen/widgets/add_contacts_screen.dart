@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
@@ -34,6 +36,8 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
 
   var isValid = CheckValid.idle;
 
+  Timer? _debounce;
+
   @override
   void initState() {
     addContactProvider = context.read<AddContactProvider>();
@@ -41,6 +45,12 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
     nicknameController = TextEditingController();
     super.initState();
     addContactProvider.initData();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 
   @override
@@ -118,9 +128,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
                                   fontSize: 14.toFont,
                                   color: Colors.black,
                                 ),
-                                onchange: (value) async {
-                                  await _checkValid(value);
-                                },
+                                onchange: _onSearchChanged,
                               ),
                               Visibility(
                                 visible: state.atSignError.isNotEmpty,
@@ -286,5 +294,15 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void _onSearchChanged(String atSign) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(
+      const Duration(milliseconds: 500),
+      () async {
+        await _checkValid(atSign);
+      },
+    );
   }
 }

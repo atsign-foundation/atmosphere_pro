@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/gradient_text_field_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -29,6 +30,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   var isValid = CheckValid.idle;
 
+  Timer? _debounce;
+
   @override
   void initState() {
     addContactProvider = context.read<AddContactProvider>();
@@ -36,6 +39,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
     nicknameController = TextEditingController();
     super.initState();
     addContactProvider.initData();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 
   @override
@@ -108,9 +117,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                   fontSize: 14.toFont,
                                   color: Colors.black,
                                 ),
-                                onchange: (value) async {
-                                  await _checkValid(value);
-                                },
+                                onchange: _onSearchChanged,
                               ),
                               Visibility(
                                 visible: state.atSignError.isNotEmpty,
@@ -272,5 +279,15 @@ class _AddContactScreenState extends State<AddContactScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void _onSearchChanged(String atSign) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(
+      const Duration(milliseconds: 500),
+      () async {
+        await _checkValid(atSign);
+      },
+    );
   }
 }
