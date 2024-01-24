@@ -48,7 +48,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                             Theme.of(context).primaryColor)),
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      await widget.onConfirmation.call();
+                      widget.onConfirmation.call();
                     },
                     child: Text(TextStrings().yes,
                         style: TextStyle(

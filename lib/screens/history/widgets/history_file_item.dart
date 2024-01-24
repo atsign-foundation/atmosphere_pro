@@ -10,6 +10,7 @@ import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -30,12 +31,14 @@ class HistoryFileItem extends StatefulWidget {
   final FileTransfer? fileTransfer;
   final HistoryType? type;
   final FileData data;
+  final Function() openFile;
 
   const HistoryFileItem({
     Key? key,
     required this.type,
     required this.fileTransfer,
     required this.data,
+    required this.openFile,
   });
 
   @override
@@ -44,6 +47,7 @@ class HistoryFileItem extends StatefulWidget {
 
 class _HistoryFileItemState extends State<HistoryFileItem> {
   String path = '';
+  String sentPath = '';
   bool isDownloading = false;
   late bool canDownload = CommonUtilityFunctions()
       .isFileDownloadAvailable(widget.fileTransfer?.date ?? DateTime.now());
@@ -55,13 +59,12 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   }
 
   void getFilePath() async {
-    path = widget.type == HistoryType.received
-        ? BackendService.getInstance().downloadDirectory!.path +
-            Platform.pathSeparator +
-            (widget.data.name ?? '')
-        : await MixedConstants.getFileSentLocation() +
-            Platform.pathSeparator +
-            (widget.data.name ?? '');
+    path = BackendService.getInstance().downloadDirectory!.path +
+        Platform.pathSeparator +
+        (widget.data.name ?? '');
+    sentPath = await MixedConstants.getFileSentLocation() +
+        Platform.pathSeparator +
+        (widget.data.name ?? '');
     setState(() {});
   }
 
@@ -69,116 +72,121 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   Widget build(BuildContext context) {
     final String fileFormat = '.${widget.data.name?.split('.').last}';
     return Slidable(
-      endActionPane: canDownload || File(path).existsSync()
-          ? ActionPane(
-              motion: ScrollMotion(),
-              extentRatio: 0.4,
-              children: [
-                if (!File(path).existsSync()) ...[
-                  SizedBox(width: 4),
-                  widget.type == HistoryType.received
-                      ? buildDownloadButton()
-                      : SizedBox.shrink(),
-                ],
-                if (File(path).existsSync()) ...[
-                  SizedBox(width: 4),
-                  buildTransferButton(),
-                  SizedBox(width: 4),
-                  buildDeleteButton(),
-                ]
-              ],
-            )
-          : null,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      endActionPane: ActionPane(
+        motion: ScrollMotion(),
+        extentRatio: 0.5,
         children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  constraints: BoxConstraints(minHeight: 52),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: ColorConstants.fileItemColor,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(width: 44),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 12, 12, 16),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: widget.data.name
-                                            ?.replaceAll(fileFormat, ''),
-                                        style: CustomTextStyles.blackW60012,
-                                      ),
-                                      TextSpan(
-                                        text: fileFormat,
-                                        style: CustomTextStyles.blackW40012,
-                                      )
-                                    ],
+          SizedBox(width: 4),
+          buildDownloadButton(),
+          SizedBox(width: 4),
+          buildTransferButton(),
+          SizedBox(width: 4),
+          buildDeleteButton(),
+        ],
+      ),
+      child: InkWell(
+        onTap: () async {
+          if (!File(path).existsSync() && !File(sentPath).existsSync()) {
+            canDownload
+                ? await downloadFiles()
+                : CommonUtilityFunctions().showFileHasExpiredDialog(
+                    MediaQuery.textScaleFactorOf(context),
+                  );
+          } else if (File(path).existsSync() || File(sentPath).existsSync()) {
+            widget.openFile.call();
+          }
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    constraints: BoxConstraints(minHeight: 52),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: ColorConstants.fileItemColor,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 44),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 12, 12, 16),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: widget.data.name
+                                              ?.replaceAll(fileFormat, ''),
+                                          style: CustomTextStyles.blackW60012,
+                                        ),
+                                        TextSpan(
+                                          text: fileFormat,
+                                          style: CustomTextStyles.blackW40012,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                                style: CustomTextStyles.oldSliverW400S12,
-                              ),
-                            ],
+                                SizedBox(width: 4),
+                                Text(
+                                  '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                  style: CustomTextStyles.oldSliverW400S12,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.horizontal(
-                      left: Radius.circular(5),
+                        )
+                      ],
                     ),
-                    child: SizedBox(
-                      width: 44,
-                      child: thumbnail(
-                        fileFormat.substring(1),
-                        path,
+                  ),
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.horizontal(
+                        left: Radius.circular(5),
+                      ),
+                      child: SizedBox(
+                        width: 44,
+                        child: thumbnail(
+                          fileFormat.substring(1),
+                          File(path).existsSync() ? path : sentPath,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: File(path).existsSync() ? 8 : 12),
-          if (File(path).existsSync())
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: ColorConstants.lightGreen,
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.done_all,
-                  size: 20,
-                  color: ColorConstants.textGreen,
-                ),
+                ],
               ),
             ),
-        ],
+            SizedBox(width: File(path).existsSync() ? 8 : 12),
+            if (File(path).existsSync() || File(sentPath).existsSync())
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorConstants.lightGreen,
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.done_all,
+                    size: 20,
+                    color: ColorConstants.textGreen,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -270,28 +278,30 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                   ),
                 ],
               )
-            : File(path).existsSync()
-                ? SvgPicture.asset(
-                    AppVectors.icCloudDownloaded,
+            : isDownloading
+                ? SizedBox(
                     width: 32,
                     height: 32,
-                    fit: BoxFit.cover,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                      color: ColorConstants.downloadIndicatorColor,
+                    ),
                   )
-                : isDownloading
-                    ? SizedBox(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          color: ColorConstants.downloadIndicatorColor,
-                        ),
-                      )
-                    : buildIconButton(
+                : !(File(path).existsSync() || File(sentPath).existsSync())
+                    ? buildIconButton(
                         onTap: () async {
                           await downloadFiles();
                         },
-                        icon: AppVectors.icDownloadFile,
-                      );
+                        onDisableTap: () {
+                          CommonUtilityFunctions().showFileHasExpiredDialog(
+                            MediaQuery.textScaleFactorOf(context),
+                          );
+                        },
+                        activeIcon: AppVectors.icDownloadFile,
+                        disableIcon: AppVectors.icDownloadDisable,
+                        isActive: canDownload,
+                      )
+                    : SizedBox.shrink();
       },
     );
   }
@@ -304,44 +314,48 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
             .add(PlatformFile(
               name: widget.data.name ?? '',
               size: widget.data.size ?? 0,
-              path: path,
+              path: File(path).existsSync() ? path : sentPath,
             ));
         Provider.of<FileTransferProvider>(context, listen: false).notify();
         Provider.of<WelcomeScreenProvider>(context, listen: false)
             .changeBottomNavigationIndex(0);
       },
-      icon: AppVectors.icSendFile,
+      activeIcon: AppVectors.icSendFile,
+      disableIcon: AppVectors.icSendDisable,
+      isActive: File(path).existsSync() || File(sentPath).existsSync(),
     );
   }
 
   Widget buildDeleteButton() {
     return buildIconButton(
-      onTap: () {
-        CommonUtilityFunctions().showConfirmationDialog(
-          () {
-            File(path).deleteSync();
-            SnackbarService().showSnackbar(
-              context,
-              "Successfully deleted the file",
-              bgColor: ColorConstants.successColor,
-            );
+      onTap: () async {
+        await FileUtils.deleteFile(
+          File(path).existsSync() ? path : sentPath,
+          fileTransferId: widget.fileTransfer?.key,
+          date: widget.fileTransfer?.date ?? DateTime.now(),
+          onComplete: () {
             Provider.of<HistoryProvider>(context, listen: false).notify();
           },
-          'Are you sure you want to delete ${widget.data.name}?',
+          type: widget.type ?? HistoryType.send,
         );
       },
-      icon: AppVectors.icDeleteFile,
+      activeIcon: AppVectors.icDeleteFile,
+      disableIcon: AppVectors.icDeleteDisable,
+      isActive: File(path).existsSync() || File(sentPath).existsSync(),
     );
   }
 
   Widget buildIconButton({
     required Function() onTap,
-    required String icon,
+    required String activeIcon,
+    required String disableIcon,
+    required bool isActive,
+    Function()? onDisableTap,
   }) {
     return InkWell(
-      onTap: onTap,
+      onTap: isActive ? onTap : onDisableTap,
       child: SvgPicture.asset(
-        icon,
+        isActive ? activeIcon : disableIcon,
         width: 32,
         height: 32,
         fit: BoxFit.cover,
@@ -350,6 +364,14 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   }
 
   Future<void> downloadFiles() async {
+    if (isDownloading) {
+      SnackbarService().showSnackbar(
+        context,
+        'File is downloading!',
+        bgColor: ColorConstants.orange,
+      );
+      return;
+    }
     setState(() {
       isDownloading = true;
     });
@@ -431,12 +453,5 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
         });
       }
     }
-  }
-
-  Future<bool> checkFileExist() async {
-    String filePath = path;
-
-    File file = File(filePath);
-    return await file.exists();
   }
 }

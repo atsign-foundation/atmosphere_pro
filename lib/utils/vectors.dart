@@ -95,4 +95,7 @@ class AppVectors {
   static String icUncheckedAll = '$_basePath/ic_unchecked_all.svg';
   static String icTooltip = '$_basePath/ic_tooltip.svg';
 
+  static String icDownloadDisable = '$_basePath/ic_download_disable.svg';
+  static String icSendDisable = '$_basePath/ic_send_disable.svg';
+  static String icDeleteDisable = '$_basePath/ic_delete_disable.svg';
 }

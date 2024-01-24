@@ -113,7 +113,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                   ? '${TextStrings().initialisingFor} $currentatSign...'
                   : (currentatSign != null && !onboardError
                       ? TextStrings().authenticating
-                      : 'Upload atSign'),
+                      : 'Get Started'),
               (currentatSign != null && !onboardError)
                   ? null
                   : () {

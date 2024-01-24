@@ -245,7 +245,7 @@ class _HomeState extends State<Home> {
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: Text(
-                                    "Upload atSign",
+                                    "Get Started",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 18.toFont,

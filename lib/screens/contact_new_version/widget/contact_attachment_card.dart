@@ -474,14 +474,11 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                     onTap: () async {
                       await OpenFile.open(filePath);
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
+                    child: Center(
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: MemoryImage(
-                            imageBytes,
-                          ),
-                          fit: BoxFit.cover,
+                        child: Image.memory(
+                          imageBytes,
                         ),
                       ),
                     ),

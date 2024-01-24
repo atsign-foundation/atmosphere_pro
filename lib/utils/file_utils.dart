@@ -25,20 +25,25 @@ class FileUtils {
     String filePath, {
     String? fileTransferId,
     Function()? onComplete,
+    required DateTime date,
+    HistoryType type = HistoryType.received,
   }) async {
     await CommonUtilityFunctions().showConfirmationDialog(
       () async {
-        if (File(filePath).existsSync()) File(filePath).deleteSync();
-        if (fileTransferId != null) {
+        final isNotExpired =
+            CommonUtilityFunctions().isFileDownloadAvailable(date);
+        if (await File(filePath).exists()) await File(filePath).delete();
+        if (fileTransferId != null &&
+            type == HistoryType.received &&
+            isNotExpired) {
           await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                   listen: false)
               .removeParticularFile(
                   fileTransferId, filePath.split(Platform.pathSeparator).last);
-
-          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                  listen: false)
-              .getAllFiles();
         }
+        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .getAllFiles();
         onComplete?.call();
         SnackbarService().showSnackbar(
           NavService.navKey.currentContext!,

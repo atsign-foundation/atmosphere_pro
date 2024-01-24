@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
@@ -49,29 +48,18 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   @override
   Widget build(BuildContext context) {
     return Slidable(
-      endActionPane: isFilesPresent(widget.fileHistory.fileDetails!) ||
-              canDownload
-          ? ActionPane(
-              motion: ScrollMotion(),
-              extentRatio: 0.6,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 16),
-                  child: CommonUtilityFunctions().isFileDownloadAvailable(
-                              widget.fileHistory.fileTransferObject!.date!) &&
-                          widget.fileHistory.type == HistoryType.received
-                      ? buildDownloadButton()
-                      : SizedBox.shrink(),
-                ),
-                if (isFilesPresent(widget.fileHistory.fileDetails!)) ...[
-                  SizedBox(width: 12),
-                  buildTransferButton(),
-                  SizedBox(width: 12),
-                  buildDeleteButton(),
-                ]
-              ],
-            )
-          : null,
+      endActionPane: ActionPane(
+        motion: ScrollMotion(),
+        extentRatio: 0.6,
+        children: [
+          SizedBox(width: 12),
+          buildDownloadButton(),
+          SizedBox(width: 12),
+          buildTransferButton(),
+          SizedBox(width: 12),
+          buildDeleteButton(),
+        ],
+      ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
@@ -127,7 +115,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
                   ),
                 ],
               )
-            : isFilesPresent(widget.fileHistory.fileDetails!)
+            : isAnyFilesPresent(widget.fileHistory.fileDetails!)
                 ? SizedBox(
                     width: 40,
                     height: 40,
@@ -148,7 +136,14 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
                         onTap: () async {
                           await downloadFiles(widget.fileHistory.fileDetails);
                         },
-                        icon: AppVectors.icDownloadFile,
+                        onDisableTap: () {
+                          CommonUtilityFunctions().showFileHasExpiredDialog(
+                            MediaQuery.textScaleFactorOf(context),
+                          );
+                        },
+                        activeIcon: AppVectors.icDownloadFile,
+                        disableIcon: AppVectors.icDownloadDisable,
+                        isActive: canDownload,
                       );
       },
     );
@@ -160,6 +155,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
         Provider.of<FileTransferProvider>(context, listen: false)
             .selectedFiles
             .addAll(widget.fileHistory.fileDetails!.files!
+                .where((e) => checkFileExist(data: e))
                 .map(
                   (e) => PlatformFile(
                     name: e.name ?? '',
@@ -172,7 +168,9 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
         Provider.of<WelcomeScreenProvider>(context, listen: false)
             .changeBottomNavigationIndex(0);
       },
-      icon: AppVectors.icSendFile,
+      activeIcon: AppVectors.icSendFile,
+      disableIcon: AppVectors.icSendDisable,
+      isActive: isAnyFilesPresent(widget.fileHistory.fileDetails!),
     );
   }
 
@@ -181,8 +179,22 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
       onTap: () {
         CommonUtilityFunctions().showConfirmationDialog(
           () {
-            widget.fileHistory.fileDetails!.files!.forEach((e) {
-              File(getFilePath(e.name ?? '')).deleteSync();
+            widget.fileHistory.fileDetails!.files!.forEach((e) async {
+              if (checkFileExist(data: e)) {
+                await File(getFilePath(e.name ?? '')).delete();
+                await Provider.of<MyFilesProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .removeParticularFile(
+                  widget.fileHistory.fileDetails?.key ?? '',
+                  getFilePath(e.name ?? '').split(Platform.pathSeparator).last,
+                );
+
+                await Provider.of<MyFilesProvider>(
+                        NavService.navKey.currentContext!,
+                        listen: false)
+                    .getAllFiles();
+              }
             });
             SnackbarService().showSnackbar(
               context,
@@ -194,18 +206,23 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           'Are you sure you want to delete the file(s)?',
         );
       },
-      icon: AppVectors.icDeleteFile,
+      activeIcon: AppVectors.icDeleteFile,
+      disableIcon: AppVectors.icDeleteDisable,
+      isActive: isAnyFilesPresent(widget.fileHistory.fileDetails!),
     );
   }
 
   Widget buildIconButton({
     required Function() onTap,
-    required String icon,
+    required String activeIcon,
+    required String disableIcon,
+    required bool isActive,
+    Function()? onDisableTap,
   }) {
     return InkWell(
-      onTap: onTap,
+      onTap: isActive ? onTap : onDisableTap,
       child: SvgPicture.asset(
-        icon,
+        isActive ? activeIcon : disableIcon,
         width: 40,
         height: 40,
         fit: BoxFit.cover,
@@ -276,7 +293,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
             setState(() {
               isDownloading = false;
             });
-            isFilesPresent(widget.fileHistory.fileDetails!);
+            isAnyFilesPresent(widget.fileHistory.fileDetails!);
             return;
           }
         }
@@ -287,7 +304,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
         isDownloading = false;
       });
       Provider.of<HistoryProvider>(context, listen: false).notify();
-      isFilesPresent(widget.fileHistory.fileDetails!);
+      isAnyFilesPresent(widget.fileHistory.fileDetails!);
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
         TextStrings().fileDownloadd,
@@ -296,14 +313,11 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
     }
   }
 
-  bool isFilesPresent(FileTransfer files) {
-    bool isPresented = true;
-    for (FileData i in files.files ?? []) {
-      final bool isExist = checkFileExist(data: i);
-      if (!isExist) {
-        isPresented = false;
-      }
-    }
+  bool isAnyFilesPresent(FileTransfer files) {
+    bool isPresented = (files.files ?? []).any((element) {
+      final bool isExist = checkFileExist(data: element);
+      return isExist;
+    });
     if (context.read<HistoryProvider>().isDownloadDone) {
       context.read<HistoryProvider>().resetIsDownloadDone();
     }

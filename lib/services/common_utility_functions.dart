@@ -829,17 +829,14 @@ class CommonUtilityFunctions {
                               onTap: () async {
                                 await openFilePath(path);
                               },
-                              child: Container(
-                                // height: double.infinity,
-                                width: double.infinity,
-                                margin: EdgeInsets.symmetric(horizontal: 33),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: FileImage(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 33),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(
                                       File(path),
                                     ),
-                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -1125,6 +1122,47 @@ class CommonUtilityFunctions {
                   Text(
                     TextStrings().noFileFound,
                     style: CustomTextStyles.primaryBold16,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
+                        isInverted: false,
+                        buttonText: TextStrings().buttonClose,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void showFileHasExpiredDialog(double deviceTextFactor) {
+    showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      TextStrings().fileHasExpired,
+                      style: CustomTextStyles.primaryBold17,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   Padding(padding: EdgeInsets.only(top: 30.0)),
                   Row(

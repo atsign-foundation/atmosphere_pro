@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -34,6 +35,7 @@ class HistoryStatusBadges extends StatefulWidget {
 
 class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
   bool isDownloading = false;
+
   int get numberFileUnread {
     int result = 0;
     List<String> listFileName = (widget.fileHistory.fileDetails?.files ?? [])
@@ -173,12 +175,24 @@ class _HistoryStatusBadgesState extends State<HistoryStatusBadges> {
                           color: ColorConstants.downloadIndicatorColor,
                         ),
                       )
-                    : buildIconButton(
-                        onTap: () async {
-                          await downloadFiles(widget.fileHistory.fileDetails);
-                        },
-                        icon: AppVectors.icDownloadFile,
-                      );
+                    : CommonUtilityFunctions().isFileDownloadAvailable(
+                            widget.fileHistory.fileDetails?.date ??
+                                DateTime.now())
+                        ? buildIconButton(
+                            onTap: () async {
+                              await downloadFiles(
+                                  widget.fileHistory.fileDetails);
+                            },
+                            icon: AppVectors.icDownloadFile,
+                          )
+                        : buildIconButton(
+                            onTap: () {
+                              CommonUtilityFunctions().showFileHasExpiredDialog(
+                                MediaQuery.textScaleFactorOf(context),
+                              );
+                            },
+                            icon: AppVectors.icDownloadDisable,
+                          );
       },
     );
   }

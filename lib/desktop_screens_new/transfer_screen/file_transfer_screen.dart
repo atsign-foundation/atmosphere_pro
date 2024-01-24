@@ -11,6 +11,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/common_widgets/file_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/widgets/add_contacts_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_add_group.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/transfer_screen/widgets/add_contact_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
@@ -712,33 +713,68 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Spacer(),
-                            CommonButton(
-                              'Add contact',
-                              () async {
-                                await showAddContactDialog()
-                                    .then((value) async {
-                                  if (value) {
-                                    if (searchController.text.isNotEmpty) {
-                                      searchController.clear();
-                                    }
-                                    await GroupService().fetchGroupsAndContacts(
-                                        isDesktop: true);
-                                    filteredContactList = [
-                                      ...GroupService().allContacts
-                                    ];
-                                    setDialogState(() {});
-                                  }
-                                });
-                              },
-                              color: Color(0xFFF07C50),
-                              border: 20,
-                              height: 40,
-                              width: 136,
-                              fontSize: 18,
-                              removePadding: true,
-                            )
                           ],
+                        ),
+                        SizedBox(height: 30),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CommonButton(
+                                'Add contact',
+                                () async {
+                                  await showAddContactDialog()
+                                      .then((value) async {
+                                    if (value) {
+                                      if (searchController.text.isNotEmpty) {
+                                        searchController.clear();
+                                      }
+                                      await GroupService()
+                                          .fetchGroupsAndContacts(
+                                              isDesktop: true);
+                                      filteredContactList = [
+                                        ...GroupService().allContacts
+                                      ];
+                                      setDialogState(() {});
+                                    }
+                                  });
+                                },
+                                color: Color(0xFFF07C50),
+                                border: 20,
+                                height: 40,
+                                width: 136,
+                                fontSize: 18,
+                                removePadding: true,
+                              ),
+                              CommonButton(
+                                'Add group',
+                                () async {
+                                  await showAddGroupDialog()
+                                      .then((value) async {
+                                    if (value) {
+                                      if (searchController.text.isNotEmpty) {
+                                        searchController.clear();
+                                      }
+                                      await GroupService()
+                                          .fetchGroupsAndContacts(
+                                              isDesktop: true);
+                                      filteredContactList = [
+                                        ...GroupService().allContacts
+                                      ];
+                                      setDialogState(() {});
+                                    }
+                                  });
+                                },
+                                color: Color(0xFFF07C50),
+                                border: 20,
+                                height: 40,
+                                width: 136,
+                                fontSize: 18,
+                                removePadding: true,
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 30),
                         Row(
@@ -972,6 +1008,39 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
               width: 400.toWidth,
               child: DesktopAddContactScreen(
                 onBack: (value) async {
+                  Navigator.pop(context);
+                  if (value) {
+                    shouldRefresh = value;
+                  }
+                },
+              ),
+            ),
+          );
+        });
+    return shouldRefresh;
+  }
+
+  Future<bool> showAddGroupDialog() async {
+    bool shouldRefresh = false;
+    await showDialog(
+        context: context,
+        barrierColor: Colors.transparent,
+        barrierDismissible: true,
+        builder: (context) {
+          return Dialog(
+            insetPadding: EdgeInsets.zero,
+            alignment: Alignment.centerRight,
+            elevation: 5.0,
+            clipBehavior: Clip.hardEdge,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              clipBehavior: Clip.hardEdge,
+              width: 400.toWidth,
+              child: DesktopAddGroup(
+                onDoneTap: (value) {
                   Navigator.pop(context);
                   if (value) {
                     shouldRefresh = value;

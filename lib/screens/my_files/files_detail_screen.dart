@@ -225,6 +225,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                           Platform.pathSeparator +
                           files[index].fileName!,
                       fileTransferId: files[index].fileTransferId,
+                      date: DateTime.parse(files[index].date ?? "").toLocal(),
                       onComplete: () {
                         files.removeAt(index);
                       },
@@ -307,6 +308,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                             Platform.pathSeparator +
                             files[index].fileName!,
                         fileTransferId: files[index].fileTransferId,
+                        date: DateTime.parse(files[index].date ?? "").toLocal(),
                         onComplete: () {
                           files.removeAt(index);
                         },
@@ -369,9 +371,11 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   extension: files[index].fileName?.split(".").last ?? "",
                   onDelete: () async {
                     await FileUtils.deleteFile(
-                        BackendService.getInstance().downloadDirectory!.path +
-                            Platform.pathSeparator +
-                            files[index].fileName!);
+                      BackendService.getInstance().downloadDirectory!.path +
+                          Platform.pathSeparator +
+                          files[index].fileName!,
+                      date: DateTime.parse(files[index].date ?? "").toLocal(),
+                    );
                     if (mounted) {
                       Navigator.pop(context);
                     }
@@ -411,6 +415,8 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                                 Platform.pathSeparator +
                                 files[index].fileName!,
                             fileTransferId: files[index].fileTransferId,
+                            date: DateTime.parse(files[index].date ?? "")
+                                .toLocal(),
                             onComplete: () {
                               files.removeAt(index);
                             },
