@@ -242,7 +242,7 @@ class _FilesDetailScreenState extends State<FilesDetailScreen> {
                   files[index].fileName ?? "",
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 8.toFont,
+                    fontSize: 12.toFont,
                     fontWeight: FontWeight.w500,
                     overflow: TextOverflow.ellipsis,
                   ),
