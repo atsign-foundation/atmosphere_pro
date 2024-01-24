@@ -157,7 +157,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                           : '${(filePickerProvider!.totalSize / (1024 * 1024)).toStringAsFixed(2)} Mb . ${filePickerProvider!.selectedFiles.length} file(s)',
                       style: TextStyle(
                         color: ColorConstants.fadedText,
-                        fontSize: 10.toFont,
+                        fontSize: 12.toFont,
                         fontWeight: FontWeight.normal,
                       ),
                     ),

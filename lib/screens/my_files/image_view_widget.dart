@@ -116,7 +116,7 @@ class ImageViewWidget extends StatelessWidget {
                       Text(
                         "$shortDate",
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           color: ColorConstants.oldSliver,
                         ),
                       ),
@@ -131,7 +131,7 @@ class ImageViewWidget extends StatelessWidget {
                       Text(
                         "$time",
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           color: ColorConstants.oldSliver,
                         ),
                       ),
@@ -153,7 +153,7 @@ class ImageViewWidget extends StatelessWidget {
                     decimals: 2,
                   ),
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 12,
                     color: ColorConstants.oldSliver,
                   ),
                 ),
@@ -171,7 +171,7 @@ class ImageViewWidget extends StatelessWidget {
                   "${image.contactName}",
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 10,
+                    fontSize: 12,
                   ),
                 ),
                 SizedBox(height: 13),
@@ -180,7 +180,7 @@ class ImageViewWidget extends StatelessWidget {
                   style: TextStyle(
                     color: ColorConstants.textLightGray,
                     fontWeight: FontWeight.w500,
-                    fontSize: 10,
+                    fontSize: 12,
                   ),
                 ),
                 SizedBox(height: 5),
@@ -189,7 +189,7 @@ class ImageViewWidget extends StatelessWidget {
                   style: TextStyle(
                     color: ColorConstants.textLightGray,
                     fontWeight: FontWeight.w500,
-                    fontSize: 10,
+                    fontSize: 12,
                   ),
                 ),
               ],

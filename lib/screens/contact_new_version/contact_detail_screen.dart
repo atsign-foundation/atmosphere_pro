@@ -149,7 +149,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                                   "Nickname",
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 8,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500),
                                 )
                               : SizedBox(),
@@ -316,7 +316,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 child: Text(
                   "Files ${widget.contact.atSign ?? ''} has sent you",
                   style: TextStyle(
-                    fontSize: 10.toFont,
+                    fontSize: 12.toFont,
                     fontWeight: FontWeight.w400,
                     color: ColorConstants.oldSliver,
                   ),

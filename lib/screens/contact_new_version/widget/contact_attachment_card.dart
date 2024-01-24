@@ -140,7 +140,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -151,7 +151,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                               .formatDateTime(widget.fileTransfer.date!),
                           style: TextStyle(
                             color: ColorConstants.grey,
-                            fontSize: 10,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -251,7 +251,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                                 TextStrings().mb,
                         style: TextStyle(
                           color: ColorConstants.grey,
-                          fontSize: 10,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -542,7 +542,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                               Text(
                                 "$shortDate",
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
                               ),
@@ -557,7 +557,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                               Text(
                                 "$time",
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: ColorConstants.oldSliver,
                                 ),
                               ),
@@ -579,7 +579,7 @@ class _ContactAttachmentCardState extends State<ContactAttachmentCard>
                                   TextStrings().mb,
                           style: TextStyle(
                             color: ColorConstants.grey,
-                            fontSize: 10,
+                            fontSize: 12,
                           ),
                           textAlign: TextAlign.left,
                         ),

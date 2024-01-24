@@ -45,7 +45,7 @@ class BottomNavigationWidget extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 10.toFont,
+                fontSize: 12.toFont,
                 color:
                     indexSelected == index ? Colors.black : Color(0xFFAEAEAE),
                 fontWeight: FontWeight.w500,
