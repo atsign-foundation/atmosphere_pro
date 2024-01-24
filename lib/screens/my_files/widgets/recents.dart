@@ -50,7 +50,10 @@ class _RecentsState extends State<Recents> {
                       return fileCard(provider.recentFile[index].fileName,
                           provider.recentFile[index].filePath,
                           fileTransferId:
-                              provider.recentFile[index].fileTransferId);
+                              provider.recentFile[index].fileTransferId,
+                          date: DateTime.parse(
+                                  provider.recentFile[index].date ?? '')
+                              .toLocal());
                     }),
               );
       },
@@ -58,10 +61,19 @@ class _RecentsState extends State<Recents> {
   }
 }
 
-Widget fileCard(String? title, String? filePath, {String? fileTransferId}) {
+Widget fileCard(
+  String? title,
+  String? filePath, {
+  String? fileTransferId,
+  required DateTime date,
+}) {
   return InkWell(
     onLongPress: () {
-      FileUtils.deleteFile(filePath!, fileTransferId: fileTransferId);
+      FileUtils.deleteFile(
+        filePath!,
+        fileTransferId: fileTransferId,
+        date: date,
+      );
     },
     child: Column(
       children: <Widget>[

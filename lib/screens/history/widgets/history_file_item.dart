@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
@@ -33,12 +31,14 @@ class HistoryFileItem extends StatefulWidget {
   final FileTransfer? fileTransfer;
   final HistoryType? type;
   final FileData data;
+  final Function() openFile;
 
   const HistoryFileItem({
     Key? key,
     required this.type,
     required this.fileTransfer,
     required this.data,
+    required this.openFile,
   });
 
   @override
@@ -74,7 +74,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
     return Slidable(
       endActionPane: ActionPane(
         motion: ScrollMotion(),
-        extentRatio: 0.4,
+        extentRatio: 0.5,
         children: [
           SizedBox(width: 4),
           buildDownloadButton(),
@@ -84,96 +84,109 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
           buildDeleteButton(),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  constraints: BoxConstraints(minHeight: 52),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: ColorConstants.fileItemColor,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(width: 44),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 12, 12, 16),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: widget.data.name
-                                            ?.replaceAll(fileFormat, ''),
-                                        style: CustomTextStyles.blackW60012,
-                                      ),
-                                      TextSpan(
-                                        text: fileFormat,
-                                        style: CustomTextStyles.blackW40012,
-                                      )
-                                    ],
+      child: InkWell(
+        onTap: () async {
+          if (!File(path).existsSync() && !File(sentPath).existsSync()) {
+            canDownload
+                ? await downloadFiles()
+                : CommonUtilityFunctions().showFileHasExpiredDialog(
+                    MediaQuery.textScaleFactorOf(context),
+                  );
+          } else if (File(path).existsSync() || File(sentPath).existsSync()) {
+            widget.openFile.call();
+          }
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    constraints: BoxConstraints(minHeight: 52),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: ColorConstants.fileItemColor,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 44),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 12, 12, 16),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: widget.data.name
+                                              ?.replaceAll(fileFormat, ''),
+                                          style: CustomTextStyles.blackW60012,
+                                        ),
+                                        TextSpan(
+                                          text: fileFormat,
+                                          style: CustomTextStyles.blackW40012,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
-                                style: CustomTextStyles.oldSliverW400S12,
-                              ),
-                            ],
+                                SizedBox(width: 4),
+                                Text(
+                                  '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
+                                  style: CustomTextStyles.oldSliverW400S12,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.horizontal(
-                      left: Radius.circular(5),
+                        )
+                      ],
                     ),
-                    child: SizedBox(
-                      width: 44,
-                      child: thumbnail(
-                        fileFormat.substring(1),
-                        File(path).existsSync() ? path : sentPath,
+                  ),
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.horizontal(
+                        left: Radius.circular(5),
+                      ),
+                      child: SizedBox(
+                        width: 44,
+                        child: thumbnail(
+                          fileFormat.substring(1),
+                          File(path).existsSync() ? path : sentPath,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: File(path).existsSync() ? 8 : 12),
-          if (File(path).existsSync() || File(sentPath).existsSync())
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: ColorConstants.lightGreen,
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.done_all,
-                  size: 20,
-                  color: ColorConstants.textGreen,
-                ),
+                ],
               ),
             ),
-        ],
+            SizedBox(width: File(path).existsSync() ? 8 : 12),
+            if (File(path).existsSync() || File(sentPath).existsSync())
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorConstants.lightGreen,
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.done_all,
+                    size: 20,
+                    color: ColorConstants.textGreen,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -280,8 +293,9 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                           await downloadFiles();
                         },
                         onDisableTap: () {
-                          showFileHasExpiredDialog(
-                              MediaQuery.of(context).textScaleFactor);
+                          CommonUtilityFunctions().showFileHasExpiredDialog(
+                            MediaQuery.textScaleFactorOf(context),
+                          );
                         },
                         activeIcon: AppVectors.icDownloadFile,
                         disableIcon: AppVectors.icDownloadDisable,
@@ -318,6 +332,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
         await FileUtils.deleteFile(
           File(path).existsSync() ? path : sentPath,
           fileTransferId: widget.fileTransfer?.key,
+          date: widget.fileTransfer?.date ?? DateTime.now(),
           onComplete: () {
             Provider.of<HistoryProvider>(context, listen: false).notify();
           },
@@ -349,6 +364,14 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
   }
 
   Future<void> downloadFiles() async {
+    if (isDownloading) {
+      SnackbarService().showSnackbar(
+        context,
+        'File is downloading!',
+        bgColor: ColorConstants.orange,
+      );
+      return;
+    }
     setState(() {
       isDownloading = true;
     });
@@ -430,46 +453,5 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
         });
       }
     }
-  }
-
-  void showFileHasExpiredDialog(double deviceTextFactor) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
-              height: 200.0.toHeight,
-              width: 300.0.toWidth,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      TextStrings().fileHasExpired,
-                      style: CustomTextStyles.primaryBold17,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 30.0)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomButton(
-                        height: 50.toHeight * deviceTextFactor,
-                        isInverted: false,
-                        buttonText: TextStrings().buttonClose,
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
   }
 }

@@ -3,12 +3,21 @@ import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_file_function_list.dart';
-import 'package:atsign_atmosphere_pro/screens/my_files/widgets/downloads_folders.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/widgets/recents.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
+import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 
 class DesktopHistoryFileItem extends StatefulWidget {
   final FileData data;
@@ -31,6 +40,8 @@ class DesktopHistoryFileItem extends StatefulWidget {
 class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
   String filePath = '';
   late String fileFormat;
+  bool isDownloading = false;
+  late bool isDownloaded = File(filePath).existsSync();
 
   @override
   void initState() {
@@ -51,13 +62,107 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
     });
   }
 
+  Future<void> downloadFiles(FileData file) async {
+    if (isDownloading) {
+      SnackbarService().showSnackbar(
+        context,
+        'File is downloading!',
+        bgColor: ColorConstants.orange,
+      );
+      return;
+    }
+    setState(() {
+      isDownloading = true;
+    });
+
+    var fileTransferProgress = Provider.of<FileProgressProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .receivedFileProgress[widget.fileTransfer.key];
+
+    if (fileTransferProgress != null) {
+      return; //returning because download is still in progress
+    }
+
+    await Provider.of<InternetConnectivityChecker>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .checkConnectivity();
+
+    var isConnected = Provider.of<InternetConnectivityChecker>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .isInternetAvailable;
+
+    if (!isConnected) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings.noInternetMsg,
+        bgColor: ColorConstants.redAlert,
+      );
+      return;
+    }
+    var result = await Provider.of<HistoryProvider>(
+            NavService.navKey.currentContext!,
+            listen: false)
+        .downloadSingleFile(
+      widget.fileTransfer.key,
+      widget.fileTransfer.sender ?? '',
+      false,
+      file.name ?? '',
+    );
+    if (result is bool && result) {
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(widget.fileTransfer);
+      // send download acknowledgement
+      await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .sendFileDownloadAcknowledgement(widget.fileTransfer);
+      if (mounted) {
+        setState(() {
+          isDownloading = false;
+
+          isDownloaded = true;
+        });
+        SnackbarService().showSnackbar(
+          NavService.navKey.currentContext!,
+          TextStrings().fileDownloadd,
+          bgColor: ColorConstants.successGreen,
+        );
+      }
+    } else if (result is bool && !result) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().downloadFailed,
+        bgColor: ColorConstants.redAlert,
+      );
+      if (mounted) {
+        setState(() {
+          isDownloading = false;
+          isDownloaded = false;
+        });
+        return;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         InkWell(
           onTap: () async {
-            await openFilePath(filePath);
+            File test = File(filePath);
+            bool fileExists = await test.exists();
+            fileExists
+                ? await OpenFile.open(filePath)
+                : CommonUtilityFunctions()
+                        .checkForDownloadAvailability(widget.fileTransfer)
+                    ? await downloadFiles(widget.data)
+                    : CommonUtilityFunctions().showFileHasExpiredDialog(
+                        MediaQuery.textScaleFactorOf(context),
+                      );
           },
           child: buildFileCard(),
         ),
@@ -145,9 +250,13 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
             ? buildSizeText()
             : DesktopFileFunctionList(
                 filePath: filePath,
-                fileTransfer: widget.fileTransfer,
-                data: widget.data,
-              )
+                date: widget.fileTransfer.date ?? DateTime.now(),
+                idKey: widget.fileTransfer.key,
+                name: widget.data.name ?? '',
+                size: widget.data.size ?? 0,
+                isDownloaded: isDownloaded,
+                isDownloading: isDownloading,
+              ),
       ],
     );
   }

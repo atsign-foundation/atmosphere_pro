@@ -11,6 +11,7 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -21,8 +22,7 @@ class HistoryImagePreview extends StatefulWidget {
   final String nickname;
   final String sender;
   final String notes;
-  final String shortDate;
-  final String time;
+  final DateTime date;
   final HistoryType? type;
   final Function() onDelete;
 
@@ -33,8 +33,7 @@ class HistoryImagePreview extends StatefulWidget {
     required this.nickname,
     required this.sender,
     required this.notes,
-    required this.shortDate,
-    required this.time,
+    required this.date,
     required this.type,
     required this.onDelete,
   });
@@ -161,6 +160,7 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                   await FileUtils.deleteFile(
                     widget.data[currentIndex.value].path ?? '',
                     fileTransferId: widget.fileTransferId,
+                    date: widget.date,
                     onComplete: () {
                       Navigator.pop(context);
                       widget.onDelete.call();
@@ -222,7 +222,7 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            widget.shortDate,
+                            DateFormat('dd/MM/yy').format(widget.date),
                             style: TextStyle(
                               fontSize: 12,
                               color: ColorConstants.oldSliver,
@@ -237,7 +237,7 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                             ),
                           ),
                           Text(
-                            widget.time,
+                            DateFormat('HH:mm').format(widget.date),
                             style: TextStyle(
                               fontSize: 12,
                               color: ColorConstants.oldSliver,

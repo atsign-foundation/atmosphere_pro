@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_item.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_image_preview.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -12,8 +10,6 @@ import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -87,26 +83,17 @@ class _HistoryFileListState extends State<HistoryFileList> {
                   padding: const EdgeInsets.fromLTRB(4, 12, 8, 12),
                   itemBuilder: (context, index) {
                     final FileData file = widget.fileTransfer!.files![index];
-                    return InkWell(
-                      onTap: () async {
-                        if (File(getFilePath(file.name ?? '')).existsSync() ||
-                            File(getSentFilePath(file.name ?? ''))
-                                .existsSync()) {
-                          await openPreview(
-                            name: file.name ?? '',
-                            size: file.size ?? 0,
-                          );
-                        } else {
-                          showNoFileDialog(
-                              MediaQuery.of(context).textScaleFactor);
-                        }
+                    return HistoryFileItem(
+                      key: UniqueKey(),
+                      type: widget.type,
+                      fileTransfer: widget.fileTransfer,
+                      data: widget.fileTransfer!.files![index],
+                      openFile: () async {
+                        await openPreview(
+                          name: file.name ?? '',
+                          size: file.size ?? 0,
+                        );
                       },
-                      child: HistoryFileItem(
-                        key: UniqueKey(),
-                        type: widget.type,
-                        fileTransfer: widget.fileTransfer,
-                        data: widget.fileTransfer!.files![index],
-                      ),
                     );
                   },
                   itemCount:
@@ -174,8 +161,6 @@ class _HistoryFileListState extends State<HistoryFileList> {
     if (FileTypes.IMAGE_TYPES.contains(name.split(".").last)) {
       String nickname = "";
       final date = (widget.fileTransfer?.date ?? DateTime.now()).toLocal();
-      final shortDate = DateFormat('dd/MM/yy').format(date);
-      final time = DateFormat('HH:mm').format(date);
       final List<FileData> dataList = (widget.fileTransfer?.files ?? [])
           .where((e) =>
               FileTypes.IMAGE_TYPES.contains(e.name?.split(".").last) &&
@@ -212,8 +197,7 @@ class _HistoryFileListState extends State<HistoryFileList> {
             nickname: nickname,
             sender: widget.fileTransfer?.sender ?? '',
             notes: widget.fileTransfer?.notes ?? '',
-            shortDate: shortDate,
-            time: time,
+            date: date,
             type: widget.type,
             onDelete: () {
               Provider.of<HistoryProvider>(context, listen: false).notify();
@@ -228,40 +212,4 @@ class _HistoryFileListState extends State<HistoryFileList> {
     }
   }
 
-  void showNoFileDialog(double deviceTextFactor) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
-              height: 200.0.toHeight,
-              width: 300.0.toWidth,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
-                  Text(
-                    TextStrings().fileNotDownload,
-                    style: CustomTextStyles.primaryBold17,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 30.0)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomButton(
-                        height: 50.toHeight * deviceTextFactor,
-                        isInverted: false,
-                        buttonText: TextStrings().buttonClose,
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
 }

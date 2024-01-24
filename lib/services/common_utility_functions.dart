@@ -1141,4 +1141,45 @@ class CommonUtilityFunctions {
           );
         });
   }
+
+  void showFileHasExpiredDialog(double deviceTextFactor) {
+    showDialog(
+        context: NavService.navKey.currentContext!,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0.toHeight,
+              width: 300.0.toWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      TextStrings().fileHasExpired,
+                      style: CustomTextStyles.primaryBold17,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 30.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        height: 50.toHeight * deviceTextFactor,
+                        isInverted: false,
+                        buttonText: TextStrings().buttonClose,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 }
