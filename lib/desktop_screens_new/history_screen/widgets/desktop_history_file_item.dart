@@ -39,30 +39,31 @@ class DesktopHistoryFileItem extends StatefulWidget {
 
 class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
   String filePath = '';
+  String sentFilePath = '';
   late String fileFormat;
   bool isDownloading = false;
-  late bool isDownloaded = File(filePath).existsSync();
+  late bool isDownloaded =
+      File(filePath).existsSync() || File(sentFilePath).existsSync();
 
   @override
   void initState() {
+    getFilePath();
     super.initState();
     fileFormat = '.${widget.data.name?.split('.').last}';
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await getFilePath();
-    });
   }
 
-  Future<void> getFilePath() async {
-    final result = widget.type == HistoryType.received
-        ? await MixedConstants.getFileDownloadLocation(
-            sharedBy: widget.fileTransfer.sender)
-        : await MixedConstants.getFileSentLocation();
-    setState(() {
-      filePath = result + Platform.pathSeparator + (widget.data.name ?? "");
-    });
+  void getFilePath() {
+    filePath = MixedConstants.getFileDownloadLocationSync(
+            sharedBy: widget.fileTransfer.sender ?? '') +
+        Platform.pathSeparator +
+        (widget.data.name ?? "");
+    sentFilePath = MixedConstants.getFileSentLocationSync() +
+        Platform.pathSeparator +
+        (widget.data.name ?? '');
+    setState(() {});
   }
 
-  Future<void> downloadFiles(FileData file) async {
+  Future<void> downloadFiles() async {
     if (isDownloading) {
       SnackbarService().showSnackbar(
         context,
@@ -100,6 +101,9 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
       );
+      setState(() {
+        isDownloading = false;
+      });
       return;
     }
     var result = await Provider.of<HistoryProvider>(
@@ -109,9 +113,19 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
       widget.fileTransfer.key,
       widget.fileTransfer.sender ?? '',
       false,
-      file.name ?? '',
+      widget.data.name ?? '',
     );
     if (result is bool && result) {
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().fileDownloadd,
+        bgColor: ColorConstants.successGreen,
+      );
+      setState(() {
+        isDownloading = false;
+
+        isDownloaded = true;
+      });
       await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
               listen: false)
           .saveNewDataInMyFiles(widget.fileTransfer);
@@ -119,18 +133,6 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
       await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
               listen: false)
           .sendFileDownloadAcknowledgement(widget.fileTransfer);
-      if (mounted) {
-        setState(() {
-          isDownloading = false;
-
-          isDownloaded = true;
-        });
-        SnackbarService().showSnackbar(
-          NavService.navKey.currentContext!,
-          TextStrings().fileDownloadd,
-          bgColor: ColorConstants.successGreen,
-        );
-      }
     } else if (result is bool && !result) {
       SnackbarService().showSnackbar(
         NavService.navKey.currentContext!,
@@ -153,20 +155,21 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
       children: [
         InkWell(
           onTap: () async {
-            File test = File(filePath);
-            bool fileExists = await test.exists();
-            fileExists
-                ? await OpenFile.open(filePath)
-                : CommonUtilityFunctions()
+            !isDownloaded
+                ? CommonUtilityFunctions()
                         .checkForDownloadAvailability(widget.fileTransfer)
-                    ? await downloadFiles(widget.data)
+                    ? await downloadFiles()
                     : CommonUtilityFunctions().showFileHasExpiredDialog(
                         MediaQuery.textScaleFactorOf(context),
-                      );
+                      )
+                : await OpenFile.open(
+                    File(filePath).existsSync() ? filePath : sentFilePath,
+                  );
           },
           child: buildFileCard(),
         ),
-        if (File(filePath).existsSync()) buildMarkRead(),
+        if (File(filePath).existsSync() || File(sentFilePath).existsSync())
+          buildMarkRead(),
       ],
     );
   }
@@ -208,7 +211,7 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
               width: 50,
               child: thumbnail(
                 fileFormat.substring(1),
-                filePath,
+                File(filePath).existsSync() ? filePath : sentFilePath,
               ),
             ),
           ),
@@ -241,22 +244,22 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
                   ],
                 ),
               ),
-              if (widget.type != HistoryType.send) buildSizeText(),
+              buildSizeText(),
             ],
           ),
         ),
         SizedBox(width: 4),
-        widget.type == HistoryType.send
-            ? buildSizeText()
-            : DesktopFileFunctionList(
-                filePath: filePath,
-                date: widget.fileTransfer.date ?? DateTime.now(),
-                idKey: widget.fileTransfer.key,
-                name: widget.data.name ?? '',
-                size: widget.data.size ?? 0,
-                isDownloaded: isDownloaded,
-                isDownloading: isDownloading,
-              ),
+        DesktopFileFunctionList(
+          filePath: filePath,
+          sentFilePath: sentFilePath,
+          date: widget.fileTransfer.date ?? DateTime.now(),
+          idKey: widget.fileTransfer.key,
+          name: widget.data.name ?? '',
+          size: widget.data.size ?? 0,
+          isDownloaded: isDownloaded,
+          isDownloading: isDownloading,
+          type: widget.type,
+        ),
       ],
     );
   }

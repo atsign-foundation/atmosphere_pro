@@ -377,24 +377,34 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
           if (mounted) {
             if (result.runtimeType == AlreadyExistsException) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
+                content: Text(TextConstants().GROUP_ALREADY_EXISTS),
+                backgroundColor: ColorConstants.redAlert,
+              ));
             } else if (result.runtimeType == InvalidAtSignException) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(result.content)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(result.content),
+                backgroundColor: ColorConstants.redAlert,
+              ));
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(TextConstants().SERVICE_ERROR),
+                backgroundColor: ColorConstants.redAlert,
+              ));
             }
           }
         } else {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(TextConstants().SERVICE_ERROR),
+              backgroundColor: ColorConstants.redAlert,
+            ));
           }
         }
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(TextConstants().EMPTY_NAME)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(TextConstants().EMPTY_NAME),
+          backgroundColor: ColorConstants.redAlert,
+        ));
       }
 
       setState(() {
