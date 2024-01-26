@@ -64,7 +64,9 @@ class _ListContactWidgetState extends State<ListContactWidget>
     }
 
     scrollController = ScrollController();
-    // _groupService.fetchGroupsAndContacts();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _groupService.fetchGroupsAndContacts();
+    });
     super.initState();
   }
 

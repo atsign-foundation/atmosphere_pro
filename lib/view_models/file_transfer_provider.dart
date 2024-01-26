@@ -5,7 +5,6 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/permission_dialog.dart';
@@ -110,14 +109,6 @@ class FileTransferProvider extends BaseModel {
 
     setStatus(PICK_FILES, Status.Loading);
     try {
-      List<PlatformFile> tempList = [];
-      if (selectedFiles.isNotEmpty) {
-        tempList = selectedFiles;
-      }
-      selectedFiles = [];
-
-      totalSize = 0;
-
       result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         type: choice == MEDIA ? FileType.media : FileType.any,
@@ -126,9 +117,6 @@ class FileTransferProvider extends BaseModel {
       );
 
       if (result?.files != null) {
-        selectedFiles = tempList;
-        tempList = [];
-
         result!.files.forEach((element) {
           selectedFiles.add(element);
         });
@@ -138,12 +126,10 @@ class FileTransferProvider extends BaseModel {
           });
         }
         hasSelectedFilesChanged = true;
+        calculateSize();
+        scrollToBottom = true;
       }
-
-      calculateSize();
-
       setStatus(PICK_FILES, Status.Done);
-      scrollToBottom = true;
     } catch (error) {
       setError(PICK_FILES, error.toString());
     }

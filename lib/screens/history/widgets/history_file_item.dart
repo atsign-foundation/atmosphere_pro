@@ -86,15 +86,13 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
       ),
       child: InkWell(
         onTap: () async {
-          if (!File(path).existsSync() && !File(sentPath).existsSync()) {
-            canDownload
-                ? await downloadFiles()
-                : CommonUtilityFunctions().showFileHasExpiredDialog(
-                    MediaQuery.textScaleFactorOf(context),
-                  );
-          } else if (File(path).existsSync() || File(sentPath).existsSync()) {
-            widget.openFile.call();
-          }
+          !File(path).existsSync() && !File(sentPath).existsSync()
+              ? canDownload
+                  ? await downloadFiles()
+                  : CommonUtilityFunctions().showFileHasExpiredDialog(
+                      MediaQuery.textScaleFactorOf(context),
+                    )
+              : widget.openFile.call();
         },
         child: Row(
           mainAxisSize: MainAxisSize.min,

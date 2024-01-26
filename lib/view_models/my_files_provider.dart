@@ -648,7 +648,7 @@ class MyFilesProvider extends BaseModel {
           if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
             filePath = MixedConstants.RECEIVED_FILE_DIRECTORY +
                 Platform.pathSeparator +
-                fileTransfer.sender! +
+                (fileTransfer.sender ?? '') +
                 Platform.pathSeparator +
                 (file.name ?? '');
           } else {

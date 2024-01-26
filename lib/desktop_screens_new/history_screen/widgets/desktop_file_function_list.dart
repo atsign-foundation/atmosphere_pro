@@ -1,15 +1,14 @@
 import 'dart:io';
 
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,12 +16,14 @@ import 'package:provider/provider.dart';
 
 class DesktopFileFunctionList extends StatelessWidget {
   final String filePath;
+  final String sentFilePath;
   final String idKey;
   final DateTime date;
   final String name;
   final int size;
   final bool isDownloading;
   final bool isDownloaded;
+  final HistoryType type;
 
   const DesktopFileFunctionList({
     required this.filePath,
@@ -32,11 +33,13 @@ class DesktopFileFunctionList extends StatelessWidget {
     required this.isDownloading,
     required this.isDownloaded,
     required this.idKey,
+    required this.sentFilePath,
+    required this.type,
   });
 
   @override
   Widget build(BuildContext context) {
-    return File(filePath).existsSync()
+    return isDownloaded
         ? Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -46,8 +49,11 @@ class DesktopFileFunctionList extends StatelessWidget {
                   FileTransferProvider.appClosedSharedFiles.add(PlatformFile(
                     name: name,
                     size: size,
-                    path: filePath,
-                    bytes: File(filePath).readAsBytesSync(),
+                    path: File(filePath).existsSync() ? filePath : sentFilePath,
+                    bytes: File(File(filePath).existsSync()
+                            ? filePath
+                            : sentFilePath)
+                        .readAsBytesSync(),
                   ));
 
                   Provider.of<FileTransferProvider>(context, listen: false)
@@ -58,33 +64,16 @@ class DesktopFileFunctionList extends StatelessWidget {
               ),
               SizedBox(width: 4),
               buildOptionButton(
-                onTap: () {
-                  CommonUtilityFunctions().showConfirmationDialog(
-                    () async {
-                      await File(filePath).delete();
-                      await Provider.of<MyFilesProvider>(
-                              NavService.navKey.currentContext!,
-                              listen: false)
-                          .removeParticularFile(
-                        idKey,
-                        filePath.split(Platform.pathSeparator).last,
-                      );
-
-                      await Provider.of<MyFilesProvider>(
-                              NavService.navKey.currentContext!,
-                              listen: false)
-                          .getAllFiles();
-                      SnackbarService().showSnackbar(
-                        context,
-                        "Successfully deleted the file",
-                        bgColor: ColorConstants.successColor,
-                      );
-                      Provider.of<HistoryProvider>(
-                              NavService.navKey.currentContext!,
-                              listen: false)
+                onTap: () async {
+                  await FileUtils.deleteFile(
+                    File(filePath).existsSync() ? filePath : sentFilePath,
+                    fileTransferId: idKey,
+                    date: date,
+                    onComplete: () {
+                      Provider.of<HistoryProvider>(context, listen: false)
                           .notify();
                     },
-                    'Are you sure you want to delete the file(s)?',
+                    type: type,
                   );
                 },
                 icon: AppVectors.icDeleteFile,
@@ -123,27 +112,24 @@ class DesktopFileFunctionList extends StatelessWidget {
                   ),
                 ],
               )
-            : isDownloaded
-                ? SizedBox.shrink()
-                : isDownloading
-                    ? SizedBox(
+            : isDownloading
+                ? SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                      color: ColorConstants.downloadIndicatorColor,
+                    ),
+                  )
+                : CommonUtilityFunctions().isFileDownloadAvailable(date) &&
+                        !isDownloaded
+                    ? SvgPicture.asset(
+                        AppVectors.icDownloadFile,
                         width: 28,
                         height: 28,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          color: ColorConstants.downloadIndicatorColor,
-                        ),
+                        fit: BoxFit.cover,
                       )
-                    : (CommonUtilityFunctions().isFileDownloadAvailable(
-                        date,
-                      ))
-                        ? SvgPicture.asset(
-                            AppVectors.icDownloadFile,
-                            width: 28,
-                            height: 28,
-                            fit: BoxFit.cover,
-                          )
-                        : SizedBox.shrink();
+                    : SizedBox.shrink();
       },
     );
   }
