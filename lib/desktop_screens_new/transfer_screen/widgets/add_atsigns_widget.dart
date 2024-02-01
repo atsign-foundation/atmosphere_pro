@@ -232,6 +232,12 @@ class _AddAtSignsWidgetState extends State<AddAtSignsWidget> {
                         } else {
                           initialLetter = "";
                         }
+
+                        List<int>? intList =
+                            groupContactModel?.group?.groupPicture?.cast<int>();
+                        byteImage = intList != null
+                            ? Uint8List.fromList(intList)
+                            : null;
                       }
 
                       return Column(

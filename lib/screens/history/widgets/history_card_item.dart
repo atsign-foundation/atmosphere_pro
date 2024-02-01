@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
@@ -8,6 +9,7 @@ import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -325,14 +327,41 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   }
 
   bool checkFileExist({required FileData data}) {
-    String filePath = getFilePath(data.name ?? '');
+    bool fileExists = false;
+    String sentFilePath = getSentFilePath(data.name ?? '');
+    String receivedFilePath = getFilePath(data.name ?? '');
 
-    File file = File(filePath);
-    return file.existsSync();
+    /// for sent file directory
+    if (widget.fileHistory.type == HistoryType.send) {
+      File file = File(sentFilePath);
+      if (file.existsSync()) {
+        return true;
+      }
+    }
+
+    File file = File(receivedFilePath);
+    fileExists = file.existsSync();
+    return fileExists;
   }
 
   String getFilePath(String name) {
+    if (widget.fileHistory.type == HistoryType.send) {
+      String sentFilePath = getSentFilePath(name);
+      File file = File(sentFilePath);
+      if (file.existsSync()) {
+        return file.path;
+      }
+    }
+
     return BackendService.getInstance().downloadDirectory!.path +
+        Platform.pathSeparator +
+        name;
+  }
+
+  String getSentFilePath(String name) {
+    return BackendService.getInstance().downloadDirectory!.path +
+        Platform.pathSeparator +
+        'sent-files' +
         Platform.pathSeparator +
         name;
   }

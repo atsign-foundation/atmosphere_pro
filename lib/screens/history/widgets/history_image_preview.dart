@@ -48,8 +48,11 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
   late PageController pageController =
       PageController(initialPage: widget.index);
 
-  String imageToBase64(String imagePath) {
+  String? imageToBase64(String imagePath) {
     File imageFile = File(imagePath);
+    if (!imageFile.existsSync()) {
+      return null;
+    }
     List<int> imageBytes = imageFile.readAsBytesSync();
     String base64Image = base64Encode(imageBytes);
     return base64Image;
@@ -104,11 +107,17 @@ class _HistoryImagePreviewState extends State<HistoryImagePreview> {
                   child: Center(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.memory(
-                        base64Decode(
-                          imageToBase64(widget.data[index].path ?? ''),
-                        ),
-                      ),
+                      child: imageToBase64(widget.data[index].path ?? '') !=
+                              null
+                          ? Image.memory(
+                              base64Decode(
+                                imageToBase64(widget.data[index].path ?? '')!,
+                              ),
+                              errorBuilder: (context, _, __) {
+                                return Icon(Icons.image);
+                              },
+                            )
+                          : SizedBox(),
                     ),
                   ),
                 );
