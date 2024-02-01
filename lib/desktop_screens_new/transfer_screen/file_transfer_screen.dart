@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
@@ -459,6 +460,13 @@ class _FileTransferScreenState extends State<FileTransferScreen> {
                               CommonUtilityFunctions().getCachedContactImage(
                             (contact?.atSign ?? ""),
                           );
+                        } else {
+                          List<int>? intList = groupContactModel
+                              .group?.groupPicture
+                              ?.cast<int>();
+                          byteImage = intList != null
+                              ? Uint8List.fromList(intList)
+                              : null;
                         }
                         return Container(
                           height: 70,

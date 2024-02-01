@@ -235,6 +235,10 @@ class BackendService {
         await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .saveNewDataInMyFiles(historyProvider.receivedHistoryLogs[i]);
+        await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                listen: false)
+            .sendFileDownloadAcknowledgement(
+                historyProvider.receivedHistoryLogs[i]);
       }
     } else if (result is bool && !result) {}
   }
