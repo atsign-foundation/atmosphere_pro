@@ -96,7 +96,7 @@ dev_dependencies:
   msix: ^3.3.1
 
 dependency_overrides:
-  package_info_plus: ^3.0.0
+  package_info_plus: ^5.0.0
   file_picker: ^5.0.0
   biometric_storage: 5.0.0+1
   permission_handler: ^11.0.1
@@ -106,6 +106,12 @@ dependency_overrides:
   file_selector_linux: ^0.9.2
   share_plus: ^7.1.0
   showcaseview: ^2.0.3
+  at_commons: ^4.0.1
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: issue_1232
   at_backupkey_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
@@ -113,6 +119,7 @@ dependency_overrides:
       ref: trunk
   http: ^1.1.0
   webview_flutter: ^4.2.4
+  # this branch doesn't exists
   at_contacts_group_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets/
