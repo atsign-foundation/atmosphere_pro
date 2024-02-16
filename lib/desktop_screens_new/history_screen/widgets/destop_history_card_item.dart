@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_card_header.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_file_list.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_received_card_body.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class DesktopHistoryCardItem extends StatefulWidget {
+class DesktopHistoryCardItem extends StatelessWidget {
   final FileHistory fileHistory;
 
   const DesktopHistoryCardItem({
@@ -13,15 +17,19 @@ class DesktopHistoryCardItem extends StatefulWidget {
     required this.fileHistory,
   });
 
-  @override
-  State<DesktopHistoryCardItem> createState() => _DesktopHistoryCardItemState();
-}
+  String getFilePath(String name) {
+    return MixedConstants.getFileDownloadLocationSync(
+            sharedBy: fileHistory.fileDetails?.sender ?? '') +
+        Platform.pathSeparator +
+        name;
+  }
 
-class _DesktopHistoryCardItemState extends State<DesktopHistoryCardItem> {
   @override
   Widget build(BuildContext context) {
+    fileHistory.fileDetails?.files
+        ?.forEach((e) => e.path = getFilePath(e.name ?? ''));
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
@@ -33,14 +41,20 @@ class _DesktopHistoryCardItemState extends State<DesktopHistoryCardItem> {
       ),
       child: Column(
         children: [
-          DesktopHistoryCardHeader(
-            fileHistory: widget.fileHistory,
+          DesktopHistoryCardHeader(fileHistory: fileHistory),
+          SizedBox(
+            height: fileHistory.type == HistoryType.received ? 12 : 8,
           ),
-          SizedBox(height: 12),
-          DesktopHistoryFileList(
-            fileTransfer: widget.fileHistory.fileDetails!,
-            type: widget.fileHistory.type ?? HistoryType.received,
-          ),
+          fileHistory.type == HistoryType.received
+              ? DesktopHistoryReceivedCardBody(
+                  fileTransfer: fileHistory.fileDetails!,
+                  type: fileHistory.type ?? HistoryType.received,
+                )
+              : DesktopHistoryFileList(
+                  fileTransfer: fileHistory.fileDetails!,
+                  type: fileHistory.type ?? HistoryType.received,
+                ),
+          if (fileHistory.type == HistoryType.received) SizedBox(height: 16),
         ],
       ),
     );

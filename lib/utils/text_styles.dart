@@ -515,4 +515,16 @@ class CustomTextStyles {
     fontSize: 11,
     fontWeight: FontWeight.w400,
   );
+
+  static TextStyle whiteW60012 = const TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle spanishGrayW50012 = const TextStyle(
+    color: ColorConstants.spanishGray,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+  );
 }

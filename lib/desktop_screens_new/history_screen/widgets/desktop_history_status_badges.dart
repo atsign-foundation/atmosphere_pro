@@ -18,63 +18,63 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
     required this.fileHistory,
   });
 
-  void openFileReceiptBottomSheet({
-    FileRecipientSection? fileRecipientSection,
-    required BuildContext context,
-  }) {
-    Provider.of<FileTransferProvider>(NavService.navKey.currentContext!,
-            listen: false)
-        .selectedFileHistory = fileHistory;
-
-    showDialog(
-        context: context,
-        barrierColor: Colors.transparent,
-        barrierDismissible: true,
-        builder: (_context) {
-          return StatefulBuilder(
-            builder: (context, setDialogState) {
-              return Dialog(
-                insetPadding: EdgeInsets.zero,
-                alignment: Alignment.centerRight,
-                elevation: 5.0,
-                clipBehavior: Clip.hardEdge,
-                child: Container(
-                  width: 400,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(12.0),
-                      topRight: const Radius.circular(12.0),
-                    ),
-                  ),
-                  child: FileRecipients(
-                    fileHistory.sharedWith,
-                    fileRecipientSection: fileRecipientSection,
-                    key: UniqueKey(),
-                  ),
-                ),
-              );
-            },
-          );
-        });
-  }
+  // void openFileReceiptBottomSheet({
+  //   FileRecipientSection? fileRecipientSection,
+  //   required BuildContext context,
+  // }) {
+  //   Provider.of<FileTransferProvider>(NavService.navKey.currentContext!,
+  //           listen: false)
+  //       .selectedFileHistory = fileHistory;
+  //
+  //   showDialog(
+  //       context: context,
+  //       barrierColor: Colors.transparent,
+  //       barrierDismissible: true,
+  //       builder: (_context) {
+  //         return StatefulBuilder(
+  //           builder: (context, setDialogState) {
+  //             return Dialog(
+  //               insetPadding: EdgeInsets.zero,
+  //               alignment: Alignment.centerRight,
+  //               elevation: 5.0,
+  //               clipBehavior: Clip.hardEdge,
+  //               child: Container(
+  //                 width: 400,
+  //                 height: MediaQuery.of(context).size.height,
+  //                 decoration: BoxDecoration(
+  //                   color: Theme.of(context).scaffoldBackgroundColor,
+  //                   borderRadius: BorderRadius.only(
+  //                     topLeft: const Radius.circular(12.0),
+  //                     topRight: const Radius.circular(12.0),
+  //                   ),
+  //                 ),
+  //                 child: FileRecipients(
+  //                   fileHistory.sharedWith,
+  //                   fileRecipientSection: fileRecipientSection,
+  //                   key: UniqueKey(),
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         );
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (fileHistory.type == HistoryType.received) {
-      return DesktopCardFunctionList(fileTransfer: fileHistory.fileDetails!);
-    } else {
+    // if (fileHistory.type == HistoryType.received) {
+    //   return DesktopCardFunctionList(fileTransfer: fileHistory.fileDetails!);
+    // } else {
       return InkWell(
         onTap: () {
-          openFileReceiptBottomSheet(context: context);
+          // openFileReceiptBottomSheet(context: context);
         },
         child: fileHistory.sharedWith!
                 .every((element) => element.isNotificationSend ?? false)
             ? buildDeliveredBadge()
             : buildErrorBadges(),
       );
-    }
+    // }
   }
 
   Widget buildDeliveredBadge() {

@@ -70,41 +70,48 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
                 .toString();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8),
+      padding: widget.fileHistory.type == HistoryType.received
+          ? EdgeInsets.only(left: 12, right: 12, top: 12)
+          : EdgeInsets.zero,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: CustomTextStyles.blackW60012,
-                  ),
-                  if (nickname.isNotEmpty ||
-                      (widget.fileHistory.type != HistoryType.received &&
-                          widget.fileHistory.sharedWith?.length != 1))
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      subTitle,
-                      style: CustomTextStyles.blackW40010,
+                      title,
+                      style: CustomTextStyles.blackW60012,
                     ),
-                ],
+                    if (nickname.isNotEmpty ||
+                        (widget.fileHistory.type != HistoryType.received &&
+                            widget.fileHistory.sharedWith?.length != 1))
+                      Text(
+                        subTitle,
+                        style: CustomTextStyles.blackW40010,
+                      ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 12),
-            if (trustedContactProvider.trustedContacts.any((element) =>
-                    element.atSign == widget.fileHistory.fileDetails?.sender) ||
-                (widget.fileHistory.sharedWith?.length == 1 &&
-                    trustedContactProvider.trustedContacts.any((element) =>
-                        element.atSign ==
-                        widget.fileHistory.sharedWith?.single.atsign)))
-              SvgPicture.asset(
-                AppVectors.icTrust,
-                color: ColorConstants.portlandOrange,
-              )
-          ]),
+              SizedBox(width: 12),
+              if (trustedContactProvider.trustedContacts.any((element) =>
+                      element.atSign ==
+                      widget.fileHistory.fileDetails?.sender) ||
+                  (widget.fileHistory.sharedWith?.length == 1 &&
+                      trustedContactProvider.trustedContacts.any((element) =>
+                          element.atSign ==
+                          widget.fileHistory.sharedWith?.single.atsign)))
+                SvgPicture.asset(
+                  AppVectors.icTrust,
+                  color: ColorConstants.portlandOrange,
+                )
+            ],
+          ),
           SizedBox(width: 20),
           (widget.fileHistory.fileDetails?.notes ?? '').isNotEmpty
               ? Expanded(
@@ -120,20 +127,23 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
               : Spacer(),
           SizedBox(width: 4),
           Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                DateFormat(MixedConstants.isToday(
-                            widget.fileHistory.fileDetails!.date!)
-                        ? 'HH:mm'
-                        : 'dd/MM/yyyy HH:mm')
-                    .format(widget.fileHistory.fileDetails!.date!),
+                DateFormat(
+                  MixedConstants.isToday(widget.fileHistory.fileDetails!.date!)
+                      ? 'HH:mm'
+                      : 'dd/MM/yyyy HH:mm',
+                ).format(widget.fileHistory.fileDetails!.date!),
                 style: CustomTextStyles.raisinBlackW40010,
               ),
-              SizedBox(height: 4),
-              DesktopHistoryStatusBadges(
-                fileHistory: widget.fileHistory,
-              ),
+              if (widget.fileHistory.type == HistoryType.send) ...[
+                SizedBox(height: 4),
+                DesktopHistoryStatusBadges(
+                  fileHistory: widget.fileHistory,
+                ),
+              ],
             ],
           )
         ],
