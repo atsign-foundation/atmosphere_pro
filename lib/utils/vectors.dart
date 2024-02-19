@@ -99,4 +99,6 @@ class AppVectors {
   static String icSendDisable = '$_basePath/ic_send_disable.svg';
   static String icDeleteDisable = '$_basePath/ic_delete_disable.svg';
   static String icDownloadOutline = '$_basePath/ic_download_outline.svg';
+  static String icDeliveredCheck = '$_basePath/ic_delivered_check.svg';
+  static String icDownloadedCheck = '$_basePath/ic_downloaded_check.svg';
 }

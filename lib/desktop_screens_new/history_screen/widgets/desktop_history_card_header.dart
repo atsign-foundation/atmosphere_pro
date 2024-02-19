@@ -72,14 +72,15 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
     return Padding(
       padding: widget.fileHistory.type == HistoryType.received
           ? EdgeInsets.only(left: 12, right: 12, top: 12)
-          : EdgeInsets.zero,
+          : EdgeInsets.only(top: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Flexible(
+              SizedBox(
+                width: 140,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,20 +113,25 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
                 )
             ],
           ),
-          SizedBox(width: 20),
-          (widget.fileHistory.fileDetails?.notes ?? '').isNotEmpty
-              ? Expanded(
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Text(
-                        '"${widget.fileHistory.fileDetails?.notes}"',
-                        style: CustomTextStyles.raisinBlackW40010,
-                      ),
-                    ),
-                  ),
-                )
-              : Spacer(),
-          SizedBox(width: 4),
+          Spacer(),
+          if ((widget.fileHistory.notes ?? '').isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.only(
+              top: widget.fileHistory.type == HistoryType.received ? 4 : 12,
+            ),
+            child: SizedBox(
+              width: 392,
+              child: SingleChildScrollView(
+                child: Text(
+                  '"${widget.fileHistory.notes}"',
+                  textAlign: TextAlign.center,
+                  style: CustomTextStyles.raisinBlackW40010,
+                ),
+              ),
+            ),
+          ),
+          Spacer(),
+          ],
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,

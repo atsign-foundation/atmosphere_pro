@@ -11,10 +11,12 @@ import 'package:flutter/material.dart';
 
 class DesktopHistoryCardItem extends StatelessWidget {
   final FileHistory fileHistory;
+  final bool isSelected;
 
   const DesktopHistoryCardItem({
     Key? key,
     required this.fileHistory,
+    required this.isSelected,
   });
 
   String getFilePath(String name) {
@@ -33,9 +35,10 @@ class DesktopHistoryCardItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: ColorConstants.sidebarTileSelected,
+          color: isSelected
+              ? ColorConstants.orangeColor
+              : ColorConstants.sidebarTileSelected,
           width: 1,
-          strokeAlign: BorderSide.strokeAlignOutside,
         ),
         color: Colors.white,
       ),

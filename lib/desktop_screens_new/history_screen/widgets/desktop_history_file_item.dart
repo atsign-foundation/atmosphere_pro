@@ -22,15 +22,15 @@ import 'package:provider/provider.dart';
 class DesktopHistoryFileItem extends StatefulWidget {
   final FileData data;
   final FileTransfer fileTransfer;
-  final int index;
   final HistoryType type;
+  final bool isPreview;
 
   const DesktopHistoryFileItem({
     Key? key,
     required this.data,
     required this.fileTransfer,
-    required this.index,
     required this.type,
+    this.isPreview = false,
   });
 
   @override
@@ -155,20 +155,23 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
       children: [
         InkWell(
           onTap: () async {
-            !isDownloaded
-                ? CommonUtilityFunctions()
-                        .checkForDownloadAvailability(widget.fileTransfer)
-                    ? await downloadFiles()
-                    : CommonUtilityFunctions().showFileHasExpiredDialog(
-                        MediaQuery.textScaleFactorOf(context),
-                      )
-                : await OpenFile.open(
-                    File(filePath).existsSync() ? filePath : sentFilePath,
-                  );
+            if (!widget.isPreview) {
+              !isDownloaded
+                  ? CommonUtilityFunctions()
+                          .checkForDownloadAvailability(widget.fileTransfer)
+                      ? await downloadFiles()
+                      : CommonUtilityFunctions().showFileHasExpiredDialog(
+                          MediaQuery.textScaleFactorOf(context),
+                        )
+                  : await OpenFile.open(
+                      File(filePath).existsSync() ? filePath : sentFilePath,
+                    );
+            }
           },
           child: buildFileCard(),
         ),
-        if (File(filePath).existsSync() || File(sentFilePath).existsSync())
+        if ((File(filePath).existsSync() || File(sentFilePath).existsSync()) &&
+            !widget.isPreview)
           buildMarkRead(),
       ],
     );
@@ -205,7 +208,7 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
           left: 6,
           child: ClipRRect(
             borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(7),
+              left: Radius.circular(5),
             ),
             child: SizedBox(
               width: 50,
@@ -244,22 +247,24 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
                   ],
                 ),
               ),
-              buildSizeText(),
+              if (!widget.isPreview) buildSizeText(),
             ],
           ),
         ),
         SizedBox(width: 4),
-        DesktopFileFunctionList(
-          filePath: filePath,
-          sentFilePath: sentFilePath,
-          date: widget.fileTransfer.date ?? DateTime.now(),
-          idKey: widget.fileTransfer.key,
-          name: widget.data.name ?? '',
-          size: widget.data.size ?? 0,
-          isDownloaded: isDownloaded,
-          isDownloading: isDownloading,
-          type: widget.type,
-        ),
+        widget.isPreview
+            ? buildSizeText()
+            : DesktopFileFunctionList(
+                filePath: filePath,
+                sentFilePath: sentFilePath,
+                date: widget.fileTransfer.date ?? DateTime.now(),
+                idKey: widget.fileTransfer.key,
+                name: widget.data.name ?? '',
+                size: widget.data.size ?? 0,
+                isDownloaded: isDownloaded,
+                isDownloading: isDownloading,
+                type: widget.type,
+              ),
       ],
     );
   }

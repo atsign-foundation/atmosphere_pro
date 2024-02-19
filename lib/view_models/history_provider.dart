@@ -79,6 +79,8 @@ class HistoryProvider extends BaseModel {
   String? app_lifecycle_state;
   HistoryType typeSelected = HistoryType.received;
 
+  FileHistory? selectedFileHistory;
+
   resetData() {
     isSyncedDataFetched = false;
     sentHistory = [];
@@ -125,6 +127,11 @@ class HistoryProvider extends BaseModel {
 
   void updateListType(List<FileType> newList) {
     listType = newList;
+    notifyListeners();
+  }
+
+  void setSelectedFileHistory(FileHistory? fileHistory) {
+    selectedFileHistory = fileHistory;
     notifyListeners();
   }
 

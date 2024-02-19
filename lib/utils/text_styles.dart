@@ -266,6 +266,12 @@ class CustomTextStyles {
       fontSize: 15,
       fontWeight: FontWeight.normal);
 
+  static TextStyle orangeColorW50013 = TextStyle(
+    color: ColorConstants.orangeColor,
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle greyText12 = TextStyle(
       color: ColorConstants.greyText,
       fontSize: 12,
@@ -444,10 +450,22 @@ class CustomTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle raisinBlackW50013 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 13.toFont,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle darkSliverWW50015 = TextStyle(
     color: ColorConstants.darkSliver,
     fontSize: 15,
     fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle darkSliverWW40012 = TextStyle(
+    color: ColorConstants.darkSliver,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
   );
 
   static TextStyle blackW60012 = TextStyle(
