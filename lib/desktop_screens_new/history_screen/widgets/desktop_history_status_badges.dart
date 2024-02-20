@@ -206,6 +206,7 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
             color: ColorConstants.retryButtonColor,
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Retry',

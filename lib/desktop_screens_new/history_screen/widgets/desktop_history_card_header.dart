@@ -115,22 +115,22 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
           ),
           Spacer(),
           if ((widget.fileHistory.notes ?? '').isNotEmpty) ...[
-          Padding(
-            padding: EdgeInsets.only(
-              top: widget.fileHistory.type == HistoryType.received ? 4 : 12,
-            ),
-            child: SizedBox(
-              width: 392,
-              child: SingleChildScrollView(
-                child: Text(
-                  '"${widget.fileHistory.notes}"',
-                  textAlign: TextAlign.center,
-                  style: CustomTextStyles.raisinBlackW40010,
+            Padding(
+              padding: EdgeInsets.only(
+                top: widget.fileHistory.type == HistoryType.received ? 4 : 12,
+              ),
+              child: SizedBox(
+                width: 392,
+                child: SingleChildScrollView(
+                  child: Text(
+                    '"${widget.fileHistory.notes}"',
+                    textAlign: TextAlign.center,
+                    style: CustomTextStyles.raisinBlackW40010,
+                  ),
                 ),
               ),
             ),
-          ),
-          Spacer(),
+            Spacer(),
           ],
           Column(
             mainAxisSize: MainAxisSize.min,

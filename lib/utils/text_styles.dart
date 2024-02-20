@@ -456,6 +456,12 @@ class CustomTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static TextStyle raisinBlackW50012 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 12.toFont,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle darkSliverWW50015 = TextStyle(
     color: ColorConstants.darkSliver,
     fontSize: 15,

@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_card_header.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_file_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_received_card_body.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_sent_card_body.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +53,8 @@ class DesktopHistoryCardItem extends StatelessWidget {
                   fileTransfer: fileHistory.fileDetails!,
                   type: fileHistory.type ?? HistoryType.received,
                 )
-              : DesktopHistoryFileList(
-                  fileTransfer: fileHistory.fileDetails!,
-                  type: fileHistory.type ?? HistoryType.received,
+              : DesktopHistorySentCardBody(
+                  fileHistory: fileHistory,
                 ),
           if (fileHistory.type == HistoryType.received) SizedBox(height: 16),
         ],

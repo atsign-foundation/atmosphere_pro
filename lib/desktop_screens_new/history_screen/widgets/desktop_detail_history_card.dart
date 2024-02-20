@@ -2,6 +2,7 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_file_item.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_status_badges.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_sent_status_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -203,26 +204,21 @@ class DesktopDetailHistoryCard extends StatelessWidget {
             height: 3,
           ),
           ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 2),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return buildStatusItemWidget(
-                  data: (fileHistory.sharedWith ?? [])[index],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(height: 4);
-              },
-              itemCount: fileHistory.sharedWith?.length ?? 0)
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return DesktopSentStatusWidget(
+                status: (fileHistory.sharedWith ?? [])[index],
+              );
+            },
+            separatorBuilder: (context, index) {
+              return SizedBox(height: 4);
+            },
+            itemCount: fileHistory.sharedWith?.length ?? 0,
+          ),
         ],
       ),
     );
-  }
-
-  Widget buildStatusItemWidget({
-    required ShareStatus data,
-  }) {
-    return SizedBox();
   }
 }
