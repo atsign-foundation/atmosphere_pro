@@ -10,7 +10,6 @@
 #include <desktop_drop/desktop_drop_plugin.h>
 #include <desktop_window/desktop_window_plugin.h>
 #include <emoji_picker_flutter/emoji_picker_flutter_plugin_c_api.h>
-#include <fc_native_video_thumbnail/fc_native_video_thumbnail_plugin_c_api.h>
 #include <file_selector_windows/file_selector_windows.h>
 #include <local_notifier/local_notifier_plugin.h>
 #include <permission_handler_windows/permission_handler_windows_plugin.h>
@@ -26,8 +25,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("DesktopWindowPlugin"));
   EmojiPickerFlutterPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("EmojiPickerFlutterPluginCApi"));
-  FcNativeVideoThumbnailPluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("FcNativeVideoThumbnailPluginCApi"));
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   LocalNotifierPluginRegisterWithRegistrar(

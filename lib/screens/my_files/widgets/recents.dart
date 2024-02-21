@@ -10,7 +10,7 @@ import 'package:atsign_atmosphere_pro/utils/file_utils.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
-import 'package:fc_native_video_thumbnail/fc_native_video_thumbnail.dart';
+// import 'package:fc_native_video_thumbnail/fc_native_video_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -179,7 +179,8 @@ Widget thumbnail(String extension, String path) {
                   ),
                 )
               : FutureBuilder(
-                  future: generateVideoThumbnail(path),
+                  // future: generateVideoThumbnail(path),
+                  future: null,
                   builder: (context, snapshot) => ClipRRect(
                     borderRadius: BorderRadius.circular(10.toHeight),
                     child: GestureDetector(
@@ -256,31 +257,31 @@ Future videoThumbnailBuilder(String path) async {
   return videoThumbnail;
 }
 
-Future<dynamic> generateVideoThumbnail(String path) async {
-  final plugin = FcNativeVideoThumbnail();
+// Future<dynamic> generateVideoThumbnail(String path) async {
+//   final plugin = FcNativeVideoThumbnail();
 
-  String thumbnailPath = path;
-  String seperator = Platform.pathSeparator;
-  var temp = thumbnailPath.split(seperator);
-  var fileNamewithExt = temp.removeLast();
-  var parentPath = temp.join(seperator);
+//   String thumbnailPath = path;
+//   String seperator = Platform.pathSeparator;
+//   var temp = thumbnailPath.split(seperator);
+//   var fileNamewithExt = temp.removeLast();
+//   var parentPath = temp.join(seperator);
 
-  var file = File("${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg");
-  bool isExist = await file.exists();
+//   var file = File("${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg");
+//   bool isExist = await file.exists();
 
-  if (isExist) {
-    return;
-  }
+//   if (isExist) {
+//     return;
+//   }
 
-  final thumbnailGenerated = await plugin.getVideoThumbnail(
-    srcFile: path,
-    destFile: "${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg",
-    width: 300,
-    height: 300,
-    keepAspectRatio: true,
-    format: 'jpeg',
-    quality: 90,
-  );
+//   final thumbnailGenerated = await plugin.getVideoThumbnail(
+//     srcFile: path,
+//     destFile: "${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg",
+//     width: 300,
+//     height: 300,
+//     keepAspectRatio: true,
+//     format: 'jpeg',
+//     quality: 90,
+//   );
 
-  print(thumbnailGenerated);
-}
+//   print(thumbnailGenerated);
+// }

@@ -85,10 +85,10 @@ packages:
     dependency: "direct main"
     description:
       name: at_commons
-      sha256: c689910d6de33e60b440fe60dbdea0eb09506d9ca25439a26e6aeb95882d2675
+      sha256: fcbfa90b6fdc619df00d7c7e2cd304da0782f273eddd5c3f39eb5daaebb60dcf
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   at_contact:
     dependency: "direct main"
     description:
@@ -418,14 +418,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
-  fc_native_video_thumbnail:
-    dependency: "direct main"
-    description:
-      name: fc_native_video_thumbnail
-      sha256: "965c6f5bea95c0823c12df145afa224e2303551b884bf17a31ac3934b0ee8329"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2"
   ffi:
     dependency: transitive
     description:

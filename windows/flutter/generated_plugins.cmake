@@ -7,7 +7,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   desktop_window
   emoji_picker_flutter
-  fc_native_video_thumbnail
   file_selector_windows
   local_notifier
   permission_handler_windows
