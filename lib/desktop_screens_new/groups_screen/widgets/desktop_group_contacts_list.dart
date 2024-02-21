@@ -63,7 +63,8 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
 
   @override
   void dispose() {
-    _groupService.emptySelectedGroupContact();
+    _groupService.selectedGroupContacts = [];
+    _groupService.selectedContactsSink.add(_groupService.selectedGroupContacts);
     super.dispose();
   }
 
