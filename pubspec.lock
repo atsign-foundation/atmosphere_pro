@@ -109,8 +109,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/at_contacts_group_flutter"
-      ref: trunk
-      resolved-ref: "182a017ce770d6818d3b8527552a87b99805bb28"
+      ref: "feat/group_service_restore"
+      resolved-ref: "1bcfe1947d0fabe10736c857619dcce5444dc60e"
       url: "https://github.com/atsign-foundation/at_widgets/"
     source: git
     version: "4.0.15"
@@ -518,10 +518,10 @@ packages:
     dependency: "direct main"
     description:
       name: filesystem_picker
-      sha256: "41bb01c65cbd8abc389509adfbd08fc4c9090d2d4d15c5fa8813d0efd980f523"
+      sha256: cc2bfe7e5a4ce21afd5b1b03824c0e6e5386a981ed6cce7bda062b1af805cf62
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "4.1.0"
   fixnum:
     dependency: transitive
     description:
