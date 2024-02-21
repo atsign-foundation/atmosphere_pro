@@ -14,6 +14,8 @@ import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
+import 'package:atsign_atmosphere_pro/widgets/download_all_button.dart';
+import 'package:atsign_atmosphere_pro/widgets/download_all_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -79,30 +81,6 @@ class _DesktopHistoryReceivedCardBodyState
     );
   }
 
-  Widget get buildDownloadButton {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      decoration: BoxDecoration(
-        color: ColorConstants.portlandOrange,
-        borderRadius: BorderRadius.circular(35),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Download',
-            style: CustomTextStyles.whiteW60012,
-          ),
-          SizedBox(width: 8),
-          SvgPicture.asset(
-            AppVectors.icDownloadOutline,
-            fit: BoxFit.cover,
-          )
-        ],
-      ),
-    );
-  }
-
   Widget buildSaveButton() {
     /// check if download expired
     if (!CommonUtilityFunctions()
@@ -116,28 +94,8 @@ class _DesktopHistoryReceivedCardBodyState
         return fileTransferProgress != null &&
                 historyProvider.downloadingFilesList
                     .contains(widget.fileTransfer.key)
-            ? Stack(
-                children: [
-                  Center(
-                    child: SvgPicture.asset(
-                      AppVectors.icCloudDownloading,
-                      width: 32,
-                      height: 32,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Center(
-                    child: SizedBox(
-                      width: 32,
-                      height: 32,
-                      child: CircularProgressIndicator(
-                        value: (fileTransferProgress.percent ?? 0) / 100,
-                        strokeWidth: 1,
-                        color: ColorConstants.downloadIndicatorColor,
-                      ),
-                    ),
-                  ),
-                ],
+            ? DownloadAllProgressIndicator(
+                progress: (fileTransferProgress.percent ?? 0) / 100,
               )
             : !(widget.fileTransfer.files ?? []).every(
                     (element) => !(File(element.path ?? '').existsSync()))
@@ -161,7 +119,7 @@ class _DesktopHistoryReceivedCardBodyState
                         onTap: () async {
                           await downloadFiles(widget.fileTransfer);
                         },
-                        child: buildDownloadButton,
+                        child: DownloadAllButton(),
                       );
       },
     );
