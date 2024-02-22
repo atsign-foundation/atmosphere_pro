@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/widgets/atsign_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -101,24 +102,36 @@ class DesktopDetailHistoryCard extends StatelessWidget {
                           ),
                           SizedBox(height: 16),
                         ],
+                        if ((fileHistory.sharedWith ?? []).length == 1) ...[
+                          buildWidgetWithTitle(
+                            title: 'Sent To',
+                            child: AtSignCardWidget(
+                              atSign: fileHistory.sharedWith?[0].atsign,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                        ],
                         buildWidgetWithTitle(
                           title: 'Sent',
                           subTitle:
                               '${fileHistory.fileDetails?.files?.length} Files',
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return buildFileListStatusWidget(
-                                  (fileHistory.fileDetails?.files ??
-                                      [])[index]);
-                            },
-                            separatorBuilder: (context, index) {
-                              return SizedBox(height: 12);
-                            },
-                            itemCount:
-                                fileHistory.fileDetails?.files?.length ?? 0,
-                          ),
+                          child: (fileHistory.sharedWith ?? []).length == 1
+                              ? buildFileListWidget()
+                              : ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return buildFileListStatusWidget(
+                                        (fileHistory.fileDetails?.files ??
+                                            [])[index]);
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(height: 12);
+                                  },
+                                  itemCount:
+                                      fileHistory.fileDetails?.files?.length ??
+                                          0,
+                                ),
                         ),
                       ],
                     ),
@@ -218,6 +231,34 @@ class DesktopDetailHistoryCard extends StatelessWidget {
             itemCount: fileHistory.sharedWith?.length ?? 0,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildFileListWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      decoration: BoxDecoration(
+        color: ColorConstants.fadedGreyN,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return DesktopHistoryFileItem(
+            data: fileHistory.fileDetails!.files![index],
+            fileTransfer: fileHistory.fileDetails!,
+            type: HistoryType.send,
+            isPreview: true,
+            showStatus: true,
+            isSent: fileHistory.sharedWith?[0].isNotificationSend,
+          );
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(height: 8);
+        },
+        itemCount: fileHistory.fileDetails?.files?.length ?? 0,
       ),
     );
   }

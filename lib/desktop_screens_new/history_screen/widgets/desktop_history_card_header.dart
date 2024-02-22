@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
+import 'package:atsign_atmosphere_pro/widgets/custom_ellipsis_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -121,11 +122,13 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
               ),
               child: SizedBox(
                 width: 392,
-                child: SingleChildScrollView(
-                  child: Text(
-                    '"${widget.fileHistory.notes}"',
-                    textAlign: TextAlign.center,
+                child: Center(
+                  child: CustomEllipsisTextWidget(
+                    text: '"${widget.fileHistory.notes}"',
+                    ellipsis: '... "',
                     style: CustomTextStyles.raisinBlackW40010,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),

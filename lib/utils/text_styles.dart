@@ -557,4 +557,16 @@ class CustomTextStyles {
     fontSize: 12,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle portlandOrangeW60012 = const TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: ColorConstants.portlandOrange,
+  );
+
+  static TextStyle portlandOrangeW50012 = const TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: ColorConstants.portlandOrange,
+  );
 }

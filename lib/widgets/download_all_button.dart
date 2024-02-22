@@ -5,14 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DownloadAllButton extends StatelessWidget {
-  const DownloadAllButton();
+  final bool enable;
+
+  const DownloadAllButton({
+    this.enable = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(
-        color: ColorConstants.portlandOrange,
+        color:
+            enable ? ColorConstants.portlandOrange : ColorConstants.lightGray,
         borderRadius: BorderRadius.circular(35),
       ),
       child: Row(

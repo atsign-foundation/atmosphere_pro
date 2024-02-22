@@ -11,11 +11,13 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,8 @@ class DesktopHistoryFileItem extends StatefulWidget {
   final FileTransfer fileTransfer;
   final HistoryType type;
   final bool isPreview;
+  final bool showStatus;
+  final bool? isSent;
 
   const DesktopHistoryFileItem({
     Key? key,
@@ -31,6 +35,8 @@ class DesktopHistoryFileItem extends StatefulWidget {
     required this.fileTransfer,
     required this.type,
     this.isPreview = false,
+    this.showStatus = false,
+    this.isSent,
   });
 
   @override
@@ -208,7 +214,7 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
           left: 6,
           child: ClipRRect(
             borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(5),
+              left: Radius.circular(7),
             ),
             child: SizedBox(
               width: 50,
@@ -252,6 +258,15 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
           ),
         ),
         SizedBox(width: 4),
+        if (widget.showStatus) ...[
+          SvgPicture.asset(
+            widget.isSent ?? true ? AppVectors.icDone : AppVectors.icUndone,
+            width: 24,
+            height: 24,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(width: 8),
+        ],
         widget.isPreview
             ? buildSizeText()
             : DesktopFileFunctionList(

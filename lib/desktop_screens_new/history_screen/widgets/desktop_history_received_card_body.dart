@@ -16,6 +16,7 @@ import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/widgets/download_all_button.dart';
 import 'package:atsign_atmosphere_pro/widgets/download_all_progress_indicator.dart';
+import 'package:atsign_atmosphere_pro/widgets/expired_notice_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -38,29 +39,39 @@ class _DesktopHistoryReceivedCardBodyState
     extends State<DesktopHistoryReceivedCardBody> {
   late HistoryProvider historyProvider =
       Provider.of<HistoryProvider>(context, listen: false);
+  bool isDownloading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: ColorConstants.culturedColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: ColorConstants.listFileShadowColor.withOpacity(0.25),
-            offset: Offset(0, 4),
-            blurRadius: 9,
-            blurStyle: BlurStyle.inner,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: ColorConstants.culturedColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: ColorConstants.listFileShadowColor.withOpacity(0.25),
+                offset: Offset(0, 4),
+                blurRadius: 9,
+                blurStyle: BlurStyle.inner,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: (widget.fileTransfer.files ?? [])
-              .every((element) => !(File(element.path ?? '').existsSync()))
-          ? buildUnDownloadedFileWidget
-          : DesktopHistoryFileList(
-              fileTransfer: widget.fileTransfer,
-              type: widget.type,
-            ),
+          child: (widget.fileTransfer.files ?? [])
+                  .every((element) => !(File(element.path ?? '').existsSync()))
+              ? buildUnDownloadedFileWidget
+              : DesktopHistoryFileList(
+                  fileTransfer: widget.fileTransfer,
+                  type: widget.type,
+                ),
+        ),
+        SizedBox(height: 12),
+        if (!CommonUtilityFunctions().isFileDownloadAvailable(
+            widget.fileTransfer.date ?? DateTime.now()))
+          ExpiredNoticeWidget(),
+      ],
     );
   }
 
@@ -91,22 +102,18 @@ class _DesktopHistoryReceivedCardBodyState
       builder: (context, provider, child) {
         var fileTransferProgress =
             provider.receivedFileProgress[widget.fileTransfer.key];
-        return fileTransferProgress != null &&
-                historyProvider.downloadingFilesList
-                    .contains(widget.fileTransfer.key)
+        return fileTransferProgress != null
             ? DownloadAllProgressIndicator(
                 progress: (fileTransferProgress.percent ?? 0) / 100,
               )
-            : !(widget.fileTransfer.files ?? []).every(
-                    (element) => !(File(element.path ?? '').existsSync()))
+            : isFilesPresent(widget.fileTransfer)
                 ? SvgPicture.asset(
                     AppVectors.icCloudDownloaded,
                     width: 32,
                     height: 32,
                     fit: BoxFit.cover,
                   )
-                : historyProvider.downloadingFilesList
-                        .contains(widget.fileTransfer.key)
+                : isDownloading
                     ? SizedBox(
                         width: 32,
                         height: 32,
@@ -115,19 +122,23 @@ class _DesktopHistoryReceivedCardBodyState
                           color: ColorConstants.downloadIndicatorColor,
                         ),
                       )
-                    : InkWell(
-                        onTap: () async {
-                          await downloadFiles(widget.fileTransfer);
-                        },
-                        child: DownloadAllButton(),
-                      );
+                    : CommonUtilityFunctions().isFileDownloadAvailable(
+                            widget.fileTransfer.date ?? DateTime.now())
+                        ? InkWell(
+                            onTap: () async {
+                              await downloadFiles(widget.fileTransfer);
+                            },
+                            child: DownloadAllButton(),
+                          )
+                        : DownloadAllButton(enable: false);
       },
     );
   }
 
   Future<void> downloadFiles(FileTransfer file) async {
-    historyProvider.addDownloadingState(file.key);
-
+    setState(() {
+      isDownloading = true;
+    });
     var fileTransferProgress = Provider.of<FileProgressProvider>(
             NavService.navKey.currentContext!,
             listen: false)
@@ -136,11 +147,6 @@ class _DesktopHistoryReceivedCardBodyState
     if (fileTransferProgress != null) {
       return; //returning because download is still in progress
     }
-
-    await Provider.of<InternetConnectivityChecker>(
-            NavService.navKey.currentContext!,
-            listen: false)
-        .checkConnectivity();
 
     var isConnected = Provider.of<InternetConnectivityChecker>(
             NavService.navKey.currentContext!,
@@ -153,11 +159,14 @@ class _DesktopHistoryReceivedCardBodyState
         TextStrings.noInternetMsg,
         bgColor: ColorConstants.redAlert,
       );
+      setState(() {
+        isDownloading = false;
+      });
       return;
     }
 
     for (FileData i in file.files ?? []) {
-      if (!(File(i.path ?? '').existsSync())) {
+      if (!(await File(i.path ?? '').exists())) {
         var result = await Provider.of<HistoryProvider>(
                 NavService.navKey.currentContext!,
                 listen: false)
@@ -167,31 +176,59 @@ class _DesktopHistoryReceivedCardBodyState
           false,
           i.name ?? '',
         );
-        if (result is bool && !result) {
-          historyProvider.removeDownloadingState(file.key);
+        if (result is bool && result) {
+          // setState(() {
+          //   numberOfFinished++;
+          // });
+          await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .saveNewDataInMyFiles(file);
+          print(file.url);
+          // send download acknowledgement
+          await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
+                  listen: false)
+              .sendFileDownloadAcknowledgement(file);
+        } else if (result is bool && !result) {
           SnackbarService().showSnackbar(
             NavService.navKey.currentContext!,
             TextStrings().downloadFailed,
             bgColor: ColorConstants.redAlert,
           );
-
-          return;
+          if (mounted) {
+            setState(() {
+              isDownloading = false;
+            });
+            isFilesPresent(widget.fileTransfer);
+            return;
+          }
         }
       }
     }
-    historyProvider.removeDownloadingState(file.key);
-    SnackbarService().showSnackbar(
-      NavService.navKey.currentContext!,
-      TextStrings().fileDownloadd,
-      bgColor: ColorConstants.successGreen,
-    );
-    await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-            listen: false)
-        .saveNewDataInMyFiles(file);
-    print(file.url);
-    // send download acknowledgement
-    await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
-            listen: false)
-        .sendFileDownloadAcknowledgement(file);
+    if (mounted) {
+      setState(() {
+        isDownloading = false;
+      });
+      Provider.of<HistoryProvider>(context, listen: false).notify();
+      isFilesPresent(widget.fileTransfer);
+      SnackbarService().showSnackbar(
+        NavService.navKey.currentContext!,
+        TextStrings().fileDownloadd,
+        bgColor: ColorConstants.successGreen,
+      );
+    }
+  }
+
+  bool isFilesPresent(FileTransfer files) {
+    bool isPresented = true;
+    for (FileData i in files.files ?? []) {
+      final bool isExist = File(i.path ?? '').existsSync();
+      if (!isExist) {
+        isPresented = false;
+      }
+    }
+    if (context.read<HistoryProvider>().isDownloadDone) {
+      context.read<HistoryProvider>().resetIsDownloadDone();
+    }
+    return isPresented;
   }
 }
