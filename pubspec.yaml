@@ -74,7 +74,7 @@ dependencies:
   local_notifier: ^0.1.1
   at_sync_ui_flutter: ^1.0.8
   showcaseview: ^1.1.5
-  biometric_storage: ^5.0.0+4
+  biometric_storage: ^5.0.1
 
 dev_dependencies:
   flutter_test:
