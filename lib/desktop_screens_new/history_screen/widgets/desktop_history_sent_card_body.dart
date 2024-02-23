@@ -44,7 +44,7 @@ class _DesktopHistorySentCardBodyState
                 if (!value)
                   Text(
                     '${widget.fileHistory.fileDetails?.files?.length} File${(widget.fileHistory.fileDetails?.files?.length ?? 0) > 1 ? 's' : ''} to ${widget.fileHistory.sharedWith?.length} Contact${(widget.fileHistory.sharedWith?.length ?? 0) > 1 ? 's' : ''}',
-                    style: CustomTextStyles.darkSliverWW40012,
+                    style: CustomTextStyles.darkSliverW40012,
                   ),
                 Spacer(),
                 buildExpandDetailsButton(value),

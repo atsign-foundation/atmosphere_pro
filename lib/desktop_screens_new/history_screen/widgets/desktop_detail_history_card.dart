@@ -188,7 +188,7 @@ class DesktopDetailHistoryCard extends StatelessWidget {
         ),
         child: Text(
           content,
-          style: CustomTextStyles.darkSliverWW40012,
+          style: CustomTextStyles.darkSliverW40012,
         ),
       ),
     );

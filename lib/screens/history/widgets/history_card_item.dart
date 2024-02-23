@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_header.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_detail_history_card.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_header.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_body.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_body.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -62,26 +63,40 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           buildDeleteButton(),
         ],
       ),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            HistoryCardHeader(
-              fileHistory: widget.fileHistory,
-            ),
-            SizedBox(height: 12),
-            Flexible(
-              child: HistoryFileList(
-                type: widget.fileHistory.type,
-                fileTransfer: widget.fileHistory.fileDetails,
+      child: InkWell(
+        onTap: () {
+          if (widget.fileHistory.type == HistoryType.send) {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return DesktopDetailHistoryCard(
+                  onPop: () {},
+                  fileHistory: widget.fileHistory,
+                );
+              },
+            );
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widget.fileHistory.type == HistoryType.received
+                  ? HistoryReceivedCardHeader(fileHistory: widget.fileHistory)
+                  : HistorySentCardBody(fileHistory: widget.fileHistory),
+              SizedBox(height: 12),
+              Flexible(
+                child: widget.fileHistory.type == HistoryType.received
+                    ? HistoryReceivedCardBody(fileHistory: widget.fileHistory)
+                    : HistorySentCardBody(fileHistory: widget.fileHistory),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

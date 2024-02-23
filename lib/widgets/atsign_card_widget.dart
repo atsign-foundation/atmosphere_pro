@@ -92,8 +92,8 @@ class _AtSignCardWidgetState extends State<AtSignCardWidget> {
             ),
           ),
           SizedBox(width: 24),
-          // if (_trustedProvider.trustedContacts
-          //     .any((element) => element.atSign == widget.atSign)) ...[
+          if (_trustedProvider.trustedContacts
+              .any((element) => element.atSign == widget.atSign)) ...[
             SizedBox(
               height: 28,
               width: 28,
@@ -107,7 +107,7 @@ class _AtSignCardWidgetState extends State<AtSignCardWidget> {
               ),
             ),
             SizedBox(width: 24),
-          // ]
+          ]
         ],
       ),
     );

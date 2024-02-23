@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DownloadAllButton extends StatelessWidget {
+  final bool isMobile;
   final bool enable;
 
   const DownloadAllButton({
     this.enable = true,
+    this.isMobile = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color:
             enable ? ColorConstants.portlandOrange : ColorConstants.lightGray,
@@ -25,12 +27,22 @@ class DownloadAllButton extends StatelessWidget {
         children: [
           Text(
             'Download',
-            style: CustomTextStyles.whiteW60012,
+            style: isMobile
+                ? CustomTextStyles.whiteW60010
+                : CustomTextStyles.whiteW60012,
           ),
           SizedBox(width: 8),
-          SvgPicture.asset(
-            AppVectors.icDownloadOutline,
-            fit: BoxFit.cover,
+          SizedBox(
+            height: isMobile ? 28 : 32,
+            width: isMobile ? 28 : 32,
+            child: Center(
+              child: SvgPicture.asset(
+                AppVectors.icDownloadOutline,
+                height: 16,
+                width: isMobile ? 24 : 28,
+                fit: BoxFit.cover,
+              ),
+            ),
           )
         ],
       ),

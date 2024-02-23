@@ -53,46 +53,52 @@ class CustomEllipsisTextWidget extends StatelessWidget {
         maxWidth: maxWidth,
       );
 
-    return LayoutBuilder(
-      builder: (context, size) {
-        var span = TextSpan(
-          text: text,
-          style: style,
-        );
+    return SizedBox(
+      width: double.infinity,
+      child: LayoutBuilder(
+        builder: (context, size) {
+          var span = TextSpan(
+            text: text,
+            style: style,
+          );
 
-        var tp = TextPainter(
-          maxLines: maxLines,
-          textAlign: textAlign,
-          textDirection: TextDirection.ltr,
-          text: span,
-        );
+          var tp = TextPainter(
+            maxLines: maxLines,
+            textAlign: textAlign,
+            textDirection: TextDirection.ltr,
+            text: span,
+          );
 
-        tp.layout(maxWidth: size.maxWidth);
+          tp.layout(maxWidth: size.maxWidth);
 
-        var exceeded = tp.didExceedMaxLines;
+          var exceeded = tp.didExceedMaxLines;
 
-        return exceeded
-            ? CustomPaint(
-                size: Size(
-                  textPainter.size.width,
-                  getTextLineHeight(),
-                ),
-                painter: EllipsisTextPainter(
-                  text: TextSpan(
-                    text: text,
-                    style: style,
+          return exceeded
+              ? SizedBox(
+                  height: tp.height,
+                  child: CustomPaint(
+                    size: Size(
+                      textPainter.size.width,
+                      getTextLineHeight(),
+                    ),
+                    painter: EllipsisTextPainter(
+                      text: TextSpan(
+                        text: text,
+                        style: style,
+                      ),
+                      ellipsis: ellipsis,
+                      maxLines: maxLines,
+                      textAlign: textAlign,
+                    ),
                   ),
-                  ellipsis: ellipsis,
-                  maxLines: maxLines,
+                )
+              : Text(
+                  text,
+                  style: style,
                   textAlign: textAlign,
-                ),
-              )
-            : Text(
-                text,
-                style: style,
-                textAlign: textAlign,
-              );
-      },
+                );
+        },
+      ),
     );
   }
 }

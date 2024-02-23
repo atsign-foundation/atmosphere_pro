@@ -136,6 +136,23 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                   ),
                                 ),
                                 SizedBox(width: 4),
+                                if (File(path).existsSync()) ...[
+                                  SvgPicture.asset(
+                                    AppVectors.icDownloadedCheck,
+                                    width: 24,
+                                    height: 24,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  SizedBox(width: 8),
+                                ] else if (File(sentPath).existsSync()) ...[
+                                  SvgPicture.asset(
+                                    AppVectors.icDeliveredCheck,
+                                    width: 24,
+                                    height: 24,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  SizedBox(width: 8),
+                                ],
                                 Text(
                                   '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                   style: CustomTextStyles.oldSliverW400S12,
@@ -167,7 +184,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
               ),
             ),
             SizedBox(width: File(path).existsSync() ? 8 : 12),
-            if (File(path).existsSync() || File(sentPath).existsSync())
+            if (File(path).existsSync() && widget.type == HistoryType.received)
               Container(
                 width: 32,
                 height: 32,
