@@ -43,21 +43,23 @@ class _HistoryReceivedCardBodyState extends State<HistoryReceivedCardBody> {
         : HistoryFileList(
             type: widget.fileHistory.type,
             fileTransfer: widget.fileHistory.fileDetails,
+            isSent: false,
           );
   }
 
   Widget get buildUnDownloadedFileWidget {
     final int numberOfFiles =
         widget.fileHistory.fileDetails?.files?.length ?? 0;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: ColorConstants.culturedColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: ColorConstants.culturedColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
@@ -67,20 +69,17 @@ class _HistoryReceivedCardBodyState extends State<HistoryReceivedCardBody> {
               buildDownloadButton(),
             ],
           ),
-          if (!CommonUtilityFunctions().isFileDownloadAvailable(
-              widget.fileHistory.fileDetails?.date ?? DateTime.now()))
-            ExpiredNoticeWidget(),
-        ],
-      ),
+        ),
+        if (!CommonUtilityFunctions().isFileDownloadAvailable(
+            widget.fileHistory.fileDetails?.date ?? DateTime.now())) ...[
+          SizedBox(height: 12),
+          ExpiredNoticeWidget(),
+        ]
+      ],
     );
   }
 
   Widget buildDownloadButton() {
-    /// check if download expired
-    if (!CommonUtilityFunctions().isFileDownloadAvailable(
-        widget.fileHistory.fileDetails!.date ?? DateTime.now())) {
-      return SizedBox.shrink();
-    }
     return Consumer<FileProgressProvider>(
       builder: (context, provider, child) {
         var fileTransferProgress =

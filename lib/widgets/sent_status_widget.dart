@@ -10,19 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class DesktopSentStatusWidget extends StatefulWidget {
+class SentStatusWidget extends StatefulWidget {
   final ShareStatus status;
 
-  const DesktopSentStatusWidget({
+  const SentStatusWidget({
     required this.status,
   });
 
   @override
-  State<DesktopSentStatusWidget> createState() =>
-      _DesktopSentStatusWidgetState();
+  State<SentStatusWidget> createState() =>
+      _SentStatusWidgetState();
 }
 
-class _DesktopSentStatusWidgetState extends State<DesktopSentStatusWidget> {
+class _SentStatusWidgetState extends State<SentStatusWidget> {
   late TrustedContactProvider _trustedProvider =
       context.read<TrustedContactProvider>();
   String nickname = '';

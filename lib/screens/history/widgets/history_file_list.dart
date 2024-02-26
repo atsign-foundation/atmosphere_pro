@@ -18,10 +18,11 @@ import 'package:provider/provider.dart';
 class HistoryFileList extends StatefulWidget {
   final HistoryType? type;
   final FileTransfer? fileTransfer;
+  final bool isSent;
 
   const HistoryFileList({
     required this.type,
-    required this.fileTransfer,
+    required this.fileTransfer, required this.isSent,
   });
 
   @override
@@ -93,7 +94,7 @@ class _HistoryFileListState extends State<HistoryFileList> {
                       name: file.name ?? '',
                       size: file.size ?? 0,
                     );
-                  },
+                  }, isSent: widget.isSent,
                 );
               },
               itemCount:

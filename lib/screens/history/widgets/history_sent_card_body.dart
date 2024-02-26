@@ -1,6 +1,6 @@
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
-import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
@@ -33,18 +33,24 @@ class _HistorySentCardBodyState extends State<HistorySentCardBody> {
       builder: (context, value, child) {
         return value
             ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildAtSignListText,
-                  SizedBox(height: 4),
-                  CustomEllipsisTextWidget(
-                    text: widget.fileHistory.notes ?? '',
-                    ellipsis: '... "',
-                    style: CustomTextStyles.darkSliverW40012,
-                  ),
+                  if ((widget.fileHistory.notes ?? '').isNotEmpty) ...[
+                    SizedBox(height: 4),
+                    CustomEllipsisTextWidget(
+                      text: widget.fileHistory.notes ?? '',
+                      ellipsis: '... "',
+                      style: CustomTextStyles.darkSliverW40012,
+                    ),
+                  ],
                   SizedBox(height: 12),
                   HistoryFileList(
                     type: widget.fileHistory.type,
                     fileTransfer: widget.fileHistory.fileDetails,
+                    isSent: (widget.fileHistory.sharedWith ?? []).every(
+                        (element) => element.isNotificationSend ?? false),
                   ),
                 ],
               )
@@ -57,55 +63,62 @@ class _HistorySentCardBodyState extends State<HistorySentCardBody> {
 
   Widget get buildAtSignListText {
     return RichText(
+      textAlign: TextAlign.left,
       text: TextSpan(
-        children: listInlineSpan,
+        children: listInlineSpan(),
       ),
     );
   }
 
-  List<InlineSpan> get listInlineSpan {
+  List<InlineSpan> listInlineSpan() {
     List<InlineSpan> result = [];
 
-    widget.fileHistory.sharedWith?.forEach((element) async {
-      final nickname = await CommonUtilityFunctions()
-          .getNickname(widget.fileHistory.fileDetails?.sender ?? '');
+    widget.fileHistory.sharedWith?.forEach((element) {
+      final nickname =
+          getCachedContactDetail(element.atsign ?? '')?.tags?['nickname'] ?? '';
       final isTrust = trustedContactProvider.trustedContacts
           .any((e) => e.atSign == element.atsign);
+
+      if (nickname.isNotEmpty) {
+        result.add(
+          TextSpan(
+            text: '$nickname ',
+            style: CustomTextStyles.blackW60013,
+          ),
+        );
+      }
       result.add(
         TextSpan(
-          children: [
-            if (nickname.isNotEmpty)
-              TextSpan(
-                text: '$nickname ',
-                style: CustomTextStyles.blackW60013,
-              ),
-            TextSpan(
-              text: element.atsign,
-              style: CustomTextStyles.blackW40013,
-            ),
-            if (isTrust)
-              WidgetSpan(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(width: 4),
-                    SvgPicture.asset(
-                      AppVectors.icTrustActivated,
-                      width: 16,
-                      height: 16,
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                ),
-              ),
-            if (element.atsign != widget.fileHistory.sharedWith?.last.atsign)
-              TextSpan(
-                text: ',',
-                style: CustomTextStyles.blackW40013,
-              ),
-          ],
+          text: element.atsign,
+          style: CustomTextStyles.blackW40013,
         ),
       );
+      if (isTrust) {
+        result.add(
+          WidgetSpan(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(width: 4),
+                SvgPicture.asset(
+                  AppVectors.icTrustActivated,
+                  width: 16,
+                  height: 16,
+                  fit: BoxFit.cover,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      if (element.atsign != widget.fileHistory.sharedWith?.last.atsign) {
+        result.add(
+          TextSpan(
+            text: ',',
+            style: CustomTextStyles.blackW40013,
+          ),
+        );
+      }
     });
 
     return result;
@@ -113,7 +126,7 @@ class _HistorySentCardBodyState extends State<HistorySentCardBody> {
 
   Widget get buildCollapsedContent {
     final numberOfFiles = widget.fileHistory.fileDetails?.files?.length ?? 0;
-    final numberOfContacts = widget.fileHistory.fileDetails?.files?.length ?? 0;
+    final numberOfContacts = widget.fileHistory.sharedWith?.length ?? 0;
 
     return Row(
       children: [

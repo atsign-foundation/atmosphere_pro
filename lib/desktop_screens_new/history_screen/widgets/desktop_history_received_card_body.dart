@@ -150,6 +150,11 @@ class _DesktopHistoryReceivedCardBodyState
       return; //returning because download is still in progress
     }
 
+    await Provider.of<InternetConnectivityChecker>(
+        NavService.navKey.currentContext!,
+        listen: false)
+        .checkConnectivity();
+
     var isConnected = Provider.of<InternetConnectivityChecker>(
             NavService.navKey.currentContext!,
             listen: false)

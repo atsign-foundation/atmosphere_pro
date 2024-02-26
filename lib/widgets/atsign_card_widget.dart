@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -56,14 +55,18 @@ class _AtSignCardWidgetState extends State<AtSignCardWidget> {
                 left: Radius.circular(10),
               ),
               child: (image ?? []).isNotEmpty
-                  ? CustomCircleAvatar(
-                      byteImage: image,
-                      nonAsset: true,
-                size: nickname.isNotEmpty ? 76 : 60,
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.horizontal(
+                        left: Radius.circular(10),
+                      ),
+                      child: Image.memory(
+                        image!,
+                        fit: BoxFit.cover,
+                      ),
                     )
                   : ContactInitial(
                       borderRadius: 0,
-                      size: nickname.isNotEmpty ? 76 : 60,
+                      size: 64,
                       initials: widget.atSign?.substring(1) ?? 'UG',
                     ),
             ),

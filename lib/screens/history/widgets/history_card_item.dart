@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_detail_history_card.dart';
+import 'package:atsign_atmosphere_pro/widgets/detail_history_card.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_body.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_body.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_header.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
@@ -46,6 +47,12 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   @override
   void initState() {
     super.initState();
+    widget.fileHistory.fileDetails?.files?.forEach(
+      (e) => e.path = getFilePath(
+        name: e.name ?? '',
+        type: HistoryType.received,
+      ),
+    );
   }
 
   @override
@@ -68,10 +75,20 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           if (widget.fileHistory.type == HistoryType.send) {
             showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.95,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
               builder: (context) {
-                return DesktopDetailHistoryCard(
+                return DetailHistoryCard(
                   onPop: () {},
                   fileHistory: widget.fileHistory,
+                  isMobile: true,
                 );
               },
             );
@@ -88,7 +105,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
             children: [
               widget.fileHistory.type == HistoryType.received
                   ? HistoryReceivedCardHeader(fileHistory: widget.fileHistory)
-                  : HistorySentCardBody(fileHistory: widget.fileHistory),
+                  : HistorySentCardHeader(fileHistory: widget.fileHistory),
               SizedBox(height: 12),
               Flexible(
                 child: widget.fileHistory.type == HistoryType.received
@@ -177,7 +194,10 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
                   (e) => PlatformFile(
                     name: e.name ?? '',
                     size: e.size ?? 0,
-                    path: getFilePath(e.name ?? ''),
+                    path: getFilePath(
+                      name: e.name ?? '',
+                      type: widget.fileHistory.type,
+                    ),
                   ),
                 )
                 .toList());
@@ -198,13 +218,19 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           () {
             widget.fileHistory.fileDetails!.files!.forEach((e) async {
               if (checkFileExist(data: e)) {
-                await File(getFilePath(e.name ?? '')).delete();
+                await File(getFilePath(
+                  name: e.name ?? '',
+                  type: widget.fileHistory.type,
+                )).delete();
                 await Provider.of<MyFilesProvider>(
                         NavService.navKey.currentContext!,
                         listen: false)
                     .removeParticularFile(
                   widget.fileHistory.fileDetails?.key ?? '',
-                  getFilePath(e.name ?? '').split(Platform.pathSeparator).last,
+                  getFilePath(
+                    name: e.name ?? '',
+                    type: widget.fileHistory.type,
+                  ).split(Platform.pathSeparator).last,
                 );
 
                 await Provider.of<MyFilesProvider>(
@@ -344,7 +370,10 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   bool checkFileExist({required FileData data}) {
     bool fileExists = false;
     String sentFilePath = getSentFilePath(data.name ?? '');
-    String receivedFilePath = getFilePath(data.name ?? '');
+    String receivedFilePath = getFilePath(
+      name: data.name ?? '',
+      type: HistoryType.received,
+    );
 
     /// for sent file directory
     if (widget.fileHistory.type == HistoryType.send) {
@@ -359,8 +388,11 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
     return fileExists;
   }
 
-  String getFilePath(String name) {
-    if (widget.fileHistory.type == HistoryType.send) {
+  String getFilePath({
+    required String name,
+    required HistoryType? type,
+  }) {
+    if (type == HistoryType.send) {
       String sentFilePath = getSentFilePath(name);
       File file = File(sentFilePath);
       if (file.existsSync()) {

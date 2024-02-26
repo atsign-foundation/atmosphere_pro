@@ -257,7 +257,7 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
             ],
           ),
         ),
-        SizedBox(width: 4),
+        SizedBox(width: 8),
         if (widget.showStatus) ...[
           SvgPicture.asset(
             widget.isSent ?? true ? AppVectors.icDone : AppVectors.icUndone,

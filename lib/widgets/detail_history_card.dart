@@ -2,30 +2,31 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_file_item.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_history_status_badges.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_sent_status_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/widgets/atsign_card_widget.dart';
+import 'package:atsign_atmosphere_pro/widgets/sent_status_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-class DesktopDetailHistoryCard extends StatelessWidget {
+class DetailHistoryCard extends StatelessWidget {
   final VoidCallback onPop;
   final FileHistory fileHistory;
+  final bool isMobile;
 
-  const DesktopDetailHistoryCard({
+  const DetailHistoryCard({
     required this.onPop,
     required this.fileHistory,
+    this.isMobile = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height,
-      child: Row(
-        children: [
+    return Row(
+      children: [
+        if (!isMobile)
           Expanded(
             child: InkWell(
               onTap: onPop,
@@ -34,26 +35,47 @@ class DesktopDetailHistoryCard extends StatelessWidget {
               splashColor: Colors.transparent,
             ),
           ),
-          Container(
-            width: 448,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(20),
-              ),
-              boxShadow: [
+        Container(
+          width: isMobile ? MediaQuery.sizeOf(context).width : 448,
+          height: isMobile ? null : MediaQuery.sizeOf(context).width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: isMobile
+                ? BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  )
+                : BorderRadius.horizontal(
+                    left: Radius.circular(20),
+                  ),
+            boxShadow: [
+              if (!isMobile)
                 BoxShadow(
                   color: Colors.black.withOpacity(0.25),
                   offset: Offset(0, 4),
                   blurRadius: 44,
                 )
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isMobile) ...[
+                  SizedBox(height: 16),
+                  Center(
+                    child: Container(
+                      width: 152,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(38),
+                        color: ColorConstants.dividerGrayColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                ] else ...[
                   SizedBox(height: 40),
                   InkWell(
                     onTap: onPop,
@@ -70,20 +92,23 @@ class DesktopDetailHistoryCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                ],
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                     physics: ClampingScrollPhysics(),
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildTextWidgetWithTitle(
-                              title: 'Sent on',
-                              content: DateFormat("MMMM d, y 'at' HH:mm")
-                                  .format(fileHistory.fileDetails?.date ??
-                                      DateTime.now()),
+                            Expanded(
+                              child: buildTextWidgetWithTitle(
+                                title: 'Sent on',
+                                content: DateFormat("MMMM d, y 'at' HH:mm")
+                                    .format(fileHistory.fileDetails?.date ??
+                                        DateTime.now()),
+                              ),
                             ),
                             buildWidgetWithTitle(
                               title: 'Status',
@@ -136,12 +161,12 @@ class DesktopDetailHistoryCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -196,7 +221,7 @@ class DesktopDetailHistoryCard extends StatelessWidget {
 
   Widget buildFileListStatusWidget(FileData data) {
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 8, 10, 12),
+      padding: EdgeInsets.fromLTRB(6, 8, 6, 12),
       decoration: BoxDecoration(
         color: ColorConstants.fadedGreyN,
         borderRadius: BorderRadius.circular(10),
@@ -212,16 +237,16 @@ class DesktopDetailHistoryCard extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            margin: EdgeInsets.only(top: 8, bottom: 12),
+            margin: EdgeInsets.fromLTRB(6, 8, 6, 12),
             color: ColorConstants.dividerGrayColor,
             height: 3,
           ),
           ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 2),
+            padding: EdgeInsets.symmetric(horizontal: 6),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return DesktopSentStatusWidget(
+              return SentStatusWidget(
                 status: (fileHistory.sharedWith ?? [])[index],
               );
             },
@@ -237,7 +262,7 @@ class DesktopDetailHistoryCard extends StatelessWidget {
 
   Widget buildFileListWidget() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
         color: ColorConstants.fadedGreyN,
         borderRadius: BorderRadius.circular(10),
