@@ -14,6 +14,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+// import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class _DesktopGroupsListState extends State<DesktopGroupsList> {
 
   @override
   void initState() {
-    GroupService().getTrustedContacts();
+    // context.read<TrustedContactProvider>().getTrustedContact();
     searchController = TextEditingController(
         text: context.read<DesktopGroupsScreenProvider>().searchGroupText);
     super.initState();

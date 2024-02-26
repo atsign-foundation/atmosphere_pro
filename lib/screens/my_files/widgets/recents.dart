@@ -179,8 +179,8 @@ Widget thumbnail(String extension, String path) {
                   ),
                 )
               : FutureBuilder(
-                  // future: generateVideoThumbnail(path),
-                  future: null,
+                  future: generateVideoThumbnail(path),
+                  // future: null,
                   builder: (context, snapshot) => ClipRRect(
                     borderRadius: BorderRadius.circular(10.toHeight),
                     child: GestureDetector(
@@ -273,15 +273,15 @@ Future<dynamic> generateVideoThumbnail(String path) async {
     return;
   }
 
-  final thumbnailGenerated = await plugin.getVideoThumbnail(
+  await plugin.getVideoThumbnail(
     srcFile: path,
     destFile: "${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg",
     width: 300,
     height: 300,
     keepAspectRatio: true,
-    format: 'jpeg',
     quality: 90,
+    type: 'jpeg',
   );
 
-  print(thumbnailGenerated);
+  // print(thumbnailGenerated);
 }

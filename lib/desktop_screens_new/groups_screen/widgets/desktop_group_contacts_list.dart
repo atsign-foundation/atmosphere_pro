@@ -12,6 +12,7 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -39,6 +40,7 @@ class DesktopGroupContactsList extends StatefulWidget {
 class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
   late GroupService _groupService;
   late DesktopGroupsScreenProvider groupProvider;
+  late TrustedContactProvider trustedProvider;
   late TextEditingController searchController;
   bool blockingContact = false;
   bool deletingContact = false;
@@ -47,6 +49,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
   void initState() {
     _groupService = GroupService();
     groupProvider = context.read<DesktopGroupsScreenProvider>();
+    trustedProvider = context.read<TrustedContactProvider>();
     searchController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       groupProvider.setSearchContactText('');
@@ -97,7 +100,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
           (widget.initialData ?? []).isNotEmpty
               ? buildContactsList(provider.showTrustedContacts
                   ? widget.initialData
-                      ?.where((e) => _groupService.trustedContacts.any(
+                      ?.where((e) => trustedProvider.trustedContacts.any(
                           (element) => element.atSign == e?.contact?.atSign))
                       .toList()
                   : widget.initialData)
@@ -138,7 +141,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                         );
                       } else {
                         return buildContactsList(provider.showTrustedContacts
-                            ? _groupService.trustedContacts
+                            ? trustedProvider.trustedContacts
                                 .map((e) => GroupContactsModel(
                                       contact: e,
                                       contactType: ContactsType.CONTACT,
@@ -380,7 +383,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                             _groupService.selectedGroupContacts);
                       }
                     },
-                    isTrusted: _groupService.trustedContacts.any((element) =>
+                    isTrusted: trustedProvider.trustedContacts.any((element) =>
                         element.atSign ==
                         contactsForAlphabet[index]?.contact?.atSign),
                   ),
@@ -403,7 +406,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                           _groupService.selectedGroupContacts);
                     }
                   },
-                  isTrusted: _groupService.trustedContacts.any((element) =>
+                  isTrusted: trustedProvider.trustedContacts.any((element) =>
                       element.atSign ==
                       contactsForAlphabet[index]?.contact?.atSign),
                 ),

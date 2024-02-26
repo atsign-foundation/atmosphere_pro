@@ -96,11 +96,11 @@ dev_dependencies:
   msix: ^3.3.1
 
 dependency_overrides:
-  at_contacts_group_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets/
-      path: packages/at_contacts_group_flutter
-      ref: feat/group_service_restore
+  # at_contacts_group_flutter:
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_widgets/
+  #     path: packages/at_contacts_group_flutter
+  #     ref: feat/group_service_restore
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
