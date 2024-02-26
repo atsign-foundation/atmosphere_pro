@@ -11,26 +11,32 @@ import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
+import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class DesktopHistoryFileItem extends StatefulWidget {
   final FileData data;
   final FileTransfer fileTransfer;
-  final int index;
   final HistoryType type;
+  final bool isPreview;
+  final bool showStatus;
+  final bool? isSent;
 
   const DesktopHistoryFileItem({
     Key? key,
     required this.data,
     required this.fileTransfer,
-    required this.index,
     required this.type,
+    this.isPreview = false,
+    this.showStatus = false,
+    this.isSent,
   });
 
   @override
@@ -155,20 +161,23 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
       children: [
         InkWell(
           onTap: () async {
-            !isDownloaded
-                ? CommonUtilityFunctions()
-                        .checkForDownloadAvailability(widget.fileTransfer)
-                    ? await downloadFiles()
-                    : CommonUtilityFunctions().showFileHasExpiredDialog(
-                        MediaQuery.textScaleFactorOf(context),
-                      )
-                : await OpenFile.open(
-                    File(filePath).existsSync() ? filePath : sentFilePath,
-                  );
+            if (!widget.isPreview) {
+              !isDownloaded
+                  ? CommonUtilityFunctions()
+                          .checkForDownloadAvailability(widget.fileTransfer)
+                      ? await downloadFiles()
+                      : CommonUtilityFunctions().showFileHasExpiredDialog(
+                          MediaQuery.textScaleFactorOf(context),
+                        )
+                  : await OpenFile.open(
+                      File(filePath).existsSync() ? filePath : sentFilePath,
+                    );
+            }
           },
           child: buildFileCard(),
         ),
-        if (File(filePath).existsSync() || File(sentFilePath).existsSync())
+        if ((File(filePath).existsSync() || File(sentFilePath).existsSync()) &&
+            !widget.isPreview)
           buildMarkRead(),
       ],
     );
@@ -244,22 +253,33 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
                   ],
                 ),
               ),
-              buildSizeText(),
+              if (!widget.isPreview) buildSizeText(),
             ],
           ),
         ),
-        SizedBox(width: 4),
-        DesktopFileFunctionList(
-          filePath: filePath,
-          sentFilePath: sentFilePath,
-          date: widget.fileTransfer.date ?? DateTime.now(),
-          idKey: widget.fileTransfer.key,
-          name: widget.data.name ?? '',
-          size: widget.data.size ?? 0,
-          isDownloaded: isDownloaded,
-          isDownloading: isDownloading,
-          type: widget.type,
-        ),
+        SizedBox(width: 8),
+        if (widget.showStatus) ...[
+          SvgPicture.asset(
+            widget.isSent ?? true ? AppVectors.icDone : AppVectors.icUndone,
+            width: 24,
+            height: 24,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(width: 8),
+        ],
+        widget.isPreview
+            ? buildSizeText()
+            : DesktopFileFunctionList(
+                filePath: filePath,
+                sentFilePath: sentFilePath,
+                date: widget.fileTransfer.date ?? DateTime.now(),
+                idKey: widget.fileTransfer.key,
+                name: widget.data.name ?? '',
+                size: widget.data.size ?? 0,
+                isDownloaded: isDownloaded,
+                isDownloading: isDownloading,
+                type: widget.type,
+              ),
       ],
     );
   }

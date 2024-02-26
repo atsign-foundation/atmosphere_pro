@@ -3,6 +3,7 @@ import 'package:atsign_atmosphere_pro/data_models/enums/file_category_type.dart'
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
+import 'package:atsign_atmosphere_pro/widgets/detail_history_card.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_filter_history_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/destop_history_card_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
@@ -55,203 +56,216 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
 
     SizeConfig().init(context);
     screenWidth = MediaQuery.of(context).size.width;
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 32),
-        color: ColorConstants.background,
-        child: ProviderHandler<HistoryProvider>(
-            functionName: context.read<HistoryProvider>().GET_ALL_FILE_HISTORY,
-            load: (provider) async {
-              await provider.getAllFileTransferHistory();
-              filteredFiles = getDisplayFileData(provider.allFilesHistory);
-            },
-            successBuilder: (provider) {
-              filterSearchFiles();
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 80, vertical: 32),
+            color: ColorConstants.background,
+            child: ProviderHandler<HistoryProvider>(
+                functionName:
+                    context.read<HistoryProvider>().GET_ALL_FILE_HISTORY,
+                load: (provider) async {
+                  await provider.getAllFileTransferHistory();
+                  filteredFiles = getDisplayFileData(provider.allFilesHistory);
+                },
+                successBuilder: (provider) {
+                  filterSearchFiles();
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Transfer History",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Spacer(),
-                      InkWell(
-                        onTap: () async {
-                          context
-                              .read<HistoryProvider>()
-                              .setSelectedType(HistoryType.received);
-                        },
-                        child: Container(
-                          width: 136,
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            color: typeSelected == HistoryType.received
-                                ? Theme.of(context).primaryColor
-                                : ColorConstants.MILD_GREY,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                              child: Text(
-                            "Received",
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Transfer History",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 7.toFont,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
                             ),
-                          )),
-                        ),
-                      ),
-                      SizedBox(width: 4),
-                      InkWell(
-                        onTap: () {
-                          context
-                              .read<HistoryProvider>()
-                              .setSelectedType(HistoryType.send);
-                        },
-                        child: Container(
-                          width: 136,
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            color: typeSelected == HistoryType.send
-                                ? Theme.of(context).primaryColor
-                                : ColorConstants.MILD_GREY,
-                            borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Center(
-                              child: Text(
-                            "Sent",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 7.toFont,
-                            ),
-                          )),
-                        ),
-                      ),
-                      Spacer(),
-                      isSearchActive
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(40),
-                              child: Container(
-                                height: 40,
-                                width: screenWidth <= 1380 ? 200 : 308,
-                                color: Colors.white,
-                                child: TextField(
-                                  controller: searchController,
-                                  autofocus: true,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      searchController.text = value;
-                                    });
-                                    filterSearchFiles();
-                                  },
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 28, vertical: 8),
-                                    border: InputBorder.none,
-                                    hintText: 'Search',
-                                    hintStyle: TextStyle(
-                                      color: ColorConstants.grey,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    suffixIcon: InkWell(
-                                      onTap: () {
-                                        searchController.text.isEmpty
-                                            ? setState(() {
-                                                isSearchActive = false;
-                                              })
-                                            : setState(() {
-                                                searchController.clear();
-                                              });
-                                      },
-                                      child: const Icon(Icons.close),
-                                    ),
-                                  ),
-                                ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () async {
+                              context
+                                  .read<HistoryProvider>()
+                                  .setSelectedType(HistoryType.received);
+                            },
+                            child: Container(
+                              width: 136,
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                color: typeSelected == HistoryType.received
+                                    ? Theme.of(context).primaryColor
+                                    : ColorConstants.MILD_GREY,
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            )
-                          : IconButtonWidget(
-                              icon: AppVectors.icSearch,
-                              onTap: () {
-                                setState(() {
-                                  isSearchActive = true;
-                                });
-                              },
+                              child: Center(
+                                  child: Text(
+                                "Received",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 7.toFont,
+                                ),
+                              )),
                             ),
-                      SizedBox(width: 12),
-                      InkWell(
-                        onTap: () {
-                          _onTapFilterIcon();
-                          setState(() {
-                            isFilterOpened = true;
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          isFilterOpened
-                              ? AppVectors.icFilterOpened
-                              : AppVectors.icFilterGray,
-                          key: filterKey,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
+                          ),
+                          SizedBox(width: 4),
+                          InkWell(
+                            onTap: () {
+                              context
+                                  .read<HistoryProvider>()
+                                  .setSelectedType(HistoryType.send);
+                            },
+                            child: Container(
+                              width: 136,
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                color: typeSelected == HistoryType.send
+                                    ? Theme.of(context).primaryColor
+                                    : ColorConstants.MILD_GREY,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Center(
+                                  child: Text(
+                                "Sent",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 7.toFont,
+                                ),
+                              )),
+                            ),
+                          ),
+                          Spacer(),
+                          isSearchActive
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: Container(
+                                    height: 40,
+                                    width: screenWidth <= 1380 ? 200 : 308,
+                                    color: Colors.white,
+                                    child: TextField(
+                                      controller: searchController,
+                                      autofocus: true,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          searchController.text = value;
+                                        });
+                                        filterSearchFiles();
+                                      },
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 28, vertical: 8),
+                                        border: InputBorder.none,
+                                        hintText: 'Search',
+                                        hintStyle: TextStyle(
+                                          color: ColorConstants.grey,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        suffixIcon: InkWell(
+                                          onTap: () {
+                                            searchController.text.isEmpty
+                                                ? setState(() {
+                                                    isSearchActive = false;
+                                                  })
+                                                : setState(() {
+                                                    searchController.clear();
+                                                  });
+                                          },
+                                          child: const Icon(Icons.close),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : IconButtonWidget(
+                                  icon: AppVectors.icSearch,
+                                  onTap: () {
+                                    setState(() {
+                                      isSearchActive = true;
+                                    });
+                                  },
+                                ),
+                          SizedBox(width: 12),
+                          InkWell(
+                            onTap: () {
+                              _onTapFilterIcon();
+                              setState(() {
+                                isFilterOpened = true;
+                              });
+                            },
+                            child: SvgPicture.asset(
+                              isFilterOpened
+                                  ? AppVectors.icFilterOpened
+                                  : AppVectors.icFilterGray,
+                              key: filterKey,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          IconButtonWidget(
+                            onTap: () async {
+                              var provider = context.read<HistoryProvider>();
+                              historyProvider.resetData();
+                              await provider.getAllFileTransferHistory();
+                              filteredFiles =
+                                  getDisplayFileData(provider.allFilesHistory);
+                            },
+                            icon: AppVectors.icRefresh,
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 12),
-                      IconButtonWidget(
-                        onTap: () async {
-                          var provider = context.read<HistoryProvider>();
-                          historyProvider.resetData();
-                          await provider.getAllFileTransferHistory();
-                          filteredFiles =
-                              getDisplayFileData(provider.allFilesHistory);
-                        },
-                        icon: AppVectors.icRefresh,
+                      SizedBox(
+                        height: 12,
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.black,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
 
-                  //body
-                  buildHistoryList.isNotEmpty
-                      ? ListView.separated(
-                          key: UniqueKey(),
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: buildHistoryList.length,
-                          itemBuilder: (context, index) {
-                            return buildHistoryList[index];
-                          },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(height: 12);
-                          },
-                        )
-                      : Center(
-                          child: Text('No results found'),
-                        )
-                ],
-              );
-            }),
-      ),
+                      //body
+                      buildHistoryList.isNotEmpty
+                          ? ListView.separated(
+                              key: UniqueKey(),
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: buildHistoryList.length,
+                              itemBuilder: (context, index) {
+                                return buildHistoryList[index];
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: 12);
+                              },
+                            )
+                          : Center(
+                              child: Text('No results found'),
+                            )
+                    ],
+                  );
+                }),
+          ),
+        ),
+        if (historyProvider.selectedFileHistory != null)
+          DetailHistoryCard(
+            onPop: () {
+              historyProvider.setSelectedFileHistory(null);
+            },
+            fileHistory: historyProvider.selectedFileHistory!,
+          ),
+      ],
     );
   }
 
@@ -445,9 +459,23 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
           }
         }
         result.add(
-          DesktopHistoryCardItem(
-            key: UniqueKey(),
-            fileHistory: filteredFiles[i],
+          InkWell(
+            onTap: () {
+              if (filteredFiles[i].type == HistoryType.send) {
+                historyProvider.setSelectedFileHistory(filteredFiles[i]);
+              }
+            },
+            child: Selector<HistoryProvider, FileHistory?>(
+              builder: (context, value, child) {
+                return DesktopHistoryCardItem(
+                  key: UniqueKey(),
+                  fileHistory: filteredFiles[i],
+                  isSelected: filteredFiles[i].fileDetails?.key ==
+                      value?.fileDetails?.key,
+                );
+              },
+              selector: (_, p) => p.selectedFileHistory,
+            ),
           ),
         );
       }

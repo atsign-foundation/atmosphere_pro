@@ -79,6 +79,10 @@ class HistoryProvider extends BaseModel {
   String? app_lifecycle_state;
   HistoryType typeSelected = HistoryType.received;
 
+  FileHistory? selectedFileHistory;
+
+  List<String> listExpandedFiles = [];
+
   resetData() {
     isSyncedDataFetched = false;
     sentHistory = [];
@@ -92,6 +96,7 @@ class HistoryProvider extends BaseModel {
     tempSentHistory = [];
     receivedFileHistory = [];
     allFilesHistory = [];
+    listExpandedFiles = [];
     listType = FileType.values.toList();
     notifyListeners();
   }
@@ -128,7 +133,21 @@ class HistoryProvider extends BaseModel {
     notifyListeners();
   }
 
+  void setSelectedFileHistory(FileHistory? fileHistory) {
+    selectedFileHistory = fileHistory;
+    notifyListeners();
+  }
+
   void notify() {
+    notifyListeners();
+  }
+
+  void setExpandedFile(String key) {
+    if (!listExpandedFiles.contains(key)) {
+      listExpandedFiles.add(key);
+    } else {
+      listExpandedFiles.remove(key);
+    }
     notifyListeners();
   }
 

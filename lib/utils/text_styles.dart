@@ -266,6 +266,12 @@ class CustomTextStyles {
       fontSize: 15,
       fontWeight: FontWeight.normal);
 
+  static TextStyle orangeColorW50013 = TextStyle(
+    color: ColorConstants.orangeColor,
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle greyText12 = TextStyle(
       color: ColorConstants.greyText,
       fontSize: 12,
@@ -444,10 +450,28 @@ class CustomTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle raisinBlackW50013 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 13.toFont,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle raisinBlackW50012 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 12.toFont,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle darkSliverWW50015 = TextStyle(
     color: ColorConstants.darkSliver,
     fontSize: 15,
     fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle darkSliverW40012 = TextStyle(
+    color: ColorConstants.darkSliver,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
   );
 
   static TextStyle blackW60012 = TextStyle(
@@ -472,6 +496,12 @@ class CustomTextStyles {
     color: Colors.black,
     fontWeight: FontWeight.w400,
     fontSize: 12,
+  );
+
+  static TextStyle blackW40013 = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+    fontSize: 13,
   );
 
   static TextStyle raisinBlackW40010 = TextStyle(
@@ -514,5 +544,41 @@ class CustomTextStyles {
     color: ColorConstants.raisinBlack,
     fontSize: 11,
     fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle whiteW60012 = const TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle whiteW60010 = const TextStyle(
+    color: Colors.white,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle spanishGrayW60010 = const TextStyle(
+    color: ColorConstants.spanishGray,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle spanishGrayW50012 = const TextStyle(
+    color: ColorConstants.spanishGray,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle portlandOrangeW60012 = const TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: ColorConstants.portlandOrange,
+  );
+
+  static TextStyle portlandOrangeW50012 = const TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: ColorConstants.portlandOrange,
   );
 }

@@ -7,6 +7,7 @@ import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
+import 'package:atsign_atmosphere_pro/widgets/custom_ellipsis_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -70,70 +71,88 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
                 .toString();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8),
+      padding: widget.fileHistory.type == HistoryType.received
+          ? EdgeInsets.only(left: 12, right: 12, top: 12)
+          : EdgeInsets.only(top: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: CustomTextStyles.blackW60012,
-                  ),
-                  if (nickname.isNotEmpty ||
-                      (widget.fileHistory.type != HistoryType.received &&
-                          widget.fileHistory.sharedWith?.length != 1))
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 140,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      subTitle,
-                      style: CustomTextStyles.blackW40010,
+                      title,
+                      style: CustomTextStyles.blackW60012,
                     ),
-                ],
+                    if (nickname.isNotEmpty ||
+                        (widget.fileHistory.type != HistoryType.received &&
+                            widget.fileHistory.sharedWith?.length != 1))
+                      Text(
+                        subTitle,
+                        style: CustomTextStyles.blackW40010,
+                      ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 12),
+              if (trustedContactProvider.trustedContacts.any((element) =>
+                      element.atSign ==
+                      widget.fileHistory.fileDetails?.sender) ||
+                  (widget.fileHistory.sharedWith?.length == 1 &&
+                      trustedContactProvider.trustedContacts.any((element) =>
+                          element.atSign ==
+                          widget.fileHistory.sharedWith?.single.atsign)))
+                SvgPicture.asset(
+                  AppVectors.icTrust,
+                  color: ColorConstants.portlandOrange,
+                )
+            ],
+          ),
+          Spacer(),
+          if ((widget.fileHistory.notes ?? '').isNotEmpty) ...[
+            Padding(
+              padding: EdgeInsets.only(
+                top: widget.fileHistory.type == HistoryType.received ? 4 : 12,
+              ),
+              child: SizedBox(
+                width: 392,
+                child: Center(
+                  child: CustomEllipsisTextWidget(
+                    text: '"${widget.fileHistory.notes}"',
+                    ellipsis: '... "',
+                    style: CustomTextStyles.raisinBlackW40010,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
-            SizedBox(width: 12),
-            if (trustedContactProvider.trustedContacts.any((element) =>
-                    element.atSign == widget.fileHistory.fileDetails?.sender) ||
-                (widget.fileHistory.sharedWith?.length == 1 &&
-                    trustedContactProvider.trustedContacts.any((element) =>
-                        element.atSign ==
-                        widget.fileHistory.sharedWith?.single.atsign)))
-              SvgPicture.asset(
-                AppVectors.icTrust,
-                color: ColorConstants.portlandOrange,
-              )
-          ]),
-          SizedBox(width: 20),
-          (widget.fileHistory.fileDetails?.notes ?? '').isNotEmpty
-              ? Expanded(
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Text(
-                        '"${widget.fileHistory.fileDetails?.notes}"',
-                        style: CustomTextStyles.raisinBlackW40010,
-                      ),
-                    ),
-                  ),
-                )
-              : Spacer(),
-          SizedBox(width: 4),
+            Spacer(),
+          ],
           Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                DateFormat(MixedConstants.isToday(
-                            widget.fileHistory.fileDetails!.date!)
-                        ? 'HH:mm'
-                        : 'dd/MM/yyyy HH:mm')
-                    .format(widget.fileHistory.fileDetails!.date!),
+                DateFormat(
+                  MixedConstants.isToday(widget.fileHistory.fileDetails!.date!)
+                      ? 'HH:mm'
+                      : 'dd/MM/yyyy HH:mm',
+                ).format(widget.fileHistory.fileDetails!.date!),
                 style: CustomTextStyles.raisinBlackW40010,
               ),
-              SizedBox(height: 4),
-              DesktopHistoryStatusBadges(
-                fileHistory: widget.fileHistory,
-              ),
+              if (widget.fileHistory.type == HistoryType.send) ...[
+                SizedBox(height: 4),
+                DesktopHistoryStatusBadges(
+                  fileHistory: widget.fileHistory,
+                ),
+              ],
             ],
           )
         ],

@@ -29,13 +29,15 @@ class ContactInitial extends StatelessWidget {
     }
 
     return Container(
-      height: size!.toFont,
-      width: size!.toFont,
+      constraints: BoxConstraints(
+        minHeight: size!.toFont,
+        minWidth: size!.toFont,
+      ),
       decoration: BoxDecoration(
         color: background ?? ContactInitialsColors.getColor(initials!),
         // borderRadius: BorderRadius.circular(size.toWidth),
         // color: ContactInitialsColors.getColor(initials),
-        borderRadius: BorderRadius.circular(( borderRadius ?? size!.toFont)),
+        borderRadius: BorderRadius.circular((borderRadius ?? size!.toFont)),
       ),
       child: Center(
         child: Text(
@@ -64,6 +66,7 @@ class ContactInitialV2 extends StatelessWidget {
   }) : super(key: key);
 
   int get startIndex => (index == 1) ? 0 : 1;
+
   int get endIndex => (initials!.length < 3) ? initials!.length : 3;
 
   Widget build(BuildContext context) {
