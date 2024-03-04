@@ -35,8 +35,8 @@ class _HistoryCardHeaderState extends State<HistoryCardHeader> {
     super.initState();
   }
 
-  void getNickname() async {
-    final String result = await CommonUtilityFunctions()
+  void getNickname() {
+    final String result = CommonUtilityFunctions()
         .getNickname(widget.fileHistory.fileDetails?.sender ?? '');
     nickname = result;
   }

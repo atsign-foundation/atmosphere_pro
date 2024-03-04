@@ -34,11 +34,11 @@ dependencies:
   archive: ^3.2.2
   cupertino_icons: ^1.0.5
   file_picker: ^6.0.0
-  filesystem_picker: ^2.0.0-nullsafety.0
+  filesystem_picker: ^4.1.0
   desktop_window: ^0.4.0
   flutter_keychain: ^2.1.0
   flutter_local_notifications: ^9.4.0
-  flutter_slidable: ^3.0.0
+  flutter_slidable: ^3.0.1
   google_fonts: ^4.0.4
   intl: ^0.17.0
   open_file: ^3.2.1
