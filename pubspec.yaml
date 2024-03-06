@@ -66,7 +66,7 @@ dependencies:
   at_commons: ^4.0.1
   at_contact: ^3.0.8
   at_common_flutter: ^2.0.13
-  at_client_mobile: ^3.2.14
+  at_client_mobile: ^3.2.15
   at_onboarding_flutter: ^6.1.7
   at_backupkey_flutter: ^4.0.13
   at_contacts_flutter: ^4.0.14
@@ -101,11 +101,6 @@ dependency_overrides:
   #     url: https://github.com/atsign-foundation/at_widgets/
   #     path: packages/at_contacts_group_flutter
   #     ref: feat/group_service_restore
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: issue_1232
   package_info_plus: ^5.0.1
   file_picker: ^5.0.0
   biometric_storage: 5.0.0+1

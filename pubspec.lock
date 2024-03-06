@@ -68,11 +68,10 @@ packages:
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: "packages/at_client_mobile"
-      ref: issue_1232
-      resolved-ref: "563ff26cc7b01fb450a8241c971c9cce8fc3a947"
-      url: "https://github.com/atsign-foundation/at_client_sdk.git"
-    source: git
+      name: at_client_mobile
+      sha256: c6eeaf8480a85448f9bb191bed905b978cad75000da68051b7b36c6f621fd280
+      url: "https://pub.dev"
+    source: hosted
     version: "3.2.15"
   at_common_flutter:
     dependency: "direct main"

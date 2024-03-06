@@ -180,7 +180,6 @@ Widget thumbnail(String extension, String path) {
                 )
               : FutureBuilder(
                   future: generateVideoThumbnail(path),
-                  // future: null,
                   builder: (context, snapshot) => ClipRRect(
                     borderRadius: BorderRadius.circular(10.toHeight),
                     child: GestureDetector(
