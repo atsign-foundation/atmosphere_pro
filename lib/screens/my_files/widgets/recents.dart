@@ -207,7 +207,7 @@ Widget thumbnail(String extension, String path) {
                 child: GestureDetector(
                   onTap: () async {
                     await openFilePath(path);
-                    //   await openDownloadsFolder(context);
+                      await openDownloadsFolder(context);
                   },
                   child: Container(
                     // padding: EdgeInsets.only(left: 10),
@@ -272,15 +272,15 @@ Future<dynamic> generateVideoThumbnail(String path) async {
     return;
   }
 
-  final thumbnailGenerated = await plugin.getVideoThumbnail(
+  await plugin.getVideoThumbnail(
     srcFile: path,
     destFile: "${parentPath}${seperator}${fileNamewithExt}_thumbnail.jpeg",
     width: 300,
     height: 300,
     keepAspectRatio: true,
-    format: 'jpeg',
     quality: 90,
+    type: 'jpeg',
   );
 
-  print(thumbnailGenerated);
+  // print(thumbnailGenerated);
 }

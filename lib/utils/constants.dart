@@ -137,8 +137,9 @@ class MixedConstants {
         Platform.isWindows ||
         Platform.isLinux && sharedBy != null) {
       _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-          Platform.pathSeparator +
-          sharedBy!;
+          ((sharedBy ?? '').isNotEmpty
+              ? Platform.pathSeparator + (sharedBy ?? '')
+              : '');
       await BackendService.getInstance()
           .doesDirectoryExist(path: _downloadPath);
       return _downloadPath;
@@ -155,8 +156,9 @@ class MixedConstants {
         Platform.isWindows ||
         Platform.isLinux && sharedBy != null) {
       _downloadPath = (MixedConstants.ApplicationDocumentsDirectory ?? '') +
-          Platform.pathSeparator +
-          (sharedBy ?? '');
+          ((sharedBy ?? '').isNotEmpty
+              ? Platform.pathSeparator + (sharedBy ?? '')
+              : '');
 
       return _downloadPath;
     } else {

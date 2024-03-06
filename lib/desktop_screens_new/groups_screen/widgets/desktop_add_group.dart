@@ -372,7 +372,10 @@ class _DesktopAddGroupState extends State<DesktopAddGroup> {
 
           widget.onDoneTap.call(true);
 
-          GroupService().emptySelectedGroupContact();
+          GroupService().selectedGroupContacts = [];
+          GroupService()
+              .selectedContactsSink
+              .add(GroupService().selectedGroupContacts);
         } else if (result != null) {
           if (mounted) {
             if (result.runtimeType == AlreadyExistsException) {

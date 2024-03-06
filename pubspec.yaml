@@ -33,14 +33,14 @@ dependencies:
     sdk: flutter
   archive: ^3.2.2
   cupertino_icons: ^1.0.5
-  file_picker: ^6.0.0
-  filesystem_picker: ^2.0.0-nullsafety.0
+  file_picker: ^6.1.1
+  filesystem_picker: ^4.1.0
   desktop_window: ^0.4.0
   flutter_keychain: ^2.1.0
   flutter_local_notifications: ^9.4.0
   flutter_slidable: ^3.0.0
   google_fonts: ^4.0.4
-  intl: ^0.17.0
+  intl: ^0.19.0
   open_file: ^3.2.1
   pedantic: ^1.11.1
   permission_handler: ^9.2.0
@@ -53,7 +53,7 @@ dependencies:
   video_thumbnail: ^0.4.6
   webview_flutter: ^3.0.4
   http: ^0.13.4
-  package_info_plus: ^1.4.2
+  package_info_plus: ^1.0.0
   fluttertoast: ^8.2.2
   file_selector: ^0.8.3
   file_selector_macos: ^0.8.2
@@ -63,16 +63,16 @@ dependencies:
   new_version: ^0.3.0
   at_server_status: ^1.0.3
 
-  at_commons: ^3.0.25
-  at_contact: ^3.0.7
-  at_common_flutter: ^2.0.10
-  at_client_mobile: ^3.2.12
-  at_onboarding_flutter: ^6.1.6
-  at_backupkey_flutter: ^4.0.5
-  at_contacts_flutter: ^4.0.7
-  at_contacts_group_flutter: ^4.0.9
+  at_commons: ^4.0.1
+  at_contact: ^3.0.8
+  at_common_flutter: ^2.0.13
+  at_client_mobile: ^3.2.15
+  at_onboarding_flutter: ^6.1.7
+  at_backupkey_flutter: ^4.0.13
+  at_contacts_flutter: ^4.0.14
+  at_contacts_group_flutter: ^4.0.15
   local_notifier: ^0.1.1
-  at_sync_ui_flutter: ^1.0.6
+  at_sync_ui_flutter: ^1.0.11
   showcaseview: ^1.1.5
   biometric_storage: ^5.0.0+4
   flutter_svg: ^1.1.5
@@ -80,7 +80,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   expandable: ^5.0.1
   desktop_drop: ^0.4.3
-  fc_native_video_thumbnail: ^0.5.2
+  fc_native_video_thumbnail: 0.3.0
   flutter_staggered_grid_view: ^0.7.0
   device_info_plus: ^9.1.0
   just_the_tooltip: ^0.0.12
@@ -96,7 +96,12 @@ dev_dependencies:
   msix: ^3.3.1
 
 dependency_overrides:
-  package_info_plus: ^3.0.0
+  # at_contacts_group_flutter:
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_widgets/
+  #     path: packages/at_contacts_group_flutter
+  #     ref: feat/group_service_restore
+  package_info_plus: ^5.0.1
   file_picker: ^5.0.0
   biometric_storage: 5.0.0+1
   permission_handler: ^11.0.1
@@ -106,23 +111,8 @@ dependency_overrides:
   file_selector_linux: ^0.9.2
   share_plus: ^7.1.0
   showcaseview: ^2.0.3
-  at_backupkey_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: packages/at_backupkey_flutter
-      ref: trunk
   http: ^1.1.0
   webview_flutter: ^4.2.4
-  at_contacts_group_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets/
-      path: packages/at_contacts_group_flutter
-      ref: feature/add-get-trusted-contact-method
-  at_contacts_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets/
-      path: packages/at_contacts_flutter
-      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -204,7 +194,7 @@ msix_config:
   publisher_display_name: "The @ Company"
   identity_name: TheCompany.mospherePro
   publisher: CN=BBFE1D0B-F713-4C7F-B375-5EA851CBB1FF
-  msix_version: 1.0.20.0
+  msix_version: 1.0.22.0
   logo_path: app-icon.png
   capabilities: internetClient
   store: true
