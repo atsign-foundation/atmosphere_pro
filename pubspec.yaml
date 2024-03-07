@@ -63,7 +63,7 @@ dependencies:
   new_version: ^0.3.0
   at_server_status: ^1.0.3
 
-  at_commons: ^4.0.1
+  at_commons: ^4.0.3
   at_contact: ^3.0.8
   at_common_flutter: ^2.0.13
   at_client_mobile: ^3.2.15
