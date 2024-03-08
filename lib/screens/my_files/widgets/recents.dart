@@ -279,7 +279,7 @@ Future<dynamic> generateVideoThumbnail(String path) async {
     height: 300,
     keepAspectRatio: true,
     quality: 90,
-    type: 'jpeg',
+    format: 'jpeg',
   );
 
   // print(thumbnailGenerated);
