@@ -87,7 +87,7 @@ class DesktopCoverImagePicker extends StatelessWidget {
               ),
             )
           : Container(
-              padding: const EdgeInsets.fromLTRB(108, 12, 108, 16),
+              padding: const EdgeInsets.only(top: 12, bottom: 16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: ColorConstants.pickerBackgroundColor,
@@ -104,7 +104,6 @@ class DesktopCoverImagePicker extends StatelessWidget {
                     AppVectors.icDesktopImage,
                     width: 48,
                     height: 32,
-                    fit: BoxFit.fitWidth,
                   ),
                 ],
               ),

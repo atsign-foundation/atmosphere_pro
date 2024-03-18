@@ -1,6 +1,6 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
-import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

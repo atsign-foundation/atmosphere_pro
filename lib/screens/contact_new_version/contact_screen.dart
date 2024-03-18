@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_contacts_group_flutter/screens/group_view/group_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/enums/contact_type.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
@@ -10,6 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_detail
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/create_group_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/contact_skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
+import 'package:atsign_atmosphere_pro/screens/group_contacts/group_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
@@ -274,7 +274,7 @@ class _ContactScreenState extends State<ContactScreen>
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => GroupView(
+                                builder: (context) => GroupContactsScreen(
                                   group: group,
                                 ),
                               ),
