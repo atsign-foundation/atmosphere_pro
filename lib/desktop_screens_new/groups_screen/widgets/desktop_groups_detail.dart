@@ -92,8 +92,8 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
             titleTextStyle: CustomTextStyles.blackW50020,
             leadingIcon: InkWell(
               onTap: provider.isEditing
-                  ? () {
-                      provider.setIsEditing(false);
+                  ? () async {
+                      await provider.setIsEditing(false);
                       if (provider.isAddingContacts) {
                         provider.setIsAddingContact();
                       }
@@ -155,7 +155,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
                                 bgColor: ColorConstants.redAlert,
                               );
                             } else {
-                              provider.setSelectedGroupImage(
+                              await provider.setSelectedGroupImage(
                                 await File(details.files.first.path)
                                     .readAsBytes(),
                               );
@@ -292,7 +292,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
                   IconButtonWidget(
                     icon: AppVectors.icEdit,
                     backgroundColor: ColorConstants.iconButtonColor,
-                    onTap: () => groupProvider.setIsEditing(true),
+                    onTap: () async => await groupProvider.setIsEditing(true),
                   ),
                   const SizedBox(width: 24),
                   IconButtonWidget(
@@ -330,7 +330,7 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
             if (!mounted) return;
             if (result != null && result) {
               Navigator.of(context).pop();
-              groupProvider.setSelectedAtGroup(null);
+              await groupProvider.setSelectedAtGroup(null);
               groupProvider.setGroupCardState(GroupCardState.disable);
             } else {
               CustomToast().show(TextConstants().SERVICE_ERROR, context);

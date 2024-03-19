@@ -18,7 +18,11 @@ class GroupsAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 36,
+        ),
         child: Row(
           children: [
             SizedBox(width: 8),
@@ -53,5 +57,5 @@ class GroupsAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(28);
+  Size get preferredSize => Size.fromHeight(64);
 }
