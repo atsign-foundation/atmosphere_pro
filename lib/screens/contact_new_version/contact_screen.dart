@@ -271,7 +271,7 @@ class _ContactScreenState extends State<ContactScreen>
                                 .addPostFrameCallback((_) async {
                               _groupService.groupViewSink.add(group);
                             });
-                            await Navigator.push(
+                            final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => GroupContactsScreen(
@@ -279,6 +279,12 @@ class _ContactScreenState extends State<ContactScreen>
                                 ),
                               ),
                             );
+
+                            if (result ?? false) {
+                              setState(() => isReloading = !isReloading);
+                              await _groupService.fetchGroupsAndContacts();
+                              setState(() => isReloading = !isReloading);
+                            }
                           },
                           onTapAddButton: () async {
                             final result = await showModalBottomSheet<bool?>(

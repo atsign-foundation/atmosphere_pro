@@ -15,8 +15,10 @@ class PickerService {
       source: ImageSource.gallery,
     );
     if (image != null) {
-     final result = await File(image.path).readAsBytes();
-     onPickedImage.call(result);
+      final result = await File(image.path).readAsBytes();
+      onPickedImage.call(result);
+    } else {
+      onPickedImage.call(Uint8List(0));
     }
   }
 }

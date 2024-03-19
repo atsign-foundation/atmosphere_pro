@@ -70,39 +70,39 @@ class CoverImagePicker extends StatelessWidget {
                 right: 12,
                 left: 12,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    InkWell(
-                      onTap: onCancel,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white54.withOpacity(0.5),
+                    if (groupImage != null)
+                      InkWell(
+                        onTap: onCancel,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white54.withOpacity(0.5),
+                          ),
+                          child: SvgPicture.asset(
+                            AppVectors.icCancel,
+                            width: 16,
+                            height: 16,
+                            color: Colors.black,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        child: SvgPicture.asset(
-                          AppVectors.icCancel,
-                          width: 16,
-                          height: 16,
-                          color: Colors.black,
-                          fit: BoxFit.cover,
-                        ),
+                      ),
+                    Spacer(),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white54.withOpacity(0.5),
+                      ),
+                      child: SvgPicture.asset(
+                        AppVectors.icEdit,
+                        width: 16,
+                        height: 16,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    if (groupImage != null)
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white54.withOpacity(0.5),
-                        ),
-                        child: SvgPicture.asset(
-                          AppVectors.icEdit,
-                          width: 16,
-                          height: 16,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
                   ],
                 ),
               ),

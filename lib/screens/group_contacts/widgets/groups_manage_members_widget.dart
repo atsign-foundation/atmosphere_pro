@@ -1,16 +1,17 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/screens/group_contacts/widgets/groups_app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/group_contacts/widgets/groups_member_item_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
+import 'package:atsign_atmosphere_pro/view_models/groups_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class GroupsManageMembersWidget extends StatefulWidget {
   const GroupsManageMembersWidget();
@@ -24,6 +25,8 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
   TextEditingController searchController = TextEditingController();
   late TrustedContactProvider trustedContactProvider =
       context.read<TrustedContactProvider>();
+  late GroupsProvider groupsProvider = context.read<GroupsProvider>();
+
   final _groupService = GroupService();
 
   @override
@@ -51,14 +54,8 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
                 ),
                 SizedBox(height: 12),
                 Expanded(
-                  child: StreamBuilder<List<GroupContactsModel?>>(
-                    stream: _groupService.allContactsStream,
-                    initialData: _groupService.allContacts,
-                    builder: (context, snapshot) {
-                      final contactList = (snapshot.data ?? [])
-                          .where((e) => e?.contact != null)
-                          .map((e) => e!.contact!)
-                          .toList();
+                  child: Selector<GroupsProvider, Tuple2<String, bool>>(
+                    builder: (context, value, child) {
                       return ListView.separated(
                         physics: ClampingScrollPhysics(),
                         padding: EdgeInsets.only(
@@ -67,14 +64,36 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
                           bottom: 112,
                         ),
                         itemBuilder: (context, index) {
-                          return buildContactList(contactList)[index];
+                          return buildContactList(
+                            filterContacts(
+                              data: _groupService.allContacts
+                                  .where((e) => e?.contact != null)
+                                  .map((e) => e!.contact!)
+                                  .toList(),
+                              searchKeyword: value.item1,
+                              showTrustedMembers: value.item2,
+                            ),
+                          )[index];
                         },
                         separatorBuilder: (context, index) {
                           return SizedBox(height: 12);
                         },
-                        itemCount: buildContactList(contactList).length,
+                        itemCount: buildContactList(
+                          filterContacts(
+                            data: _groupService.allContacts
+                                .where((e) => e?.contact != null)
+                                .map((e) => e!.contact!)
+                                .toList(),
+                            searchKeyword: value.item1,
+                            showTrustedMembers: value.item2,
+                          ),
+                        ).length,
                       );
                     },
+                    selector: (_, p) => Tuple2<String, bool>(
+                      p.searchKeyword,
+                      p.showTrustedMembers,
+                    ),
                   ),
                 ),
               ],
@@ -91,12 +110,36 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
     );
   }
 
+  List<AtContact> filterContacts(
+      {required List<AtContact> data,
+      required bool showTrustedMembers,
+      required String searchKeyword}) {
+    List<AtContact> sampleList = data;
+
+    if (showTrustedMembers) {
+      sampleList = sampleList
+          .where((element) => trustedContactProvider.trustedContacts
+              .any((e) => e.atSign == element.atSign))
+          .map((e) => e)
+          .toList();
+    } else if (searchKeyword.isNotEmpty) {
+      sampleList = sampleList
+          .where((element) => (element.atSign ?? '').contains(searchKeyword))
+          .map((e) => e)
+          .toList();
+    }
+    return sampleList;
+  }
+
   Widget buildSearchWidget() {
     return Row(
       children: [
         Expanded(
           child: TextField(
             maxLines: 1,
+            onChanged: (value) {
+              groupsProvider.changeSearchKeyword(value);
+            },
             style: CustomTextStyles.blackW50014,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(
@@ -125,6 +168,9 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
         ),
         SizedBox(width: 12),
         InkWell(
+          onTap: () {
+            groupsProvider.setShowTrustedMembersStatus();
+          },
           child: Container(
             width: 40,
             height: 40,
@@ -133,12 +179,17 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
               color: ColorConstants.iconButtonColor,
               shape: BoxShape.circle,
             ),
-            child: SvgPicture.asset(
-              AppVectors.icTrust,
-              width: 24,
-              height: 20,
-              color: Colors.black,
-              fit: BoxFit.cover,
+            child: Selector<GroupsProvider, bool>(
+              builder: (context, value, child) {
+                return SvgPicture.asset(
+                  AppVectors.icTrust,
+                  width: 24,
+                  height: 20,
+                  color: value ? ColorConstants.orange : Colors.black,
+                  fit: BoxFit.cover,
+                );
+              },
+              selector: (_, p) => p.showTrustedMembers,
             ),
           ),
         ),
@@ -172,13 +223,24 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
                   : ''));
         }
         result.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: GroupsMemberItemWidget(
-              member: sortedList[i],
-              isTrusted: trustedContactProvider.trustedContacts.any(
-                (element) => element.atSign == sortedList[i].atSign,
-              ),
+          Selector<GroupsProvider, bool>(
+            builder: (context, value, child) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: GroupsMemberItemWidget(
+                  member: sortedList[i],
+                  isTrusted: trustedContactProvider.trustedContacts.any(
+                    (element) => element.atSign == sortedList[i].atSign,
+                  ),
+                  isSelected: value,
+                  onTap: () {
+                    groupsProvider.addOrRemoveMember(sortedList[i]);
+                  },
+                ),
+              );
+            },
+            selector: (_, p) => p.members.any(
+              (element) => element.atSign == sortedList[i].atSign,
             ),
           ),
         );
@@ -235,23 +297,44 @@ class _GroupsManageMembersWidgetState extends State<GroupsManageMembersWidget> {
   }
 
   Widget buildSelectContactButton() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(7),
-      ),
-      child: RichText(
-        text: TextSpan(
-          text: 'Selects Contact ',
-          style: CustomTextStyles.whiteBold16,
-          children: [
-            TextSpan(
-              text: '(3)',
-              style: CustomTextStyles.whiteW40016,
-            ),
-          ],
+    return InkWell(
+      onTap: () async {
+        await groupsProvider.updateMembers(context);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Selector<GroupsProvider, Tuple2<int, bool>>(
+          builder: (context, value, child) {
+            return value.item2
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  )
+                : RichText(
+                    text: TextSpan(
+                      text: 'Selects Contact ',
+                      style: CustomTextStyles.whiteBold16,
+                      children: [
+                        TextSpan(
+                          text: '(${value.item1})',
+                          style: CustomTextStyles.whiteW40016,
+                        ),
+                      ],
+                    ),
+                  );
+          },
+          selector: (_, p) => Tuple2<int, bool>(
+            p.members.length,
+            p.isLoading,
+          ),
         ),
       ),
     );
