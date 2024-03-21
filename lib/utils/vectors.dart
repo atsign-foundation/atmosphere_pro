@@ -101,4 +101,5 @@ class AppVectors {
   static String icPencil = '$_basePath/ic_pencil.svg';
   static String icMobileImage = '$_basePath/ic_mobile_image.svg';
   static String icTrustDeactivated = '$_basePath/ic_trust_deactivated.svg';
+  static String icDeleteGroup = '$_basePath/ic_delete_group.svg';
 }
