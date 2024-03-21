@@ -2,17 +2,16 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/cover_image_picker.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/search_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/widget/list_contact_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -115,7 +114,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             },
                           ),
                         ),
-                        _buildImage(value.selectedImageByteData),
+                        SizedBox(height: 16),
+                        CoverImagePicker(
+                          onTap: () async {
+                            await _provider.selectCoverImage();
+                          },
+                          groupImage: value.selectedImageByteData,
+                          height: 88,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(
                             top: 22,
@@ -253,49 +259,5 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
       );
     });
-  }
-
-  Widget _buildImage(Uint8List? selectedImage) {
-    return InkWell(
-      onTap: () async {
-        await _provider.selectCoverImage();
-      },
-      child: Container(
-        height: 89,
-        width: double.infinity,
-        margin: const EdgeInsets.fromLTRB(27, 14, 27, 0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xFFECECEC),
-        ),
-        child: selectedImage != null
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.memory(
-                  selectedImage,
-                  fit: BoxFit.cover,
-                ),
-              )
-            : Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "Insert Cover Image",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: ColorConstants.grey,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Image.asset(
-                      ImageConstants.icImage,
-                    ),
-                  ],
-                ),
-              ),
-      ),
-    );
   }
 }

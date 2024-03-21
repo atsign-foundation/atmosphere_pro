@@ -61,6 +61,7 @@ class ColorConstants {
   static const Color gray2 = Color(0xFFB9B9B9);
   static const Color lightGray2 = Color(0xFFE3E3E3);
   static const Color darkGray2 = Color(0xFF474747);
+  static const Color dimGray = Color(0xFF696969);
 
   static const Color sidebarTextUnselected = Color(0xFFA4A4A5);
   static const Color sidebarTextSelected = Color(0xFF000000);
@@ -106,6 +107,7 @@ class ColorConstants {
   static const Color disableTooltipColor = Color(0xFFC4C4C4);
   static const Color inactiveIconColor = Color(0xFFC5C5C5);
   static const Color closeButtonColor = Color(0xFFE6E6E6);
+  static const Color editMembersButtonColor = Color(0xFFF0F0F0);
 }
 
 class ContactInitialsColors {

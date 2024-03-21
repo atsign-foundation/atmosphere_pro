@@ -15,6 +15,7 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
   bool isAddingContacts = false;
   Uint8List? selectedGroupImage;
   String? selectedGroupName;
+  bool showEditOptions = false;
 
   void reset() {
     searchGroupText = '';
@@ -23,6 +24,7 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
     isEditing = false;
     isAddingContacts = false;
     groupCardState = GroupCardState.disable;
+    showEditOptions = false;
     notifyListeners();
   }
 
@@ -36,15 +38,15 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedAtGroup(AtGroup? atGroup) {
+  Future<void> setSelectedAtGroup(AtGroup? atGroup) async {
     selectedAtGroup = atGroup;
     setSelectedGroupName(selectedAtGroup?.groupName ?? '');
     if (selectedAtGroup?.groupPicture != null) {
-      setSelectedGroupImage(
+      await setSelectedGroupImage(
         Uint8List.fromList(selectedAtGroup?.groupPicture.cast<int>()),
       );
     } else {
-      setSelectedGroupImage(Uint8List(0));
+      await setSelectedGroupImage(Uint8List(0));
     }
     notifyListeners();
   }
@@ -64,13 +66,13 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsEditing(bool status) {
+  Future<void> setIsEditing(bool status) async {
     isEditing = status;
     if (selectedAtGroup?.groupPicture != null) {
-      setSelectedGroupImage(
+      await setSelectedGroupImage(
           Uint8List.fromList(selectedAtGroup?.groupPicture.cast<int>()));
     } else {
-      setSelectedGroupImage(Uint8List(0));
+      await setSelectedGroupImage(Uint8List(0));
     }
     notifyListeners();
   }
@@ -80,14 +82,18 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedGroupImage(Uint8List data) {
-    AppUtils.checkGroupImageSize(
-      image: data,
-      onSatisfy: (value) {
-        selectedGroupImage = value;
-        notifyListeners();
-      },
-    );
+  Future<void> setSelectedGroupImage(Uint8List data) async {
+    if (data.isNotEmpty) {
+      await AppUtils.checkGroupImageSize(
+        image: data,
+        onSatisfy: (value) {
+          selectedGroupImage = value;
+        },
+      );
+    } else {
+      selectedGroupImage = data;
+    }
+    notifyListeners();
   }
 
   void setSelectedGroupName(String name) {
@@ -95,5 +101,10 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
       selectedGroupName = name;
       notifyListeners();
     }
+  }
+
+  void setShowEditOptionsStatus() {
+    showEditOptions = !showEditOptions;
+    notifyListeners();
   }
 }

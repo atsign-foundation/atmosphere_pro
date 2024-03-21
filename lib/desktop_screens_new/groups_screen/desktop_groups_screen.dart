@@ -84,8 +84,8 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
                           snapshot.data!,
                           key: UniqueKey(),
                           expandIndex: GroupService().expandIndex ?? 0,
-                          onExpand: (value) {
-                            provider.setSelectedAtGroup(value);
+                          onExpand: (value) async {
+                            await provider.setSelectedAtGroup(value);
                             provider.setGroupCardState(GroupCardState.expanded);
                           },
                           onAdd: () {
@@ -111,8 +111,8 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        groupsProvider.setSelectedAtGroup(null);
+                      onTap: () async {
+                        await groupsProvider.setSelectedAtGroup(null);
                         groupsProvider
                             .setGroupCardState(GroupCardState.disable);
                       },
@@ -135,7 +135,7 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
         return DesktopAddGroup(
           onDoneTap: (value) async {
             if (value) await GroupService().getAllGroupsDetails();
-            groupsProvider.setSelectedAtGroup(null);
+            await groupsProvider.setSelectedAtGroup(null);
             groupsProvider.setGroupCardState(GroupCardState.disable);
           },
         );
@@ -143,7 +143,7 @@ class _DesktopGroupsScreenState extends State<DesktopGroupsScreen> {
         return DesktopGroupsDetail(
           onBackArrowTap: (value) async {
             if (value) await GroupService().getAllGroupsDetails();
-            groupsProvider.setSelectedAtGroup(null);
+            await groupsProvider.setSelectedAtGroup(null);
             groupsProvider.setGroupCardState(GroupCardState.disable);
           },
         );
