@@ -15,6 +15,7 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
   bool isAddingContacts = false;
   Uint8List? selectedGroupImage;
   String? selectedGroupName;
+  bool showEditOptions = false;
 
   void reset() {
     searchGroupText = '';
@@ -23,6 +24,7 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
     isEditing = false;
     isAddingContacts = false;
     groupCardState = GroupCardState.disable;
+    showEditOptions = false;
     notifyListeners();
   }
 
@@ -99,5 +101,10 @@ class DesktopGroupsScreenProvider extends ChangeNotifier {
       selectedGroupName = name;
       notifyListeners();
     }
+  }
+
+  void setShowEditOptionsStatus() {
+    showEditOptions = !showEditOptions;
+    notifyListeners();
   }
 }

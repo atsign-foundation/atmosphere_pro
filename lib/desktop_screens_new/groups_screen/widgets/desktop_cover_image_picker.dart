@@ -7,16 +7,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class DesktopCoverImagePicker extends StatelessWidget {
   final Uint8List? selectedImage;
-  final Function() onPickImage;
+  final Function()? onPickImage;
   final bool isEdit;
-  final Function() onCancel;
+  final Function()? onCancel;
 
   const DesktopCoverImagePicker({
     Key? key,
     this.selectedImage,
-    required this.onPickImage,
+    this.onPickImage,
     required this.isEdit,
-    required this.onCancel,
+    this.onCancel,
   }) : super(key: key);
 
   @override
@@ -24,14 +24,13 @@ class DesktopCoverImagePicker extends StatelessWidget {
     return InkWell(
       onTap: () async {
         if (isEdit) {
-          onPickImage.call();
+          onPickImage?.call();
         }
       },
-      child: selectedImage != null && selectedImage!.isNotEmpty
-          ? SizedBox(
-              width: 360,
-              height: 88,
-              child: Stack(
+      child: SizedBox(
+        height: 120,
+        child: selectedImage != null && selectedImage!.isNotEmpty
+            ? Stack(
                 alignment: Alignment.center,
                 fit: StackFit.expand,
                 children: [
@@ -84,30 +83,30 @@ class DesktopCoverImagePicker extends StatelessWidget {
                       ),
                     ),
                 ],
+              )
+            : Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: ColorConstants.pickerBackgroundColor,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Insert Cover Image',
+                      style: CustomTextStyles.orangeW50014,
+                    ),
+                    const SizedBox(height: 8),
+                    SvgPicture.asset(
+                      AppVectors.icDesktopImage,
+                      width: 48,
+                      height: 32,
+                    ),
+                  ],
+                ),
               ),
-            )
-          : Container(
-              padding: const EdgeInsets.only(top: 12, bottom: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: ColorConstants.pickerBackgroundColor,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Insert Cover Image',
-                    style: CustomTextStyles.orangeW50014,
-                  ),
-                  const SizedBox(height: 8),
-                  SvgPicture.asset(
-                    AppVectors.icDesktopImage,
-                    width: 48,
-                    height: 32,
-                  ),
-                ],
-              ),
-            ),
+      ),
     );
   }
 }

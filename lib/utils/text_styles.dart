@@ -533,10 +533,10 @@ class CustomTextStyles {
     fontSize: 12,
   );
 
-  static TextStyle blackW40013 = TextStyle(
+  static TextStyle blackW40015 = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w400,
-    fontSize: 13,
+    fontSize: 15,
   );
 
   static TextStyle blackW40017 = TextStyle(
@@ -555,6 +555,12 @@ class CustomTextStyles {
     color: ColorConstants.raisinBlack,
     fontSize: 12,
     fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle raisinBlackW50015 = TextStyle(
+    color: ColorConstants.raisinBlack,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
   );
 
   static TextStyle blackW60010 = TextStyle(
@@ -633,5 +639,11 @@ class CustomTextStyles {
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: ColorConstants.grey,
+  );
+
+  static TextStyle dimGrayW50015 = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    color: ColorConstants.dimGray,
   );
 }

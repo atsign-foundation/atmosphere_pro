@@ -5,7 +5,6 @@ import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
-import 'package:at_contacts_group_flutter/widgets/horizontal_circular_list.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/desktop_custom_list_tile.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/icon_button_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -13,6 +12,7 @@ import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,16 +20,16 @@ import 'package:provider/provider.dart';
 
 class DesktopGroupContactsList extends StatefulWidget {
   final bool asSelectionScreen;
-  final bool singleSelection;
-  final bool showContacts;
   final List<GroupContactsModel?>? initialData;
+  final bool showMembersOnly;
+  final bool showSelectedBorder;
 
   const DesktopGroupContactsList({
     Key? key,
     this.asSelectionScreen = false,
-    this.singleSelection = false,
-    this.showContacts = true,
     this.initialData,
+    this.showMembersOnly = false,
+    this.showSelectedBorder = true,
   }) : super(key: key);
 
   @override
@@ -51,11 +51,12 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     groupProvider = context.read<DesktopGroupsScreenProvider>();
     trustedProvider = context.read<TrustedContactProvider>();
     searchController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       groupProvider.setSearchContactText('');
       if (groupProvider.showTrustedContacts) {
         groupProvider.setShowTrustedContacts();
       }
+      _groupService.selectedContactsSink.add(widget.initialData ?? []);
     });
     super.initState();
   }
@@ -66,8 +67,6 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
 
   @override
   void dispose() {
-    _groupService.selectedGroupContacts = [];
-    _groupService.selectedContactsSink.add(_groupService.selectedGroupContacts);
     super.dispose();
   }
 
@@ -77,33 +76,29 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
         builder: (context, provider, child) {
       return Column(
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: buildSearchField(),
-              ),
-              const SizedBox(width: 12),
-              IconButtonWidget(
-                icon: AppVectors.icTrust,
-                backgroundColor: ColorConstants.iconButtonColor,
-                isSelected: provider.showTrustedContacts,
-                onTap: () {
-                  provider.setShowTrustedContacts();
-                },
-              )
-            ],
-          ),
-          const SizedBox(height: 20),
-          widget.asSelectionScreen ? HorizontalCircularList() : Container(),
-          (widget.initialData ?? []).isNotEmpty
-              ? buildContactsList(provider.showTrustedContacts
-                  ? widget.initialData
-                      ?.where((e) => trustedProvider.trustedContacts.any(
-                          (element) => element.atSign == e?.contact?.atSign))
-                      .toList()
-                  : widget.initialData)
+          if (!widget.showMembersOnly) ...[
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: buildSearchField(),
+                ),
+                const SizedBox(width: 12),
+                IconButtonWidget(
+                  icon: AppVectors.icTrust,
+                  backgroundColor: ColorConstants.iconButtonColor,
+                  isSelected: provider.showTrustedContacts,
+                  onTap: () {
+                    provider.setShowTrustedContacts();
+                  },
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+          ],
+          !widget.asSelectionScreen
+              ? buildContactsList(widget.initialData)
               : StreamBuilder<List<GroupContactsModel?>>(
                   stream: _groupService.allContactsStream,
                   initialData: _groupService.allContacts,
@@ -140,14 +135,16 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                           ],
                         );
                       } else {
-                        return buildContactsList(provider.showTrustedContacts
-                            ? trustedProvider.trustedContacts
-                                .map((e) => GroupContactsModel(
-                                      contact: e,
-                                      contactType: ContactsType.CONTACT,
-                                    ))
-                                .toList()
-                            : snapshot.data);
+                        return buildContactsList(
+                          provider.showTrustedContacts
+                              ? trustedProvider.trustedContacts
+                                  .map((e) => GroupContactsModel(
+                                        contact: e,
+                                        contactType: ContactsType.CONTACT,
+                                      ))
+                                  .toList()
+                              : snapshot.data,
+                        );
                       }
                     }
                   })
@@ -160,6 +157,7 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     // filtering contacts and groups
     var _filteredList = <GroupContactsModel?>[];
     _filteredList = getAllContactList(data ?? []);
+    bool isFirst = true;
 
     if (_filteredList.isEmpty) {
       return Center(
@@ -175,7 +173,6 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
 
     // renders contacts according to the initial alphabet
     return ListView.builder(
-      padding: EdgeInsets.only(bottom: 80.toHeight),
       itemCount: 27,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -200,31 +197,91 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
         }
 
         if (contactsForAlphabet.isEmpty) {
-          return Container();
+          Widget separator = SizedBox();
+          if (widget.showMembersOnly &&
+              getContactsForAlphabets(
+                _filteredList,
+                String.fromCharCode(alphabetIndex + 1 + 65).toUpperCase(),
+                alphabetIndex + 1,
+              ).isNotEmpty) {
+            if (isFirst &&
+                getContactsForAlphabets(
+                  _filteredList,
+                  String.fromCharCode(alphabetIndex -1 + 65).toUpperCase(),
+                  alphabetIndex - 1,
+                ).isNotEmpty) {
+              isFirst = false;
+            } else {
+              separator = Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Divider(
+                  color: ColorConstants.boxGrey,
+                  thickness: 1.toHeight,
+                  height: 0,
+                ),
+              );
+            }
+          } else if (!widget.showMembersOnly &&
+              getContactsForAlphabets(
+                _filteredList,
+                String.fromCharCode(alphabetIndex + 1 + 65).toUpperCase(),
+                alphabetIndex + 1,
+              ).isNotEmpty) {
+            if (isFirst &&
+                getContactsForAlphabets(
+                  _filteredList,
+                  String.fromCharCode(alphabetIndex -1 + 65).toUpperCase(),
+                  alphabetIndex - 1,
+                ).isNotEmpty) {
+              isFirst = false;
+            } else {
+              separator = SizedBox(height: 16);
+            }
+          }
+          return separator;
         }
 
         return Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                Text(
-                  currentChar,
-                  style: TextStyle(
-                    color: ColorConstants.darkSliver,
-                    fontSize: 20.toFont,
-                    fontWeight: FontWeight.bold,
+            if (!widget.showMembersOnly) ...[
+              Row(
+                children: [
+                  Text(
+                    currentChar,
+                    style: TextStyle(
+                      color: ColorConstants.darkSliver,
+                      fontSize: 20.toFont,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(width: 16.toWidth),
-                Expanded(
-                  child: Divider(
-                    color: ColorConstants.boxGrey,
-                    height: 1.toHeight,
+                  SizedBox(width: 16.toWidth),
+                  Expanded(
+                    child: Divider(
+                      color: ColorConstants.boxGrey,
+                      thickness: 1.toHeight,
+                      height: 0,
+                    ),
                   ),
+                ],
+              ),
+              SizedBox(height: 16),
+            ],
+            contactListBuilder(contactsForAlphabet),
+            if (widget.showMembersOnly &&
+                getContactsForAlphabets(
+                  _filteredList,
+                  String.fromCharCode(alphabetIndex + 1 + 65).toUpperCase(),
+                  alphabetIndex + 1,
+                ).isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Divider(
+                  color: ColorConstants.boxGrey,
+                  thickness: 1.toHeight,
+                  height: 0,
                 ),
-              ],
-            ),
-            contactListBuilder(contactsForAlphabet)
+              ),
           ],
         );
       },
@@ -324,47 +381,83 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
     List<GroupContactsModel?> contactsForAlphabet,
   ) {
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: EdgeInsets.symmetric(
+        horizontal: widget.showMembersOnly ? 0 : 28,
+      ),
       itemCount: contactsForAlphabet.length,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      separatorBuilder: (context, _) => Divider(
-        color: ColorConstants.dividerColor,
-        height: 1.toHeight,
+      separatorBuilder: (context, _) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Divider(
+          color: ColorConstants.boxGrey,
+          thickness: 1.toHeight,
+          height: 0,
+        ),
       ),
       itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(
-            right: 24,
-            bottom: 12,
-            top: 12,
-          ),
-          child: (contactsForAlphabet[index]!.contact != null)
-              ? Slidable(
-                  endActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    extentRatio: 0.25,
-                    children: [
-                      SlidableAction(
-                        label: TextStrings().block,
-                        backgroundColor: ColorConstants.inputFieldColor,
-                        icon: Icons.block,
-                        onPressed: (context) async {
-                          blockUnblockContact(
-                              contactsForAlphabet[index]!.contact!);
+        return (contactsForAlphabet[index]!.contact != null)
+            ? Slidable(
+                endActionPane: ActionPane(
+                  motion: const ScrollMotion(),
+                  extentRatio: 0.25,
+                  children: [
+                    SlidableAction(
+                      label: TextStrings().block,
+                      backgroundColor: ColorConstants.inputFieldColor,
+                      icon: Icons.block,
+                      onPressed: (context) async {
+                        blockUnblockContact(
+                            contactsForAlphabet[index]!.contact!);
+                      },
+                    ),
+                    SlidableAction(
+                      label: TextStrings().delete,
+                      backgroundColor: Colors.red,
+                      icon: Icons.delete,
+                      onPressed: (context) async {
+                        deleteAtSign(contactsForAlphabet[index]!.contact!);
+                      },
+                    ),
+                  ],
+                ),
+                child: StreamBuilder<List<GroupContactsModel?>>(
+                    initialData: widget.initialData,
+                    stream: _groupService.selectedContactsStream,
+                    builder: (context, snapshot) {
+                      return DesktopCustomListTile(
+                        key: UniqueKey(),
+                        onTap: () {},
+                        asSelectionTile: widget.asSelectionScreen,
+                        selectSingle: false,
+                        item: contactsForAlphabet[index],
+                        selectedList: (s) {
+                          setSelectedContactsList(s);
                         },
-                      ),
-                      SlidableAction(
-                        label: TextStrings().delete,
-                        backgroundColor: Colors.red,
-                        icon: Icons.delete,
-                        onPressed: (context) async {
-                          deleteAtSign(contactsForAlphabet[index]!.contact!);
+                        selectedContact: snapshot.data ?? [],
+                        onTrailingPressed: () {
+                          if (contactsForAlphabet[index]!.contact != null) {
+                            Navigator.pop(context);
+
+                            _groupService
+                                .addGroupContact(contactsForAlphabet[index]);
+                            setSelectedContactsList(
+                                _groupService.selectedGroupContacts);
+                          }
                         },
-                      ),
-                    ],
-                  ),
-                  child: DesktopCustomListTile(
+                        isTrusted: trustedProvider.trustedContacts.any(
+                            (element) =>
+                                element.atSign ==
+                                contactsForAlphabet[index]?.contact?.atSign),
+                        showSelectedBorder: widget.showSelectedBorder,
+                      );
+                    }),
+              )
+            : StreamBuilder<List<GroupContactsModel?>>(
+                initialData: widget.initialData,
+                stream: _groupService.selectedContactsStream,
+                builder: (context, snapshot) {
+                  return DesktopCustomListTile(
                     key: UniqueKey(),
                     onTap: () {},
                     asSelectionTile: widget.asSelectionScreen,
@@ -373,8 +466,9 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                     selectedList: (s) {
                       setSelectedContactsList(s);
                     },
+                    selectedContact: snapshot.data ?? [],
                     onTrailingPressed: () {
-                      if (contactsForAlphabet[index]!.contact != null) {
+                      if (contactsForAlphabet[index]!.group != null) {
                         Navigator.pop(context);
 
                         _groupService
@@ -386,31 +480,9 @@ class _DesktopGroupContactsListState extends State<DesktopGroupContactsList> {
                     isTrusted: trustedProvider.trustedContacts.any((element) =>
                         element.atSign ==
                         contactsForAlphabet[index]?.contact?.atSign),
-                  ),
-                )
-              : DesktopCustomListTile(
-                  key: UniqueKey(),
-                  onTap: () {},
-                  asSelectionTile: widget.asSelectionScreen,
-                  selectSingle: false,
-                  item: contactsForAlphabet[index],
-                  selectedList: (s) {
-                    setSelectedContactsList(s);
-                  },
-                  onTrailingPressed: () {
-                    if (contactsForAlphabet[index]!.group != null) {
-                      Navigator.pop(context);
-
-                      _groupService.addGroupContact(contactsForAlphabet[index]);
-                      setSelectedContactsList(
-                          _groupService.selectedGroupContacts);
-                    }
-                  },
-                  isTrusted: trustedProvider.trustedContacts.any((element) =>
-                      element.atSign ==
-                      contactsForAlphabet[index]?.contact?.atSign),
-                ),
-        );
+                    showSelectedBorder: widget.showSelectedBorder,
+                  );
+                });
       },
     );
   }
