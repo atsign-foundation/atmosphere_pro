@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:atsign_atmosphere_pro/data_models/notification_payload.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:local_notifier/local_notifier.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LocalNotificationService {
@@ -26,6 +27,10 @@ class LocalNotificationService {
 
     if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
       initializePlatformSpecifics();
+    }
+
+    if (Platform.isWindows) {
+      await LocalNotifier.instance.setup(appName: 'atmosphere_pro');
     }
   }
 
@@ -99,15 +104,14 @@ class LocalNotificationService {
       await _notificationsPlugin.show(
           0, '$from sent you a file', message, platformChannelSpecifics,
           payload: jsonEncode(payload));
-    } /*else if (Platform.isWindows) {
-      final localNotifier = LocalNotifier.instance;
+    } else if (Platform.isWindows) {
       LocalNotification notification = LocalNotification(
         identifier: 'identifier',
         title: '$from sent you a file',
         subtitle: message,
       );
-      await localNotifier.notify(notification);
-    }*/
+      await notification.show();
+    }
   }
 
   cancelNotifications() async {
