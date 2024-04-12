@@ -6,6 +6,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/widgets/
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_filter_history_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/destop_history_card_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';
@@ -49,6 +50,36 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     });
   }
 
+  Widget _buildSkeletonLoadingAppBar() {
+    return Padding(
+      padding: EdgeInsets.only(right: 32, bottom: 12),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: SkeletonLoadingWidget(
+              height: 48,
+              borderRadius: BorderRadius.circular(47),
+            ),
+          ),
+          SizedBox(width: 20),
+          SkeletonLoadingWidget(
+            height: 44,
+            width: 44,
+            borderRadius: BorderRadius.circular(48),
+          ),
+          SizedBox(width: 8),
+          SkeletonLoadingWidget(
+            height: 44,
+            width: 44,
+            borderRadius: BorderRadius.circular(48),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     HistoryType typeSelected = context.watch<HistoryProvider>().typeSelected;
@@ -61,6 +92,7 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
         color: ColorConstants.background,
         child: ProviderHandler<HistoryProvider>(
             functionName: context.read<HistoryProvider>().GET_ALL_FILE_HISTORY,
+            showSkeletonLoading: true,
             load: (provider) async {
               await provider.getAllFileTransferHistory();
               filteredFiles = getDisplayFileData(provider.allFilesHistory);

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/input_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/add_contact_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
+import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
   var isValid = CheckValid.idle;
 
   Timer? _debounce;
+  bool addToTrusted = false;
 
   @override
   void initState() {
@@ -138,7 +141,33 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                 hintText: 'Enter nickname',
                                 controller: nicknameController,
                               ),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: 10),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Checkbox(
+                                    value: addToTrusted,
+                                    side: MaterialStateBorderSide.resolveWith(
+                                      (states) => const BorderSide(
+                                          width: 2,
+                                          color: ColorConstants.orange),
+                                    ),
+                                    activeColor: const Color(0x00473d24),
+                                    checkColor: ColorConstants.orange,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(2),
+                                      ),
+                                    ),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        addToTrusted = val ?? false;
+                                      });
+                                    },
+                                  ),
+                                  Text("Add to trusted senders?")
+                                ],
+                              ),
                               Container(
                                 height: 1,
                                 decoration: BoxDecoration(
@@ -215,6 +244,16 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             atSign: atSignController.text,
                             nickname: nicknameController.text,
                           );
+
+                          Map<dynamic, dynamic> tags = {
+                            'nickname': nicknameController.text
+                          };
+                          AtContact contact = AtContact(
+                              atSign: atSignController.text, tags: tags);
+
+                          Provider.of<TrustedContactProvider>(context,
+                                  listen: false)
+                              .addTrustedContacts(contact);
 
                           if (response ?? false) {
                             Navigator.of(context).pop(true);
