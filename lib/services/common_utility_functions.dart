@@ -768,9 +768,15 @@ class CommonUtilityFunctions {
     return isDownloadAvailable;
   }
 
-  Future<String> getNickname(String atSign) async {
-    var res = await ContactService().getContactDetails(atSign, null);
-    return res['nickname'] ?? "";
+  String getNickname(String atSign) {
+    var nickname = '';
+    for (var contact in ContactService().contactList) {
+      if (contact.atSign == atSign) {
+        nickname = contact.tags?['nickname'] ?? "";
+      }
+    }
+
+    return nickname;
   }
 
   Widget interactableThumbnail(String extension, String path,

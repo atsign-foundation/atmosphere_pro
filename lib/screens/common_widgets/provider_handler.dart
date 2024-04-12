@@ -38,7 +38,10 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<T>(builder: (context, _provider, __) {
       if (_provider.status[functionName!] == Status.Loading) {
-        return _buildLoading(context);
+        return SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: _buildLoading(context),
+        );
       } else if (_provider.status[functionName!] == Status.Error) {
         if (showError) {
           print('IN SHOW ERROR');
@@ -72,15 +75,14 @@ class ProviderHandler<T extends BaseModel> extends StatelessWidget {
   }
 
   Widget _buildLoading(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS) {
-      if (functionName ==
-              context.read<HistoryProvider>().GET_ALL_FILE_HISTORY ||
-          showSkeletonLoading) {
-        return HistorySkeletonLoadingWidget();
-      } else if (functionName == context.read<MyFilesProvider>().ALL_FILES ||
-          showSkeletonLoading) {
-        return FilesSkeletonLoadingWidget();
-      }
+    // if (Platform.isAndroid || Platform.isIOS) {
+    if (functionName == context.read<HistoryProvider>().GET_ALL_FILE_HISTORY ||
+        showSkeletonLoading) {
+      return HistorySkeletonLoadingWidget();
+    } else if (functionName == context.read<MyFilesProvider>().ALL_FILES ||
+        showSkeletonLoading) {
+      return FilesSkeletonLoadingWidget();
+      // }
     }
     return Center(
       child: SizedBox(
