@@ -5,7 +5,8 @@ class FileTypes {
     'PNG',
     'png',
     'jpg',
-    'jpeg'
+    'jpeg',
+    'heic'
   ];
   static List<String> VIDEO_TYPES = ['mp4', 'MP4', 'mov', 'MOV'];
   static List<String> AUDIO_TYPES = [

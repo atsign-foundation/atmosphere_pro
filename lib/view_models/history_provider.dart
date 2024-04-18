@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -794,6 +795,7 @@ class HistoryProvider extends BaseModel {
     setStatus(GET_ALL_FILE_DATA, Status.Loading);
     List<FileTransfer> tempReceivedHistoryLogs = [];
     List<FileHistory> tempReceivedFiles = [];
+    List<AtKey> expiredKeys = [];
 
     List<AtKey> fileTransferAtkeys =
         await AtClientManager.getInstance().atClient.getAtKeys(
@@ -801,7 +803,7 @@ class HistoryProvider extends BaseModel {
             );
 
     fileTransferAtkeys.retainWhere((element) =>
-        !element.key!.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
+        !element.key.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT));
 
     bool isNewKeyAvailable = false;
     fileTransferAtkeys.forEach((AtKey atkey) {
@@ -830,6 +832,8 @@ class HistoryProvider extends BaseModel {
           },
         );
 
+        // var metaData = await AtClientManager.getInstance().atClient.getMeta(res[0]);
+
         if (atvalue.value != null) {
           try {
             FileTransferObject fileTransferObject =
@@ -837,6 +841,12 @@ class HistoryProvider extends BaseModel {
             FileTransfer filesModel =
                 convertFiletransferObjectToFileTransfer(fileTransferObject);
             filesModel.sender = atKey.sharedBy!;
+
+            if (fileTransferObject.date?.isBefore(
+                    DateTime.now().subtract(const Duration(days: 15))) ??
+                false) {
+              expiredKeys.add(atKey);
+            }
 
             if ((listFileTypeSelect ?? []).isNotEmpty) {
               List<FileData> files = [];
@@ -901,9 +911,18 @@ class HistoryProvider extends BaseModel {
       }
     }
 
+    // delete all the expired keys
+    unawaited(deleteKeys(expiredKeys));
+
     receivedHistoryLogs = tempReceivedHistoryLogs;
     receivedFileHistory = tempReceivedFiles;
     setStatus(GET_ALL_FILE_DATA, Status.Done);
+  }
+
+  Future<void> deleteKeys(List<AtKey> keys) async {
+    for (var expiredKey in keys) {
+      await AtClientManager.getInstance().atClient.delete(expiredKey);
+    }
   }
 
   Future<void> getAllFileTransferHistory() async {

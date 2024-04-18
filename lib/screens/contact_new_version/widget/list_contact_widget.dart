@@ -171,9 +171,14 @@ class _ListContactWidgetState extends State<ListContactWidget>
     for (var c in allGroupContactData) {
       if (showContacts &&
           c?.contact != null &&
-          (c?.contact?.atSign ?? '').toString().toUpperCase().contains(
-                widget.searchKeywords.toUpperCase(),
-              )) {
+          ((c?.contact?.atSign ?? '').toString().toUpperCase().contains(
+                    widget.searchKeywords.toUpperCase(),
+                  ) ||
+              (c?.contact?.tags?["nickname"]
+                      .toString()
+                      .toUpperCase()
+                      .contains(widget.searchKeywords.toUpperCase()) ??
+                  false))) {
         _filteredList.add(c);
       }
 

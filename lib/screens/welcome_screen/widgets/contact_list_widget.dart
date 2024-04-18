@@ -59,7 +59,7 @@ class ContactListWidget extends StatelessWidget {
             ),
             child: TabBar(
               controller: tabController,
-              indicatorColor: Colors.transparent,
+              indicatorColor: ColorConstants.backgroundTab,
               padding: EdgeInsets.symmetric(
                 horizontal: 13.toWidth,
                 vertical: 7.toHeight,

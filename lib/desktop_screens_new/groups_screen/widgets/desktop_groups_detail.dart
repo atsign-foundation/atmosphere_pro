@@ -380,7 +380,10 @@ class _DesktopGroupsDetailState extends State<DesktopGroupsDetail> {
           if (mounted) {
             widget.onBackArrowTap.call(true);
 
-            GroupService().emptySelectedGroupContact();
+            GroupService().selectedGroupContacts = [];
+            GroupService()
+                .selectedContactsSink
+                .add(GroupService().selectedGroupContacts);
           }
         } else if (result != null) {
           if (mounted) {
