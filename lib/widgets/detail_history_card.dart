@@ -98,6 +98,7 @@ class DetailHistoryCard extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                     physics: ClampingScrollPhysics(),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,

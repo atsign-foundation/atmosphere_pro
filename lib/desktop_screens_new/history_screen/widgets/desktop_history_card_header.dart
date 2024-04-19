@@ -115,7 +115,10 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
             ],
           ),
           Spacer(),
-          if ((widget.fileHistory.notes ?? '').isNotEmpty) ...[
+          if ((widget.fileHistory.type == HistoryType.received
+                  ? widget.fileHistory.fileDetails?.notes ?? ''
+                  : widget.fileHistory.notes ?? '')
+              .isNotEmpty) ...[
             Padding(
               padding: EdgeInsets.only(
                 top: widget.fileHistory.type == HistoryType.received ? 4 : 12,
@@ -124,7 +127,8 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
                 width: 392,
                 child: Center(
                   child: CustomEllipsisTextWidget(
-                    text: '"${widget.fileHistory.notes}"',
+                    text:
+                        '"${widget.fileHistory.type == HistoryType.received ? widget.fileHistory.fileDetails?.notes ?? '' : widget.fileHistory.notes ?? ''}"',
                     ellipsis: '... "',
                     style: CustomTextStyles.raisinBlackW40010,
                     maxLines: 2,

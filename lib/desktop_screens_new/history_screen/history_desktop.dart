@@ -51,36 +51,6 @@ class _HistoryDesktopScreenState extends State<HistoryDesktopScreen> {
     });
   }
 
-  Widget _buildSkeletonLoadingAppBar() {
-    return Padding(
-      padding: EdgeInsets.only(right: 32, bottom: 12),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: SkeletonLoadingWidget(
-              height: 48,
-              borderRadius: BorderRadius.circular(47),
-            ),
-          ),
-          SizedBox(width: 20),
-          SkeletonLoadingWidget(
-            height: 44,
-            width: 44,
-            borderRadius: BorderRadius.circular(48),
-          ),
-          SizedBox(width: 8),
-          SkeletonLoadingWidget(
-            height: 44,
-            width: 44,
-            borderRadius: BorderRadius.circular(48),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     HistoryType typeSelected = context.watch<HistoryProvider>().typeSelected;

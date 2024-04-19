@@ -7,7 +7,6 @@ import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/contact_new_version/contact_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/history/transfer_history_screen.dart';
 import 'package:atsign_atmosphere_pro/screens/my_files/my_files_screen.dart';
@@ -123,7 +122,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void acceptFiles() async {
-    _intentDataStreamSubscription = await ReceiveSharingIntent.getMediaStream()
+    _intentDataStreamSubscription = await ReceiveSharingIntent.instance
+        .getMediaStream()
         .listen((List<SharedMediaFile> value) async {
       _sharedFiles = value;
 
@@ -157,7 +157,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
 
     // For sharing images coming from outside the app while the app is closed
-    await ReceiveSharingIntent.getInitialMedia().then(
+    await ReceiveSharingIntent.instance.getInitialMedia().then(
         (List<SharedMediaFile> value) async {
       _sharedFiles = value;
       if (_sharedFiles != null && _sharedFiles!.isNotEmpty) {
@@ -181,7 +181,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }, onError: (error) {
       print('ERROR IS HERE=========>$error');
     });
-    ReceiveSharingIntent.reset();
+    await ReceiveSharingIntent.instance.reset();
   }
 
   @override

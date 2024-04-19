@@ -24,6 +24,7 @@ class DesktopFileFunctionList extends StatelessWidget {
   final bool isDownloading;
   final bool isDownloaded;
   final HistoryType type;
+  final Function()? onDelete;
 
   const DesktopFileFunctionList({
     required this.filePath,
@@ -35,6 +36,7 @@ class DesktopFileFunctionList extends StatelessWidget {
     required this.idKey,
     required this.sentFilePath,
     required this.type,
+    this.onDelete,
   });
 
   @override
@@ -75,6 +77,7 @@ class DesktopFileFunctionList extends StatelessWidget {
                     },
                     type: type,
                   );
+                  onDelete?.call();
                 },
                 icon: AppVectors.icDeleteFile,
               ),

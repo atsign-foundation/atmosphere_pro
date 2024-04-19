@@ -279,6 +279,10 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
                 isDownloaded: isDownloaded,
                 isDownloading: isDownloading,
                 type: widget.type,
+                onDelete: () => setState(() {
+                  isDownloaded = File(filePath).existsSync() ||
+                      File(sentFilePath).existsSync();
+                }),
               ),
       ],
     );

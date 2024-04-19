@@ -99,6 +99,7 @@ class HistoryProvider extends BaseModel {
     allFilesHistory = [];
     listExpandedFiles = [];
     listType = FileType.values.toList();
+    isDownloadDone = false;
     notifyListeners();
   }
 
@@ -154,16 +155,20 @@ class HistoryProvider extends BaseModel {
 
   void addDownloadingState(String key) {
     if (!downloadingFilesList.contains(key)) {
-      downloadingFilesList.add(key);
+      final list = [...downloadingFilesList];
+      list.add(key);
+      downloadingFilesList = list;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void removeDownloadingState(String key) {
     if (downloadingFilesList.contains(key)) {
-      downloadingFilesList.remove(key);
+      final list = [...downloadingFilesList];
+      list.remove(key);
+      downloadingFilesList = list;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {

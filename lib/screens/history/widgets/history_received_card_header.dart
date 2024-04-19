@@ -19,7 +19,8 @@ class HistoryReceivedCardHeader extends StatefulWidget {
   });
 
   @override
-  State<HistoryReceivedCardHeader> createState() => _HistoryReceivedCardHeaderState();
+  State<HistoryReceivedCardHeader> createState() =>
+      _HistoryReceivedCardHeaderState();
 }
 
 class _HistoryReceivedCardHeaderState extends State<HistoryReceivedCardHeader> {
@@ -136,14 +137,14 @@ class _HistoryReceivedCardHeaderState extends State<HistoryReceivedCardHeader> {
             )
           ],
         ),
-        if ((widget.fileHistory.notes ?? '').isNotEmpty) ...[
-        SizedBox(height: 4),
-        CustomEllipsisTextWidget(
-          text: '"${widget.fileHistory.notes}"',
-          style: CustomTextStyles.darkSliverW40012,
-          ellipsis: '... "',
-          textAlign: TextAlign.left,
-        )
+        if ((widget.fileHistory.fileDetails?.notes ?? '').isNotEmpty) ...[
+          SizedBox(height: 4),
+          CustomEllipsisTextWidget(
+            text: '"${widget.fileHistory.fileDetails?.notes}"',
+            style: CustomTextStyles.darkSliverW40012,
+            ellipsis: '... "',
+            textAlign: TextAlign.left,
+          )
         ],
       ],
     );
