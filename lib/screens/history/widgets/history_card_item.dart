@@ -2,14 +2,16 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_card_header.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_file_list.dart';
+import 'package:atsign_atmosphere_pro/widgets/detail_history_card.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_header.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_body.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_body.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_header.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
@@ -45,6 +47,12 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   @override
   void initState() {
     super.initState();
+    widget.fileHistory.fileDetails?.files?.forEach(
+      (e) => e.path = getFilePath(
+        name: e.name ?? '',
+        type: HistoryType.received,
+      ),
+    );
   }
 
   @override
@@ -62,26 +70,50 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           buildDeleteButton(),
         ],
       ),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            HistoryCardHeader(
-              fileHistory: widget.fileHistory,
-            ),
-            SizedBox(height: 12),
-            Flexible(
-              child: HistoryFileList(
-                type: widget.fileHistory.type,
-                fileTransfer: widget.fileHistory.fileDetails,
+      child: InkWell(
+        onTap: () {
+          if (widget.fileHistory.type == HistoryType.send) {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.95,
               ),
-            ),
-          ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
+              builder: (context) {
+                return DetailHistoryCard(
+                  onPop: () {},
+                  fileHistory: widget.fileHistory,
+                  isMobile: true,
+                );
+              },
+            );
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widget.fileHistory.type == HistoryType.received
+                  ? HistoryReceivedCardHeader(fileHistory: widget.fileHistory)
+                  : HistorySentCardHeader(fileHistory: widget.fileHistory),
+              SizedBox(height: 12),
+              Flexible(
+                child: widget.fileHistory.type == HistoryType.received
+                    ? HistoryReceivedCardBody(fileHistory: widget.fileHistory)
+                    : HistorySentCardBody(fileHistory: widget.fileHistory),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -162,7 +194,10 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
                   (e) => PlatformFile(
                     name: e.name ?? '',
                     size: e.size ?? 0,
-                    path: getFilePath(e.name ?? ''),
+                    path: getFilePath(
+                      name: e.name ?? '',
+                      type: widget.fileHistory.type,
+                    ),
                   ),
                 )
                 .toList());
@@ -183,13 +218,19 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
           () {
             widget.fileHistory.fileDetails!.files!.forEach((e) async {
               if (checkFileExist(data: e)) {
-                await File(getFilePath(e.name ?? '')).delete();
+                await File(getFilePath(
+                  name: e.name ?? '',
+                  type: widget.fileHistory.type,
+                )).delete();
                 await Provider.of<MyFilesProvider>(
                         NavService.navKey.currentContext!,
                         listen: false)
                     .removeParticularFile(
                   widget.fileHistory.fileDetails?.key ?? '',
-                  getFilePath(e.name ?? '').split(Platform.pathSeparator).last,
+                  getFilePath(
+                    name: e.name ?? '',
+                    type: widget.fileHistory.type,
+                  ).split(Platform.pathSeparator).last,
                 );
 
                 await Provider.of<MyFilesProvider>(
@@ -329,7 +370,10 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   bool checkFileExist({required FileData data}) {
     bool fileExists = false;
     String sentFilePath = getSentFilePath(data.name ?? '');
-    String receivedFilePath = getFilePath(data.name ?? '');
+    String receivedFilePath = getFilePath(
+      name: data.name ?? '',
+      type: HistoryType.received,
+    );
 
     /// for sent file directory
     if (widget.fileHistory.type == HistoryType.send) {
@@ -344,8 +388,11 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
     return fileExists;
   }
 
-  String getFilePath(String name) {
-    if (widget.fileHistory.type == HistoryType.send) {
+  String getFilePath({
+    required String name,
+    required HistoryType? type,
+  }) {
+    if (type == HistoryType.send) {
       String sentFilePath = getSentFilePath(name);
       File file = File(sentFilePath);
       if (file.existsSync()) {

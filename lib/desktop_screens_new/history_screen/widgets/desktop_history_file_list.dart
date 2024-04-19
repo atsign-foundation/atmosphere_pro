@@ -32,7 +32,6 @@ class DesktopHistoryFileList extends StatelessWidget {
             key: UniqueKey(),
             data: fileTransfer.files![index],
             fileTransfer: fileTransfer,
-            index: index,
             type: type,
           );
         },

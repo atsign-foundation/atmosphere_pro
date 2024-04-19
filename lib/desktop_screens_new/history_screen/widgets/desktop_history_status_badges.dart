@@ -1,7 +1,7 @@
-import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
+import 'dart:io';
+
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_card_function_list.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
@@ -62,36 +62,99 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (fileHistory.type == HistoryType.received) {
-      return DesktopCardFunctionList(fileTransfer: fileHistory.fileDetails!);
-    } else {
-      return InkWell(
-        onTap: () {
-          openFileReceiptBottomSheet(context: context);
-        },
-        child: fileHistory.sharedWith!
-                .every((element) => element.isNotificationSend ?? false)
-            ? buildDeliveredBadge()
-            : buildErrorBadges(),
-      );
-    }
+    // if (fileHistory.type == HistoryType.received) {
+    //   return DesktopCardFunctionList(fileTransfer: fileHistory.fileDetails!);
+    // } else {
+    return InkWell(
+      onTap: () {
+        openFileReceiptBottomSheet(context: context);
+      },
+      child: fileHistory.sharedWith!
+              .every((element) => element.isNotificationSend ?? false)
+          ? (fileHistory.fileDetails?.files ?? [])
+                  .every((element) => File(element.path ?? '').existsSync())
+              ? buildDownloadedBadge()
+              : buildDeliveredBadge()
+          : buildErrorBadges(),
+    );
+    // }
   }
 
   Widget buildDeliveredBadge() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(49.5),
-        color: ColorConstants.deliveredBackgroundColor,
-      ),
-      child: Text(
-        'Delivered',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: ColorConstants.deliveredColor,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 80,
+          height: 24,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(43),
+            color: ColorConstants.deliveredBackgroundColor,
+          ),
+          child: Text(
+            'Delivered',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: ColorConstants.deliveredColor,
+            ),
+          ),
         ),
-      ),
+        SizedBox(width: 4),
+        Container(
+          width: 24,
+          height: 24,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: ColorConstants.deliveredBackgroundColor,
+          ),
+          child: SvgPicture.asset(
+            AppVectors.icDeliveredCheck,
+            fit: BoxFit.cover,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildDownloadedBadge() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 80,
+          height: 24,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(43),
+            color: ColorConstants.lightGreen,
+          ),
+          child: Text(
+            'Downloaded',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: ColorConstants.textGreen,
+            ),
+          ),
+        ),
+        SizedBox(width: 4),
+        Container(
+          width: 24,
+          height: 24,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: ColorConstants.lightGreen,
+          ),
+          child: SvgPicture.asset(
+            AppVectors.icDownloadedCheck,
+            fit: BoxFit.cover,
+          ),
+        )
+      ],
     );
   }
 
@@ -99,8 +162,8 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 36,
-          height: 36,
+          width: 24,
+          height: 24,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: ColorConstants.errorBackgroundColor,
@@ -110,7 +173,7 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
               '!',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
+                fontSize: 12,
                 color: ColorConstants.orangeColor,
               ),
             ),
@@ -118,7 +181,9 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
         ),
         SizedBox(width: 4),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          width: 52,
+          height: 24,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(49.5),
             color: ColorConstants.errorBackgroundColor,
@@ -134,13 +199,14 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
         ),
         SizedBox(width: 4),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          width: 64,
+          height: 24,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(49.5),
             color: ColorConstants.retryButtonColor,
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Retry',

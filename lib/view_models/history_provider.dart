@@ -80,6 +80,10 @@ class HistoryProvider extends BaseModel {
   String? app_lifecycle_state;
   HistoryType typeSelected = HistoryType.received;
 
+  FileHistory? selectedFileHistory;
+
+  List<String> listExpandedFiles = [];
+
   resetData() {
     isSyncedDataFetched = false;
     sentHistory = [];
@@ -93,7 +97,9 @@ class HistoryProvider extends BaseModel {
     tempSentHistory = [];
     receivedFileHistory = [];
     allFilesHistory = [];
+    listExpandedFiles = [];
     listType = FileType.values.toList();
+    isDownloadDone = false;
     notifyListeners();
   }
 
@@ -129,22 +135,40 @@ class HistoryProvider extends BaseModel {
     notifyListeners();
   }
 
+  void setSelectedFileHistory(FileHistory? fileHistory) {
+    selectedFileHistory = fileHistory;
+    notifyListeners();
+  }
+
   void notify() {
+    notifyListeners();
+  }
+
+  void setExpandedFile(String key) {
+    if (!listExpandedFiles.contains(key)) {
+      listExpandedFiles.add(key);
+    } else {
+      listExpandedFiles.remove(key);
+    }
     notifyListeners();
   }
 
   void addDownloadingState(String key) {
     if (!downloadingFilesList.contains(key)) {
-      downloadingFilesList.add(key);
+      final list = [...downloadingFilesList];
+      list.add(key);
+      downloadingFilesList = list;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void removeDownloadingState(String key) {
     if (downloadingFilesList.contains(key)) {
-      downloadingFilesList.remove(key);
+      final list = [...downloadingFilesList];
+      list.remove(key);
+      downloadingFilesList = list;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   updateFileHistoryDetail(FileHistory fileHistory) async {

@@ -163,7 +163,7 @@ class FileTransferProvider extends BaseModel {
   void acceptFiles() async {
     setStatus(ACCEPT_FILES, Status.Loading);
     try {
-      await ReceiveSharingIntent.getMediaStream().listen(
+      await ReceiveSharingIntent.instance.getMediaStream().listen(
           (List<SharedMediaFile> value) {
         _sharedFiles = value;
 
@@ -186,7 +186,8 @@ class FileTransferProvider extends BaseModel {
       });
 
       // For sharing images coming from outside the app while the app is closed
-      await ReceiveSharingIntent.getInitialMedia()
+      await ReceiveSharingIntent.instance
+          .getInitialMedia()
           .then((List<SharedMediaFile> value) {
         _sharedFiles = value;
         if (_sharedFiles != null && _sharedFiles!.isNotEmpty) {

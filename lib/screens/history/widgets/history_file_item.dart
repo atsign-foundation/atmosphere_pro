@@ -32,6 +32,7 @@ class HistoryFileItem extends StatefulWidget {
   final HistoryType? type;
   final FileData data;
   final Function() openFile;
+  final bool isSent;
 
   const HistoryFileItem({
     Key? key,
@@ -39,6 +40,7 @@ class HistoryFileItem extends StatefulWidget {
     required this.fileTransfer,
     required this.data,
     required this.openFile,
+    required this.isSent,
   });
 
   @override
@@ -135,7 +137,43 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 4),
+                                SizedBox(width: 8),
+                                if (File(path).existsSync()) ...[
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: ColorConstants.lightGreen,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      AppVectors.icDownloadedCheck,
+                                      width: 16,
+                                      height: 12,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                ] else if (widget.isSent) ...[
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: ColorConstants
+                                          .deliveredBackgroundColor,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      AppVectors.icDeliveredCheck,
+                                      width: 12,
+                                      height: 12,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                ],
                                 Text(
                                   '${(widget.data.size! / (1024 * 1024)).toStringAsFixed(2)} Mb',
                                   style: CustomTextStyles.oldSliverW400S12,
@@ -166,23 +204,23 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                 ],
               ),
             ),
-            SizedBox(width: File(path).existsSync() ? 8 : 12),
-            if (File(path).existsSync() || File(sentPath).existsSync())
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: ColorConstants.lightGreen,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.done_all,
-                    size: 20,
-                    color: ColorConstants.textGreen,
-                  ),
-                ),
-              ),
+            // SizedBox(width: File(path).existsSync() ? 8 : 12),
+            // if (File(path).existsSync() && widget.type == HistoryType.received)
+            //   Container(
+            //     width: 32,
+            //     height: 32,
+            //     decoration: BoxDecoration(
+            //       shape: BoxShape.circle,
+            //       color: ColorConstants.lightGreen,
+            //     ),
+            //     child: Center(
+            //       child: Icon(
+            //         Icons.done_all,
+            //         size: 20,
+            //         color: ColorConstants.textGreen,
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),

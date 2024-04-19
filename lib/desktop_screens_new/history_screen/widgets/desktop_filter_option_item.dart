@@ -68,8 +68,8 @@ class DesktopFilterOptionItem extends StatelessWidget {
                   isCheck
                       ? AppVectors.icChecked
                       : isAllOption
-                      ? AppVectors.icUncheckedAll
-                      :  AppVectors.icUnchecked,
+                          ? AppVectors.icUncheckedAll
+                          : AppVectors.icUnchecked,
                   width: 16,
                   height: 16,
                   color: isAllOption ? Colors.white : Colors.black,

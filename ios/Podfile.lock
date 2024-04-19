@@ -261,21 +261,21 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   emoji_picker_flutter: fe2e6151c5b548e975d546e6eeb567daf0962a58
   fc_native_video_thumbnail: 927d4dcfd4c7e9f2cc1a20bb52dfee83de3792c2
-  file_picker: 15fd9539e4eb735dc54bae8c0534a7a9511a03de
-  file_selector_ios: b6a6c6667913d571590169ef946afbafe3b52688
+  file_picker: ce3938a0df3cc1ef404671531facef740d03f920
+  file_selector_ios: 78baf21d03f1e37a7df97bb2494f9cd86de8fa5d
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
-  image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
+  fluttertoast: 9f2f8e81bb5ce18facb9748d7855bf5a756fe3db
+  image_picker_ios: b545a5f16c0fa88e3ecbbce3ed4de45567a8ec18
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
-  permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   receive_sharing_intent: 9ca20ae908f83c36ddaaaa8c9bd30ce4700495e8
   SDWebImage: a3ba0b8faac7228c3c8eadd1a55c9c9fe5e16457
@@ -284,7 +284,7 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: ec33c32b8688982cecc6348adeae667c1b9938da
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
