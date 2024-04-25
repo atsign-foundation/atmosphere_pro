@@ -9,7 +9,7 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dar
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';

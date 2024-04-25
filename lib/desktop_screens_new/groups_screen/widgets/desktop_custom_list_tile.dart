@@ -32,6 +32,8 @@ class DesktopCustomListTile extends StatefulWidget {
   final bool selectSingle;
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
   final bool isTrusted;
+  final List<GroupContactsModel?> selectedContact;
+  final bool showSelectedBorder;
 
   const DesktopCustomListTile({
     Key? key,
@@ -42,6 +44,8 @@ class DesktopCustomListTile extends StatefulWidget {
     this.selectSingle = false,
     this.selectedList,
     required this.isTrusted,
+    this.selectedContact = const [],
+    required this.showSelectedBorder,
   }) : super(key: key);
 
   @override
@@ -63,7 +67,7 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
     _groupService = GroupService();
     // ignore: omit_local_variable_types
 
-    getIsSelectedValue(_groupService.selectedGroupContacts);
+    getIsSelectedValue(widget.selectedContact);
     super.initState();
   }
 
@@ -113,110 +117,104 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
   Widget build(BuildContext context) {
     getNameAndImage();
 
-    return StreamBuilder<List<GroupContactsModel?>>(
-        initialData: _groupService.selectedGroupContacts,
-        stream: _groupService.selectedContactsStream,
-        builder: (context, snapshot) {
-          getIsSelectedValue(_groupService.selectedGroupContacts);
-
-          return InkWell(
-            onTap: () {
-              if (widget.asSelectionTile) {
-                if (widget.selectSingle) {
-                  _groupService.selectedGroupContacts = [];
+    return InkWell(
+      onTap: () {
+        if (widget.asSelectionTile) {
+          if (widget.selectSingle) {
+            _groupService.selectedGroupContacts = [];
+            _groupService.addGroupContact(widget.item);
+            widget.selectedList!([widget.item]);
+            Navigator.pop(context);
+          } else if (!widget.selectSingle) {
+            if (mounted) {
+              setState(() {
+                if (isSelected) {
+                  _groupService.removeGroupContact(widget.item);
+                } else {
                   _groupService.addGroupContact(widget.item);
-                  widget.selectedList!([widget.item]);
-                  Navigator.pop(context);
-                } else if (!widget.selectSingle) {
-                  if (mounted) {
-                    setState(() {
-                      if (isSelected) {
-                        _groupService.removeGroupContact(widget.item);
-                      } else {
-                        _groupService.addGroupContact(widget.item);
-                      }
-                      isSelected = !isSelected;
-                    });
-                  }
                 }
-              } else {
-                widget.onTap!();
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color:
-                      isSelected ? ColorConstants.orange : Colors.transparent,
-                  width: 2,
-                ),
-              ),
-              child: Row(
-                children: [
-                  (isLoading)
-                      ? const CircularProgressIndicator()
-                      : ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
+                isSelected = !isSelected;
+              });
+            }
+          }
+        } else {
+          widget.onTap!();
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected && widget.showSelectedBorder
+                ? ColorConstants.orange
+                : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Row(
+          children: [
+            (isLoading)
+                ? const CircularProgressIndicator()
+                : ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                    ),
+                    child: (image != null)
+                        ? Image.memory(
+                            image!,
+                            width: 72,
+                            height: 72,
+                            fit: BoxFit.cover,
+                          )
+                        : ContactInitial(
+                            size: 72,
+                            borderRadius: 0,
+                            initials: (initials ?? 'UG'),
                           ),
-                          child: (image != null)
-                              ? Image.memory(
-                                  image!,
-                                  width: 72,
-                                  height: 72,
-                                  fit: BoxFit.cover,
-                                )
-                              : ContactInitial(
-                                  size: 72,
-                                  borderRadius: 0,
-                                  initials: (initials ?? 'UG'),
-                                ),
-                        ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.item?.contact?.atSign ??
-                                '${widget.item?.group?.members?.length} Members',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13.toFont,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          if ((widget.item?.contact?.tags?["nickname"] ?? '')
-                              .isNotEmpty)
-                            Text(
-                              widget.item?.contact?.tags?["nickname"],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 10.toFont,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                        ],
+                  ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.item?.contact?.atSign ??
+                          '${widget.item?.group?.members?.length} Members',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13.toFont,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  if (widget.isTrusted)
-                    SvgPicture.asset(
-                      AppVectors.icTrust,
-                      width: 24,
-                      height: 20,
-                      color: ColorConstants.orange,
-                    ),
-                  const SizedBox(width: 24),
-                ],
+                    if ((widget.item?.contact?.tags?["nickname"] ?? '')
+                        .isNotEmpty)
+                      Text(
+                        widget.item?.contact?.tags?["nickname"],
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 10.toFont,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
-          );
-        });
+            if (widget.isTrusted)
+              SvgPicture.asset(
+                AppVectors.icTrust,
+                width: 24,
+                height: 20,
+                color: ColorConstants.orange,
+              ),
+            const SizedBox(width: 24),
+          ],
+        ),
+      ),
+    );
   }
 }

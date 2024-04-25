@@ -27,4 +27,6 @@ class DesktopRoutes {
       'desktop_group_right_initial';
   static const String DESKTOP_NEW_GROUP = 'desktop_new_group';
   static const String DESKTOP_GROUP_DETAIL = 'desktop_group_detail';
+  static const String DESKTOP_ADD_OR_REMOVE_CONTACTS =
+      'desktop_add_or_remove_contacts';
 }

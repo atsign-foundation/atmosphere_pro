@@ -7,7 +7,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
-import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
+import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/contact_card.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';

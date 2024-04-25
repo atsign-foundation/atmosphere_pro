@@ -5,6 +5,7 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_download_all_files
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/desktop_home.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/trusted_sender/desktop_empty_trusted_sender.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/contacts_screen/desktop_contact_screen.dart';
+import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/desktop_add_or_remove_contacts_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/groups_screen/desktop_groups_screen.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/blocked_contacts.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/settings_screen/settings_desktop.dart';
@@ -70,6 +71,9 @@ class DesktopSetupRoutes {
       },
       DesktopRoutes.DEKSTOP_CONTACTS_SCREEN: (context) {
         return DesktopContactScreen();
+      },
+      DesktopRoutes.DESKTOP_ADD_OR_REMOVE_CONTACTS: (context) {
+        return DesktopAddOrRemoveContactsScreen();
       },
       DesktopRoutes.DESKTOP_DOWNLOAD_ALL: (context) {
         return DesktopDownloadAllFiles();

@@ -156,46 +156,39 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                           SizedBox(height: 4),
                           Flexible(
                             child: isEditNickname
-                                ? Row(
-                                    children: [
-                                      Flexible(
-                                        child: TextField(
-                                          maxLines: 1,
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(
-                                              left: 16,
-                                            ),
-                                            hintText: 'Enter Nickname',
-                                            hintStyle: TextStyle(
-                                              fontSize: 14.toFont,
-                                              fontWeight: FontWeight.w500,
-                                              color: ColorConstants.textBlack,
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            labelStyle: TextStyle(
-                                              fontSize: 14.toFont,
-                                            ),
-                                            fillColor: Colors.white,
-                                            filled: true,
-                                            suffixIcon: InkWell(
-                                              onTap: () {
-                                                nicknameController.clear();
-                                              },
-                                              child: Icon(
-                                                Icons.clear,
-                                                color: Colors.black,
-                                                size: 16,
-                                              ),
-                                            ),
-                                          ),
-                                          controller: nicknameController,
+                                ? TextField(
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(
+                                        left: 16,
+                                      ),
+                                      hintText: 'Enter Nickname',
+                                      hintStyle: TextStyle(
+                                        fontSize: 14.toFont,
+                                        fontWeight: FontWeight.w500,
+                                        color: ColorConstants.textBlack,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      labelStyle: TextStyle(
+                                        fontSize: 14.toFont,
+                                      ),
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      suffixIcon: InkWell(
+                                        onTap: () {
+                                          nicknameController.clear();
+                                        },
+                                        child: Icon(
+                                          Icons.clear,
+                                          color: Colors.black,
+                                          size: 16,
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                    controller: nicknameController,
                                   )
                                 : Text(
                                     widget.contact.tags?['nickname'] ??
