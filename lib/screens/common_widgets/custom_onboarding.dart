@@ -57,12 +57,7 @@ class CustomOnboarding {
     switch (result.status) {
       case AtOnboardingResultStatus.success:
         final atsign = result.atsign!;
-        final OnboardingService _onboardingService = OnboardingService.getInstance();
-        final value = _onboardingService.atClientServiceMap;
         await AtClientManager.getInstance().setCurrentAtSign(atsign, MixedConstants.appNamespace, atClientPrefernce);
-
-        _backendService.atClientServiceInstance = value[atsign];
-        _backendService.currentAtSign = value[atsign]!.atClientManager.atClient.getCurrentAtSign();
 
         BackendService.getInstance().syncWithSecondary();
 
