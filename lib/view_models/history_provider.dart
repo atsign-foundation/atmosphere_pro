@@ -618,8 +618,7 @@ class HistoryProvider extends BaseModel {
     }
 
     for (var atKey in fileTransferAtkeys) {
-      var isCurrentAtsign = compareAtSign(
-          atKey.sharedBy!, BackendService.getInstance().currentAtSign!);
+      var isCurrentAtsign = compareAtSign(atKey.sharedBy!, AtClientManager.getInstance().atClient.getCurrentAtSign()!);
       if (!isCurrentAtsign && !checkRegexFromBlockedAtsign(atKey.sharedBy!)) {
         receivedItemsId[atKey.key] = true;
 
