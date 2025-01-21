@@ -47,10 +47,7 @@ class CustomOnboarding {
           ),
           isSwitchingAtsign: !isInit,
           atsign: atSign);
-
-      print('Onboarding result: $result');
     } catch (e) {
-      print('Error in onboarding: $e');
       return;
     }
 
