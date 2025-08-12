@@ -1,6 +1,6 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class DesktopCustomInputField extends StatelessWidget {
@@ -31,9 +31,8 @@ class DesktopCustomInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
-        selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+        text: initialValue,
+        selection: TextSelection.collapsed(offset: initialValue.length)));
     return Container(
       width: width.toWidth,
       height: height,
