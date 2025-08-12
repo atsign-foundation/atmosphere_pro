@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/widgets/home_description_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_home/widgets/logo_widget.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/common_button.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -58,12 +58,12 @@ class _DesktopHomeState extends State<DesktopHome> {
       setState(() {});
     }
     print('currentatSign $currentatSign, ${(currentatSign != null)}');
-    await backendService
-        .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) {
+    try {
+      atClientPrefernce = await backendService.getAtClientPreference();
+    } catch (e) {
       print(e);
-    });
+      atClientPrefernce = null;
+    }
 
     if (currentatSign != null) {
       await _onBoard(currentatSign);
