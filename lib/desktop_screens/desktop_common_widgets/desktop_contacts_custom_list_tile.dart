@@ -39,7 +39,7 @@ class DesktopContactsCustomListTile extends StatelessWidget {
           )),
       trailing: IconButton(
         onPressed: () {},
-        icon: (false) ? Icon(Icons.close) : Icon(Icons.add),
+        icon: Icon(Icons.add),
       ),
     );
   }
