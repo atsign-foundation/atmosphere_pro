@@ -138,7 +138,7 @@ class _ContactScreenState extends State<ContactScreen>
           : InkWell(
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
-              overlayColor: MaterialStateColor.resolveWith(
+              overlayColor: WidgetStateColor.resolveWith(
                 (states) => Colors.transparent,
               ),
               onTap: () {

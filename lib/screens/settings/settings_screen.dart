@@ -118,21 +118,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           TextButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(
+                                    WidgetStateProperty.all<Color>(
                                         Colors.white),
-                                side: MaterialStateProperty.all<BorderSide>(
+                                side: WidgetStateProperty.all<BorderSide>(
                                   const BorderSide(color: Colors.black),
                                 ),
-                                textStyle: MaterialStateProperty.all<TextStyle>(
+                                textStyle: WidgetStateProperty.all<TextStyle>(
                                     TextStyle(
                                   fontSize: 16.toFont,
                                 )),
-                                padding: MaterialStateProperty.all<
+                                padding: WidgetStateProperty.all<
                                         EdgeInsetsGeometry>(
                                     EdgeInsets.symmetric(
                                         horizontal: 15.toWidth,
                                         vertical: 10.toHeight)),
-                                shape: MaterialStateProperty.all<
+                                shape: WidgetStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -156,19 +156,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           TextButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(
+                                    WidgetStateProperty.all<Color>(
                                         Colors.black),
-                                textStyle: MaterialStateProperty.all<TextStyle>(
+                                textStyle: WidgetStateProperty.all<TextStyle>(
                                     TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 16.toFont,
                                 )),
-                                padding: MaterialStateProperty.all<
+                                padding: WidgetStateProperty.all<
                                         EdgeInsetsGeometry>(
                                     EdgeInsets.symmetric(
                                         horizontal: 15.toWidth,
                                         vertical: 10.toHeight)),
-                                shape: MaterialStateProperty.all<
+                                shape: WidgetStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),

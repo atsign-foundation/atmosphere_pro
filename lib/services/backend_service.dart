@@ -13,7 +13,6 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_onboarding.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
-import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/local_notification_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/services/version_service.dart';
@@ -31,7 +30,6 @@ import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
@@ -177,7 +175,7 @@ class BackendService {
         .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT)) {
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         DownloadAcknowledgement downloadAcknowledgement =
             DownloadAcknowledgement.fromJson(jsonDecode(decryptedMessage));
 
@@ -194,7 +192,7 @@ class BackendService {
       var atKey = notificationKey.split(':')[1];
       var decryptedMessage = response.value!;
 
-      if (decryptedMessage != null && decryptedMessage != '') {
+      if (decryptedMessage != '') {
         await Provider.of<HistoryProvider>(NavService.navKey.currentContext!,
                 listen: false)
             .checkForUpdatedOrNewNotification(fromAtSign, decryptedMessage);

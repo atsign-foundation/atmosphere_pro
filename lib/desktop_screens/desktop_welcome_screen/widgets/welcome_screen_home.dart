@@ -2,14 +2,11 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:atsign_atmosphere_pro/dekstop_services/desktop_image_picker.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_toast.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
-import 'package:atsign_atmosphere_pro/view_models/base_model.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:flutter/material.dart';
@@ -122,8 +119,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                 SizedBox(
                   height: 20.toHeight,
                 ),
-                (_welcomeScreenProvider.selectedContacts != null &&
-                        _welcomeScreenProvider.selectedContacts.isNotEmpty &&
+                (_welcomeScreenProvider.selectedContacts.isNotEmpty &&
                         _filePickerProvider.selectedFiles.isNotEmpty)
                     ? Container(
                         color: Colors.white,
@@ -179,8 +175,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
                       )
                     : SizedBox(),
                 SizedBox(
-                  height: (_welcomeScreenProvider.selectedContacts != null &&
-                          _welcomeScreenProvider.selectedContacts.isNotEmpty &&
+                  height: (_welcomeScreenProvider.selectedContacts.isNotEmpty &&
                           _filePickerProvider.selectedFiles.isNotEmpty)
                       ? 10.toHeight
                       : 0,

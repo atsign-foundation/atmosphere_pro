@@ -216,10 +216,10 @@ class HistoryProvider extends BaseModel {
     AtKey atKey = AtKey()
       ..key = fileHistory.fileDetails!.key
       ..metadata = Metadata()
-      ..metadata!.ttr = -1
-      ..metadata!.ccd = true
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
       // key will be deleted after 15 days.
-      ..metadata!.ttl = 1296000000; // 1000 * 60 * 60 * 24 * 15
+      ..metadata.ttl = 1296000000; // 1000 * 60 * 60 * 24 * 15
 
     try {
       var res = await AtClientManager.getInstance().atClient.put(
@@ -293,7 +293,7 @@ class HistoryProvider extends BaseModel {
 
     sentFileAtkeys.retainWhere(
       (element) =>
-          !element.key!
+          !element.key
               .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
@@ -326,7 +326,7 @@ class HistoryProvider extends BaseModel {
         return AtValue();
       });
 
-      if (keyValue != null && keyValue.value != null) {
+      if (keyValue.value != null) {
         try {
           Map historyFile = json.decode((keyValue.value) as String) as Map;
           sendFileHistory['history'] = historyFile['history'];
@@ -405,7 +405,7 @@ class HistoryProvider extends BaseModel {
 
     sentFileAtkeys.retainWhere(
       (element) =>
-          !element.key!
+          !element.key
               .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
@@ -421,7 +421,7 @@ class HistoryProvider extends BaseModel {
         },
       );
 
-      if (atvalue != null && atvalue.value != null) {
+      if (atvalue.value != null) {
         try {
           FileHistory fileHistory = FileHistory.fromJson(
             jsonDecode(atvalue.value),
@@ -894,10 +894,8 @@ class HistoryProvider extends BaseModel {
                 tempReceivedFiles.insert(0, file);
               }
             } else {
-              if (filesModel.key != null) {
-                tempReceivedHistoryLogs.insert(0, filesModel);
-              }
-
+              tempReceivedHistoryLogs.insert(0, filesModel);
+            
               final file = FileHistory(
                 filesModel,
                 [],
@@ -905,10 +903,8 @@ class HistoryProvider extends BaseModel {
                 fileTransferObject,
               );
 
-              if (filesModel.key != null) {
-                tempReceivedFiles.insert(0, file);
-              }
-            }
+              tempReceivedFiles.insert(0, file);
+                        }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
           }
@@ -1222,17 +1218,12 @@ class HistoryProvider extends BaseModel {
               listen: false)
           .checkForUndownloadedFiles();
 
-      if (files is List<File>) {
-        await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
-                listen: false)
-            .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return true;
-      } else {
-        setStatus(DOWNLOAD_FILE, Status.Done);
-        return false;
-      }
-    } catch (e) {
+      await Provider.of<MyFilesProvider>(NavService.navKey.currentContext!,
+              listen: false)
+          .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
+      setStatus(DOWNLOAD_FILE, Status.Done);
+      return true;
+        } catch (e) {
       print('error in downloading file: $e');
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
               listen: false)
@@ -1250,9 +1241,6 @@ class HistoryProvider extends BaseModel {
     downloadPath ??= await MixedConstants.getFileDownloadLocation(
       sharedBy: sharedByAtSign,
     );
-    if (downloadPath == null) {
-      throw Exception('downloadPath not found');
-    }
 
     FileTransferObject? fileTransferObject;
 
@@ -1339,10 +1327,10 @@ class HistoryProvider extends BaseModel {
 
     AtKey atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata!.ttr = -1
-      ..metadata!.ccd = true
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
       ..key = MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT + fileTransfer.key
-      ..metadata!.ttl = 518400000
+      ..metadata.ttl = 518400000
       ..sharedWith = fileTransfer.sender;
     try {
       var notificationResult = await AtClientManager.getInstance()
@@ -1475,9 +1463,9 @@ class HistoryProvider extends BaseModel {
     AtKey atKey = AtKey()
       ..key = fileHistory.fileDetails!.key
       ..metadata = Metadata()
-      ..metadata!.ttr = -1
-      ..metadata!.ccd = true
-      ..metadata!.ttl = 1296000000;
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      ..metadata.ttl = 1296000000;
 
     var res = await AtClientManager.getInstance().atClient.delete(atKey);
     if (res) {
@@ -1510,7 +1498,7 @@ class HistoryProvider extends BaseModel {
             );
 
     fileTransferAtkeys.retainWhere((element) =>
-        !element.key!.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
+        !element.key.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
         receivedItemsId[element.key] != true);
 
     for (var atKey in fileTransferAtkeys) {

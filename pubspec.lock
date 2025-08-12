@@ -66,7 +66,7 @@ packages:
     source: hosted
     version: "2.0.0"
   at_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: at_client
       sha256: a20b991cc0f7d2cec8362194eafc972945bec476539d107db1cc0e8780a88da9
@@ -194,7 +194,7 @@ packages:
     source: hosted
     version: "1.0.0"
   at_utils:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: at_utils
       sha256: "29be5ecaa9861845232f800b7fd0ddfc8b2ad2b38b3e8b6e05972b4bd0defa62"
@@ -258,7 +258,7 @@ packages:
     source: hosted
     version: "1.1.2"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
@@ -817,7 +817,7 @@ packages:
     source: hosted
     version: "0.2.1+1"
   internet_connection_checker:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: internet_connection_checker
       sha256: "1c683e63e89c9ac66a40748b1b20889fd9804980da732bf2b58d6d5456c8e876"
@@ -1065,7 +1065,7 @@ packages:
     source: hosted
     version: "3.2.1"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
@@ -1089,7 +1089,7 @@ packages:
     source: hosted
     version: "1.1.0"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
@@ -1534,7 +1534,7 @@ packages:
     source: hosted
     version: "3.1.4"
   uuid:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: uuid
       sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"

@@ -88,6 +88,13 @@ dependencies:
   video_thumbnail: ^0.5.3
   webview_flutter: ^4.7.0
 
+  path: any
+  internet_connection_checker: any
+  path_provider: any
+  uuid: any
+  at_client: any
+  at_utils: any
+  collection: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

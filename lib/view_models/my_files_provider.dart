@@ -635,7 +635,7 @@ class MyFilesProvider extends BaseModel {
 
     var fileAtKey = formMyFileAtKey(fileTransfer.key);
 
-    if (!_keyStore.isKeyExists(fileAtKey.key!)) {
+    if (!_keyStore.isKeyExists(fileAtKey.key)) {
       var res = await _atClient.put(
         fileAtKey,
         jsonEncode(fileTransfer.toJson()),
@@ -746,7 +746,7 @@ class MyFilesProvider extends BaseModel {
       ..key = MixedConstants.MY_FILES_KEY + transferUniqueId
       ..sharedBy = AtClientManager.getInstance().atClient.getCurrentAtSign()
       ..metadata = Metadata()
-      ..metadata!.ttr = -1;
+      ..metadata.ttr = -1;
   }
 
   Future<bool> deletMyFileRecord(String fileTransferId) async {

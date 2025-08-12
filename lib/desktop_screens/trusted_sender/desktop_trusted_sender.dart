@@ -16,8 +16,6 @@ import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:provider/provider.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 
 class DesktopTrustedSender extends StatefulWidget {
   @override
@@ -87,13 +85,13 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                                   });
                                 },
                                 style: ButtonStyle(backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
+                                    WidgetStateProperty.resolveWith<Color>(
+                                  (Set<WidgetState> states) {
                                     return ColorConstants.orangeColor;
                                   },
                                 ), fixedSize:
-                                    MaterialStateProperty.resolveWith<Size>(
-                                  (Set<MaterialState> states) {
+                                    WidgetStateProperty.resolveWith<Size>(
+                                  (Set<WidgetState> states) {
                                     return Size(100, 40);
                                   },
                                 )),
@@ -262,13 +260,13 @@ class _DesktopTrustedSenderState extends State<DesktopTrustedSender> {
                               TextButton(
                                 onPressed: () {},
                                 style: ButtonStyle(backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
+                                    WidgetStateProperty.resolveWith<Color>(
+                                  (Set<WidgetState> states) {
                                     return ColorConstants.orangeColor;
                                   },
                                 ), fixedSize:
-                                    MaterialStateProperty.resolveWith<Size>(
-                                  (Set<MaterialState> states) {
+                                    WidgetStateProperty.resolveWith<Size>(
+                                  (Set<WidgetState> states) {
                                     return Size(120, 40);
                                   },
                                 )),

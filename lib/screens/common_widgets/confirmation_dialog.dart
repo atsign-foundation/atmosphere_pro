@@ -44,7 +44,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                 ),
                 TextButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                             Theme.of(context).primaryColor)),
                     onPressed: () async {
                       Navigator.of(context).pop();

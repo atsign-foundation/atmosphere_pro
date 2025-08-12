@@ -1,9 +1,3 @@
-/// This is a custom widget to handle states from view models
-/// This takes in a [functionName] as a String to render only function which is called,
-/// a [successBuilder] which tells what to render is status is [Status.Done]
-/// [Status.Loading] renders a CircularProgressIndicator whereas
-/// [Status.Error] renders [errorBuilder]
-import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_skeleton_loading_widget.dart';

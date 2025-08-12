@@ -102,9 +102,6 @@ class _DesktopHistoryScreenState extends State<DesktopHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (historyProvider == null) {
-      historyProvider = Provider.of<HistoryProvider>(context);
-    }
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: ColorConstants.scaffoldColor,

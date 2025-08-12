@@ -5,7 +5,6 @@ import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_card_btn.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
 

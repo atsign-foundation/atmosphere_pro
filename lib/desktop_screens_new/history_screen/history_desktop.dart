@@ -7,7 +7,6 @@ import 'package:atsign_atmosphere_pro/widgets/detail_history_card.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/desktop_filter_history_widget.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/history_screen/widgets/destop_history_card_item.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
-import 'package:atsign_atmosphere_pro/screens/common_widgets/skeleton_loading_widget.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/file_types.dart';

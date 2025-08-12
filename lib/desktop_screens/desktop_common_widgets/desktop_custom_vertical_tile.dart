@@ -33,10 +33,8 @@ Widget customPersonVerticalTile(
               right: 0,
               child: InkWell(
                 onTap: () {
-                  if (onCancel != null) {
-                    onCancel();
-                  }
-                },
+                  onCancel();
+                                },
                 child: isCancelIcon ? Icon(Icons.cancel) : SizedBox(),
               ),
             ),

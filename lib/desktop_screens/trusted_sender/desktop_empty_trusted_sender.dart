@@ -94,12 +94,12 @@ class _DesktopEmptySenderState extends State<DesktopEmptySender> {
                         });
                       },
                       style: ButtonStyle(backgroundColor:
-                          MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
+                          WidgetStateProperty.resolveWith<Color>(
+                        (Set<WidgetState> states) {
                           return ColorConstants.orangeColor;
                         },
-                      ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-                        (Set<MaterialState> states) {
+                      ), fixedSize: WidgetStateProperty.resolveWith<Size>(
+                        (Set<WidgetState> states) {
                           return Size(160, 40);
                         },
                       )),

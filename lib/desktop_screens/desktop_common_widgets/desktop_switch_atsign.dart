@@ -91,7 +91,7 @@ class _DesktopSwitchAtsignState extends State<DesktopSwitchAtsign> {
                   ),
                 ),
                 SizedBox(height: 5),
-                (_name != null && _name != '')
+                (_name != '')
                     ? SizedBox(
                         width: 180,
                         child: Text(

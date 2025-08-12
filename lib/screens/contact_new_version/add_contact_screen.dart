@@ -147,7 +147,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                                 children: [
                                   Checkbox(
                                     value: addToTrusted,
-                                    side: MaterialStateBorderSide.resolveWith(
+                                    side: WidgetStateBorderSide.resolveWith(
                                       (states) => const BorderSide(
                                           width: 2,
                                           color: ColorConstants.orange),

@@ -1,10 +1,9 @@
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/data_models/file_transfer_object.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/foundation.dart';
 
 class NotificationService extends ChangeNotifier {
-  NotificationService._() {}
+  NotificationService._();
   static NotificationService _instace = NotificationService._();
   factory NotificationService() => _instace;
   static final fileObjectKey = 'fileObject';

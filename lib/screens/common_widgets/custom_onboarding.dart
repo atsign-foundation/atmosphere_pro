@@ -1,4 +1,3 @@
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
