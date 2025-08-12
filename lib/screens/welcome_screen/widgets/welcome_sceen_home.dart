@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_client_mobile/src/at_client_service.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/notification_icon.dart';
@@ -14,7 +15,6 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/overlapping_contacts.dart';
 import 'package:atsign_atmosphere_pro/screens/welcome_screen/widgets/pick_file_dialog.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/overlay_service.dart';
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';

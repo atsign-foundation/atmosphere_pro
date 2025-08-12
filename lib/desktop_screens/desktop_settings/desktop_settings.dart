@@ -1,5 +1,6 @@
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_client_mobile/src/at_client_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/switch_at_sign.dart';
@@ -100,7 +101,7 @@ class _DesktopSettingsState extends State<DesktopSettings> {
                 ),
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 36, vertical: 18),
+                      const EdgeInsets.symmetric(horizontal: 36, vertical: 18),
                   child: ListView(
                     shrinkWrap: true,
                     children: [

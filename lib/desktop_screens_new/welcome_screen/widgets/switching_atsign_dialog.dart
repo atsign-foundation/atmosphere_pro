@@ -1,4 +1,4 @@
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_client_mobile/src/at_client_service.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/welcome_screen/widgets/atsign_card_widget.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';

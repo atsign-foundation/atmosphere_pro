@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_client_mobile/src/at_client_service.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar_custom.dart';
@@ -117,9 +118,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           TextButton(
                             style: ButtonStyle(
-                                backgroundColor:
-                                    WidgetStateProperty.all<Color>(
-                                        Colors.white),
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                    Colors.white),
                                 side: WidgetStateProperty.all<BorderSide>(
                                   const BorderSide(color: Colors.black),
                                 ),
@@ -127,11 +127,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     TextStyle(
                                   fontSize: 16.toFont,
                                 )),
-                                padding: WidgetStateProperty.all<
-                                        EdgeInsetsGeometry>(
-                                    EdgeInsets.symmetric(
-                                        horizontal: 15.toWidth,
-                                        vertical: 10.toHeight)),
+                                padding:
+                                    WidgetStateProperty.all<EdgeInsetsGeometry>(
+                                        EdgeInsets.symmetric(
+                                            horizontal: 15.toWidth,
+                                            vertical: 10.toHeight)),
                                 shape: WidgetStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -155,19 +155,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           const Spacer(),
                           TextButton(
                             style: ButtonStyle(
-                                backgroundColor:
-                                    WidgetStateProperty.all<Color>(
-                                        Colors.black),
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                    Colors.black),
                                 textStyle: WidgetStateProperty.all<TextStyle>(
                                     TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 16.toFont,
                                 )),
-                                padding: WidgetStateProperty.all<
-                                        EdgeInsetsGeometry>(
-                                    EdgeInsets.symmetric(
-                                        horizontal: 15.toWidth,
-                                        vertical: 10.toHeight)),
+                                padding:
+                                    WidgetStateProperty.all<EdgeInsetsGeometry>(
+                                        EdgeInsets.symmetric(
+                                            horizontal: 15.toWidth,
+                                            vertical: 10.toHeight)),
                                 shape: WidgetStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
