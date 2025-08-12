@@ -1,9 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
-    as pro_text_strings;
 import 'package:atsign_atmosphere_pro/screens/common_widgets/app_bar.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_button.dart';
@@ -11,10 +9,12 @@ import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avata
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_handler.dart';
 import 'package:atsign_atmosphere_pro/screens/group_contacts_screen/widgets/group_contact_list_tile.dart';
 import 'package:atsign_atmosphere_pro/screens/trusted_contacts/widgets/remove_trusted_contact_dialog.dart';
+import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart'
+    as pro_text_strings;
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -45,7 +45,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                   ),
                 ),
             successBuilder: (provider) {
-              return ShowCaseWidget(builder: Builder(builder: (context) {
+              return ShowCaseWidget(builder: (context) {
                 myContext = context;
                 return Scaffold(
                   appBar: CustomAppBar(
@@ -222,7 +222,7 @@ class _TrustedContactsState extends State<TrustedContacts> {
                     ]),
                   ),
                 );
-              }));
+              });
             }));
   }
 }

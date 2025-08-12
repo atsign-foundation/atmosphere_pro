@@ -31,62 +31,62 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   archive: ^3.4.10
+  at_backupkey_flutter: ^4.0.13
+  at_client_mobile: ^3.2.15
+  at_common_flutter: ^2.0.13
+  at_commons: ^4.0.6
+  at_contact: ^3.0.8
+  at_contacts_flutter: ^4.0.14
+  at_contacts_group_flutter: ^4.0.15
+  at_onboarding_flutter: ^6.1.7
+  at_server_status: ^1.0.4
+  at_sync_ui_flutter: ^1.0.11
+  biometric_storage: ^5.0.1
+  carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.8
-  file_picker: ^6.1.1
-  filesystem_picker: ^4.1.0
+  desktop_drop: ^0.4.4
   desktop_window: ^0.4.0
+  device_info_plus: ^9.0.3
+  dotted_border: ^2.1.0
+  expandable: ^5.0.1
+  fc_native_video_thumbnail: ^0.8.0
+  file_picker: ^6.1.1
+  file_selector: ^1.0.3
+  filesystem_picker: ^4.1.0
+  flutter_image_compress: ^2.2.0
   flutter_keychain: ^2.4.0
   flutter_local_notifications: ^17.0.1
   flutter_slidable: ^3.1.0
+  flutter_staggered_grid_view: ^0.7.0
+  flutter_svg: ^2.0.10+1
+  flutter_toastr: ^1.0.3
+  fluttertoast: ^8.2.5
   google_fonts: ^6.2.1
+  http: ^0.13.1
+  image_picker: ^1.1.0
   intl: ^0.19.0
+  just_the_tooltip: ^0.0.12
+  local_notifier: ^0.1.6
+  new_version: ^0.3.1
   open_file: ^3.3.2
+  open_store: ^0.5.0
+  package_info_plus: ^5.0.0
   permission_handler: ^11.3.1
   provider: ^6.1.2
   qr_flutter: ^4.1.0
   receive_sharing_intent: 1.7.0
   rxdart: ^0.27.7
   share_plus: ^7.1.0
+  shimmer: ^3.0.0
+  showcaseview: ^3.0.0
+  smooth_page_indicator: ^1.1.0
   url_launcher: ^6.2.6
+  version: ^3.0.2
+  video_compress: ^3.1.2
   video_thumbnail: ^0.5.3
   webview_flutter: ^4.7.0
-  http: ^0.13.1
-  package_info_plus: ^5.0.0
-  fluttertoast: ^8.2.5
-  file_selector: ^1.0.3
-  carousel_slider: ^4.2.1
-  flutter_toastr: ^1.0.3
-  video_compress: ^3.1.2
-  new_version: ^0.3.1
-  at_server_status: ^1.0.4
-
-  at_commons: ^4.0.6
-  at_contact: ^3.0.8
-  at_common_flutter: ^2.0.13
-  at_client_mobile: ^3.2.15
-  at_onboarding_flutter: ^6.1.7
-  at_backupkey_flutter: ^4.0.13
-  at_contacts_flutter: ^4.0.14
-  at_contacts_group_flutter: ^4.0.15
-  local_notifier: ^0.1.6
-  at_sync_ui_flutter: ^1.0.11
-  showcaseview: ^2.0.3
-  biometric_storage: ^5.0.1
-  flutter_svg: ^2.0.10+1
-  image_picker: ^1.1.0
-  dotted_border: ^2.1.0
-  expandable: ^5.0.1
-  desktop_drop: ^0.4.4
-  fc_native_video_thumbnail: ^0.8.0
-  flutter_staggered_grid_view: ^0.7.0
-  device_info_plus: ^9.0.3
-  just_the_tooltip: ^0.0.12
-  shimmer: ^3.0.0
-  version: ^3.0.2
-  open_store: ^0.5.0
-  flutter_image_compress: ^2.2.0
-  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:

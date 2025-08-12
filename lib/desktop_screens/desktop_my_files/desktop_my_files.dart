@@ -1,9 +1,8 @@
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens/desktop_common_widgets/desktop_header.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -169,12 +168,12 @@ class _DesktopMyFilesState extends State<DesktopMyFiles>
                         TextButton(
                           onPressed: () {},
                           style: ButtonStyle(backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
+                              WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
                               return ColorConstants.orangeColor;
                             },
-                          ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-                            (Set<MaterialState> states) {
+                          ), fixedSize: WidgetStateProperty.resolveWith<Size>(
+                            (Set<WidgetState> states) {
                               return Size(120, 40);
                             },
                           )),

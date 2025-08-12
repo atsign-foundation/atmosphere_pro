@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
@@ -96,7 +97,7 @@ class CommonUtilityFunctions {
         barrierDismissible: true,
         context: NavService.navKey.currentContext!,
         builder: (BuildContext context) {
-          return ShowCaseWidget(builder: Builder(builder: (context) {
+          return ShowCaseWidget(builder: (context) {
             return StatefulBuilder(builder: (context, stateSet) {
               return Dialog(
                   shape: RoundedRectangleBorder(
@@ -205,8 +206,8 @@ class CommonUtilityFunctions {
                                             borderRadius:
                                                 BorderRadius.circular(2.0),
                                           ),
-                                          side: MaterialStateBorderSide
-                                              .resolveWith(
+                                          side:
+                                              WidgetStateBorderSide.resolveWith(
                                             (states) => const BorderSide(
                                                 width: 2,
                                                 color: ColorConstants.orange),
@@ -241,7 +242,7 @@ class CommonUtilityFunctions {
                                               borderRadius:
                                                   BorderRadius.circular(2.0),
                                             ),
-                                            side: MaterialStateBorderSide
+                                            side: WidgetStateBorderSide
                                                 .resolveWith(
                                               (states) => const BorderSide(
                                                   width: 2,
@@ -286,23 +287,22 @@ class CommonUtilityFunctions {
                                 child: TextButton(
                                   style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all<Color>(
+                                          WidgetStateProperty.all<Color>(
                                               Colors.white),
-                                      side:
-                                          MaterialStateProperty.all<BorderSide>(
+                                      side: WidgetStateProperty.all<BorderSide>(
                                         const BorderSide(color: Colors.black),
                                       ),
                                       textStyle:
-                                          MaterialStateProperty.all<TextStyle>(
+                                          WidgetStateProperty.all<TextStyle>(
                                               TextStyle(
                                         fontSize: 16.toFont,
                                       )),
-                                      padding: MaterialStateProperty.all<
+                                      padding: WidgetStateProperty.all<
                                               EdgeInsetsGeometry>(
                                           EdgeInsets.symmetric(
                                               horizontal: 15.toWidth,
                                               vertical: 10.toHeight)),
-                                      shape: MaterialStateProperty.all<
+                                      shape: WidgetStateProperty.all<
                                               RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
                                         borderRadius:
@@ -328,20 +328,20 @@ class CommonUtilityFunctions {
                               TextButton(
                                 style: ButtonStyle(
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(
+                                        WidgetStateProperty.all<Color>(
                                             Colors.black),
                                     textStyle:
-                                        MaterialStateProperty.all<TextStyle>(
+                                        WidgetStateProperty.all<TextStyle>(
                                             const TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 16,
                                     )),
-                                    padding: MaterialStateProperty.all<
+                                    padding: WidgetStateProperty.all<
                                             EdgeInsetsGeometry>(
                                         EdgeInsets.symmetric(
                                             horizontal: 15.toWidth,
                                             vertical: 10.toHeight)),
-                                    shape: MaterialStateProperty.all<
+                                    shape: WidgetStateProperty.all<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -381,7 +381,7 @@ class CommonUtilityFunctions {
                     ),
                   ));
             });
-          }));
+          });
         });
   }
 
@@ -652,7 +652,7 @@ class CommonUtilityFunctions {
                     Spacer(),
                     TextButton(
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
+                            backgroundColor: WidgetStateProperty.all(
                                 Theme.of(context).primaryColor)),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
