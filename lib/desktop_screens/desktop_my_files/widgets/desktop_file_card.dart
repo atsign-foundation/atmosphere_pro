@@ -17,7 +17,7 @@ class DesktopFileCard extends StatefulWidget {
   final String? filePath;
   final bool showDelete;
   final String transferId;
-  Key? key;
+  final Key? key;
   DesktopFileCard(
       {this.title,
       this.filePath,

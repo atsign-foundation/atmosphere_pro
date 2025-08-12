@@ -1,16 +1,16 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 
 class DesktopSelectedFiles extends StatefulWidget {
-  ValueChanged<bool> onChange;
+  final ValueChanged<bool> onChange;
   final bool showCancelIcon;
   DesktopSelectedFiles(this.onChange, {this.showCancelIcon = true});
   @override

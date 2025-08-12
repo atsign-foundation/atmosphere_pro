@@ -12,7 +12,7 @@ class SideBarItem extends StatelessWidget {
   final bool showIconOnly, isDesktop;
   final WelcomeScreenProvider _welcomeScreenProvider = WelcomeScreenProvider();
   final Color displayColor;
-  bool isScale;
+  final bool initialIsScale;
   final bool showNotificationDot;
   SideBarItem(
       {Key? key,
@@ -21,16 +21,15 @@ class SideBarItem extends StatelessWidget {
       this.routeName,
       this.arguments,
       this.showIconOnly = false,
-      this.isScale = false,
+      this.initialIsScale = false,
       this.displayColor = ColorConstants.fadedText,
       this.showNotificationDot = false,
       this.isDesktop = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (SizeConfig().isMobile(context)) {
-      isScale = false;
-    }
+    final bool isScale =
+        SizeConfig().isMobile(context) ? false : initialIsScale;
 
     return InkWell(
       onTap: () {

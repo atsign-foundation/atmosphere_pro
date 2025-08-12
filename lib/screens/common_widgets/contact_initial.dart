@@ -1,13 +1,13 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactInitial extends StatelessWidget {
   final double? size, maxSize, minSize, borderRadius;
   final String? initials;
-  int? index;
-  Color? background;
+  final int? index;
+  final Color? background;
 
   ContactInitial({
     Key? key,
@@ -22,11 +22,7 @@ class ContactInitial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (initials!.length < 3) {
-      index = initials!.length;
-    } else {
-      index = 2;
-    }
+    final int displayIndex = (initials!.length < 3) ? initials!.length : 2;
 
     return Container(
       constraints: BoxConstraints(
@@ -41,7 +37,7 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials!.substring(0, index).toUpperCase(),
+          initials!.substring(0, displayIndex).toUpperCase(),
           style: CustomTextStyles.whiteBold(size: (size! ~/ 3)),
         ),
       ),

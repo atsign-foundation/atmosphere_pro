@@ -1,7 +1,7 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/person_vertical_tile.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
 import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class FileRecipients extends StatefulWidget {
   final List<ShareStatus>? filesharedWith;
-  FileRecipientSection? fileRecipientSection;
+  final FileRecipientSection? fileRecipientSection;
 
   FileRecipients(
     this.filesharedWith, {
