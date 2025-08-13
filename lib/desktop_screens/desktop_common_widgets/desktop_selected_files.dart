@@ -18,15 +18,12 @@ class DesktopSelectedFiles extends StatefulWidget {
 }
 
 class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
-  FileTransferProvider? _filePickerProvider;
   late WelcomeScreenProvider welcomeScreenProvider;
   @override
   void initState() {
     welcomeScreenProvider = Provider.of<WelcomeScreenProvider>(
         NavService.navKey.currentContext!,
         listen: false);
-    _filePickerProvider =
-        Provider.of<FileTransferProvider>(context, listen: false);
     super.initState();
   }
 
