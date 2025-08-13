@@ -1,8 +1,9 @@
 import 'dart:io';
+
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
@@ -77,11 +78,12 @@ class _HomeState extends State<Home> {
       authenticating = true;
     });
     String? currentatSign = await _backendService.getAtSign();
-    await _backendService
-        .getAtClientPreference()
-        .then((value) => atClientPrefernce = value)
-        .catchError((e) => print(e));
 
+    try {
+      atClientPrefernce = await _backendService.getAtClientPreference();
+    } catch (e) {
+      print(e);
+    }
     if (currentatSign == null || currentatSign == '') {
       setState(() {
         authenticating = false;
