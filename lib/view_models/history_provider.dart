@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
@@ -13,8 +14,10 @@ import 'package:atsign_atmosphere_pro/desktop_screens/desktop_my_files/widgets/d
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
 import 'package:atsign_atmosphere_pro/services/exception_service.dart';
 import 'package:atsign_atmosphere_pro/services/file_transfer_service.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/local_notification_service.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart'
+    as notificationService;
 import 'package:atsign_atmosphere_pro/services/snackbar_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/constants.dart';
@@ -26,8 +29,7 @@ import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/services/notification_service.dart'
-    as notificationService;
+
 import 'trusted_sender_view_model.dart';
 
 class HistoryProvider extends BaseModel {
@@ -293,8 +295,7 @@ class HistoryProvider extends BaseModel {
 
     sentFileAtkeys.retainWhere(
       (element) =>
-          !element.key
-              .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
+          !element.key.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
 
@@ -405,8 +406,7 @@ class HistoryProvider extends BaseModel {
 
     sentFileAtkeys.retainWhere(
       (element) =>
-          !element.key
-              .contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
+          !element.key.contains(MixedConstants.FILE_TRANSFER_ACKNOWLEDGEMENT) &&
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
 
@@ -895,7 +895,7 @@ class HistoryProvider extends BaseModel {
               }
             } else {
               tempReceivedHistoryLogs.insert(0, filesModel);
-            
+
               final file = FileHistory(
                 filesModel,
                 [],
@@ -904,7 +904,7 @@ class HistoryProvider extends BaseModel {
               );
 
               tempReceivedFiles.insert(0, file);
-                        }
+            }
           } catch (e) {
             print('error in getAllFileTransferData file model conversion: $e');
           }
@@ -1209,8 +1209,7 @@ class HistoryProvider extends BaseModel {
       }
       notifyListeners();
 
-      var files =
-          await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
+      await _downloadSingleFileFromWeb(transferId, sharedBy, fileName);
       allFilesHistory[index].fileDetails?.files![_fileIndex!].isDownloading =
           false;
 
@@ -1223,7 +1222,7 @@ class HistoryProvider extends BaseModel {
           .saveNewDataInMyFiles(allFilesHistory[index].fileDetails!);
       setStatus(DOWNLOAD_FILE, Status.Done);
       return true;
-        } catch (e) {
+    } catch (e) {
       print('error in downloading file: $e');
       Provider.of<FileProgressProvider>(NavService.navKey.currentContext!,
               listen: false)
