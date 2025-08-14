@@ -299,11 +299,11 @@ class HistoryProvider extends BaseModel {
           compareAtSign(element.sharedBy!, atClient.getCurrentAtSign()!),
     );
 
-    bool isNewKeyAvailable = false;
+    // bool isNewKeyAvailable = false;
 
     sentFileAtkeys.forEach((AtKey atkey) {
       if (individualSentFileId[atkey.key] == null) {
-        isNewKeyAvailable = true;
+        // isNewKeyAvailable = true;
       }
       individualSentFileId[atkey.key] = true;
     });
