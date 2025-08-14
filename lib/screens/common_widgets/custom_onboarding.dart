@@ -32,18 +32,26 @@ class CustomOnboarding {
     final OnboardingService _onboardingService =
         OnboardingService.getInstance();
 
-    _onboardingService.setAtsign = atSign;
+    try {
+      _onboardingService.setAtsign = atSign;
 
-    result = await AtOnboarding.onboard(
-        context: NavService.navKey.currentContext!,
-        config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
-          domain: MixedConstants.ROOT_DOMAIN,
-          rootEnvironment: RootEnvironment.Production,
-          appAPIKey: MixedConstants.ONBOARD_API_KEY,
-        ),
-        isSwitchingAtsign: !isInit,
-        atsign: atSign);
+      result = await AtOnboarding.onboard(
+          context: NavService.navKey.currentContext!,
+          config: AtOnboardingConfig(
+            atClientPreference: atClientPrefernce!,
+            domain: MixedConstants.ROOT_DOMAIN,
+            rootEnvironment: RootEnvironment.Production,
+            appAPIKey: MixedConstants.ONBOARD_API_KEY,
+            showPopupSharedStorage: true,
+          ),
+          isSwitchingAtsign: !isInit,
+          atsign: atSign);
+
+      print('Onboarding result: $result');
+    } catch (e) {
+      print('Error in onboarding: $e');
+      return;
+    }
 
     switch (result.status) {
       case AtOnboardingResultStatus.success:
@@ -55,8 +63,7 @@ class CustomOnboarding {
             atsign, MixedConstants.appNamespace, atClientPrefernce);
 
         _backendService.atClientServiceInstance = value[atsign];
-        _backendService.currentAtSign =
-            value[atsign]!.atClientManager.atClient.getCurrentAtSign();
+        _backendService.currentAtSign = _onboardingService.currentAtsign;
 
         BackendService.getInstance().syncWithSecondary();
 
