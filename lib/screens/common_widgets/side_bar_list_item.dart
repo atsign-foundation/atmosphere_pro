@@ -2,7 +2,6 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SideBarItem extends StatelessWidget {
   final String? image;
@@ -39,7 +38,7 @@ class SideBarItem extends StatelessWidget {
         }
         Navigator.pushNamed(context, routeName!, arguments: arguments ?? {});
       },
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: Row(
           children: [
@@ -89,17 +88,5 @@ class SideBarItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
