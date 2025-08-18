@@ -23,10 +23,11 @@ Future<void> openDownloadsFolder(BuildContext context) async {
           await Permission.storage.request().isGranted,
     );
   } else {
-    String url = 'shareddocuments://' +
-        BackendService.getInstance().atClientPreference.downloadPath!;
-    if (await canLaunch(url)) {
-      await launch(url);
+    final url =
+        'shareddocuments://${BackendService.getInstance().atClientPreference.downloadPath!}';
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       throw 'Could not launch $url';
     }
@@ -42,4 +43,3 @@ Future<void> openFilePath(String path) async {
     CommonUtilityFunctions().showNoFileDialog();
   }
 }
-

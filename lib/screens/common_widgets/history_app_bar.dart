@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,7 +16,7 @@ import '../../utils/text_styles.dart';
 
 class HistoryAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
-  HistoryAppBar({required this.title});
+  const HistoryAppBar({Key? key, required this.title}) : super(key: key);
 
   @override
   _HistoryAppBarState createState() => _HistoryAppBarState();
@@ -130,7 +130,7 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
     );
   }
 
-  navigateToDownloads() async {
+  Future<void> navigateToDownloads() async {
     // navigate to downloads folder
     if (Platform.isAndroid) {
       await FilesystemPicker.open(
@@ -145,10 +145,11 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
             await Permission.storage.request().isGranted,
       );
     } else {
-      String url = 'shareddocuments://' +
-          BackendService.getInstance().atClientPreference.downloadPath!;
-      if (await canLaunch(url)) {
-        await launch(url);
+      final url =
+          'shareddocuments://${BackendService.getInstance().atClientPreference.downloadPath!}';
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
       } else {
         throw 'Could not launch $url';
       }

@@ -148,12 +148,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                           .isGranted,
                                 );
                               } else {
-                                String url = 'shareddocuments://' +
-                                    BackendService.getInstance()
-                                        .atClientPreference
-                                        .downloadPath!;
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                final url =
+                                    'shareddocuments://${BackendService.getInstance().atClientPreference.downloadPath!}';
+                                final Uri uri = Uri.parse(url);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri);
                                 } else {
                                   throw 'Could not launch $url';
                                 }
@@ -200,13 +199,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   Widget menuBar(BuildContext context) {
     return Consumer<FileDownloadChecker>(
-      builder: (context, _fileDownloadChecker, _) {
+      builder: (context, fileDownloadChecker, _) {
         return IconButton(
           onPressed: () {
             Scaffold.of(context).openEndDrawer();
           },
           alignment: Alignment.topCenter,
-          tooltip: _fileDownloadChecker.undownloadedFilesExist
+          tooltip: fileDownloadChecker.undownloadedFilesExist
               ? 'Hamburger Menu & Dot'
               : 'Hamburger Menu',
           padding: EdgeInsets.zero,
@@ -223,7 +222,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   semanticLabel: '',
                 ),
               ),
-              _fileDownloadChecker.undownloadedFilesExist
+              fileDownloadChecker.undownloadedFilesExist
                   ? Positioned(
                       right: -4,
                       top: 2,

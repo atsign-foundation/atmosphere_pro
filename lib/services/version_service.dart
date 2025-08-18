@@ -18,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 class VersionService {
   VersionService._();
 
-  static VersionService _internal = VersionService._();
+  static final VersionService _internal = VersionService._();
 
   factory VersionService.getInstance() {
     return _internal;
@@ -28,7 +28,7 @@ class VersionService {
   late PackageInfo packageInfo;
   bool isBackwardCompatible = true, isNewVersionAvailable = false;
 
-  init() async {
+  Future<void> init() async {
     isBackwardCompatible = true;
     isNewVersionAvailable = false;
     await getVersion();
@@ -36,7 +36,7 @@ class VersionService {
     showVersionUpgradeDialog();
   }
 
-  getVersion() async {
+  Future<void> getVersion() async {
     packageInfo = await PackageInfo.fromPlatform();
 
     try {
@@ -63,7 +63,7 @@ class VersionService {
     }
   }
 
-  showVersionUpgradeDialog() async {
+  Future<void> showVersionUpgradeDialog() async {
     try {
       if (Platform.isIOS || Platform.isAndroid) {
         mobileUpgradedDialog();
@@ -78,17 +78,17 @@ class VersionService {
     }
   }
 
-  desktopUpgradeDialog() {
+  void desktopUpgradeDialog() {
     if (isNewVersionAvailable && version != null) {
       showDialog(
           context: NavService.navKey.currentContext!,
           barrierDismissible: isBackwardCompatible ? true : false,
-          builder: (BuildContext _context) {
+          builder: (BuildContext context) {
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.toWidth),
               ),
-              content: Container(
+              content: SizedBox(
                 width: 300.toWidth,
                 child: SingleChildScrollView(
                   child: Column(
@@ -122,7 +122,7 @@ class VersionService {
     }
   }
 
-  compareVersions() {
+  void compareVersions() {
     if (version == null) {
       return;
     }
@@ -163,14 +163,14 @@ class VersionService {
       }
 
       print(
-        'isNewVersionAvailable : ${isNewVersionAvailable}, isback: ${isBackwardCompatible}',
+        'isNewVersionAvailable : $isNewVersionAvailable, isback: $isBackwardCompatible',
       );
     } catch (e) {
       print('error in comparing versions');
     }
   }
 
-  mobileUpgradedDialog() async {
+  Future<void> mobileUpgradedDialog() async {
     final newVersion = NewVersionPlus();
     final status = await newVersion.getVersionStatus();
 
@@ -184,7 +184,7 @@ class VersionService {
     }
   }
 
-  desktopUpdateHandler() async {
+  Future<void> desktopUpdateHandler() async {
     late String url;
     if (Platform.isMacOS) {
       url = MixedConstants.MACOS_STORE_LINK;
@@ -193,12 +193,11 @@ class VersionService {
     } else if (Platform.isLinux) {
       url = MixedConstants.LINUX_STORE_LINK;
     }
-
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
       );
     }
   }
