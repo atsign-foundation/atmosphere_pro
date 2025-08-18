@@ -104,7 +104,7 @@ PODS:
     - Mantle/extobjc (= 2.2.0)
   - Mantle/extobjc (2.2.0)
   - MTBBarcodeScanner (5.0.11)
-  - open_file (0.0.1):
+  - open_file_ios (0.0.1):
     - Flutter
   - package_info_plus (0.4.5):
     - Flutter
@@ -140,6 +140,7 @@ PODS:
     - libwebp
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - at_backupkey_flutter (from `.symlinks/plugins/at_backupkey_flutter/ios`)
@@ -160,7 +161,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
-  - open_file (from `.symlinks/plugins/open_file/ios`)
+  - open_file_ios (from `.symlinks/plugins/open_file_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -171,7 +172,7 @@ DEPENDENCIES:
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_compress (from `.symlinks/plugins/video_compress/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -222,8 +223,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
-  open_file:
-    :path: ".symlinks/plugins/open_file/ios"
+  open_file_ios:
+    :path: ".symlinks/plugins/open_file_ios/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -245,7 +246,7 @@ EXTERNAL SOURCES:
   video_thumbnail:
     :path: ".symlinks/plugins/video_thumbnail/ios"
   webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   at_backupkey_flutter: 2fc3d01138175e41bce8b574387a47544c53e01b
@@ -255,40 +256,40 @@ SPEC CHECKSUMS:
   at_onboarding_flutter: e8219b6d0bfb236d3837ec3528871aebdcc56e8d
   biometric_storage: 1400f1382af3a4cc2bf05340e13c3d8de873ceb9
   CropViewController: 58fb440f30dac788b129d2a1f24cffdcb102669c
-  device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
+  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   DKCamera: a902b66921fca14b7a75266feb8c7568aa7caa71
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  emoji_picker_flutter: fe2e6151c5b548e975d546e6eeb567daf0962a58
+  emoji_picker_flutter: 8e50ec5caac456a23a78637e02c6293ea0ac8771
   fc_native_video_thumbnail: 927d4dcfd4c7e9f2cc1a20bb52dfee83de3792c2
-  file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
-  file_selector_ios: 78baf21d03f1e37a7df97bb2494f9cd86de8fa5d
+  file_picker: b159e0c068aef54932bb15dc9fd1571818edaf49
+  file_selector_ios: f0670c1064a8c8450e38145d8043160105d0b97c
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  fluttertoast: 9f2f8e81bb5ce18facb9748d7855bf5a756fe3db
-  image_picker_ios: b545a5f16c0fa88e3ecbbce3ed4de45567a8ec18
+  fluttertoast: e9a18c7be5413da53898f660530c56f35edfba9c
+  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
-  open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
-  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  open_file_ios: 461db5853723763573e140de3193656f91990d9e
+  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   receive_sharing_intent: 6837b01768e567fe8562182397bf43d63d8c6437
   SDWebImage: a3ba0b8faac7228c3c8eadd1a55c9c9fe5e16457
   SDWebImageWebPCoder: c94f09adbca681822edad9e532ac752db713eabf
-  share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
-  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: ec33c32b8688982cecc6348adeae667c1b9938da
-  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
-  webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
+  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 
 PODFILE CHECKSUM: a69c71e5c6dcbb517b96ee8fed9f0c82ee0b181a
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

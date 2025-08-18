@@ -58,7 +58,7 @@ class _DesktopWelcomeScreenStartState extends State<DesktopWelcomeScreenStart> {
             body: Stack(clipBehavior: Clip.none, children: [
               DesktopWelcomeScreen(atClient: atClient),
               authenticating
-                  ? LoadingDialog().showTextLoader(
+                  ? LoadingDialog().onlyText(
                       '${TextStrings().initialisingFor} $currentatSign')
                   : SizedBox()
             ]),
@@ -140,9 +140,9 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Consumer<SideBarProvider>(builder: (_context, _sideBarProvider, _) {
+          Consumer<SideBarProvider>(builder: (context, sideBarProvider, _) {
             return SizedBox(
-              width: _sideBarProvider.isSidebarExpanded
+              width: sideBarProvider.isSidebarExpanded
                   ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                   : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
             );
@@ -163,9 +163,9 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
         ],
       ),
       Consumer<SideBarProvider>(
-        builder: (_context, _sideBarProvider, _) {
+        builder: (context, sideBarProvider, _) {
           return Container(
-            width: _sideBarProvider.isSidebarExpanded
+            width: sideBarProvider.isSidebarExpanded
                 ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                 : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
             height: SizeConfig().screenHeight,
@@ -195,7 +195,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
               },
               successBuilder: (provider) => SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: _sideBarProvider.isSidebarExpanded
+                  crossAxisAlignment: sideBarProvider.isSidebarExpanded
                       ? CrossAxisAlignment.start
                       : CrossAxisAlignment.center,
                   children: [
@@ -208,7 +208,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                           height: 58.toHeight),
                     ),
                     SizedBox(height: 20.toHeight),
-                    if (_sideBarProvider.isSidebarExpanded)
+                    if (sideBarProvider.isSidebarExpanded)
                       GradientButton(
                         onPressed: () {},
                         height: 50.toHeight,
@@ -237,7 +237,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       menuItemsIcons[0],
                       routes[0],
                       title: menuItemsTitle[0],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
@@ -247,14 +247,14 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         'isBlockedScreen': false,
                       },
                       title: menuItemsTitle[1],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
                       menuItemsIcons[2],
                       routes[2],
                       title: menuItemsTitle[2],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
@@ -264,28 +264,28 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                         'isBlockedScreen': true,
                       },
                       title: menuItemsTitle[3],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
                       menuItemsIcons[4],
                       routes[4],
                       title: menuItemsTitle[4],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
                       menuItemsIcons[5],
                       routes[5],
                       title: menuItemsTitle[5],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
                       menuItemsIcons[6],
                       routes[6],
                       title: menuItemsTitle[6],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SidebarTitleText(TextStrings().sidebarHelpCenter),
                     // SideBarIcon(
@@ -302,7 +302,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       isUrlLauncher: true,
                       arguments: {"url": MixedConstants.FAQ},
                       title: menuItemsTitle[7],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
@@ -311,14 +311,14 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       isUrlLauncher: true,
                       arguments: {"url": MixedConstants.TERMS_CONDITIONS},
                       title: menuItemsTitle[8],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 2.toHeight),
                     SideBarIcon(
                       menuItemsIcons[9],
                       routes[7],
                       title: menuItemsTitle[9],
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     // SideBarIcon(
                     //   menuItemsIcons[10],
@@ -331,7 +331,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                     SizedBox(height: 10.toHeight),
                     BuildAvatarWidget(
                       atClient: widget.atClient,
-                      isSidebarExpanded: _sideBarProvider.isSidebarExpanded,
+                      isSidebarExpanded: sideBarProvider.isSidebarExpanded,
                     ),
                     SizedBox(height: 10.toHeight),
                   ],
@@ -344,10 +344,10 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
           );
         },
       ),
-      Consumer<SideBarProvider>(builder: (_context, _provider, _) {
+      Consumer<SideBarProvider>(builder: (context, provider, _) {
         return Positioned(
           top: 40,
-          left: _provider.isSidebarExpanded
+          left: provider.isSidebarExpanded
               ? MixedConstants.SIDEBAR_WIDTH_EXPANDED - 20
               : MixedConstants.SIDEBAR_WIDTH_COLLAPSED - 20,
           child: Builder(
@@ -365,7 +365,7 @@ class _DesktopWelcomeScreenState extends State<DesktopWelcomeScreen> {
                       color: Colors.black),
                   padding: EdgeInsets.only(left: 4),
                   child: Icon(
-                      _provider.isSidebarExpanded
+                      provider.isSidebarExpanded
                           ? Icons.arrow_back_ios
                           : Icons.arrow_forward_ios_sharp,
                       size: 20,
@@ -461,20 +461,20 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
     return popupMenuList;
   }
 
-  getPopupMenuItem(List<String> list) {
+  List<PopupMenuItem<String>> getPopupMenuItem(List<String> list) {
     List<PopupMenuItem<String>> menuItems = [];
-    list.forEach((element) {
+    for (var element in list) {
       menuItems.add(PopupMenuItem(
         value: element,
         child: DesktopSwitchAtsign(key: Key(element), atsign: element),
       ));
-    });
+    }
 
     return menuItems;
   }
 
-  onAtsignChange(String selectedOption) async {
-    late var atClientPrefernce;
+  Future<void> onAtsignChange(String selectedOption) async {
+    late AtClientPreference atClientPrefernce;
 
     try {
       atClientPrefernce =
@@ -513,7 +513,7 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
             List<String>? atsignList = snapshot.data;
             var image = CommonUtilityFunctions()
                 .getCachedContactImage(widget.atClient.getCurrentAtSign()!);
-            return Container(
+            return SizedBox(
               width: widget.isSidebarExpanded
                   ? MixedConstants.SIDEBAR_WIDTH_EXPANDED
                   : MixedConstants.SIDEBAR_WIDTH_COLLAPSED,
@@ -540,7 +540,7 @@ class _BuildAvatarWidgetState extends State<BuildAvatarWidget> {
                       if (widget.isSidebarExpanded)
                         Flexible(
                           child: Text(
-                            '     ' + widget.atClient.getCurrentAtSign()!,
+                            '     ${widget.atClient.getCurrentAtSign()!}',
                             style:
                                 CustomTextStyles.desktopPrimaryBold12.copyWith(
                               overflow: TextOverflow.ellipsis,
@@ -588,11 +588,13 @@ class SideBarIcon extends StatelessWidget {
   final Map<String, dynamic>? arguments;
   final bool isUrlLauncher, isSidebarExpanded, isEmailLauncher;
   SideBarIcon(this.image, this.routeName,
-      {this.arguments,
+      {Key? key,
+      this.arguments,
       this.isUrlLauncher = false,
       this.isEmailLauncher = false,
       this.isSidebarExpanded = true,
-      this.title});
+      this.title})
+      : super(key: key);
   bool isHovered = false;
   bool isCurrentRoute = false;
   var nestedProvider = Provider.of<NestedRouteProvider>(
@@ -668,8 +670,8 @@ class SideBarIcon extends StatelessWidget {
                               title: title,
                             ),
                             Consumer<FileDownloadChecker>(
-                              builder: (context, _fileDownloadChecker, _) {
-                                return _fileDownloadChecker
+                              builder: (context, fileDownloadChecker, _) {
+                                return fileDownloadChecker
                                         .undownloadedFilesExist
                                     ? Positioned(
                                         left: 12,

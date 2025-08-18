@@ -24,9 +24,10 @@ class DesktopHistoryReceivedCardBody extends StatefulWidget {
   final HistoryType type;
 
   const DesktopHistoryReceivedCardBody({
+    Key? key,
     required this.fileTransfer,
     required this.type,
-  });
+  }) : super(key: key);
 
   @override
   State<DesktopHistoryReceivedCardBody> createState() =>

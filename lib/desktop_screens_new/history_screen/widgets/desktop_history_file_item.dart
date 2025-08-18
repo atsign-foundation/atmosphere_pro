@@ -37,7 +37,7 @@ class DesktopHistoryFileItem extends StatefulWidget {
     this.isPreview = false,
     this.showStatus = false,
     this.isSent,
-  });
+  }) : super(key: key);
 
   @override
   State<DesktopHistoryFileItem> createState() => _DesktopHistoryFileItemState();
@@ -167,7 +167,7 @@ class _DesktopHistoryFileItemState extends State<DesktopHistoryFileItem> {
                           .checkForDownloadAvailability(widget.fileTransfer)
                       ? await downloadFiles()
                       : CommonUtilityFunctions().showFileHasExpiredDialog(
-                          MediaQuery.textScaleFactorOf(context),
+                          MediaQuery.textScalerOf(context).scale(1.0),
                         )
                   : await OpenFile.open(
                       File(filePath).existsSync() ? filePath : sentFilePath,

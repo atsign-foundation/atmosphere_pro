@@ -44,7 +44,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
     super.initState();
   }
 
-  fetchContacts() {
+  void fetchContacts() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       setState(() {
         isLoading = true;
@@ -83,7 +83,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Container(
+                            child: SizedBox(
                               height: MediaQuery.of(context).size.height - 120,
                               child: StreamBuilder<List<BaseContact?>>(
                                 stream: ContactService().contactStream,
@@ -152,7 +152,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
                                               showGroup = false;
                                             });
                                           },
-                                          child: Container(
+                                          child: SizedBox(
                                               width: double.infinity,
                                               key: UniqueKey(),
                                               child: DesktopContactCard(

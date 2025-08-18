@@ -41,7 +41,7 @@ class HistoryFileItem extends StatefulWidget {
     required this.data,
     required this.openFile,
     required this.isSent,
-  });
+  }) : super(key: key);
 
   @override
   State<HistoryFileItem> createState() => _HistoryFileItemState();
@@ -92,7 +92,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
               ? canDownload
                   ? await downloadFiles()
                   : CommonUtilityFunctions().showFileHasExpiredDialog(
-                      MediaQuery.textScaleFactorOf(context),
+                      MediaQuery.textScalerOf(context).scale(1.0),
                     )
               : widget.openFile.call();
         },
@@ -233,7 +233,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
             ? Image.memory(
                 File(path).readAsBytesSync(),
                 fit: BoxFit.cover,
-                errorBuilder: (BuildContext _context, _, __) {
+                errorBuilder: (BuildContext context, _, __) {
                   return Container(
                     child: Icon(
                       Icons.image,
@@ -260,7 +260,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                     : Image.memory(
                         videoThumbnail!,
                         fit: BoxFit.cover,
-                        errorBuilder: (BuildContext _context, _, __) {
+                        errorBuilder: (BuildContext context, _, __) {
                           return Icon(
                             Icons.image,
                           );
@@ -330,7 +330,7 @@ class _HistoryFileItemState extends State<HistoryFileItem> {
                         },
                         onDisableTap: () {
                           CommonUtilityFunctions().showFileHasExpiredDialog(
-                            MediaQuery.textScaleFactorOf(context),
+                            MediaQuery.textScalerOf(context).scale(1.0),
                           );
                         },
                         activeIcon: AppVectors.icDownloadFile,

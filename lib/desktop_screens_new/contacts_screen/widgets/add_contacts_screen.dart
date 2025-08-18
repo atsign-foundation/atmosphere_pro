@@ -56,7 +56,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddContactProvider>(
-      builder: (_c, provider, _) {
+      builder: (c, provider, _) {
         state = context.watch<AddContactProvider>();
         return Scaffold(
           backgroundColor: Colors.transparent,
@@ -268,7 +268,7 @@ class _DesktopAddContactScreenState extends State<DesktopAddContactScreen> {
   }
 
   // Check if the atSign in valid
-  _checkValid(String atSign) async {
+  Future<void> _checkValid(String atSign) async {
     if (atSign.isEmpty) {
       setState(() {
         isValid = CheckValid.idle;

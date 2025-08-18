@@ -23,7 +23,8 @@ class SentItemFileView extends StatefulWidget {
   final FileHistory sentHistory;
   final Function(bool) isFileViewOpen;
 
-  SentItemFileView(this.sentHistory, this.isFileViewOpen);
+  const SentItemFileView(this.sentHistory, this.isFileViewOpen, {Key? key})
+      : super(key: key);
 
   @override
   _SentItemFileViewState createState() => _SentItemFileViewState();
@@ -42,14 +43,14 @@ class _SentItemFileViewState extends State<SentItemFileView> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    double deviceTextFactor = MediaQuery.of(context).textScaler.scale(1.0);
 
     return Container(
       color: Color(0xffEFEFEF),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             height: (SizeConfig().isTablet(context)
                     ? 80.0.toHeight
                     : 70.0.toHeight) *
@@ -63,18 +64,18 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     onTap: () async {
-                      String _path = MixedConstants.SENT_FILE_DIRECTORY +
+                      String path = MixedConstants.SENT_FILE_DIRECTORY +
                           filesList![index].name!;
-                      File test = File(_path);
+                      File test = File(path);
                       bool fileExists = await test.exists();
 
                       if (fileExists) {
-                        await OpenFile.open(_path);
+                        await OpenFile.open(path);
                       } else {
                         _showNoFileDialog(deviceTextFactor);
                       }
                     },
-                    leading: Container(
+                    leading: SizedBox(
                         height: 50.toHeight,
                         width: 50.toHeight,
                         child: FutureBuilder(
@@ -139,10 +140,8 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                                             .size
                                             .toString()) <=
                                         1024
-                                    ? '${filesList![index].size} ' +
-                                        TextStrings().kb
-                                    : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                        TextStrings().mb,
+                                    ? '${filesList![index].size} ${TextStrings().kb}'
+                                    : '${(filesList![index].size! / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
                                 style: CustomTextStyles.secondaryRegular12,
                               ),
                               SizedBox(width: 10.toHeight),
@@ -197,7 +196,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
                     TextStrings().hideFiles,
                     style: CustomTextStyles.primaryBlueBold14,
                   ),
-                  Container(
+                  SizedBox(
                     width: 22.toWidth,
                     height: 22.toWidth,
                     child: Center(
@@ -223,7 +222,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
           return Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
+            child: SizedBox(
               height: 200.0.toHeight,
               width: 300.0.toWidth,
               child: Column(
@@ -271,8 +270,8 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     }
 
     //  file share failed for any receiver
-    var _sharedWith = widget.sentHistory.sharedWith ?? [];
-    for (ShareStatus sharedWithAtsign in _sharedWith) {
+    var sharedWith = widget.sentHistory.sharedWith ?? [];
+    for (ShareStatus sharedWithAtsign in sharedWith) {
       if (sharedWithAtsign.isNotificationSend != null &&
           !sharedWithAtsign.isNotificationSend!) {
         return retryButton(fileData, index, FileOperation.RESEND_NOTIFICATION);
@@ -280,7 +279,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     }
 
     // file everyone received file
-    for (ShareStatus sharedWithAtsign in _sharedWith) {
+    for (ShareStatus sharedWithAtsign in sharedWith) {
       if (sharedWithAtsign.isFileDownloaded != null &&
           !sharedWithAtsign.isFileDownloaded!) {
         return sentConfirmation();
@@ -363,7 +362,8 @@ class _SentItemFileViewState extends State<SentItemFileView> {
     );
   }
 
-  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
+  void openFileReceiptBottomSheet(
+      {FileRecipientSection? fileRecipientSection}) {
     Provider.of<FileTransferProvider>(context, listen: false)
         .selectedFileHistory = widget.sentHistory;
 
@@ -371,7 +371,7 @@ class _SentItemFileViewState extends State<SentItemFileView> {
         context: context,
         isScrollControlled: true,
         shape: StadiumBorder(),
-        builder: (_context) {
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(

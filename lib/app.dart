@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/services/notification_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/theme.dart';
@@ -7,8 +11,9 @@ import 'package:atsign_atmosphere_pro/view_models/create_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_add_group_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/desktop_groups_screen_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_download_checker.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/side_bar_provider.dart';
@@ -17,14 +22,11 @@ import 'package:atsign_atmosphere_pro/view_models/trusted_sender_view_model.dart
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
-import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
-import 'dart:io';
+
 import 'routes/routes.dart';
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -83,7 +85,9 @@ class _MyAppState extends State<MyApp> {
             },
             child: MediaQuery(
               data: data.copyWith(
-                  textScaler: TextScaler.linear(data.textScaleFactor > 1.1 ? 1.1 : data.textScaleFactor)),
+                  textScaler: TextScaler.linear(data.textScaler.scale(1) > 1.1
+                      ? 1.1
+                      : data.textScaler.scale(1))),
               child: child!,
             ),
           );

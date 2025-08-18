@@ -12,6 +12,7 @@ class CommonButton extends StatelessWidget {
   const CommonButton(
     this.title,
     this.onTap, {
+    Key? key,
     this.border,
     this.color = Colors.black,
     this.height,
@@ -20,11 +21,11 @@ class CommonButton extends StatelessWidget {
     this.fontSize,
     this.textColor,
     this.leading,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    double deviceTextFactor = MediaQuery.textScalerOf(context).scale(1.0);
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(

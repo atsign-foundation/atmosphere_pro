@@ -1,19 +1,19 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_popup_route.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/triple_dot_loading.dart';
 import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
 class LoadingDialog {
   LoadingDialog._();
 
-  static LoadingDialog _instance = LoadingDialog._();
+  static final LoadingDialog _instance = LoadingDialog._();
 
   factory LoadingDialog() => _instance;
   bool _showing = false;
 
-  show({String? text}) {
+  void show({String? text}) {
     if (!_showing) {
       _showing = true;
       NavService.navKey.currentState!
@@ -35,7 +35,7 @@ class LoadingDialog {
     }
   }
 
-  hide() {
+  void hide() {
     print("hide called");
     if (_showing) {
       NavService.navKey.currentState!.pop();
@@ -43,7 +43,7 @@ class LoadingDialog {
     }
   }
 
-  showTextLoader(String text, {TextStyle? style}) {
+  void showTextLoader(String text, {TextStyle? style}) {
     if (!_showing) {
       _showing = true;
       NavService.navKey.currentState!
@@ -59,14 +59,14 @@ class LoadingDialog {
     }
   }
 
-  onlyText(String text, {TextStyle? style}) {
+  Widget onlyText(String text, {TextStyle? style}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Flexible(
           child: Text(
             text,
-            textScaleFactor: 1,
+            textScaler: TextScaler.linear(1),
             style: style ??
                 TextStyle(
                     color: ColorConstants.mildGrey,

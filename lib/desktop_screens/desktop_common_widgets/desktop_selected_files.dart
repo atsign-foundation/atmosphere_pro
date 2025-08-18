@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 class DesktopSelectedFiles extends StatefulWidget {
   final ValueChanged<bool> onChange;
   final bool showCancelIcon;
-  DesktopSelectedFiles(this.onChange, {this.showCancelIcon = true});
+  const DesktopSelectedFiles(this.onChange,
+      {Key? key, this.showCancelIcon = true})
+      : super(key: key);
   @override
   _DesktopSelectedFilesState createState() => _DesktopSelectedFilesState();
 }
@@ -59,7 +61,7 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                         ),
                       ),
                     ),
-                    child: Container(
+                    child: SizedBox(
                       width: 230,
                       child: Stack(children: [
                         widget.showCancelIcon
@@ -94,9 +96,9 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                               double.parse(provider.selectedFiles[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.selectedFiles[index].size} Kb' +
+                                  ? '${provider.selectedFiles[index].size} Kb'
                                       ' . ${provider.selectedFiles[index].extension}'
-                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb'
                                       ' . ${provider.selectedFiles[index].extension}',
                               style: TextStyle(
                                 color: ColorConstants.fadedText,

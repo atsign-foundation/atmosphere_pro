@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:atsign_atmosphere_pro/data_models/file_modal.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
-import 'package:atsign_atmosphere_pro/widgets/detail_history_card.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_body.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/history_received_card_header.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_body.dart';
 import 'package:atsign_atmosphere_pro/screens/history/widgets/history_sent_card_header.dart';
 import 'package:atsign_atmosphere_pro/services/backend_service.dart';
@@ -20,6 +19,7 @@ import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/internet_connectivity_checker.dart';
 import 'package:atsign_atmosphere_pro/view_models/my_files_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
+import 'package:atsign_atmosphere_pro/widgets/detail_history_card.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -32,7 +32,7 @@ class HistoryCardItem extends StatefulWidget {
   const HistoryCardItem({
     Key? key,
     required this.fileHistory,
-  });
+  }) : super(key: key);
 
   @override
   State<HistoryCardItem> createState() => _HistoryCardItemState();
@@ -172,7 +172,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
                         },
                         onDisableTap: () {
                           CommonUtilityFunctions().showFileHasExpiredDialog(
-                            MediaQuery.textScaleFactorOf(context),
+                            MediaQuery.textScalerOf(context).scale(1.0),
                           );
                         },
                         activeIcon: AppVectors.icDownloadFile,
@@ -304,7 +304,7 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
     }
 
     for (FileData i in file.files ?? []) {
-      if (!(await checkFileExist(data: i))) {
+      if (!(checkFileExist(data: i))) {
         var result = await Provider.of<HistoryProvider>(
                 NavService.navKey.currentContext!,
                 listen: false)
@@ -406,10 +406,6 @@ class _HistoryCardItemState extends State<HistoryCardItem> {
   }
 
   String getSentFilePath(String name) {
-    return BackendService.getInstance().downloadDirectory!.path +
-        Platform.pathSeparator +
-        'sent-files' +
-        Platform.pathSeparator +
-        name;
+    return '${BackendService.getInstance().downloadDirectory!.path}${Platform.pathSeparator}sent-files${Platform.pathSeparator}$name';
   }
 }
