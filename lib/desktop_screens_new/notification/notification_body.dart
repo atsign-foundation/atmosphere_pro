@@ -7,14 +7,14 @@ import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/fail_card
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/receive_card.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/sending_file_card.dart';
 import 'package:atsign_atmosphere_pro/desktop_screens_new/notification/success_card.dart';
+import 'package:atsign_atmosphere_pro/services/notification_service.dart'
+    as notification_service;
 import 'package:atsign_atmosphere_pro/utils/colors.dart' as color;
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:atsign_atmosphere_pro/services/notification_service.dart'
-    as notification_service;
 
 class NotificationBody extends StatefulWidget {
   const NotificationBody({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _NotificationBodyState extends State<NotificationBody> {
   @override
   Widget build(BuildContext context) {
     return Consumer<notification_service.NotificationService>(
-      builder: (_context, provider, _) {
+      builder: (context, provider, _) {
         return ClipRRect(
           child: Container(
             margin: EdgeInsets.only(top: 80),
@@ -119,7 +119,10 @@ class _NotificationBodyState extends State<NotificationBody> {
                           AppVectors.icCancel,
                           height: 20,
                           width: 20,
-                          color: color.ColorConstants.closeButtonColor,
+                          colorFilter: ColorFilter.mode(
+                            color.ColorConstants.closeButtonColor,
+                            BlendMode.srcIn,
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -177,11 +180,11 @@ class _NotificationBodyState extends State<NotificationBody> {
 
   bool isSuccess(FileHistory fileHistory) {
     bool isSuccess = true;
-    fileHistory.sharedWith!.forEach((ShareStatus element) {
+    for (var element in fileHistory.sharedWith!) {
       if (element.isNotificationSend == false) {
         isSuccess = false;
       }
-    });
+    }
 
     return isSuccess;
   }

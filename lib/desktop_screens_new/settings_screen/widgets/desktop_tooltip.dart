@@ -10,10 +10,11 @@ class DesktopTooltip extends StatefulWidget {
   final AxisDirection axisDirection;
 
   const DesktopTooltip({
+    Key? key,
     required this.content,
     required this.controller,
     this.axisDirection = AxisDirection.right,
-  });
+  }) : super(key: key);
 
   @override
   State<DesktopTooltip> createState() => _DesktopTooltipState();
@@ -66,9 +67,12 @@ class _DesktopTooltipState extends State<DesktopTooltip> {
               width: 12,
               height: 16,
               fit: BoxFit.cover,
-              color: value == TooltipStatus.isShowing
-                  ? ColorConstants.orange
-                  : ColorConstants.disableTooltipColor,
+              colorFilter: ColorFilter.mode(
+                value == TooltipStatus.isShowing
+                    ? ColorConstants.orange
+                    : ColorConstants.disableTooltipColor,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         );

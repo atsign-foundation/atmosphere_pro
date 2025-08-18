@@ -15,8 +15,9 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
   final FileHistory fileHistory;
 
   const DesktopHistoryStatusBadges({
+    Key? key,
     required this.fileHistory,
-  });
+  }) : super(key: key);
 
   void openFileReceiptBottomSheet({
     FileRecipientSection? fileRecipientSection,
@@ -30,7 +31,7 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
         context: context,
         barrierColor: Colors.transparent,
         barrierDismissible: true,
-        builder: (_context) {
+        builder: (context) {
           return StatefulBuilder(
             builder: (context, setDialogState) {
               return Dialog(
@@ -221,7 +222,10 @@ class DesktopHistoryStatusBadges extends StatelessWidget {
                 AppVectors.icRefresh,
                 width: 12,
                 height: 12,
-                color: ColorConstants.iconHeaderColor,
+                colorFilter: ColorFilter.mode(
+                  ColorConstants.iconHeaderColor,
+                  BlendMode.srcIn,
+                ),
               )
             ],
           ),

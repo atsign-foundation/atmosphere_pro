@@ -29,7 +29,10 @@ class DesktopSettingsCard extends StatelessWidget {
             ),
             child: SvgPicture.asset(
               vectorIcon,
-              color: Colors.grey,
+              colorFilter: ColorFilter.mode(
+                Colors.grey,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           SizedBox(

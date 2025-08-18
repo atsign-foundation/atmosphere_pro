@@ -203,7 +203,10 @@ class HistoryStatusBadges extends StatelessWidget {
                 AppVectors.icRefresh,
                 width: 12,
                 height: 12,
-                color: ColorConstants.iconHeaderColor,
+                colorFilter: ColorFilter.mode(
+                  ColorConstants.iconHeaderColor,
+                  BlendMode.srcIn,
+                ),
               )
             ],
           ),

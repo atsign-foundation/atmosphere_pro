@@ -83,7 +83,10 @@ class _HeaderWidgetState extends State<HeaderWidget> {
             child: Center(
               child: SvgPicture.asset(
                 icon,
-                color: ColorConstants.grey,
+                colorFilter: ColorFilter.mode(
+                  ColorConstants.grey,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           )

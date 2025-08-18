@@ -15,8 +15,9 @@ class HistoryReceivedCardHeader extends StatefulWidget {
   final FileHistory fileHistory;
 
   const HistoryReceivedCardHeader({
+    Key? key,
     required this.fileHistory,
-  });
+  }) : super(key: key);
 
   @override
   State<HistoryReceivedCardHeader> createState() =>
@@ -101,7 +102,10 @@ class _HistoryReceivedCardHeaderState extends State<HistoryReceivedCardHeader> {
                       child: Center(
                         child: SvgPicture.asset(
                           AppVectors.icTrust,
-                          color: ColorConstants.portlandOrange,
+                          colorFilter: ColorFilter.mode(
+                            ColorConstants.portlandOrange,
+                            BlendMode.srcIn,
+                          ),
                           width: 20,
                           height: 20,
                           fit: BoxFit.cover,

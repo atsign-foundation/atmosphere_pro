@@ -14,7 +14,7 @@ class OptionHeaderWidget extends StatefulWidget {
   final Function()? searchOffCallBack;
   final EdgeInsetsGeometry? margin;
 
-  OptionHeaderWidget({
+  const OptionHeaderWidget({
     Key? key,
     this.onReloadCallback,
     this.onSearchCallback,
@@ -132,7 +132,10 @@ class _OptionHeaderWidgetState extends State<OptionHeaderWidget> {
             child: Center(
               child: SvgPicture.asset(
                 icon,
-                color: ColorConstants.grey,
+                colorFilter: ColorFilter.mode(
+                  ColorConstants.grey,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           )

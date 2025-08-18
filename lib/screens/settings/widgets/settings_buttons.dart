@@ -30,7 +30,10 @@ class SettingsButton extends StatelessWidget {
           children: [
             SvgPicture.asset(
               image,
-              color: ColorConstants.textBoxBg,
+              colorFilter: ColorFilter.mode(
+                ColorConstants.textBoxBg,
+                BlendMode.srcIn,
+              ),
               height: 27,
               width: 27,
             ),

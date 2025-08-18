@@ -17,8 +17,9 @@ class DesktopHistoryCardHeader extends StatefulWidget {
   final FileHistory fileHistory;
 
   const DesktopHistoryCardHeader({
+    Key? key,
     required this.fileHistory,
-  });
+  }) : super(key: key);
 
   @override
   State<DesktopHistoryCardHeader> createState() =>
@@ -37,7 +38,7 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
   }
 
   void getNickname() async {
-    final String result = await CommonUtilityFunctions().getNickname(
+    final String result = CommonUtilityFunctions().getNickname(
       widget.fileHistory.type == HistoryType.received
           ? widget.fileHistory.fileDetails?.sender ?? ''
           : widget.fileHistory.sharedWith?.length == 1
@@ -110,7 +111,10 @@ class _DesktopHistoryCardHeaderState extends State<DesktopHistoryCardHeader> {
                           widget.fileHistory.sharedWith?.single.atsign)))
                 SvgPicture.asset(
                   AppVectors.icTrust,
-                  color: ColorConstants.portlandOrange,
+                  colorFilter: ColorFilter.mode(
+                    ColorConstants.portlandOrange,
+                    BlendMode.srcIn,
+                  ),
                 )
             ],
           ),

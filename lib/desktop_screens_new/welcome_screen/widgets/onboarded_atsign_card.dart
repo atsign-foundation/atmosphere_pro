@@ -16,13 +16,14 @@ class OnboardedAtSignCard extends StatelessWidget {
   final Function() onTap;
 
   const OnboardedAtSignCard({
+    Key? key,
     required this.avatar,
     required this.displayName,
     required this.atSignKey,
     required this.isExpanded,
     required this.isSelected,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +85,11 @@ class OnboardedAtSignCard extends StatelessWidget {
               AppVectors.icMore,
               width: 20,
               height: 20,
-              color: isSelected
-                  ? ColorConstants.orange
-                  : ColorConstants.raisinBlack,
+              colorFilter: ColorFilter.mode(
+                  isSelected
+                      ? ColorConstants.orange
+                      : ColorConstants.raisinBlack,
+                  BlendMode.srcIn),
               fit: BoxFit.cover,
             ),
           )

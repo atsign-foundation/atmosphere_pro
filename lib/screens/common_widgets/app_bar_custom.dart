@@ -42,7 +42,10 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.only(left: 30, right: 16),
             child: SvgPicture.asset(
               AppVectors.appIcon,
-              color: Colors.black,
+              colorFilter: ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           Expanded(
@@ -84,7 +87,8 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                             ],
                           ),
                         ),
-                      ]..addAll(suffixIcon ?? []),
+                        ...?suffixIcon,
+                      ],
                     ),
                   ),
           ),

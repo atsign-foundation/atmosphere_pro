@@ -65,58 +65,58 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                   Spacer(),
                   isSearchActive
                       ? ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
-                        child: Container(
-                          height: 40,
-                          width: 308,
-                          color: Colors.white,
-                          child: TextField(
-                            controller: searchController,
-                            autofocus: true,
-                            onChanged: (value) {
-                              setState(() {
-                                searchText = value;
-                              });
-                            },
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 28, vertical: 8),
-                              border: InputBorder.none,
-                              hintText: 'Search',
-                              hintStyle: TextStyle(
-                                color: ColorConstants.grey,
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            height: 40,
+                            width: 308,
+                            color: Colors.white,
+                            child: TextField(
+                              controller: searchController,
+                              autofocus: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  searchText = value;
+                                });
+                              },
+                              style: const TextStyle(
+                                color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
-                              suffixIcon: InkWell(
-                                  onTap: () {
-                                    searchText.isEmpty
-                                        ? setState(() {
-                                            isSearchActive = false;
-                                          })
-                                        : setState(() {
-                                            searchText = '';
-                                            searchController.clear();
-                                          });
-                                  },
-                                  child: const Icon(Icons.close)),
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 28, vertical: 8),
+                                border: InputBorder.none,
+                                hintText: 'Search',
+                                hintStyle: TextStyle(
+                                  color: ColorConstants.grey,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                suffixIcon: InkWell(
+                                    onTap: () {
+                                      searchText.isEmpty
+                                          ? setState(() {
+                                              isSearchActive = false;
+                                            })
+                                          : setState(() {
+                                              searchText = '';
+                                              searchController.clear();
+                                            });
+                                    },
+                                    child: const Icon(Icons.close)),
+                              ),
                             ),
                           ),
-                        ),
-                      )
+                        )
                       : IconButtonWidget(
-                        icon: AppVectors.icSearch,
-                        onTap: () {
-                          setState(() {
-                            isSearchActive = true;
-                          });
-                        },
-                      ),
+                          icon: AppVectors.icSearch,
+                          onTap: () {
+                            setState(() {
+                              isSearchActive = true;
+                            });
+                          },
+                        ),
                   SizedBox(
                     width: 10,
                   ),
@@ -130,7 +130,10 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
                     ),
                     child: SvgPicture.asset(
                       AppVectors.icRefresh,
-                      color: Colors.black,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black,
+                        BlendMode.srcIn,
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -150,7 +153,7 @@ class _DesktopTrustedScreenState extends State<DesktopTrustedScreen> {
 
               // BODY
               Expanded(
-                child: Container(
+                child: SizedBox(
                   width: SizeConfig().screenWidth,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -62,7 +62,10 @@ class DesktopCoverImagePicker extends StatelessWidget {
                                 AppVectors.icCancel,
                                 width: 16,
                                 height: 16,
-                                color: Colors.black,
+                                colorFilter: ColorFilter.mode(
+                                  Colors.black,
+                                  BlendMode.srcIn,
+                                ),
                                 fit: BoxFit.cover,
                               ),
                             ),

@@ -9,8 +9,9 @@ class DownloadAllProgressIndicator extends StatelessWidget {
   final double progress;
 
   const DownloadAllProgressIndicator({
+    Key? key,
     required this.progress,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,10 @@ class DownloadAllProgressIndicator extends StatelessWidget {
               SvgPicture.asset(
                 AppVectors.icDownloadOutline,
                 fit: BoxFit.cover,
-                color: ColorConstants.spanishGray,
+                colorFilter: ColorFilter.mode(
+                  ColorConstants.spanishGray,
+                  BlendMode.srcIn,
+                ),
               ),
             ],
           ),

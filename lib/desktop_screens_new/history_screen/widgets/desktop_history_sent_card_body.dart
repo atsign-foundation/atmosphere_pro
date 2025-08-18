@@ -13,8 +13,9 @@ class DesktopHistorySentCardBody extends StatefulWidget {
   final FileHistory fileHistory;
 
   const DesktopHistorySentCardBody({
+    Key? key,
     required this.fileHistory,
-  });
+  }) : super(key: key);
 
   @override
   State<DesktopHistorySentCardBody> createState() =>
@@ -77,7 +78,10 @@ class _DesktopHistorySentCardBodyState
             height: 8,
             width: 12,
             fit: BoxFit.cover,
-            color: ColorConstants.raisinBlack,
+            colorFilter: ColorFilter.mode(
+              ColorConstants.raisinBlack,
+              BlendMode.srcIn,
+            ),
           )
         ],
       ),

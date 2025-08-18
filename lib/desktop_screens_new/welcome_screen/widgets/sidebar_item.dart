@@ -1,4 +1,10 @@
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:atsign_atmosphere_pro/data_models/menu_item.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
+import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
+import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
+import 'package:atsign_atmosphere_pro/utils/colors.dart';
+import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -6,24 +12,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:atsign_atmosphere_pro/data_models/menu_item.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_route_names.dart';
-import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
-import 'package:atsign_atmosphere_pro/services/navigation_service.dart';
-import 'package:atsign_atmosphere_pro/utils/colors.dart';
-import 'package:atsign_atmosphere_pro/utils/text_styles.dart';
-
 class SidebarItem extends StatelessWidget {
   final MenuItem menuItem;
   final Map<String, dynamic>? arguments;
   final bool isUrlLauncher, isSidebarExpanded, isEmailLauncher;
 
-  SidebarItem(
-      {this.arguments,
+  const SidebarItem(
+      {Key? key,
+      this.arguments,
       this.isUrlLauncher = false,
       this.isEmailLauncher = false,
       this.isSidebarExpanded = true,
-      required this.menuItem});
+      required this.menuItem})
+      : super(key: key);
 
   void onTapItem(MenuItem item, BuildContext context) async {
     if ((item.isUrl == true) && (item.routeName != null)) {
@@ -115,8 +116,7 @@ class SidebarItem extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 4),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          final MenuItem item =
-                              menuItem.children![index];
+                          final MenuItem item = menuItem.children![index];
                           return Container(
                             color: ColorConstants.raisinBlack,
                             child: Padding(
@@ -128,8 +128,7 @@ class SidebarItem extends StatelessWidget {
                                 child: BuildSidebarIconTitle(
                                   image: item.image,
                                   route: item.routeName ?? "",
-                                  isSidebarExpanded:
-                                      isSidebarExpanded,
+                                  isSidebarExpanded: isSidebarExpanded,
                                   isChildTile: true,
                                   title: item.title,
                                   nestedProvider: nestedProvider,
@@ -203,7 +202,7 @@ class BuildSidebarIconTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isCurrentRoute;
+    bool isCurrentRoute;
     if (nestedProvider.current_route == route ||
         childRoutes.contains(nestedProvider.current_route)) {
       isCurrentRoute = true;
@@ -264,9 +263,12 @@ class BuildSidebarIconTitle extends StatelessWidget {
                   : AppVectors.icArrowDownOutline,
               width: 12,
               fit: BoxFit.fitWidth,
-              color: isCurrentRoute
-                  ? Colors.white
-                  : ColorConstants.sidebarTextUnselected,
+              colorFilter: ColorFilter.mode(
+                isCurrentRoute
+                    ? Colors.white
+                    : ColorConstants.sidebarTextUnselected,
+                BlendMode.srcIn,
+              ),
             ),
         ],
       ),

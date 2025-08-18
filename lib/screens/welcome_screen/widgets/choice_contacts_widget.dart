@@ -250,7 +250,10 @@ class _ChoiceContactsWidgetState extends State<ChoiceContactsWidget>
                     SizedBox(width: 9),
                     SvgPicture.asset(
                       AppVectors.icPlus11px,
-                      color: Colors.white,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ],
                 ),

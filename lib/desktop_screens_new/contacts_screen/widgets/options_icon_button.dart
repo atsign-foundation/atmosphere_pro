@@ -8,10 +8,11 @@ class OptionsIconButton extends StatelessWidget {
   final String icon;
 
   const OptionsIconButton({
+    Key? key,
     required this.onTap,
     required this.icon,
     this.isSelected = false,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,10 @@ class OptionsIconButton extends StatelessWidget {
           icon,
           width: 20,
           height: 20,
-          color: isSelected ? Colors.white : Colors.black,
+          colorFilter: ColorFilter.mode(
+            isSelected ? Colors.white : Colors.black,
+            BlendMode.srcIn,
+          ),
           fit: BoxFit.cover,
         ),
       ),

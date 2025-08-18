@@ -25,7 +25,7 @@ class InformationCardExpanded extends StatefulWidget {
     Key? key,
     required this.atContact,
     required this.onBack,
-  });
+  }) : super(key: key);
 
   @override
   State<InformationCardExpanded> createState() =>
@@ -62,13 +62,13 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
 
   void getContactState() {
     isTrusted = false;
-    trustedContactProvider.trustedContacts.forEach((element) {
+    for (var element in trustedContactProvider.trustedContacts) {
       if (element.atSign == widget.atContact.atSign) {
         setState(() {
           isTrusted = true;
         });
       }
-    });
+    }
     setState(() {
       isBlocked = widget.atContact.blocked ?? false;
     });
@@ -335,7 +335,10 @@ class _InformationCardExpandedState extends State<InformationCardExpanded> {
                 AppVectors.icCancel,
                 width: 8,
                 height: 8,
-                color: Colors.black,
+                colorFilter: ColorFilter.mode(
+                  Colors.black,
+                  BlendMode.srcIn,
+                ),
                 fit: BoxFit.cover,
               ),
             ),

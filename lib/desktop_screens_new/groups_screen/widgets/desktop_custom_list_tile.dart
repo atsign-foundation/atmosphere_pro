@@ -11,7 +11,6 @@ import 'dart:typed_data';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
@@ -20,7 +19,6 @@ import 'package:at_utils/at_logger.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -67,7 +65,7 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
     super.initState();
   }
 
-  getIsSelectedValue(List<GroupContactsModel?> selectedGroupContacts) {
+  void getIsSelectedValue(List<GroupContactsModel?> selectedGroupContacts) {
     isSelected = false;
     for (GroupContactsModel? groupContact in selectedGroupContacts) {
       if (groupContact!.contact != null &&
@@ -82,7 +80,7 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
     }
   }
 
-  getNameAndImage() {
+  void getNameAndImage() {
     try {
       if (widget.item?.contact != null) {
         initials = widget.item?.contact?.atSign;
@@ -210,7 +208,10 @@ class _DesktopCustomListTileState extends State<DesktopCustomListTile> {
                       AppVectors.icTrust,
                       width: 24,
                       height: 20,
-                      color: ColorConstants.orange,
+                      colorFilter: ColorFilter.mode(
+                        ColorConstants.orange,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   const SizedBox(width: 24),
                 ],

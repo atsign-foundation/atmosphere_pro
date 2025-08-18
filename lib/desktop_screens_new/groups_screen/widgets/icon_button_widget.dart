@@ -32,7 +32,10 @@ class IconButtonWidget extends StatelessWidget {
         ),
         child: SvgPicture.asset(
           icon,
-          color: isSelected ? ColorConstants.orange : Colors.black,
+          colorFilter: ColorFilter.mode(
+            isSelected ? ColorConstants.orange : Colors.black,
+            BlendMode.srcIn,
+          ),
           fit: BoxFit.cover,
         ),
       ),

@@ -46,7 +46,10 @@ class FilterOptionItem extends StatelessWidget {
                 if ((icon ?? '').isNotEmpty) ...[
                   SvgPicture.asset(
                     icon!,
-                    color: Colors.black,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black,
+                      BlendMode.srcIn,
+                    ),
                     fit: BoxFit.cover,
                   ),
                   SizedBox(width: 12),
@@ -69,10 +72,13 @@ class FilterOptionItem extends StatelessWidget {
                       ? AppVectors.icChecked
                       : isAllOption
                           ? AppVectors.icUncheckedAll
-                          :  AppVectors.icUnchecked,
+                          : AppVectors.icUnchecked,
                   width: 16,
                   height: 16,
-                  color: isAllOption ? Colors.white : Colors.black,
+                  colorFilter: ColorFilter.mode(
+                    isAllOption ? Colors.white : Colors.black,
+                    BlendMode.srcIn,
+                  ),
                   fit: BoxFit.cover,
                 ),
               ],

@@ -15,8 +15,9 @@ class HistorySentCardBody extends StatefulWidget {
   final FileHistory fileHistory;
 
   const HistorySentCardBody({
+    Key? key,
     required this.fileHistory,
-  });
+  }) : super(key: key);
 
   @override
   State<HistorySentCardBody> createState() => _HistorySentCardBodyState();
@@ -153,7 +154,10 @@ class _HistorySentCardBodyState extends State<HistorySentCardBody> {
                 height: 8,
                 width: 12,
                 fit: BoxFit.cover,
-                color: ColorConstants.raisinBlack,
+                colorFilter: ColorFilter.mode(
+                  ColorConstants.raisinBlack,
+                  BlendMode.srcIn,
+                ),
               )
             ],
           ),

@@ -58,7 +58,10 @@ class EmptyContactsWidget extends StatelessWidget {
                             SizedBox(width: 16),
                             SvgPicture.asset(
                               AppVectors.icBigTrustActivated,
-                              color: ColorConstants.portlandOrange,
+                              colorFilter: ColorFilter.mode(
+                                ColorConstants.portlandOrange,
+                                BlendMode.srcIn,
+                              ),
                               width: 20,
                               height: 20,
                             ),
