@@ -24,7 +24,7 @@ class ReceivedFileCard extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.1),
+          color: Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -41,7 +41,7 @@ class ReceivedFileCard extends StatelessWidget {
                       style: TextStyle(color: Colors.black),
                       children: [
                         TextSpan(
-                          text: '${fileHistory.fileDetails?.sender ?? ''}',
+                          text: fileHistory.fileDetails?.sender ?? '',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -111,7 +111,7 @@ class ReceivedFileCard extends StatelessWidget {
     );
   }
 
-  cardNavigator() async {
+  Future<void> cardNavigator() async {
     if (Navigator.of(NavService.navKey.currentContext!).canPop()) {
       Navigator.of(NavService.navKey.currentContext!).pop();
     }

@@ -57,7 +57,8 @@ class _DesktopHistoryReceivedCardBodyState
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: ColorConstants.listFileShadowColor.withOpacity(0.25),
+                color:
+                    ColorConstants.listFileShadowColor.withValues(alpha: 0.25),
                 offset: Offset(0, 4),
                 blurRadius: 9,
                 blurStyle: BlurStyle.inner,

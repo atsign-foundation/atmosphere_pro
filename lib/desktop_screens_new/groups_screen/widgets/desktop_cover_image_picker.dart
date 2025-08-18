@@ -56,7 +56,7 @@ class DesktopCoverImagePicker extends StatelessWidget {
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.white54.withOpacity(0.5),
+                                color: Colors.white54.withValues(alpha: 0.5),
                               ),
                               child: SvgPicture.asset(
                                 AppVectors.icCancel,
@@ -71,7 +71,7 @@ class DesktopCoverImagePicker extends StatelessWidget {
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.white54.withOpacity(0.5),
+                              color: Colors.white54.withValues(alpha: 0.5),
                             ),
                             child: SvgPicture.asset(
                               AppVectors.icEdit,

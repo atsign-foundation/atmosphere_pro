@@ -192,7 +192,7 @@ class _DesktopContactScreenState extends State<DesktopContactScreen> {
           ),
           if (isLoading)
             Container(
-              color: Colors.grey.withOpacity(0.4),
+              color: Colors.grey.withValues(alpha: 0.4),
               alignment: Alignment.center,
               child: CircularProgressIndicator(
                 color: ColorConstants.orange,

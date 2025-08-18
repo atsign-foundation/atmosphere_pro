@@ -54,11 +54,11 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
   void initState() {
     filesList = widget.fileHistory!.fileDetails!.files;
     if (widget.fileHistory!.sharedWith != null) {
-      widget.fileHistory!.sharedWith!.forEach((ShareStatus sharedWith) {
+      for (var sharedWith in widget.fileHistory!.sharedWith!) {
         if (sharedWith.isNotificationSend == false) {
           isFileSentSuccess = false;
         }
-      });
+      }
     }
     numberOfAllFiles = widget.fileHistory?.fileDetails?.files?.length ?? 0;
     super.initState();
@@ -102,7 +102,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         flex: 1,
                         child: Text(
                           widget.fileHistory?.type == HistoryType.received
-                              ? "${widget.fileHistory?.fileDetails?.sender ?? ''}"
+                              ? widget.fileHistory?.fileDetails?.sender ?? ''
                               : (widget.fileHistory?.sharedWith ?? [])
                                   .map((shareStatus) => shareStatus.atsign)
                                   .join(",")
@@ -156,7 +156,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                 borderRadius: BorderRadius.circular(33),
                                 color: isFileSentSuccess
                                     ? ColorConstants.lightGreen
-                                    : Colors.red.withOpacity(0.3),
+                                    : Colors.red.withValues(alpha: 0.3),
                               ),
                               child: Center(
                                 child: Text(
@@ -193,7 +193,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                         child: Column(
                           children: [
                             Text(
-                              '${DateFormat("MM/dd/yy").format(widget.fileHistory!.fileDetails!.date!)}',
+                              DateFormat("MM/dd/yy").format(
+                                  widget.fileHistory!.fileDetails!.date!),
                               style: TextStyle(
                                 fontSize: 11.toFont,
                                 color: ColorConstants.oldSliver,
@@ -201,7 +202,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                               ),
                             ),
                             Text(
-                              '${DateFormat('kk:mm').format(widget.fileHistory!.fileDetails!.date!)}',
+                              DateFormat('kk:mm').format(
+                                  widget.fileHistory!.fileDetails!.date!),
                               style: TextStyle(
                                 fontSize: 10.toFont,
                                 color: ColorConstants.oldSliver,
@@ -234,7 +236,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
                                   ),
                                 ),
                               );
-                            }).toList(),
+                            }),
                           ],
                         ),
                       ),
@@ -300,7 +302,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
 
   Widget buildDownloadMultipleFilesButton() {
     return Consumer<FileProgressProvider>(
-      builder: (_c, provider, _) {
+      builder: (c, provider, _) {
         var fileTransferProgress =
             provider.receivedFileProgress[widget.fileHistory?.fileDetails?.key];
         return Row(
@@ -342,7 +344,8 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
     );
   }
 
-  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
+  void openFileReceiptBottomSheet(
+      {FileRecipientSection? fileRecipientSection}) {
     Provider.of<FileTransferProvider>(context, listen: false)
         .selectedFileHistory = widget.fileHistory;
 
@@ -350,7 +353,7 @@ class _HistoryCardWidgetState extends State<HistoryCardWidget> {
         context: context,
         barrierColor: Colors.transparent,
         barrierDismissible: true,
-        builder: (_context) {
+        builder: (context) {
           return StatefulBuilder(
             builder: (context, setDialogState) {
               return Dialog(

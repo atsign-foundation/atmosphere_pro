@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/contact_initial.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/custom_circle_avatar.dart';
@@ -35,7 +36,7 @@ class _GroupCardWidgetState extends State<GroupCardWidget> {
     super.initState();
   }
 
-  getNameAndImage() {
+  void getNameAndImage() {
     try {
       if (widget.group.groupPicture != null) {
         image = Uint8List.fromList(widget.group.groupPicture?.cast<int>());
@@ -66,7 +67,7 @@ class _GroupCardWidgetState extends State<GroupCardWidget> {
                   : ColorConstants.textBoxBg,
             ),
             color: widget.isSelected
-                ? ColorConstants.orange.withOpacity(0.2)
+                ? ColorConstants.orange.withValues(alpha: 0.2)
                 : Colors.white,
           ),
           child: Row(

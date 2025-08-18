@@ -52,7 +52,7 @@ class _GradientTextFieldWidgetState extends State<GradientTextFieldWidget> {
             gradient: LinearGradient(
               colors: [
                 ColorConstants.orangeColor,
-                ColorConstants.yellow.withOpacity(0.65),
+                ColorConstants.yellow.withValues(alpha: 0.65),
               ],
             ),
             width: 2,
@@ -62,7 +62,7 @@ class _GradientTextFieldWidgetState extends State<GradientTextFieldWidget> {
             gradient: LinearGradient(
               colors: [
                 ColorConstants.orangeColor,
-                ColorConstants.yellow.withOpacity(0.65),
+                ColorConstants.yellow.withValues(alpha: 0.65),
               ],
             ),
             width: 2,

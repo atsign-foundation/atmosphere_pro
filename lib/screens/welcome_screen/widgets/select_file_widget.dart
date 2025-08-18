@@ -1,7 +1,8 @@
 import 'dart:typed_data';
+
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/error_dialog.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/provider_callback.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/services/common_utility_functions.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/text_strings.dart';
@@ -14,11 +15,12 @@ class SelectFileWidget extends StatefulWidget {
   final Function(bool) onUpdate;
   final Function onNotesUpdate;
   final String? initialValue;
-  SelectFileWidget(
+  const SelectFileWidget(
     this.onUpdate,
     this.onNotesUpdate, {
+    Key? key,
     this.initialValue,
-  });
+  }) : super(key: key);
   @override
   _SelectFileWidgetState createState() => _SelectFileWidgetState();
 }
@@ -190,7 +192,7 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                             border: Border(
                               bottom: BorderSide(
                                 color: ColorConstants.dividerColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 width: 1.toHeight,
                               ),
                             ),
@@ -208,9 +210,9 @@ class _SelectFileWidgetState extends State<SelectFileWidget> {
                               double.parse(provider.selectedFiles[index].size
                                           .toString()) <=
                                       1024
-                                  ? '${provider.selectedFiles[index].size} Kb' +
+                                  ? '${provider.selectedFiles[index].size} Kb'
                                       ' . ${provider.selectedFiles[index].extension}'
-                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb' +
+                                  : '${(provider.selectedFiles[index].size / (1024 * 1024)).toStringAsFixed(2)} Mb'
                                       ' . ${provider.selectedFiles[index].extension}',
                               style: TextStyle(
                                 color: ColorConstants.fadedText,

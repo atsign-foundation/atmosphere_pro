@@ -82,7 +82,7 @@ class SuccessCard extends StatelessWidget {
               ],
             ),
             NotificationCardButton(
-              backgroundColor: Color(0xFF18A2EF).withOpacity(0.2),
+              backgroundColor: Color(0xFF18A2EF).withValues(alpha: 0.2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

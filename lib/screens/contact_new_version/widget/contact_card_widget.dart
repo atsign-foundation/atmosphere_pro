@@ -77,7 +77,7 @@ class _ContactCardWidgetState extends State<ContactCardWidget> {
                   : ColorConstants.textBoxBg,
             ),
             color: widget.isSelected
-                ? ColorConstants.orange.withOpacity(0.2)
+                ? ColorConstants.orange.withValues(alpha: 0.2)
                 : Colors.white,
           ),
           child: Row(

@@ -394,7 +394,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
         height: 61.toHeight,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: ColorConstants.yellow.withOpacity(0.19),
+          color: ColorConstants.yellow.withValues(alpha: 0.19),
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.centerLeft,
@@ -446,7 +446,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
   }
 
-  selectFiles(String choice) async {
+  Future<void> selectFiles(String choice) async {
     await providerCallback<FileTransferProvider>(context,
         task: (provider) => provider.pickFiles(choice),
         taskName: (provider) => provider.PICK_FILES,
@@ -457,7 +457,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
   }
 
-  scrollToBottom() {
+  void scrollToBottom() {
     Timer(
       Duration(milliseconds: 200),
       () {
@@ -472,7 +472,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     );
   }
 
-  reAttemptSendingFiles() async {
+  Future<void> reAttemptSendingFiles() async {
     if (mounted) {
       setState(() {
         isFileShareFailed = false;
@@ -497,7 +497,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
   }
 
-  sendFileWithFileBin() async {
+  Future<void> sendFileWithFileBin() async {
     if (filePickerModel.selectedFiles.isEmpty) {
       SnackbarService().showSnackbar(
         context,
@@ -572,7 +572,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     }
   }
 
-  switchAtsign() async {
+  Future<void> switchAtsign() async {
     var atSignList = await KeychainUtil.getAtsignList();
     await showModalBottomSheet(
       context: NavService.navKey.currentContext!,
@@ -583,7 +583,7 @@ class _WelcomeScreenHomeState extends State<WelcomeScreenHome> {
     );
   }
 
-  openFile(PlatformFile file) async {
+  Future<void> openFile(PlatformFile file) async {
     final result = await OpenFile.open(file.path);
 
     if (result.type != ResultType.done) {

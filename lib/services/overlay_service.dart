@@ -3,20 +3,21 @@ import 'dart:ui';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/routes/route_names.dart';
-import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/screens/common_widgets/linear_progress_bar.dart';
+import 'package:atsign_atmosphere_pro/screens/history/widgets/file_recipients.dart';
 import 'package:atsign_atmosphere_pro/utils/colors.dart';
 import 'package:atsign_atmosphere_pro/utils/images.dart';
 import 'package:atsign_atmosphere_pro/utils/vectors.dart';
-import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/file_progress_provider.dart';
+import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/welcome_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'navigation_service.dart';
+
 import '../data_models/file_transfer_status.dart';
+import 'navigation_service.dart';
 
 class OverlayService {
   OverlayService._();
@@ -30,7 +31,7 @@ class OverlayService {
     hideOverlay();
     snackBarOverlayEntry = _buildSnackBarOverlayEntry();
     NavService.navKey.currentState?.overlay?.insert(snackBarOverlayEntry!);
-    return null;
+    return;
   }
 
   void hideOverlay() {
@@ -50,7 +51,7 @@ class OverlayService {
             builder: (context, snapshot) {
               final flushbarStatus = snapshot.data ?? FLUSHBAR_STATUS.SENDING;
               return Consumer<FileProgressProvider>(
-                builder: (_context, provider, _) {
+                builder: (context, provider, _) {
                   String text = _getText(
                     flushbarStatus,
                     fileTransferProgress: provider.sentFileTransferProgress,
@@ -58,10 +59,10 @@ class OverlayService {
 
                   String icon = getImage(flushbarStatus);
                   return Scaffold(
-                    backgroundColor: bgColor.withOpacity(0.7),
+                    backgroundColor: bgColor.withValues(alpha: 0.7),
                     body: SafeArea(
                       child: Material(
-                        color: bgColor.withOpacity(0.7),
+                        color: bgColor.withValues(alpha: 0.7),
                         child: Column(
                           children: [
                             Align(
@@ -273,17 +274,17 @@ class OverlayService {
     'Something went wrong,\nplease try again!',
   ];
 
-  openFileReceiptBottomSheet(context,
+  void openFileReceiptBottomSheet(context,
       {FileRecipientSection? fileRecipientSection =
           FileRecipientSection.FAILED}) {
-    var _historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+    var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     Provider.of<FileTransferProvider>(context, listen: false)
-        .selectedFileHistory = _historyProvider.sentHistory[0];
+        .selectedFileHistory = historyProvider.sentHistory[0];
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         shape: StadiumBorder(),
-        builder: (_context) {
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
@@ -294,7 +295,7 @@ class OverlayService {
               ),
             ),
             child: FileRecipients(
-              _historyProvider.sentHistory[0].sharedWith,
+              historyProvider.sentHistory[0].sharedWith,
               fileRecipientSection: fileRecipientSection,
               key: UniqueKey(),
             ),

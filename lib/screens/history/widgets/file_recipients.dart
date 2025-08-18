@@ -13,11 +13,11 @@ class FileRecipients extends StatefulWidget {
   final List<ShareStatus>? filesharedWith;
   final FileRecipientSection? fileRecipientSection;
 
-  FileRecipients(
+  const FileRecipients(
     this.filesharedWith, {
-    this.fileRecipientSection,
     Key? key,
-  });
+    this.fileRecipientSection,
+  }) : super(key: key);
 
   @override
   _FileRecipientsState createState() => _FileRecipientsState();
@@ -35,11 +35,11 @@ class _FileRecipientsState extends State<FileRecipients> {
     sortAtsigns();
 
     if (widget.fileRecipientSection == FileRecipientSection.DOWNLOADED) {
-      color = ColorConstants.blueText.withOpacity(0.5);
+      color = ColorConstants.blueText.withValues(alpha: 0.5);
     } else if (widget.fileRecipientSection == FileRecipientSection.DELIVERED) {
-      color = ColorConstants.successGreen.withOpacity(0.5);
+      color = ColorConstants.successGreen.withValues(alpha: 0.5);
     } else if (widget.fileRecipientSection == FileRecipientSection.FAILED) {
-      color = ColorConstants.redAlert.withOpacity(0.5);
+      color = ColorConstants.redAlert.withValues(alpha: 0.5);
     }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -50,12 +50,12 @@ class _FileRecipientsState extends State<FileRecipients> {
     super.initState();
   }
 
-  sortAtsigns() {
+  void sortAtsigns() {
     deliveredToList = [];
     downloadedByList = [];
     filedInDeliveringList = [];
 
-    widget.filesharedWith!.forEach((element) {
+    for (var element in widget.filesharedWith!) {
       if (element.isNotificationSend!) {
         deliveredToList.add(element);
       } else {
@@ -65,7 +65,7 @@ class _FileRecipientsState extends State<FileRecipients> {
       if (element.isFileDownloaded!) {
         downloadedByList.add(element);
       }
-    });
+    }
   }
 
   @override

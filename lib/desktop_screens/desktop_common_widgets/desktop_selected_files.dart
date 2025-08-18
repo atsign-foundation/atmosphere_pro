@@ -56,7 +56,8 @@ class _DesktopSelectedFilesState extends State<DesktopSelectedFiles> {
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: ColorConstants.dividerColor.withOpacity(0.1),
+                          color: ColorConstants.dividerColor
+                              .withValues(alpha: 0.1),
                           width: 1.toHeight,
                         ),
                       ),

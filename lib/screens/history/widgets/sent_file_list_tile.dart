@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer_status.dart';
@@ -17,7 +19,6 @@ import 'package:atsign_atmosphere_pro/view_models/file_transfer_provider.dart';
 import 'package:atsign_atmosphere_pro/view_models/history_provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -55,9 +56,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     }
     filesList = widget.sentHistory!.fileDetails!.files;
 
-    widget.sentHistory!.fileDetails!.files!.forEach((element) {
+    for (var element in widget.sentHistory!.fileDetails!.files!) {
       fileSize += element.size!;
-    });
+    }
 
     if (contactList[0] != null) {
       firstContactImage =
@@ -69,7 +70,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     }
   }
 
-  getDisplayDetails() async {
+  Future<void> getDisplayDetails() async {
     var displayDetails = await getAtSignDetails(contactList[0] ?? '');
     if (displayDetails.tags != null) {
       nickName = displayDetails.tags!['nickname'] ??
@@ -171,9 +172,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         SizedBox(width: 10.toHeight),
                         Text(
                           double.parse(fileSize.toString()) <= 1024
-                              ? '${fileSize} ' + TextStrings().kb
-                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ' +
-                                  TextStrings().mb,
+                              ? '$fileSize ${TextStrings().kb}'
+                              : '${(fileSize / (1024 * 1024)).toStringAsFixed(2)} ${TextStrings().mb}',
                           style: CustomTextStyles.secondaryRegular12,
                         )
                       ],
@@ -217,7 +217,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                       children: [
                         widget.sentHistory!.fileDetails!.date != null
                             ? Text(
-                                '${DateFormat("MM-dd-yyyy").format(widget.sentHistory!.fileDetails!.date!)}',
+                                DateFormat("MM-dd-yyyy").format(
+                                    widget.sentHistory!.fileDetails!.date!),
                                 style: CustomTextStyles.secondaryRegular12,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -232,7 +233,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                         SizedBox(width: 10.toHeight),
                         widget.sentHistory!.fileDetails!.date != null
                             ? Text(
-                                '${DateFormat('kk:mm').format(widget.sentHistory!.fileDetails!.date!)}',
+                                DateFormat('kk:mm').format(
+                                    widget.sentHistory!.fileDetails!.date!),
                                 style: CustomTextStyles.secondaryRegular12,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -256,7 +258,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                                   TextStrings().seeFiles,
                                   style: CustomTextStyles.primaryBlueBold14,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 22.toWidth,
                                   height: 22.toWidth,
                                   child: Center(
@@ -285,14 +287,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
 
   Widget getListTileLeading() {
     return contactList.isNotEmpty
-        ? Container(
+        ? SizedBox(
             width: 55.toHeight,
             height: 55.toHeight,
             child: Stack(
               children: [
                 InkWell(
                   onTap: openFileReceiptBottomSheet,
-                  child: Container(
+                  child: SizedBox(
                     width: 45.toHeight,
                     height: 45.toHeight,
                     child: (firstContactImage != null && !isFileSharedToGroup)
@@ -313,7 +315,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                     ? Positioned(
                         right: 0,
                         bottom: 0,
-                        child: Container(
+                        child: SizedBox(
                           height: 35.toHeight,
                           width: 35.toHeight,
                           child: ContactInitial(
@@ -333,7 +335,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                             height: 35.toHeight,
                             width: 35.toHeight,
                             decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
+                                color: Colors.black.withValues(alpha: 0.6),
                                 borderRadius: BorderRadius.circular(50.toWidth),
                                 border: Border.all(
                                     color: Colors.white, width: 1.5)),
@@ -370,7 +372,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
                 ? RichText(
                     text: TextSpan(children: [
                       TextSpan(
-                        text: '${nickName}',
+                        text: nickName,
                         style: CustomTextStyles.primaryRegular16,
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
@@ -385,14 +387,14 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
   }
 
   bool isFileDownloadedForSingleAtsign() {
-    bool _isDownloaded = false;
+    bool isDownloaded = false;
 
-    widget.sentHistory!.sharedWith!.forEach((element) {
+    for (var element in widget.sentHistory!.sharedWith!) {
       if (element.isFileDownloaded!) {
-        _isDownloaded = true;
+        isDownloaded = true;
       }
-    });
-    return _isDownloaded;
+    }
+    return isDownloaded;
   }
 
   Future<bool> isFilePresent(String filePath) async {
@@ -401,7 +403,8 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
     return fileExists;
   }
 
-  openFileReceiptBottomSheet({FileRecipientSection? fileRecipientSection}) {
+  void openFileReceiptBottomSheet(
+      {FileRecipientSection? fileRecipientSection}) {
     Provider.of<FileTransferProvider>(context, listen: false)
         .selectedFileHistory = widget.sentHistory;
 
@@ -409,7 +412,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         context: context,
         isScrollControlled: true,
         shape: StadiumBorder(),
-        builder: (_context) {
+        builder: (context) {
           return Container(
             height: SizeConfig().screenHeight * 0.8,
             decoration: BoxDecoration(
@@ -428,7 +431,7 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
         });
   }
 
-  deleteSentFile() async {
+  Future<void> deleteSentFile() async {
     await showModalBottomSheet(
         context: NavService.navKey.currentContext!,
         backgroundColor: Colors.white,
@@ -441,9 +444,9 @@ class _SentFilesListTileState extends State<SentFilesListTile> {
             ));
   }
 
-  onFileViewChange(bool _isOpen) {
+  void onFileViewChange(bool isOpen) {
     setState(() {
-      isOpen = _isOpen;
+      isOpen = isOpen;
     });
   }
 }

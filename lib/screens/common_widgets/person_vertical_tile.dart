@@ -16,11 +16,9 @@ class CustomPersonVerticalTile extends StatefulWidget {
   final ShareStatus shareStatus;
   final bool isFailedAtsignList;
 
-  @override
-  final Key? key;
-
-  CustomPersonVerticalTile(
-      {this.key, required this.shareStatus, this.isFailedAtsignList = false});
+  const CustomPersonVerticalTile(
+      {Key? key, required this.shareStatus, this.isFailedAtsignList = false})
+      : super(key: key);
 
   @override
   _CustomPersonVerticalTileState createState() =>
@@ -38,7 +36,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   }
 
   // ignore: always_declare_return_types
-  getAtsignImage() async {
+  Future<void> getAtsignImage() async {
     if (widget.shareStatus.atsign == null) return;
     var contact = await getAtSignDetails(widget.shareStatus.atsign!);
 
@@ -78,7 +76,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                               width: 50.toFont,
                               height: 50.toFont,
                               fit: BoxFit.fill,
-                              errorBuilder: (BuildContext _context, _, __) {
+                              errorBuilder: (BuildContext context, _, __) {
                                 return Container(
                                   child: Icon(
                                     Icons.image,
@@ -98,7 +96,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                           height: 50.toHeight,
                           width: 50.toHeight,
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(50.toWidth),
                           ),
                           child: InkWell(
@@ -146,7 +144,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
     );
   }
 
-  hanleResendFileNotificaiton() async {
+  Future<void> hanleResendFileNotificaiton() async {
     FileHistory selectedFileHistory =
         Provider.of<FileTransferProvider>(context, listen: false)
             .getSelectedFileHistory!;
