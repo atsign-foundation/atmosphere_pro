@@ -8,7 +8,6 @@ import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dar
 import 'package:at_contacts_group_flutter/utils/init_group_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:atsign_atmosphere_pro/data_models/file_transfer.dart';
 import 'package:atsign_atmosphere_pro/desktop_routes/desktop_routes.dart';
@@ -69,7 +68,7 @@ class BackendService {
   StreamSink<bool> get isAuthuneticatingSink =>
       _isAuthuneticatingStreamController.sink;
 
-  setDownloadPath(
+  Future<void> setDownloadPath(
       {String? atsign,
       atClientPreference,
       required atClientServiceInstance}) async {
@@ -103,7 +102,7 @@ class BackendService {
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
-    var _atClientPreference = AtClientPreference()
+    var atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
       ..commitLogPath = path
       ..downloadPath = downloadDirectory!.path
@@ -114,7 +113,7 @@ class BackendService {
       ..outboundConnectionTimeout = MixedConstants.TIME_OUT
       ..monitorHeartbeatInterval = Duration(minutes: 1)
       ..hiveStoragePath = path;
-    return _atClientPreference;
+    return atClientPreference;
   }
 
   ///Fetches atsign from device keychain.
@@ -150,8 +149,8 @@ class BackendService {
 
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
-  startMonitor() async {
-    await AtClientManager.getInstance()
+  Future<void> startMonitor() async {
+    AtClientManager.getInstance()
         .atClient
         .notificationService
         .subscribe(regex: MixedConstants.appNamespace, shouldDecrypt: true)
@@ -208,11 +207,11 @@ class BackendService {
         TrustedContactProvider trustedContactProvider =
             Provider.of<TrustedContactProvider>(context, listen: false);
 
-        trustedContactProvider.trustedContacts.forEach((element) {
+        for (var element in trustedContactProvider.trustedContacts) {
           if (element.atSign == fromAtSign) {
             trustedSender = true;
           }
-        });
+        }
 
         if (trustedSender) {
           await downloadFiles(context, atKey.split('.').first, fromAtSign);
@@ -221,7 +220,8 @@ class BackendService {
     }
   }
 
-  downloadFiles(BuildContext context, String key, String fromAtSign) async {
+  Future<void> downloadFiles(
+      BuildContext context, String key, String fromAtSign) async {
     var historyProvider = Provider.of<HistoryProvider>(context, listen: false);
     var result = await historyProvider.downloadFiles(
       key,
@@ -243,7 +243,7 @@ class BackendService {
     } else if (result is bool && !result) {}
   }
 
-  syncWithSecondary() async {
+  Future<void> syncWithSecondary() async {
     AtSyncUIService().init(
         appNavigator: NavService.navKey,
         onSuccessCallback: _onSuccessCallback,
@@ -251,11 +251,9 @@ class BackendService {
         primaryColor: ColorConstants.orangeColor,
         showRemoveAtsignOption: true,
         onAtSignRemoved: _onAtsignRemoved);
-
-    AtSyncUIService().sync(atSyncUIOverlay: AtSyncUIOverlay.dialog);
   }
 
-  _onAtsignRemoved() async {
+  Future<void> _onAtsignRemoved() async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await Navigator.pushNamedAndRemoveUntil(NavService.navKey.currentContext!,
           DesktopRoutes.DESKTOP_HOME, (Route<dynamic> route) => false);
@@ -265,7 +263,7 @@ class BackendService {
     }
   }
 
-  _onSuccessCallback(SyncResult syncStatus) async {
+  Future<void> _onSuccessCallback(SyncResult syncStatus) async {
     // removes failed snackbar message.
     ScaffoldMessenger.of(NavService.navKey.currentContext!)
         .hideCurrentSnackBar();
@@ -319,8 +317,8 @@ class BackendService {
     }
   }
 
-  _onSyncErrorCallback(SyncResult syncStatus) async {
-    print('sync failed : ${syncStatus}');
+  Future<void> _onSyncErrorCallback(SyncResult syncStatus) async {
+    print('sync failed : $syncStatus');
     ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(
       SnackBar(
         duration: Duration(days: 365),
@@ -334,7 +332,7 @@ class BackendService {
                 onTap: () async {
                   ScaffoldMessenger.of(NavService.navKey.currentContext!)
                       .hideCurrentSnackBar();
-                  AtSyncUIService().sync();
+                  AtSyncUIService().init(appNavigator: NavService.navKey);
                 },
                 child: Text(TextStrings().retry,
                     style: CustomTextStyles.whiteBold16),
@@ -352,7 +350,7 @@ class BackendService {
     return atSignsList;
   }
 
-  deleteAtSignFromKeyChain(String atsign) async {
+  Future<void> deleteAtSignFromKeyChain(String atsign) async {
     List<String>? atSignList = await getAtsignList();
 
     await KeychainUtil.deleteAtSignFromKeychain(atsign);
@@ -360,10 +358,10 @@ class BackendService {
     if (atSignList != null) {
       atSignList.removeWhere((element) => element == atsign);
     }
-    late var atClientPrefernce;
+    late AtClientPreference atClientPrefernce;
     await getAtClientPreference().then((value) => atClientPrefernce = value);
 
-    var tempAtsign;
+    String tempAtsign;
     if (atSignList == null || atSignList.isEmpty) {
       tempAtsign = '';
     } else {
@@ -391,7 +389,7 @@ class BackendService {
       final result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
+          atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
@@ -424,17 +422,17 @@ class BackendService {
 
   bool authenticating = false;
 
-  checkToOnboard({
+  Future<void> checkToOnboard({
     String? atSign,
     bool isSwitchAccount = false,
   }) async {
     try {
-      final OnboardingService _onboardingService =
+      final OnboardingService onboardingService =
           OnboardingService.getInstance();
-      late var atClientPrefernce;
+      late AtClientPreference atClientPrefernce;
       AtOnboardingResult result;
 
-      _onboardingService.setAtsign = atSign;
+      onboardingService.setAtsign = atSign;
 
       try {
         //  await getAtClientPreference();
@@ -449,7 +447,7 @@ class BackendService {
       result = await AtOnboarding.onboard(
         context: NavService.navKey.currentContext!,
         config: AtOnboardingConfig(
-          atClientPreference: atClientPrefernce!,
+          atClientPreference: atClientPrefernce,
           domain: MixedConstants.ROOT_DOMAIN,
           rootEnvironment: RootEnvironment.Production,
           appAPIKey: MixedConstants.ONBOARD_API_KEY,
@@ -459,7 +457,7 @@ class BackendService {
 
       switch (result.status) {
         case AtOnboardingResultStatus.success:
-          final value = _onboardingService.atClientServiceMap;
+          final value = onboardingService.atClientServiceMap;
           authenticating = true;
           isAuthuneticatingSink.add(authenticating);
           await onboardSuccessCallback(
@@ -493,8 +491,10 @@ class BackendService {
     }
   }
 
-  onboardSuccessCallback(Map<String?, AtClientService> atClientServiceMap,
-      String onboardedAtsign, AtClientPreference atClientPreference) async {
+  Future<void> onboardSuccessCallback(
+      Map<String?, AtClientService> atClientServiceMap,
+      String onboardedAtsign,
+      AtClientPreference atClientPreference) async {
     // setting client service and manager
     await AtClientManager.getInstance().setCurrentAtSign(
         onboardedAtsign, MixedConstants.appNamespace, atClientPreference);
@@ -562,16 +562,16 @@ class BackendService {
     } as dynamic);
   }
 
-  setDownloadDirectory() async {
-    var _preference = await getAtClientPreference();
+  Future<void> setDownloadDirectory() async {
+    var preference = await getAtClientPreference();
     MixedConstants.setNewApplicationDocumentsDirectory(
         AtClientManager.getInstance().atClient.getCurrentAtSign());
-    _preference.downloadPath = MixedConstants.RECEIVED_FILE_DIRECTORY;
-    AtClientManager.getInstance().atClient.setPreferences(_preference);
+    preference.downloadPath = MixedConstants.RECEIVED_FILE_DIRECTORY;
+    AtClientManager.getInstance().atClient.setPreferences(preference);
   }
 
   /// to create directory if does not exist
-  doesDirectoryExist({String? path}) async {
+  Future<void> doesDirectoryExist({String? path}) async {
     final dir =
         Directory(path ?? MixedConstants.ApplicationDocumentsDirectory!);
     if ((await dir.exists())) {
@@ -580,7 +580,7 @@ class BackendService {
     }
   }
 
-  onNotificationClick(String payload) async {
+  Future<void> onNotificationClick(String payload) async {
     if (Platform.isAndroid || Platform.isIOS) {
       await Navigator.pushNamedAndRemoveUntil(
         NavService.navKey.currentContext!,
@@ -603,7 +603,7 @@ class BackendService {
     }
   }
 
-  showToast(String msg, {bool isError = false, bool isSuccess = true}) {
+  void showToast(String msg, {bool isError = false, bool isSuccess = true}) {
     ErrorDialog().show(msg, context: NavService.navKey.currentContext);
   }
 
