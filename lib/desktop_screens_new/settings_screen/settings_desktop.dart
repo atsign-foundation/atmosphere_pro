@@ -192,7 +192,7 @@ class _SettingsScreenDesktopState extends State<SettingsScreenDesktop> {
                             ),
                             SizedBox(width: 16),
                             Switch(
-                                activeColor: ColorConstants.orange,
+                                activeThumbColor: ColorConstants.orange,
                                 value: enableShareStSign,
                                 onChanged: (check) async {
                                   if (check) {
