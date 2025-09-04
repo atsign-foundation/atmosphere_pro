@@ -33,7 +33,7 @@ dependencies:
     sdk: flutter
 
   archive: ^3.4.10
-  at_backupkey_flutter: ^4.0.13
+  at_backupkey_flutter: ^4.0.17
   at_client_mobile: ^3.2.15
   at_common_flutter: ^2.0.13
   at_commons: ^5.0.1
