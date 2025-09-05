@@ -17,13 +17,13 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Mobile version
-version: 1.0.11+76
+version: 1.0.15+81
 
 # Desktop version macos
-# version: 1.0.1+19
+# version: 1.0.16+83
 
 # Desktop version windows
-# version: 1.0.1+1
+# version: 1.0.24
 
 environment:
   sdk: ">=2.15.0 <4.0.0"

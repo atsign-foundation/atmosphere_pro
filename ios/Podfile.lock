@@ -85,7 +85,6 @@ PODS:
     - Flutter
   - fluttertoast (0.0.2):
     - Flutter
-    - Toast
   - image_picker_ios (0.0.1):
     - Flutter
   - libwebp (1.3.2):
@@ -130,7 +129,6 @@ PODS:
     - Flutter
     - FlutterMacOS
   - SwiftyGif (5.4.4)
-  - Toast (4.1.0)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_compress (0.3.0):
@@ -186,7 +184,6 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SwiftyGif
-    - Toast
 
 EXTERNAL SOURCES:
   at_backupkey_flutter:
@@ -264,11 +261,11 @@ SPEC CHECKSUMS:
   fc_native_video_thumbnail: 927d4dcfd4c7e9f2cc1a20bb52dfee83de3792c2
   file_picker: b159e0c068aef54932bb15dc9fd1571818edaf49
   file_selector_ios: f0670c1064a8c8450e38145d8043160105d0b97c
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  fluttertoast: e9a18c7be5413da53898f660530c56f35edfba9c
+  fluttertoast: 21eecd6935e7064cc1fcb733a4c5a428f3f24f0f
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
@@ -284,7 +281,6 @@ SPEC CHECKSUMS:
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
-  Toast: ec33c32b8688982cecc6348adeae667c1b9938da
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
