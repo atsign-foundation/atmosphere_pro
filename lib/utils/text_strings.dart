@@ -13,7 +13,7 @@ class TextStrings {
   String homeDescriptionDesktop = 'Truly encrypted\nfile transfer.';
   String homeDescriptionSub = 'Private. Simple. Secure.';
   String appName = 'atmospherePro';
-  String copyRight = '© 2022 The @ Company';
+  String copyRight = '© 2025 Atsign';
   String homeFileTransferItsSafe = 'File transfer.\nIt’s safe!';
   String homeHassleFree = 'Hassle free.\n';
   String homeWeWillSetupAccount = 'We will set up your account right away.';
